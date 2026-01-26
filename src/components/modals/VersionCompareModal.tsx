@@ -9,12 +9,13 @@ interface VersionCompareModalProps {
   onClose: () => void;
 }
 
-// Feature matrix data from CLAUDE.md
+// Feature matrix data - Light & Medium: viewable resources only, Max+: full features
 const FEATURE_CATEGORIES = [
   {
     name: "Bookmarks & Resources",
     features: [
-      { name: "All bookmarks (with FOCUS badge where needed)", light: true, medium: true, max: true, maxPlus: true },
+      { name: "Public bookmarks", light: true, medium: true, max: true, maxPlus: true },
+      { name: "Internal bookmarks (FOCUS required)", light: false, medium: true, max: true, maxPlus: true },
       { name: "Suggest new bookmark", light: true, medium: true, max: true, maxPlus: true },
       { name: "Report broken link", light: true, medium: true, max: true, maxPlus: true },
     ],
@@ -36,13 +37,13 @@ const FEATURE_CATEGORIES = [
     ],
   },
   {
-    name: "Ward Diary",
+    name: "Ward Diary & Tasks",
     features: [
-      { name: "Ward tasks (no PII)", light: false, medium: true, max: true, maxPlus: true },
+      { name: "Ward tasks", light: false, medium: false, max: true, maxPlus: true },
       { name: "Patient tasks", light: false, medium: false, max: true, maxPlus: true },
       { name: "Appointments", light: false, medium: false, max: true, maxPlus: true },
-      { name: "My Shift view", light: false, medium: true, max: true, maxPlus: true },
-      { name: "Calendar view", light: false, medium: true, max: true, maxPlus: true },
+      { name: "My Tasks view", light: false, medium: false, max: true, maxPlus: true },
+      { name: "Calendar view", light: false, medium: false, max: true, maxPlus: true },
       { name: "Sync with SystemOne Tasks", light: false, medium: false, max: false, maxPlus: true },
     ],
   },
@@ -80,25 +81,25 @@ export function VersionCompareModal({ isOpen, onClose }: VersionCompareModalProp
       <div className="space-y-6">
         {/* Version overview */}
         <div className="grid grid-cols-4 gap-2 text-center">
-          <div className="p-3 bg-green-50 rounded-lg">
+          <div className="p-3 bg-green-50 rounded-lg border-2 border-green-200">
             <p className="text-2xl mb-1">🌱</p>
             <p className="font-bold text-green-800">Light</p>
-            <p className="text-xs text-green-600">Public demo</p>
+            <p className="text-xs text-green-600">Public resources</p>
           </div>
-          <div className="p-3 bg-blue-50 rounded-lg">
+          <div className="p-3 bg-blue-50 rounded-lg border-2 border-blue-200">
             <p className="text-2xl mb-1">🌿</p>
             <p className="font-bold text-blue-800">Medium</p>
-            <p className="text-xs text-blue-600">Trust internal</p>
+            <p className="text-xs text-blue-600">+ Internal content</p>
           </div>
-          <div className="p-3 bg-purple-50 rounded-lg">
+          <div className="p-3 bg-purple-50 rounded-lg border-2 border-purple-200">
             <p className="text-2xl mb-1">🌳</p>
             <p className="font-bold text-purple-800">Max</p>
-            <p className="text-xs text-purple-600">Full features</p>
+            <p className="text-xs text-purple-600">+ Diary & Patients</p>
           </div>
-          <div className="p-3 bg-amber-50 rounded-lg">
+          <div className="p-3 bg-amber-50 rounded-lg border-2 border-amber-200">
             <p className="text-2xl mb-1">🚀</p>
             <p className="font-bold text-amber-800">Max+</p>
-            <p className="text-xs text-amber-600">SystemOne API</p>
+            <p className="text-xs text-amber-600">+ SystemOne API</p>
           </div>
         </div>
 

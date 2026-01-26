@@ -53,10 +53,12 @@ export type FeatureFlag =
   | "audit_logs";
 
 // Feature availability by version
+// Light & Medium: Viewable resources only (Bookmarks, Referrals, How-To Guides)
+// Medium adds internal/non-public content (internal emails, phones, SOPs)
+// Max & Max+: Full features (Ward Diary, Patient List, My Tasks)
 const featureMatrix: Record<AppVersion, FeatureFlag[]> = {
   light: [
     "bookmarks",
-    "bookmarks_focus",
     "workflows",
     "guides",
   ],
@@ -67,9 +69,6 @@ const featureMatrix: Record<AppVersion, FeatureFlag[]> = {
     "workflows_internal",
     "guides",
     "guides_internal",
-    "ward_tasks",
-    "user_management",
-    "audit_logs",
   ],
   max: [
     "bookmarks",

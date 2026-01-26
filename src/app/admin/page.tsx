@@ -5,11 +5,12 @@ import { useApp } from "@/app/providers";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { FileText, BookOpen, ArrowRight, Pencil, Shield } from "lucide-react";
+import { FileText, BookOpen, ArrowRight, Pencil, Shield, Bookmark } from "lucide-react";
 
 // Count data (would come from data in real app)
 const WORKFLOW_COUNT = 12;
 const GUIDE_COUNT = 13;
+const BOOKMARK_COUNT = 28;
 
 export default function AdminPage() {
   const { user } = useApp();
@@ -60,7 +61,7 @@ export default function AdminPage() {
         </div>
 
         {/* Admin cards */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {/* Workflows card */}
           <Link href="/admin/workflows" className="block no-underline">
             <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-rose-300 hover:shadow-lg transition-all cursor-pointer group">
@@ -72,15 +73,15 @@ export default function AdminPage() {
                   <h2 className="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors">
                     Workflows
                   </h2>
-                  <p className="text-gray-500">{WORKFLOW_COUNT} referral workflows</p>
+                  <p className="text-gray-500">{WORKFLOW_COUNT} referrals</p>
                 </div>
               </div>
-              <p className="text-gray-600 mb-4">
-                Edit and manage referral workflows. Add new steps, update forms, and customize case note templates.
+              <p className="text-gray-600 mb-4 text-sm">
+                Edit referral workflows, steps, forms, and case note templates.
               </p>
-              <div className="flex items-center gap-2 text-rose-600 font-semibold group-hover:gap-3 transition-all">
-                Manage Workflows
-                <ArrowRight className="w-5 h-5" />
+              <div className="flex items-center gap-2 text-rose-600 font-semibold group-hover:gap-3 transition-all text-sm">
+                Manage
+                <ArrowRight className="w-4 h-4" />
               </div>
             </div>
           </Link>
@@ -99,12 +100,36 @@ export default function AdminPage() {
                   <p className="text-gray-500">{GUIDE_COUNT} how-to guides</p>
                 </div>
               </div>
-              <p className="text-gray-600 mb-4">
-                Edit and manage how-to guides. Add new content, update steps, and include helpful tips.
+              <p className="text-gray-600 mb-4 text-sm">
+                Edit how-to guides, add content, steps, and helpful tips.
               </p>
-              <div className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all">
-                Manage Guides
-                <ArrowRight className="w-5 h-5" />
+              <div className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all text-sm">
+                Manage
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Bookmarks card */}
+          <Link href="/admin/bookmarks" className="block no-underline">
+            <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-amber-300 hover:shadow-lg transition-all cursor-pointer group">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-700 rounded-xl flex items-center justify-center">
+                  <Bookmark className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
+                    Bookmarks
+                  </h2>
+                  <p className="text-gray-500">{BOOKMARK_COUNT} bookmarks</p>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4 text-sm">
+                Edit bookmarks, links, and descriptions.{user.role === "senior_admin" ? " Manage categories." : ""}
+              </p>
+              <div className="flex items-center gap-2 text-amber-600 font-semibold group-hover:gap-3 transition-all text-sm">
+                Manage
+                <ArrowRight className="w-4 h-4" />
               </div>
             </div>
           </Link>

@@ -1,9 +1,10 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { Header } from "./header";
+import { Header } from "./Header";
 import { Footer } from "./footer";
 import { GdprModal } from "@/components/auth/gdpr-modal";
+import { BackToTop } from "@/components/ui";
 import { useApp } from "@/app/providers";
 
 interface MainLayoutProps {
@@ -39,6 +40,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       </main>
       <Footer />
       <GdprModal isOpen={showGdpr} onAccept={handleGdprAccept} />
+      <BackToTop />
     </div>
   );
 }

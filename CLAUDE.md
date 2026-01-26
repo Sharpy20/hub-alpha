@@ -641,11 +641,31 @@ Working through in order. Marking complete as fixed.
 **Immediate Next Steps:**
 1. Complete Phase 5: Admin features (workflow/guide editors, admin log)
 2. Mobile responsiveness pass
-3. Error handling improvements
-4. Accessibility audit (WCAG 2.1 AA)
-5. Prepare for deployment
+3. Prepare for user testing
 
-**Recently Completed (26 Jan 2026):**
+**Recently Completed (26 Jan 2026 - Session 4):**
+- ✅ Expanded day view in ward diary with shift filters
+- ✅ Compact task cards (shift labels as tooltips)
+- ✅ Data sources link added to Settings dropdown
+- ✅ Renamed "Ward Diary" to "Diary" and "My Tasks" to "Tasks" in header
+- ✅ Fixed footer text contrast issues
+- ✅ Bookmark management for contributors (new admin page)
+- ✅ Derbyshire MH Helpline moved to top of Crisis Support
+- ✅ Project evaluation document created (10 perspectives)
+- ✅ Error boundaries added
+- ✅ Accessibility improvements (focus indicators, ARIA labels, reduced motion)
+- ✅ Security headers added
+- ✅ FAQ page created
+- ✅ GDPR data retention section added
+- ✅ Custom 404 page
+- ✅ Page meta titles
+- ✅ Back to top button
+- ✅ Print styles
+- ✅ Confirmation dialogs component
+- ✅ Loading skeleton components
+- ✅ Empty state improvements
+
+**Previously Completed (26 Jan 2026 - Earlier):**
 - ✅ Login flow now uses staff dropdown per ward instead of free text name entry
 - ✅ Each ward has "Ward Admin" as first staff member at top of list
 - ✅ Role is determined by staff selection (read-only display)
@@ -655,7 +675,7 @@ Working through in order. Marking complete as fixed.
 - ✅ Leadership approval checkbox only shows for repeating tasks
 - ✅ New "View repeat ward tasks" modal with Mon-Sun weekly overview and edit/delete
 
-**Recently Completed (25 Jan 2026):**
+**Previously Completed (25 Jan 2026):**
 - ✅ All 20 snag list items completed
 - Ward task system with cross-ward viewing
 - Patient list with transfer and discharge workflows
@@ -741,6 +761,31 @@ Then open http://localhost:3000
 
 **New Documents:**
 - `docs/progress reviews/SystemOne-API-Guide.md`
+
+**Build Status:** All builds pass successfully
+
+### 26 January 2026 - Session 4 (Polish & Quality)
+**Completed:**
+- [x] Expanded day view in ward diary with shift filters
+- [x] Compact task cards (shift labels as tooltips)
+- [x] Data sources link added to Settings dropdown
+- [x] Renamed "Ward Diary" to "Diary" and "My Tasks" to "Tasks" in header
+- [x] Fixed footer text contrast issues
+- [x] Bookmark management for contributors (new admin page)
+- [x] Derbyshire MH Helpline moved to top of Crisis Support
+- [x] Project evaluation document created (10 perspectives)
+- [x] Error boundaries added
+- [x] Accessibility improvements (focus indicators, ARIA labels, reduced motion)
+- [x] Security headers added
+- [x] FAQ page created
+- [x] GDPR data retention section added
+- [x] Custom 404 page
+- [x] Page meta titles
+- [x] Back to top button
+- [x] Print styles
+- [x] Confirmation dialogs component
+- [x] Loading skeleton components
+- [x] Empty state improvements
 
 **Build Status:** All builds pass successfully
 

@@ -46,6 +46,7 @@ import {
   StaffTasksModal,
   TaskDetailModal,
 } from "@/components/modals";
+import { ConfirmDialog } from "@/components/ui";
 
 // Helper functions
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
@@ -424,6 +425,7 @@ function DayColumn({
                 : "hover:bg-gray-200 text-gray-400 hover:text-gray-600"
             }`}
             title="Expand day view"
+            aria-label="Expand day view"
           >
             <Maximize2 className="w-4 h-4" />
           </button>
@@ -512,8 +514,19 @@ function DayColumn({
         {/* Empty state */}
         {totalVisible === 0 && (
           <div className={`text-center ${isFocused ? "py-8" : "py-4"} text-gray-400`}>
-            <p className={isFocused ? "text-3xl mb-2" : "text-xl mb-1"}>✨</p>
-            <p className={isFocused ? "text-sm" : "text-xs"}>No tasks</p>
+            <p className={isFocused ? "text-4xl mb-2" : "text-2xl mb-1"}>
+              {hideCompleted ? "🎉" : "📋"}
+            </p>
+            <p className={`font-medium ${isFocused ? "text-sm" : "text-xs"}`}>
+              {hideCompleted ? "All done!" : "No tasks scheduled"}
+            </p>
+            {isFocused && (
+              <p className="text-xs mt-1 text-gray-300">
+                {hideCompleted
+                  ? "Show completed tasks to see your progress"
+                  : "Click 'Add Task' to create one"}
+              </p>
+            )}
           </div>
         )}
 
@@ -1205,7 +1218,7 @@ function RepeatWardTasksModal({
               <p className="text-white/70 text-sm">{recurringTasks.length} recurring task{recurringTasks.length !== 1 ? "s" : ""}</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+          <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-lg transition-colors" aria-label="Close dialog">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -1214,9 +1227,14 @@ function RepeatWardTasksModal({
         <div className="flex-1 overflow-auto p-4">
           {recurringTasks.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-4xl mb-3">🔄</p>
-              <p className="text-gray-600 font-medium">No repeating ward tasks</p>
-              <p className="text-gray-400 text-sm mt-1">Create a repeating task to see it here</p>
+              <p className="text-5xl mb-4">🔄</p>
+              <p className="text-gray-700 font-semibold text-lg">No repeating ward tasks yet</p>
+              <p className="text-gray-500 text-sm mt-2 max-w-xs mx-auto">
+                Repeating tasks help ensure routine ward activities happen every shift.
+              </p>
+              <p className="text-gray-400 text-xs mt-3">
+                Create a ward task and toggle &quot;Repeating Task&quot; to add it here
+              </p>
             </div>
           ) : (
             <>
@@ -1251,6 +1269,7 @@ function RepeatWardTasksModal({
                             onClick={() => onEditTask(task)}
                             className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
                             title="Edit task"
+                            aria-label="Edit task"
                           >
                             <Pencil className="w-4 h-4 text-gray-600" />
                           </button>
@@ -1258,6 +1277,7 @@ function RepeatWardTasksModal({
                             onClick={() => onDeleteTask(task.id)}
                             className="p-2 hover:bg-red-100 rounded-lg transition-colors"
                             title="Delete task"
+                            aria-label="Delete task"
                           >
                             <Trash2 className="w-4 h-4 text-red-500" />
                           </button>
@@ -1296,7 +1316,10 @@ function RepeatWardTasksModal({
                           className="min-h-[180px] bg-gray-50 rounded-lg p-3 space-y-2"
                         >
                           {dayTasks.length === 0 ? (
-                            <p className="text-gray-300 text-xs text-center mt-8">No tasks</p>
+                            <div className="text-center mt-6">
+                              <p className="text-gray-300 text-lg mb-1">-</p>
+                              <p className="text-gray-300 text-xs">Rest day</p>
+                            </div>
                           ) : (
                             dayTasks.map((task) => {
                               const shiftConfig = SHIFT_CONFIG[task.shift];
@@ -1320,6 +1343,7 @@ function RepeatWardTasksModal({
                                         onClick={() => onEditTask(task)}
                                         className="p-1.5 hover:bg-white/20 rounded transition-colors"
                                         title="Edit task"
+                                        aria-label="Edit task"
                                       >
                                         <Pencil className="w-3.5 h-3.5" />
                                       </button>
@@ -1327,6 +1351,7 @@ function RepeatWardTasksModal({
                                         onClick={() => onDeleteTask(task.id)}
                                         className="p-1.5 hover:bg-red-500/50 rounded transition-colors"
                                         title="Delete task"
+                                        aria-label="Delete task"
                                       >
                                         <Trash2 className="w-3.5 h-3.5" />
                                       </button>
@@ -1567,12 +1592,20 @@ function ExpandedDayView({
         <div className="max-w-7xl mx-auto">
           {totalFiltered === 0 ? (
             <div className="text-center py-16">
-              <p className="text-6xl mb-4">✨</p>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">No tasks to show</h2>
-              <p className="text-gray-500">
+              <p className="text-6xl mb-4">
                 {hideCompleted || !showEarly || !showLate || !showNight || !showWardTasks || !showPatientTasks || !showAppointments
-                  ? "Try adjusting your filters to see more tasks"
-                  : "This day has no scheduled tasks"}
+                  ? "🔍"
+                  : "📋"}
+              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                {hideCompleted || !showEarly || !showLate || !showNight || !showWardTasks || !showPatientTasks || !showAppointments
+                  ? "No matching tasks"
+                  : "No tasks scheduled"}
+              </h2>
+              <p className="text-gray-500 max-w-md mx-auto">
+                {hideCompleted || !showEarly || !showLate || !showNight || !showWardTasks || !showPatientTasks || !showAppointments
+                  ? "Try adjusting your filters above to see more tasks, or toggle 'Hide done' to show completed tasks."
+                  : "This day has no scheduled tasks. Click 'Add Task' to create one."}
               </p>
             </div>
           ) : (
@@ -1749,6 +1782,10 @@ export default function TasksPage() {
   const [showStaffTasksModal, setShowStaffTasksModal] = useState(false);
   const [showRepeatTasksModal, setShowRepeatTasksModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; taskId: string | null }>({
+    isOpen: false,
+    taskId: null,
+  });
 
   // Generate dates array (7 days back, today, 7 days forward)
   const today = new Date();
@@ -1838,9 +1875,14 @@ export default function TasksPage() {
 
   // Handle deleting a repeat task
   const handleDeleteRepeatTask = (taskId: string) => {
-    if (confirm("Are you sure you want to delete this repeating task?")) {
-      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+    setDeleteConfirm({ isOpen: true, taskId });
+  };
+
+  const confirmDeleteRepeatTask = () => {
+    if (deleteConfirm.taskId) {
+      setTasks((prev) => prev.filter((t) => t.id !== deleteConfirm.taskId));
     }
+    setDeleteConfirm({ isOpen: false, taskId: null });
   };
 
   // Get ward tasks for repeat modal
@@ -1940,6 +1982,7 @@ export default function TasksPage() {
                 }
               }}
               className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+              aria-label="Previous day"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -1951,6 +1994,7 @@ export default function TasksPage() {
                 }
               }}
               className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+              aria-label="Next day"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -2140,6 +2184,18 @@ export default function TasksPage() {
           onAddTask={() => setShowAddModal(true)}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Delete Repeating Task?"
+        message="This will permanently remove this repeating task from all future dates. This action cannot be undone."
+        variant="danger"
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={confirmDeleteRepeatTask}
+        onCancel={() => setDeleteConfirm({ isOpen: false, taskId: null })}
+      />
     </MainLayout>
   );
 }

@@ -151,7 +151,16 @@ function BookmarksContent() {
         {filteredBookmarks.length === 0 && (
           <div className="text-center py-16 bg-gray-50 rounded-xl">
             <span className="text-6xl mb-4 block">🔍</span>
-            <p className="text-lg text-gray-500">No bookmarks found in this category.</p>
+            <p className="text-lg font-medium text-gray-700">No bookmarks found</p>
+            <p className="text-gray-500 mt-2 max-w-sm mx-auto">
+              No bookmarks match this category. Try selecting a different category above or view all bookmarks.
+            </p>
+            <button
+              onClick={() => setSelectedCategory("all")}
+              className="mt-4 px-4 py-2 bg-slate-600 text-white rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors"
+            >
+              View All Bookmarks
+            </button>
           </div>
         )}
 

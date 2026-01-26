@@ -61,9 +61,24 @@ export function KanbanColumn({
       <div className="flex-1 p-3 space-y-3 overflow-y-auto min-h-[200px] max-h-[60vh]">
         {tasks.length === 0 ? (
           <div className="h-full flex items-center justify-center text-gray-400">
-            <div className="text-center">
-              <p className="text-3xl mb-2">📭</p>
-              <p className="text-sm">Drop tasks here</p>
+            <div className="text-center px-4">
+              <p className="text-4xl mb-2">
+                {title === "Today" ? "📋" : title === "In Progress" ? "🔄" : "🎉"}
+              </p>
+              <p className="text-sm font-medium">
+                {title === "Today"
+                  ? "No tasks claimed"
+                  : title === "In Progress"
+                  ? "Nothing in progress"
+                  : "Nothing completed yet"}
+              </p>
+              <p className="text-xs mt-1 text-gray-300">
+                {title === "Today"
+                  ? "Claim tasks from the Ward Diary"
+                  : title === "In Progress"
+                  ? "Drag tasks here when working"
+                  : "Complete tasks to see them here"}
+              </p>
             </div>
           </div>
         ) : (

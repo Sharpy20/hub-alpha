@@ -64,6 +64,7 @@ export function StaffManagementModal({ isOpen, onClose, ward }: StaffManagementM
           <button
             onClick={onClose}
             className="p-1 hover:bg-white/20 rounded-lg transition-colors"
+            aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>
@@ -85,6 +86,7 @@ export function StaffManagementModal({ isOpen, onClose, ward }: StaffManagementM
               onClick={handleAdd}
               disabled={!newName.trim()}
               className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50"
+              aria-label="Add staff member"
             >
               <Plus className="w-5 h-5" />
             </button>
@@ -110,12 +112,14 @@ export function StaffManagementModal({ isOpen, onClose, ward }: StaffManagementM
                     <button
                       onClick={() => handleEdit(member.id)}
                       className="p-1 text-green-600 hover:bg-green-100 rounded"
+                      aria-label="Save changes"
                     >
                       <Check className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setEditingId(null)}
                       className="p-1 text-gray-400 hover:bg-gray-200 rounded"
+                      aria-label="Cancel editing"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -129,12 +133,14 @@ export function StaffManagementModal({ isOpen, onClose, ward }: StaffManagementM
                     <button
                       onClick={() => startEdit(member)}
                       className="p-1 text-gray-400 hover:bg-gray-200 rounded"
+                      aria-label="Edit staff member"
                     >
                       <Pencil className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(member.id)}
                       className="p-1 text-red-400 hover:bg-red-100 rounded"
+                      aria-label="Delete staff member"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

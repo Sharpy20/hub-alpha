@@ -5,12 +5,16 @@ export const WARDS = ["Byron", "Shelley", "Keats", "Wordsworth", "Dickinson"] as
 export type WardName = (typeof WARDS)[number];
 
 // Staff member names for each ward
-// First entry is always the Ward Admin, then other staff follow
-const STAFF_LETTERS = ["B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"];
+// First entries are role-based admins, then regular staff follow
+const STAFF_LETTERS = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"];
 
 const generateStaffNames = (wardPrefix: string, wardName: string): string[] => {
-  // First entry is the Ward Admin
-  const names = [`${wardName} Ward Admin`];
+  // First entries are the named role positions
+  const names = [
+    `${wardName} Ward Admin`,
+    `${wardName} Senior Admin`,
+    `${wardName} Contributor`,
+  ];
 
   // Add the rest of the staff
   STAFF_LETTERS.forEach((letter, i) => {
@@ -33,13 +37,12 @@ export const STAFF_NAMES: Record<string, string[]> = {
   Dickinson: generateStaffNames("DI", "Dickinson"),
 };
 
-// Role distribution pattern: first is ward_admin, then mix of other roles
+// Role distribution pattern: first three are named roles, rest are normal staff
 const getRoleForIndex = (index: number): UserRole => {
-  if (index === 0) return "ward_admin"; // First staff member is always ward admin
-  if (index < 3) return "senior_admin";
-  if (index < 6) return "ward_admin";
-  if (index < 9) return "contributor";
-  return "normal";
+  if (index === 0) return "ward_admin";     // "[Ward] Ward Admin"
+  if (index === 1) return "senior_admin";   // "[Ward] Senior Admin"
+  if (index === 2) return "contributor";    // "[Ward] Contributor"
+  return "normal";  // All other staff are normal users
 };
 
 // Generate staff for all wards

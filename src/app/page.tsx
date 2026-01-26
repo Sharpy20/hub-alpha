@@ -60,6 +60,14 @@ export default function HomePage() {
           )}
         </section>
 
+        {/* Bookmark Carousel - Full width section */}
+        <section>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Quick Links
+          </h2>
+          <BookmarkCarousel />
+        </section>
+
         {/* Quick Actions - Full width, stacked, colorful */}
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -85,14 +93,6 @@ export default function HomePage() {
               </Link>
             ))}
           </div>
-        </section>
-
-        {/* Bookmark Carousel - Full width section */}
-        <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Quick Links
-          </h2>
-          <BookmarkCarousel />
         </section>
 
         {/* Today's Tasks Widget - Only for Medium+ */}

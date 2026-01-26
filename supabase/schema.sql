@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS feedback_posts (
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   category TEXT NOT NULL DEFAULT 'general',
+  sub_category TEXT DEFAULT NULL,
   author_name TEXT NOT NULL,
   author_id TEXT NOT NULL,
   upvotes INTEGER DEFAULT 0,

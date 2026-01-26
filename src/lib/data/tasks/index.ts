@@ -137,54 +137,44 @@ const generateAllPatients = (): Patient[] => {
 // All patients across all wards (100 total: 20 × 5 wards)
 export const DEMO_PATIENTS: Patient[] = generateAllPatients();
 
-// Ward task templates for variety
+// Ward task templates for variety (reduced set)
 const WARD_TASK_TEMPLATES = [
   { title: "Fridge temperature check", description: "Check and record medication fridge temperature", priority: "routine" as const, shift: "early" as const },
   { title: "Controlled drugs check", description: "Count and verify CD stock with another RN", priority: "important" as const, shift: "early" as const },
-  { title: "Ward round prep", description: "Prepare patient notes and update boards", priority: "important" as const, shift: "early" as const },
   { title: "Safety huddle", description: "Brief team meeting - risks, staffing, priorities", priority: "routine" as const, shift: "early" as const },
   { title: "Medication round (AM)", description: "Morning medication round", priority: "important" as const, shift: "early" as const },
-  { title: "Stock check - supplies", description: "Check ward supplies and reorder if needed", priority: "routine" as const, shift: "early" as const },
   { title: "Medication round (PM)", description: "Afternoon medication round", priority: "important" as const, shift: "late" as const },
   { title: "Handover preparation", description: "Prepare handover notes for night staff", priority: "routine" as const, shift: "late" as const },
   { title: "Environmental check", description: "Ward safety and cleanliness check", priority: "routine" as const, shift: "late" as const },
-  { title: "Documentation review", description: "Review and update patient documentation", priority: "routine" as const, shift: "late" as const },
   { title: "Night observation round", description: "Complete observation checks", priority: "important" as const, shift: "night" as const },
   { title: "Night medication round", description: "Overnight medication round", priority: "important" as const, shift: "night" as const },
-  { title: "Night handover prep", description: "Prepare handover for early shift", priority: "routine" as const, shift: "night" as const },
   { title: "Resus equipment check", description: "Daily check of emergency equipment", priority: "urgent" as const, shift: "early" as const },
-  { title: "Fluid balance totals", description: "Calculate and record fluid balance totals", priority: "routine" as const, shift: "late" as const },
-  { title: "Bed management update", description: "Update bed status on system", priority: "routine" as const, shift: "early" as const },
-  { title: "Ward meeting notes", description: "Document ward meeting outcomes", priority: "routine" as const, shift: "early" as const },
-  { title: "Equipment maintenance log", description: "Complete equipment maintenance checks", priority: "routine" as const, shift: "late" as const },
-  { title: "Staff allocation board", description: "Update staff allocation for next shift", priority: "routine" as const, shift: "late" as const },
-  { title: "Night safety checks", description: "Complete hourly safety checks", priority: "important" as const, shift: "night" as const },
 ];
 
-// Generate ward tasks - 20 per ward (one per staff member, plus extras)
+// Generate ward tasks - 10 per ward
 const generateWardTasks = (ward: string, startId: number): WardTask[] => {
   const staff = WARD_STAFF[ward];
   const tasks: WardTask[] = [];
   let id = startId;
 
-  // Generate 20 ward tasks - each staff gets one task to claim or complete
-  for (let i = 0; i < 20; i++) {
+  // Generate 10 ward tasks
+  for (let i = 0; i < 10; i++) {
     const template = WARD_TASK_TEMPLATES[i % WARD_TASK_TEMPLATES.length];
-    const staffMember = staff[i];
+    const staffMember = staff[i % staff.length];
 
-    // Determine status: first 5 completed, next 5 in_progress/claimed, rest pending
+    // Determine status: first 3 completed, next 3 in_progress/claimed, rest pending
     let status: "pending" | "in_progress" | "completed" | "overdue" = "pending";
     let claimedBy: string | undefined;
     let claimedAt: string | undefined;
     let completedBy: string | undefined;
     let completedAt: string | undefined;
 
-    if (i < 5) {
+    if (i < 3) {
       // Completed tasks
       status = "completed";
       completedBy = staffMember;
       completedAt = todayStr;
-    } else if (i < 10) {
+    } else if (i < 6) {
       // In progress / claimed tasks
       status = "in_progress";
       claimedBy = staffMember;
@@ -454,14 +444,14 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
   return appointments;
 };
 
-// Generate all ward tasks (20 per ward × 5 wards = 100 total)
+// Generate all ward tasks (10 per ward × 5 wards = 50 total)
 const generateAllWardTasks = (): WardTask[] => {
   const tasks: WardTask[] = [];
   let startId = 1;
 
   for (const ward of WARDS) {
     tasks.push(...generateWardTasks(ward, startId));
-    startId += 20;
+    startId += 10;
   }
 
   return tasks;

@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+:root {
+  /* NHS Identity Colours */
+  --nhs-blue: #005EB8;
+  --nhs-dark-blue: #003087;
+  --nhs-bright-blue: #0072CE;
+  --nhs-light-blue: #41B6E6;
+  --nhs-aqua: #00A9CE;
+
+  /* NHS Neutrals */
+  --nhs-black: #212B32;
+  --nhs-dark-grey: #425563;
+  --nhs-mid-grey: #768692;
+  --nhs-pale-grey: #E8EDEE;
+  --nhs-white: #FFFFFF;
+
+  /* NHS Support Colours */
+  --nhs-green: #007F3B;
+  --nhs-warm-yellow: #FFB81C;
+  --nhs-orange: #ED8B00;
+  --nhs-red: #DA291C;
+  --nhs-purple: #330072;
+  --nhs-pink: #AE2573;
+
+  /* App tokens */
+  --background: var(--nhs-white);
+  --foreground: var(--nhs-black);
+  --primary: var(--nhs-blue);
+  --primary-dark: var(--nhs-dark-blue);
+  --secondary: var(--nhs-pale-grey);
+  --accent: var(--nhs-bright-blue);
+  --muted: var(--nhs-mid-grey);
+  --success: var(--nhs-green);
+  --warning: var(--nhs-warm-yellow);
+  --error: var(--nhs-red);
+}
+
+@theme inline {
+  /* NHS Colours for Tailwind */
+  --color-nhs-blue: var(--nhs-blue);
+  --color-nhs-dark-blue: var(--nhs-dark-blue);
+  --color-nhs-bright-blue: var(--nhs-bright-blue);
+  --color-nhs-light-blue: var(--nhs-light-blue);
+  --color-nhs-aqua: var(--nhs-aqua);
+  --color-nhs-black: var(--nhs-black);
+  --color-nhs-dark-grey: var(--nhs-dark-grey);
+  --color-nhs-mid-grey: var(--nhs-mid-grey);
+  --color-nhs-pale-grey: var(--nhs-pale-grey);
+  --color-nhs-white: var(--nhs-white);
+  --color-nhs-green: var(--nhs-green);
+  --color-nhs-yellow: var(--nhs-warm-yellow);
+  --color-nhs-orange: var(--nhs-orange);
+  --color-nhs-red: var(--nhs-red);
+  --color-nhs-purple: var(--nhs-purple);
+  --color-nhs-pink: var(--nhs-pink);
+
+  /* Semantic colours */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  /* Font family */
+  --font-sans: "Source Sans 3", Arial, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Focus states for accessibility */
+*:focus-visible {
+  outline: 3px solid var(--nhs-warm-yellow);
+  outline-offset: 2px;
+}
+
+/* NHS-style link styling - no underlines for cleaner look */
+a {
+  color: var(--nhs-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--nhs-dark-blue);
+  text-decoration: none;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--nhs-warm-yellow);
+  color: var(--nhs-black);
+  padding: 8px;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease;
+}
+
+/* Marquee animation for scrolling tip */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-33.33%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 15s linear infinite;
+}
+
+/* Toast slide-in animation */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}

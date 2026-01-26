@@ -24,6 +24,12 @@ import {
   X,
   Pencil,
   Trash2,
+  Maximize2,
+  ArrowLeft,
+  Filter,
+  Sun,
+  Moon,
+  Sunset,
 } from "lucide-react";
 import {
   DiaryTask,
@@ -97,35 +103,27 @@ function TaskCard({
 
   let gradient = "from-gray-400 to-gray-600";
   let icon = "📌";
+  let iconTooltip = "";
   let subtitle = "";
 
   if (task.type === "ward") {
     const shiftConfig = SHIFT_CONFIG[task.shift];
     gradient = shiftConfig.gradient;
     icon = shiftConfig.icon;
-    subtitle = `${shiftConfig.label} Shift`;
+    iconTooltip = `${shiftConfig.label} Shift`; // Tooltip instead of subtitle
   } else if (task.type === "patient") {
     const catConfig = TASK_CATEGORY_CONFIG[task.category];
     gradient = catConfig.gradient;
     icon = catConfig.icon;
-    subtitle = ""; // Patient name shown separately for larger display
+    iconTooltip = catConfig.label;
   } else if (task.type === "appointment") {
     gradient = "from-blue-500 to-blue-700";
     icon = "📅";
+    iconTooltip = "Appointment";
     subtitle = task.appointmentTime || "";
   }
 
   const priorityConfig = PRIORITY_CONFIG[task.priority];
-
-  // Claimed status message
-  let claimedMessage = "";
-  if (isClaimed && !isCompleted) {
-    if (isInProgress) {
-      claimedMessage = `${task.claimedBy} working on`;
-    } else {
-      claimedMessage = `Claimed by ${task.claimedBy}`;
-    }
-  }
 
   return (
     <div
@@ -134,119 +132,127 @@ function TaskCard({
         isCompleted ? "opacity-60" : "hover:shadow-lg hover:scale-[1.02]"
       } ${compact ? "text-sm" : ""}`}
     >
-      <div className={`bg-gradient-to-r ${gradient} p-3 ${compact ? "p-2" : "p-3"}`}>
+      <div className={`bg-gradient-to-r ${gradient} ${compact ? "p-2" : "p-2.5"}`}>
         <div className="flex items-start gap-2">
           <button
-            onClick={() => onToggleComplete(task.id)}
-            className={`flex-shrink-0 w-6 h-6 rounded-full border-2 border-white/50 flex items-center justify-center transition-all ${
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleComplete(task.id);
+            }}
+            className={`flex-shrink-0 w-5 h-5 rounded-full border-2 border-white/50 flex items-center justify-center transition-all ${
               isCompleted ? "bg-white/30" : "hover:bg-white/20"
             }`}
           >
-            {isCompleted && <Check className="w-4 h-4 text-white" />}
+            {isCompleted && <Check className="w-3 h-3 text-white" />}
           </button>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className={compact ? "text-lg" : "text-xl"}>{icon}</span>
+            <div className="flex items-center gap-1.5">
+              <span className={compact ? "text-base" : "text-lg"} title={iconTooltip}>{icon}</span>
               <h4
                 className={`font-semibold text-white truncate ${
                   isCompleted ? "line-through" : ""
-                } ${compact ? "text-sm" : ""}`}
+                } ${compact ? "text-xs" : "text-sm"}`}
               >
                 {task.title}
               </h4>
+              {isOverdue && (
+                <span className="bg-red-500 text-white text-[10px] px-1 py-0.5 rounded font-medium flex-shrink-0">
+                  Overdue
+                </span>
+              )}
+              <span className="flex-shrink-0" title={priorityConfig.label}>{priorityConfig.icon}</span>
             </div>
-            {subtitle && <p className="text-white/70 text-xs mt-0.5 truncate">{subtitle}</p>}
 
-            {/* Patient name - larger display */}
+            {/* Appointment time subtitle */}
+            {subtitle && <p className="text-white/70 text-xs truncate">{subtitle}</p>}
+
+            {/* Patient name */}
             {(task.type === "patient" || task.type === "appointment") && task.patientName && (
-              <p className={`text-white font-medium mt-0.5 truncate ${compact ? "text-xs" : "text-sm"}`}>
+              <p className={`text-white font-medium truncate ${compact ? "text-xs" : "text-sm"}`}>
                 👤 {task.patientName}
               </p>
             )}
 
-            {/* Claimed status */}
-            {claimedMessage && (
-              <p className="text-white/90 text-xs mt-1 flex items-center gap-1 bg-white/20 rounded px-1.5 py-0.5 inline-flex">
-                <Hand className="w-3 h-3" />
-                {claimedMessage}
-              </p>
+            {/* Claimed status row with steal/unclaim buttons inline */}
+            {isClaimed && !isCompleted && (
+              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                {/* Steal button - if claimed by someone else */}
+                {!isClaimedByMe && onSteal && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSteal(task.id);
+                    }}
+                    className="flex items-center gap-1 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors"
+                    title="Take over this task"
+                  >
+                    <Hand className="w-2.5 h-2.5" />
+                    Steal
+                  </button>
+                )}
+                {/* Unclaim button - if claimed by me */}
+                {isClaimedByMe && onClaim && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClaim(task.id);
+                    }}
+                    className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
+                  >
+                    <Hand className="w-2.5 h-2.5" />
+                    Drop
+                  </button>
+                )}
+                <span className="text-white/80 text-[10px] flex items-center gap-1">
+                  <Hand className="w-2.5 h-2.5" />
+                  {isInProgress ? `${task.claimedBy} working` : task.claimedBy}
+                </span>
+              </div>
             )}
-          </div>
-          <div className="flex items-center gap-1">
-            {isOverdue && (
-              <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded font-medium">
-                Overdue
-              </span>
+
+            {/* Claim button row - only if not claimed */}
+            {!isCompleted && !isClaimed && onClaim && (
+              <div className="mt-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClaim(task.id);
+                  }}
+                  className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
+                >
+                  <Hand className="w-2.5 h-2.5" />
+                  Claim
+                </button>
+              </div>
             )}
-            <span title={priorityConfig.label}>{priorityConfig.icon}</span>
+
+            {/* Linked resources */}
+            {((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
+             ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId) ? (
+              <div className="flex items-center gap-2 mt-1">
+                {(task.type === "patient" || task.type === "appointment") && task.linkedReferralId && (
+                  <Link
+                    href={`/referrals/${task.linkedReferralId}`}
+                    className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span>📋</span>
+                    <span className="underline">Referral</span>
+                  </Link>
+                )}
+                {(task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId && (
+                  <Link
+                    href={`/how-to/${task.linkedGuideId}`}
+                    className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span>📖</span>
+                    <span className="underline">Guide</span>
+                  </Link>
+                )}
+              </div>
+            ) : null}
           </div>
-        </div>
-
-        {/* Action buttons */}
-        <div className="mt-2 flex items-center gap-2">
-          {/* Claim button - only show if not completed and not claimed by someone else */}
-          {!isCompleted && !isClaimed && onClaim && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onClaim(task.id);
-              }}
-              className="flex items-center gap-1 text-white/90 text-xs bg-white/20 hover:bg-white/30 rounded px-2 py-1 transition-colors"
-            >
-              <Hand className="w-3 h-3" />
-              Claim
-            </button>
-          )}
-
-          {/* Unclaim button - only if claimed by current user and not completed */}
-          {!isCompleted && isClaimedByMe && onClaim && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onClaim(task.id); // Toggle - will unclaim
-              }}
-              className="flex items-center gap-1 text-white/90 text-xs bg-white/20 hover:bg-white/30 rounded px-2 py-1 transition-colors"
-            >
-              <Hand className="w-3 h-3" />
-              Unclaim
-            </button>
-          )}
-
-          {/* Steal button - only if claimed by someone else and not completed */}
-          {!isCompleted && isClaimed && !isClaimedByMe && onSteal && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSteal(task.id);
-              }}
-              className="flex items-center gap-1 text-white/90 text-xs bg-amber-500/50 hover:bg-amber-500/70 rounded px-2 py-1 transition-colors"
-              title="Take over this task from the current owner"
-            >
-              <Hand className="w-3 h-3" />
-              Steal
-            </button>
-          )}
-
-          {(task.type === "patient" || task.type === "appointment") && task.linkedReferralId && (
-            <Link
-              href={`/referrals/${task.linkedReferralId}`}
-              className="flex items-center gap-1 text-white/80 text-xs hover:text-white no-underline"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span>📋</span>
-              <span className="underline">Referral</span>
-            </Link>
-          )}
-          {(task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId && (
-            <Link
-              href={`/how-to/${task.linkedGuideId}`}
-              className="flex items-center gap-1 text-white/80 text-xs hover:text-white no-underline"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span>📖</span>
-              <span className="underline">Guide</span>
-            </Link>
-          )}
         </div>
       </div>
     </div>
@@ -318,6 +324,7 @@ function DayColumn({
   showAddButton,
   onAddTask,
   onClick,
+  onExpand,
 }: {
   date: string;
   tasks: DiaryTask[];
@@ -331,6 +338,7 @@ function DayColumn({
   showAddButton?: boolean;
   onAddTask?: () => void;
   onClick?: () => void;
+  onExpand?: () => void;
 }) {
   const todayDate = formatDate(new Date());
   const isPastDay = isPast(date) && date !== todayDate;
@@ -393,7 +401,7 @@ function DayColumn({
     >
       {/* Day header */}
       <div
-        className={`p-3 text-center transition-all ${
+        className={`p-3 transition-all relative ${
           isFocused
             ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
             : isToday
@@ -403,15 +411,34 @@ function DayColumn({
             : "bg-gray-50 text-gray-700"
         }`}
       >
-        <p className={`font-bold ${isFocused ? "text-lg" : "text-sm"}`}>
-          {formatDisplayDate(date)}
-        </p>
-        <p className={`text-xs ${isFocused ? "text-white/70" : "opacity-70"}`}>
-          {new Date(date).toLocaleDateString("en-GB", { weekday: "long" })}
-        </p>
-        {!isFocused && totalVisible > 0 && (
-          <p className="text-xs mt-1 font-medium">{totalVisible} task{totalVisible !== 1 ? 's' : ''}</p>
+        {/* Expand button */}
+        {onExpand && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onExpand();
+            }}
+            className={`absolute top-2 right-2 p-1.5 rounded-lg transition-colors ${
+              isFocused
+                ? "hover:bg-white/20 text-white/80 hover:text-white"
+                : "hover:bg-gray-200 text-gray-400 hover:text-gray-600"
+            }`}
+            title="Expand day view"
+          >
+            <Maximize2 className="w-4 h-4" />
+          </button>
         )}
+        <div className="text-center">
+          <p className={`font-bold ${isFocused ? "text-lg" : "text-sm"}`}>
+            {formatDisplayDate(date)}
+          </p>
+          <p className={`text-xs ${isFocused ? "text-white/70" : "opacity-70"}`}>
+            {new Date(date).toLocaleDateString("en-GB", { weekday: "long" })}
+          </p>
+          {!isFocused && totalVisible > 0 && (
+            <p className="text-xs mt-1 font-medium">{totalVisible} task{totalVisible !== 1 ? 's' : ''}</p>
+          )}
+        </div>
       </div>
 
       {/* Tasks content - always show, with compact mode for non-focused */}
@@ -1333,6 +1360,377 @@ function RepeatWardTasksModal({
   );
 }
 
+// Expanded Day View - Full page view for a single day
+function ExpandedDayView({
+  date,
+  tasks,
+  hideCompleted,
+  onToggleComplete,
+  onClaim,
+  onSteal,
+  onTaskClick,
+  currentUserName,
+  onClose,
+  onAddTask,
+}: {
+  date: string;
+  tasks: DiaryTask[];
+  hideCompleted: boolean;
+  onToggleComplete: (id: string) => void;
+  onClaim?: (id: string) => void;
+  onSteal?: (id: string) => void;
+  onTaskClick?: (task: DiaryTask) => void;
+  currentUserName?: string;
+  onClose: () => void;
+  onAddTask?: () => void;
+}) {
+  // Shift filter state - which shifts to show
+  const [showEarly, setShowEarly] = useState(true);
+  const [showLate, setShowLate] = useState(true);
+  const [showNight, setShowNight] = useState(true);
+
+  // Task type filter state
+  const [showWardTasks, setShowWardTasks] = useState(true);
+  const [showPatientTasks, setShowPatientTasks] = useState(true);
+  const [showAppointments, setShowAppointments] = useState(true);
+
+  const todayDate = formatDate(new Date());
+  const isPastDay = isPast(date) && date !== todayDate;
+  const isToday = date === todayDate;
+
+  // Filter tasks based on settings
+  const filterTasks = (taskList: DiaryTask[]) => {
+    let filtered = taskList;
+
+    // Filter completed if needed
+    if (hideCompleted) {
+      filtered = filtered.filter(t => t.status !== "completed");
+    }
+
+    // Filter by task type
+    filtered = filtered.filter(t => {
+      if (t.type === "ward" && !showWardTasks) return false;
+      if (t.type === "patient" && !showPatientTasks) return false;
+      if (t.type === "appointment" && !showAppointments) return false;
+      return true;
+    });
+
+    // Filter ward tasks by shift
+    filtered = filtered.filter(t => {
+      if (t.type === "ward") {
+        const wardTask = t as WardTask;
+        if (wardTask.shift === "early" && !showEarly) return false;
+        if (wardTask.shift === "late" && !showLate) return false;
+        if (wardTask.shift === "night" && !showNight) return false;
+      }
+      return true;
+    });
+
+    return filtered;
+  };
+
+  const wardTasks = filterTasks(tasks.filter(t => t.type === "ward")) as WardTask[];
+  const patientTasks = filterTasks(tasks.filter(t => t.type === "patient")) as PatientTask[];
+  const appointments = filterTasks(tasks.filter(t => t.type === "appointment")) as Appointment[];
+
+  // Group ward tasks by shift
+  const earlyTasks = wardTasks.filter(t => t.shift === "early");
+  const lateTasks = wardTasks.filter(t => t.shift === "late");
+  const nightTasks = wardTasks.filter(t => t.shift === "night");
+
+  const totalFiltered = wardTasks.length + patientTasks.length + appointments.length;
+
+  return (
+    <div className="fixed inset-0 bg-gray-50 z-40 overflow-hidden flex flex-col">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 shadow-lg">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onClose}
+              className="flex items-center gap-2 px-3 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="font-medium">Back to Overview</span>
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold">{formatDisplayDate(date)}</h1>
+              <p className="text-white/70">
+                {new Date(date).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="bg-white/20 px-3 py-1.5 rounded-full text-sm font-medium">
+              {totalFiltered} task{totalFiltered !== 1 ? "s" : ""} showing
+            </span>
+            {onAddTask && (
+              <button
+                onClick={onAddTask}
+                className="flex items-center gap-2 px-4 py-2 bg-white text-indigo-600 rounded-xl font-medium hover:bg-white/90 transition-colors"
+              >
+                <Plus className="w-5 h-5" />
+                Add Task
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="bg-white border-b border-gray-200 p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Shift filters - only show for today */}
+            {isToday && (
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Shifts:</span>
+                <button
+                  onClick={() => setShowEarly(!showEarly)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                    showEarly
+                      ? "bg-gradient-to-r from-amber-400 to-orange-500 text-white"
+                      : "bg-gray-100 text-gray-400 line-through"
+                  }`}
+                >
+                  <Sun className="w-4 h-4" />
+                  Early
+                </button>
+                <button
+                  onClick={() => setShowLate(!showLate)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                    showLate
+                      ? "bg-gradient-to-r from-blue-400 to-blue-600 text-white"
+                      : "bg-gray-100 text-gray-400 line-through"
+                  }`}
+                >
+                  <Sunset className="w-4 h-4" />
+                  Late
+                </button>
+                <button
+                  onClick={() => setShowNight(!showNight)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                    showNight
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-700 text-white"
+                      : "bg-gray-100 text-gray-400 line-through"
+                  }`}
+                >
+                  <Moon className="w-4 h-4" />
+                  Night
+                </button>
+              </div>
+            )}
+
+            {/* Task type filters */}
+            <div className="flex items-center gap-2 border-l border-gray-200 pl-4 ml-2">
+              <span className="text-sm font-medium text-gray-700">Show:</span>
+              {isToday && (
+                <button
+                  onClick={() => setShowWardTasks(!showWardTasks)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                    showWardTasks
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-gray-100 text-gray-400 line-through"
+                  }`}
+                >
+                  🏥 Ward Tasks
+                </button>
+              )}
+              <button
+                onClick={() => setShowPatientTasks(!showPatientTasks)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  showPatientTasks
+                    ? "bg-violet-100 text-violet-700"
+                    : "bg-gray-100 text-gray-400 line-through"
+                }`}
+              >
+                👤 Patient Tasks
+              </button>
+              <button
+                onClick={() => setShowAppointments(!showAppointments)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  showAppointments
+                    ? "bg-blue-100 text-blue-700"
+                    : "bg-gray-100 text-gray-400 line-through"
+                }`}
+              >
+                📅 Appointments
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="max-w-7xl mx-auto">
+          {totalFiltered === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-6xl mb-4">✨</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">No tasks to show</h2>
+              <p className="text-gray-500">
+                {hideCompleted || !showEarly || !showLate || !showNight || !showWardTasks || !showPatientTasks || !showAppointments
+                  ? "Try adjusting your filters to see more tasks"
+                  : "This day has no scheduled tasks"}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Ward Tasks Column - only show for today */}
+              {isToday && showWardTasks && (earlyTasks.length > 0 || lateTasks.length > 0 || nightTasks.length > 0) && (
+                <div className="space-y-6">
+                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    🏥 Ward Tasks
+                    <span className="text-sm font-normal text-gray-500">
+                      ({wardTasks.length})
+                    </span>
+                  </h2>
+
+                  {/* Early Shift */}
+                  {showEarly && earlyTasks.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center">
+                          <Sun className="w-4 h-4 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-gray-800">Early Shift</h3>
+                        <span className="text-xs text-gray-500">({earlyTasks.length})</span>
+                      </div>
+                      <div className="space-y-2">
+                        {earlyTasks.map(task => (
+                          <TaskCard
+                            key={task.id}
+                            task={task}
+                            onToggleComplete={onToggleComplete}
+                            onClaim={onClaim}
+                            onSteal={onSteal}
+                            onClick={onTaskClick}
+                            currentUserName={currentUserName}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Late Shift */}
+                  {showLate && lateTasks.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                          <Sunset className="w-4 h-4 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-gray-800">Late Shift</h3>
+                        <span className="text-xs text-gray-500">({lateTasks.length})</span>
+                      </div>
+                      <div className="space-y-2">
+                        {lateTasks.map(task => (
+                          <TaskCard
+                            key={task.id}
+                            task={task}
+                            onToggleComplete={onToggleComplete}
+                            onClaim={onClaim}
+                            onSteal={onSteal}
+                            onClick={onTaskClick}
+                            currentUserName={currentUserName}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Night Shift */}
+                  {showNight && nightTasks.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-700 flex items-center justify-center">
+                          <Moon className="w-4 h-4 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-gray-800">Night Shift</h3>
+                        <span className="text-xs text-gray-500">({nightTasks.length})</span>
+                      </div>
+                      <div className="space-y-2">
+                        {nightTasks.map(task => (
+                          <TaskCard
+                            key={task.id}
+                            task={task}
+                            onToggleComplete={onToggleComplete}
+                            onClaim={onClaim}
+                            onSteal={onSteal}
+                            onClick={onTaskClick}
+                            currentUserName={currentUserName}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Patient Tasks Column */}
+              {showPatientTasks && patientTasks.length > 0 && (
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
+                    👤 Patient Tasks
+                    <span className="text-sm font-normal text-gray-500">
+                      ({patientTasks.length})
+                    </span>
+                  </h2>
+                  <div className="space-y-2">
+                    {patientTasks.map(task => (
+                      <TaskCard
+                        key={task.id}
+                        task={task}
+                        onToggleComplete={onToggleComplete}
+                        onClaim={onClaim}
+                        onSteal={onSteal}
+                        onClick={onTaskClick}
+                        currentUserName={currentUserName}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Appointments Column */}
+              {showAppointments && appointments.length > 0 && (
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
+                    📅 Appointments
+                    <span className="text-sm font-normal text-gray-500">
+                      ({appointments.length})
+                    </span>
+                  </h2>
+                  <div className="space-y-2">
+                    {appointments.map(task => (
+                      <TaskCard
+                        key={task.id}
+                        task={task}
+                        onToggleComplete={onToggleComplete}
+                        onClaim={onClaim}
+                        onSteal={onSteal}
+                        onClick={onTaskClick}
+                        currentUserName={currentUserName}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Footer with keyboard hint */}
+      <div className="bg-white border-t border-gray-200 p-3 text-center">
+        <p className="text-sm text-gray-500">
+          Press <kbd className="px-2 py-1 bg-gray-100 rounded text-xs font-mono">Esc</kbd> or click Back to return to overview
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // Main Tasks Page
 export default function TasksPage() {
   const { user, hasFeature, activeWard } = useApp();
@@ -1343,6 +1741,7 @@ export default function TasksPage() {
   const [hideCompleted, setHideCompleted] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [focusedDate, setFocusedDate] = useState<string>("");
+  const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
   // Management modal states
   const [showStaffModal, setShowStaffModal] = useState(false);
@@ -1362,6 +1761,17 @@ export default function TasksPage() {
       setFocusedDate(todayStr);
     }
   }, [focusedDate, todayStr]);
+
+  // Handle escape key to close expanded view
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && expandedDay) {
+        setExpandedDay(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [expandedDay]);
 
   const hasTaskFeature = hasFeature("ward_tasks");
 
@@ -1547,25 +1957,25 @@ export default function TasksPage() {
           </div>
 
           <button
-            onClick={() => setHideCompleted(!hideCompleted)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
-              hideCompleted
-                ? "bg-amber-100 text-amber-800"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
+            onClick={() => setShowRepeatTasksModal(true)}
+            className="flex items-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-700 rounded-xl font-medium hover:bg-indigo-200 transition-all"
+            title="View Repeating Ward Tasks"
           >
-            {hideCompleted ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            {hideCompleted ? "Active only" : "Hide done"}
+            <Repeat className="w-5 h-5" />
+            <span className="hidden sm:inline">Repeat Tasks</span>
           </button>
 
           <div className="flex items-center gap-2 ml-auto">
             <button
-              onClick={() => setShowRepeatTasksModal(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-700 rounded-xl font-medium hover:bg-indigo-200 transition-all"
-              title="View Repeating Ward Tasks"
+              onClick={() => setHideCompleted(!hideCompleted)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
+                hideCompleted
+                  ? "bg-amber-100 text-amber-800"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
             >
-              <Repeat className="w-5 h-5" />
-              <span className="hidden sm:inline">Repeat Tasks</span>
+              {hideCompleted ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {hideCompleted ? "Active only" : "Hide done"}
             </button>
 
             <button
@@ -1641,6 +2051,7 @@ export default function TasksPage() {
                 showAddButton={true}
                 onAddTask={() => setShowAddModal(true)}
                 onClick={() => scrollToDate(date)}
+                onExpand={() => setExpandedDay(date)}
               />
             </div>
           ))}
@@ -1713,6 +2124,22 @@ export default function TasksPage() {
         onEditTask={handleEditRepeatTask}
         onDeleteTask={handleDeleteRepeatTask}
       />
+
+      {/* Expanded Day View */}
+      {expandedDay && (
+        <ExpandedDayView
+          date={expandedDay}
+          tasks={getTasksForDate(expandedDay)}
+          hideCompleted={hideCompleted}
+          onToggleComplete={handleToggleComplete}
+          onClaim={handleClaim}
+          onSteal={handleSteal}
+          onTaskClick={handleTaskClick}
+          currentUserName={user?.name}
+          onClose={() => setExpandedDay(null)}
+          onAddTask={() => setShowAddModal(true)}
+        />
+      )}
     </MainLayout>
   );
 }

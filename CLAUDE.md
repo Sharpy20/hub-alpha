@@ -26,6 +26,24 @@
 
 ---
 
+## 🚀 LIVE DEPLOYMENT - ALWAYS PUSH TO VERCEL
+
+**This project is deployed LIVE on Vercel. Do NOT just run locally.**
+
+- **Live URL:** https://inpatient-hub-alpha.vercel.app
+- **GitHub Repo:** https://github.com/Sharpy20/hub-alpha
+- **Deployment:** Automatic via Vercel on push to `main` branch
+
+**After making changes:**
+1. `git add <files>`
+2. `git commit -m "message"`
+3. `git push origin main`
+4. Vercel deploys automatically (takes ~2 mins)
+
+**Do NOT** rely on `npm run dev` / localhost for testing - always push and verify on live.
+
+---
+
 ## CRITICAL RULES
 
 1. **100% Standalone Project** - No references to other projects, build everything fresh

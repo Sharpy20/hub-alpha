@@ -238,7 +238,7 @@ export function Header() {
                         <Link
                           href="/versions"
                           onClick={() => setProfileDropdownOpen(false)}
-                          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold transition-colors"
+                          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold transition-colors"
                         >
                           <LayoutGrid className="w-3.5 h-3.5" />
                           Compare All Features
@@ -426,7 +426,7 @@ export function Header() {
                   <Link
                     href="/versions"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-sm font-semibold transition-colors"
+                    className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
                   >
                     <LayoutGrid className="w-4 h-4" />
                     Compare All Features

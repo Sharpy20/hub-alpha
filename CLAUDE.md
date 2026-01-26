@@ -62,19 +62,23 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 
 ### Version Definitions
 
+**Light & Medium = Viewable Resources Only** (Bookmarks, Referrals, How-To Guides)
+**Max & Max+ = Full Features** (Ward Diary, Patient List, My Tasks)
+
 | Version | Description | Auth | PII | Hosting |
 |---------|-------------|------|-----|---------|
-| **Light** | Public info only, personal tool | Demo login | None | Public Vercel |
-| **Medium** | Internal SOPs, ward task diary | Trust auth | None | FOCUS/restricted |
-| **Max** | Full patient/staff lists, discharge | Trust auth | Yes | Trust infra, DIPA |
-| **Max+** | SystemOne API integration | Trust auth | Yes | Trust infra, API approval |
+| **Light** | Public resources only | Demo login | None | Public Vercel |
+| **Medium** | + Internal content (non-public phones, emails, SOPs) | Trust auth | None | FOCUS/restricted |
+| **Max** | + Ward Diary, Patient List, My Tasks | Trust auth | Yes | Trust infra, DIPA |
+| **Max+** | + SystemOne API integration | Trust auth | Yes | Trust infra, API approval |
 
 ### Feature Matrix
 
 | Feature | Light | Medium | Max | Max+ |
 |---------|:-----:|:------:|:---:|:----:|
 | **BOOKMARKS** |||||
-| All bookmarks (with FOCUS badge where needed) | Y | Y | Y | Y |
+| Public bookmarks | Y | Y | Y | Y |
+| Internal bookmarks (FOCUS required) | - | Y | Y | Y |
 | Suggest new bookmark | Y | Y | Y | Y |
 | Report broken link | Y | Y | Y | Y |
 | **REFERRAL WORKFLOWS** |||||
@@ -85,12 +89,12 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | **HOW-TO GUIDES** |||||
 | Public guides (generic clinical) | Y | Y | Y | Y |
 | Internal SOPs (trust-specific) | - | Y | Y | Y |
-| **WARD DIARY** |||||
-| Ward tasks (no PII) | - | Y | Y | Y |
+| **WARD DIARY & TASKS** |||||
+| Ward tasks | - | - | Y | Y |
 | Patient tasks | - | - | Y | Y |
 | Appointments | - | - | Y | Y |
-| My Shift view | - | Y | Y | Y |
-| Calendar view | - | Y | Y | Y |
+| My Tasks view | - | - | Y | Y |
+| Calendar view | - | - | Y | Y |
 | Sync with SystemOne Tasks | - | - | - | Y |
 | **PATIENT LIST** |||||
 | View patients | - | - | Y | Y |
@@ -99,8 +103,8 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | SystemOne patient lookup | - | - | - | Y |
 | **ADMIN** |||||
 | Content editing (workflows/guides) | Y | Y | Y | Y |
-| User management | - | Y | Y | Y |
-| Audit logs | - | Y | Y | Y |
+| User management | - | - | Y | Y |
+| Audit logs | - | - | Y | Y |
 | **AUTH** |||||
 | Demo login (name/role picker) | Y | - | - | - |
 | Trust authentication | - | Y | Y | Y |

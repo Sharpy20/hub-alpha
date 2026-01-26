@@ -1979,16 +1979,27 @@ export default function TasksPage() {
       <MainLayout>
         <div className="text-center py-16">
           <p className="text-6xl mb-4">🔒</p>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Tasks Feature</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Ward Diary</h1>
           <p className="text-gray-500 mb-4">
-            This feature requires Medium version or higher.
+            This feature requires <span className="font-semibold text-purple-600">Max</span> version or higher.
           </p>
-          <Link
-            href="/"
-            className="inline-block px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium no-underline hover:shadow-lg"
-          >
-            Go Home
-          </Link>
+          <p className="text-sm text-gray-400 mb-6">
+            Light and Medium versions provide viewable resources only (Bookmarks, Referrals, How-To Guides).
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <Link
+              href="/"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium no-underline hover:shadow-lg"
+            >
+              Go Home
+            </Link>
+            <Link
+              href="/versions"
+              className="inline-block px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium no-underline hover:bg-gray-200"
+            >
+              Compare Versions
+            </Link>
+          </div>
         </div>
       </MainLayout>
     );

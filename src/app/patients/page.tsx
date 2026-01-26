@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useApp } from "@/app/providers";
 import { MainLayout } from "@/components/layout";
 import { Card } from "@/components/ui";
@@ -185,14 +186,29 @@ export default function PatientsPage() {
   if (!hasFeature("patient_list")) {
     return (
       <MainLayout>
-        <div className="max-w-4xl mx-auto py-12 text-center">
-          <div className="text-6xl mb-4">🔒</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Patient List Not Available
-          </h1>
-          <p className="text-gray-600">
-            The patient list feature requires Max or Max+ version.
+        <div className="text-center py-16">
+          <p className="text-6xl mb-4">🔒</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Patient List</h1>
+          <p className="text-gray-500 mb-4">
+            This feature requires <span className="font-semibold text-purple-600">Max</span> version or higher.
           </p>
+          <p className="text-sm text-gray-400 mb-6">
+            Light and Medium versions provide viewable resources only (Bookmarks, Referrals, How-To Guides).
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <Link
+              href="/"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium no-underline hover:shadow-lg"
+            >
+              Go Home
+            </Link>
+            <Link
+              href="/versions"
+              className="inline-block px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium no-underline hover:bg-gray-200"
+            >
+              Compare Versions
+            </Link>
+          </div>
         </div>
       </MainLayout>
     );

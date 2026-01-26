@@ -20,6 +20,10 @@ import {
   Save,
   Eye,
   Pencil,
+  Link as LinkIcon,
+  Download,
+  BookOpen,
+  ExternalLink,
 } from "lucide-react";
 
 // Step type configurations with visual styling
@@ -227,6 +231,94 @@ export function FlowchartEditor({ steps, onChange, canDelete = false }: Flowchar
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        {/* Linked Documents Summary */}
+        <div className="mt-4 bg-white rounded-xl border-2 border-gray-200 overflow-hidden">
+          <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-4">
+            <h3 className="font-bold flex items-center gap-2">
+              <LinkIcon className="w-4 h-4" />
+              Linked Documents
+            </h3>
+            <p className="text-xs text-white/70 mt-1">Forms & guides in this workflow</p>
+          </div>
+          <div className="p-3 space-y-3 max-h-[30vh] overflow-y-auto">
+            {/* Collect all forms from steps */}
+            {(() => {
+              const formsStep = steps.find(s => s.type === "forms");
+              const allForms = formsStep?.forms;
+
+              if (!allForms || (
+                (!allForms.blank || allForms.blank.length === 0) &&
+                (!allForms.wagoll || allForms.wagoll.length === 0) &&
+                (!allForms.systemOne || allForms.systemOne.length === 0) &&
+                (!allForms.otherGuides || allForms.otherGuides.length === 0)
+              )) {
+                return (
+                  <p className="text-xs text-gray-500 text-center py-2">
+                    No documents linked yet. Add a Forms & Guides step to manage documents.
+                  </p>
+                );
+              }
+
+              return (
+                <>
+                  {allForms.blank && allForms.blank.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
+                        <Download className="w-3 h-3 inline mr-1" />
+                        Blank Forms ({allForms.blank.length})
+                      </p>
+                      {allForms.blank.map((f, i) => (
+                        <div key={i} className="text-xs text-gray-700 pl-4 py-0.5 truncate">
+                          • {f.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {allForms.wagoll && allForms.wagoll.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
+                        <Eye className="w-3 h-3 inline mr-1" />
+                        Examples/WAGOLL ({allForms.wagoll.length})
+                      </p>
+                      {allForms.wagoll.map((f, i) => (
+                        <div key={i} className="text-xs text-gray-700 pl-4 py-0.5 truncate">
+                          • {f.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {allForms.systemOne && allForms.systemOne.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
+                        <FileText className="w-3 h-3 inline mr-1" />
+                        SystemOne ({allForms.systemOne.length})
+                      </p>
+                      {allForms.systemOne.map((f, i) => (
+                        <div key={i} className="text-xs text-gray-700 pl-4 py-0.5 truncate">
+                          • {f.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {allForms.otherGuides && allForms.otherGuides.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
+                        <BookOpen className="w-3 h-3 inline mr-1" />
+                        Other Guides ({allForms.otherGuides.length})
+                      </p>
+                      {allForms.otherGuides.map((f, i) => (
+                        <div key={i} className="text-xs text-gray-700 pl-4 py-0.5 truncate">
+                          • {f.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -638,6 +730,279 @@ function StepEditorPanel({
                   <Plus className="w-4 h-4 inline mr-1" />
                   Add Method
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* Forms & Guides editor */}
+          {editedStep.type === "forms" && (
+            <div className="space-y-6">
+              {/* Blank Forms */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <Download className="w-4 h-4 inline mr-1" />
+                  Blank Forms (Downloadable)
+                </label>
+                <p className="text-xs text-gray-500 mb-2">
+                  Forms users can download and complete
+                </p>
+                <div className="space-y-2">
+                  {(editedStep.forms?.blank || []).map((form, idx) => (
+                    <div key={idx} className="flex gap-2 items-start">
+                      <div className="flex-1 space-y-1">
+                        <input
+                          type="text"
+                          value={form.label}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.blank = [...(newForms.blank || [])];
+                            newForms.blank[idx] = { ...form, label: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="Form name (e.g., IMHA Referral Form)"
+                          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm"
+                        />
+                        <input
+                          type="text"
+                          value={form.url}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.blank = [...(newForms.blank || [])];
+                            newForms.blank[idx] = { ...form, url: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="URL or file path"
+                          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm font-mono text-xs"
+                        />
+                      </div>
+                      <button
+                        onClick={() => {
+                          const newForms = { ...editedStep.forms };
+                          newForms.blank = newForms.blank?.filter((_, i) => i !== idx);
+                          setEditedStep({ ...editedStep, forms: newForms });
+                        }}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const newForms = { ...editedStep.forms };
+                      newForms.blank = [...(newForms.blank || []), { label: "", url: "#" }];
+                      setEditedStep({ ...editedStep, forms: newForms });
+                    }}
+                    className="w-full py-2 border-2 border-dashed border-blue-300 rounded-lg text-blue-500 hover:border-blue-400 hover:bg-blue-50 text-sm"
+                  >
+                    <Plus className="w-4 h-4 inline mr-1" />
+                    Add Blank Form
+                  </button>
+                </div>
+              </div>
+
+              {/* WAGOLL Examples */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <Eye className="w-4 h-4 inline mr-1" />
+                  Examples (WAGOLL - What A Good One Looks Like)
+                </label>
+                <p className="text-xs text-gray-500 mb-2">
+                  Completed examples to show users the expected standard
+                </p>
+                <div className="space-y-2">
+                  {(editedStep.forms?.wagoll || []).map((form, idx) => (
+                    <div key={idx} className="flex gap-2 items-start">
+                      <div className="flex-1 space-y-1">
+                        <input
+                          type="text"
+                          value={form.label}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.wagoll = [...(newForms.wagoll || [])];
+                            newForms.wagoll[idx] = { ...form, label: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="Example name"
+                          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm"
+                        />
+                        <input
+                          type="text"
+                          value={form.url}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.wagoll = [...(newForms.wagoll || [])];
+                            newForms.wagoll[idx] = { ...form, url: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="URL or file path"
+                          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm font-mono text-xs"
+                        />
+                        <input
+                          type="text"
+                          value={form.note || ""}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.wagoll = [...(newForms.wagoll || [])];
+                            newForms.wagoll[idx] = { ...form, note: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="Note (e.g., 'Example only - do not submit')"
+                          className="w-full px-3 py-2 border-2 border-amber-200 bg-amber-50 rounded-lg text-sm"
+                        />
+                      </div>
+                      <button
+                        onClick={() => {
+                          const newForms = { ...editedStep.forms };
+                          newForms.wagoll = newForms.wagoll?.filter((_, i) => i !== idx);
+                          setEditedStep({ ...editedStep, forms: newForms });
+                        }}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const newForms = { ...editedStep.forms };
+                      newForms.wagoll = [...(newForms.wagoll || []), { label: "", url: "#", note: "Example only - do not submit" }];
+                      setEditedStep({ ...editedStep, forms: newForms });
+                    }}
+                    className="w-full py-2 border-2 border-dashed border-amber-300 rounded-lg text-amber-600 hover:border-amber-400 hover:bg-amber-50 text-sm"
+                  >
+                    <Plus className="w-4 h-4 inline mr-1" />
+                    Add Example (WAGOLL)
+                  </button>
+                </div>
+              </div>
+
+              {/* SystemOne Guides */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <FileText className="w-4 h-4 inline mr-1" />
+                  SystemOne Guides
+                </label>
+                <p className="text-xs text-gray-500 mb-2">
+                  Links to SystemOne templates or guides
+                </p>
+                <div className="space-y-2">
+                  {(editedStep.forms?.systemOne || []).map((form, idx) => (
+                    <div key={idx} className="flex gap-2 items-start">
+                      <div className="flex-1 space-y-1">
+                        <input
+                          type="text"
+                          value={form.label}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.systemOne = [...(newForms.systemOne || [])];
+                            newForms.systemOne[idx] = { ...form, label: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="Guide name"
+                          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm"
+                        />
+                        <input
+                          type="text"
+                          value={form.url}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.systemOne = [...(newForms.systemOne || [])];
+                            newForms.systemOne[idx] = { ...form, url: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="URL"
+                          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm font-mono text-xs"
+                        />
+                      </div>
+                      <button
+                        onClick={() => {
+                          const newForms = { ...editedStep.forms };
+                          newForms.systemOne = newForms.systemOne?.filter((_, i) => i !== idx);
+                          setEditedStep({ ...editedStep, forms: newForms });
+                        }}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const newForms = { ...editedStep.forms };
+                      newForms.systemOne = [...(newForms.systemOne || []), { label: "", url: "#" }];
+                      setEditedStep({ ...editedStep, forms: newForms });
+                    }}
+                    className="w-full py-2 border-2 border-dashed border-green-300 rounded-lg text-green-600 hover:border-green-400 hover:bg-green-50 text-sm"
+                  >
+                    <Plus className="w-4 h-4 inline mr-1" />
+                    Add SystemOne Guide
+                  </button>
+                </div>
+              </div>
+
+              {/* Other Guides */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <BookOpen className="w-4 h-4 inline mr-1" />
+                  Other Guides & Resources
+                </label>
+                <p className="text-xs text-gray-500 mb-2">
+                  Additional helpful resources and links
+                </p>
+                <div className="space-y-2">
+                  {(editedStep.forms?.otherGuides || []).map((form, idx) => (
+                    <div key={idx} className="flex gap-2 items-start">
+                      <div className="flex-1 space-y-1">
+                        <input
+                          type="text"
+                          value={form.label}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.otherGuides = [...(newForms.otherGuides || [])];
+                            newForms.otherGuides[idx] = { ...form, label: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="Resource name"
+                          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm"
+                        />
+                        <input
+                          type="text"
+                          value={form.url}
+                          onChange={(e) => {
+                            const newForms = { ...editedStep.forms };
+                            newForms.otherGuides = [...(newForms.otherGuides || [])];
+                            newForms.otherGuides[idx] = { ...form, url: e.target.value };
+                            setEditedStep({ ...editedStep, forms: newForms });
+                          }}
+                          placeholder="URL"
+                          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-sm font-mono text-xs"
+                        />
+                      </div>
+                      <button
+                        onClick={() => {
+                          const newForms = { ...editedStep.forms };
+                          newForms.otherGuides = newForms.otherGuides?.filter((_, i) => i !== idx);
+                          setEditedStep({ ...editedStep, forms: newForms });
+                        }}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const newForms = { ...editedStep.forms };
+                      newForms.otherGuides = [...(newForms.otherGuides || []), { label: "", url: "#" }];
+                      setEditedStep({ ...editedStep, forms: newForms });
+                    }}
+                    className="w-full py-2 border-2 border-dashed border-purple-300 rounded-lg text-purple-600 hover:border-purple-400 hover:bg-purple-50 text-sm"
+                  >
+                    <Plus className="w-4 h-4 inline mr-1" />
+                    Add Other Guide
+                  </button>
+                </div>
               </div>
             </div>
           )}

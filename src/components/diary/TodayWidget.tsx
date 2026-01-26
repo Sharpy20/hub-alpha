@@ -15,6 +15,7 @@ import {
 import {
   ALL_DEMO_TASKS,
 } from "@/lib/data/tasks";
+import { useApp } from "@/app/providers";
 
 // Helper
 const formatDate = (date: Date) => date.toISOString().split("T")[0];
@@ -163,12 +164,15 @@ function TaskColumn({
 }
 
 export function TodayWidget() {
+  const { activeWard } = useApp();
   const [tasks, setTasks] = useState<DiaryTask[]>(ALL_DEMO_TASKS);
   const todayStr = formatDate(new Date());
 
-  // Get today's tasks with carry-over logic
+  // Get today's tasks with carry-over logic, filtered by active ward
   const getTodayTasks = (): DiaryTask[] => {
     return tasks.filter((task) => {
+      // Filter by active ward
+      if (task.ward !== activeWard) return false;
       if (task.type === "ward") {
         return task.dueDate === todayStr;
       } else if (task.type === "patient") {
@@ -220,6 +224,9 @@ export function TodayWidget() {
         <div>
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
             📋 Today&apos;s Tasks
+            <span className="text-sm font-medium bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
+              {activeWard} Ward
+            </span>
           </h2>
           <p className="text-sm text-gray-600">
             {new Date().toLocaleDateString("en-GB", {

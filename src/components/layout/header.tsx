@@ -2,14 +2,75 @@
 
 import Link from "next/link";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
   const { user, setUser, version, setVersion, hasFeature, activeWard, setActiveWard, allWards } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [savedFeedback, setSavedFeedback] = useState<string | null>(null);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Handle selection changes with feedback and auto-close
+  const handleWardChange = (ward: string) => {
+    setActiveWard(ward);
+    setSavedFeedback("Ward");
+    setTimeout(() => {
+      setSavedFeedback(null);
+      setProfileDropdownOpen(false);
+    }, 800);
+  };
+
+  const handleRoleChange = (role: "normal" | "ward_admin" | "contributor" | "senior_admin") => {
+    if (user) {
+      setUser({ ...user, role });
+      setSavedFeedback("Role");
+      setTimeout(() => {
+        setSavedFeedback(null);
+        setProfileDropdownOpen(false);
+      }, 800);
+    }
+  };
+
+  const handleVersionChange = (newVersion: "light" | "medium" | "max" | "max_plus") => {
+    setVersion(newVersion);
+    setSavedFeedback("Version");
+    setTimeout(() => {
+      setSavedFeedback(null);
+      setProfileDropdownOpen(false);
+    }, 800);
+  };
+
+  // Mobile handlers
+  const handleMobileWardChange = (ward: string) => {
+    setActiveWard(ward);
+    setSavedFeedback("Ward");
+    setTimeout(() => {
+      setSavedFeedback(null);
+      setMobileMenuOpen(false);
+    }, 800);
+  };
+
+  const handleMobileRoleChange = (role: "normal" | "ward_admin" | "contributor" | "senior_admin") => {
+    if (user) {
+      setUser({ ...user, role });
+      setSavedFeedback("Role");
+      setTimeout(() => {
+        setSavedFeedback(null);
+        setMobileMenuOpen(false);
+      }, 800);
+    }
+  };
+
+  const handleMobileVersionChange = (newVersion: "light" | "medium" | "max" | "max_plus") => {
+    setVersion(newVersion);
+    setSavedFeedback("Version");
+    setTimeout(() => {
+      setSavedFeedback(null);
+      setMobileMenuOpen(false);
+    }, 800);
+  };
 
   const handleLogout = () => {
     setUser(null);
@@ -167,6 +228,14 @@ export function Header() {
                         <p className="text-sm text-white/80">{roleLabels[user.role] || user.role}</p>
                       </div>
 
+                      {/* Saved feedback banner */}
+                      {savedFeedback && (
+                        <div className="p-3 bg-emerald-50 border-b border-emerald-200 flex items-center gap-2 text-emerald-700">
+                          <Check className="w-4 h-4" />
+                          <span className="text-sm font-medium">{savedFeedback} saved!</span>
+                        </div>
+                      )}
+
                       {/* Ward selector */}
                       <div className="p-3 border-b border-gray-100">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
@@ -177,7 +246,7 @@ export function Header() {
                           {allWards.map((ward) => (
                             <button
                               key={ward}
-                              onClick={() => setActiveWard(ward)}
+                              onClick={() => handleWardChange(ward)}
                               className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
                                 activeWard === ward
                                   ? 'bg-indigo-100 text-indigo-700'
@@ -201,7 +270,7 @@ export function Header() {
                           {(["normal", "ward_admin", "contributor", "senior_admin"] as const).map((role) => (
                             <button
                               key={role}
-                              onClick={() => setUser({ ...user, role })}
+                              onClick={() => handleRoleChange(role)}
                               className={`px-2 py-1.5 rounded text-xs font-medium transition-colors ${
                                 user.role === role
                                   ? 'bg-emerald-100 text-emerald-700'
@@ -224,7 +293,7 @@ export function Header() {
                           {(Object.entries(versionLabels) as [string, { label: string; icon: string }][]).map(([key, val]) => (
                             <button
                               key={key}
-                              onClick={() => setVersion(key as "light" | "medium" | "max" | "max_plus")}
+                              onClick={() => handleVersionChange(key as "light" | "medium" | "max" | "max_plus")}
                               className={`px-2 py-1.5 rounded text-xs font-medium transition-colors ${
                                 version === key
                                   ? 'bg-purple-100 text-purple-700'
@@ -359,6 +428,14 @@ export function Header() {
                 </Link>
               )}
 
+              {/* Mobile Saved feedback banner */}
+              {savedFeedback && (
+                <div className="py-3 px-4 bg-emerald-50 border-b border-emerald-200 flex items-center gap-2 text-emerald-700">
+                  <Check className="w-4 h-4" />
+                  <span className="text-sm font-medium">{savedFeedback} saved!</span>
+                </div>
+              )}
+
               {/* Mobile Ward Switcher */}
               {showTasks && user && (
                 <div className="py-3 border-b border-gray-100">
@@ -367,7 +444,7 @@ export function Header() {
                     {allWards.map((ward) => (
                       <button
                         key={ward}
-                        onClick={() => setActiveWard(ward)}
+                        onClick={() => handleMobileWardChange(ward)}
                         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                           activeWard === ward
                             ? 'bg-indigo-100 text-indigo-700'
@@ -390,7 +467,7 @@ export function Header() {
                     {(["normal", "ward_admin", "contributor", "senior_admin"] as const).map((role) => (
                       <button
                         key={role}
-                        onClick={() => setUser({ ...user, role })}
+                        onClick={() => handleMobileRoleChange(role)}
                         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                           user.role === role
                             ? 'bg-emerald-100 text-emerald-700'
@@ -412,7 +489,7 @@ export function Header() {
                     {(Object.entries(versionLabels) as [string, { label: string; icon: string }][]).map(([key, val]) => (
                       <button
                         key={key}
-                        onClick={() => setVersion(key as "light" | "medium" | "max" | "max_plus")}
+                        onClick={() => handleMobileVersionChange(key as "light" | "medium" | "max" | "max_plus")}
                         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                           version === key
                             ? 'bg-purple-100 text-purple-700'

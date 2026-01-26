@@ -125,7 +125,13 @@ export default function HomePage() {
               </button>
             ))}
           </div>
-          <p className="text-center text-sm text-gray-500 mt-4">
+          <Link
+            href="/versions"
+            className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors"
+          >
+            📊 Compare All Features
+          </Link>
+          <p className="text-center text-sm text-gray-500 mt-3">
             Current: <strong className="text-gray-900">{version.toUpperCase()}</strong>
             {" · "}
             <Link href="/gdpr" className="text-indigo-600 hover:text-indigo-800">

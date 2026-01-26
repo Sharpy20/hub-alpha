@@ -14,8 +14,9 @@ import {
   ChevronDown,
   Shield,
   Workflow,
+  AlertTriangle,
 } from "lucide-react";
-import { FlowchartEditor, WorkflowStep } from "@/components/admin/FlowchartEditor";
+import { FlowchartEditor, WorkflowStep, WorkflowVersion } from "@/components/admin/FlowchartEditor";
 
 // Workflow data - same structure as referrals page
 const WORKFLOWS = [
@@ -139,6 +140,65 @@ interface EditingWorkflow {
   icon: string;
   category: string;
   steps: WorkflowStep[];
+  versions: WorkflowVersion[];
+}
+
+// Validation function (same as in FlowchartEditor)
+function validateWorkflow(steps: WorkflowStep[]): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+  const validEndingTypes = ["endpoint", "gdpr", "reminder", "casenote"];
+
+  function checkPath(stepList: WorkflowStep[], pathName: string): boolean {
+    if (stepList.length === 0) {
+      errors.push(`${pathName} has no steps`);
+      return false;
+    }
+
+    const lastStep = stepList[stepList.length - 1];
+
+    if (lastStep.type === "decision_yesno" || lastStep.type === "decision_multi") {
+      if (!lastStep.branches || lastStep.branches.length === 0) {
+        errors.push(`${pathName}: Decision "${lastStep.title}" has no branches defined`);
+        return false;
+      }
+
+      let allBranchesValid = true;
+      for (const branch of lastStep.branches) {
+        if (!checkPath(branch.steps, `${pathName} > ${branch.label}`)) {
+          allBranchesValid = false;
+        }
+      }
+      return allBranchesValid;
+    }
+
+    if (!validEndingTypes.includes(lastStep.type)) {
+      const hasDecision = stepList.some(s => s.type === "decision_yesno" || s.type === "decision_multi");
+      if (hasDecision) {
+        errors.push(`${pathName}: Branch must end with an endpoint or completion step`);
+        return false;
+      }
+    }
+
+    for (let i = 0; i < stepList.length - 1; i++) {
+      const step = stepList[i];
+      if (step.type === "decision_yesno" || step.type === "decision_multi") {
+        if (!step.branches || step.branches.length === 0) {
+          errors.push(`${pathName}: Decision "${step.title}" has no branches defined`);
+          return false;
+        }
+        for (const branch of step.branches) {
+          if (!checkPath(branch.steps, `${pathName} > ${branch.label}`)) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  const valid = checkPath(steps, "Main workflow");
+  return { valid, errors };
 }
 
 export default function WorkflowsAdminPage() {
@@ -146,6 +206,7 @@ export default function WorkflowsAdminPage() {
   const router = useRouter();
   const [editingWorkflow, setEditingWorkflow] = useState<EditingWorkflow | null>(null);
   const [savedMessage, setSavedMessage] = useState(false);
+  const [validationError, setValidationError] = useState<string[] | null>(null);
 
   // Redirect if not contributor or senior_admin
   useEffect(() => {
@@ -190,17 +251,45 @@ export default function WorkflowsAdminPage() {
         icon: workflow.icon,
         category: workflow.category,
         steps: sampleSteps,
+        versions: [],
       });
+      setValidationError(null);
     }
   };
 
   const handleSaveWorkflow = () => {
     if (!editingWorkflow) return;
 
+    // Validate workflow before saving
+    const validation = validateWorkflow(editingWorkflow.steps);
+    if (!validation.valid) {
+      setValidationError(validation.errors);
+      return;
+    }
+
+    // Save version history
+    const newVersion: WorkflowVersion = {
+      id: `v-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      steps: JSON.parse(JSON.stringify(editingWorkflow.steps)),
+      savedBy: user?.name || "Unknown",
+      note: "Manual save",
+    };
+
+    const updatedVersions = [newVersion, ...editingWorkflow.versions].slice(0, 20);
+    setEditingWorkflow({ ...editingWorkflow, versions: updatedVersions });
+
     // In real app, would save to localStorage/database
     console.log("Saving workflow:", editingWorkflow);
+    setValidationError(null);
     setSavedMessage(true);
     setTimeout(() => setSavedMessage(false), 2000);
+  };
+
+  const handleVersionsChange = (versions: WorkflowVersion[]) => {
+    if (editingWorkflow) {
+      setEditingWorkflow({ ...editingWorkflow, versions });
+    }
   };
 
   // Editing view - Visual Flowchart Editor
@@ -301,12 +390,38 @@ export default function WorkflowsAdminPage() {
             </div>
           </details>
 
+          {/* Validation Error Banner */}
+          {validationError && (
+            <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <h3 className="font-bold text-red-800">Cannot Save - Workflow Invalid</h3>
+                  <p className="text-red-700 text-sm mt-1">
+                    All decision tree paths must reach an endpoint before saving.
+                  </p>
+                  <ul className="mt-2 text-sm text-red-600 space-y-1">
+                    {validationError.map((error, i) => (
+                      <li key={i}>• {error}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Visual Flowchart Editor */}
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-6">
             <FlowchartEditor
               steps={editingWorkflow.steps}
-              onChange={(newSteps) => setEditingWorkflow({ ...editingWorkflow, steps: newSteps })}
+              onChange={(newSteps) => {
+                setEditingWorkflow({ ...editingWorkflow, steps: newSteps });
+                setValidationError(null);
+              }}
               canDelete={user?.role === "senior_admin"}
+              versions={editingWorkflow.versions}
+              onVersionsChange={handleVersionsChange}
+              currentUser={user?.name || "Unknown"}
             />
           </div>
 

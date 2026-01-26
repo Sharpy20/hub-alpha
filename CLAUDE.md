@@ -664,6 +664,8 @@ Working through in order. Marking complete as fixed.
 - ✅ Confirmation dialogs component
 - ✅ Loading skeleton components
 - ✅ Empty state improvements
+- ✅ "Request a Feature" category in community feedback with "is related to..." dropdown
+- ✅ Task cards: referral/guide links moved to right side (same row as claim/steal)
 
 **Previously Completed (26 Jan 2026 - Earlier):**
 - ✅ Login flow now uses staff dropdown per ward instead of free text name entry
@@ -786,6 +788,17 @@ Then open http://localhost:3000
 - [x] Confirmation dialogs component
 - [x] Loading skeleton components
 - [x] Empty state improvements
+- [x] "Request a Feature" category in community feedback with "is related to..." dropdown
+- [x] Task cards: referral/guide links moved to right side (same row as claim/steal)
+
+**New Files Created:**
+- `src/app/not-found.tsx` - Custom 404 page
+- `src/app/faq/page.tsx` - FAQ page with 8 questions
+- `src/components/ui/error-boundary.tsx` - Error boundary component
+- `src/components/ui/Skeleton.tsx` - Loading skeleton component
+- `src/components/ui/back-to-top.tsx` - Back to top button
+- `src/components/ui/confirm-dialog.tsx` - Confirmation dialog component
+- Layout files with meta titles for all routes
 
 **Build Status:** All builds pass successfully
 

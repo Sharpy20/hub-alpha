@@ -84,14 +84,26 @@ body {
 }
 
 /* NHS-style link styling - no underlines for cleaner look */
-a {
+/* Only apply default blue if no text color class is set */
+a:not([class*="text-"]) {
   color: var(--nhs-blue);
+}
+
+a:not([class*="text-"]):hover {
+  color: var(--nhs-dark-blue);
+}
+
+a {
   text-decoration: none;
 }
 
-a:hover {
-  color: var(--nhs-dark-blue);
-  text-decoration: none;
+/* Ensure links in footer inherit proper colors */
+footer a {
+  color: inherit;
+}
+
+footer a:hover {
+  color: inherit;
 }
 
 /* Skip link for accessibility */

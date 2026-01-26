@@ -10,7 +10,7 @@ export function Footer() {
           {/* About */}
           <div>
             <h3 className="font-bold text-lg mb-3">Inpatient Hub</h3>
-            <p className="text-sm text-nhs-light-blue">
+            <p className="text-sm text-white/70">
               A ward management tool for NHS inpatient staff. Quick access to
               resources, referral workflows, and clinical guides.
             </p>
@@ -19,11 +19,11 @@ export function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="font-bold text-lg mb-3">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2 text-sm text-white/70">
               <li>
                 <Link
                   href="/bookmarks"
-                  className="text-nhs-light-blue hover:text-white no-underline"
+                  className="hover:text-white transition-colors"
                 >
                   Bookmarks
                 </Link>
@@ -31,7 +31,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/referrals"
-                  className="text-nhs-light-blue hover:text-white no-underline"
+                  className="hover:text-white transition-colors"
                 >
                   Referral Hub
                 </Link>
@@ -39,7 +39,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/how-to"
-                  className="text-nhs-light-blue hover:text-white no-underline"
+                  className="hover:text-white transition-colors"
                 >
                   How-To Guides
                 </Link>
@@ -47,7 +47,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/gdpr"
-                  className="text-nhs-light-blue hover:text-white no-underline"
+                  className="hover:text-white transition-colors"
                 >
                   GDPR & Privacy
                 </Link>
@@ -58,16 +58,16 @@ export function Footer() {
           {/* Support */}
           <div>
             <h3 className="font-bold text-lg mb-3">Support</h3>
-            <p className="text-sm text-nhs-light-blue mb-2">
+            <p className="text-sm text-white/70 mb-2">
               This is a demo version with fictional data.
             </p>
-            <p className="text-sm text-nhs-light-blue">
+            <p className="text-sm text-white/70">
               For the live version, contact your ward administrator.
             </p>
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-white/20 text-center text-sm text-nhs-light-blue">
+        <div className="mt-8 pt-6 border-t border-white/20 text-center text-sm text-white/70">
           <p>&copy; {currentYear} Inpatient Hub Demo. Not for clinical use.</p>
         </div>
       </div>

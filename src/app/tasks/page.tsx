@@ -174,25 +174,77 @@ function TaskCard({
               </p>
             )}
 
-            {/* Claimed status row with steal/unclaim buttons inline */}
+            {/* Claimed status row with steal/unclaim buttons inline + linked resources on right */}
             {isClaimed && !isCompleted && (
-              <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                {/* Steal button - if claimed by someone else */}
-                {!isClaimedByMe && onSteal && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSteal(task.id);
-                    }}
-                    className="flex items-center gap-1 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors"
-                    title="Take over this task"
-                  >
+              <div className="flex items-center justify-between gap-1.5 mt-1">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {/* Steal button - if claimed by someone else */}
+                  {!isClaimedByMe && onSteal && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSteal(task.id);
+                      }}
+                      className="flex items-center gap-1 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors"
+                      title="Take over this task"
+                    >
+                      <Hand className="w-2.5 h-2.5" />
+                      Steal
+                    </button>
+                  )}
+                  {/* Unclaim button - if claimed by me */}
+                  {isClaimedByMe && onClaim && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onClaim(task.id);
+                      }}
+                      className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
+                    >
+                      <Hand className="w-2.5 h-2.5" />
+                      Drop
+                    </button>
+                  )}
+                  <span className="text-white/80 text-[10px] flex items-center gap-1">
                     <Hand className="w-2.5 h-2.5" />
-                    Steal
-                  </button>
-                )}
-                {/* Unclaim button - if claimed by me */}
-                {isClaimedByMe && onClaim && (
+                    {isInProgress ? `${task.claimedBy} working` : task.claimedBy}
+                  </span>
+                </div>
+                {/* Linked resources - right side */}
+                {((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
+                 ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId) ? (
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {(task.type === "patient" || task.type === "appointment") && task.linkedReferralId && (
+                      <Link
+                        href={`/referrals/${task.linkedReferralId}`}
+                        className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
+                        onClick={(e) => e.stopPropagation()}
+                        title="View linked referral"
+                      >
+                        <span>📋</span>
+                      </Link>
+                    )}
+                    {(task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId && (
+                      <Link
+                        href={`/how-to/${task.linkedGuideId}`}
+                        className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
+                        onClick={(e) => e.stopPropagation()}
+                        title="View linked guide"
+                      >
+                        <span>📖</span>
+                      </Link>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            )}
+
+            {/* Claim button row - only if not claimed + linked resources on right */}
+            {!isCompleted && !isClaimed && (onClaim ||
+              ((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
+              ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId)) && (
+              <div className="flex items-center justify-between gap-1.5 mt-1">
+                {onClaim ? (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -201,44 +253,52 @@ function TaskCard({
                     className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
                   >
                     <Hand className="w-2.5 h-2.5" />
-                    Drop
+                    Claim
                   </button>
-                )}
-                <span className="text-white/80 text-[10px] flex items-center gap-1">
-                  <Hand className="w-2.5 h-2.5" />
-                  {isInProgress ? `${task.claimedBy} working` : task.claimedBy}
-                </span>
+                ) : <div />}
+                {/* Linked resources - right side */}
+                {((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
+                 ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId) ? (
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {(task.type === "patient" || task.type === "appointment") && task.linkedReferralId && (
+                      <Link
+                        href={`/referrals/${task.linkedReferralId}`}
+                        className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
+                        onClick={(e) => e.stopPropagation()}
+                        title="View linked referral"
+                      >
+                        <span>📋</span>
+                      </Link>
+                    )}
+                    {(task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId && (
+                      <Link
+                        href={`/how-to/${task.linkedGuideId}`}
+                        className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
+                        onClick={(e) => e.stopPropagation()}
+                        title="View linked guide"
+                      >
+                        <span>📖</span>
+                      </Link>
+                    )}
+                  </div>
+                ) : null}
               </div>
             )}
 
-            {/* Claim button row - only if not claimed */}
-            {!isCompleted && !isClaimed && onClaim && (
-              <div className="mt-1">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClaim(task.id);
-                  }}
-                  className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
-                >
-                  <Hand className="w-2.5 h-2.5" />
-                  Claim
-                </button>
-              </div>
-            )}
-
-            {/* Linked resources */}
-            {((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
-             ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId) ? (
-              <div className="flex items-center gap-2 mt-1">
+            {/* Linked resources only - when completed and has links */}
+            {isCompleted && (
+              ((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
+              ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId)
+            ) && (
+              <div className="flex items-center justify-end gap-2 mt-1">
                 {(task.type === "patient" || task.type === "appointment") && task.linkedReferralId && (
                   <Link
                     href={`/referrals/${task.linkedReferralId}`}
                     className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
                     onClick={(e) => e.stopPropagation()}
+                    title="View linked referral"
                   >
                     <span>📋</span>
-                    <span className="underline">Referral</span>
                   </Link>
                 )}
                 {(task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId && (
@@ -246,13 +306,13 @@ function TaskCard({
                     href={`/how-to/${task.linkedGuideId}`}
                     className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
                     onClick={(e) => e.stopPropagation()}
+                    title="View linked guide"
                   >
                     <span>📖</span>
-                    <span className="underline">Guide</span>
                   </Link>
                 )}
               </div>
-            ) : null}
+            )}
           </div>
         </div>
       </div>

@@ -282,14 +282,14 @@ export function TodayWidget() {
           href="/tasks"
           className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-medium hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md transition-all"
         >
-          Ward Diary
+          Diary
           <ChevronRight className="w-4 h-4" />
         </Link>
         <Link
           href="/my-tasks"
           className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-medium hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md transition-all"
         >
-          My Tasks
+          Tasks
           <ChevronRight className="w-4 h-4" />
         </Link>
       </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
@@ -149,14 +149,14 @@ export function Header() {
                     className="px-4 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-2 transition-colors"
                   >
                     <CalendarDays className="w-4 h-4" />
-                    Ward Diary
+                    Diary
                   </Link>
                   <Link
                     href="/my-tasks"
                     className="px-4 py-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold flex items-center gap-2 transition-colors"
                   >
                     <ClipboardList className="w-4 h-4" />
-                    My Tasks
+                    Tasks
                   </Link>
                 </>
               )}
@@ -231,6 +231,21 @@ export function Header() {
                       <div>
                         <p className="font-semibold text-gray-900">Feedback</p>
                         <p className="text-xs text-gray-500 mt-0.5">Share ideas, report issues, and help shape this tool during alpha</p>
+                      </div>
+                    </Link>
+
+                    {/* Data Sources Audit */}
+                    <Link
+                      href="/data-sources"
+                      onClick={() => setSettingsDropdownOpen(false)}
+                      className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
+                    >
+                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Database className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900">Data Sources</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p>
                       </div>
                     </Link>
 
@@ -415,7 +430,7 @@ export function Header() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <CalendarDays className="w-5 h-5 text-indigo-600" />
-                    Ward Diary
+                    Diary
                   </Link>
                   <Link
                     href="/my-tasks"
@@ -423,7 +438,7 @@ export function Header() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <ClipboardList className="w-5 h-5 text-purple-600" />
-                    My Tasks
+                    Tasks
                   </Link>
                 </>
               )}
@@ -493,6 +508,19 @@ export function Header() {
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Feedback</p>
                       <p className="text-xs text-gray-500">Share ideas and report issues</p>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/data-sources"
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Database className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">Data Sources</p>
+                      <p className="text-xs text-gray-500">Audit log of all information</p>
                     </div>
                   </Link>
                   {canAccessAdmin && (

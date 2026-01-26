@@ -1193,7 +1193,7 @@ function RepeatWardTasksModal({
           </button>
         </div>
 
-        {/* Weekly Grid */}
+        {/* Content */}
         <div className="flex-1 overflow-auto p-4">
           {recurringTasks.length === 0 ? (
             <div className="text-center py-12">
@@ -1202,124 +1202,130 @@ function RepeatWardTasksModal({
               <p className="text-gray-400 text-sm mt-1">Create a repeating task to see it here</p>
             </div>
           ) : (
-            <div className="grid grid-cols-7 gap-2">
-              {/* Day headers */}
-              {DAY_ABBREVS.map((day, idx) => (
-                <div
-                  key={day}
-                  className={`text-center p-2 font-semibold text-sm rounded-lg ${
-                    idx === 0 || idx === 6
-                      ? "bg-gray-100 text-gray-600"
-                      : "bg-indigo-100 text-indigo-800"
-                  }`}
-                >
-                  {day}
-                </div>
-              ))}
-
-              {/* Day columns */}
-              {DAY_ABBREVS.map((_, dayIndex) => {
-                const dayTasks = getTasksForDay(dayIndex);
-                return (
-                  <div
-                    key={dayIndex}
-                    className="min-h-[200px] bg-gray-50 rounded-lg p-2 space-y-2"
-                  >
-                    {dayTasks.length === 0 ? (
-                      <p className="text-gray-300 text-xs text-center mt-4">No tasks</p>
-                    ) : (
-                      dayTasks.map((task) => {
-                        const shiftConfig = SHIFT_CONFIG[task.shift];
-                        return (
-                          <div
-                            key={task.id}
-                            className={`bg-gradient-to-r ${shiftConfig.gradient} text-white rounded-lg p-2 text-xs`}
+            <>
+              {/* All recurring tasks list - NOW ON TOP */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3">All Repeating Tasks</h3>
+                <div className="space-y-2">
+                  {recurringTasks.map((task) => {
+                    const shiftConfig = SHIFT_CONFIG[task.shift];
+                    const activeDays = task.recurringDays?.map((d) => DAY_ABBREVS[d]).join(", ") || "None";
+                    return (
+                      <div
+                        key={task.id}
+                        className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
+                      >
+                        <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${shiftConfig.gradient} flex items-center justify-center text-white`}>
+                          <span className="text-lg">{shiftConfig.icon}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-gray-900 truncate">{task.title}</p>
+                          <p className="text-sm text-gray-500">
+                            {shiftConfig.label} · {activeDays}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {task.description?.includes("✅") && (
+                            <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                              Approved
+                            </span>
+                          )}
+                          <button
+                            onClick={() => onEditTask(task)}
+                            className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+                            title="Edit task"
                           >
-                            <div className="flex items-start justify-between gap-1">
-                              <div className="flex-1 min-w-0">
-                                <p className="font-semibold truncate">{task.title}</p>
-                                <p className="text-white/70 text-[10px] flex items-center gap-1 mt-0.5">
-                                  {shiftConfig.icon} {shiftConfig.label}
-                                </p>
-                                {task.description?.includes("✅") && (
-                                  <p className="text-[10px] text-white/80 mt-0.5">✅ Approved</p>
-                                )}
-                              </div>
-                              <div className="flex flex-col gap-1">
-                                <button
-                                  onClick={() => onEditTask(task)}
-                                  className="p-1 hover:bg-white/20 rounded transition-colors"
-                                  title="Edit task"
-                                >
-                                  <Pencil className="w-3 h-3" />
-                                </button>
-                                <button
-                                  onClick={() => onDeleteTask(task.id)}
-                                  className="p-1 hover:bg-red-500/50 rounded transition-colors"
-                                  title="Delete task"
-                                >
-                                  <Trash2 className="w-3 h-3" />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* All recurring tasks list */}
-          {recurringTasks.length > 0 && (
-            <div className="mt-6 border-t border-gray-200 pt-4">
-              <h3 className="font-semibold text-gray-900 mb-3">All Repeating Tasks</h3>
-              <div className="space-y-2">
-                {recurringTasks.map((task) => {
-                  const shiftConfig = SHIFT_CONFIG[task.shift];
-                  const activeDays = task.recurringDays?.map((d) => DAY_ABBREVS[d]).join(", ") || "None";
-                  return (
-                    <div
-                      key={task.id}
-                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
-                    >
-                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${shiftConfig.gradient} flex items-center justify-center text-white`}>
-                        <span className="text-lg">{shiftConfig.icon}</span>
+                            <Pencil className="w-4 h-4 text-gray-600" />
+                          </button>
+                          <button
+                            onClick={() => onDeleteTask(task.id)}
+                            className="p-2 hover:bg-red-100 rounded-lg transition-colors"
+                            title="Delete task"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </button>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 truncate">{task.title}</p>
-                        <p className="text-sm text-gray-500">
-                          {shiftConfig.label} · {activeDays}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {task.description?.includes("✅") && (
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                            Approved
-                          </span>
-                        )}
-                        <button
-                          onClick={() => onEditTask(task)}
-                          className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                          title="Edit task"
-                        >
-                          <Pencil className="w-4 h-4 text-gray-600" />
-                        </button>
-                        <button
-                          onClick={() => onDeleteTask(task.id)}
-                          className="p-2 hover:bg-red-100 rounded-lg transition-colors"
-                          title="Delete task"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-500" />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+
+              {/* Weekly Grid - NOW ON BOTTOM, WIDER COLUMNS */}
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="font-semibold text-gray-900 mb-3">Weekly Schedule</h3>
+                <div className="overflow-x-auto">
+                  <div className="grid grid-cols-7 gap-3 min-w-[900px]">
+                    {/* Day headers */}
+                    {DAY_ABBREVS.map((day, idx) => (
+                      <div
+                        key={day}
+                        className={`text-center p-3 font-semibold text-sm rounded-lg ${
+                          idx === 0 || idx === 6
+                            ? "bg-gray-100 text-gray-600"
+                            : "bg-indigo-100 text-indigo-800"
+                        }`}
+                      >
+                        {DAYS[idx]}
+                      </div>
+                    ))}
+
+                    {/* Day columns */}
+                    {DAY_ABBREVS.map((_, dayIndex) => {
+                      const dayTasks = getTasksForDay(dayIndex);
+                      return (
+                        <div
+                          key={dayIndex}
+                          className="min-h-[180px] bg-gray-50 rounded-lg p-3 space-y-2"
+                        >
+                          {dayTasks.length === 0 ? (
+                            <p className="text-gray-300 text-xs text-center mt-8">No tasks</p>
+                          ) : (
+                            dayTasks.map((task) => {
+                              const shiftConfig = SHIFT_CONFIG[task.shift];
+                              return (
+                                <div
+                                  key={task.id}
+                                  className={`bg-gradient-to-r ${shiftConfig.gradient} text-white rounded-lg p-3 text-sm`}
+                                >
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="flex-1 min-w-0">
+                                      <p className="font-semibold">{task.title}</p>
+                                      <p className="text-white/70 text-xs flex items-center gap-1 mt-1">
+                                        {shiftConfig.icon} {shiftConfig.label}
+                                      </p>
+                                      {task.description?.includes("✅") && (
+                                        <p className="text-xs text-white/80 mt-1">✅ Approved</p>
+                                      )}
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                      <button
+                                        onClick={() => onEditTask(task)}
+                                        className="p-1.5 hover:bg-white/20 rounded transition-colors"
+                                        title="Edit task"
+                                      >
+                                        <Pencil className="w-3.5 h-3.5" />
+                                      </button>
+                                      <button
+                                        onClick={() => onDeleteTask(task.id)}
+                                        className="p-1.5 hover:bg-red-500/50 rounded transition-colors"
+                                        title="Delete task"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </>
           )}
         </div>
 

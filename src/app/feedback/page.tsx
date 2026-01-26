@@ -230,7 +230,10 @@ function NewPostModal({
         {hasSubCategories && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Specific {FEEDBACK_CATEGORIES.find(c => c.id === category)?.label.replace(' Workflows', '').replace(' Guides', '')}
+              {category === 'feature-request'
+                ? 'Is related to... (optional)'
+                : `Specific ${FEEDBACK_CATEGORIES.find(c => c.id === category)?.label.replace(' Workflows', '').replace(' Guides', '')}`
+              }
             </label>
             <select
               value={subCategory || ''}
@@ -244,7 +247,10 @@ function NewPostModal({
               ))}
             </select>
             <p className="text-xs text-gray-500 mt-1">
-              Select a specific item or choose &quot;General&quot; for overall feedback
+              {category === 'feature-request'
+                ? 'Help us understand which area your feature request relates to'
+                : 'Select a specific item or choose "General" for overall feedback'
+              }
             </p>
           </div>
         )}

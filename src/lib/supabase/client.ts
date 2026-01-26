@@ -40,11 +40,11 @@ export interface FeedbackVote {
 
 // Categories for feedback
 export const FEEDBACK_CATEGORIES = [
+  { id: 'feature-request', label: 'Request a Feature', icon: '✨', color: 'amber' },
   { id: 'referrals', label: 'Referral Workflows', icon: '📋', color: 'indigo' },
   { id: 'guides', label: 'How-To Guides', icon: '📖', color: 'emerald' },
   { id: 'ward-diary', label: 'Ward Diary', icon: '📅', color: 'purple' },
   { id: 'patients', label: 'Patient Features', icon: '👤', color: 'blue' },
-  { id: 'feature-ideas', label: 'Feature Ideas', icon: '💡', color: 'amber' },
   { id: 'bugs', label: 'Bug Reports', icon: '🐛', color: 'red' },
   { id: 'general', label: 'General', icon: '💬', color: 'gray' },
 ] as const;
@@ -53,6 +53,17 @@ export type FeedbackCategory = typeof FEEDBACK_CATEGORIES[number]['id'];
 
 // Sub-categories for specific feedback areas
 export const FEEDBACK_SUB_CATEGORIES: Record<string, { id: string; label: string }[]> = {
+  'feature-request': [
+    { id: 'general-feature', label: 'General / Not specific' },
+    { id: 'related-referrals', label: 'Related to: Referral Workflows' },
+    { id: 'related-guides', label: 'Related to: How-To Guides' },
+    { id: 'related-diary', label: 'Related to: Ward Diary' },
+    { id: 'related-patients', label: 'Related to: Patient Features' },
+    { id: 'related-bookmarks', label: 'Related to: Bookmarks' },
+    { id: 'related-admin', label: 'Related to: Admin / Settings' },
+    { id: 'related-login', label: 'Related to: Login / User Profiles' },
+    { id: 'related-mobile', label: 'Related to: Mobile Experience' },
+  ],
   referrals: [
     { id: 'general-referrals', label: 'General / All Referrals' },
     { id: 'imha-advocacy', label: 'IMHA / Advocacy' },

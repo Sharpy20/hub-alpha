@@ -3,8 +3,12 @@
 import { MainLayout } from "@/components/layout";
 import { Button, Card, CardContent, Badge } from "@/components/ui";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Check, Lightbulb, BookOpen, Pencil } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Lightbulb, BookOpen, Pencil, UserPlus } from "lucide-react";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
+import { useApp } from "@/app/providers";
+import { useTasks } from "@/app/tasks-provider";
+import { PatientPickerModal } from "@/components/modals";
+import { Patient } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -165,13 +169,45 @@ export default function GuidePage() {
   const params = useParams();
   const router = useRouter();
   const { canEdit } = useCanEdit();
+  const { user } = useApp();
+  const { addTask } = useTasks();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
+
+  // Patient linking state
+  const [showPatientPicker, setShowPatientPicker] = useState(false);
+  const [linkedPatient, setLinkedPatient] = useState<Patient | null>(null);
 
   const guideId = params.id as string;
   const guide = GUIDES[guideId] || DEFAULT_GUIDE;
   const config = GUIDE_CONFIG[guideId] || { icon: "📖", gradient: "from-blue-500 to-blue-700", category: "Guide" };
   const step = guide.steps[currentStep];
+
+  // Handle patient selection
+  const handlePatientSelect = (patient: Patient) => {
+    setLinkedPatient(patient);
+
+    // Create a task in the job diary
+    const today = new Date().toISOString().split("T")[0];
+    addTask({
+      id: `task-guide-${Date.now()}`,
+      type: "patient",
+      title: `${guide.title} - ${patient.name}`,
+      category: "other",
+      patientName: patient.name,
+      ward: patient.ward,
+      priority: "routine",
+      status: "pending",
+      dueDate: today,
+      createdAt: today,
+      createdBy: user?.name || "Unknown",
+      carryOver: true,
+      linkedGuideId: guideId,
+    });
+
+    // Log to console (would be audit log in production)
+    console.log(`[AUDIT LOG] ${new Date().toISOString()} - User: ${user?.name} - Accessed guide "${guide.title}" for patient ${patient.name} (${patient.ward} Ward)`);
+  };
 
   const handleNext = () => {
     if (!completedSteps.includes(step.id)) {
@@ -218,11 +254,45 @@ export default function GuidePage() {
             <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
               <span className="text-4xl">{config.icon}</span>
             </div>
-            <div>
+            <div className="flex-1">
               <Badge className="bg-white/20 text-white border-0 mb-1">{config.category}</Badge>
               <h1 className="text-2xl md:text-3xl font-bold">{guide.title}</h1>
               <p className="text-white/80 text-lg">{guide.description}</p>
             </div>
+          </div>
+
+          {/* Link to Patient button */}
+          <div className="mt-4 pt-4 border-t border-white/20">
+            {linkedPatient ? (
+              <div className="flex items-center justify-between bg-white/20 rounded-xl p-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white/30 rounded-lg flex items-center justify-center">
+                    <UserPlus className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">{linkedPatient.name}</p>
+                    <p className="text-white/70 text-sm">{linkedPatient.ward} Ward - Room {linkedPatient.room}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowPatientPicker(true)}
+                  className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+                >
+                  Change
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowPatientPicker(true)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/20 hover:bg-white/30 rounded-xl font-semibold transition-colors"
+              >
+                <UserPlus className="w-5 h-5" />
+                Link to Patient
+              </button>
+            )}
+            <p className="text-white/60 text-xs text-center mt-2">
+              Linking creates a job diary task and audit log entry
+            </p>
           </div>
         </div>
 
@@ -363,6 +433,15 @@ export default function GuidePage() {
           </div>
         </div>
       </div>
+
+      {/* Patient Picker Modal */}
+      <PatientPickerModal
+        isOpen={showPatientPicker}
+        onClose={() => setShowPatientPicker(false)}
+        onSelect={handlePatientSelect}
+        title={guide.title}
+        type="guide"
+      />
     </MainLayout>
   );
 }

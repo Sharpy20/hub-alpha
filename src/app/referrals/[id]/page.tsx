@@ -4,6 +4,7 @@ import { MainLayout } from "@/components/layout";
 import { Button, Card, CardContent, Badge } from "@/components/ui";
 import { useParams, useRouter } from "next/navigation";
 import { useApp } from "@/app/providers";
+import { useTasks } from "@/app/tasks-provider";
 import {
   CheckCircle,
   FileText,
@@ -23,8 +24,11 @@ import {
   Phone,
   Mail,
   Pencil,
+  UserPlus,
 } from "lucide-react";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
+import { PatientPickerModal } from "@/components/modals";
+import { Patient } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -1289,7 +1293,8 @@ const AREA_OPTIONS = [
 export default function WorkflowPage() {
   const params = useParams();
   const router = useRouter();
-  const { hasFeature } = useApp();
+  const { hasFeature, user } = useApp();
+  const { addTask } = useTasks();
   const { canEdit } = useCanEdit();
   const [currentStep, setCurrentStep] = useState(0);
   const [criteriaConfirmed, setCriteriaConfirmed] = useState(false);
@@ -1302,7 +1307,37 @@ export default function WorkflowPage() {
   const [selectedArea, setSelectedArea] = useState<"city" | "county" | null>(null);
   const [systemOnePushed, setSystemOnePushed] = useState(false);
 
+  // Patient linking state
+  const [showPatientPicker, setShowPatientPicker] = useState(false);
+  const [linkedPatient, setLinkedPatient] = useState<Patient | null>(null);
+
   const hasSystemOneIntegration = hasFeature("systemon_notes");
+
+  // Handle patient selection
+  const handlePatientSelect = (patient: Patient) => {
+    setLinkedPatient(patient);
+
+    // Create a task in the job diary
+    const today = new Date().toISOString().split("T")[0];
+    addTask({
+      id: `task-referral-${Date.now()}`,
+      type: "patient",
+      title: `${workflow.title} - ${patient.name}`,
+      category: "referral",
+      patientName: patient.name,
+      ward: patient.ward,
+      priority: "routine",
+      status: "pending",
+      dueDate: today,
+      createdAt: today,
+      createdBy: user?.name || "Unknown",
+      carryOver: true,
+      linkedReferralId: workflowId,
+    });
+
+    // Log to console (would be audit log in production)
+    console.log(`[AUDIT LOG] ${new Date().toISOString()} - User: ${user?.name} - Accessed referral "${workflow.title}" for patient ${patient.name} (${patient.ward} Ward)`);
+  };
 
   const workflowId = params.id as string;
   const workflow = WORKFLOWS[workflowId] || DEFAULT_WORKFLOW;
@@ -1369,24 +1404,60 @@ export default function WorkflowPage() {
               <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Referrals</span>
             </button>
-            {canEdit && (
-              <Link
-                href="/admin/workflows"
-                className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline"
-              >
-                <Pencil className="w-4 h-4" />
-                Edit
-              </Link>
-            )}
+            <div className="flex items-center gap-2">
+              {canEdit && (
+                <Link
+                  href="/admin/workflows"
+                  className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit
+                </Link>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
               <span className="text-4xl">{workflow.icon}</span>
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="text-2xl md:text-3xl font-bold">{workflow.title}</h1>
               <p className="text-white/80 text-lg">{workflow.description}</p>
             </div>
+          </div>
+
+          {/* Link to Patient button */}
+          <div className="mt-4 pt-4 border-t border-white/20">
+            {linkedPatient ? (
+              <div className="flex items-center justify-between bg-white/20 rounded-xl p-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white/30 rounded-lg flex items-center justify-center">
+                    <UserPlus className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">{linkedPatient.name}</p>
+                    <p className="text-white/70 text-sm">{linkedPatient.ward} Ward - Room {linkedPatient.room}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowPatientPicker(true)}
+                  className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors"
+                >
+                  Change
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowPatientPicker(true)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/20 hover:bg-white/30 rounded-xl font-semibold transition-colors"
+              >
+                <UserPlus className="w-5 h-5" />
+                Link to Patient
+              </button>
+            )}
+            <p className="text-white/60 text-xs text-center mt-2">
+              Linking creates a job diary task and audit log entry
+            </p>
           </div>
         </div>
 
@@ -1811,6 +1882,15 @@ export default function WorkflowPage() {
           </div>
         </div>
       </div>
+
+      {/* Patient Picker Modal */}
+      <PatientPickerModal
+        isOpen={showPatientPicker}
+        onClose={() => setShowPatientPicker(false)}
+        onSelect={handlePatientSelect}
+        title={workflow.title}
+        type="referral"
+      />
     </MainLayout>
   );
 }

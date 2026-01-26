@@ -636,7 +636,22 @@ export default function FeedbackPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold">Community Feedback</h1>
-              <p className="text-white/80">Share ideas, report issues, and collaborate</p>
+              <p className="text-white/80">Help shape this tool into something useful for everyone</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Alpha Development Banner */}
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4">
+          <div className="flex items-start gap-3">
+            <div className="text-2xl">🚀</div>
+            <div>
+              <h2 className="font-bold text-amber-900">Alpha Development Stage</h2>
+              <p className="text-amber-800 text-sm mt-1">
+                Your feedback is incredibly valuable right now! Help make this tool wonderful by sharing your ideas,
+                reporting issues, and suggesting improvements. Every bit of input helps shape Inpatient Hub into
+                something truly useful for all ward staff.
+              </p>
             </div>
           </div>
         </div>

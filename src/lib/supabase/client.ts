@@ -11,6 +11,7 @@ export interface FeedbackPost {
   title: string;
   content: string;
   category: string;
+  sub_category: string | null;
   author_name: string;
   author_id: string;
   upvotes: number;
@@ -49,3 +50,49 @@ export const FEEDBACK_CATEGORIES = [
 ] as const;
 
 export type FeedbackCategory = typeof FEEDBACK_CATEGORIES[number]['id'];
+
+// Sub-categories for specific feedback areas
+export const FEEDBACK_SUB_CATEGORIES: Record<string, { id: string; label: string }[]> = {
+  referrals: [
+    { id: 'general-referrals', label: 'General / All Referrals' },
+    { id: 'imha-advocacy', label: 'IMHA / Advocacy' },
+    { id: 'picu', label: 'PICU Referral' },
+    { id: 'safeguarding', label: 'Safeguarding Adults' },
+    { id: 'dietitian', label: 'Dietitian' },
+    { id: 'social-care', label: 'Social Care' },
+    { id: 'homeless-discharge', label: 'Homeless Discharge / DTR' },
+    { id: 'dental', label: 'Dental Referral' },
+    { id: 'physio', label: 'Physiotherapy' },
+    { id: 'ot', label: 'Occupational Therapy' },
+    { id: 'speech-language', label: 'Speech & Language' },
+    { id: 'podiatry', label: 'Podiatry' },
+  ],
+  guides: [
+    { id: 'general-guides', label: 'General / All Guides' },
+    { id: 'news2', label: 'NEWS2 Observations' },
+    { id: 'seizure', label: 'Seizure Management' },
+    { id: 'capacity', label: 'Capacity Assessment' },
+    { id: 'dols', label: 'DoLS' },
+    { id: 'section-17', label: 'Section 17 Leave' },
+    { id: 'rapid-tranq', label: 'Rapid Tranquillisation' },
+    { id: 'seclusion', label: 'Seclusion' },
+    { id: 'refeeding', label: 'Refeeding Syndrome' },
+    { id: 'discharge-planning', label: 'Discharge Planning' },
+    { id: 'care-planning', label: 'Care Planning' },
+  ],
+  'ward-diary': [
+    { id: 'general-diary', label: 'General / Ward Diary' },
+    { id: 'ward-tasks', label: 'Ward Tasks' },
+    { id: 'patient-tasks', label: 'Patient Tasks' },
+    { id: 'appointments', label: 'Appointments' },
+    { id: 'my-tasks', label: 'My Tasks View' },
+    { id: 'repeating-tasks', label: 'Repeating Tasks' },
+  ],
+  patients: [
+    { id: 'general-patients', label: 'General / Patient Features' },
+    { id: 'patient-list', label: 'Patient List' },
+    { id: 'discharge', label: 'Discharge Process' },
+    { id: 'transfer', label: 'Patient Transfer' },
+    { id: 'patient-tasks', label: 'Patient Tasks' },
+  ],
+};

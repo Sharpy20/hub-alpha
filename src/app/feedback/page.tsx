@@ -8,6 +8,7 @@ import {
   FeedbackPost,
   FeedbackComment,
   FEEDBACK_CATEGORIES,
+  FEEDBACK_SUB_CATEGORIES,
   FeedbackCategory,
 } from "@/lib/supabase";
 import {
@@ -61,10 +62,21 @@ function timeAgo(date: string): string {
   return new Date(date).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
+// Get sub-category label
+function getSubCategoryLabel(categoryId: string, subCategoryId: string | null): string | null {
+  if (!subCategoryId) return null;
+  const subCategories = FEEDBACK_SUB_CATEGORIES[categoryId];
+  if (!subCategories) return null;
+  const sub = subCategories.find((s) => s.id === subCategoryId);
+  return sub?.label || null;
+}
+
 // Category badge component
-function CategoryBadge({ categoryId }: { categoryId: string }) {
+function CategoryBadge({ categoryId, subCategoryId }: { categoryId: string; subCategoryId?: string | null }) {
   const category = FEEDBACK_CATEGORIES.find((c) => c.id === categoryId);
   if (!category) return null;
+
+  const subCategoryLabel = subCategoryId ? getSubCategoryLabel(categoryId, subCategoryId) : null;
 
   const colorClasses: Record<string, string> = {
     indigo: "bg-indigo-100 text-indigo-700",
@@ -79,7 +91,9 @@ function CategoryBadge({ categoryId }: { categoryId: string }) {
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${colorClasses[category.color]}`}>
       <span>{category.icon}</span>
-      {category.label}
+      {subCategoryLabel && !subCategoryLabel.startsWith('General')
+        ? subCategoryLabel
+        : category.label}
     </span>
   );
 }
@@ -146,21 +160,38 @@ function NewPostModal({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (title: string, content: string, category: FeedbackCategory) => void;
+  onSubmit: (title: string, content: string, category: FeedbackCategory, subCategory: string | null) => void;
   username: string;
 }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState<FeedbackCategory>("general");
+  const [subCategory, setSubCategory] = useState<string | null>(null);
+
+  // Get sub-categories for the selected category
+  const subCategories = FEEDBACK_SUB_CATEGORIES[category] || [];
+  const hasSubCategories = subCategories.length > 0;
 
   if (!isOpen) return null;
 
+  const handleCategoryChange = (newCategory: FeedbackCategory) => {
+    setCategory(newCategory);
+    // Reset sub-category when main category changes
+    const newSubCategories = FEEDBACK_SUB_CATEGORIES[newCategory] || [];
+    if (newSubCategories.length > 0) {
+      setSubCategory(newSubCategories[0].id); // Default to first option (General)
+    } else {
+      setSubCategory(null);
+    }
+  };
+
   const handleSubmit = () => {
     if (title.trim() && content.trim()) {
-      onSubmit(title.trim(), content.trim(), category);
+      onSubmit(title.trim(), content.trim(), category, hasSubCategories ? subCategory : null);
       setTitle("");
       setContent("");
       setCategory("general");
+      setSubCategory(null);
       onClose();
     }
   };
@@ -181,7 +212,7 @@ function NewPostModal({
             {FEEDBACK_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setCategory(cat.id)}
+                onClick={() => handleCategoryChange(cat.id)}
                 className={`p-2 rounded-lg text-left text-sm flex items-center gap-2 transition-all ${
                   category === cat.id
                     ? "bg-indigo-100 text-indigo-700 border-2 border-indigo-400"
@@ -194,6 +225,29 @@ function NewPostModal({
             ))}
           </div>
         </div>
+
+        {/* Sub-category dropdown - only show if category has sub-categories */}
+        {hasSubCategories && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Specific {FEEDBACK_CATEGORIES.find(c => c.id === category)?.label.replace(' Workflows', '').replace(' Guides', '')}
+            </label>
+            <select
+              value={subCategory || ''}
+              onChange={(e) => setSubCategory(e.target.value)}
+              className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none bg-white"
+            >
+              {subCategories.map((sub) => (
+                <option key={sub.id} value={sub.id}>
+                  {sub.label}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">
+              Select a specific item or choose &quot;General&quot; for overall feedback
+            </p>
+          </div>
+        )}
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -289,7 +343,7 @@ function PostCard({
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <CategoryBadge categoryId={post.category} />
+              <CategoryBadge categoryId={post.category} subCategoryId={post.sub_category} />
               <span className="text-xs text-gray-400">•</span>
               <span className="text-xs text-gray-500">{timeAgo(post.created_at)}</span>
             </div>
@@ -470,12 +524,13 @@ export default function FeedbackPage() {
   }, [userId, fetchData]);
 
   // Handle creating a new post
-  const handleCreatePost = async (title: string, content: string, category: FeedbackCategory) => {
+  const handleCreatePost = async (title: string, content: string, category: FeedbackCategory, subCategory: string | null) => {
     try {
       const { error } = await supabase.from("feedback_posts").insert({
         title,
         content,
         category,
+        sub_category: subCategory,
         author_name: username,
         author_id: userId,
         upvotes: 0,

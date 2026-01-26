@@ -1,7 +1,17 @@
 import { Bookmark } from "@/lib/types";
 
 export const bookmarks: Bookmark[] = [
-  // Crisis Support
+  // Crisis Support - Derbyshire MH Helpline first (local service)
+  {
+    id: "derbyshire-mh-helpline",
+    title: "Derbyshire MH Helpline",
+    icon: "☎️",
+    url: "https://www.derbyshirehealthcareft.nhs.uk",
+    category: "Crisis Support",
+    requiresFocus: false,
+    description: "Local 24/7 mental health support",
+    phone: "0800 028 0077",
+  },
   {
     id: "samaritans",
     title: "Samaritans",
@@ -41,16 +51,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: false,
     description: "Urgent medical help",
     phone: "111",
-  },
-  {
-    id: "derbyshire-mh-helpline",
-    title: "Derbyshire MH Helpline",
-    icon: "☎️",
-    url: "https://www.derbyshirehealthcareft.nhs.uk",
-    category: "Crisis Support",
-    requiresFocus: false,
-    description: "Local 24/7 mental health support",
-    phone: "0800 028 0077",
   },
 
   // Clinical Systems

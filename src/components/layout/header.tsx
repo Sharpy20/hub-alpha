@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, ExternalLink } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
@@ -209,21 +209,10 @@ export function Header() {
 
                       {/* Version selector (item 12 - role/version switcher) */}
                       <div className="p-3 border-b border-gray-100">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                            <Settings className="w-3 h-3 inline mr-1" />
-                            Demo Version
-                          </p>
-                          <Link
-                            href="/versions"
-                            onClick={() => setProfileDropdownOpen(false)}
-                            className="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
-                          >
-                            <LayoutGrid className="w-3 h-3" />
-                            Compare
-                            <ExternalLink className="w-3 h-3" />
-                          </Link>
-                        </div>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                          <Settings className="w-3 h-3 inline mr-1" />
+                          Demo Version
+                        </p>
                         <div className="grid grid-cols-2 gap-1">
                           {(Object.entries(versionLabels) as [string, { label: string; icon: string }][]).map(([key, val]) => (
                             <button
@@ -239,6 +228,14 @@ export function Header() {
                             </button>
                           ))}
                         </div>
+                        <Link
+                          href="/versions"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold transition-colors"
+                        >
+                          <LayoutGrid className="w-3.5 h-3.5" />
+                          Compare All Features
+                        </Link>
                       </div>
 
                       {/* Logout */}
@@ -395,18 +392,7 @@ export function Header() {
               {/* Mobile Version Switcher */}
               {user && (
                 <div className="py-3 border-b border-gray-100">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs text-gray-500 font-semibold uppercase">Demo Version</p>
-                    <Link
-                      href="/versions"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
-                    >
-                      <LayoutGrid className="w-3 h-3" />
-                      Compare Versions
-                      <ExternalLink className="w-3 h-3" />
-                    </Link>
-                  </div>
+                  <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Demo Version</p>
                   <div className="flex flex-wrap gap-2">
                     {(Object.entries(versionLabels) as [string, { label: string; icon: string }][]).map(([key, val]) => (
                       <button
@@ -422,6 +408,14 @@ export function Header() {
                       </button>
                     ))}
                   </div>
+                  <Link
+                    href="/versions"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-sm font-semibold transition-colors"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                    Compare All Features
+                  </Link>
                 </div>
               )}
 

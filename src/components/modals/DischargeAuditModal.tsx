@@ -38,24 +38,24 @@ export function DischargeAuditModal({
 }: DischargeAuditModalProps) {
   const [confirmed, setConfirmed] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showS1Prompt, setShowS1Prompt] = useState(false);
+  const [s1Uploaded, setS1Uploaded] = useState(false);
 
+  const handleS1Complete = () => {
+    setShowS1Prompt(false);
+    setS1Uploaded(false);
+    onClose();
+  };
+
+  // Early returns BEFORE any conditional renders that need data
   if (!isOpen || !patient) return null;
 
-  // Group tasks by status
+  // Group tasks by status (needed for generateAuditText)
   const completedTasks = patientTasks.filter((t) => t.status === "completed");
   const incompleteTasks = patientTasks.filter(
     (t) => t.status !== "completed" && t.status !== "cancelled"
   );
   const cancelledTasks = patientTasks.filter((t) => t.status === "cancelled");
-
-  const handleConfirm = () => {
-    if (confirmed) {
-      onConfirmDischarge(patient.id);
-      toasts.dischargeConfirmed(patient.name);
-      setConfirmed(false);
-      onClose();
-    }
-  };
 
   const generateAuditText = () => {
     const lines: string[] = [];
@@ -83,6 +83,138 @@ export function DischargeAuditModal({
     }
     lines.push(`Generated: ${new Date().toLocaleString("en-GB")}`);
     return lines.join("\n");
+  };
+
+  // SystemOne upload prompt after discharge confirmation
+  if (showS1Prompt) {
+    return (
+      <div
+        className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+        onClick={handleS1Complete}
+      >
+        <div
+          className="bg-white rounded-2xl w-full max-w-md overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 text-white">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <Send className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold">Upload to SystemOne</h2>
+                <p className="text-sm text-white/80">Discharge confirmed</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-medium text-green-800">Discharge confirmed for {patient.name}</p>
+                <p className="text-sm text-green-700 mt-1">
+                  The audit log has been generated and is ready for upload.
+                </p>
+              </div>
+            </div>
+
+            <div className="text-center py-2">
+              <p className="text-gray-700 font-medium mb-2">
+                Upload audit log to SystemOne attachments?
+              </p>
+              <p className="text-sm text-gray-500">
+                This will add the discharge summary to the patient&apos;s electronic record.
+              </p>
+            </div>
+
+            {/* Download reminder */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
+              <p className="text-amber-800">
+                <strong>Tip:</strong> Download a copy of the audit log before uploading for your records.
+              </p>
+            </div>
+
+            {/* Upload checkbox */}
+            <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg cursor-pointer">
+              <input
+                type="checkbox"
+                checked={s1Uploaded}
+                onChange={(e) => setS1Uploaded(e.target.checked)}
+                className="w-5 h-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+              />
+              <span className="text-gray-700">
+                I have uploaded the audit log to SystemOne
+              </span>
+            </label>
+          </div>
+
+          {/* Actions */}
+          <div className="p-4 bg-gray-50 border-t border-gray-200 space-y-3">
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  const blob = new Blob([generateAuditText()], { type: "text/plain" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `discharge-audit-${patient.name.replace(/\s+/g, "-")}.txt`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Download Audit Log
+              </button>
+              <button
+                onClick={() => {
+                  window.open("https://systmone.tpp-uk.com", "_blank");
+                }}
+                className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2"
+              >
+                <Send className="w-4 h-4" />
+                Open SystemOne
+              </button>
+            </div>
+            <button
+              onClick={handleS1Complete}
+              disabled={!s1Uploaded}
+              className={`w-full px-4 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
+                s1Uploaded
+                  ? "bg-green-600 text-white hover:bg-green-700"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              }`}
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              {s1Uploaded ? "Complete" : "Confirm upload to continue"}
+            </button>
+            <button
+              onClick={handleS1Complete}
+              className="w-full text-sm text-gray-500 hover:text-gray-700"
+            >
+              Skip for now
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleConfirm = () => {
+    if (confirmed) {
+      onConfirmDischarge(patient.id);
+      toasts.dischargeConfirmed(patient.name);
+      setConfirmed(false);
+      // Show S1 upload prompt instead of closing
+      if (isMaxPlus) {
+        setShowS1Prompt(true);
+      } else {
+        onClose();
+      }
+    }
   };
 
   const copyAuditLog = async () => {

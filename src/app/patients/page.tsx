@@ -56,6 +56,7 @@ export default function PatientsPage() {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [isTasksModalOpen, setIsTasksModalOpen] = useState(false);
+  const [isDischargeConfirmOpen, setIsDischargeConfirmOpen] = useState(false);
 
   // Initialize patients and tasks from demo data
   useEffect(() => {
@@ -134,6 +135,36 @@ export default function PatientsPage() {
           : p
       )
     );
+  };
+
+  // Initiate discharge (normal user) - marks as pending or discharged
+  const handleInitiateDischarge = (patientId: string) => {
+    const now = new Date().toISOString().split("T")[0];
+    const isAdmin = user?.role === "ward_admin" || user?.role === "senior_admin";
+
+    setPatients((prev) =>
+      prev.map((p) =>
+        p.id === patientId
+          ? {
+              ...p,
+              status: "discharged" as PatientStatus,
+              dischargeDate: now,
+              dischargedBy: user?.name || "Unknown",
+              // If admin initiates, auto-confirm; otherwise pending confirmation
+              dischargeConfirmed: isAdmin,
+              dischargeConfirmedBy: isAdmin ? user?.name : undefined,
+              dischargeConfirmedAt: isAdmin ? now : undefined,
+            }
+          : p
+      )
+    );
+    setIsDischargeConfirmOpen(false);
+    setSelectedPatient(null);
+  };
+
+  const openDischargeConfirm = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setIsDischargeConfirmOpen(true);
   };
 
   const getPatientTasks = (patientId: string): DiaryTask[] => {
@@ -433,6 +464,13 @@ export default function PatientsPage() {
                         <ArrowRight className="w-4 h-4" />
                         Transfer
                       </button>
+                      <button
+                        onClick={() => openDischargeConfirm(patient)}
+                        className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors flex items-center justify-center gap-2 text-sm"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Discharge
+                      </button>
                     </div>
                   )}
 
@@ -500,6 +538,103 @@ export default function PatientsPage() {
         patient={selectedPatient}
         tasks={selectedPatient ? getPatientTasks(selectedPatient.id) : []}
       />
+
+      {/* Discharge Confirmation Modal */}
+      {isDischargeConfirmOpen && selectedPatient && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          onClick={() => {
+            setIsDischargeConfirmOpen(false);
+            setSelectedPatient(null);
+          }}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-md overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-500 to-red-700 p-4 text-white">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <LogOut className="w-6 h-6" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">Discharge Patient</h2>
+                  <p className="text-sm text-white/80">Confirm this action</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-4">
+              <div className="text-center">
+                <p className="text-lg font-semibold text-gray-900 mb-1">
+                  {selectedPatient.name}
+                </p>
+                <p className="text-gray-500">
+                  {selectedPatient.room}{selectedPatient.bed && ` (${selectedPatient.bed})`}
+                </p>
+              </div>
+
+              {/* Outstanding tasks warning */}
+              {getOutstandingTaskCount(selectedPatient.id) > 0 && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-amber-800">Outstanding tasks</p>
+                    <p className="text-sm text-amber-700">
+                      This patient has {getOutstandingTaskCount(selectedPatient.id)} incomplete task(s).
+                      These should be reviewed before discharge.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Role-based message */}
+              {user?.role === "ward_admin" || user?.role === "senior_admin" ? (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <p className="text-sm text-green-800">
+                    <strong>Admin discharge:</strong> As a ward admin, the discharge will be
+                    confirmed immediately. You&apos;ll be able to review the audit log after.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-blue-800">
+                    <strong>Pending confirmation:</strong> The patient will be marked as discharged
+                    but will require ward admin confirmation. The admin will review the audit log
+                    and complete the process.
+                  </p>
+                </div>
+              )}
+
+              <p className="text-center text-gray-600">
+                Are you sure you want to discharge this patient?
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="p-4 bg-gray-50 border-t border-gray-200 flex gap-3">
+              <button
+                onClick={() => {
+                  setIsDischargeConfirmOpen(false);
+                  setSelectedPatient(null);
+                }}
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-100 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleInitiateDischarge(selectedPatient.id)}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+              >
+                <LogOut className="w-4 h-4" />
+                Confirm Discharge
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </MainLayout>
   );
 }

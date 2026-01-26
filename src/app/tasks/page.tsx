@@ -318,7 +318,6 @@ function DayColumn({
   showAddButton,
   onAddTask,
   onClick,
-  onHeaderClick,
 }: {
   date: string;
   tasks: DiaryTask[];
@@ -332,7 +331,6 @@ function DayColumn({
   showAddButton?: boolean;
   onAddTask?: () => void;
   onClick?: () => void;
-  onHeaderClick?: () => void;
 }) {
   const todayDate = formatDate(new Date());
   const isPastDay = isPast(date) && date !== todayDate;
@@ -393,22 +391,17 @@ function DayColumn({
           : "border-gray-200 hover:border-gray-300"
       } overflow-hidden`}
     >
-      {/* Day header - clickable to open full screen */}
+      {/* Day header */}
       <div
-        onClick={(e) => {
-          e.stopPropagation();
-          onHeaderClick?.();
-        }}
-        className={`p-3 text-center transition-all cursor-pointer hover:opacity-90 ${
+        className={`p-3 text-center transition-all ${
           isFocused
             ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
             : isToday
-            ? "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+            ? "bg-indigo-100 text-indigo-800"
             : isPastDay
-            ? "bg-gray-100 text-gray-500 hover:bg-gray-200"
-            : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+            ? "bg-gray-100 text-gray-500"
+            : "bg-gray-50 text-gray-700"
         }`}
-        title="Click to open full-screen view"
       >
         <p className={`font-bold ${isFocused ? "text-lg" : "text-sm"}`}>
           {formatDisplayDate(date)}
@@ -419,9 +412,6 @@ function DayColumn({
         {!isFocused && totalVisible > 0 && (
           <p className="text-xs mt-1 font-medium">{totalVisible} task{totalVisible !== 1 ? 's' : ''}</p>
         )}
-        <p className={`text-xs mt-1 ${isFocused ? "text-white/50" : "text-gray-400"}`}>
-          📺 tap for full view
-        </p>
       </div>
 
       {/* Tasks content - always show, with compact mode for non-focused */}
@@ -1343,238 +1333,6 @@ function RepeatWardTasksModal({
   );
 }
 
-// Day Full Screen Modal - shows all tasks for a specific day
-function DayFullScreenModal({
-  isOpen,
-  onClose,
-  date,
-  tasks,
-  onToggleComplete,
-  onClaim,
-  onSteal,
-  onTaskClick,
-  currentUserName,
-  hideCompleted,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  date: string;
-  tasks: DiaryTask[];
-  onToggleComplete: (id: string) => void;
-  onClaim?: (id: string) => void;
-  onSteal?: (id: string) => void;
-  onTaskClick?: (task: DiaryTask) => void;
-  currentUserName?: string;
-  hideCompleted: boolean;
-}) {
-  if (!isOpen) return null;
-
-  const todayStr = formatDate(new Date());
-  const isToday = date === todayStr;
-  const isPastDay = isPast(date) && !isToday;
-
-  const wardTasks = tasks.filter((t) => t.type === "ward") as WardTask[];
-  const patientTasks = tasks.filter((t) => t.type === "patient") as PatientTask[];
-  const appointments = tasks.filter((t) => t.type === "appointment") as Appointment[];
-
-  const filterCompleted = (items: DiaryTask[]) =>
-    hideCompleted ? items.filter((t) => t.status !== "completed") : items;
-
-  // Only show ward tasks for today
-  const visibleWardTasks = isToday ? filterCompleted(wardTasks) : [];
-  const visiblePatientTasks = filterCompleted(patientTasks);
-  const visibleAppointments = filterCompleted(appointments);
-
-  const pendingCount = tasks.filter((t) => t.status === "pending" || t.status === "overdue" || t.status === "in_progress").length;
-  const completedCount = tasks.filter((t) => t.status === "completed").length;
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
-      <div
-        className="bg-white w-full h-full md:w-[95%] md:h-[95%] md:rounded-2xl overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className={`p-6 ${
-          isToday
-            ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
-            : isPastDay
-            ? "bg-gray-200 text-gray-700"
-            : "bg-gradient-to-r from-blue-500 to-cyan-500 text-white"
-        }`}>
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold">{formatDisplayDate(date)}</h2>
-              <p className={`text-lg ${isToday || !isPastDay ? "text-white/80" : "text-gray-500"}`}>
-                {new Date(date).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
-                isToday || !isPastDay ? "bg-white/20 text-white" : "bg-gray-300 text-gray-700"
-              }`}>
-                <Clock className="w-4 h-4" />
-                {pendingCount} pending
-              </div>
-              <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
-                isToday || !isPastDay ? "bg-white/20 text-white" : "bg-gray-300 text-gray-700"
-              }`}>
-                <Check className="w-4 h-4" />
-                {completedCount} done
-              </div>
-              <button
-                onClick={onClose}
-                className={`p-2 rounded-lg transition-colors ${
-                  isToday || !isPastDay ? "hover:bg-white/20 text-white" : "hover:bg-gray-300 text-gray-700"
-                }`}
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-auto p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Ward Tasks - only for today */}
-            {isToday && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">🏥</span>
-                  <h3 className="text-xl font-bold text-gray-900">Ward Tasks</h3>
-                  <span className="bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full text-sm font-medium">
-                    {visibleWardTasks.length}
-                  </span>
-                </div>
-                {visibleWardTasks.length === 0 ? (
-                  <div className="text-center py-8 bg-gray-50 rounded-xl text-gray-400">
-                    <p className="text-3xl mb-2">✨</p>
-                    <p>No ward tasks</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {visibleWardTasks.map((task) => (
-                      <TaskCard
-                        key={task.id}
-                        task={task}
-                        onToggleComplete={onToggleComplete}
-                        onClaim={onClaim}
-                        onSteal={onSteal}
-                        onClick={onTaskClick}
-                        currentUserName={currentUserName}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Patient Tasks */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">👤</span>
-                <h3 className="text-xl font-bold text-gray-900">Patient Tasks</h3>
-                <span className="bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full text-sm font-medium">
-                  {visiblePatientTasks.length}
-                </span>
-              </div>
-              {visiblePatientTasks.length === 0 ? (
-                <div className="text-center py-8 bg-gray-50 rounded-xl text-gray-400">
-                  <p className="text-3xl mb-2">✨</p>
-                  <p>No patient tasks</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {visiblePatientTasks.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      task={task}
-                      onToggleComplete={onToggleComplete}
-                      onClaim={onClaim}
-                      onSteal={onSteal}
-                      onClick={onTaskClick}
-                      currentUserName={currentUserName}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Appointments */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">📅</span>
-                <h3 className="text-xl font-bold text-gray-900">Appointments</h3>
-                <span className="bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full text-sm font-medium">
-                  {visibleAppointments.length}
-                </span>
-              </div>
-              {visibleAppointments.length === 0 ? (
-                <div className="text-center py-8 bg-gray-50 rounded-xl text-gray-400">
-                  <p className="text-3xl mb-2">✨</p>
-                  <p>No appointments</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {visibleAppointments.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      task={task}
-                      onToggleComplete={onToggleComplete}
-                      onClaim={onClaim}
-                      onSteal={onSteal}
-                      onClick={onTaskClick}
-                      currentUserName={currentUserName}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* If not today, show ward tasks note */}
-            {!isToday && (
-              <div className="lg:col-span-1 space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">🏥</span>
-                  <h3 className="text-xl font-bold text-gray-900">Ward Tasks</h3>
-                </div>
-                <div className="text-center py-8 bg-gray-50 rounded-xl text-gray-400">
-                  <p className="text-3xl mb-2">📋</p>
-                  <p>Ward tasks only show for today</p>
-                  <p className="text-sm mt-1">They reset each day by shift</p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Empty state if no tasks at all */}
-          {visibleWardTasks.length === 0 && visiblePatientTasks.length === 0 && visibleAppointments.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-6xl mb-4">🎉</p>
-              <p className="text-2xl font-bold text-gray-900 mb-2">No tasks for this day</p>
-              <p className="text-gray-500">Enjoy the clear schedule!</p>
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
-          <p className="text-sm text-gray-500">
-            Click a task card to view details or edit
-          </p>
-          <button
-            onClick={onClose}
-            className="px-6 py-2 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // Main Tasks Page
 export default function TasksPage() {
   const { user, hasFeature, activeWard } = useApp();
@@ -1585,7 +1343,6 @@ export default function TasksPage() {
   const [hideCompleted, setHideCompleted] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [focusedDate, setFocusedDate] = useState<string>("");
-  const [fullScreenDate, setFullScreenDate] = useState<string | null>(null);
 
   // Management modal states
   const [showStaffModal, setShowStaffModal] = useState(false);
@@ -1884,7 +1641,6 @@ export default function TasksPage() {
                 showAddButton={true}
                 onAddTask={() => setShowAddModal(true)}
                 onClick={() => scrollToDate(date)}
-                onHeaderClick={() => setFullScreenDate(date)}
               />
             </div>
           ))}
@@ -1956,19 +1712,6 @@ export default function TasksPage() {
         tasks={wardTasks}
         onEditTask={handleEditRepeatTask}
         onDeleteTask={handleDeleteRepeatTask}
-      />
-
-      <DayFullScreenModal
-        isOpen={!!fullScreenDate}
-        onClose={() => setFullScreenDate(null)}
-        date={fullScreenDate || todayStr}
-        tasks={fullScreenDate ? getTasksForDate(fullScreenDate) : []}
-        onToggleComplete={handleToggleComplete}
-        onClaim={handleClaim}
-        onSteal={handleSteal}
-        onTaskClick={handleTaskClick}
-        currentUserName={user?.name}
-        hideCompleted={hideCompleted}
       />
     </MainLayout>
   );

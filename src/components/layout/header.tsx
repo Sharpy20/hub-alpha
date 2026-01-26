@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
@@ -123,6 +123,13 @@ export function Header() {
               >
                 <BookOpen className="w-4 h-4" />
                 Guides
+              </Link>
+              <Link
+                href="/feedback"
+                className="px-4 py-2 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 font-semibold flex items-center gap-2 transition-colors"
+              >
+                <MessageSquare className="w-4 h-4" />
+                Feedback
               </Link>
               {canAccessAdmin && (
                 <Link
@@ -332,6 +339,14 @@ export function Header() {
               >
                 <BookOpen className="w-5 h-5 text-emerald-600" />
                 Guides
+              </Link>
+              <Link
+                href="/feedback"
+                className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <MessageSquare className="w-5 h-5 text-pink-600" />
+                Feedback
               </Link>
               {canAccessAdmin && (
                 <Link

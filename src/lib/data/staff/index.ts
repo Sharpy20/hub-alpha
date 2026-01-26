@@ -4,33 +4,41 @@ import { StaffMember, UserRole } from "@/lib/types";
 export const WARDS = ["Byron", "Shelley", "Keats", "Wordsworth", "Dickinson"] as const;
 export type WardName = (typeof WARDS)[number];
 
-// Staff member names for each ward (20 per ward: Staff_A through Staff_T)
-// Using simple demo names for clarity in testing
-const STAFF_LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"];
+// Staff member names for each ward
+// First entry is always the Ward Admin, then other staff follow
+const STAFF_LETTERS = ["B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"];
 
-const generateStaffNames = (wardPrefix: string): string[] => {
-  return STAFF_LETTERS.map((letter, i) => {
-    // Make some doctors (indices 3, 6 - typically senior positions)
-    if (i === 3 || i === 6) {
-      return `Dr. ${wardPrefix}_${letter}`;
+const generateStaffNames = (wardPrefix: string, wardName: string): string[] => {
+  // First entry is the Ward Admin
+  const names = [`${wardName} Ward Admin`];
+
+  // Add the rest of the staff
+  STAFF_LETTERS.forEach((letter, i) => {
+    // Make some doctors (indices 2, 5 in the letter array - typically senior positions)
+    if (i === 2 || i === 5) {
+      names.push(`Dr. ${wardPrefix}_${letter}`);
+    } else {
+      names.push(`Staff_${wardPrefix}_${letter}`);
     }
-    return `Staff_${wardPrefix}_${letter}`;
   });
+
+  return names;
 };
 
 export const STAFF_NAMES: Record<string, string[]> = {
-  Byron: generateStaffNames("BY"),
-  Shelley: generateStaffNames("SH"),
-  Keats: generateStaffNames("KE"),
-  Wordsworth: generateStaffNames("WO"),
-  Dickinson: generateStaffNames("DI"),
+  Byron: generateStaffNames("BY", "Byron"),
+  Shelley: generateStaffNames("SH", "Shelley"),
+  Keats: generateStaffNames("KE", "Keats"),
+  Wordsworth: generateStaffNames("WO", "Wordsworth"),
+  Dickinson: generateStaffNames("DI", "Dickinson"),
 };
 
-// Role distribution pattern: roughly 60% normal, 15% ward_admin, 15% contributor, 10% senior_admin
+// Role distribution pattern: first is ward_admin, then mix of other roles
 const getRoleForIndex = (index: number): UserRole => {
-  if (index < 2) return "senior_admin";
-  if (index < 5) return "ward_admin";
-  if (index < 8) return "contributor";
+  if (index === 0) return "ward_admin"; // First staff member is always ward admin
+  if (index < 3) return "senior_admin";
+  if (index < 6) return "ward_admin";
+  if (index < 9) return "contributor";
   return "normal";
 };
 
@@ -47,7 +55,7 @@ const generateAllStaff = (): StaffMember[] => {
         name: names[i],
         role: getRoleForIndex(i),
         ward,
-        isActive: i !== 7, // Index 7 is inactive (e.g., Claire Adams in Byron)
+        isActive: i !== 8, // Index 8 is inactive
       });
       idCounter++;
     }

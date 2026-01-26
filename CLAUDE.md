@@ -608,6 +608,13 @@ Working through in order. Marking complete as fixed.
 | 24 | [x] | **URGENT SECURITY** - RESOLVED: Fresh git repo created with clean history. All commits now attributed to Sharpy20. New repo: hub-alpha |
 | 25 | [x] | Ward diary sections - user unable to minimize tasks (toggle button not working) |
 | 26 | [x] | Login flow - user's selected ward not being set as activeWard when going to ward diary |
+| 27 | [x] | Login flow - changed from free text to dropdown selection from staff list per ward |
+| 28 | [x] | Staff data - added "Ward Admin" as first staff member at top of each ward's staff list |
+| 29 | [x] | Ward diary - changed "Quick Guide" text to "Diary Key" |
+| 30 | [x] | Add task modal - leadership approval checkbox now only shows for repeating tasks |
+| 31 | [x] | Add task modal - added toggle between one-off and repeating tasks |
+| 32 | [x] | Add task modal - added date picker for one-off ward tasks (future date selection) |
+| 33 | [x] | Ward diary - added "View repeat ward tasks" button with Mon-Sun weekly overview modal |
 
 ---
 
@@ -619,6 +626,16 @@ Working through in order. Marking complete as fixed.
 3. Error handling improvements
 4. Accessibility audit (WCAG 2.1 AA)
 5. Prepare for deployment
+
+**Recently Completed (26 Jan 2026):**
+- ✅ Login flow now uses staff dropdown per ward instead of free text name entry
+- ✅ Each ward has "Ward Admin" as first staff member at top of list
+- ✅ Role is determined by staff selection (read-only display)
+- ✅ Ward diary "Quick Guide" renamed to "Diary Key"
+- ✅ Add task modal enhanced with one-off vs repeating task toggle
+- ✅ One-off tasks get date picker, repeating tasks get day selection
+- ✅ Leadership approval checkbox only shows for repeating tasks
+- ✅ New "View repeat ward tasks" modal with Mon-Sun weekly overview and edit/delete
 
 **Recently Completed (25 Jan 2026):**
 - ✅ All 20 snag list items completed

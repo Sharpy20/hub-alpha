@@ -20,6 +20,10 @@ import {
   UserSquare2,
   ClipboardList,
   Hand,
+  Repeat,
+  X,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import {
   DiaryTask,
@@ -522,11 +526,12 @@ function AddTaskModal({
   const [linkedReferral, setLinkedReferral] = useState("");
   const [linkedGuide, setLinkedGuide] = useState("");
 
-  // Ward task specific - repeating tasks
+  // Ward task specific - repeating vs one-off
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurringDays, setRecurringDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]); // Default all days
   const [selectedShift, setSelectedShift] = useState<"early" | "late" | "night">("early");
   const [requiresApproval, setRequiresApproval] = useState(false);
+  const [wardTaskDate, setWardTaskDate] = useState(formatDate(new Date())); // Date for one-off ward tasks
 
   // Appointment specific
   const [appointmentDate, setAppointmentDate] = useState(formatDate(new Date()));
@@ -589,16 +594,19 @@ function AddTaskModal({
         linkedGuideId: showApptGuide && apptLinkedGuide ? apptLinkedGuide : undefined,
       });
     } else {
+      // Ward task - use wardTaskDate for one-off, today for recurring
+      const taskDueDate = isRecurring ? formatDate(new Date()) : wardTaskDate;
       onAdd({
         ...baseTask,
         type: "ward",
+        dueDate: taskDueDate,
         shift: selectedShift,
         isRecurring,
         recurringDays: isRecurring ? recurringDays : undefined,
         carryOver: false,
         linkedGuideId: linkedGuide || undefined,
-        // If requiresApproval is set, add a note to the description
-        description: requiresApproval ? "⚠️ Requires leadership approval" : undefined,
+        // If requiresApproval is set for repeating tasks, add a note to the description
+        description: isRecurring && requiresApproval ? "✅ Leadership approved" : undefined,
       });
     }
 
@@ -914,85 +922,112 @@ function AddTaskModal({
               </div>
             </div>
 
-            {/* Repeats toggle */}
-            <div className="mb-4 space-y-3">
-              <div className="border border-gray-200 rounded-xl overflow-hidden">
+            {/* Task type toggle - One-off vs Repeating */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Task Schedule</label>
+              <div className="grid grid-cols-2 gap-2">
                 <button
-                  onClick={() => setIsRecurring(!isRecurring)}
-                  className={`w-full p-3 text-left flex items-center justify-between transition-colors ${
-                    isRecurring ? "bg-indigo-50" : "bg-white hover:bg-gray-50"
+                  onClick={() => setIsRecurring(false)}
+                  className={`p-3 rounded-xl text-center transition-all ${
+                    !isRecurring
+                      ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
-                  <span className="flex items-center gap-2 text-sm">
-                    <span>🔄</span>
-                    <span>This task repeats</span>
-                  </span>
-                  <span className={`text-lg ${isRecurring ? "text-indigo-600" : "text-gray-400"}`}>
-                    {isRecurring ? "−" : "+"}
-                  </span>
+                  <span className="text-xl block">📌</span>
+                  <span className="text-xs font-medium">One-off Task</span>
                 </button>
-                {isRecurring && (
-                  <div className="p-3 border-t border-gray-200 bg-gray-50">
-                    <p className="text-xs font-medium text-gray-600 mb-2">Repeats on:</p>
-                    <div className="flex gap-1">
-                      {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, idx) => (
-                        <button
-                          key={day}
-                          onClick={() => {
-                            setRecurringDays((prev) =>
-                              prev.includes(idx)
-                                ? prev.filter((d) => d !== idx)
-                                : [...prev, idx].sort()
-                            );
-                          }}
-                          className={`flex-1 py-2 text-xs rounded transition-colors ${
-                            recurringDays.includes(idx)
-                              ? "bg-indigo-500 text-white"
-                              : "bg-gray-200 text-gray-600 hover:bg-gray-300"
-                          }`}
-                        >
-                          {day}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="flex gap-2 mt-2">
-                      <button
-                        onClick={() => setRecurringDays([0, 1, 2, 3, 4, 5, 6])}
-                        className="text-xs text-indigo-600 hover:text-indigo-800"
-                      >
-                        All days
-                      </button>
-                      <button
-                        onClick={() => setRecurringDays([1, 2, 3, 4, 5])}
-                        className="text-xs text-indigo-600 hover:text-indigo-800"
-                      >
-                        Weekdays
-                      </button>
-                      <button
-                        onClick={() => setRecurringDays([0, 6])}
-                        className="text-xs text-indigo-600 hover:text-indigo-800"
-                      >
-                        Weekends
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <button
+                  onClick={() => setIsRecurring(true)}
+                  className={`p-3 rounded-xl text-center transition-all ${
+                    isRecurring
+                      ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="text-xl block">🔄</span>
+                  <span className="text-xs font-medium">Repeating Task</span>
+                </button>
               </div>
-
-              {/* Leadership approval toggle */}
-              <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50">
-                <input
-                  type="checkbox"
-                  checked={requiresApproval}
-                  onChange={(e) => setRequiresApproval(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
-                />
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Requires leadership approval</p>
-                  <p className="text-xs text-gray-500">Mark this task as needing senior sign-off</p>
-                </div>
-              </label>
             </div>
+
+            {/* One-off task date picker */}
+            {!isRecurring && (
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                <input
+                  type="date"
+                  value={wardTaskDate}
+                  onChange={(e) => setWardTaskDate(e.target.value)}
+                  min={formatDate(new Date())} // Can't schedule in the past
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
+                />
+              </div>
+            )}
+
+            {/* Repeating task settings */}
+            {isRecurring && (
+              <div className="mb-4 space-y-3">
+                <div className="p-3 border border-indigo-200 rounded-xl bg-indigo-50">
+                  <p className="text-xs font-medium text-indigo-800 mb-2">Repeats on:</p>
+                  <div className="flex gap-1">
+                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, idx) => (
+                      <button
+                        key={day}
+                        onClick={() => {
+                          setRecurringDays((prev) =>
+                            prev.includes(idx)
+                              ? prev.filter((d) => d !== idx)
+                              : [...prev, idx].sort()
+                          );
+                        }}
+                        className={`flex-1 py-2 text-xs rounded transition-colors ${
+                          recurringDays.includes(idx)
+                            ? "bg-indigo-500 text-white"
+                            : "bg-white text-gray-600 hover:bg-gray-100"
+                        }`}
+                      >
+                        {day}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => setRecurringDays([0, 1, 2, 3, 4, 5, 6])}
+                      className="text-xs text-indigo-600 hover:text-indigo-800"
+                    >
+                      All days
+                    </button>
+                    <button
+                      onClick={() => setRecurringDays([1, 2, 3, 4, 5])}
+                      className="text-xs text-indigo-600 hover:text-indigo-800"
+                    >
+                      Weekdays
+                    </button>
+                    <button
+                      onClick={() => setRecurringDays([0, 6])}
+                      className="text-xs text-indigo-600 hover:text-indigo-800"
+                    >
+                      Weekends
+                    </button>
+                  </div>
+                </div>
+
+                {/* Leadership approval toggle - only for repeating tasks */}
+                <label className="flex items-center gap-3 p-3 border border-amber-200 rounded-xl cursor-pointer hover:bg-amber-50 bg-amber-50/50">
+                  <input
+                    type="checkbox"
+                    checked={requiresApproval}
+                    onChange={(e) => setRequiresApproval(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-gray-700">Has ward leadership approved this repeating task?</p>
+                    <p className="text-xs text-gray-500">Mark if this task has been signed off by senior staff</p>
+                  </div>
+                </label>
+              </div>
+            )}
           </>
         )}
 
@@ -1100,6 +1135,198 @@ function AddTaskModal({
   );
 }
 
+// Repeat Ward Tasks Modal - shows Mon-Sun overview
+function RepeatWardTasksModal({
+  isOpen,
+  onClose,
+  tasks,
+  onEditTask,
+  onDeleteTask,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  tasks: WardTask[];
+  onEditTask: (task: WardTask) => void;
+  onDeleteTask: (taskId: string) => void;
+}) {
+  if (!isOpen) return null;
+
+  // Filter only recurring ward tasks
+  const recurringTasks = tasks.filter((t) => t.isRecurring);
+
+  // Days of the week
+  const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const DAY_ABBREVS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  // Get tasks for a specific day
+  const getTasksForDay = (dayIndex: number): WardTask[] => {
+    return recurringTasks.filter((t) => t.recurringDays?.includes(dayIndex));
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
+      <div
+        className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+          <div className="flex items-center gap-3">
+            <Repeat className="w-6 h-6" />
+            <div>
+              <h2 className="text-xl font-bold">Repeating Ward Tasks</h2>
+              <p className="text-white/70 text-sm">{recurringTasks.length} recurring task{recurringTasks.length !== 1 ? "s" : ""}</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Weekly Grid */}
+        <div className="flex-1 overflow-auto p-4">
+          {recurringTasks.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-4xl mb-3">🔄</p>
+              <p className="text-gray-600 font-medium">No repeating ward tasks</p>
+              <p className="text-gray-400 text-sm mt-1">Create a repeating task to see it here</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-7 gap-2">
+              {/* Day headers */}
+              {DAY_ABBREVS.map((day, idx) => (
+                <div
+                  key={day}
+                  className={`text-center p-2 font-semibold text-sm rounded-lg ${
+                    idx === 0 || idx === 6
+                      ? "bg-gray-100 text-gray-600"
+                      : "bg-indigo-100 text-indigo-800"
+                  }`}
+                >
+                  {day}
+                </div>
+              ))}
+
+              {/* Day columns */}
+              {DAY_ABBREVS.map((_, dayIndex) => {
+                const dayTasks = getTasksForDay(dayIndex);
+                return (
+                  <div
+                    key={dayIndex}
+                    className="min-h-[200px] bg-gray-50 rounded-lg p-2 space-y-2"
+                  >
+                    {dayTasks.length === 0 ? (
+                      <p className="text-gray-300 text-xs text-center mt-4">No tasks</p>
+                    ) : (
+                      dayTasks.map((task) => {
+                        const shiftConfig = SHIFT_CONFIG[task.shift];
+                        return (
+                          <div
+                            key={task.id}
+                            className={`bg-gradient-to-r ${shiftConfig.gradient} text-white rounded-lg p-2 text-xs`}
+                          >
+                            <div className="flex items-start justify-between gap-1">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold truncate">{task.title}</p>
+                                <p className="text-white/70 text-[10px] flex items-center gap-1 mt-0.5">
+                                  {shiftConfig.icon} {shiftConfig.label}
+                                </p>
+                                {task.description?.includes("✅") && (
+                                  <p className="text-[10px] text-white/80 mt-0.5">✅ Approved</p>
+                                )}
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <button
+                                  onClick={() => onEditTask(task)}
+                                  className="p-1 hover:bg-white/20 rounded transition-colors"
+                                  title="Edit task"
+                                >
+                                  <Pencil className="w-3 h-3" />
+                                </button>
+                                <button
+                                  onClick={() => onDeleteTask(task.id)}
+                                  className="p-1 hover:bg-red-500/50 rounded transition-colors"
+                                  title="Delete task"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* All recurring tasks list */}
+          {recurringTasks.length > 0 && (
+            <div className="mt-6 border-t border-gray-200 pt-4">
+              <h3 className="font-semibold text-gray-900 mb-3">All Repeating Tasks</h3>
+              <div className="space-y-2">
+                {recurringTasks.map((task) => {
+                  const shiftConfig = SHIFT_CONFIG[task.shift];
+                  const activeDays = task.recurringDays?.map((d) => DAY_ABBREVS[d]).join(", ") || "None";
+                  return (
+                    <div
+                      key={task.id}
+                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl"
+                    >
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${shiftConfig.gradient} flex items-center justify-center text-white`}>
+                        <span className="text-lg">{shiftConfig.icon}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-900 truncate">{task.title}</p>
+                        <p className="text-sm text-gray-500">
+                          {shiftConfig.label} · {activeDays}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {task.description?.includes("✅") && (
+                          <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                            Approved
+                          </span>
+                        )}
+                        <button
+                          onClick={() => onEditTask(task)}
+                          className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+                          title="Edit task"
+                        >
+                          <Pencil className="w-4 h-4 text-gray-600" />
+                        </button>
+                        <button
+                          onClick={() => onDeleteTask(task.id)}
+                          className="p-2 hover:bg-red-100 rounded-lg transition-colors"
+                          title="Delete task"
+                        >
+                          <Trash2 className="w-4 h-4 text-red-500" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-200 bg-gray-50">
+          <button
+            onClick={onClose}
+            className="w-full p-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Main Tasks Page
 export default function TasksPage() {
   const { user, hasFeature, activeWard } = useApp();
@@ -1115,6 +1342,7 @@ export default function TasksPage() {
   const [showStaffModal, setShowStaffModal] = useState(false);
   const [showPatientModal, setShowPatientModal] = useState(false);
   const [showStaffTasksModal, setShowStaffTasksModal] = useState(false);
+  const [showRepeatTasksModal, setShowRepeatTasksModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
 
   // Generate dates array (7 days back, today, 7 days forward)
@@ -1185,6 +1413,22 @@ export default function TasksPage() {
     } as DiaryTask;
     addTask(task);
   };
+
+  // Handle editing a repeat task - open it in the task detail modal
+  const handleEditRepeatTask = (task: WardTask) => {
+    setSelectedTask(task);
+    setShowRepeatTasksModal(false);
+  };
+
+  // Handle deleting a repeat task
+  const handleDeleteRepeatTask = (taskId: string) => {
+    if (confirm("Are you sure you want to delete this repeating task?")) {
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+    }
+  };
+
+  // Get ward tasks for repeat modal
+  const wardTasks = tasks.filter((t) => t.type === "ward" && t.ward === activeWard) as WardTask[];
 
   // Get tasks for a specific date, filtered by activeWard
   const getTasksForDate = (date: string): DiaryTask[] => {
@@ -1310,6 +1554,15 @@ export default function TasksPage() {
 
           <div className="flex items-center gap-2 ml-auto">
             <button
+              onClick={() => setShowRepeatTasksModal(true)}
+              className="flex items-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-700 rounded-xl font-medium hover:bg-indigo-200 transition-all"
+              title="View Repeating Ward Tasks"
+            >
+              <Repeat className="w-5 h-5" />
+              <span className="hidden sm:inline">Repeat Tasks</span>
+            </button>
+
+            <button
               onClick={() => setShowStaffModal(true)}
               className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
               title="Manage Staff Names"
@@ -1389,7 +1642,7 @@ export default function TasksPage() {
 
         {/* Legend */}
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <h3 className="font-semibold text-gray-900 mb-3">📚 Quick Guide</h3>
+          <h3 className="font-semibold text-gray-900 mb-3">📚 Diary Key</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             <div>
               <p className="font-medium text-gray-900 mb-1">🏥 Ward Tasks</p>
@@ -1446,7 +1699,14 @@ export default function TasksPage() {
         onToggleComplete={handleToggleComplete}
         onUpdate={handleUpdateTask}
       />
+
+      <RepeatWardTasksModal
+        isOpen={showRepeatTasksModal}
+        onClose={() => setShowRepeatTasksModal(false)}
+        tasks={wardTasks}
+        onEditTask={handleEditRepeatTask}
+        onDeleteTask={handleDeleteRepeatTask}
+      />
     </MainLayout>
   );
 }
-// Force rebuild 25 Jan 2026 20:19:04

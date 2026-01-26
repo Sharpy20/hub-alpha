@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
@@ -216,6 +216,21 @@ export function Header() {
                       <div>
                         <p className="font-semibold text-gray-900">Intro Guide</p>
                         <p className="text-xs text-gray-500 mt-0.5">Learn how to use Inpatient Hub with visual guides and tips</p>
+                      </div>
+                    </Link>
+
+                    {/* FAQ */}
+                    <Link
+                      href="/faq"
+                      onClick={() => setSettingsDropdownOpen(false)}
+                      className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
+                    >
+                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <CircleHelp className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900">FAQ</p>
+                        <p className="text-xs text-gray-500 mt-0.5">Frequently asked questions about the app</p>
                       </div>
                     </Link>
 
@@ -495,6 +510,19 @@ export function Header() {
                     <div>
                       <p className="font-semibold text-gray-900 text-sm">Intro Guide</p>
                       <p className="text-xs text-gray-500">Learn how to use the app</p>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/faq"
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <CircleHelp className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-900 text-sm">FAQ</p>
+                      <p className="text-xs text-gray-500">Common questions answered</p>
                     </div>
                   </Link>
                   <Link

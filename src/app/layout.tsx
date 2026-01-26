@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { TasksProvider } from "./tasks-provider";
 import { Toaster } from "sonner";
+import { ErrorBoundary } from "@/components/ui";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
@@ -12,7 +13,7 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Inpatient Hub",
+  title: "Inpatient Hub - Ward Resources & Referrals",
   description: "NHS ward management tool for quick access to resources, referrals, and guides",
   icons: {
     icon: "/favicon.ico",
@@ -36,7 +37,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${sourceSans.variable} font-sans antialiased`}>
         <Providers>
-          <TasksProvider>{children}</TasksProvider>
+          <TasksProvider>
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </TasksProvider>
         </Providers>
         <Toaster position="top-right" richColors closeButton />
       </body>

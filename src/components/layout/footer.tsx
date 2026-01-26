@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ShieldAlert } from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -61,9 +62,16 @@ export function Footer() {
             <p className="text-sm text-white/70 mb-2">
               This is a demo version with fictional data.
             </p>
-            <p className="text-sm text-white/70">
+            <p className="text-sm text-white/70 mb-4">
               For the live version, contact your ward administrator.
             </p>
+            <Link
+              href="/feedback"
+              className="inline-flex items-center gap-2 text-sm text-nhs-light-blue hover:text-white transition-colors"
+            >
+              <ShieldAlert className="w-4 h-4" />
+              Report a data concern
+            </Link>
           </div>
         </div>
 

@@ -1,11 +1,35 @@
 "use client";
 
+import { useState } from "react";
 import { MainLayout } from "@/components/layout";
-import { Card, CardContent, CardHeader } from "@/components/ui";
-import { Shield, Lock, FileText, Mail, Database } from "lucide-react";
+import { Card, CardContent, CardHeader, Button } from "@/components/ui";
+import { Shield, Lock, FileText, Mail, Database, Trash2, Check, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 
 export default function GdprPage() {
+  const [dataCleared, setDataCleared] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
+
+  const handleClearData = () => {
+    setIsClearing(true);
+
+    // Clear all localStorage data
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+    }
+
+    // Show confirmation
+    setTimeout(() => {
+      setIsClearing(false);
+      setDataCleared(true);
+
+      // Reset confirmation after 3 seconds
+      setTimeout(() => {
+        setDataCleared(false);
+      }, 3000);
+    }, 500);
+  };
+
   return (
     <MainLayout>
       <div className="max-w-3xl mx-auto space-y-6">
@@ -104,6 +128,128 @@ export default function GdprPage() {
                 Report any data breaches through normal Trust channels (Datix)
               </li>
             </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-bold text-nhs-black flex items-center gap-2">
+              <Database className="w-6 h-6 text-nhs-orange" />
+              Data Retention (Light Version)
+            </h2>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-nhs-dark-grey">
+              In this demo (Light) version of Inpatient Hub:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
+              <li>
+                <strong>Browser storage only</strong> - All data is stored in
+                your browser's localStorage
+              </li>
+              <li>
+                <strong>No external transmission</strong> - No data is sent to
+                or stored on external servers
+              </li>
+              <li>
+                <strong>Automatic clearing</strong> - Data is removed when you
+                clear your browser data/cache
+              </li>
+              <li>
+                <strong>Device-specific</strong> - Data does not sync between
+                devices or browsers
+              </li>
+            </ul>
+
+            <div className="bg-nhs-pale-grey p-4 rounded-lg mt-4">
+              <h3 className="font-semibold text-nhs-black mb-2">
+                Clear Your Data
+              </h3>
+              <p className="text-sm text-nhs-dark-grey mb-3">
+                You can clear all app data stored in your browser at any time.
+                This will remove your login session, preferences, and any local
+                data.
+              </p>
+              <Button
+                onClick={handleClearData}
+                variant={dataCleared ? "primary" : "outline"}
+                className={`flex items-center gap-2 ${
+                  dataCleared
+                    ? "bg-nhs-green hover:bg-nhs-green text-white"
+                    : ""
+                }`}
+                disabled={isClearing}
+              >
+                {isClearing ? (
+                  <>
+                    <span className="animate-spin">...</span>
+                    Clearing...
+                  </>
+                ) : dataCleared ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Data Cleared
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    Clear my data
+                  </>
+                )}
+              </Button>
+            </div>
+
+            <div className="border-t border-gray-200 pt-4 mt-4">
+              <h3 className="font-semibold text-nhs-black mb-2">
+                Medium+ Version Retention
+              </h3>
+              <p className="text-sm text-nhs-dark-grey">
+                In future Medium, Max, and Max+ versions deployed on Trust
+                infrastructure, different data retention policies will apply:
+              </p>
+              <ul className="list-disc list-inside space-y-1 text-sm text-nhs-mid-grey mt-2">
+                <li>
+                  Data stored on secure Trust/Supabase servers
+                </li>
+                <li>
+                  Retention periods aligned with NHS records management policies
+                </li>
+                <li>
+                  Audit logs maintained for compliance
+                </li>
+                <li>
+                  Users can request data deletion through formal IG channels
+                </li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Report a Data Concern */}
+        <Card className="border-2 border-nhs-blue bg-blue-50">
+          <CardHeader>
+            <h2 className="text-xl font-bold text-nhs-black flex items-center gap-2">
+              <ShieldAlert className="w-6 h-6 text-nhs-blue" />
+              Report a Data Concern
+            </h2>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-nhs-dark-grey">
+              If you have concerns about how your data is being handled, please report it.
+              We take all data protection concerns seriously and will investigate promptly.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/feedback"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-nhs-blue text-white rounded-md hover:bg-nhs-dark-blue transition-colors font-medium"
+              >
+                <ShieldAlert className="w-4 h-4" />
+                Report a Concern
+              </Link>
+              <p className="text-sm text-nhs-mid-grey self-center">
+                Or contact your Trust's IG team directly via Datix
+              </p>
+            </div>
           </CardContent>
         </Card>
 

@@ -167,6 +167,7 @@ export function PatientPickerModal({
             <button
               onClick={onClose}
               className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+              aria-label="Close dialog"
             >
               <X className="w-5 h-5" />
             </button>

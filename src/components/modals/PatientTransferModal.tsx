@@ -102,6 +102,7 @@ export function PatientTransferModal({
             <button
               onClick={handleClose}
               className="p-1 hover:bg-white/20 rounded-lg transition-colors"
+              aria-label="Close dialog"
             >
               <X className="w-5 h-5" />
             </button>

@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { bookmarks as initialBookmarks, getCategories } from "@/lib/data/bookmarks";
 import { Bookmark as BookmarkType } from "@/lib/types";
+import { ConfirmDialog } from "@/components/ui";
 
 export default function AdminBookmarksPage() {
   const { user } = useApp();
@@ -31,6 +32,10 @@ export default function AdminBookmarksPage() {
   const [editingBookmark, setEditingBookmark] = useState<BookmarkType | null>(null);
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; bookmarkId: string | null }>({
+    isOpen: false,
+    bookmarkId: null,
+  });
 
   const categories = getCategories();
   const isSeniorAdmin = user?.role === "senior_admin";
@@ -95,9 +100,14 @@ export default function AdminBookmarksPage() {
 
   // Handle delete
   const handleDeleteBookmark = (id: string) => {
-    if (confirm("Are you sure you want to delete this bookmark?")) {
-      saveBookmarks(bookmarks.filter((b) => b.id !== id));
+    setDeleteConfirm({ isOpen: true, bookmarkId: id });
+  };
+
+  const confirmDeleteBookmark = () => {
+    if (deleteConfirm.bookmarkId) {
+      saveBookmarks(bookmarks.filter((b) => b.id !== deleteConfirm.bookmarkId));
     }
+    setDeleteConfirm({ isOpen: false, bookmarkId: null });
   };
 
   // New bookmark template
@@ -271,9 +281,27 @@ export default function AdminBookmarksPage() {
         </div>
 
         {filteredBookmarks.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            <Bookmark className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p>No bookmarks found matching your search.</p>
+          <div className="text-center py-12">
+            <Bookmark className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+            <p className="text-lg font-medium text-gray-700">No bookmarks found</p>
+            <p className="text-gray-500 mt-2 max-w-sm mx-auto">
+              {searchTerm
+                ? `No bookmarks match "${searchTerm}". Try a different search term.`
+                : filterCategory !== "all"
+                ? "No bookmarks in this category."
+                : "No bookmarks have been added yet."}
+            </p>
+            {(searchTerm || filterCategory !== "all") && (
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilterCategory("all");
+                }}
+                className="mt-4 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium hover:bg-amber-600 transition-colors"
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -292,6 +320,18 @@ export default function AdminBookmarksPage() {
           }}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Delete Bookmark?"
+        message="This action cannot be undone. The bookmark will be permanently removed."
+        variant="danger"
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
+        onConfirm={confirmDeleteBookmark}
+        onCancel={() => setDeleteConfirm({ isOpen: false, bookmarkId: null })}
+      />
     </MainLayout>
   );
 }

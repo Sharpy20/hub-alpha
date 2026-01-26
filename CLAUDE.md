@@ -605,7 +605,7 @@ Working through in order. Marking complete as fixed.
 
 | # | Status | Description |
 |---|--------|-------------|
-| 24 | [PARTIAL] | **URGENT SECURITY** - Git config fixed (local user.name=Sharpy20). **USER ACTION NEEDED:** Check Vercel account - if logged in as DafttvLive, log out and reconnect with Sharpy20 GitHub account. Existing commits show DafttvLive author but new commits will be Sharpy20. |
+| 24 | [x] | **URGENT SECURITY** - RESOLVED: Fresh git repo created with clean history. All commits now attributed to Sharpy20. New repo: hub-alpha |
 | 25 | [x] | Ward diary sections - user unable to minimize tasks (toggle button not working) |
 | 26 | [x] | Login flow - user's selected ward not being set as activeWard when going to ward diary |
 

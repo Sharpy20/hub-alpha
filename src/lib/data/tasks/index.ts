@@ -6,6 +6,7 @@ import {
   Patient,
   PatientStatus,
   LegalStatus,
+  AuditType,
 } from "@/lib/types";
 import { WARDS, STAFF_NAMES } from "../staff";
 
@@ -137,28 +138,85 @@ const generateAllPatients = (): Patient[] => {
 // All patients across all wards (100 total: 20 × 5 wards)
 export const DEMO_PATIENTS: Patient[] = generateAllPatients();
 
+// Assurance Dashboard base URL (FOCUS internal)
+const ASSURANCE_DASHBOARD_URL = "https://focus.derbyshirehealthcareft.nhs.uk/assurance-dashboard";
+
 // Ward task templates for variety (reduced set)
-const WARD_TASK_TEMPLATES = [
-  { title: "Fridge temperature check", description: "Check and record medication fridge temperature", priority: "routine" as const, shift: "early" as const },
-  { title: "Controlled drugs check", description: "Count and verify CD stock with another RN", priority: "important" as const, shift: "early" as const },
+// Tasks marked with isAuditTask: true will show links to Assurance Dashboard
+const WARD_TASK_TEMPLATES: Array<{
+  title: string;
+  description: string;
+  priority: "routine" | "important" | "urgent";
+  shift: "early" | "late" | "night";
+  isAuditTask?: boolean;
+  auditType?: AuditType;
+  linkedGuideId?: string;
+}> = [
+  {
+    title: "Fridge temperature check",
+    description: "Check and record medication fridge temperature on Assurance Dashboard",
+    priority: "routine" as const,
+    shift: "early" as const,
+    isAuditTask: true,
+    auditType: "fridge_temps",
+    linkedGuideId: "fridge-temps",
+  },
+  {
+    title: "Controlled drugs check",
+    description: "Count and verify CD stock with another RN - record on Assurance Dashboard",
+    priority: "important" as const,
+    shift: "early" as const,
+    isAuditTask: true,
+    auditType: "controlled_drugs",
+  },
   { title: "Safety huddle", description: "Brief team meeting - risks, staffing, priorities", priority: "routine" as const, shift: "early" as const },
   { title: "Medication round (AM)", description: "Morning medication round", priority: "important" as const, shift: "early" as const },
+  {
+    title: "Water temperature check",
+    description: "Check hot water outlets and record on Assurance Dashboard",
+    priority: "routine" as const,
+    shift: "late" as const,
+    isAuditTask: true,
+    auditType: "water_temps",
+  },
   { title: "Medication round (PM)", description: "Afternoon medication round", priority: "important" as const, shift: "late" as const },
   { title: "Handover preparation", description: "Prepare handover notes for night staff", priority: "routine" as const, shift: "late" as const },
-  { title: "Environmental check", description: "Ward safety and cleanliness check", priority: "routine" as const, shift: "late" as const },
+  {
+    title: "Shift change walkaround",
+    description: "Complete environmental walkaround and record on Assurance Dashboard",
+    priority: "routine" as const,
+    shift: "late" as const,
+    isAuditTask: true,
+    auditType: "walkaround",
+  },
   { title: "Night observation round", description: "Complete observation checks", priority: "important" as const, shift: "night" as const },
   { title: "Night medication round", description: "Overnight medication round", priority: "important" as const, shift: "night" as const },
-  { title: "Resus equipment check", description: "Daily check of emergency equipment", priority: "urgent" as const, shift: "early" as const },
+  {
+    title: "Resus equipment check",
+    description: "Daily check of emergency equipment - record on Assurance Dashboard",
+    priority: "urgent" as const,
+    shift: "early" as const,
+    isAuditTask: true,
+    auditType: "resus_check",
+  },
+  {
+    title: "Ligature point check",
+    description: "Complete ligature point audit and record on Assurance Dashboard",
+    priority: "important" as const,
+    shift: "night" as const,
+    isAuditTask: true,
+    auditType: "ligature_check",
+  },
 ];
 
-// Generate ward tasks - 10 per ward
+// Generate ward tasks - 12 per ward (includes audit tasks)
 const generateWardTasks = (ward: string, startId: number): WardTask[] => {
   const staff = WARD_STAFF[ward];
   const tasks: WardTask[] = [];
   let id = startId;
 
-  // Generate 10 ward tasks
-  for (let i = 0; i < 10; i++) {
+  // Generate 12 ward tasks (includes audit tasks)
+  for (let i = 0; i < 12; i++) {
     const template = WARD_TASK_TEMPLATES[i % WARD_TASK_TEMPLATES.length];
     const staffMember = staff[i % staff.length];
 
@@ -182,6 +240,11 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
     }
     // Rest are pending (unclaimed)
 
+    // Build assurance dashboard URL for audit tasks
+    const assuranceDashboardUrl = template.isAuditTask && template.auditType
+      ? `${ASSURANCE_DASHBOARD_URL}/audits/${template.auditType.replace(/_/g, "-")}`
+      : undefined;
+
     tasks.push({
       id: `wt${id++}`,
       type: "ward",
@@ -199,6 +262,11 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
       createdBy: "System",
       ...(claimedBy && { claimedBy, claimedAt }),
       ...(completedBy && { completedBy, completedAt }),
+      // Audit task fields
+      ...(template.isAuditTask && { isAuditTask: true }),
+      ...(template.auditType && { auditType: template.auditType }),
+      ...(assuranceDashboardUrl && { assuranceDashboardUrl }),
+      ...(template.linkedGuideId && { linkedGuideId: template.linkedGuideId }),
     });
   }
 
@@ -444,14 +512,14 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
   return appointments;
 };
 
-// Generate all ward tasks (10 per ward × 5 wards = 50 total)
+// Generate all ward tasks (12 per ward × 5 wards = 60 total, includes audit tasks)
 const generateAllWardTasks = (): WardTask[] => {
   const tasks: WardTask[] = [];
   let startId = 1;
 
   for (const ward of WARDS) {
     tasks.push(...generateWardTasks(ward, startId));
-    startId += 10;
+    startId += 12;
   }
 
   return tasks;

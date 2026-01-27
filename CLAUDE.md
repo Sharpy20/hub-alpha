@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 26 January 2026
+> **Last Updated:** 27 January 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -96,6 +96,10 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | My Tasks view | - | - | Y | Y |
 | Calendar view | - | - | Y | Y |
 | Sync with SystemOne Tasks | - | - | - | Y |
+| **ASSURANCE DASHBOARD** |||||
+| Audit tasks (fridge temps, etc.) | Link | Link | Link | Auto-sync |
+| Dashboard link on tasks | Y | Y | Y | Y |
+| Webhook auto-completion | - | - | - | Y |
 | **PATIENT LIST** |||||
 | View patients | - | - | Y | Y |
 | Activity log | - | - | Y | Y |
@@ -646,6 +650,17 @@ Working through in order. Marking complete as fixed.
 1. Complete Phase 5: Admin features (workflow/guide editors, admin log)
 2. Mobile responsiveness pass
 3. Prepare for user testing
+
+**Recently Completed (27 Jan 2026 - Session 5):**
+- ✅ Assurance Dashboard integration designed (Light-Max: link-only, Max+: auto-sync)
+- ✅ Added AuditType to types (fridge_temps, water_temps, walkaround, controlled_drugs, resus_check, fire_safety, ligature_check)
+- ✅ Added AUDIT_TYPE_CONFIG with icons and dashboard paths
+- ✅ Extended WardTask with isAuditTask, auditType, assuranceDashboardUrl fields
+- ✅ Updated ward task templates with audit tasks linked to Assurance Dashboard
+- ✅ Created "Fridge Temperature Recording" how-to guide (6 steps)
+- ✅ Documented Assurance Dashboard webhook spec in API research doc
+- ✅ Updated version comparison page with Assurance Dashboard feature (Link vs Sync)
+- ✅ Updated feature matrix in CLAUDE.md
 
 **Recently Completed (26 Jan 2026 - Session 4):**
 - ✅ Expanded day view in ward diary with shift filters

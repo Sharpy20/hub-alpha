@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useApp } from "@/app/providers";
 import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
+  const router = useRouter();
   const { user, setUser, version, setVersion, hasFeature, activeWard, setActiveWard, allWards } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -74,10 +76,27 @@ export function Header() {
     }, 800);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Clear user state
     setUser(null);
     setMobileMenuOpen(false);
     setProfileDropdownOpen(false);
+
+    // Clear all localStorage items
+    localStorage.removeItem("inpatient_hub_user");
+    localStorage.removeItem("inpatient_hub_version");
+    localStorage.removeItem("inpatient_hub_gdpr");
+    localStorage.removeItem("inpatient_hub_active_ward");
+
+    // Call logout API to clear the site access cookie
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // Continue with redirect even if API call fails
+    }
+
+    // Redirect to password page
+    router.push("/password");
   };
 
   // Close dropdowns when clicking outside

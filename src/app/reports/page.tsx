@@ -61,11 +61,17 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
     return { completed, outstanding, total: tasks.length };
   }, [tasks]);
 
+  // Helper to get due date from any task type
+  const getTaskDueDate = (task: DiaryTask): string => {
+    if (task.type === "appointment") return task.appointmentDate;
+    return task.dueDate;
+  };
+
   // Sort tasks: outstanding first (by due date), then completed
   const sortedTasks = useMemo(() => {
     const outstandingTasks = tasks
       .filter(t => t.status !== "completed")
-      .sort((a, b) => new Date(a.dueDate || "").getTime() - new Date(b.dueDate || "").getTime());
+      .sort((a, b) => new Date(getTaskDueDate(a) || "").getTime() - new Date(getTaskDueDate(b) || "").getTime());
     const completedTasks = tasks
       .filter(t => t.status === "completed")
       .sort((a, b) => new Date(b.completedAt || "").getTime() - new Date(a.completedAt || "").getTime());
@@ -143,7 +149,7 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
                     {task.status === "completed" ? (
                       <>Completed by <span className="font-medium">{task.completedBy || "Unknown"}</span></>
                     ) : (
-                      <>Outstanding - Due <span className="font-medium">{task.dueDate ? new Date(task.dueDate).toLocaleDateString("en-GB") : "No date"}</span></>
+                      <>Outstanding - Due <span className="font-medium">{getTaskDueDate(task) ? new Date(getTaskDueDate(task)).toLocaleDateString("en-GB") : "No date"}</span></>
                     )}
                   </p>
                 </div>

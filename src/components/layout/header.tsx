@@ -161,22 +161,13 @@ export function Header() {
                 </>
               )}
               {showPatients && (
-                <>
-                  <Link
-                    href="/patients"
-                    className="px-4 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-2 transition-colors"
-                  >
-                    <Users className="w-4 h-4" />
-                    Patients
-                  </Link>
-                  <Link
-                    href="/reports"
-                    className="px-4 py-2 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold flex items-center gap-2 transition-colors"
-                  >
-                    <BarChart3 className="w-4 h-4" />
-                    Reports
-                  </Link>
-                </>
+                <Link
+                  href="/patients"
+                  className="px-4 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-2 transition-colors"
+                >
+                  <Users className="w-4 h-4" />
+                  Patients
+                </Link>
               )}
               <Link
                 href="/bookmarks"
@@ -272,6 +263,23 @@ export function Header() {
                         <p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p>
                       </div>
                     </Link>
+
+                    {/* Patient Reports - only for Max/Max+ */}
+                    {showPatients && (
+                      <Link
+                        href="/reports"
+                        onClick={() => setSettingsDropdownOpen(false)}
+                        className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
+                      >
+                        <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <BarChart3 className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">Progress Reports</p>
+                          <p className="text-xs text-gray-500 mt-0.5">Generate patient progress audits for wards or individuals</p>
+                        </div>
+                      </Link>
+                    )}
 
                     {/* Editor (Admin) - only for contributors */}
                     {canAccessAdmin && (
@@ -467,24 +475,14 @@ export function Header() {
                 </>
               )}
               {showPatients && (
-                <>
-                  <Link
-                    href="/patients"
-                    className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Users className="w-5 h-5 text-teal-600" />
-                    Patients
-                  </Link>
-                  <Link
-                    href="/reports"
-                    className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <BarChart3 className="w-5 h-5 text-violet-600" />
-                    Reports
-                  </Link>
-                </>
+                <Link
+                  href="/patients"
+                  className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Users className="w-5 h-5 text-teal-600" />
+                  Patients
+                </Link>
               )}
               <Link
                 href="/bookmarks"
@@ -570,6 +568,21 @@ export function Header() {
                       <p className="text-xs text-gray-500">Audit log of all information</p>
                     </div>
                   </Link>
+                  {showPatients && (
+                    <Link
+                      href="/reports"
+                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <BarChart3 className="w-4 h-4 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm">Progress Reports</p>
+                        <p className="text-xs text-gray-500">Generate patient audits</p>
+                      </div>
+                    </Link>
+                  )}
                   {canAccessAdmin && (
                     <Link
                       href="/admin"

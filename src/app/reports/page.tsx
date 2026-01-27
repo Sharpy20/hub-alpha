@@ -208,7 +208,7 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
           )}
         </div>
 
-        {/* Alerts */}
+        {/* Alerts - COMMENTED OUT: Already handled via SystemOne, may add later based on user feedback
         {patient.alerts && patient.alerts.length > 0 && (
           <div className="p-3 bg-red-50 rounded-xl border border-red-100">
             <div className="flex items-center gap-2 mb-2">
@@ -224,6 +224,7 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
             </div>
           </div>
         )}
+        */}
 
         {/* Expandable Recent Tasks */}
         <button

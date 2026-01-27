@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
@@ -126,79 +126,83 @@ export function Header() {
           <div className="flex items-center justify-between h-16">
 
             {/* Logo and title - clickable to home (replaces Home link - item 18a) */}
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-2 group">
               <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
                 <span className="text-xl">🏥</span>
               </div>
-              <div>
-                <h1 className="text-lg font-bold text-gray-900 leading-tight group-hover:text-indigo-700 transition-colors">
-                  Inpatient Hub
-                </h1>
-                <p className="text-xs text-gray-500">
-                  Ward Resources & Referrals
-                </p>
+              <div className="leading-none">
+                <p className="text-xs font-bold text-gray-500 group-hover:text-indigo-500 transition-colors">Inpatient</p>
+                <p className="text-xl font-black text-gray-900 group-hover:text-indigo-700 transition-colors -mt-0.5">Hub</p>
               </div>
             </Link>
 
             {/* Desktop nav - separate tiles with gaps (item 18c) */}
-            <nav className="hidden md:flex items-center gap-2">
-              {showTasks && (
-                <>
-                  <Link
-                    href="/tasks"
-                    className="px-4 py-2 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-2 transition-colors"
-                  >
-                    <CalendarDays className="w-4 h-4" />
-                    Diary
-                  </Link>
-                  <Link
-                    href="/my-tasks"
-                    className="px-4 py-2 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold flex items-center gap-2 transition-colors"
-                  >
-                    <ClipboardList className="w-4 h-4" />
-                    Tasks
-                  </Link>
-                </>
+            <nav className="hidden md:flex items-center gap-3">
+              {/* Ward Tools Group - Diary, Tasks, Patients */}
+              {(showTasks || showPatients) && (
+                <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
+                  {showTasks && (
+                    <>
+                      <Link
+                        href="/tasks"
+                        className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
+                      >
+                        <CalendarDays className="w-4 h-4" />
+                        Diary
+                      </Link>
+                      <Link
+                        href="/my-tasks"
+                        className="px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
+                      >
+                        <ClipboardList className="w-4 h-4" />
+                        Tasks
+                      </Link>
+                    </>
+                  )}
+                  {showPatients && (
+                    <Link
+                      href="/patients"
+                      className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
+                    >
+                      <Users className="w-4 h-4" />
+                      Patients
+                    </Link>
+                  )}
+                </div>
               )}
-              {showPatients && (
-                <Link
-                  href="/patients"
-                  className="px-4 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-2 transition-colors"
-                >
-                  <Users className="w-4 h-4" />
-                  Patients
-                </Link>
-              )}
-              <Link
-                href="/bookmarks"
-                className="px-4 py-2 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-2 transition-colors"
-              >
-                <Bookmark className="w-4 h-4" />
-                Bookmarks
-              </Link>
-              <Link
-                href="/referrals"
-                className="px-4 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-2 transition-colors"
-              >
-                <FileText className="w-4 h-4" />
-                Referrals
-              </Link>
-              <Link
-                href="/how-to"
-                className="px-4 py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold flex items-center gap-2 transition-colors"
-              >
-                <BookOpen className="w-4 h-4" />
-                Guides
-              </Link>
 
-              {/* Settings dropdown */}
+              {/* Resources Group - Bookmarks, Referrals, Guides */}
+              <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
+                <Link
+                  href="/bookmarks"
+                  className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
+                >
+                  <Bookmark className="w-4 h-4" />
+                  Bookmarks
+                </Link>
+                <Link
+                  href="/referrals"
+                  className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
+                >
+                  <FileText className="w-4 h-4" />
+                  Referrals
+                </Link>
+                <Link
+                  href="/how-to"
+                  className="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Guides
+                </Link>
+              </div>
+
+              {/* More dropdown (renamed from Settings) */}
               <div className="relative" ref={settingsDropdownRef}>
                 <button
                   onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
-                  className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-2 transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
                 >
-                  <Settings className="w-4 h-4" />
-                  Settings
+                  More
                   <ChevronDown className={`w-4 h-4 transition-transform ${settingsDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -385,7 +389,7 @@ export function Header() {
                       {/* Version selector (item 12 - role/version switcher) */}
                       <div className="p-3 border-b border-gray-100">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                          <Settings className="w-3 h-3 inline mr-1" />
+                          <Sparkles className="w-3 h-3 inline mr-1" />
                           Demo Version
                         </p>
                         <div className="grid grid-cols-2 gap-1">
@@ -509,11 +513,10 @@ export function Header() {
                 Guides
               </Link>
 
-              {/* Settings section */}
+              {/* More section */}
               <div className="py-3 border-b border-gray-100">
-                <p className="text-xs text-gray-500 mb-2 font-semibold uppercase flex items-center gap-1">
-                  <Settings className="w-3 h-3" />
-                  Settings
+                <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">
+                  More
                 </p>
                 <div className="space-y-2">
                   <Link

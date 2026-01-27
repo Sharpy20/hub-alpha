@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Settings, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 export function Header() {
@@ -161,13 +161,22 @@ export function Header() {
                 </>
               )}
               {showPatients && (
-                <Link
-                  href="/patients"
-                  className="px-4 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-2 transition-colors"
-                >
-                  <Users className="w-4 h-4" />
-                  Patients
-                </Link>
+                <>
+                  <Link
+                    href="/patients"
+                    className="px-4 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-2 transition-colors"
+                  >
+                    <Users className="w-4 h-4" />
+                    Patients
+                  </Link>
+                  <Link
+                    href="/reports"
+                    className="px-4 py-2 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold flex items-center gap-2 transition-colors"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    Reports
+                  </Link>
+                </>
               )}
               <Link
                 href="/bookmarks"
@@ -458,14 +467,24 @@ export function Header() {
                 </>
               )}
               {showPatients && (
-                <Link
-                  href="/patients"
-                  className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Users className="w-5 h-5 text-teal-600" />
-                  Patients
-                </Link>
+                <>
+                  <Link
+                    href="/patients"
+                    className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Users className="w-5 h-5 text-teal-600" />
+                    Patients
+                  </Link>
+                  <Link
+                    href="/reports"
+                    className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <BarChart3 className="w-5 h-5 text-violet-600" />
+                    Reports
+                  </Link>
+                </>
               )}
               <Link
                 href="/bookmarks"

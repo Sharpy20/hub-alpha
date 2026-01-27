@@ -102,6 +102,7 @@ const VERSIONS = [
       { name: "Internal Forms/SOPs", included: true },
       { name: "Ward Diary", included: true },
       { name: "Patient List", included: true },
+      { name: "Progress Reports", included: true },
       { name: "Assurance Dashboard", included: true, note: "Link only" },
       { name: "SystemOne Integration", included: false },
     ],
@@ -137,6 +138,7 @@ const VERSIONS = [
       { name: "Internal Forms/SOPs", included: true },
       { name: "Ward Diary", included: true },
       { name: "Patient List", included: true },
+      { name: "Progress Reports", included: true, note: "Auto-delivery" },
       { name: "Assurance Dashboard", included: true, note: "Auto-sync" },
       { name: "SystemOne Integration", included: true },
     ],
@@ -331,6 +333,7 @@ export default function VersionsPage() {
                   { name: "Internal SOPs/Forms", light: false, medium: true, max: true, maxPlus: true },
                   { name: "Ward Diary", light: false, medium: false, max: true, maxPlus: true },
                   { name: "Patient List", light: false, medium: false, max: true, maxPlus: true },
+                  { name: "Progress Reports", light: false, medium: false, max: true, maxPlus: "auto" },
                   { name: "Assurance Dashboard", light: "link", medium: "link", max: "link", maxPlus: "sync" },
                   { name: "SystemOne Sync", light: false, medium: false, max: false, maxPlus: true },
                 ].map((row, i) => (
@@ -341,6 +344,8 @@ export default function VersionsPage() {
                         <span className="text-xs font-medium text-blue-600">Link</span>
                       ) : row.light === "sync" ? (
                         <span className="text-xs font-medium text-green-600">Sync</span>
+                      ) : row.light === "auto" ? (
+                        <span className="text-xs font-medium text-amber-600">Auto</span>
                       ) : row.light ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (
@@ -352,6 +357,8 @@ export default function VersionsPage() {
                         <span className="text-xs font-medium text-blue-600">Link</span>
                       ) : row.medium === "sync" ? (
                         <span className="text-xs font-medium text-green-600">Sync</span>
+                      ) : row.medium === "auto" ? (
+                        <span className="text-xs font-medium text-amber-600">Auto</span>
                       ) : row.medium ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (
@@ -363,6 +370,8 @@ export default function VersionsPage() {
                         <span className="text-xs font-medium text-blue-600">Link</span>
                       ) : row.max === "sync" ? (
                         <span className="text-xs font-medium text-green-600">Sync</span>
+                      ) : row.max === "auto" ? (
+                        <span className="text-xs font-medium text-amber-600">Auto</span>
                       ) : row.max ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (
@@ -374,6 +383,8 @@ export default function VersionsPage() {
                         <span className="text-xs font-medium text-blue-600">Link</span>
                       ) : row.maxPlus === "sync" ? (
                         <span className="text-xs font-medium text-green-600">Sync</span>
+                      ) : row.maxPlus === "auto" ? (
+                        <span className="text-xs font-medium text-amber-600">Auto</span>
                       ) : row.maxPlus ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { MainLayout } from "@/components/layout";
-import { Badge, Button, Card, CardContent } from "@/components/ui";
+import { Button, Card, CardContent } from "@/components/ui";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import {
@@ -16,30 +16,18 @@ import {
   Users,
   Building2,
   UserCheck,
-  Download,
   Printer,
   Send,
-  Calendar,
   Clock,
   Mail,
   MessageSquare,
-  ChevronDown,
   ChevronUp,
-  AlertTriangle,
   CheckCircle2,
-  XCircle,
-  Timer,
-  Activity,
-  Shield,
   Home,
   User,
-  Stethoscope,
-  CalendarDays,
   ListTodo,
-  Bell,
   Zap,
 } from "lucide-react";
-import Link from "next/link";
 
 // Report scope options
 type ReportScope = "all_wards" | "single_ward" | "selected_patients";
@@ -64,80 +52,64 @@ const getWardDataName = (wardId: string): string => {
   return wardId.charAt(0).toUpperCase() + wardId.slice(1);
 };
 
-// Calculate days since admission
-const getDaysSinceAdmission = (admissionDate: string): number => {
-  const admission = new Date(admissionDate);
-  const today = new Date();
-  const diffTime = Math.abs(today.getTime() - admission.getTime());
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-};
-
-// Get legal status display
-const getLegalStatusDisplay = (status: string): { label: string; color: string; icon: string } => {
-  const statusMap: Record<string, { label: string; color: string; icon: string }> = {
-    informal: { label: "Informal", color: "bg-green-100 text-green-800", icon: "🟢" },
-    section_2: { label: "Section 2", color: "bg-amber-100 text-amber-800", icon: "🟡" },
-    section_3: { label: "Section 3", color: "bg-orange-100 text-orange-800", icon: "🟠" },
-    section_37: { label: "Section 37", color: "bg-red-100 text-red-800", icon: "🔴" },
-    section_17_leave: { label: "S17 Leave", color: "bg-blue-100 text-blue-800", icon: "🔵" },
-    cto: { label: "CTO", color: "bg-purple-100 text-purple-800", icon: "🟣" },
-  };
-  return statusMap[status] || { label: status, color: "bg-gray-100 text-gray-800", icon: "⚪" };
-};
-
-// Patient Report Card Component
+// Patient Report Card Component - Minimal PII version (ward + name only)
 const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryTask[] }) => {
-  const [expanded, setExpanded] = useState(false);
-  const legalStatus = getLegalStatusDisplay(patient.legalStatus);
-  const daysSinceAdmission = getDaysSinceAdmission(patient.admissionDate);
-
   // Task statistics
   const taskStats = useMemo(() => {
     const completed = tasks.filter(t => t.status === "completed").length;
-    const pending = tasks.filter(t => t.status === "pending").length;
-    const inProgress = tasks.filter(t => t.status === "in_progress").length;
-    const overdue = tasks.filter(t => t.status === "overdue").length;
-    return { completed, pending, inProgress, overdue, total: tasks.length };
+    const outstanding = tasks.filter(t => t.status !== "completed").length;
+    return { completed, outstanding, total: tasks.length };
   }, [tasks]);
 
-  // Recent tasks (last 5)
-  const recentTasks = useMemo(() => {
-    return tasks
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, 5);
+  // Sort tasks: outstanding first (by due date), then completed
+  const sortedTasks = useMemo(() => {
+    const outstandingTasks = tasks
+      .filter(t => t.status !== "completed")
+      .sort((a, b) => new Date(a.dueDate || "").getTime() - new Date(b.dueDate || "").getTime());
+    const completedTasks = tasks
+      .filter(t => t.status === "completed")
+      .sort((a, b) => new Date(b.completedAt || "").getTime() - new Date(a.completedAt || "").getTime());
+    return [...outstandingTasks, ...completedTasks];
   }, [tasks]);
 
-  // Status color based on overdue tasks
-  const statusColor = taskStats.overdue > 0
-    ? "from-red-500 to-rose-600"
-    : taskStats.pending > 3
-      ? "from-amber-500 to-orange-600"
+  // Status color based on outstanding tasks
+  const statusColor = taskStats.outstanding > 3
+    ? "from-amber-500 to-orange-600"
+    : taskStats.outstanding > 0
+      ? "from-blue-500 to-indigo-600"
       : "from-emerald-500 to-green-600";
 
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow">
-      {/* Header with gradient */}
+      {/* Header - Minimal: Name and Ward only */}
       <div className={`bg-gradient-to-r ${statusColor} p-4 text-white`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-              <User className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold">{patient.name}</h3>
-              <p className="text-white/80 text-sm">
-                {patient.ward} Ward - Room {patient.room}{patient.bed ? `, Bed ${patient.bed}` : ""}
-              </p>
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
+            <User className="w-6 h-6" />
           </div>
-          <Badge className={`${legalStatus.color} border-0 font-semibold`}>
-            {legalStatus.icon} {legalStatus.label}
-          </Badge>
+          <div>
+            <h3 className="text-xl font-bold">{patient.name}</h3>
+            <p className="text-white/80 text-sm">{patient.ward} Ward</p>
+          </div>
         </div>
       </div>
 
-      {/* Quick Stats Row */}
-      <div className="grid grid-cols-4 gap-2 p-4 bg-gray-50 border-b border-gray-100">
+      {/* Quick Stats Row - Simplified */}
+      <div className="grid grid-cols-3 gap-2 p-4 bg-gray-50 border-b border-gray-100">
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-1 text-gray-600">
+            <ListTodo className="w-4 h-4" />
+            <span className="text-xl font-bold">{taskStats.total}</span>
+          </div>
+          <p className="text-xs text-gray-500">Total Tasks</p>
+        </div>
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-1 text-amber-600">
+            <Clock className="w-4 h-4" />
+            <span className="text-xl font-bold">{taskStats.outstanding}</span>
+          </div>
+          <p className="text-xs text-gray-500">Outstanding</p>
+        </div>
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 text-emerald-600">
             <CheckCircle2 className="w-4 h-4" />
@@ -145,167 +117,61 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
           </div>
           <p className="text-xs text-gray-500">Completed</p>
         </div>
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1 text-blue-600">
-            <Timer className="w-4 h-4" />
-            <span className="text-xl font-bold">{taskStats.inProgress}</span>
-          </div>
-          <p className="text-xs text-gray-500">In Progress</p>
-        </div>
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1 text-amber-600">
-            <Clock className="w-4 h-4" />
-            <span className="text-xl font-bold">{taskStats.pending}</span>
-          </div>
-          <p className="text-xs text-gray-500">Pending</p>
-        </div>
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1 text-red-600">
-            <AlertTriangle className="w-4 h-4" />
-            <span className="text-xl font-bold">{taskStats.overdue}</span>
-          </div>
-          <p className="text-xs text-gray-500">Overdue</p>
-        </div>
       </div>
 
-      {/* Patient Details */}
-      <div className="p-4 space-y-4">
-        {/* Key Info Grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex items-center gap-2 p-2 bg-blue-50 rounded-lg">
-            <CalendarDays className="w-4 h-4 text-blue-600" />
-            <div>
-              <p className="text-xs text-gray-500">Admitted</p>
-              <p className="text-sm font-semibold text-gray-800">
-                {new Date(patient.admissionDate).toLocaleDateString("en-GB")}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 p-2 bg-purple-50 rounded-lg">
-            <Activity className="w-4 h-4 text-purple-600" />
-            <div>
-              <p className="text-xs text-gray-500">Length of Stay</p>
-              <p className="text-sm font-semibold text-gray-800">{daysSinceAdmission} days</p>
-            </div>
-          </div>
-          {patient.namedNurse && (
-            <div className="flex items-center gap-2 p-2 bg-emerald-50 rounded-lg">
-              <UserCheck className="w-4 h-4 text-emerald-600" />
-              <div>
-                <p className="text-xs text-gray-500">Named Nurse</p>
-                <p className="text-sm font-semibold text-gray-800 truncate">{patient.namedNurse}</p>
+      {/* All Tasks List */}
+      <div className="p-4">
+        <div className="space-y-2">
+          {sortedTasks.length > 0 ? (
+            sortedTasks.map((task) => (
+              <div
+                key={task.id}
+                className={`flex items-center gap-3 p-3 rounded-lg border ${
+                  task.status === "completed"
+                    ? "bg-emerald-50 border-emerald-100"
+                    : "bg-amber-50 border-amber-100"
+                }`}
+              >
+                {task.status === "completed" ? (
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                ) : (
+                  <Clock className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-800">{task.title}</p>
+                  <p className="text-xs text-gray-600 mt-0.5">
+                    {task.status === "completed" ? (
+                      <>Completed by <span className="font-medium">{task.completedBy || "Unknown"}</span></>
+                    ) : (
+                      <>Outstanding - Due <span className="font-medium">{task.dueDate ? new Date(task.dueDate).toLocaleDateString("en-GB") : "No date"}</span></>
+                    )}
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
-          {patient.consultant && (
-            <div className="flex items-center gap-2 p-2 bg-indigo-50 rounded-lg">
-              <Stethoscope className="w-4 h-4 text-indigo-600" />
-              <div>
-                <p className="text-xs text-gray-500">Consultant</p>
-                <p className="text-sm font-semibold text-gray-800 truncate">{patient.consultant}</p>
-              </div>
-            </div>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500 text-center py-4">No tasks recorded</p>
           )}
         </div>
 
-        {/* Alerts - COMMENTED OUT: Already handled via SystemOne, may add later based on user feedback
-        {patient.alerts && patient.alerts.length > 0 && (
-          <div className="p-3 bg-red-50 rounded-xl border border-red-100">
-            <div className="flex items-center gap-2 mb-2">
-              <Bell className="w-4 h-4 text-red-600" />
-              <span className="text-sm font-semibold text-red-800">Active Alerts</span>
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {patient.alerts.map((alert, i) => (
-                <Badge key={i} className="bg-red-100 text-red-700 border-0 text-xs">
-                  {alert}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-        */}
-
-        {/* Expandable Recent Tasks */}
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <ListTodo className="w-4 h-4 text-gray-600" />
-            <span className="font-semibold text-gray-700">Recent Tasks ({taskStats.total})</span>
-          </div>
-          {expanded ? (
-            <ChevronUp className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          )}
-        </button>
-
-        {expanded && (
-          <div className="space-y-2 animate-in slide-in-from-top-2">
-            {recentTasks.length > 0 ? (
-              recentTasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="flex items-center gap-3 p-2 bg-white border border-gray-100 rounded-lg"
-                >
-                  {task.status === "completed" ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                  ) : task.status === "overdue" ? (
-                    <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
-                  ) : task.status === "in_progress" ? (
-                    <Timer className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                  ) : (
-                    <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-800 truncate">{task.title}</p>
-                    <p className="text-xs text-gray-500">
-                      {task.type === "appointment" ? "Appointment" : task.type === "patient" ? "Patient Task" : "Ward Task"}
-                    </p>
-                  </div>
-                  <Badge
-                    className={`text-xs border-0 ${
-                      task.status === "completed"
-                        ? "bg-emerald-100 text-emerald-700"
-                        : task.status === "overdue"
-                        ? "bg-red-100 text-red-700"
-                        : task.status === "in_progress"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-700"
-                    }`}
-                  >
-                    {task.status.replace("_", " ")}
-                  </Badge>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-gray-500 text-center py-4">No tasks recorded</p>
-            )}
-          </div>
-        )}
-
         {/* Status Summary */}
-        <div className={`p-3 rounded-xl ${
-          taskStats.overdue > 0
-            ? "bg-red-50 border border-red-100"
-            : taskStats.pending > 3
-              ? "bg-amber-50 border border-amber-100"
+        <div className={`mt-4 p-3 rounded-xl ${
+          taskStats.outstanding > 3
+            ? "bg-amber-50 border border-amber-100"
+            : taskStats.outstanding > 0
+              ? "bg-blue-50 border border-blue-100"
               : "bg-emerald-50 border border-emerald-100"
         }`}>
           <p className={`text-sm font-medium ${
-            taskStats.overdue > 0
-              ? "text-red-700"
-              : taskStats.pending > 3
-                ? "text-amber-700"
+            taskStats.outstanding > 3
+              ? "text-amber-700"
+              : taskStats.outstanding > 0
+                ? "text-blue-700"
                 : "text-emerald-700"
           }`}>
-            {taskStats.overdue > 0
-              ? `Attention needed: ${taskStats.overdue} overdue task${taskStats.overdue > 1 ? "s" : ""}`
-              : taskStats.pending > 3
-                ? `${taskStats.pending} tasks pending completion`
-                : "All tasks on track"}
+            {taskStats.outstanding > 0
+              ? `${taskStats.outstanding} task${taskStats.outstanding > 1 ? "s" : ""} outstanding`
+              : "All tasks completed"}
           </p>
         </div>
       </div>

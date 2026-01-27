@@ -21,6 +21,7 @@ import {
   XCircle,
   FileText,
   LogOut,
+  BarChart3,
 } from "lucide-react";
 import {
   DEMO_PATIENTS,
@@ -244,14 +245,23 @@ export default function PatientsPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center">
-              <User className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center">
+                <User className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Patient List</h1>
+                <p className="text-gray-600">{activeWard} Ward</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Patient List</h1>
-              <p className="text-gray-600">{activeWard} Ward</p>
-            </div>
+            <Link
+              href="/reports"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:from-violet-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+            >
+              <BarChart3 className="w-5 h-5" />
+              Progress Reports
+            </Link>
           </div>
         </div>
 

@@ -100,6 +100,12 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | Audit tasks (fridge temps, etc.) | Link | Link | Link | Auto-sync |
 | Dashboard link on tasks | Y | Y | Y | Y |
 | Webhook auto-completion | - | - | - | Y |
+| **PATIENT PROGRESS REPORTS** |||||
+| Generate reports | - | - | Y | Y |
+| All wards / single ward / pick patients | - | - | Y | Y |
+| Print reports | - | - | Y | Y |
+| Schedule delivery (Email/Teams) | - | - | - | Y |
+| Daily/weekly auto-send | - | - | - | Y |
 | **PATIENT LIST** |||||
 | View patients | - | - | Y | Y |
 | Activity log | - | - | Y | Y |
@@ -661,6 +667,12 @@ Working through in order. Marking complete as fixed.
 - ✅ Documented Assurance Dashboard webhook spec in API research doc
 - ✅ Updated version comparison page with Assurance Dashboard feature (Link vs Sync)
 - ✅ Updated feature matrix in CLAUDE.md
+- ✅ Created Patient Progress Reports page (/reports)
+- ✅ Report scope selection: All wards, single ward, or pick patients
+- ✅ Engaging report card design with patient info, task stats, alerts
+- ✅ Max+ scheduled delivery: Email or MS Teams (daily/weekly/on-demand)
+- ✅ Added Reports link to header navigation (Max/Max+ only)
+- ✅ Updated version comparison with Progress Reports feature
 
 **Recently Completed (26 Jan 2026 - Session 4):**
 - ✅ Expanded day view in ward diary with shift filters

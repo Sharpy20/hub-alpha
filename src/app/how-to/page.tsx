@@ -25,6 +25,14 @@ const GUIDES = [
     gradient: "from-red-500 to-red-700",
   },
   {
+    id: "fridge-temps",
+    title: "Fridge Temperature Recording",
+    description: "Medication fridge monitoring and Assurance Dashboard recording",
+    icon: "🌡️",
+    category: "Ward Procedures",
+    gradient: "from-cyan-500 to-cyan-700",
+  },
+  {
     id: "mental-state-exam",
     title: "Mental State Examination",
     description: "10-point guide to MSE assessment",

@@ -38,6 +38,7 @@ const VERSIONS = [
       { name: "Internal Forms/SOPs", included: false },
       { name: "Ward Diary", included: false },
       { name: "Patient List", included: false },
+      { name: "Assurance Dashboard", included: true, note: "Link only" },
       { name: "SystemOne Integration", included: false },
     ],
     security: ["No authentication required", "Public hosting acceptable", "No sensitive data stored"],
@@ -67,6 +68,7 @@ const VERSIONS = [
       { name: "Internal Forms/SOPs", included: true },
       { name: "Ward Diary", included: false },
       { name: "Patient List", included: false },
+      { name: "Assurance Dashboard", included: true, note: "Link only" },
       { name: "SystemOne Integration", included: false },
     ],
     security: [
@@ -100,6 +102,7 @@ const VERSIONS = [
       { name: "Internal Forms/SOPs", included: true },
       { name: "Ward Diary", included: true },
       { name: "Patient List", included: true },
+      { name: "Assurance Dashboard", included: true, note: "Link only" },
       { name: "SystemOne Integration", included: false },
     ],
     security: [
@@ -134,6 +137,7 @@ const VERSIONS = [
       { name: "Internal Forms/SOPs", included: true },
       { name: "Ward Diary", included: true },
       { name: "Patient List", included: true },
+      { name: "Assurance Dashboard", included: true, note: "Auto-sync" },
       { name: "SystemOne Integration", included: true },
     ],
     security: [
@@ -261,6 +265,9 @@ export default function VersionsPage() {
                             <X className="w-3.5 h-3.5 text-gray-300" />
                           )}
                           {f.name}
+                          {"note" in f && f.note && (
+                            <span className="text-[10px] text-gray-500 ml-0.5">({f.note})</span>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -324,33 +331,50 @@ export default function VersionsPage() {
                   { name: "Internal SOPs/Forms", light: false, medium: true, max: true, maxPlus: true },
                   { name: "Ward Diary", light: false, medium: false, max: true, maxPlus: true },
                   { name: "Patient List", light: false, medium: false, max: true, maxPlus: true },
+                  { name: "Assurance Dashboard", light: "link", medium: "link", max: "link", maxPlus: "sync" },
                   { name: "SystemOne Sync", light: false, medium: false, max: false, maxPlus: true },
                 ].map((row, i) => (
                   <tr key={row.name} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                     <td className="p-3 font-medium text-gray-700">{row.name}</td>
                     <td className="p-3 text-center">
-                      {row.light ? (
+                      {row.light === "link" ? (
+                        <span className="text-xs font-medium text-blue-600">Link</span>
+                      ) : row.light === "sync" ? (
+                        <span className="text-xs font-medium text-green-600">Sync</span>
+                      ) : row.light ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (
                         <X className="w-5 h-5 text-gray-300 mx-auto" />
                       )}
                     </td>
                     <td className="p-3 text-center">
-                      {row.medium ? (
+                      {row.medium === "link" ? (
+                        <span className="text-xs font-medium text-blue-600">Link</span>
+                      ) : row.medium === "sync" ? (
+                        <span className="text-xs font-medium text-green-600">Sync</span>
+                      ) : row.medium ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (
                         <X className="w-5 h-5 text-gray-300 mx-auto" />
                       )}
                     </td>
                     <td className="p-3 text-center">
-                      {row.max ? (
+                      {row.max === "link" ? (
+                        <span className="text-xs font-medium text-blue-600">Link</span>
+                      ) : row.max === "sync" ? (
+                        <span className="text-xs font-medium text-green-600">Sync</span>
+                      ) : row.max ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (
                         <X className="w-5 h-5 text-gray-300 mx-auto" />
                       )}
                     </td>
                     <td className="p-3 text-center">
-                      {row.maxPlus ? (
+                      {row.maxPlus === "link" ? (
+                        <span className="text-xs font-medium text-blue-600">Link</span>
+                      ) : row.maxPlus === "sync" ? (
+                        <span className="text-xs font-medium text-green-600">Sync</span>
+                      ) : row.maxPlus ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (
                         <X className="w-5 h-5 text-gray-300 mx-auto" />

@@ -27,6 +27,7 @@ const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: s
   "capacity-assessment": { icon: "⚖️", gradient: "from-violet-500 to-violet-700", category: "MHA & Legal" },
   restraint: { icon: "🤝", gradient: "from-slate-500 to-slate-700", category: "MHA & Legal" },
   "admission-checklist": { icon: "✅", gradient: "from-emerald-500 to-emerald-700", category: "Admin" },
+  "fridge-temps": { icon: "🌡️", gradient: "from-cyan-500 to-cyan-700", category: "Ward Procedures" },
 };
 
 // Demo guide content - multiple guides
@@ -122,6 +123,48 @@ const GUIDES: Record<string, GuideData> = {
         id: "4",
         title: "Documentation",
         content: "Document in the patient's notes:\n\n• S17 leave form completed and signed by RC\n• Dates/times of leave\n• Any conditions\n• Risk assessment reviewed\n• Patient informed of conditions\n• Copy given to patient",
+      },
+    ],
+  },
+  "fridge-temps": {
+    id: "fridge-temps",
+    title: "Fridge Temperature Recording",
+    description: "Daily medication fridge monitoring and Assurance Dashboard recording",
+    steps: [
+      {
+        id: "1",
+        title: "When to Check",
+        content: "Medication fridge temperatures must be checked and recorded:\n\n• Once daily (Early shift)\n• At approximately the same time each day\n• Before the first medication round if possible\n\nThis is a regulatory requirement for safe medication storage.",
+        tip: "Set a reminder or include this as a standing item in your early shift handover.",
+      },
+      {
+        id: "2",
+        title: "Acceptable Range",
+        content: "The medication fridge must be maintained between:\n\n• Minimum: 2°C\n• Maximum: 8°C\n• Target: 4-5°C\n\nMost medications requiring refrigeration (e.g., insulin, some antibiotics, vaccines) require this range to remain effective.",
+        tip: "If the fridge has a min/max thermometer, check both current AND min/max readings since last reset.",
+      },
+      {
+        id: "3",
+        title: "Recording on Assurance Dashboard",
+        content: "1. Log into FOCUS and navigate to Assurance Dashboard\n2. Select 'Fridge Temperature' audit\n3. Select your ward\n4. Enter the current temperature reading\n5. If min/max available, enter those too\n6. Add any notes if temperature was out of range\n7. Submit the audit\n\nThe dashboard will flag any out-of-range readings automatically.",
+        tip: "In Max+ version, completing on the dashboard will auto-complete this task in the Ward Diary.",
+      },
+      {
+        id: "4",
+        title: "Out of Range - Immediate Actions",
+        content: "If temperature is outside 2-8°C:\n\n• Do NOT use medications until resolved\n• Check fridge door seal and closure\n• Check fridge is plugged in and running\n• Check nothing is blocking the vents\n• Do not overcrowd the fridge\n\nIf still out of range after 30 minutes, escalate.",
+        tip: "Never store medications in the fridge door compartments - temperature is less stable there.",
+      },
+      {
+        id: "5",
+        title: "Escalation",
+        content: "If temperature remains out of range:\n\n1. Inform the Nurse in Charge immediately\n2. Contact Pharmacy for medication assessment\n3. Log an incident on Datix if medications may be compromised\n4. Estates may need to repair/replace the fridge\n5. Document all actions in the ward communication book\n\nPharmacy will advise whether affected medications can still be used.",
+      },
+      {
+        id: "6",
+        title: "Documentation Summary",
+        content: "For each check, record:\n\n• Date and time\n• Current temperature\n• Min/Max readings (if available)\n• Your name/signature\n• Any actions taken if out of range\n\nThe Assurance Dashboard maintains an audit trail for CQC inspections and Trust governance.",
+        tip: "Keep a backup paper log on the fridge as well - useful if dashboard is temporarily unavailable.",
       },
     ],
   },

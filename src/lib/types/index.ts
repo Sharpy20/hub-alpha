@@ -110,6 +110,17 @@ export type TaskStatus = "pending" | "in_progress" | "completed" | "cancelled" |
 export type TaskPriority = "routine" | "important" | "urgent";
 export type TaskType = "ward" | "patient" | "appointment";
 
+// Audit task types for Assurance Dashboard integration
+export type AuditType =
+  | "fridge_temps"
+  | "water_temps"
+  | "walkaround"
+  | "controlled_drugs"
+  | "resus_check"
+  | "fire_safety"
+  | "ligature_check"
+  | "other_audit";
+
 // Task category for patient tasks
 export type PatientTaskCategory =
   | "referral"
@@ -147,6 +158,10 @@ export interface WardTask extends BaseTask {
   recurringDays?: number[]; // 0-6 for days of week
   linkedGuideId?: string;
   carryOver: boolean; // If not done, carry to next shift
+  // Audit task fields (for Assurance Dashboard integration)
+  isAuditTask?: boolean;
+  auditType?: AuditType;
+  assuranceDashboardUrl?: string; // FOCUS link to complete audit on dashboard
 }
 
 // Patient Task - one-off tasks for specific patients
@@ -187,6 +202,18 @@ export const TASK_CATEGORY_CONFIG: Record<PatientTaskCategory, { icon: string; g
   discharge_planning: { icon: "🏠", gradient: "from-teal-500 to-teal-700", label: "Discharge Planning" },
   medical_review: { icon: "👨‍⚕️", gradient: "from-purple-500 to-purple-700", label: "Medical Review" },
   other: { icon: "📌", gradient: "from-gray-500 to-gray-700", label: "Other" },
+};
+
+// Audit type configuration for Assurance Dashboard tasks
+export const AUDIT_TYPE_CONFIG: Record<AuditType, { icon: string; gradient: string; label: string; dashboardPath?: string }> = {
+  fridge_temps: { icon: "🌡️", gradient: "from-cyan-500 to-cyan-700", label: "Fridge Temps", dashboardPath: "/audits/fridge-temperature" },
+  water_temps: { icon: "💧", gradient: "from-blue-500 to-blue-700", label: "Water Temps", dashboardPath: "/audits/water-temperature" },
+  walkaround: { icon: "🚶", gradient: "from-emerald-500 to-emerald-700", label: "Walkaround", dashboardPath: "/audits/shift-walkaround" },
+  controlled_drugs: { icon: "💊", gradient: "from-rose-500 to-rose-700", label: "Controlled Drugs", dashboardPath: "/audits/controlled-drugs" },
+  resus_check: { icon: "❤️‍🩹", gradient: "from-red-500 to-red-700", label: "Resus Check", dashboardPath: "/audits/resus-equipment" },
+  fire_safety: { icon: "🔥", gradient: "from-orange-500 to-orange-700", label: "Fire Safety", dashboardPath: "/audits/fire-safety" },
+  ligature_check: { icon: "🔍", gradient: "from-slate-500 to-slate-700", label: "Ligature Check", dashboardPath: "/audits/ligature-points" },
+  other_audit: { icon: "📋", gradient: "from-gray-500 to-gray-700", label: "Other Audit" },
 };
 
 export const SHIFT_CONFIG: Record<ShiftType, { label: string; icon: string; time: string; gradient: string }> = {

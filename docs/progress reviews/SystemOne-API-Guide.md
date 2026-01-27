@@ -271,4 +271,247 @@ TPP provides a **Demo Environment** for development:
 
 ---
 
+## Assurance Dashboard Integration (Max+)
+
+> **Added:** 27 January 2026
+
+### Overview
+
+The Trust's **Assurance Dashboard** is an internal system used to record ward audits including:
+- Fridge temperature checks
+- Water temperature checks
+- Shift change walkarounds
+- Controlled drugs counts
+- Resus equipment checks
+- Ligature point audits
+- Fire safety checks
+
+The Assurance Dashboard supports **webhooks** and **Power Automate** integration, enabling automatic synchronization with Inpatient Hub.
+
+---
+
+### Integration Tiers
+
+| Version | Behaviour |
+|---------|-----------|
+| **Light** | Ward task shows link to How-To guide + FOCUS link to dashboard |
+| **Medium** | Same as Light (link-only) |
+| **Max** | Same as Light/Medium (link-only) |
+| **Max+** | Auto-sync: Dashboard completion triggers Hub task completion |
+
+---
+
+### Light/Medium/Max Implementation
+
+For non-Max+ versions, audit tasks include:
+- `linkedGuideId`: Links to how-to guide (e.g., "fridge-temps")
+- `assuranceDashboardUrl`: FOCUS link to complete audit on dashboard
+
+**User flow:**
+1. User sees audit task in Ward Diary
+2. Clicks "Open Guide" to view how-to guide
+3. Clicks "Complete on Dashboard" (opens FOCUS link)
+4. Returns to Hub and manually marks task complete
+
+---
+
+### Max+ Webhook Integration
+
+#### Architecture
+
+```
+┌─────────────────────────┐         ┌──────────────────────┐
+│  Assurance Dashboard    │         │    Inpatient Hub     │
+│                         │         │                      │
+│  User completes audit   │         │                      │
+│         │               │         │                      │
+│         ▼               │         │                      │
+│  Dashboard fires        │         │                      │
+│  webhook to Power       │         │                      │
+│  Automate               │         │                      │
+│         │               │         │                      │
+└─────────┼───────────────┘         │                      │
+          │                         │                      │
+          ▼                         │                      │
+┌─────────────────────────┐         │                      │
+│    Power Automate       │         │                      │
+│                         │         │                      │
+│  1. Receive webhook     │         │                      │
+│  2. Transform payload   │         │                      │
+│  3. Call Hub API ───────┼────────►│  POST /api/assurance │
+│                         │         │  /sync               │
+└─────────────────────────┘         │         │            │
+                                    │         ▼            │
+                                    │  Find matching task  │
+                                    │  by auditType + ward │
+                                    │  + date              │
+                                    │         │            │
+                                    │         ▼            │
+                                    │  Mark task complete  │
+                                    │  with audit metadata │
+                                    └──────────────────────┘
+```
+
+#### Webhook Payload (from Assurance Dashboard)
+
+```json
+{
+  "eventType": "AUDIT_COMPLETED",
+  "timestamp": "2026-01-27T08:15:00Z",
+  "audit": {
+    "id": "audit-12345",
+    "type": "fridge_temps",
+    "ward": "Byron",
+    "completedBy": {
+      "name": "Sarah Johnson",
+      "email": "sarah.johnson@nhs.net",
+      "staffId": "NHS123456"
+    },
+    "completedAt": "2026-01-27T08:14:32Z",
+    "values": {
+      "currentTemp": 4.2,
+      "minTemp": 3.8,
+      "maxTemp": 5.1,
+      "inRange": true
+    },
+    "notes": "",
+    "dashboardUrl": "https://focus.../assurance-dashboard/audits/12345"
+  }
+}
+```
+
+#### Audit Type Mapping
+
+| Dashboard Audit | Hub auditType | Notes |
+|-----------------|---------------|-------|
+| Fridge Temperature | `fridge_temps` | Daily, early shift |
+| Water Temperature | `water_temps` | Daily, late shift |
+| Shift Walkaround | `walkaround` | Each shift change |
+| Controlled Drugs | `controlled_drugs` | Daily, early shift |
+| Resus Equipment | `resus_check` | Daily, early shift |
+| Fire Safety | `fire_safety` | Weekly |
+| Ligature Points | `ligature_check` | Daily, night shift |
+
+#### Hub API Endpoint
+
+**POST** `/api/assurance/sync`
+
+**Request Body:**
+```json
+{
+  "auditType": "fridge_temps",
+  "ward": "Byron",
+  "completedBy": "Sarah Johnson",
+  "completedAt": "2026-01-27T08:14:32Z",
+  "auditId": "audit-12345",
+  "values": {
+    "currentTemp": 4.2,
+    "inRange": true
+  }
+}
+```
+
+**Response (Success):**
+```json
+{
+  "success": true,
+  "taskId": "wt123",
+  "message": "Task marked complete",
+  "syncedAt": "2026-01-27T08:15:01Z"
+}
+```
+
+**Response (No Match):**
+```json
+{
+  "success": false,
+  "error": "NO_MATCHING_TASK",
+  "message": "No pending fridge_temps task found for Byron on 2026-01-27"
+}
+```
+
+#### Task Matching Logic
+
+```typescript
+function findMatchingTask(
+  auditType: AuditType,
+  ward: string,
+  date: string
+): WardTask | null {
+  return tasks.find(task =>
+    task.type === "ward" &&
+    task.isAuditTask === true &&
+    task.auditType === auditType &&
+    task.ward === ward &&
+    task.dueDate === date &&
+    task.status !== "completed" &&
+    task.status !== "cancelled"
+  );
+}
+```
+
+#### Power Automate Flow
+
+1. **Trigger:** When Assurance Dashboard fires webhook
+2. **Parse JSON:** Extract audit data
+3. **Transform:** Map dashboard fields to Hub API format
+4. **HTTP Request:** POST to Hub API endpoint
+5. **Condition:** Check response success
+6. **Log:** Record sync result for audit trail
+
+#### Security Considerations
+
+- API endpoint requires authentication (Trust SSO token or API key)
+- Webhook source validation (verify request from Power Automate)
+- Ward access validation (user completing audit must have access to that ward)
+- Audit logging of all sync events
+
+#### Failure Handling
+
+| Scenario | Action |
+|----------|--------|
+| Hub API unavailable | Power Automate retries 3x, then logs failure |
+| No matching task | Log warning, don't create task (prevents duplicates) |
+| Task already complete | Return success (idempotent) |
+| Ward mismatch | Log error, alert admin |
+
+---
+
+### Implementation Phases
+
+**Phase 1: Link-Only (Current)**
+- Add `assuranceDashboardUrl` to audit tasks
+- Add `linkedGuideId` for how-to guides
+- User manually completes on both systems
+
+**Phase 2: Webhook Listener (Future)**
+- Build `/api/assurance/sync` endpoint
+- Configure Power Automate flow
+- Test with single audit type (fridge temps)
+
+**Phase 3: Full Sync (Future)**
+- Expand to all audit types
+- Add sync status indicators in UI
+- Build admin dashboard for sync monitoring
+
+---
+
+### Value Assessment
+
+**Benefits:**
+- Eliminates double data entry
+- Provides single view of ward compliance
+- Automatic audit trail linking
+- Faster task completion workflow
+
+**Challenges:**
+- Requires Power Automate configuration (IT involvement)
+- Dashboard webhook capability needs confirmation
+- Must handle edge cases (manual completion, timing)
+
+**Recommendation:**
+Start with link-only implementation (Light-Max). Pursue webhook integration for Max+ once SystmOne integration groundwork is complete.
+
+---
+
 *This document is for planning purposes. Actual integration requires formal approval processes with NHS Digital and TPP.*

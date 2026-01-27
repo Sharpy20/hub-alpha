@@ -55,6 +55,57 @@
 
 ---
 
+## ⚠️ VARIABLE NAMING - KNOWN INCONSISTENCIES
+
+**IMPORTANT:** The codebase has some naming inconsistencies between modules. Be aware of these when working with data:
+
+### Ward Identifiers
+
+| Source | Format | Example |
+|--------|--------|---------|
+| `src/lib/types/index.ts` → `WARDS[].id` | lowercase | `"byron"` |
+| `src/lib/types/index.ts` → `WARDS[].name` | Title + "Ward" | `"Byron Ward"` |
+| `src/lib/data/staff/index.ts` → `WARDS` | Capitalized | `"Byron"` |
+| Patient data → `patient.ward` | Capitalized | `"Byron"` |
+| Task data → `task.ward` | Capitalized | `"Byron"` |
+
+**Solution:** Use helper function to convert:
+```typescript
+const getWardDataName = (wardId: string): string => {
+  return wardId.charAt(0).toUpperCase() + wardId.slice(1);
+};
+// getWardDataName("byron") → "Byron"
+```
+
+### Task Date Fields
+
+| Task Type | Date Field | Example |
+|-----------|------------|---------|
+| `WardTask` | `dueDate` | `"2026-01-27"` |
+| `PatientTask` | `dueDate` | `"2026-01-27"` |
+| `Appointment` | `appointmentDate` | `"2026-01-27"` |
+
+**Solution:** Use helper function for `DiaryTask` union type:
+```typescript
+const getTaskDueDate = (task: DiaryTask): string => {
+  if (task.type === "appointment") return task.appointmentDate;
+  return task.dueDate;
+};
+```
+
+### Patient Data - PII Considerations
+
+The following fields exist on `Patient` but are **commented out in reports** to minimise PII:
+- `legalStatus` - MHA status (Section 2/3, Informal, CTO, etc.)
+- `admissionDate` - When admitted
+- `room`, `bed` - Location details
+- `namedNurse`, `consultant` - Staff assignments
+- `alerts` - Clinical alerts (handled via SystemOne)
+
+Reports currently show only: **ward** and **name**
+
+---
+
 ## VERSION SYSTEM
 
 Environment variable controls version:

@@ -503,7 +503,7 @@ export default function ReportsPage() {
   const [scope, setScope] = useState<ReportScope>("single_ward");
   const [selectedWard, setSelectedWard] = useState(activeWard || "Byron");
   const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
-  const [patientFilterWard, setPatientFilterWard] = useState<string>("all"); // Filter for patient picker
+  const [patientFilterWards, setPatientFilterWards] = useState<string[]>([]); // Filter for patient picker (empty = all wards)
   const [showReport, setShowReport] = useState(false);
   const [showDeliveryConfig, setShowDeliveryConfig] = useState(false);
   const [deliveryConfig, setDeliveryConfig] = useState<DeliveryConfig>({
@@ -708,13 +708,13 @@ export default function ReportsPage() {
                     {/* Ward filter buttons */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Filter by Ward
+                        Filter by Ward (click to toggle)
                       </label>
                       <div className="flex flex-wrap gap-2">
                         <button
-                          onClick={() => setPatientFilterWard("all")}
+                          onClick={() => setPatientFilterWards([])}
                           className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                            patientFilterWard === "all"
+                            patientFilterWards.length === 0
                               ? "bg-violet-500 text-white"
                               : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                           }`}
@@ -724,9 +724,15 @@ export default function ReportsPage() {
                         {WARDS.map((ward) => (
                           <button
                             key={ward.id}
-                            onClick={() => setPatientFilterWard(ward.id)}
+                            onClick={() => {
+                              setPatientFilterWards(prev =>
+                                prev.includes(ward.id)
+                                  ? prev.filter(id => id !== ward.id)
+                                  : [...prev, ward.id]
+                              );
+                            }}
                             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                              patientFilterWard === ward.id
+                              patientFilterWards.includes(ward.id)
                                 ? "bg-violet-500 text-white"
                                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                             }`}
@@ -741,27 +747,29 @@ export default function ReportsPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => {
-                          const patientsToAdd = (patientFilterWard === "all" ? WARDS : [WARDS.find(w => w.id === patientFilterWard)!])
+                          const wardsToUse = patientFilterWards.length === 0 ? WARDS : WARDS.filter(w => patientFilterWards.includes(w.id));
+                          const patientsToAdd = wardsToUse
                             .flatMap(ward => getPatientsByWard(ward.id).filter(p => p.status !== "discharged"))
                             .map(p => p.id);
                           setSelectedPatients(prev => [...new Set([...prev, ...patientsToAdd])]);
                         }}
                         className="px-3 py-1.5 rounded-lg text-sm font-medium bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"
                       >
-                        Select All {patientFilterWard !== "all" ? `(${WARDS.find(w => w.id === patientFilterWard)?.name})` : "Shown"}
+                        Select All Shown
                       </button>
                       <button
                         onClick={() => {
-                          if (patientFilterWard === "all") {
+                          if (patientFilterWards.length === 0) {
                             setSelectedPatients([]);
                           } else {
-                            const patientsToRemove = getPatientsByWard(patientFilterWard).map(p => p.id);
+                            const patientsToRemove = patientFilterWards
+                              .flatMap(wardId => getPatientsByWard(wardId).map(p => p.id));
                             setSelectedPatients(prev => prev.filter(id => !patientsToRemove.includes(id)));
                           }
                         }}
                         className="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
                       >
-                        Clear {patientFilterWard !== "all" ? `(${WARDS.find(w => w.id === patientFilterWard)?.name})` : "All"}
+                        Clear {patientFilterWards.length > 0 ? "Selected Wards" : "All"}
                       </button>
                     </div>
 
@@ -771,16 +779,14 @@ export default function ReportsPage() {
                         Click patients to toggle selection
                       </label>
                       <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-xl p-2 space-y-1">
-                        {(patientFilterWard === "all" ? WARDS : [WARDS.find(w => w.id === patientFilterWard)!]).map((ward) => (
-                          <div key={ward.id}>
-                            {patientFilterWard === "all" && (
+                        {(patientFilterWards.length === 0 ? WARDS : WARDS.filter(w => patientFilterWards.includes(w.id))).map((ward) => {
+                          const wardPatients = getPatientsByWard(ward.id).filter(p => p.status !== "discharged");
+                          return (
+                            <div key={ward.id}>
                               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1 bg-gray-50 rounded sticky top-0">
-                                {ward.name}
+                                {ward.name} ({wardPatients.length} patients)
                               </p>
-                            )}
-                            {getPatientsByWard(ward.id)
-                              .filter(p => p.status !== "discharged")
-                              .map((patient) => (
+                              {wardPatients.map((patient) => (
                                 <button
                                   key={patient.id}
                                   onClick={() => togglePatientSelection(patient.id)}
@@ -792,29 +798,30 @@ export default function ReportsPage() {
                                 >
                                   <div
                                     className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                                    selectedPatients.includes(patient.id)
-                                      ? "bg-violet-500 border-violet-500 text-white"
-                                      : "border-gray-300"
-                                  }`}
-                                >
-                                  {selectedPatients.includes(patient.id) && (
-                                    <CheckCircle2 className="w-3 h-3" />
-                                  )}
-                                </div>
-                                <span className="text-sm">{patient.name}</span>
-                                <span className="text-xs text-gray-500 ml-auto">
-                                  Room {patient.room}
-                                </span>
-                              </button>
-                            ))}
-                        </div>
-                      ))}
-                    </div>
-                    {selectedPatients.length > 0 && (
-                      <p className="text-sm text-violet-600 mt-2">
-                        {selectedPatients.length} patient{selectedPatients.length > 1 ? "s" : ""} selected
-                      </p>
-                    )}
+                                      selectedPatients.includes(patient.id)
+                                        ? "bg-violet-500 border-violet-500 text-white"
+                                        : "border-gray-300"
+                                    }`}
+                                  >
+                                    {selectedPatients.includes(patient.id) && (
+                                      <CheckCircle2 className="w-3 h-3" />
+                                    )}
+                                  </div>
+                                  <span className="text-sm">{patient.name}</span>
+                                  <span className="text-xs text-gray-500 ml-auto">
+                                    Room {patient.room}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {selectedPatients.length > 0 && (
+                        <p className="text-sm text-violet-600 mt-2">
+                          {selectedPatients.length} patient{selectedPatients.length > 1 ? "s" : ""} selected
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}

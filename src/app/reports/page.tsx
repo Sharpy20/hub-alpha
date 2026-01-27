@@ -58,6 +58,12 @@ interface DeliveryConfig {
   dayOfWeek?: number;
 }
 
+// Convert ward ID to ward name format used in patient data
+// Types use lowercase id: "byron", but patient data uses capitalized: "Byron"
+const getWardDataName = (wardId: string): string => {
+  return wardId.charAt(0).toUpperCase() + wardId.slice(1);
+};
+
 // Calculate days since admission
 const getDaysSinceAdmission = (admissionDate: string): number => {
   const admission = new Date(admissionDate);
@@ -519,7 +525,7 @@ export default function ReportsPage() {
     if (scope === "all_wards") {
       return DEMO_PATIENTS.filter(p => p.status !== "discharged");
     } else if (scope === "single_ward") {
-      return getPatientsByWard(selectedWard).filter(p => p.status !== "discharged");
+      return getPatientsByWard(getWardDataName(selectedWard)).filter(p => p.status !== "discharged");
     } else {
       return DEMO_PATIENTS.filter(p => selectedPatients.includes(p.id) && p.status !== "discharged");
     }
@@ -649,7 +655,7 @@ export default function ReportsPage() {
                       <div>
                         <p className="font-semibold text-gray-800">Single Ward</p>
                         <p className="text-sm text-gray-500">
-                          {getPatientsByWard(selectedWard).filter(p => p.status !== "discharged").length} patients
+                          {getPatientsByWard(getWardDataName(selectedWard)).filter(p => p.status !== "discharged").length} patients
                         </p>
                       </div>
                     </div>
@@ -749,7 +755,7 @@ export default function ReportsPage() {
                         onClick={() => {
                           const wardsToUse = patientFilterWards.length === 0 ? WARDS : WARDS.filter(w => patientFilterWards.includes(w.id));
                           const patientsToAdd = wardsToUse
-                            .flatMap(ward => getPatientsByWard(ward.id).filter(p => p.status !== "discharged"))
+                            .flatMap(ward => getPatientsByWard(getWardDataName(ward.id)).filter(p => p.status !== "discharged"))
                             .map(p => p.id);
                           setSelectedPatients(prev => [...new Set([...prev, ...patientsToAdd])]);
                         }}
@@ -763,7 +769,7 @@ export default function ReportsPage() {
                             setSelectedPatients([]);
                           } else {
                             const patientsToRemove = patientFilterWards
-                              .flatMap(wardId => getPatientsByWard(wardId).map(p => p.id));
+                              .flatMap(wardId => getPatientsByWard(getWardDataName(wardId)).map(p => p.id));
                             setSelectedPatients(prev => prev.filter(id => !patientsToRemove.includes(id)));
                           }
                         }}
@@ -780,7 +786,7 @@ export default function ReportsPage() {
                       </label>
                       <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-xl p-2 space-y-1">
                         {(patientFilterWards.length === 0 ? WARDS : WARDS.filter(w => patientFilterWards.includes(w.id))).map((ward) => {
-                          const wardPatients = getPatientsByWard(ward.id).filter(p => p.status !== "discharged");
+                          const wardPatients = getPatientsByWard(getWardDataName(ward.id)).filter(p => p.status !== "discharged");
                           return (
                             <div key={ward.id}>
                               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1 bg-gray-50 rounded sticky top-0">

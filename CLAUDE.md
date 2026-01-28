@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 27 January 2026
+> **Last Updated:** 28 January 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -707,7 +707,15 @@ Working through in order. Marking complete as fixed.
 | 35 | [x] | Add task modal - patient name field changed from free text to searchable dropdown of active ward patients |
 | 36 | [x] | Ward diary - SystemOne sync tip banner now hidden in Max+ version (only shows for Light/Medium/Max) |
 | 37 | [x] | Removed PatientNamesModal from Ward Diary and My Tasks (was not persisting changes) |
-| 38 | [x] | Added "Add Patient" button and modal to Patients page (name, room, bed, legal status)
+| 38 | [x] | Added "Add Patient" button and modal to Patients page (name, room, bed, legal status) |
+| 39 | [x] | Add Patient modal - Simple/Advanced toggle with alerts selection from ALERTS_POOL |
+| 40 | [x] | Ward Admin Settings page (/admin/ward-settings) - 6 tabs: Patients, Tasks, Shifts, Layout, Discharge, Content |
+| 41 | [x] | WardSettingsProvider - ward-scoped settings context with localStorage persistence |
+| 42 | [x] | User bookmark favorites - "My Favorites" section on home page displays starred bookmarks |
+| 43 | [x] | Bookmarks page - star toggle on each bookmark to add/remove from favorites |
+| 44 | [x] | Project evaluation - comprehensive 10-perspective review generated (docs/evaluations/2026-01-28_project-evaluation.md) |
+| 45 | [x] | Security fix - Updated Next.js 16.1.4 → 16.1.6 to fix moderate DoS vulnerability (GHSA-9g9p-9gw9-jx7f) |
+| 46 | [x] | Fixed failing provider tests - updated feature matrix expectations (medium no longer has ward_tasks/audit_logs) |
 
 ---
 
@@ -717,6 +725,21 @@ Working through in order. Marking complete as fixed.
 1. Complete Phase 5: Admin features (workflow/guide editors, admin log)
 2. Mobile responsiveness pass
 3. Prepare for user testing
+4. Address recommendations from project evaluation
+
+**Recently Completed (28 Jan 2026 - Session 6):**
+- ✅ Patient tasks modal now opens TaskDetailModal for viewing/editing
+- ✅ Add task modal patient field changed to searchable dropdown
+- ✅ SystemOne sync banner hidden in Max+ version
+- ✅ Removed non-functional PatientNamesModal
+- ✅ Added "Add Patient" feature to Patients page with Simple/Advanced toggle
+- ✅ Created comprehensive Ward Admin Settings page with 6 configuration tabs
+- ✅ Added WardSettingsProvider for ward-scoped settings
+- ✅ User bookmark favorites on home page (My Favorites section)
+- ✅ Star toggle on bookmarks page to manage favorites
+- ✅ Ran full 10-perspective project evaluation
+- ✅ Fixed Next.js security vulnerability (16.1.4 → 16.1.6)
+- ✅ Fixed failing unit tests (40/40 now pass)
 
 **Recently Completed (27 Jan 2026 - Session 5):**
 - ✅ Assurance Dashboard integration designed (Light-Max: link-only, Max+: auto-sync)

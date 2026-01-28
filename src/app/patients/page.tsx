@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useApp } from "@/app/providers";
 import { MainLayout } from "@/components/layout";
 import { Card } from "@/components/ui";
-import { PatientTransferModal, DischargeAuditModal, PatientTasksModal } from "@/components/modals";
+import { PatientTransferModal, DischargeAuditModal, PatientTasksModal, TaskDetailModal } from "@/components/modals";
 import {
   User,
   Search,
@@ -59,6 +59,8 @@ export default function PatientsPage() {
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [isTasksModalOpen, setIsTasksModalOpen] = useState(false);
   const [isDischargeConfirmOpen, setIsDischargeConfirmOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
+  const [isTaskDetailModalOpen, setIsTaskDetailModalOpen] = useState(false);
 
   // Initialize patients and tasks from demo data
   useEffect(() => {
@@ -121,6 +123,17 @@ export default function PatientsPage() {
   const openTasksModal = (patient: Patient) => {
     setSelectedPatient(patient);
     setIsTasksModalOpen(true);
+  };
+
+  const handleTaskClick = (task: DiaryTask) => {
+    setSelectedTask(task);
+    setIsTaskDetailModalOpen(true);
+  };
+
+  const handleTaskUpdate = (taskId: string, updates: Partial<DiaryTask>) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, ...updates } as DiaryTask : t))
+    );
   };
 
   const handleConfirmDischarge = (patientId: string) => {
@@ -563,7 +576,49 @@ export default function PatientsPage() {
         }}
         patient={selectedPatient}
         tasks={selectedPatient ? getPatientTasks(selectedPatient.id) : []}
+        onTaskClick={handleTaskClick}
       />
+
+      {/* Task Detail Modal */}
+      {selectedTask && (
+        <TaskDetailModal
+          isOpen={isTaskDetailModalOpen}
+          onClose={() => {
+            setIsTaskDetailModalOpen(false);
+            setSelectedTask(null);
+          }}
+          task={selectedTask}
+          currentUserName={user?.name || "Unknown User"}
+          onClaim={(taskId) => {
+            setTasks((prev) =>
+              prev.map((t) =>
+                t.id === taskId
+                  ? { ...t, claimedBy: user?.name || "Unknown User", claimedAt: new Date().toISOString().split("T")[0] }
+                  : t
+              ) as DiaryTask[]
+            );
+          }}
+          onSteal={(taskId) => {
+            setTasks((prev) =>
+              prev.map((t) =>
+                t.id === taskId
+                  ? { ...t, claimedBy: user?.name || "Unknown User", claimedAt: new Date().toISOString().split("T")[0] }
+                  : t
+              ) as DiaryTask[]
+            );
+          }}
+          onToggleComplete={(taskId) => {
+            setTasks((prev) =>
+              prev.map((t) =>
+                t.id === taskId
+                  ? { ...t, status: t.status === "completed" ? "pending" : "completed" }
+                  : t
+              ) as DiaryTask[]
+            );
+          }}
+          onUpdate={handleTaskUpdate}
+        />
+      )}
 
       {/* Discharge Confirmation Modal */}
       {isDischargeConfirmOpen && selectedPatient && (

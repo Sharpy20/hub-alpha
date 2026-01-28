@@ -39,7 +39,9 @@ import {
   SHIFT_CONFIG,
   TASK_CATEGORY_CONFIG,
   PRIORITY_CONFIG,
+  Patient,
 } from "@/lib/types";
+import { getActivePatientsByWard } from "@/lib/data/tasks";
 import {
   StaffManagementModal,
   PatientNamesModal,
@@ -613,15 +615,22 @@ function AddTaskModal({
   isOpen,
   onClose,
   onAdd,
+  activeWard,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (task: Partial<DiaryTask>) => void;
+  activeWard: string;
 }) {
   const [taskType, setTaskType] = useState<"ward" | "patient" | "appointment">("ward");
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<string>("referral");
   const [patientName, setPatientName] = useState("");
+  const [patientSearch, setPatientSearch] = useState("");
+  const [showPatientDropdown, setShowPatientDropdown] = useState(false);
+
+  // Get patients for current ward
+  const wardPatients = getActivePatientsByWard(activeWard.charAt(0).toUpperCase() + activeWard.slice(1));
   const [priority, setPriority] = useState<"routine" | "important" | "urgent">("routine");
   const [linkedReferral, setLinkedReferral] = useState("");
   const [linkedGuide, setLinkedGuide] = useState("");
@@ -794,15 +803,77 @@ function AddTaskModal({
         </div>
 
         {(taskType === "patient" || taskType === "appointment") && (
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label className="block text-sm font-medium text-gray-700 mb-1">Patient Name</label>
-            <input
-              type="text"
-              value={patientName}
-              onChange={(e) => setPatientName(e.target.value)}
-              placeholder="e.g., John Smith"
-              className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                value={patientSearch}
+                onChange={(e) => {
+                  setPatientSearch(e.target.value);
+                  setShowPatientDropdown(true);
+                  // Clear selection if user types something different
+                  if (patientName && e.target.value !== patientName) {
+                    setPatientName("");
+                  }
+                }}
+                onFocus={() => setShowPatientDropdown(true)}
+                placeholder="Search patients..."
+                className={`w-full p-3 border-2 rounded-xl focus:border-indigo-500 focus:outline-none ${
+                  patientName ? "border-green-400 bg-green-50" : "border-gray-200"
+                }`}
+              />
+              {patientName && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPatientName("");
+                    setPatientSearch("");
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            {showPatientDropdown && (
+              <div className="absolute z-10 w-full mt-1 bg-white border-2 border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                {wardPatients
+                  .filter((p) =>
+                    p.name.toLowerCase().includes(patientSearch.toLowerCase())
+                  )
+                  .slice(0, 10)
+                  .map((patient) => (
+                    <button
+                      key={patient.id}
+                      type="button"
+                      onClick={() => {
+                        setPatientName(patient.name);
+                        setPatientSearch(patient.name);
+                        setShowPatientDropdown(false);
+                      }}
+                      className={`w-full px-4 py-2 text-left hover:bg-indigo-50 flex items-center justify-between ${
+                        patientName === patient.name ? "bg-indigo-100" : ""
+                      }`}
+                    >
+                      <span className="font-medium text-gray-900">{patient.name}</span>
+                      <span className="text-xs text-gray-500">Room {patient.room}</span>
+                    </button>
+                  ))}
+                {wardPatients.filter((p) =>
+                  p.name.toLowerCase().includes(patientSearch.toLowerCase())
+                ).length === 0 && (
+                  <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                    No patients found
+                  </div>
+                )}
+              </div>
+            )}
+            {patientName && (
+              <p className="mt-1 text-xs text-green-600 flex items-center gap-1">
+                <Check className="w-3 h-3" /> Selected: {patientName}
+              </p>
+            )}
           </div>
         )}
 
@@ -2130,14 +2201,16 @@ export default function TasksPage() {
           </div>
         </div>
 
-        {/* SystemOne tip banner */}
-        <div className="overflow-hidden bg-red-50 border border-red-200 rounded-xl">
-          <div className="animate-marquee whitespace-nowrap py-2 text-red-600 font-medium text-sm">
-            <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
-            <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
-            <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
+        {/* SystemOne tip banner - only show when NOT in Max+ */}
+        {!hasFeature("systemon_sync") && (
+          <div className="overflow-hidden bg-red-50 border border-red-200 rounded-xl">
+            <div className="animate-marquee whitespace-nowrap py-2 text-red-600 font-medium text-sm">
+              <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
+              <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
+              <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Scrollable diary */}
         <div
@@ -2200,6 +2273,7 @@ export default function TasksPage() {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddTask}
+        activeWard={activeWard}
       />
 
       <StaffManagementModal

@@ -75,10 +75,11 @@ describe('hasFeature', () => {
     { version: 'light', feature: 'ward_tasks', expected: false },
     { version: 'light', feature: 'patient_list', expected: false },
 
-    // Medium version features
-    { version: 'medium', feature: 'ward_tasks', expected: true },
+    // Medium version features (viewable resources only, no ward features)
+    { version: 'medium', feature: 'bookmarks_focus', expected: true },
+    { version: 'medium', feature: 'workflows_internal', expected: true },
+    { version: 'medium', feature: 'ward_tasks', expected: false },
     { version: 'medium', feature: 'patient_list', expected: false },
-    { version: 'medium', feature: 'audit_logs', expected: true },
 
     // Max version features
     { version: 'max', feature: 'patient_list', expected: true },

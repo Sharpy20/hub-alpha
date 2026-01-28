@@ -3,6 +3,7 @@ import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { TasksProvider } from "./tasks-provider";
+import { WardSettingsProvider } from "./ward-settings-provider";
 import { Toaster } from "sonner";
 import { ErrorBoundary } from "@/components/ui";
 
@@ -38,7 +39,9 @@ export default function RootLayout({
       <body className={`${sourceSans.variable} font-sans antialiased`}>
         <Providers>
           <TasksProvider>
-            <ErrorBoundary>{children}</ErrorBoundary>
+            <WardSettingsProvider>
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </WardSettingsProvider>
           </TasksProvider>
         </Providers>
         <Toaster position="top-right" richColors closeButton />

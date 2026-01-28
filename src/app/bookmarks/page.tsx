@@ -6,7 +6,8 @@ import { MainLayout } from "@/components/layout";
 import { Badge } from "@/components/ui";
 import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
-import { Lock, ExternalLink, Bookmark, Filter } from "lucide-react";
+import { useWardSettings } from "@/app/ward-settings-provider";
+import { Lock, ExternalLink, Bookmark, Filter, Star } from "lucide-react";
 
 // Check if icon is an emoji
 function isEmoji(str: string): boolean {
@@ -29,6 +30,7 @@ function BookmarksContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const { userFavoriteBookmarks, toggleFavoriteBookmark } = useWardSettings();
 
   const categories = ["all", ...getCategories()];
   const filteredBookmarks =
@@ -142,7 +144,25 @@ function BookmarksContent() {
                     )}
                   </div>
                 </div>
-                <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-purple-500 flex-shrink-0 transition-colors" />
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavoriteBookmark(bookmark.id);
+                    }}
+                    className="p-2 rounded-lg hover:bg-amber-50 transition-colors"
+                    title={userFavoriteBookmarks.includes(bookmark.id) ? "Remove from favorites" : "Add to favorites"}
+                  >
+                    <Star
+                      className={`w-5 h-5 transition-colors ${
+                        userFavoriteBookmarks.includes(bookmark.id)
+                          ? "text-amber-500 fill-amber-500"
+                          : "text-gray-300 hover:text-amber-400"
+                      }`}
+                    />
+                  </button>
+                  <ExternalLink className="w-5 h-5 text-gray-400 group-hover:text-purple-500 transition-colors" />
+                </div>
               </div>
             );
           })}

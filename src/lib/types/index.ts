@@ -293,3 +293,153 @@ export interface StaffMember {
   ward: string;
   isActive: boolean;
 }
+
+// ============================================
+// WARD SETTINGS TYPES
+// ============================================
+
+export type FieldVisibility = "hidden" | "optional" | "mandatory";
+export type PatientEntryMode = "simple" | "advanced" | "choice";
+
+export interface PatientFieldSettings {
+  room: FieldVisibility;
+  bed: FieldVisibility;
+  legalStatus: FieldVisibility;
+  alerts: FieldVisibility;
+}
+
+export interface ShiftTimes {
+  start: string; // HH:MM format
+  end: string;
+}
+
+export interface ShiftSettings {
+  early: ShiftTimes;
+  late: ShiftTimes;
+  night: ShiftTimes;
+}
+
+export interface RoomConfig {
+  id: string;
+  name: string;
+  beds: string[]; // e.g., ["A", "B"] or ["1", "2"]
+}
+
+export interface DischargeChecklistItem {
+  id: string;
+  label: string;
+  required: boolean;
+}
+
+export interface TaskCategoryConfig {
+  category: string;
+  enabled: boolean;
+  carryOver: boolean; // Does this category carry forward if incomplete?
+}
+
+export interface AutoAssignRule {
+  id: string;
+  taskType: "patient" | "appointment";
+  category?: string; // Optional - specific category
+  assignTo: "named_nurse" | "consultant" | "creator" | "unassigned";
+}
+
+export interface TaskFieldRequirements {
+  patientLink: FieldVisibility; // Must link to patient?
+  priority: FieldVisibility;
+  category: FieldVisibility;
+}
+
+export interface WardSettings {
+  wardId: string;
+
+  // Patient Settings (1-3)
+  patientEntryMode: PatientEntryMode;
+  patientFields: PatientFieldSettings;
+  customAlerts: string[]; // Ward-specific alerts in addition to defaults
+
+  // Task Settings (4-7)
+  taskCategories: TaskCategoryConfig[];
+  autoAssignRules: AutoAssignRule[];
+  taskFieldRequirements: TaskFieldRequirements;
+
+  // Shift Settings (8, 10)
+  shifts: ShiftSettings;
+  shiftTaskDefaults: Record<"early" | "late" | "night", string[]>; // Default task IDs per shift
+
+  // Ward Layout (11-14)
+  capacity: number;
+  rooms: RoomConfig[];
+  showCapacityOnList: boolean;
+
+  // Discharge Settings (18-19)
+  dischargeChecklist: DischargeChecklistItem[];
+  dischargeInitiateRoles: UserRole[];
+  dischargeApproveRoles: UserRole[];
+
+  // Pinned Content (21, 23)
+  pinnedWorkflows: string[]; // Workflow IDs
+  pinnedGuides: string[]; // Guide IDs
+  customQuickLinks: { id: string; title: string; url: string; icon: string }[];
+}
+
+// Default ward settings
+export const DEFAULT_WARD_SETTINGS: Omit<WardSettings, "wardId"> = {
+  patientEntryMode: "choice",
+  patientFields: {
+    room: "optional",
+    bed: "optional",
+    legalStatus: "optional",
+    alerts: "optional",
+  },
+  customAlerts: [],
+  taskCategories: [
+    { category: "referral", enabled: true, carryOver: true },
+    { category: "care", enabled: true, carryOver: true },
+    { category: "observation", enabled: true, carryOver: false },
+    { category: "medication", enabled: true, carryOver: true },
+    { category: "documentation", enabled: true, carryOver: true },
+    { category: "assessment", enabled: true, carryOver: true },
+    { category: "discharge", enabled: true, carryOver: true },
+    { category: "other", enabled: true, carryOver: false },
+  ],
+  autoAssignRules: [],
+  taskFieldRequirements: {
+    patientLink: "optional",
+    priority: "optional",
+    category: "optional",
+  },
+  shifts: {
+    early: { start: "07:00", end: "14:30" },
+    late: { start: "14:00", end: "21:30" },
+    night: { start: "21:00", end: "07:30" },
+  },
+  shiftTaskDefaults: {
+    early: [],
+    late: [],
+    night: [],
+  },
+  capacity: 20,
+  rooms: [],
+  showCapacityOnList: true,
+  dischargeChecklist: [
+    { id: "dc-1", label: "All tasks completed or transferred", required: true },
+    { id: "dc-2", label: "Discharge summary written", required: true },
+    { id: "dc-3", label: "Medications dispensed (TTOs)", required: true },
+    { id: "dc-4", label: "Follow-up appointments arranged", required: false },
+    { id: "dc-5", label: "GP notified", required: true },
+    { id: "dc-6", label: "Community team notified", required: false },
+    { id: "dc-7", label: "Property returned", required: false },
+  ],
+  dischargeInitiateRoles: ["normal", "ward_admin", "contributor", "senior_admin"],
+  dischargeApproveRoles: ["ward_admin", "senior_admin"],
+  pinnedWorkflows: [],
+  pinnedGuides: [],
+  customQuickLinks: [],
+};
+
+// User favorites (for personal bookmark favorites)
+export interface UserFavorites {
+  odId: string;
+  bookmarkIds: string[];
+}

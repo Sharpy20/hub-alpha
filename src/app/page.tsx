@@ -4,8 +4,10 @@ import { MainLayout } from "@/components/layout";
 import { BookmarkCarousel } from "@/components/bookmarks";
 import { TodayWidget } from "@/components/diary";
 import { useApp } from "@/app/providers";
+import { useWardSettings } from "@/app/ward-settings-provider";
 import Link from "next/link";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Star, Plus, ExternalLink } from "lucide-react";
+import { bookmarks } from "@/lib/data/bookmarks";
 
 const QUICK_ACTIONS = [
   {
@@ -40,7 +42,11 @@ const VERSION_OPTIONS = [
 
 export default function HomePage() {
   const { user, version, setVersion, hasFeature } = useApp();
+  const { userFavoriteBookmarks, toggleFavoriteBookmark } = useWardSettings();
   const showTasks = hasFeature("ward_tasks");
+
+  // Get favorite bookmark objects
+  const favoriteBookmarks = bookmarks.filter((b) => userFavoriteBookmarks.includes(b.id));
 
   return (
     <MainLayout>
@@ -59,6 +65,47 @@ export default function HomePage() {
             </div>
           )}
         </section>
+
+        {/* User Favorites Section */}
+        {favoriteBookmarks.length > 0 && (
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                <Star className="w-6 h-6 text-amber-500 fill-amber-500" />
+                My Favorites
+              </h2>
+              <Link
+                href="/bookmarks"
+                className="text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
+              >
+                Manage
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {favoriteBookmarks.slice(0, 8).map((bookmark) => (
+                <a
+                  key={bookmark.id}
+                  href={bookmark.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group bg-white border-2 border-gray-100 rounded-xl p-4 hover:border-amber-300 hover:shadow-md transition-all no-underline"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <span className="text-2xl">{bookmark.icon}</span>
+                    <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-amber-500 transition-colors" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 group-hover:text-amber-600 transition-colors">
+                    {bookmark.title}
+                  </h3>
+                  {bookmark.phone && (
+                    <p className="text-xs text-gray-500 mt-1">{bookmark.phone}</p>
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Bookmark Carousel - Full width section */}
         <section>

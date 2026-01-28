@@ -17,6 +17,7 @@ interface PatientTasksModalProps {
   onClose: () => void;
   patient: Patient | null;
   tasks: DiaryTask[];
+  onTaskClick?: (task: DiaryTask) => void;
 }
 
 const STATUS_CONFIG = {
@@ -27,7 +28,7 @@ const STATUS_CONFIG = {
   cancelled: { label: "Cancelled", color: "text-gray-500", bgColor: "bg-gray-100", icon: Clock },
 };
 
-export function PatientTasksModal({ isOpen, onClose, patient, tasks }: PatientTasksModalProps) {
+export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick }: PatientTasksModalProps) {
   if (!patient) return null;
 
   // Separate tasks by type
@@ -96,12 +97,13 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks }: PatientTa
                   return (
                     <div
                       key={task.id}
-                      className={`p-3 rounded-lg border ${
+                      onClick={() => onTaskClick?.(task)}
+                      className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
                         task.status === "overdue"
-                          ? "border-red-200 bg-red-50"
+                          ? "border-red-200 bg-red-50 hover:border-red-300"
                           : task.status === "completed"
-                          ? "border-green-200 bg-green-50"
-                          : "border-gray-200 bg-white"
+                          ? "border-green-200 bg-green-50 hover:border-green-300"
+                          : "border-gray-200 bg-white hover:border-indigo-300"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -165,10 +167,11 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks }: PatientTa
                   return (
                     <div
                       key={appt.id}
-                      className={`p-3 rounded-lg border ${
+                      onClick={() => onTaskClick?.(appt)}
+                      className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
                         appt.status === "completed"
-                          ? "border-green-200 bg-green-50"
-                          : "border-blue-200 bg-blue-50"
+                          ? "border-green-200 bg-green-50 hover:border-green-300"
+                          : "border-blue-200 bg-blue-50 hover:border-blue-300"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">

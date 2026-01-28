@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd complete sign out with password re-entry\n\n- Create /api/auth/logout endpoint to clear site_access cookie\n- Update header logout to clear all localStorage items\n- Redirect to password page on sign out\n\nGenerated with [Claude Code]\\(https://claude.ai/code\\)\nvia [Happy]\\(https://happy.engineering\\)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nCo-Authored-By: Happy <yesreply@happy.engineering>\nEOF\n\\)\")",
+      "Bash(git push:*)"
+    ]
+  }
+}

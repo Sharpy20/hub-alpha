@@ -699,6 +699,14 @@ Working through in order. Marking complete as fixed.
 | 32 | [x] | Add task modal - added date picker for one-off ward tasks (future date selection) |
 | 33 | [x] | Ward diary - added "View repeat ward tasks" button with Mon-Sun weekly overview modal |
 
+## SNAG LIST (28 Jan 2026)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 34 | [x] | Patient tasks modal - clicking tasks/appointments now opens TaskDetailModal for viewing/editing |
+| 35 | [x] | Add task modal - patient name field changed from free text to searchable dropdown of active ward patients |
+| 36 | [x] | Ward diary - SystemOne sync tip banner now hidden in Max+ version (only shows for Light/Medium/Max) |
+
 ---
 
 ## CURRENT FOCUS

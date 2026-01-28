@@ -64,8 +64,8 @@ const PATIENT_STATUSES: PatientStatus[] = [
   "discharged", // 10%
 ];
 
-// Alerts pool
-const ALERTS_POOL = [
+// Alerts pool - exported for use in Add Patient modal
+export const ALERTS_POOL = [
   "Falls risk",
   "DOLS in place",
   "Diabetes - BMs QDS",

@@ -29,6 +29,7 @@ import {
   DEMO_PATIENTS,
   getTasksForPatient,
   ALL_DEMO_TASKS,
+  ALERTS_POOL,
 } from "@/lib/data/tasks";
 import { Patient, DiaryTask, PatientStatus, LegalStatus } from "@/lib/types";
 
@@ -70,6 +71,8 @@ export default function PatientsPage() {
   const [newPatientRoom, setNewPatientRoom] = useState("");
   const [newPatientBed, setNewPatientBed] = useState("");
   const [newPatientLegalStatus, setNewPatientLegalStatus] = useState<LegalStatus>("informal");
+  const [newPatientAlerts, setNewPatientAlerts] = useState<string[]>([]);
+  const [addPatientMode, setAddPatientMode] = useState<"simple" | "advanced">("simple");
 
   // Initialize patients and tasks from demo data
   useEffect(() => {
@@ -192,18 +195,19 @@ export default function PatientsPage() {
   };
 
   const handleAddPatient = () => {
-    if (!newPatientName.trim() || !newPatientRoom.trim()) return;
+    if (!newPatientName.trim()) return;
 
     const wardPrefix = activeWard.substring(0, 2).toUpperCase();
     const newPatient: Patient = {
       id: `p-${wardPrefix}-${Date.now()}`,
       name: newPatientName.trim(),
-      room: newPatientRoom.trim(),
+      room: newPatientRoom.trim() || "TBA",
       bed: newPatientBed.trim() || undefined,
       ward: activeWard.charAt(0).toUpperCase() + activeWard.slice(1),
       status: "active",
       legalStatus: newPatientLegalStatus,
       admissionDate: new Date().toISOString().split("T")[0],
+      alerts: newPatientAlerts.length > 0 ? newPatientAlerts : undefined,
     };
 
     setPatients((prev) => [...prev, newPatient]);
@@ -213,7 +217,16 @@ export default function PatientsPage() {
     setNewPatientRoom("");
     setNewPatientBed("");
     setNewPatientLegalStatus("informal");
+    setNewPatientAlerts([]);
     setIsAddPatientModalOpen(false);
+  };
+
+  const toggleAlert = (alert: string) => {
+    setNewPatientAlerts((prev) =>
+      prev.includes(alert)
+        ? prev.filter((a) => a !== alert)
+        : [...prev, alert]
+    );
   };
 
   const getPatientTasks = (patientId: string): DiaryTask[] => {
@@ -767,11 +780,11 @@ export default function PatientsPage() {
           onClick={() => setIsAddPatientModalOpen(false)}
         >
           <div
-            className="bg-white rounded-2xl w-full max-w-md overflow-hidden"
+            className="bg-white rounded-2xl w-full max-w-lg overflow-hidden max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white flex-shrink-0">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -792,7 +805,32 @@ export default function PatientsPage() {
             </div>
 
             {/* Form */}
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-4 overflow-y-auto flex-1">
+              {/* Simple/Advanced Toggle */}
+              <div className="flex items-center justify-between bg-gray-100 rounded-xl p-1">
+                <button
+                  onClick={() => setAddPatientMode("simple")}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                    addPatientMode === "simple"
+                      ? "bg-white text-green-600 shadow-sm"
+                      : "text-gray-600 hover:text-gray-800"
+                  }`}
+                >
+                  Simple
+                </button>
+                <button
+                  onClick={() => setAddPatientMode("advanced")}
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                    addPatientMode === "advanced"
+                      ? "bg-white text-green-600 shadow-sm"
+                      : "text-gray-600 hover:text-gray-800"
+                  }`}
+                >
+                  Advanced
+                </button>
+              </div>
+
+              {/* Patient Name - Always shown */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Patient Name *
@@ -803,52 +841,87 @@ export default function PatientsPage() {
                   onChange={(e) => setNewPatientName(e.target.value)}
                   placeholder="e.g., John Smith"
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                  autoFocus
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Room *
-                  </label>
-                  <input
-                    type="text"
-                    value={newPatientRoom}
-                    onChange={(e) => setNewPatientRoom(e.target.value)}
-                    placeholder="e.g., 101"
-                    className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Bed (optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={newPatientBed}
-                    onChange={(e) => setNewPatientBed(e.target.value)}
-                    placeholder="e.g., A"
-                    className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
-                  />
-                </div>
-              </div>
+              {/* Advanced Fields */}
+              {addPatientMode === "advanced" && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Room <span className="text-gray-400 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={newPatientRoom}
+                        onChange={(e) => setNewPatientRoom(e.target.value)}
+                        placeholder="e.g., 101"
+                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Bed <span className="text-gray-400 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={newPatientBed}
+                        onChange={(e) => setNewPatientBed(e.target.value)}
+                        placeholder="e.g., A"
+                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Legal Status
-                </label>
-                <select
-                  value={newPatientLegalStatus}
-                  onChange={(e) => setNewPatientLegalStatus(e.target.value as LegalStatus)}
-                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
-                >
-                  {Object.entries(LEGAL_STATUS_CONFIG).map(([key, config]) => (
-                    <option key={key} value={key}>
-                      {config.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      MHA Status <span className="text-gray-400 font-normal">(optional)</span>
+                    </label>
+                    <select
+                      value={newPatientLegalStatus}
+                      onChange={(e) => setNewPatientLegalStatus(e.target.value as LegalStatus)}
+                      className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                    >
+                      {Object.entries(LEGAL_STATUS_CONFIG).map(([key, config]) => (
+                        <option key={key} value={key}>
+                          {config.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Alerts Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Alerts <span className="text-gray-400 font-normal">(optional)</span>
+                    </label>
+                    <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-xl border-2 border-gray-200 max-h-40 overflow-y-auto">
+                      {ALERTS_POOL.map((alert) => (
+                        <button
+                          key={alert}
+                          type="button"
+                          onClick={() => toggleAlert(alert)}
+                          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                            newPatientAlerts.includes(alert)
+                              ? "bg-red-100 text-red-700 border-2 border-red-300"
+                              : "bg-white text-gray-600 border-2 border-gray-200 hover:border-gray-300"
+                          }`}
+                        >
+                          {newPatientAlerts.includes(alert) && "✓ "}
+                          {alert}
+                        </button>
+                      ))}
+                    </div>
+                    {newPatientAlerts.length > 0 && (
+                      <p className="mt-2 text-sm text-red-600">
+                        {newPatientAlerts.length} alert{newPatientAlerts.length !== 1 ? "s" : ""} selected
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
                 <p>
@@ -859,16 +932,23 @@ export default function PatientsPage() {
             </div>
 
             {/* Actions */}
-            <div className="p-4 bg-gray-50 border-t border-gray-200 flex gap-3">
+            <div className="p-4 bg-gray-50 border-t border-gray-200 flex gap-3 flex-shrink-0">
               <button
-                onClick={() => setIsAddPatientModalOpen(false)}
+                onClick={() => {
+                  setIsAddPatientModalOpen(false);
+                  setNewPatientName("");
+                  setNewPatientRoom("");
+                  setNewPatientBed("");
+                  setNewPatientLegalStatus("informal");
+                  setNewPatientAlerts([]);
+                }}
                 className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddPatient}
-                disabled={!newPatientName.trim() || !newPatientRoom.trim()}
+                disabled={!newPatientName.trim()}
                 className="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" />

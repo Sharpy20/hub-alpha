@@ -22,6 +22,8 @@ import {
   FileText,
   LogOut,
   BarChart3,
+  Plus,
+  X,
 } from "lucide-react";
 import {
   DEMO_PATIENTS,
@@ -61,6 +63,13 @@ export default function PatientsPage() {
   const [isDischargeConfirmOpen, setIsDischargeConfirmOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
   const [isTaskDetailModalOpen, setIsTaskDetailModalOpen] = useState(false);
+  const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
+
+  // Add patient form state
+  const [newPatientName, setNewPatientName] = useState("");
+  const [newPatientRoom, setNewPatientRoom] = useState("");
+  const [newPatientBed, setNewPatientBed] = useState("");
+  const [newPatientLegalStatus, setNewPatientLegalStatus] = useState<LegalStatus>("informal");
 
   // Initialize patients and tasks from demo data
   useEffect(() => {
@@ -182,6 +191,31 @@ export default function PatientsPage() {
     setIsDischargeConfirmOpen(true);
   };
 
+  const handleAddPatient = () => {
+    if (!newPatientName.trim() || !newPatientRoom.trim()) return;
+
+    const wardPrefix = activeWard.substring(0, 2).toUpperCase();
+    const newPatient: Patient = {
+      id: `p-${wardPrefix}-${Date.now()}`,
+      name: newPatientName.trim(),
+      room: newPatientRoom.trim(),
+      bed: newPatientBed.trim() || undefined,
+      ward: activeWard.charAt(0).toUpperCase() + activeWard.slice(1),
+      status: "active",
+      legalStatus: newPatientLegalStatus,
+      admissionDate: new Date().toISOString().split("T")[0],
+    };
+
+    setPatients((prev) => [...prev, newPatient]);
+
+    // Reset form
+    setNewPatientName("");
+    setNewPatientRoom("");
+    setNewPatientBed("");
+    setNewPatientLegalStatus("informal");
+    setIsAddPatientModalOpen(false);
+  };
+
   const getPatientTasks = (patientId: string): DiaryTask[] => {
     return getTasksForPatient(patientId, tasks);
   };
@@ -268,13 +302,22 @@ export default function PatientsPage() {
                 <p className="text-gray-600">{activeWard} Ward</p>
               </div>
             </div>
-            <Link
-              href="/reports"
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:from-violet-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
-            >
-              <BarChart3 className="w-5 h-5" />
-              Progress Reports
-            </Link>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsAddPatientModalOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-all shadow-md hover:shadow-lg"
+              >
+                <Plus className="w-5 h-5" />
+                Add Patient
+              </button>
+              <Link
+                href="/reports"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:from-violet-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+              >
+                <BarChart3 className="w-5 h-5" />
+                Reports
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -711,6 +754,125 @@ export default function PatientsPage() {
               >
                 <LogOut className="w-4 h-4" />
                 Confirm Discharge
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Patient Modal */}
+      {isAddPatientModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          onClick={() => setIsAddPatientModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-md overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-4 text-white">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Plus className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold">Add New Patient</h2>
+                    <p className="text-sm text-white/80">{activeWard} Ward</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsAddPatientModalOpen(false)}
+                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Form */}
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Patient Name *
+                </label>
+                <input
+                  type="text"
+                  value={newPatientName}
+                  onChange={(e) => setNewPatientName(e.target.value)}
+                  placeholder="e.g., John Smith"
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Room *
+                  </label>
+                  <input
+                    type="text"
+                    value={newPatientRoom}
+                    onChange={(e) => setNewPatientRoom(e.target.value)}
+                    placeholder="e.g., 101"
+                    className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Bed (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={newPatientBed}
+                    onChange={(e) => setNewPatientBed(e.target.value)}
+                    placeholder="e.g., A"
+                    className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Legal Status
+                </label>
+                <select
+                  value={newPatientLegalStatus}
+                  onChange={(e) => setNewPatientLegalStatus(e.target.value as LegalStatus)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                >
+                  {Object.entries(LEGAL_STATUS_CONFIG).map(([key, config]) => (
+                    <option key={key} value={key}>
+                      {config.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
+                <p>
+                  <strong>Note:</strong> In Max+ version, patients would be synced from SystemOne.
+                  This manual entry is for demo purposes.
+                </p>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="p-4 bg-gray-50 border-t border-gray-200 flex gap-3">
+              <button
+                onClick={() => setIsAddPatientModalOpen(false)}
+                className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddPatient}
+                disabled={!newPatientName.trim() || !newPatientRoom.trim()}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Add Patient
               </button>
             </div>
           </div>

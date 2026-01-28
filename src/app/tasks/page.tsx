@@ -44,7 +44,6 @@ import {
 import { getActivePatientsByWard } from "@/lib/data/tasks";
 import {
   StaffManagementModal,
-  PatientNamesModal,
   StaffTasksModal,
   TaskDetailModal,
 } from "@/components/modals";
@@ -1909,7 +1908,6 @@ export default function TasksPage() {
 
   // Management modal states
   const [showStaffModal, setShowStaffModal] = useState(false);
-  const [showPatientModal, setShowPatientModal] = useState(false);
   const [showStaffTasksModal, setShowStaffTasksModal] = useState(false);
   const [showRepeatTasksModal, setShowRepeatTasksModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
@@ -2174,15 +2172,6 @@ export default function TasksPage() {
             </button>
 
             <button
-              onClick={() => setShowPatientModal(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
-              title="Manage Patient Names"
-            >
-              <UserSquare2 className="w-5 h-5" />
-              <span className="hidden sm:inline">Patients</span>
-            </button>
-
-            <button
               onClick={() => setShowStaffTasksModal(true)}
               className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
               title="View Staff Tasks"
@@ -2279,12 +2268,6 @@ export default function TasksPage() {
       <StaffManagementModal
         isOpen={showStaffModal}
         onClose={() => setShowStaffModal(false)}
-        ward={activeWard}
-      />
-
-      <PatientNamesModal
-        isOpen={showPatientModal}
-        onClose={() => setShowPatientModal(false)}
         ward={activeWard}
       />
 

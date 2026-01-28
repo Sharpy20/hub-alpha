@@ -5,12 +5,11 @@ import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import Link from "next/link";
-import { Users, UserSquare2, ClipboardList, CalendarDays, Info } from "lucide-react";
+import { Users, ClipboardList, CalendarDays, Info } from "lucide-react";
 import { DiaryTask } from "@/lib/types";
 import { KanbanBoard } from "@/components/kanban";
 import {
   StaffManagementModal,
-  PatientNamesModal,
   StaffTasksModal,
   TaskDetailModal,
 } from "@/components/modals";
@@ -21,7 +20,6 @@ export default function MyTasksPage() {
 
   // Management modal states
   const [showStaffModal, setShowStaffModal] = useState(false);
-  const [showPatientModal, setShowPatientModal] = useState(false);
   const [showStaffTasksModal, setShowStaffTasksModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
 
@@ -164,15 +162,6 @@ export default function MyTasksPage() {
             </button>
 
             <button
-              onClick={() => setShowPatientModal(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
-              title="Manage Patient Names"
-            >
-              <UserSquare2 className="w-5 h-5" />
-              <span className="hidden sm:inline">Patients</span>
-            </button>
-
-            <button
               onClick={() => setShowStaffTasksModal(true)}
               className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
               title="View Staff Tasks"
@@ -238,12 +227,6 @@ export default function MyTasksPage() {
       <StaffManagementModal
         isOpen={showStaffModal}
         onClose={() => setShowStaffModal(false)}
-        ward={user.ward}
-      />
-
-      <PatientNamesModal
-        isOpen={showPatientModal}
-        onClose={() => setShowPatientModal(false)}
         ward={user.ward}
       />
 

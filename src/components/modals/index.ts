@@ -1,5 +1,4 @@
 export { StaffManagementModal } from "./StaffManagementModal";
-export { PatientNamesModal } from "./PatientNamesModal";
 export { StaffTasksModal } from "./StaffTasksModal";
 export { TaskDetailModal } from "./TaskDetailModal";
 export { PatientTransferModal } from "./PatientTransferModal";

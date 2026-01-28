@@ -706,6 +706,8 @@ Working through in order. Marking complete as fixed.
 | 34 | [x] | Patient tasks modal - clicking tasks/appointments now opens TaskDetailModal for viewing/editing |
 | 35 | [x] | Add task modal - patient name field changed from free text to searchable dropdown of active ward patients |
 | 36 | [x] | Ward diary - SystemOne sync tip banner now hidden in Max+ version (only shows for Light/Medium/Max) |
+| 37 | [x] | Removed PatientNamesModal from Ward Diary and My Tasks (was not persisting changes) |
+| 38 | [x] | Added "Add Patient" button and modal to Patients page (name, room, bed, legal status)
 
 ---
 

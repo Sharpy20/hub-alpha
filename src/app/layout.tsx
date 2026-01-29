@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { TasksProvider } from "./tasks-provider";
 import { WardSettingsProvider } from "./ward-settings-provider";
+import { VerificationProvider } from "./verification-provider";
 import { Toaster } from "sonner";
 import { ErrorBoundary } from "@/components/ui";
 
@@ -40,7 +41,9 @@ export default function RootLayout({
         <Providers>
           <TasksProvider>
             <WardSettingsProvider>
-              <ErrorBoundary>{children}</ErrorBoundary>
+              <VerificationProvider>
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </VerificationProvider>
             </WardSettingsProvider>
           </TasksProvider>
         </Providers>

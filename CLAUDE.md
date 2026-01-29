@@ -75,6 +75,7 @@ git remote -v
 4. **Public Info Check** - If a phone number/email isn't Google-able, use placeholder: [INTERNAL - See FOCUS]
 5. **NHS Styling** - Follow NHS Identity guidelines (colours, typography, accessibility)
 6. **Project Isolation** - NEVER reference, import from, or link to any other projects (see Security section above)
+7. **Documentation Sync** - After ANY feature change, follow the Documentation Sync Workflow (update CLAUDE.md → Dev Panel → GDPR if needed)
 
 ---
 

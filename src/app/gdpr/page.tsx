@@ -279,10 +279,19 @@ export default function GdprPage() {
               Data Sources Audit Log
             </Link>
           </p>
-          <p className="text-xs text-gray-400 mt-2">
-            <Link href="/dev-panel" className="text-gray-400 hover:text-gray-500">
-              dev panel
-            </Link>
+        </div>
+
+        {/* Dev Panel - prominent button for IT/IG stakeholders */}
+        <div className="pt-4">
+          <Link
+            href="/dev-panel"
+            className="flex items-center justify-center gap-2 p-4 bg-white border-2 border-slate-200 rounded-xl text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-400 hover:shadow-md transition-all"
+          >
+            <Shield className="w-5 h-5" />
+            Developer & Governance Panel
+          </Link>
+          <p className="text-xs text-gray-400 text-center mt-2">
+            Technical documentation, DPIA, clinical safety, and compliance information
           </p>
         </div>
       </div>

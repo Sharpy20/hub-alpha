@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 28 January 2026
+> **Last Updated:** 29 January 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -75,6 +75,29 @@ git remote -v
 4. **Public Info Check** - If a phone number/email isn't Google-able, use placeholder: [INTERNAL - See FOCUS]
 5. **NHS Styling** - Follow NHS Identity guidelines (colours, typography, accessibility)
 6. **Project Isolation** - NEVER reference, import from, or link to any other projects (see Security section above)
+
+---
+
+## 📚 DOCUMENTATION SYNC WORKFLOW
+
+**After any feature change, update documentation in this order:**
+
+1. **CLAUDE.md** → Update Snag List, Feature Matrix, or relevant sections
+2. **Dev Panel** → Update affected sections:
+   - `/app/dev-panel/page.tsx` → Technical Spec, Data Catalogue, RBAC, User Flows
+   - If data handling changed → Update DPIA section
+   - If new hazards identified → Update Clinical Safety section
+3. **GDPR Page** → If data collection/storage changed
+4. **User-facing content** → FAQ, intro guides if affected
+
+**Currency Stamps:**
+- Add `Last reviewed: YYYY-MM-DD` to documentation sections
+- Mark sections: ✅ current | ⚠️ review due | 🔄 updating
+
+**Dev Panel Access:**
+- Entry: Small link on GDPR page ("dev panel")
+- Password: `Eft3&d3` (demo only - production uses Trust key vault)
+- In-memory session token (clears on page refresh)
 
 ---
 
@@ -753,15 +776,31 @@ Working through in order. Marking complete as fixed.
 | 53 | [x] | Add patient modal - include alerts selection (ligature risk, absconding risk, etc.) |
 | 54 | [x] | Add patient modal - Simple/Advanced toggle with ward admin override settings (3 states: simple only, advanced only, toggle enabled) |
 
+## DEV PANEL & GOVERNANCE (29 Jan 2026)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 55 | [x] | Dev Panel route created with password gate (`Eft3&d3`) |
+| 56 | [x] | Dev Panel left nav with 11 sections (Overview, Technical, Data Catalogue, RBAC, User Flows, DPIA, Clinical Safety, Schemas, Webhooks, SystmOne, References) |
+| 57 | [x] | Schema Status Widget showing DRAFT status |
+| 58 | [x] | DPIA draft scaffold with 7 sections |
+| 59 | [x] | Clinical Safety section with hazard log starter |
+| 60 | [x] | Dev Panel link added to GDPR page |
+| 61 | [x] | Documentation Sync Workflow added to CLAUDE.md |
+| 62 | [ ] | Complete remaining Dev Panel sections (expand content) |
+| 63 | [ ] | Add "Export to PDF" buttons |
+| 64 | [ ] | Add Q&A Pack for stakeholders |
+| 65 | [ ] | Add Role-specific Evaluations section |
+
 ---
 
 ## CURRENT FOCUS
 
 **Immediate Next Steps:**
-1. Complete Phase 5: Admin features (workflow/guide editors, admin log)
-2. Mobile responsiveness pass
-3. Prepare for user testing
-4. Address recommendations from project evaluation
+1. ~~Complete Phase 5: Admin features~~ → Dev Panel now priority for IT meeting
+2. Expand Dev Panel content for stakeholder meeting (1 week)
+3. Mobile responsiveness pass
+4. Prepare for user testing
 
 **Recently Completed (28 Jan 2026 - Session 6):**
 - ✅ Patient tasks modal now opens TaskDetailModal for viewing/editing
@@ -952,6 +991,34 @@ Then open http://localhost:3000
 - Layout files with meta titles for all routes
 
 **Build Status:** All builds pass successfully
+
+### 29 January 2026 - Session 7 (Dev Panel & Governance)
+**Completed:**
+- [x] Dev Panel route with password gate (access code: `Eft3&d3`)
+- [x] 11-section left navigation with priority indicators
+- [x] Schema Status Widget (DRAFT/LIVE/UNKNOWN states)
+- [x] Overview section with 60-sec pitch and 5-min deep dive
+- [x] Technical Spec with stack inventory and C4 diagrams (ASCII)
+- [x] Data Catalogue with entity overview and PII classification
+- [x] RBAC Matrix with role definitions and permissions table
+- [x] User Flows for referral workflow, task lifecycle, discharge
+- [x] DPIA Draft scaffold (7 sections with sign-off checklist)
+- [x] Clinical Safety section (DCB 0129/0160, hazard log starter)
+- [x] Supabase Schemas section (draft tables, RLS policies)
+- [x] Assurance Webhooks spec with Power Automate example
+- [x] SystmOne (MAX+) preview section with approval checklist
+- [x] References section (Trust policies, external standards)
+- [x] Dev Panel link on GDPR page
+- [x] Documentation Sync Workflow added to CLAUDE.md
+
+**New Files Created:**
+- `src/app/dev-panel/page.tsx` - Complete Dev Panel with all sections
+
+**Access:**
+- Navigate to GDPR & Privacy page → small "dev panel" link at bottom
+- Password: `Eft3&d3`
+
+**Build Status:** Pending verification
 
 ---
 

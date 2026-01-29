@@ -279,6 +279,11 @@ export default function GdprPage() {
               Data Sources Audit Log
             </Link>
           </p>
+          <p className="text-xs text-gray-400 mt-2">
+            <Link href="/dev-panel" className="text-gray-400 hover:text-gray-500">
+              dev panel
+            </Link>
+          </p>
         </div>
       </div>
     </MainLayout>

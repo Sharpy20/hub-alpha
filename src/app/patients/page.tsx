@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useApp } from "@/app/providers";
+import { useWardSettings } from "@/app/ward-settings-provider";
 import { MainLayout } from "@/components/layout";
 import { Card } from "@/components/ui";
 import { PatientTransferModal, DischargeAuditModal, PatientTasksModal, TaskDetailModal } from "@/components/modals";
@@ -31,7 +32,7 @@ import {
   ALL_DEMO_TASKS,
   ALERTS_POOL,
 } from "@/lib/data/tasks";
-import { Patient, DiaryTask, PatientStatus, LegalStatus } from "@/lib/types";
+import { Patient, DiaryTask, PatientStatus, LegalStatus, PatientEntryMode, FieldVisibility } from "@/lib/types";
 
 const LEGAL_STATUS_CONFIG: Record<LegalStatus, { label: string; color: string; bgColor: string }> = {
   informal: { label: "Informal", color: "text-green-700", bgColor: "bg-green-100" },
@@ -53,6 +54,9 @@ type StatusFilter = "all" | PatientStatus;
 
 export default function PatientsPage() {
   const { user, hasFeature, activeWard } = useApp();
+  const { getWardSettings } = useWardSettings();
+  const wardSettings = getWardSettings(activeWard);
+
   const [patients, setPatients] = useState<Patient[]>([]);
   const [tasks, setTasks] = useState<DiaryTask[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,7 +76,28 @@ export default function PatientsPage() {
   const [newPatientBed, setNewPatientBed] = useState("");
   const [newPatientLegalStatus, setNewPatientLegalStatus] = useState<LegalStatus>("informal");
   const [newPatientAlerts, setNewPatientAlerts] = useState<string[]>([]);
-  const [addPatientMode, setAddPatientMode] = useState<"simple" | "advanced">("simple");
+
+  // Ward admin can set: "simple" (always simple), "advanced" (always advanced), "choice" (user chooses)
+  const patientEntryMode = wardSettings.patientEntryMode;
+  const patientFields = wardSettings.patientFields;
+
+  // Determine effective mode based on ward settings
+  const getDefaultMode = (): "simple" | "advanced" => {
+    if (patientEntryMode === "simple") return "simple";
+    if (patientEntryMode === "advanced") return "advanced";
+    return "simple"; // Default for "choice"
+  };
+  const [addPatientMode, setAddPatientMode] = useState<"simple" | "advanced">(getDefaultMode);
+
+  // Whether toggle is shown (only when "choice" mode)
+  const showModeToggle = patientEntryMode === "choice";
+
+  // Whether to show advanced fields (either mode is advanced, or user toggled to advanced)
+  const showAdvancedFields = addPatientMode === "advanced";
+
+  // Helper to check if a field should be shown
+  const shouldShowField = (field: FieldVisibility): boolean => field !== "hidden";
+  const isFieldRequired = (field: FieldVisibility): boolean => field === "mandatory";
 
   // Initialize patients and tasks from demo data
   useEffect(() => {
@@ -806,29 +831,38 @@ export default function PatientsPage() {
 
             {/* Form */}
             <div className="p-6 space-y-4 overflow-y-auto flex-1">
-              {/* Simple/Advanced Toggle */}
-              <div className="flex items-center justify-between bg-gray-100 rounded-xl p-1">
-                <button
-                  onClick={() => setAddPatientMode("simple")}
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                    addPatientMode === "simple"
-                      ? "bg-white text-green-600 shadow-sm"
-                      : "text-gray-600 hover:text-gray-800"
-                  }`}
-                >
-                  Simple
-                </button>
-                <button
-                  onClick={() => setAddPatientMode("advanced")}
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                    addPatientMode === "advanced"
-                      ? "bg-white text-green-600 shadow-sm"
-                      : "text-gray-600 hover:text-gray-800"
-                  }`}
-                >
-                  Advanced
-                </button>
-              </div>
+              {/* Simple/Advanced Toggle - only show when ward allows choice */}
+              {showModeToggle && (
+                <div className="flex items-center justify-between bg-gray-100 rounded-xl p-1">
+                  <button
+                    onClick={() => setAddPatientMode("simple")}
+                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                      addPatientMode === "simple"
+                        ? "bg-white text-green-600 shadow-sm"
+                        : "text-gray-600 hover:text-gray-800"
+                    }`}
+                  >
+                    Simple
+                  </button>
+                  <button
+                    onClick={() => setAddPatientMode("advanced")}
+                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                      addPatientMode === "advanced"
+                        ? "bg-white text-green-600 shadow-sm"
+                        : "text-gray-600 hover:text-gray-800"
+                    }`}
+                  >
+                    Advanced
+                  </button>
+                </div>
+              )}
+
+              {/* Mode indicator when fixed by admin */}
+              {!showModeToggle && (
+                <div className="text-xs text-gray-500 text-center py-1">
+                  {patientEntryMode === "simple" ? "Simple mode (set by ward admin)" : "Advanced mode (set by ward admin)"}
+                </div>
+              )}
 
               {/* Patient Name - Always shown */}
               <div>
@@ -845,81 +879,92 @@ export default function PatientsPage() {
                 />
               </div>
 
-              {/* Advanced Fields */}
-              {addPatientMode === "advanced" && (
+              {/* Advanced Fields - shown when in advanced mode */}
+              {showAdvancedFields && (
                 <>
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Room <span className="text-gray-400 font-normal">(optional)</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={newPatientRoom}
-                        onChange={(e) => setNewPatientRoom(e.target.value)}
-                        placeholder="e.g., 101"
-                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Bed <span className="text-gray-400 font-normal">(optional)</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={newPatientBed}
-                        onChange={(e) => setNewPatientBed(e.target.value)}
-                        placeholder="e.g., A"
-                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      MHA Status <span className="text-gray-400 font-normal">(optional)</span>
-                    </label>
-                    <select
-                      value={newPatientLegalStatus}
-                      onChange={(e) => setNewPatientLegalStatus(e.target.value as LegalStatus)}
-                      className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
-                    >
-                      {Object.entries(LEGAL_STATUS_CONFIG).map(([key, config]) => (
-                        <option key={key} value={key}>
-                          {config.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Alerts Selection */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Alerts <span className="text-gray-400 font-normal">(optional)</span>
-                    </label>
-                    <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-xl border-2 border-gray-200 max-h-40 overflow-y-auto">
-                      {ALERTS_POOL.map((alert) => (
-                        <button
-                          key={alert}
-                          type="button"
-                          onClick={() => toggleAlert(alert)}
-                          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                            newPatientAlerts.includes(alert)
-                              ? "bg-red-100 text-red-700 border-2 border-red-300"
-                              : "bg-white text-gray-600 border-2 border-gray-200 hover:border-gray-300"
-                          }`}
-                        >
-                          {newPatientAlerts.includes(alert) && "✓ "}
-                          {alert}
-                        </button>
-                      ))}
-                    </div>
-                    {newPatientAlerts.length > 0 && (
-                      <p className="mt-2 text-sm text-red-600">
-                        {newPatientAlerts.length} alert{newPatientAlerts.length !== 1 ? "s" : ""} selected
-                      </p>
+                    {/* Room field */}
+                    {shouldShowField(patientFields.room) && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Room {isFieldRequired(patientFields.room) ? "*" : <span className="text-gray-400 font-normal">(optional)</span>}
+                        </label>
+                        <input
+                          type="text"
+                          value={newPatientRoom}
+                          onChange={(e) => setNewPatientRoom(e.target.value)}
+                          placeholder="e.g., 101"
+                          className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                        />
+                      </div>
+                    )}
+                    {/* Bed field */}
+                    {shouldShowField(patientFields.bed) && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Bed {isFieldRequired(patientFields.bed) ? "*" : <span className="text-gray-400 font-normal">(optional)</span>}
+                        </label>
+                        <input
+                          type="text"
+                          value={newPatientBed}
+                          onChange={(e) => setNewPatientBed(e.target.value)}
+                          placeholder="e.g., A"
+                          className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                        />
+                      </div>
                     )}
                   </div>
+
+                  {/* MHA Status field */}
+                  {shouldShowField(patientFields.legalStatus) && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        MHA Status {isFieldRequired(patientFields.legalStatus) ? "*" : <span className="text-gray-400 font-normal">(optional)</span>}
+                      </label>
+                      <select
+                        value={newPatientLegalStatus}
+                        onChange={(e) => setNewPatientLegalStatus(e.target.value as LegalStatus)}
+                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                      >
+                        {Object.entries(LEGAL_STATUS_CONFIG).map(([key, config]) => (
+                          <option key={key} value={key}>
+                            {config.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Alerts Selection */}
+                  {shouldShowField(patientFields.alerts) && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Alerts {isFieldRequired(patientFields.alerts) ? "*" : <span className="text-gray-400 font-normal">(optional)</span>}
+                      </label>
+                      <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-xl border-2 border-gray-200 max-h-40 overflow-y-auto">
+                        {ALERTS_POOL.map((alert) => (
+                          <button
+                            key={alert}
+                            type="button"
+                            onClick={() => toggleAlert(alert)}
+                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+                              newPatientAlerts.includes(alert)
+                                ? "bg-red-100 text-red-700 border-2 border-red-300"
+                                : "bg-white text-gray-600 border-2 border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            {newPatientAlerts.includes(alert) && "✓ "}
+                            {alert}
+                          </button>
+                        ))}
+                      </div>
+                      {newPatientAlerts.length > 0 && (
+                        <p className="mt-2 text-sm text-red-600">
+                          {newPatientAlerts.length} alert{newPatientAlerts.length !== 1 ? "s" : ""} selected
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </>
               )}
 

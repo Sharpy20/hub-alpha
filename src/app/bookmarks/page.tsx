@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout";
-import { Badge } from "@/components/ui";
+import { Badge, VerificationBadge } from "@/components/ui";
 import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings } from "@/app/ward-settings-provider";
@@ -132,7 +132,7 @@ function BookmarksContent() {
                       {bookmark.phone}
                     </p>
                   )}
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-2 mt-2 flex-wrap">
                     <Badge className={`bg-gradient-to-r ${categoryConfig.gradient} text-white border-0 text-xs`}>
                       {bookmark.category}
                     </Badge>
@@ -142,6 +142,11 @@ function BookmarksContent() {
                         FOCUS
                       </Badge>
                     )}
+                    <VerificationBadge
+                      contentType="bookmark"
+                      contentId={bookmark.id}
+                      contentTitle={bookmark.title}
+                    />
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">

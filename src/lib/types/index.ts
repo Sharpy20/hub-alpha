@@ -1,3 +1,15 @@
+// ============================================
+// CONTENT VERIFICATION TYPES
+// ============================================
+
+export type VerificationStatus = "ai_generated" | "verified";
+
+export interface VerificationInfo {
+  status: VerificationStatus;
+  verifiedBy?: string;      // Name of admin who verified
+  verifiedAt?: string;      // ISO date string
+}
+
 // Ward definitions
 export interface Ward {
   id: string;
@@ -23,6 +35,7 @@ export interface Bookmark {
   requiresFocus: boolean;
   description?: string;
   phone?: string;
+  verification?: VerificationInfo;
 }
 
 export const BOOKMARK_CATEGORIES = [
@@ -80,6 +93,7 @@ export interface Workflow {
     instructions?: string;
   };
   caseNoteTemplate: string;
+  verification?: VerificationInfo;
 }
 
 // Guide types
@@ -99,6 +113,7 @@ export interface Guide {
   steps: GuideStep[];
   relatedWorkflows?: string[];
   relatedBookmarks?: string[];
+  verification?: VerificationInfo;
 }
 
 // ============================================

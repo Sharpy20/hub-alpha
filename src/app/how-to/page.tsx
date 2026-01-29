@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MainLayout } from "@/components/layout";
-import { Badge } from "@/components/ui";
+import { Badge, VerificationBadge } from "@/components/ui";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Filter, Pencil } from "lucide-react";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
@@ -236,10 +236,15 @@ export default function HowToPage() {
                     <p className="text-gray-500 text-sm mt-0.5 line-clamp-1">
                       {guide.description}
                     </p>
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-2 mt-2 flex-wrap">
                       <Badge className={`bg-gradient-to-r ${categoryConfig.gradient} text-white border-0 text-xs`}>
                         {guide.category}
                       </Badge>
+                      <VerificationBadge
+                        contentType="guide"
+                        contentId={guide.id}
+                        contentTitle={guide.title}
+                      />
                     </div>
                   </div>
                   <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-500 flex-shrink-0 transition-colors" />

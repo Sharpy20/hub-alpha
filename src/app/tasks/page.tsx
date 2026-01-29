@@ -321,6 +321,117 @@ function TaskCard({
   );
 }
 
+// Priority order: urgent first, then important, then routine
+const PRIORITY_ORDER: Record<string, number> = {
+  urgent: 0,
+  important: 1,
+  routine: 2,
+};
+
+// Priority border colors
+const PRIORITY_BORDER_CONFIG: Record<string, { borderColor: string; bgColor: string; label: string; icon: string }> = {
+  urgent: { borderColor: "border-red-400", bgColor: "bg-red-50", label: "Urgent", icon: "🔴" },
+  important: { borderColor: "border-amber-400", bgColor: "bg-amber-50", label: "Important", icon: "🟡" },
+  routine: { borderColor: "border-green-300", bgColor: "bg-green-50/50", label: "Routine", icon: "🟢" },
+};
+
+// Priority Grouped Tasks Component
+function PriorityGroupedTasks({
+  tasks,
+  onToggleComplete,
+  onClaim,
+  onSteal,
+  onTaskClick,
+  currentUserName,
+  compact,
+}: {
+  tasks: DiaryTask[];
+  onToggleComplete: (id: string) => void;
+  onClaim?: (id: string) => void;
+  onSteal?: (id: string) => void;
+  onTaskClick?: (task: DiaryTask) => void;
+  currentUserName?: string;
+  compact?: boolean;
+}) {
+  // Sort tasks by priority (urgent first)
+  const sortedTasks = [...tasks].sort((a, b) => {
+    const priorityA = PRIORITY_ORDER[a.priority] ?? 2;
+    const priorityB = PRIORITY_ORDER[b.priority] ?? 2;
+    return priorityA - priorityB;
+  });
+
+  // Group tasks by priority
+  const groupedTasks = sortedTasks.reduce((acc, task) => {
+    const priority = task.priority || "routine";
+    if (!acc[priority]) acc[priority] = [];
+    acc[priority].push(task);
+    return acc;
+  }, {} as Record<string, DiaryTask[]>);
+
+  // Render order: urgent, important, routine
+  const priorityKeys = ["urgent", "important", "routine"].filter(
+    (p) => groupedTasks[p] && groupedTasks[p].length > 0
+  );
+
+  // If only one priority or no tasks, render without grouping borders
+  if (priorityKeys.length <= 1) {
+    return (
+      <div className="space-y-2">
+        {sortedTasks.map((task) => (
+          <TaskCard
+            key={task.id}
+            task={task}
+            onToggleComplete={onToggleComplete}
+            onClaim={onClaim}
+            onSteal={onSteal}
+            onClick={onTaskClick}
+            currentUserName={currentUserName}
+            compact={compact}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  // Multiple priorities - render with group borders
+  return (
+    <div className="space-y-3">
+      {priorityKeys.map((priority) => {
+        const config = PRIORITY_BORDER_CONFIG[priority];
+        const priorityTasks = groupedTasks[priority];
+        return (
+          <div
+            key={priority}
+            className={`rounded-lg border-2 ${config.borderColor} ${config.bgColor} p-2`}
+          >
+            <div className="flex items-center gap-1.5 mb-2 px-1">
+              <span className="text-sm">{config.icon}</span>
+              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+                {config.label}
+              </span>
+              <span className="text-xs text-gray-500">({priorityTasks.length})</span>
+            </div>
+            <div className="space-y-2">
+              {priorityTasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onToggleComplete={onToggleComplete}
+                  onClaim={onClaim}
+                  onSteal={onSteal}
+                  onClick={onTaskClick}
+                  currentUserName={currentUserName}
+                  compact={compact}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // Collapsible Section Component
 function CollapsibleSection({
   title,
@@ -360,7 +471,7 @@ function CollapsibleSection({
           <ChevronDown className="w-4 h-4 text-gray-400" />
         )}
       </button>
-      {expanded && <div className="space-y-2 mt-2">{children}</div>}
+      {expanded && <div className="mt-2">{children}</div>}
     </div>
   );
 }
@@ -514,21 +625,18 @@ function DayColumn({
           expanded={wardTasksExpanded}
           onToggle={() => toggleSection("wardTasks")}
         >
-          {visibleWardTasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onToggleComplete={onToggleComplete}
-              onClaim={onClaim}
-              onSteal={onSteal}
-              onClick={onTaskClick}
-              currentUserName={currentUserName}
-              compact={!isFocused}
-              />
-            ))}
-          </CollapsibleSection>
+          <PriorityGroupedTasks
+            tasks={visibleWardTasks}
+            onToggleComplete={onToggleComplete}
+            onClaim={onClaim}
+            onSteal={onSteal}
+            onTaskClick={onTaskClick}
+            currentUserName={currentUserName}
+            compact={!isFocused}
+          />
+        </CollapsibleSection>
 
-          {/* Patient Tasks */}
+        {/* Patient Tasks */}
         <CollapsibleSection
           title="Patient Tasks"
           icon="👤"
@@ -536,18 +644,15 @@ function DayColumn({
           expanded={patientTasksExpanded}
           onToggle={() => toggleSection("patientTasks")}
         >
-          {visiblePatientTasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onToggleComplete={onToggleComplete}
-              onClaim={onClaim}
-              onSteal={onSteal}
-              onClick={onTaskClick}
-              currentUserName={currentUserName}
-              compact={!isFocused}
-            />
-          ))}
+          <PriorityGroupedTasks
+            tasks={visiblePatientTasks}
+            onToggleComplete={onToggleComplete}
+            onClaim={onClaim}
+            onSteal={onSteal}
+            onTaskClick={onTaskClick}
+            currentUserName={currentUserName}
+            compact={!isFocused}
+          />
         </CollapsibleSection>
 
         {/* Appointments */}
@@ -558,18 +663,15 @@ function DayColumn({
           expanded={appointmentsExpanded}
           onToggle={() => toggleSection("appointments")}
         >
-          {visibleAppointments.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onToggleComplete={onToggleComplete}
-              onClaim={onClaim}
-              onSteal={onSteal}
-              onClick={onTaskClick}
-              currentUserName={currentUserName}
-              compact={!isFocused}
-            />
-          ))}
+          <PriorityGroupedTasks
+            tasks={visibleAppointments}
+            onToggleComplete={onToggleComplete}
+            onClaim={onClaim}
+            onSteal={onSteal}
+            onTaskClick={onTaskClick}
+            currentUserName={currentUserName}
+            compact={!isFocused}
+          />
         </CollapsibleSection>
 
         {/* Empty state */}
@@ -1760,19 +1862,14 @@ function ExpandedDayView({
                         <h3 className="font-semibold text-gray-800">Early Shift</h3>
                         <span className="text-xs text-gray-500">({earlyTasks.length})</span>
                       </div>
-                      <div className="space-y-2">
-                        {earlyTasks.map(task => (
-                          <TaskCard
-                            key={task.id}
-                            task={task}
-                            onToggleComplete={onToggleComplete}
-                            onClaim={onClaim}
-                            onSteal={onSteal}
-                            onClick={onTaskClick}
-                            currentUserName={currentUserName}
-                          />
-                        ))}
-                      </div>
+                      <PriorityGroupedTasks
+                        tasks={earlyTasks}
+                        onToggleComplete={onToggleComplete}
+                        onClaim={onClaim}
+                        onSteal={onSteal}
+                        onTaskClick={onTaskClick}
+                        currentUserName={currentUserName}
+                      />
                     </div>
                   )}
 
@@ -1786,19 +1883,14 @@ function ExpandedDayView({
                         <h3 className="font-semibold text-gray-800">Late Shift</h3>
                         <span className="text-xs text-gray-500">({lateTasks.length})</span>
                       </div>
-                      <div className="space-y-2">
-                        {lateTasks.map(task => (
-                          <TaskCard
-                            key={task.id}
-                            task={task}
-                            onToggleComplete={onToggleComplete}
-                            onClaim={onClaim}
-                            onSteal={onSteal}
-                            onClick={onTaskClick}
-                            currentUserName={currentUserName}
-                          />
-                        ))}
-                      </div>
+                      <PriorityGroupedTasks
+                        tasks={lateTasks}
+                        onToggleComplete={onToggleComplete}
+                        onClaim={onClaim}
+                        onSteal={onSteal}
+                        onTaskClick={onTaskClick}
+                        currentUserName={currentUserName}
+                      />
                     </div>
                   )}
 
@@ -1812,19 +1904,14 @@ function ExpandedDayView({
                         <h3 className="font-semibold text-gray-800">Night Shift</h3>
                         <span className="text-xs text-gray-500">({nightTasks.length})</span>
                       </div>
-                      <div className="space-y-2">
-                        {nightTasks.map(task => (
-                          <TaskCard
-                            key={task.id}
-                            task={task}
-                            onToggleComplete={onToggleComplete}
-                            onClaim={onClaim}
-                            onSteal={onSteal}
-                            onClick={onTaskClick}
-                            currentUserName={currentUserName}
-                          />
-                        ))}
-                      </div>
+                      <PriorityGroupedTasks
+                        tasks={nightTasks}
+                        onToggleComplete={onToggleComplete}
+                        onClaim={onClaim}
+                        onSteal={onSteal}
+                        onTaskClick={onTaskClick}
+                        currentUserName={currentUserName}
+                      />
                     </div>
                   )}
                 </div>
@@ -1839,19 +1926,14 @@ function ExpandedDayView({
                       ({patientTasks.length})
                     </span>
                   </h2>
-                  <div className="space-y-2">
-                    {patientTasks.map(task => (
-                      <TaskCard
-                        key={task.id}
-                        task={task}
-                        onToggleComplete={onToggleComplete}
-                        onClaim={onClaim}
-                        onSteal={onSteal}
-                        onClick={onTaskClick}
-                        currentUserName={currentUserName}
-                      />
-                    ))}
-                  </div>
+                  <PriorityGroupedTasks
+                    tasks={patientTasks}
+                    onToggleComplete={onToggleComplete}
+                    onClaim={onClaim}
+                    onSteal={onSteal}
+                    onTaskClick={onTaskClick}
+                    currentUserName={currentUserName}
+                  />
                 </div>
               )}
 
@@ -1864,19 +1946,14 @@ function ExpandedDayView({
                       ({appointments.length})
                     </span>
                   </h2>
-                  <div className="space-y-2">
-                    {appointments.map(task => (
-                      <TaskCard
-                        key={task.id}
-                        task={task}
-                        onToggleComplete={onToggleComplete}
-                        onClaim={onClaim}
-                        onSteal={onSteal}
-                        onClick={onTaskClick}
-                        currentUserName={currentUserName}
-                      />
-                    ))}
-                  </div>
+                  <PriorityGroupedTasks
+                    tasks={appointments}
+                    onToggleComplete={onToggleComplete}
+                    onClaim={onClaim}
+                    onSteal={onSteal}
+                    onTaskClick={onTaskClick}
+                    currentUserName={currentUserName}
+                  />
                 </div>
               )}
             </div>
@@ -2190,13 +2267,13 @@ export default function TasksPage() {
           </div>
         </div>
 
-        {/* SystemOne tip banner - only show when NOT in Max+ */}
-        {!hasFeature("systemon_sync") && (
-          <div className="overflow-hidden bg-red-50 border border-red-200 rounded-xl">
-            <div className="animate-marquee whitespace-nowrap py-2 text-red-600 font-medium text-sm">
-              <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
-              <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
-              <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
+        {/* SystemOne tip banner - only show in Max+ version */}
+        {hasFeature("systemon_sync") && (
+          <div className="overflow-hidden bg-green-50 border border-green-200 rounded-xl">
+            <div className="animate-marquee whitespace-nowrap py-2 text-green-600 font-medium text-sm">
+              <span className="mx-8">✅ SystemOne sync enabled - Tasks can sync with SystemOne in this version</span>
+              <span className="mx-8">✅ SystemOne sync enabled - Tasks can sync with SystemOne in this version</span>
+              <span className="mx-8">✅ SystemOne sync enabled - Tasks can sync with SystemOne in this version</span>
             </div>
           </div>
         )}

@@ -717,6 +717,19 @@ Working through in order. Marking complete as fixed.
 | 45 | [x] | Security fix - Updated Next.js 16.1.4 → 16.1.6 to fix moderate DoS vulnerability (GHSA-9g9p-9gw9-jx7f) |
 | 46 | [x] | Fixed failing provider tests - updated feature matrix expectations (medium no longer has ward_tasks/audit_logs) |
 
+## SNAG LIST (29 Jan 2026)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 47 | [x] | Patient list - clicking a task/appointment in patient modal should open TaskDetailModal |
+| 48 | [x] | Add task modal - ensure patient name is ALWAYS a searchable dropdown (not free text) across all entry points |
+| 49 | [x] | Ward diary - group tasks by priority with colored borders, urgent tasks at top of each group |
+| 50 | [x] | SystemOne sync banner - ONLY show in Max+ version (currently showing in wrong versions) |
+| 51 | [x] | Ward diary - remove ability to add patients to patient list from diary view (never existed/already removed) |
+| 52 | [x] | Add patient modal - make room, bed, and MHA status all optional fields |
+| 53 | [x] | Add patient modal - include alerts selection (ligature risk, absconding risk, etc.) |
+| 54 | [x] | Add patient modal - Simple/Advanced toggle with ward admin override settings (3 states: simple only, advanced only, toggle enabled) |
+
 ---
 
 ## CURRENT FOCUS

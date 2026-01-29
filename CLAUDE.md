@@ -44,6 +44,29 @@
 
 ---
 
+## GIT CREDENTIALS - LOCAL REPO SETUP
+
+This project uses repo-specific GitHub credentials to avoid conflicts with Windows Credential Manager when multiple GitHub accounts are in use.
+
+**Remote URL format (already configured):**
+```
+https://Sharpy20@github.com/Sharpy20/hub-alpha.git
+```
+
+**To verify setup:**
+```bash
+git remote -v
+```
+
+**If push fails with permission error:**
+1. Check you're logged into Sharpy20 GitHub account in browser
+2. Run: `git remote set-url origin https://Sharpy20@github.com/Sharpy20/hub-alpha.git`
+3. Try push again - enter Sharpy20 credentials when prompted
+
+**NEVER use global credential changes** - this could affect other projects.
+
+---
+
 ## CRITICAL RULES
 
 1. **100% Standalone Project** - No references to other projects, build everything fresh

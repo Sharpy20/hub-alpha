@@ -458,3 +458,33 @@ export interface UserFavorites {
   odId: string;
   bookmarkIds: string[];
 }
+
+// ============================================
+// REFERRAL TRACKING TYPES
+// ============================================
+
+export type ReferralLogStatus = "sent" | "awaiting_response" | "chased" | "completed" | "cancelled";
+
+export interface ReferralLog {
+  id: string;
+  workflowId: string; // e.g., "imha-advocacy", "picu"
+  workflowTitle: string;
+  patientName?: string;
+  patientId?: string;
+  sentDate: string; // ISO date
+  sentBy: string; // User name
+  sentTo: string; // Service/email/phone
+  status: ReferralLogStatus;
+  notes?: string;
+  chaseHistory: ReferralChase[];
+  completedDate?: string;
+  completedNotes?: string;
+}
+
+export interface ReferralChase {
+  id: string;
+  date: string; // ISO date
+  method: "phone" | "email" | "other";
+  notes: string;
+  chasedBy: string;
+}

@@ -265,4 +265,95 @@ footer a:hover {
   h1, h2 {
     break-after: avoid;
   }
+
+  /* ============================================
+     REPORT-SPECIFIC PRINT STYLES
+     Optimized for patient progress reports
+     ============================================ */
+
+  /* Reduce overall spacing */
+  .print-compact * {
+    line-height: 1.3 !important;
+  }
+
+  /* Reduce report header size */
+  .print-report-header {
+    padding: 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .print-report-header h1 {
+    font-size: 16px !important;
+    margin: 0 !important;
+  }
+
+  .print-report-header p {
+    font-size: 10px !important;
+    margin: 2px 0 !important;
+  }
+
+  /* Compact patient cards for reports */
+  .print-patient-card {
+    padding: 8px !important;
+    margin-bottom: 8px !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+  }
+
+  .print-patient-card h3 {
+    font-size: 12px !important;
+    margin: 0 0 4px 0 !important;
+  }
+
+  /* Stats row - inline and compact */
+  .print-stats-row {
+    display: flex !important;
+    gap: 12px !important;
+    font-size: 10px !important;
+    padding: 4px 0 !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Task list - very compact */
+  .print-task-list {
+    font-size: 9px !important;
+    line-height: 1.4 !important;
+  }
+
+  .print-task-item {
+    padding: 3px 6px !important;
+    margin-bottom: 2px !important;
+    border-radius: 2px !important;
+  }
+
+  .print-task-item p {
+    margin: 0 !important;
+  }
+
+  /* Summary box - minimal */
+  .print-summary {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+    margin-top: 4px !important;
+  }
+
+  /* Force 2 columns for patient cards */
+  .print-grid-2col {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Hide decorative elements */
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Truncate long task titles */
+  .print-truncate {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 200px !important;
+  }
 }

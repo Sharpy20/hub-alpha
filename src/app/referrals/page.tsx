@@ -4,7 +4,8 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { Badge, VerificationBadge } from "@/components/ui";
 import Link from "next/link";
-import { ArrowRight, ClipboardList, Filter, Pencil } from "lucide-react";
+import { ArrowRight, ClipboardList, Clock, Filter, Pencil } from "lucide-react";
+import { useReferralLog } from "@/app/referral-log-provider";
 import { useApp } from "@/app/providers";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 
@@ -155,8 +156,10 @@ const CATEGORY_CONFIG: Record<string, { gradient: string; icon: string }> = {
 
 export default function ReferralsPage() {
   const { canEdit } = useCanEdit();
+  const { getPendingCount } = useReferralLog();
   const allCategories = [...new Set(REFERRALS.map((r) => r.category))];
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const pendingCount = getPendingCount();
 
   const filteredReferrals = selectedCategory === "all"
     ? REFERRALS
@@ -184,15 +187,29 @@ export default function ReferralsPage() {
                 </p>
               </div>
             </div>
-            {canEdit && (
+            <div className="flex items-center gap-2">
               <Link
-                href="/admin/workflows"
+                href="/referrals/log"
                 className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline"
               >
-                <Pencil className="w-4 h-4" />
-                Edit Workflows
+                <Clock className="w-4 h-4" />
+                Chase Log
+                {pendingCount > 0 && (
+                  <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full">
+                    {pendingCount}
+                  </span>
+                )}
               </Link>
-            )}
+              {canEdit && (
+                <Link
+                  href="/admin/workflows"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline"
+                >
+                  <Pencil className="w-4 h-4" />
+                  Edit Workflows
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 

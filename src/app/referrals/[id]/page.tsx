@@ -12,6 +12,7 @@ import {
   BookOpen,
   Send,
   Clipboard,
+  ClipboardList,
   Calendar,
   Shield,
   ArrowLeft,
@@ -31,6 +32,7 @@ import { PatientPickerModal } from "@/components/modals";
 import { Patient } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
+import { useReferralLog } from "@/app/referral-log-provider";
 
 // Workflow data with all referral types
 const WORKFLOWS: Record<string, WorkflowData> = {
@@ -1295,8 +1297,10 @@ export default function WorkflowPage() {
   const router = useRouter();
   const { hasFeature, user } = useApp();
   const { addTask } = useTasks();
+  const { addReferralLog } = useReferralLog();
   const { canEdit } = useCanEdit();
   const [currentStep, setCurrentStep] = useState(0);
+  const [referralLogged, setReferralLogged] = useState(false);
   const [criteriaConfirmed, setCriteriaConfirmed] = useState(false);
   const [reminderConfirmed, setReminderConfirmed] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -1390,6 +1394,32 @@ export default function WorkflowPage() {
   };
 
   const isComplete = currentStep === workflow.steps.length - 1;
+
+  const handleLogReferral = () => {
+    // Determine who it was sent to based on selected area
+    let sentTo = "External Service";
+    if (workflowId === "imha-advocacy") {
+      sentTo = selectedArea === "city" ? "Derby City Advocacy (POhWER)" : "Derbyshire County (Cloverleaf)";
+    } else {
+      // Use first submission method as default
+      const step = workflow.steps.find(s => s.type === "submission");
+      if (step?.methods && step.methods.length > 0) {
+        sentTo = step.methods[0].label;
+      }
+    }
+
+    addReferralLog({
+      workflowId: workflowId,
+      workflowTitle: workflow.title,
+      patientName: linkedPatient?.name,
+      sentDate: new Date().toISOString(),
+      sentBy: user?.name || "Unknown",
+      sentTo: sentTo,
+      status: "sent",
+      notes: linkedPatient ? `Referral for ${linkedPatient.name}` : undefined,
+    });
+    setReferralLogged(true);
+  };
 
   return (
     <MainLayout>
@@ -1833,13 +1863,32 @@ export default function WorkflowPage() {
           </Button>
 
           {isComplete ? (
-            <Button
-              onClick={() => router.push("/referrals")}
-              className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-            >
-              <Check className="w-5 h-5 mr-2" />
-              Complete
-            </Button>
+            <div className="flex-1 flex gap-2">
+              {!referralLogged ? (
+                <Button
+                  onClick={handleLogReferral}
+                  className="flex-1 py-4 text-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
+                >
+                  <ClipboardList className="w-5 h-5 mr-2" />
+                  Log to Chase Log
+                </Button>
+              ) : (
+                <Button
+                  disabled
+                  className="flex-1 py-4 text-lg bg-amber-100 text-amber-700 cursor-not-allowed"
+                >
+                  <Check className="w-5 h-5 mr-2" />
+                  Logged
+                </Button>
+              )}
+              <Button
+                onClick={() => router.push("/referrals")}
+                className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+              >
+                <Check className="w-5 h-5 mr-2" />
+                Complete
+              </Button>
+            </div>
           ) : (
             <Button
               onClick={handleNext}

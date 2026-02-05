@@ -86,11 +86,11 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
       : "from-emerald-500 to-green-600";
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow print-patient-card">
       {/* Header - Minimal: Name and Ward only */}
-      <div className={`bg-gradient-to-r ${statusColor} p-4 text-white`}>
+      <div className={`bg-gradient-to-r ${statusColor} p-4 text-white print-report-header`}>
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
+          <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center print-hide">
             <User className="w-6 h-6" />
           </div>
           <div>
@@ -101,55 +101,57 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
       </div>
 
       {/* Quick Stats Row - Simplified */}
-      <div className="grid grid-cols-3 gap-2 p-4 bg-gray-50 border-b border-gray-100">
+      <div className="grid grid-cols-3 gap-2 p-4 bg-gray-50 border-b border-gray-100 print-stats-row">
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 text-gray-600">
-            <ListTodo className="w-4 h-4" />
+            <ListTodo className="w-4 h-4 print-hide" />
             <span className="text-xl font-bold">{taskStats.total}</span>
           </div>
-          <p className="text-xs text-gray-500">Total Tasks</p>
+          <p className="text-xs text-gray-500">Total</p>
         </div>
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 text-amber-600">
-            <Clock className="w-4 h-4" />
+            <Clock className="w-4 h-4 print-hide" />
             <span className="text-xl font-bold">{taskStats.outstanding}</span>
           </div>
           <p className="text-xs text-gray-500">Outstanding</p>
         </div>
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 text-emerald-600">
-            <CheckCircle2 className="w-4 h-4" />
+            <CheckCircle2 className="w-4 h-4 print-hide" />
             <span className="text-xl font-bold">{taskStats.completed}</span>
           </div>
-          <p className="text-xs text-gray-500">Completed</p>
+          <p className="text-xs text-gray-500">Done</p>
         </div>
       </div>
 
       {/* All Tasks List */}
-      <div className="p-4">
+      <div className="p-4 print-task-list">
         <div className="space-y-2">
           {sortedTasks.length > 0 ? (
             sortedTasks.map((task) => (
               <div
                 key={task.id}
-                className={`flex items-center gap-3 p-3 rounded-lg border ${
+                className={`flex items-center gap-3 p-3 rounded-lg border print-task-item ${
                   task.status === "completed"
                     ? "bg-emerald-50 border-emerald-100"
                     : "bg-amber-50 border-amber-100"
                 }`}
               >
                 {task.status === "completed" ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 print-hide" />
                 ) : (
-                  <Clock className="w-5 h-5 text-amber-500 flex-shrink-0" />
+                  <Clock className="w-5 h-5 text-amber-500 flex-shrink-0 print-hide" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800">{task.title}</p>
+                  <p className="text-sm font-medium text-gray-800 print-truncate">
+                    {task.status === "completed" ? "✓ " : "○ "}{task.title}
+                  </p>
                   <p className="text-xs text-gray-600 mt-0.5">
                     {task.status === "completed" ? (
-                      <>Completed by <span className="font-medium">{task.completedBy || "Unknown"}</span></>
+                      <>Done: {task.completedBy || "Unknown"}</>
                     ) : (
-                      <>Outstanding - Due <span className="font-medium">{getTaskDueDate(task) ? new Date(getTaskDueDate(task)).toLocaleDateString("en-GB") : "No date"}</span></>
+                      <>Due: {getTaskDueDate(task) ? new Date(getTaskDueDate(task)).toLocaleDateString("en-GB") : "No date"}</>
                     )}
                   </p>
                 </div>
@@ -161,7 +163,7 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
         </div>
 
         {/* Status Summary */}
-        <div className={`mt-4 p-3 rounded-xl ${
+        <div className={`mt-4 p-3 rounded-xl print-summary ${
           taskStats.outstanding > 3
             ? "bg-amber-50 border border-amber-100"
             : taskStats.outstanding > 0

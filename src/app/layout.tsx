@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import { TasksProvider } from "./tasks-provider";
 import { WardSettingsProvider } from "./ward-settings-provider";
 import { VerificationProvider } from "./verification-provider";
+import { ReferralLogProvider } from "./referral-log-provider";
 import { Toaster } from "sonner";
 import { ErrorBoundary } from "@/components/ui";
 
@@ -41,9 +42,11 @@ export default function RootLayout({
         <Providers>
           <TasksProvider>
             <WardSettingsProvider>
-              <VerificationProvider>
-                <ErrorBoundary>{children}</ErrorBoundary>
-              </VerificationProvider>
+              <ReferralLogProvider>
+                <VerificationProvider>
+                  <ErrorBoundary>{children}</ErrorBoundary>
+                </VerificationProvider>
+              </ReferralLogProvider>
             </WardSettingsProvider>
           </TasksProvider>
         </Providers>

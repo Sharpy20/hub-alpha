@@ -7,7 +7,7 @@ import { Badge, VerificationBadge } from "@/components/ui";
 import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings } from "@/app/ward-settings-provider";
-import { Lock, ExternalLink, Bookmark, Filter, Star } from "lucide-react";
+import { Lock, ExternalLink, Bookmark, Filter, Star, Check } from "lucide-react";
 
 // Check if icon is an emoji
 function isEmoji(str: string): boolean {
@@ -30,7 +30,7 @@ function BookmarksContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const { userFavoriteBookmarks, toggleFavoriteBookmark } = useWardSettings();
+  const { userFavoriteBookmarks, toggleFavoriteBookmark, defaultBookmarkCategory, setDefaultBookmarkCategory } = useWardSettings();
 
   const categories = ["all", ...getCategories()];
   const filteredBookmarks =
@@ -74,13 +74,35 @@ function BookmarksContent() {
 
         {/* Category filter */}
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-2 mb-3">
-            <Filter className="w-5 h-5 text-gray-500" />
-            <span className="font-bold text-gray-700">Filter by Category</span>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Filter className="w-5 h-5 text-gray-500" />
+              <span className="font-bold text-gray-700">Filter by Category</span>
+            </div>
+            {selectedCategory !== "all" && (
+              <button
+                onClick={() => setDefaultBookmarkCategory(selectedCategory)}
+                className={`text-xs px-3 py-1 rounded-lg transition-all flex items-center gap-1 ${
+                  defaultBookmarkCategory === selectedCategory
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                {defaultBookmarkCategory === selectedCategory ? (
+                  <>
+                    <Check className="w-3 h-3" />
+                    Default on home
+                  </>
+                ) : (
+                  "Set as home default"
+                )}
+              </button>
+            )}
           </div>
           <div className="flex flex-wrap gap-2">
             {categories.map((category) => {
               const config = CATEGORY_CONFIG[category] || CATEGORY_CONFIG["all"];
+              const isDefault = category !== "all" && defaultBookmarkCategory === category;
               return (
                 <button
                   key={category}
@@ -93,6 +115,7 @@ function BookmarksContent() {
                 >
                   <span>{config.icon}</span>
                   {category === "all" ? "All Bookmarks" : category}
+                  {isDefault && <Check className="w-3 h-3" />}
                 </button>
               );
             })}

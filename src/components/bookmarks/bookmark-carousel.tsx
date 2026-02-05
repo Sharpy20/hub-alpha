@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
 import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
+import { useWardSettings } from "@/app/ward-settings-provider";
 import type { Bookmark } from "@/lib/types";
 import Link from "next/link";
 
@@ -82,7 +83,21 @@ function WheelConnector({ index, total }: { index: number; total: number }) {
 
 export function BookmarkCarousel() {
   const categories = getCategories();
-  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+  const { defaultBookmarkCategory } = useWardSettings();
+
+  // Find the index of the default category, or 0 if not found
+  const getDefaultCategoryIndex = () => {
+    const index = categories.indexOf(defaultBookmarkCategory);
+    return index >= 0 ? index : 0;
+  };
+
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(getDefaultCategoryIndex);
+
+  // Update index when default category changes
+  useEffect(() => {
+    setCurrentCategoryIndex(getDefaultCategoryIndex());
+  }, [defaultBookmarkCategory]);
+
   const currentCategory = categories[currentCategoryIndex];
 
   const categoryBookmarks = bookmarks.filter(

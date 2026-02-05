@@ -9,6 +9,8 @@ interface WardSettingsContextType {
   updateWardSettings: (wardId: string, updates: Partial<WardSettings>) => void;
   userFavoriteBookmarks: string[];
   toggleFavoriteBookmark: (bookmarkId: string) => void;
+  defaultBookmarkCategory: string;
+  setDefaultBookmarkCategory: (category: string) => void;
 }
 
 const WardSettingsContext = createContext<WardSettingsContextType | null>(null);
@@ -16,10 +18,12 @@ const WardSettingsContext = createContext<WardSettingsContextType | null>(null);
 // Storage keys
 const WARD_SETTINGS_KEY = "inpatient-hub-ward-settings";
 const USER_FAVORITES_KEY = "inpatient-hub-user-favorites";
+const DEFAULT_BOOKMARK_CATEGORY_KEY = "inpatient-hub-default-bookmark-category";
 
 export function WardSettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Record<string, WardSettings>>({});
   const [userFavoriteBookmarks, setUserFavoriteBookmarks] = useState<string[]>([]);
+  const [defaultBookmarkCategory, setDefaultBookmarkCategoryState] = useState<string>("Crisis Support");
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -31,6 +35,10 @@ export function WardSettingsProvider({ children }: { children: ReactNode }) {
       const savedFavorites = localStorage.getItem(USER_FAVORITES_KEY);
       if (savedFavorites) {
         setUserFavoriteBookmarks(JSON.parse(savedFavorites));
+      }
+      const savedDefaultCategory = localStorage.getItem(DEFAULT_BOOKMARK_CATEGORY_KEY);
+      if (savedDefaultCategory) {
+        setDefaultBookmarkCategoryState(savedDefaultCategory);
       }
     } catch (e) {
       console.error("Failed to load ward settings:", e);
@@ -77,6 +85,11 @@ export function WardSettingsProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const setDefaultBookmarkCategory = useCallback((category: string) => {
+    setDefaultBookmarkCategoryState(category);
+    localStorage.setItem(DEFAULT_BOOKMARK_CATEGORY_KEY, category);
+  }, []);
+
   return (
     <WardSettingsContext.Provider
       value={{
@@ -85,6 +98,8 @@ export function WardSettingsProvider({ children }: { children: ReactNode }) {
         updateWardSettings,
         userFavoriteBookmarks,
         toggleFavoriteBookmark,
+        defaultBookmarkCategory,
+        setDefaultBookmarkCategory,
       }}
     >
       {children}

@@ -69,6 +69,8 @@ export default function PatientsPage() {
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
   const [isTaskDetailModalOpen, setIsTaskDetailModalOpen] = useState(false);
   const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
+  const [isEditAlertsModalOpen, setIsEditAlertsModalOpen] = useState(false);
+  const [editingPatientAlerts, setEditingPatientAlerts] = useState<string[]>([]);
 
   // Add patient form state
   const [newPatientName, setNewPatientName] = useState("");
@@ -252,6 +254,34 @@ export default function PatientsPage() {
         ? prev.filter((a) => a !== alert)
         : [...prev, alert]
     );
+  };
+
+  const toggleEditingAlert = (alert: string) => {
+    setEditingPatientAlerts((prev) =>
+      prev.includes(alert)
+        ? prev.filter((a) => a !== alert)
+        : [...prev, alert]
+    );
+  };
+
+  const openEditAlertsModal = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setEditingPatientAlerts(patient.alerts || []);
+    setIsEditAlertsModalOpen(true);
+  };
+
+  const handleSaveAlerts = () => {
+    if (!selectedPatient) return;
+    setPatients((prev) =>
+      prev.map((p) =>
+        p.id === selectedPatient.id
+          ? { ...p, alerts: editingPatientAlerts.length > 0 ? editingPatientAlerts : undefined }
+          : p
+      )
+    );
+    setIsEditAlertsModalOpen(false);
+    setSelectedPatient(null);
+    setEditingPatientAlerts([]);
   };
 
   const getPatientTasks = (patientId: string): DiaryTask[] => {
@@ -492,19 +522,37 @@ export default function PatientsPage() {
                   </div>
 
                   {/* Alerts */}
-                  {patient.alerts && patient.alerts.length > 0 && (
-                    <div className="mb-3 flex flex-wrap gap-1">
-                      {patient.alerts.map((alert, idx) => (
-                        <span
-                          key={idx}
-                          className="flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium"
+                  <div className="mb-3">
+                    {patient.alerts && patient.alerts.length > 0 ? (
+                      <div className="flex flex-wrap gap-1 items-center">
+                        {patient.alerts.map((alert, idx) => (
+                          <span
+                            key={idx}
+                            className="flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium"
+                          >
+                            <AlertTriangle className="w-3 h-3" />
+                            {alert}
+                          </span>
+                        ))}
+                        <button
+                          onClick={() => openEditAlertsModal(patient)}
+                          className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                          title="Edit alerts"
                         >
-                          <AlertTriangle className="w-3 h-3" />
-                          {alert}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                          Edit
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => openEditAlertsModal(patient)}
+                        className="flex items-center gap-1 px-2 py-1 text-xs text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+                        title="Add alerts"
+                      >
+                        <Plus className="w-3 h-3" />
+                        Add alerts
+                      </button>
+                    )}
+                  </div>
 
                   {/* Info */}
                   <div className="space-y-1 text-sm text-gray-600 mb-4">
@@ -998,6 +1046,98 @@ export default function PatientsPage() {
               >
                 <Plus className="w-4 h-4" />
                 Add Patient
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Alerts Modal */}
+      {isEditAlertsModalOpen && selectedPatient && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+          onClick={() => {
+            setIsEditAlertsModalOpen(false);
+            setSelectedPatient(null);
+            setEditingPatientAlerts([]);
+          }}
+        >
+          <div
+            className="bg-white rounded-2xl w-full max-w-lg overflow-hidden max-h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-500 to-orange-600 p-4 text-white flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <AlertTriangle className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold">Edit Alerts</h2>
+                    <p className="text-sm text-white/80">{selectedPatient.name}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsEditAlertsModalOpen(false);
+                    setSelectedPatient(null);
+                    setEditingPatientAlerts([]);
+                  }}
+                  className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Alert Selection */}
+            <div className="p-6 overflow-y-auto flex-1">
+              <p className="text-sm text-gray-600 mb-4">
+                Select all alerts that apply to this patient. Changes will be saved immediately.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {ALERTS_POOL.map((alert) => (
+                  <button
+                    key={alert}
+                    type="button"
+                    onClick={() => toggleEditingAlert(alert)}
+                    className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                      editingPatientAlerts.includes(alert)
+                        ? "bg-red-100 text-red-700 border-2 border-red-300"
+                        : "bg-gray-100 text-gray-600 border-2 border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    {editingPatientAlerts.includes(alert) && "✓ "}
+                    {alert}
+                  </button>
+                ))}
+              </div>
+              {editingPatientAlerts.length > 0 && (
+                <p className="mt-4 text-sm text-red-600 font-medium">
+                  {editingPatientAlerts.length} alert{editingPatientAlerts.length !== 1 ? "s" : ""} selected
+                </p>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="p-4 bg-gray-50 border-t border-gray-200 flex gap-3 flex-shrink-0">
+              <button
+                onClick={() => {
+                  setIsEditAlertsModalOpen(false);
+                  setSelectedPatient(null);
+                  setEditingPatientAlerts([]);
+                }}
+                className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveAlerts}
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-orange-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                Save Alerts
               </button>
             </div>
           </div>

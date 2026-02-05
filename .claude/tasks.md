@@ -1,9 +1,11 @@
 # Task Backlog - Referral Hub
 
-> Auto-synced from Task Hub. Last sync: 2026-02-05 06:46
+> Auto-synced from Task Hub. Last sync: 2026-02-05 06:50
 
-## Pending (5)
+## Pending (6)
 
+- [ ] Alerts [medium]
+  > Can't amend alerts when pt already on ward
 - [ ] Alerts [medium]
   > Custom alerts not showing on ward when adding new pt
 - [ ] Patient task print [medium]

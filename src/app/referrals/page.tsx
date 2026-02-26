@@ -52,11 +52,19 @@ const REFERRALS = [
   },
   {
     id: "social-care",
-    title: "Social Care",
-    description: "Adult social care assessments and support",
+    title: "Social Care (Derby City)",
+    description: "Care Act assessment, S117 referrals & Enablement — Derby City MH Social Care",
     icon: "👥",
     gradient: "from-amber-500 to-amber-700",
     category: "Social & Housing",
+  },
+  {
+    id: "s117-meeting",
+    title: "S117 Meeting Request",
+    description: "Request Social Care attendance at S117 discharge meeting (7 days notice)",
+    icon: "⚖️",
+    gradient: "from-purple-600 to-purple-800",
+    category: "Legal & Advocacy",
   },
   {
     id: "dietitian",

@@ -237,10 +237,10 @@ export const SHIFT_CONFIG: Record<ShiftType, { label: string; icon: string; time
   night: { label: "Night", icon: "🌙", time: "21:00 - 07:30", gradient: "from-indigo-600 to-purple-700" },
 };
 
-export const PRIORITY_CONFIG: Record<TaskPriority, { label: string; icon: string; color: string }> = {
-  routine: { label: "Routine", icon: "🟢", color: "text-green-600" },
-  important: { label: "Important", icon: "🟡", color: "text-amber-600" },
-  urgent: { label: "Urgent", icon: "🔴", color: "text-red-600" },
+export const PRIORITY_CONFIG: Record<TaskPriority, { label: string; icon: string; color: string; gradient: string }> = {
+  routine: { label: "Routine", icon: "🟢", color: "text-green-600", gradient: "from-green-500 to-emerald-600" },
+  important: { label: "Important", icon: "🟡", color: "text-amber-600", gradient: "from-amber-500 to-orange-600" },
+  urgent: { label: "Urgent", icon: "🔴", color: "text-red-600", gradient: "from-red-500 to-rose-700" },
 };
 
 export const STATUS_CONFIG: Record<TaskStatus, { label: string; icon: string; bgColor: string }> = {
@@ -275,6 +275,8 @@ export interface Patient {
   dischargeConfirmedAt?: string;
   namedNurse?: string;
   consultant?: string;
+  wardProfessional?: string; // Staff member allocated as ward professional for this patient
+  admissionTime?: string; // HH:MM format - time of admission
   diagnoses?: string[];
   alerts?: string[]; // e.g., "Falls risk", "Allergen: Penicillin"
 }
@@ -283,7 +285,7 @@ export interface Patient {
 // USER TYPES
 // ============================================
 
-export type UserRole = "normal" | "ward_admin" | "contributor" | "senior_admin";
+export type UserRole = "normal" | "lead" | "manager" | "ward_admin" | "senior_admin";
 
 export interface User {
   id: string;
@@ -307,6 +309,7 @@ export interface StaffMember {
   role: UserRole;
   ward: string;
   isActive: boolean;
+  isContributor?: boolean; // Contributor is a flag, not a role - granted by ward_admin or manager
 }
 
 // ============================================

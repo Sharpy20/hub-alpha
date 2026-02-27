@@ -5,7 +5,7 @@ export const WARDS = ["Byron", "Shelley", "Keats", "Wordsworth", "Dickinson"] as
 export type WardName = (typeof WARDS)[number];
 
 // Staff member names for each ward
-// First entries are role-based admins, then regular staff follow
+// First entries are role-based positions, then regular staff follow
 const STAFF_LETTERS = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"];
 
 const generateStaffNames = (wardPrefix: string, wardName: string): string[] => {
@@ -13,11 +13,12 @@ const generateStaffNames = (wardPrefix: string, wardName: string): string[] => {
   const names = [
     `${wardName} Ward Admin`,
     `${wardName} Senior Admin`,
-    `${wardName} Contributor`,
+    `${wardName} Lead`,
+    `${wardName} Manager`,
   ];
 
-  // Add the rest of the staff
-  STAFF_LETTERS.forEach((letter, i) => {
+  // Add the rest of the staff (16 more to reach 20)
+  STAFF_LETTERS.slice(0, 16).forEach((letter, i) => {
     // Make some doctors (indices 2, 5 in the letter array - typically senior positions)
     if (i === 2 || i === 5) {
       names.push(`Dr. ${wardPrefix}_${letter}`);
@@ -37,12 +38,19 @@ export const STAFF_NAMES: Record<string, string[]> = {
   Dickinson: generateStaffNames("DI", "Dickinson"),
 };
 
-// Role distribution pattern: first three are named roles, rest are normal staff
+// Role distribution pattern: first four are named roles, rest are normal staff
 const getRoleForIndex = (index: number): UserRole => {
   if (index === 0) return "ward_admin";     // "[Ward] Ward Admin"
   if (index === 1) return "senior_admin";   // "[Ward] Senior Admin"
-  if (index === 2) return "contributor";    // "[Ward] Contributor"
+  if (index === 2) return "lead";           // "[Ward] Lead"
+  if (index === 3) return "manager";        // "[Ward] Manager"
   return "normal";  // All other staff are normal users
+};
+
+// Some staff members have contributor privileges (granted by ward_admin or manager)
+const hasContributorFlag = (index: number): boolean => {
+  // Lead and Manager get contributor by default, plus a couple of regular staff
+  return index === 2 || index === 3 || index === 6 || index === 10;
 };
 
 // Generate staff for all wards
@@ -59,6 +67,7 @@ const generateAllStaff = (): StaffMember[] => {
         role: getRoleForIndex(i),
         ward,
         isActive: i !== 8, // Index 8 is inactive
+        isContributor: hasContributorFlag(i) || undefined,
       });
       idCounter++;
     }
@@ -93,6 +102,13 @@ export function getStaffById(id: string): StaffMember | undefined {
 // Helper to get all wards
 export function getAllWards(): readonly string[] {
   return WARDS;
+}
+
+// Helper to get leads and managers for a ward
+export function getLeadsAndManagers(ward: string): StaffMember[] {
+  return DEMO_STAFF.filter(
+    (s) => s.ward === ward && s.isActive && (s.role === "lead" || s.role === "manager")
+  );
 }
 
 // Helper to get staff count per ward

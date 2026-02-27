@@ -12,7 +12,7 @@ const capitalizeWard = (ward: string): string => {
 
 // Version types
 export type AppVersion = "light" | "medium" | "max" | "max_plus";
-export type UserRole = "normal" | "ward_admin" | "contributor" | "senior_admin";
+export type UserRole = "normal" | "lead" | "manager" | "ward_admin" | "senior_admin";
 
 // User context
 interface User {

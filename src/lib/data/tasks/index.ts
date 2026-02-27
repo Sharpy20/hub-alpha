@@ -8,7 +8,7 @@ import {
   LegalStatus,
   AuditType,
 } from "@/lib/types";
-import { WARDS, STAFF_NAMES } from "../staff";
+import { WARDS, STAFF_NAMES, getLeadsAndManagers } from "../staff";
 
 // Re-export WARDS for convenience
 export { WARDS };
@@ -89,6 +89,13 @@ const generateAdmissionDate = (index: number): string => {
   return formatDate(addDays(today, -daysAgo));
 };
 
+// Generate admission time (spread across the day)
+const generateAdmissionTime = (index: number): string => {
+  const hours = (8 + (index * 3) % 16).toString().padStart(2, "0");
+  const mins = ((index * 17) % 60).toString().padStart(2, "0");
+  return `${hours}:${mins}`;
+};
+
 // Generate all patients for all wards (20 per ward = 100 total)
 const generateAllPatients = (): Patient[] => {
   const patients: Patient[] = [];
@@ -98,6 +105,11 @@ const generateAllPatients = (): Patient[] => {
     const staff = WARD_STAFF[ward];
     const doctors = staff.filter(s => s.startsWith("Dr."));
     const nurses = staff.filter(s => !s.startsWith("Dr."));
+    // Get leads and managers for ward professional allocation
+    const leadsManagers = getLeadsAndManagers(ward);
+    const wardProfessionals = leadsManagers.length > 0
+      ? leadsManagers.map(s => s.name)
+      : nurses.slice(0, 2); // Fallback to first 2 nurses
 
     for (let i = 0; i < 20; i++) {
       const patientName = getPatientName(ward, i);
@@ -111,6 +123,9 @@ const generateAllPatients = (): Patient[] => {
         alerts.push(ALERTS_POOL[(i + a) % ALERTS_POOL.length]);
       }
 
+      // Assign ward professional from leads/managers (round-robin)
+      const wardProfessional = wardProfessionals[i % wardProfessionals.length];
+
       const patient: Patient = {
         id: `p${idCounter}`,
         name: patientName,
@@ -120,8 +135,10 @@ const generateAllPatients = (): Patient[] => {
         status,
         legalStatus,
         admissionDate: generateAdmissionDate(i),
+        admissionTime: generateAdmissionTime(i),
         namedNurse: nurses[i % nurses.length],
         consultant: doctors[i % doctors.length],
+        wardProfessional,
         ...(alerts.length > 0 && { alerts }),
         ...(status === "pending_discharge" && { expectedDischargeDate: tomorrowStr }),
         ...(status === "discharged" && { dischargeDate: yesterdayStr }),
@@ -551,16 +568,70 @@ const generateAllAppointments = (): Appointment[] => {
   return appointments;
 };
 
+// Generate 72-hour admission audit tasks for active patients
+// These are linked to leads/managers and appear under "My Patients" for senior staff
+const generateAdmissionAuditTasks = (): PatientTask[] => {
+  const tasks: PatientTask[] = [];
+  let id = 1;
+
+  for (const ward of WARDS) {
+    const wardPatients = DEMO_PATIENTS.filter(p => p.ward === ward && p.status !== "discharged");
+    const leadsManagers = getLeadsAndManagers(ward);
+    const creatorName = leadsManagers.length > 0 ? leadsManagers[0].name : "System";
+
+    for (const patient of wardPatients) {
+      // Calculate 72hr deadline from admission
+      const admissionDate = new Date(patient.admissionDate);
+      const deadline = addDays(admissionDate, 3);
+      const deadlineStr = formatDate(deadline);
+      const todayDate = new Date();
+      todayDate.setHours(0, 0, 0, 0);
+
+      // Determine status based on deadline
+      let status: "pending" | "completed" | "overdue" = "pending";
+      if (deadline < todayDate) {
+        // Past deadline - 70% completed, 30% overdue
+        status = id % 10 < 7 ? "completed" : "overdue";
+      }
+
+      tasks.push({
+        id: `audit72-${id++}`,
+        type: "patient",
+        title: "72-Hour Admission Audit",
+        description: `Complete 72-hour post-admission audit for ${patient.name}. Must be completed by senior staff (Lead/Manager) within 72 hours of admission on ${patient.admissionDate} at ${patient.admissionTime || "N/A"}.`,
+        status,
+        priority: "urgent",
+        category: "assessment",
+        patientId: patient.id,
+        patientName: patient.name,
+        dueDate: deadlineStr,
+        carryOver: true,
+        ward,
+        createdAt: patient.admissionDate,
+        createdBy: "System",
+        ...(status === "completed" && {
+          completedBy: creatorName,
+          completedAt: formatDate(addDays(admissionDate, 2)),
+        }),
+      });
+    }
+  }
+
+  return tasks;
+};
+
 // Exported data
 export const DEMO_WARD_TASKS: WardTask[] = generateAllWardTasks();
 export const DEMO_PATIENT_TASKS: PatientTask[] = generateAllPatientTasks();
 export const DEMO_APPOINTMENTS: Appointment[] = generateAllAppointments();
+export const DEMO_AUDIT_72HR_TASKS: PatientTask[] = generateAdmissionAuditTasks();
 
 // Combined tasks
 export const ALL_DEMO_TASKS: DiaryTask[] = [
   ...DEMO_WARD_TASKS,
   ...DEMO_PATIENT_TASKS,
   ...DEMO_APPOINTMENTS,
+  ...DEMO_AUDIT_72HR_TASKS,
 ];
 
 // Helper functions

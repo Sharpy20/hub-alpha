@@ -26,7 +26,7 @@ export function Header() {
     }, 800);
   };
 
-  const handleRoleChange = (role: "normal" | "ward_admin" | "contributor" | "senior_admin") => {
+  const handleRoleChange = (role: "normal" | "lead" | "manager" | "ward_admin" | "senior_admin") => {
     if (user) {
       setUser({ ...user, role });
       setSavedFeedback("Role");
@@ -56,7 +56,7 @@ export function Header() {
     }, 800);
   };
 
-  const handleMobileRoleChange = (role: "normal" | "ward_admin" | "contributor" | "senior_admin") => {
+  const handleMobileRoleChange = (role: "normal" | "lead" | "manager" | "ward_admin" | "senior_admin") => {
     if (user) {
       setUser({ ...user, role });
       setSavedFeedback("Role");
@@ -122,15 +122,16 @@ export function Header() {
 
   const roleLabels: Record<string, string> = {
     normal: "Staff",
+    lead: "Lead",
+    manager: "Manager",
     ward_admin: "Ward Admin",
-    contributor: "Contributor",
     senior_admin: "Senior Admin",
   };
 
   const showTasks = hasFeature("ward_tasks");
   const showPatients = hasFeature("patient_list");
   const isViewingOtherWard = user && activeWard !== user.ward;
-  const canAccessAdmin = user && (user.role === "contributor" || user.role === "senior_admin");
+  const canAccessAdmin = user && (user.role === "manager" || user.role === "ward_admin" || user.role === "senior_admin");
 
   return (
     <>
@@ -388,8 +389,8 @@ export function Header() {
                           <User className="w-3 h-3 inline mr-1" />
                           Demo Role
                         </p>
-                        <div className="grid grid-cols-2 gap-1">
-                          {(["normal", "ward_admin", "contributor", "senior_admin"] as const).map((role) => (
+                        <div className="grid grid-cols-3 gap-1">
+                          {(["normal", "lead", "manager", "ward_admin", "senior_admin"] as const).map((role) => (
                             <button
                               key={role}
                               onClick={() => handleRoleChange(role)}

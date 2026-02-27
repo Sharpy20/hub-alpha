@@ -660,7 +660,7 @@ export function Header() {
                 <div className="py-3 border-b border-gray-100">
                   <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">Demo Role</p>
                   <div className="flex flex-wrap gap-2">
-                    {(["normal", "ward_admin", "contributor", "senior_admin"] as const).map((role) => (
+                    {(["normal", "lead", "manager", "ward_admin", "senior_admin"] as const).map((role) => (
                       <button
                         key={role}
                         onClick={() => handleMobileRoleChange(role)}

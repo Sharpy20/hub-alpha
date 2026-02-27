@@ -26,7 +26,7 @@ export function Header() {
     }, 800);
   };
 
-  const handleRoleChange = (role: "normal" | "lead" | "manager" | "ward_admin" | "senior_admin") => {
+  const handleRoleChange = (role: "staff" | "lead" | "manager" | "ward_admin" | "senior_admin") => {
     if (user) {
       setUser({ ...user, role });
       setSavedFeedback("Role");
@@ -56,7 +56,7 @@ export function Header() {
     }, 800);
   };
 
-  const handleMobileRoleChange = (role: "normal" | "lead" | "manager" | "ward_admin" | "senior_admin") => {
+  const handleMobileRoleChange = (role: "staff" | "lead" | "manager" | "ward_admin" | "senior_admin") => {
     if (user) {
       setUser({ ...user, role });
       setSavedFeedback("Role");
@@ -121,7 +121,7 @@ export function Header() {
   };
 
   const roleLabels: Record<string, string> = {
-    normal: "Staff",
+    staff: "Staff",
     lead: "Lead",
     manager: "Manager",
     ward_admin: "Ward Admin",
@@ -131,7 +131,7 @@ export function Header() {
   const showTasks = hasFeature("ward_tasks");
   const showPatients = hasFeature("patient_list");
   const isViewingOtherWard = user && activeWard !== user.ward;
-  const canAccessAdmin = user && (user.role === "manager" || user.role === "ward_admin" || user.role === "senior_admin");
+  const canAccessAdmin = user && (user.isContributor || user.role === "manager" || user.role === "ward_admin" || user.role === "senior_admin");
 
   return (
     <>
@@ -390,7 +390,7 @@ export function Header() {
                           Demo Role
                         </p>
                         <div className="grid grid-cols-3 gap-1">
-                          {(["normal", "lead", "manager", "ward_admin", "senior_admin"] as const).map((role) => (
+                          {(["staff", "lead", "manager", "ward_admin", "senior_admin"] as const).map((role) => (
                             <button
                               key={role}
                               onClick={() => handleRoleChange(role)}
@@ -660,7 +660,7 @@ export function Header() {
                 <div className="py-3 border-b border-gray-100">
                   <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">Demo Role</p>
                   <div className="flex flex-wrap gap-2">
-                    {(["normal", "lead", "manager", "ward_admin", "senior_admin"] as const).map((role) => (
+                    {(["staff", "lead", "manager", "ward_admin", "senior_admin"] as const).map((role) => (
                       <button
                         key={role}
                         onClick={() => handleMobileRoleChange(role)}

@@ -24,7 +24,7 @@ export function StaffManagementModal({ isOpen, onClose, ward }: StaffManagementM
     const newStaff: StaffMember = {
       id: `staff-${Date.now()}`,
       name: newName.trim(),
-      role: "normal",
+      role: "staff",
       ward,
       isActive: true,
     };

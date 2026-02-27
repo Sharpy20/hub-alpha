@@ -32,6 +32,7 @@ import {
   ALL_DEMO_TASKS,
   ALERTS_POOL,
 } from "@/lib/data/tasks";
+import { getWardProfessionalCandidates } from "@/lib/data/staff";
 import { Patient, DiaryTask, PatientStatus, LegalStatus, PatientEntryMode, FieldVisibility } from "@/lib/types";
 
 const LEGAL_STATUS_CONFIG: Record<LegalStatus, { label: string; color: string; bgColor: string }> = {
@@ -71,6 +72,14 @@ export default function PatientsPage() {
   const [isAddPatientModalOpen, setIsAddPatientModalOpen] = useState(false);
   const [isEditAlertsModalOpen, setIsEditAlertsModalOpen] = useState(false);
   const [editingPatientAlerts, setEditingPatientAlerts] = useState<string[]>([]);
+
+  // Ward professional editing state
+  const [editingWPPatientId, setEditingWPPatientId] = useState<string | null>(null);
+  const [newPatientWP, setNewPatientWP] = useState("");
+
+  // Get eligible WP candidates for current ward
+  const wardName = activeWard.charAt(0).toUpperCase() + activeWard.slice(1);
+  const wpCandidates = getWardProfessionalCandidates(wardName);
 
   // Add patient form state
   const [newPatientName, setNewPatientName] = useState("");
@@ -232,7 +241,6 @@ export default function PatientsPage() {
 
     const wardPrefix = activeWard.substring(0, 2).toUpperCase();
     const nowDate = new Date().toISOString().split("T")[0];
-    const wardName = activeWard.charAt(0).toUpperCase() + activeWard.slice(1);
     const patientId = `p-${wardPrefix}-${Date.now()}`;
 
     const newPatient: Patient = {
@@ -245,6 +253,7 @@ export default function PatientsPage() {
       legalStatus: newPatientLegalStatus,
       admissionDate: nowDate,
       admissionTime: newPatientAdmissionTime,
+      wardProfessional: newPatientWP || undefined,
       alerts: newPatientAlerts.length > 0 ? newPatientAlerts : undefined,
     };
 
@@ -280,6 +289,7 @@ export default function PatientsPage() {
     setNewPatientBed("");
     setNewPatientLegalStatus("informal");
     setNewPatientAlerts([]);
+    setNewPatientWP("");
     setNewPatientAdmissionTime(
       `${new Date().getHours().toString().padStart(2, "0")}:${new Date().getMinutes().toString().padStart(2, "0")}`
     );
@@ -292,6 +302,13 @@ export default function PatientsPage() {
         ? prev.filter((a) => a !== alert)
         : [...prev, alert]
     );
+  };
+
+  const handleChangeWP = (patientId: string, newWP: string) => {
+    setPatients((prev) =>
+      prev.map((p) => p.id === patientId ? { ...p, wardProfessional: newWP || undefined } : p)
+    );
+    setEditingWPPatientId(null);
   };
 
   const toggleEditingAlert = (alert: string) => {
@@ -602,12 +619,34 @@ export default function PatientsPage() {
                       <User className="w-4 h-4 text-gray-400" />
                       {patient.consultant || "No consultant"}
                     </p>
-                    {patient.wardProfessional && (
-                      <p className="flex items-center gap-2">
-                        <Clipboard className="w-4 h-4 text-teal-500" />
-                        <span className="text-teal-700 font-medium">WP: {patient.wardProfessional}</span>
-                      </p>
-                    )}
+                    <div className="flex items-center gap-2">
+                      <Clipboard className="w-4 h-4 text-teal-500" />
+                      {editingWPPatientId === patient.id ? (
+                        <select
+                          value={patient.wardProfessional || ""}
+                          onChange={(e) => handleChangeWP(patient.id, e.target.value)}
+                          onBlur={() => setEditingWPPatientId(null)}
+                          autoFocus
+                          className="text-sm border border-teal-300 rounded-lg px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-teal-400 bg-white"
+                        >
+                          <option value="">No WP assigned</option>
+                          {wpCandidates.map((s) => (
+                            <option key={s.id} value={s.name}>{s.name}</option>
+                          ))}
+                        </select>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingWPPatientId(patient.id);
+                          }}
+                          className="text-teal-700 font-medium hover:text-teal-900 hover:underline transition-colors cursor-pointer"
+                          title="Click to change ward professional"
+                        >
+                          WP: {patient.wardProfessional || "Not assigned"}
+                        </button>
+                      )}
+                    </div>
                     <p className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gray-400" />
                       Admitted: {new Date(patient.admissionDate).toLocaleDateString("en-GB")}
@@ -988,6 +1027,26 @@ export default function PatientsPage() {
                 </p>
               </div>
 
+              {/* Ward Professional - Always shown */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Ward Professional
+                </label>
+                <select
+                  value={newPatientWP}
+                  onChange={(e) => setNewPatientWP(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                >
+                  <option value="">None assigned</option>
+                  {wpCandidates.map((s) => (
+                    <option key={s.id} value={s.name}>{s.name} ({s.role})</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Staff, Lead, or Manager responsible for this patient.
+                </p>
+              </div>
+
               {/* Advanced Fields - shown when in advanced mode */}
               {showAdvancedFields && (
                 <>
@@ -1095,6 +1154,7 @@ export default function PatientsPage() {
                   setNewPatientBed("");
                   setNewPatientLegalStatus("informal");
                   setNewPatientAlerts([]);
+                  setNewPatientWP("");
                 }}
                 className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-colors"
               >

@@ -8,7 +8,7 @@ import {
   LegalStatus,
   AuditType,
 } from "@/lib/types";
-import { WARDS, STAFF_NAMES, getLeadsAndManagers } from "../staff";
+import { WARDS, STAFF_NAMES, getLeadsAndManagers, getWardProfessionalCandidates } from "../staff";
 
 // Re-export WARDS for convenience
 export { WARDS };
@@ -105,11 +105,11 @@ const generateAllPatients = (): Patient[] => {
     const staff = WARD_STAFF[ward];
     const doctors = staff.filter(s => s.startsWith("Dr."));
     const nurses = staff.filter(s => !s.startsWith("Dr."));
-    // Get leads and managers for ward professional allocation
-    const leadsManagers = getLeadsAndManagers(ward);
-    const wardProfessionals = leadsManagers.length > 0
-      ? leadsManagers.map(s => s.name)
-      : nurses.slice(0, 2); // Fallback to first 2 nurses
+    // Get eligible ward professionals (staff, lead, manager - not ward_admin/senior_admin)
+    const wpCandidates = getWardProfessionalCandidates(ward);
+    const wardProfessionals = wpCandidates.length > 0
+      ? wpCandidates.map(s => s.name)
+      : nurses.slice(0, 4); // Fallback to first 4 nurses
 
     for (let i = 0; i < 20; i++) {
       const patientName = getPatientName(ward, i);

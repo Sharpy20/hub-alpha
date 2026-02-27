@@ -57,7 +57,7 @@ const PATIENT_ENTRY_MODES: { value: PatientEntryMode; label: string; description
 ];
 
 const ROLES: { value: UserRole; label: string }[] = [
-  { value: "normal", label: "Normal User" },
+  { value: "staff", label: "Staff" },
   { value: "ward_admin", label: "Ward Admin" },
   { value: "lead", label: "Lead" },
   { value: "manager", label: "Manager" },

@@ -44,7 +44,7 @@ const getRoleForIndex = (index: number): UserRole => {
   if (index === 1) return "senior_admin";   // "[Ward] Senior Admin"
   if (index === 2) return "lead";           // "[Ward] Lead"
   if (index === 3) return "manager";        // "[Ward] Manager"
-  return "normal";  // All other staff are normal users
+  return "staff";  // All other staff are regular staff
 };
 
 // Some staff members have contributor privileges (granted by ward_admin or manager)
@@ -108,6 +108,13 @@ export function getAllWards(): readonly string[] {
 export function getLeadsAndManagers(ward: string): StaffMember[] {
   return DEMO_STAFF.filter(
     (s) => s.ward === ward && s.isActive && (s.role === "lead" || s.role === "manager")
+  );
+}
+
+// Helper to get eligible ward professionals (staff, lead, manager - not ward_admin or senior_admin)
+export function getWardProfessionalCandidates(ward: string): StaffMember[] {
+  return DEMO_STAFF.filter(
+    (s) => s.ward === ward && s.isActive && (s.role === "staff" || s.role === "lead" || s.role === "manager")
   );
 }
 

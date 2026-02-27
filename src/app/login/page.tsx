@@ -11,8 +11,8 @@ import { User, Building2, Shield, Info, Sparkles, ChevronDown } from "lucide-rea
 
 const ROLES: { value: UserRole; label: string; description: string; icon: string; gradient: string }[] = [
   {
-    value: "normal",
-    label: "Normal User",
+    value: "staff",
+    label: "Staff",
     description: "View content, add tasks, suggest links",
     icon: "👤",
     gradient: "from-blue-500 to-blue-700",

@@ -1,11 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import Link from "next/link";
-import { FileText, BookOpen, ArrowRight, Pencil, Shield, Bookmark, Settings } from "lucide-react";
+import { FileText, BookOpen, ArrowRight, Pencil, Shield, Bookmark, Settings, Sparkles, AlertTriangle } from "lucide-react";
 
 // Count data (would come from data in real app)
 const WORKFLOW_COUNT = 12;
@@ -14,30 +13,15 @@ const BOOKMARK_COUNT = 28;
 
 export default function AdminPage() {
   const { user } = useApp();
-  const router = useRouter();
+  const [showCreatorRequest, setShowCreatorRequest] = useState(false);
 
-  // Redirect if not an admin/contributor
-  const hasAdminAccess = user && (
-    user.isContributor ||
-    user.role === "manager" ||
-    user.role === "ward_admin" ||
-    user.role === "senior_admin"
-  );
-  useEffect(() => {
-    if (user && !hasAdminAccess) {
-      router.push("/");
-    }
-  }, [user, router, hasAdminAccess]);
-
-  if (!user || !hasAdminAccess) {
+  if (!user) {
     return (
       <MainLayout>
         <div className="text-center py-20">
           <Shield className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
-          <p className="text-gray-500">
-            You need Manager, Ward Admin, Senior Admin, or Contributor permissions to access this page.
-          </p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Please Log In</h1>
+          <p className="text-gray-500">You need to be logged in to access admin features.</p>
         </div>
       </MainLayout>
     );
@@ -47,7 +31,9 @@ export default function AdminPage() {
   const isWardAdmin = user.role === "ward_admin" || user.role === "manager" || user.role === "senior_admin";
 
   const roleLabels: Record<string, string> = {
-    contributor: "Creator Admin",
+    staff: "Staff",
+    lead: "Lead",
+    manager: "Manager",
     ward_admin: "Ward Admin",
     senior_admin: "Senior Admin",
   };
@@ -65,10 +51,44 @@ export default function AdminPage() {
               <h1 className="text-3xl font-bold">Creator Admin Dashboard</h1>
               <p className="text-white/80 mt-1">
                 Logged in as {user.name} ({roleLabels[user.role] || user.role})
+                {user.isContributor && " + Contributor"}
               </p>
             </div>
           </div>
         </div>
+
+        {/* Request Creator Privileges - shown for users without content admin access */}
+        {!isContentAdmin && (
+          <div className="bg-white rounded-xl border-2 border-amber-200 p-6 max-w-lg mx-auto">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-6 h-6 text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900 mb-1">Want to create content?</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Contributor privileges let you create and edit workflows, guides, and bookmarks. This is a separate privilege that can be added to any role.
+                </p>
+                {showCreatorRequest ? (
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                    <p className="text-sm text-amber-800 font-medium mb-1">Request submitted</p>
+                    <p className="text-xs text-amber-700">
+                      Needs approval from a Ward Admin or Manager, plus completion of Creator Training.
+                      Your request has been noted - please speak to your Ward Admin or Manager.
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowCreatorRequest(true)}
+                    className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+                  >
+                    Request Creator Privileges
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Ward Admin cards */}
         {isWardAdmin && (
@@ -177,10 +197,11 @@ export default function AdminPage() {
         )}
 
         {/* Info box */}
+        {(isContentAdmin || isWardAdmin) && (
         <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-6">
           <h3 className="font-bold text-gray-800 mb-2">About Content Editing</h3>
           <p className="text-gray-600 mb-3">
-            As a {roleLabels[user.role] || user.role}, you can edit workflows and guides. Changes are saved to local storage in this demo version.
+            As a {roleLabels[user.role] || user.role}{user.isContributor ? " with Contributor privileges" : ""}, you can edit workflows and guides. Changes are saved to local storage in this demo version.
           </p>
           {user.role === "senior_admin" && (
             <p className="text-gray-600">
@@ -188,6 +209,7 @@ export default function AdminPage() {
             </p>
           )}
         </div>
+        )}
       </div>
     </MainLayout>
   );

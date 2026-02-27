@@ -18,18 +18,25 @@ const ROLES: { value: UserRole; label: string; description: string; icon: string
     gradient: "from-blue-500 to-blue-700",
   },
   {
+    value: "lead",
+    label: "Lead",
+    description: "View staff tasks, My Patients filter",
+    icon: "📋",
+    gradient: "from-teal-500 to-teal-700",
+  },
+  {
+    value: "manager",
+    label: "Manager",
+    description: "Lead privileges + grant contributor, more options",
+    icon: "👔",
+    gradient: "from-amber-500 to-amber-700",
+  },
+  {
     value: "ward_admin",
     label: "Ward Admin",
     description: "Manage ward, approve discharges, view logs",
     icon: "🏥",
     gradient: "from-purple-500 to-purple-700",
-  },
-  {
-    value: "contributor",
-    label: "Contributor",
-    description: "Create and edit workflows and guides",
-    icon: "✍️",
-    gradient: "from-amber-500 to-amber-700",
   },
   {
     value: "senior_admin",
@@ -43,12 +50,14 @@ const ROLES: { value: UserRole; label: string; description: string; icon: string
 // Helper to get role icon
 const getRoleIcon = (role: UserRole): string => {
   switch (role) {
+    case "lead":
+      return "📋";
+    case "manager":
+      return "👔";
     case "ward_admin":
       return "🏥";
     case "senior_admin":
       return "👑";
-    case "contributor":
-      return "✍️";
     default:
       return "👤";
   }
@@ -93,6 +102,7 @@ export default function LoginPage() {
         name: selectedStaff.name,
         role: selectedStaff.role,
         ward: ward,
+        isContributor: selectedStaff.isContributor || false,
       });
       router.push("/");
     }
@@ -179,6 +189,7 @@ export default function LoginPage() {
                     {wardStaff.map((staff) => (
                       <option key={staff.id} value={staff.id}>
                         {getRoleIcon(staff.role)} {staff.name}
+                        {staff.isContributor ? " ✍️" : ""}
                       </option>
                     ))}
                   </select>
@@ -192,9 +203,16 @@ export default function LoginPage() {
                       <span className="text-2xl">{getRoleIcon(selectedStaff.role)}</span>
                       <div>
                         <p className="font-semibold text-gray-900">{selectedStaff.name}</p>
-                        <p className="text-sm text-gray-600 capitalize">
-                          {selectedStaff.role.replace("_", " ")}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm text-gray-600 capitalize">
+                            {selectedStaff.role.replace("_", " ")}
+                          </p>
+                          {selectedStaff.isContributor && (
+                            <span className="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-medium">
+                              ✍️ Contributor
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -207,22 +225,22 @@ export default function LoginPage() {
                   <Shield className="w-4 h-4 inline mr-1" />
                   3. Your Role (based on staff selection)
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                   {ROLES.map((r) => {
                     const isSelected = selectedStaff?.role === r.value;
                     return (
                       <div
                         key={r.value}
-                        className={`flex flex-col items-center gap-2 p-4 border-2 rounded-xl transition-all ${
+                        className={`flex flex-col items-center gap-1.5 p-3 border-2 rounded-xl transition-all ${
                           isSelected
                             ? `border-transparent bg-gradient-to-br ${r.gradient} text-white shadow-lg scale-[1.02]`
                             : "border-gray-200 bg-gray-50 opacity-50"
                         }`}
                       >
-                        <span className="text-3xl">{r.icon}</span>
+                        <span className="text-2xl">{r.icon}</span>
                         <div className="text-center">
-                          <p className="font-bold text-sm">{r.label}</p>
-                          <p className={`text-xs mt-1 ${isSelected ? "text-white/80" : "text-gray-500"}`}>
+                          <p className="font-bold text-xs">{r.label}</p>
+                          <p className={`text-[10px] mt-0.5 ${isSelected ? "text-white/80" : "text-gray-500"}`}>
                             {r.description}
                           </p>
                         </div>
@@ -231,7 +249,7 @@ export default function LoginPage() {
                   })}
                 </div>
                 <p className="text-xs text-gray-500 mt-2 text-center">
-                  Role is determined by the staff member you select
+                  Role is determined by the staff member you select. Contributor is a separate privilege (✍️).
                 </p>
               </div>
 

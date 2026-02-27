@@ -5,7 +5,7 @@ import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import Link from "next/link";
-import { Users, ClipboardList, CalendarDays, Info } from "lucide-react";
+import { Users, ClipboardList, CalendarDays, Info, UserSquare2, Filter } from "lucide-react";
 import { DiaryTask } from "@/lib/types";
 import { KanbanBoard } from "@/components/kanban";
 import {
@@ -13,15 +13,37 @@ import {
   StaffTasksModal,
   TaskDetailModal,
 } from "@/components/modals";
+import { DEMO_PATIENTS } from "@/lib/data/tasks";
+import { getStaffByWard } from "@/lib/data/staff";
 
 export default function MyTasksPage() {
-  const { user, hasFeature } = useApp();
+  const { user, hasFeature, activeWard } = useApp();
   const { tasks, updateTask, claimTask, toggleComplete } = useTasks();
 
   // Management modal states
   const [showStaffModal, setShowStaffModal] = useState(false);
   const [showStaffTasksModal, setShowStaffTasksModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
+
+  // My Patients toggle
+  const [showMyPatients, setShowMyPatients] = useState(false);
+
+  // Lead/Manager staff filter
+  const [selectedStaffFilter, setSelectedStaffFilter] = useState<string[]>([]);
+  const [showStaffFilterDropdown, setShowStaffFilterDropdown] = useState(false);
+
+  // Check if user is lead or manager
+  const isLeadOrManager = user?.role === "lead" || user?.role === "manager";
+
+  // Get patients where current user is ward professional
+  const myPatientIds = showMyPatients && user
+    ? DEMO_PATIENTS
+        .filter(p => p.wardProfessional === user.name && p.ward === activeWard)
+        .map(p => p.id)
+    : [];
+
+  // Get staff for filter
+  const wardStaffList = isLeadOrManager ? getStaffByWard(activeWard) : [];
 
   const hasTaskFeature = hasFeature("ward_tasks");
 
@@ -54,8 +76,23 @@ export default function MyTasksPage() {
     setSelectedTask(task);
   };
 
+  // Apply My Patients and staff filters
+  const filteredTasks = tasks.filter((task) => {
+    // My Patients filter
+    if (showMyPatients && myPatientIds.length > 0) {
+      if (task.type === "patient" || task.type === "appointment") {
+        if (!task.patientId || !myPatientIds.includes(task.patientId)) return false;
+      }
+    }
+    // Staff filter (Lead/Manager)
+    if (selectedStaffFilter.length > 0) {
+      if (task.claimedBy && !selectedStaffFilter.includes(task.claimedBy)) return false;
+    }
+    return true;
+  });
+
   // Count user's claimed tasks
-  const myClaimedTasks = tasks.filter((t) => t.claimedBy === user?.name);
+  const myClaimedTasks = filteredTasks.filter((t) => t.claimedBy === user?.name);
   const pendingCount = myClaimedTasks.filter(
     (t) => t.status === "pending" || t.status === "overdue"
   ).length;
@@ -151,6 +188,81 @@ export default function MyTasksPage() {
             Ward Diary
           </Link>
 
+          {/* My Patients toggle */}
+          <button
+            onClick={() => setShowMyPatients(!showMyPatients)}
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all ${
+              showMyPatients
+                ? "bg-teal-100 text-teal-800 ring-2 ring-teal-300"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+            title="Filter to patients where you are the ward professional"
+          >
+            <UserSquare2 className="w-5 h-5" />
+            <span className="hidden sm:inline">My Patients</span>
+          </button>
+
+          {/* Lead/Manager staff filter */}
+          {isLeadOrManager && (
+            <div className="relative">
+              <button
+                onClick={() => setShowStaffFilterDropdown(!showStaffFilterDropdown)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all ${
+                  selectedStaffFilter.length > 0
+                    ? "bg-purple-100 text-purple-800 ring-2 ring-purple-300"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+                title="Filter by staff member's tasks"
+              >
+                <Filter className="w-5 h-5" />
+                <span className="hidden sm:inline">
+                  {selectedStaffFilter.length > 0 ? `Staff (${selectedStaffFilter.length})` : "Staff Filter"}
+                </span>
+              </button>
+              {showStaffFilterDropdown && (
+                <div className="absolute top-full mt-1 left-0 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-64 max-h-72 overflow-y-auto">
+                  <div className="p-2 border-b border-gray-100">
+                    <button
+                      onClick={() => setSelectedStaffFilter([])}
+                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+                    >
+                      Clear all
+                    </button>
+                  </div>
+                  {wardStaffList.map((staff) => (
+                    <label
+                      key={staff.id}
+                      className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedStaffFilter.includes(staff.name)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedStaffFilter((prev) => [...prev, staff.name]);
+                          } else {
+                            setSelectedStaffFilter((prev) => prev.filter((n) => n !== staff.name));
+                          }
+                        }}
+                        className="rounded border-gray-300 text-purple-600"
+                      />
+                      <span className="text-sm text-gray-700">{staff.name}</span>
+                      <span className="text-xs text-gray-400 ml-auto capitalize">{staff.role.replace("_", " ")}</span>
+                    </label>
+                  ))}
+                  <div className="p-2 border-t border-gray-100">
+                    <button
+                      onClick={() => setShowStaffFilterDropdown(false)}
+                      className="w-full py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center gap-2 ml-auto">
             <button
               onClick={() => setShowStaffModal(true)}
@@ -198,7 +310,7 @@ export default function MyTasksPage() {
 
         {/* Kanban Board */}
         <KanbanBoard
-          tasks={tasks}
+          tasks={filteredTasks}
           currentUserName={user.name}
           onUpdateTask={handleUpdateTask}
           onTaskClick={handleTaskClick}

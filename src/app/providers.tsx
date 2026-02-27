@@ -19,6 +19,7 @@ interface User {
   name: string;
   role: UserRole;
   ward: string;
+  isContributor?: boolean; // Contributor is a flag, not a role
 }
 
 interface AppContextType {

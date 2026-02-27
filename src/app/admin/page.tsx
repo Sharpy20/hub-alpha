@@ -16,30 +16,35 @@ export default function AdminPage() {
   const { user } = useApp();
   const router = useRouter();
 
-  // Redirect if not contributor, ward_admin, or senior_admin
-  const allowedRoles = ["contributor", "ward_admin", "senior_admin"];
+  // Redirect if not an admin/contributor
+  const hasAdminAccess = user && (
+    user.isContributor ||
+    user.role === "manager" ||
+    user.role === "ward_admin" ||
+    user.role === "senior_admin"
+  );
   useEffect(() => {
-    if (user && !allowedRoles.includes(user.role)) {
+    if (user && !hasAdminAccess) {
       router.push("/");
     }
-  }, [user, router]);
+  }, [user, router, hasAdminAccess]);
 
-  if (!user || !allowedRoles.includes(user.role)) {
+  if (!user || !hasAdminAccess) {
     return (
       <MainLayout>
         <div className="text-center py-20">
           <Shield className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
           <p className="text-gray-500">
-            You need Ward Admin, Creator Admin, or Senior Admin permissions to access this page.
+            You need Manager, Ward Admin, Senior Admin, or Contributor permissions to access this page.
           </p>
         </div>
       </MainLayout>
     );
   }
 
-  const isContentAdmin = user.role === "contributor" || user.role === "senior_admin";
-  const isWardAdmin = user.role === "ward_admin" || user.role === "senior_admin";
+  const isContentAdmin = user.isContributor || user.role === "manager" || user.role === "senior_admin";
+  const isWardAdmin = user.role === "ward_admin" || user.role === "manager" || user.role === "senior_admin";
 
   const roleLabels: Record<string, string> = {
     contributor: "Creator Admin",

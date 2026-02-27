@@ -16,27 +16,30 @@ interface KanbanTaskCardProps {
 export function KanbanTaskCard({ task, onDragStart, onUnclaim, onComplete, onReopen, onClick }: KanbanTaskCardProps) {
   const isCompleted = task.status === "completed";
 
-  let gradient = "from-gray-400 to-gray-600";
+  // Priority-based gradient
+  const priorityConfig = PRIORITY_CONFIG[task.priority];
+  const gradient = priorityConfig.gradient;
+
+  // Type-based icon and subtitle
   let icon = "📌";
   let subtitle = "";
+  let typeTag = "";
 
   if (task.type === "ward") {
     const shiftConfig = SHIFT_CONFIG[task.shift];
-    gradient = shiftConfig.gradient;
     icon = shiftConfig.icon;
     subtitle = `${shiftConfig.label} Shift`;
+    typeTag = `${shiftConfig.label} · Ward`;
   } else if (task.type === "patient") {
     const catConfig = TASK_CATEGORY_CONFIG[task.category];
-    gradient = catConfig.gradient;
     icon = catConfig.icon;
     subtitle = task.patientName || "No patient assigned";
+    typeTag = catConfig.label;
   } else if (task.type === "appointment") {
-    gradient = "from-blue-500 to-blue-700";
     icon = "📅";
     subtitle = `${task.appointmentTime} · ${task.patientName || "Ward"}`;
+    typeTag = "Appointment";
   }
-
-  const priorityConfig = PRIORITY_CONFIG[task.priority];
 
   return (
     <div
@@ -60,8 +63,14 @@ export function KanbanTaskCard({ task, onDragStart, onUnclaim, onComplete, onReo
             </h4>
             <p className="text-white/70 text-xs mt-0.5 truncate">{subtitle}</p>
           </div>
-          <span title={priorityConfig.label}>{priorityConfig.icon}</span>
         </div>
+
+        {/* Type tag */}
+        {typeTag && (
+          <span className="inline-block text-white/70 text-[10px] bg-white/15 rounded px-1.5 py-0.5 mt-1">
+            {typeTag}
+          </span>
+        )}
 
         {/* Due date indicator */}
         {task.type !== "appointment" && (

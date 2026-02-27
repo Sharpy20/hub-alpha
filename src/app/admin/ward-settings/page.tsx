@@ -59,7 +59,8 @@ const PATIENT_ENTRY_MODES: { value: PatientEntryMode; label: string; description
 const ROLES: { value: UserRole; label: string }[] = [
   { value: "normal", label: "Normal User" },
   { value: "ward_admin", label: "Ward Admin" },
-  { value: "contributor", label: "Contributor" },
+  { value: "lead", label: "Lead" },
+  { value: "manager", label: "Manager" },
   { value: "senior_admin", label: "Senior Admin" },
 ];
 
@@ -77,8 +78,8 @@ export default function WardSettingsPage() {
     setHasChanges(false);
   }, [activeWard, getWardSettings]);
 
-  // Check if user has admin access
-  const isAdmin = user?.role === "ward_admin" || user?.role === "senior_admin";
+  // Check if user has admin access (managers can also access settings)
+  const isAdmin = user?.role === "ward_admin" || user?.role === "senior_admin" || user?.role === "manager";
 
   if (!hasFeature("ward_tasks")) {
     return (
@@ -96,6 +97,9 @@ export default function WardSettingsPage() {
     );
   }
 
+  // Creator request state
+  const [showCreatorRequest, setShowCreatorRequest] = useState(false);
+
   if (!isAdmin) {
     return (
       <MainLayout>
@@ -104,9 +108,33 @@ export default function WardSettingsPage() {
             <AlertTriangle className="w-10 h-10 text-amber-500" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Access Required</h1>
-          <p className="text-gray-600 max-w-md">
-            Only Ward Admins and Senior Admins can access ward settings.
+          <p className="text-gray-600 max-w-md mb-6">
+            Only Ward Admins, Managers, and Senior Admins can access ward settings.
           </p>
+
+          {/* Request Creator Privileges */}
+          <div className="bg-white border border-gray-200 rounded-xl p-6 max-w-md w-full">
+            <h3 className="font-semibold text-gray-900 mb-2">Want to create content?</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Contributor privileges let you create and edit workflows and guides. This is a separate privilege that can be added to any role.
+            </p>
+            {showCreatorRequest ? (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <p className="text-sm text-amber-800 font-medium mb-1">Request submitted</p>
+                <p className="text-xs text-amber-700">
+                  Needs approval from a Ward Admin or Manager, plus completion of Creator Training.
+                  Your request has been noted - please speak to your Ward Admin or Manager.
+                </p>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowCreatorRequest(true)}
+                className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+              >
+                Request Creator Privileges
+              </button>
+            )}
+          </div>
         </div>
       </MainLayout>
     );

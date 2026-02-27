@@ -208,14 +208,19 @@ export default function WorkflowsAdminPage() {
   const [savedMessage, setSavedMessage] = useState(false);
   const [validationError, setValidationError] = useState<string[] | null>(null);
 
-  // Redirect if not contributor or senior_admin
+  // Redirect if not a content admin
+  const hasContentAccess = user && (
+    user.isContributor ||
+    user.role === "manager" ||
+    user.role === "senior_admin"
+  );
   useEffect(() => {
-    if (user && user.role !== "contributor" && user.role !== "senior_admin") {
+    if (user && !hasContentAccess) {
       router.push("/");
     }
-  }, [user, router]);
+  }, [user, router, hasContentAccess]);
 
-  if (!user || (user.role !== "contributor" && user.role !== "senior_admin")) {
+  if (!user || !hasContentAccess) {
     return (
       <MainLayout>
         <div className="text-center py-20">

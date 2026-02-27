@@ -24,7 +24,7 @@ export function VerificationBadge({
   const [showModal, setShowModal] = useState(false);
 
   const verification = getVerification(contentType, contentId);
-  const canVerify = user?.role === "contributor" || user?.role === "senior_admin";
+  const canVerify = user?.isContributor || user?.role === "manager" || user?.role === "ward_admin" || user?.role === "senior_admin";
 
   const isVerified = verification?.status === "verified";
   const verifiedDate = verification?.verifiedAt

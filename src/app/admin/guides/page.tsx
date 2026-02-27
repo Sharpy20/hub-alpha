@@ -319,14 +319,14 @@ export default function GuidesAdminPage() {
   const [draggedType, setDraggedType] = useState<string | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  // Redirect if not contributor or senior_admin
+  // Redirect if not contributor or admin
   useEffect(() => {
-    if (user && user.role !== "contributor" && user.role !== "senior_admin") {
+    if (user && !user.isContributor && user.role !== "manager" && user.role !== "ward_admin" && user.role !== "senior_admin") {
       router.push("/");
     }
   }, [user, router]);
 
-  if (!user || (user.role !== "contributor" && user.role !== "senior_admin")) {
+  if (!user || (!user.isContributor && user.role !== "manager" && user.role !== "ward_admin" && user.role !== "senior_admin")) {
     return (
       <MainLayout>
         <div className="text-center py-20">

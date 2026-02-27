@@ -31,23 +31,21 @@ function MiniTaskCard({
   const isCompleted = task.status === "completed";
   const isOverdue = task.status === "overdue";
 
-  let gradient = "from-gray-400 to-gray-600";
+  // Priority-based gradient
+  const priorityConfig = PRIORITY_CONFIG[task.priority];
+  const gradient = priorityConfig.gradient;
+
   let icon = "📌";
 
   if (task.type === "ward") {
     const shiftConfig = SHIFT_CONFIG[task.shift];
-    gradient = shiftConfig.gradient;
     icon = shiftConfig.icon;
   } else if (task.type === "patient") {
     const catConfig = TASK_CATEGORY_CONFIG[task.category];
-    gradient = catConfig.gradient;
     icon = catConfig.icon;
   } else if (task.type === "appointment") {
-    gradient = "from-blue-500 to-blue-700";
     icon = "📅";
   }
-
-  const priorityConfig = PRIORITY_CONFIG[task.priority];
 
   return (
     <div
@@ -77,12 +75,9 @@ function MiniTaskCard({
           >
             {task.title}
           </h4>
-          <div className="flex items-center gap-1">
-            {isOverdue && (
-              <span className="bg-red-500 text-white text-[10px] px-1 rounded">!</span>
-            )}
-            <span className="text-xs">{priorityConfig.icon}</span>
-          </div>
+          {isOverdue && (
+            <span className="bg-red-500 text-white text-[10px] px-1 rounded flex-shrink-0">!</span>
+          )}
         </div>
       </div>
     </div>

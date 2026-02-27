@@ -78,6 +78,12 @@ export default function PatientsPage() {
   const [newPatientBed, setNewPatientBed] = useState("");
   const [newPatientLegalStatus, setNewPatientLegalStatus] = useState<LegalStatus>("informal");
   const [newPatientAlerts, setNewPatientAlerts] = useState<string[]>([]);
+  const [newPatientAdmissionTime, setNewPatientAdmissionTime] = useState(
+    () => {
+      const now = new Date();
+      return `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+    }
+  );
 
   // Ward admin can set: "simple" (always simple), "advanced" (always advanced), "choice" (user chooses)
   const patientEntryMode = wardSettings.patientEntryMode;
@@ -225,19 +231,48 @@ export default function PatientsPage() {
     if (!newPatientName.trim()) return;
 
     const wardPrefix = activeWard.substring(0, 2).toUpperCase();
+    const nowDate = new Date().toISOString().split("T")[0];
+    const wardName = activeWard.charAt(0).toUpperCase() + activeWard.slice(1);
+    const patientId = `p-${wardPrefix}-${Date.now()}`;
+
     const newPatient: Patient = {
-      id: `p-${wardPrefix}-${Date.now()}`,
+      id: patientId,
       name: newPatientName.trim(),
       room: newPatientRoom.trim() || "TBA",
       bed: newPatientBed.trim() || undefined,
-      ward: activeWard.charAt(0).toUpperCase() + activeWard.slice(1),
+      ward: wardName,
       status: "active",
       legalStatus: newPatientLegalStatus,
-      admissionDate: new Date().toISOString().split("T")[0],
+      admissionDate: nowDate,
+      admissionTime: newPatientAdmissionTime,
       alerts: newPatientAlerts.length > 0 ? newPatientAlerts : undefined,
     };
 
     setPatients((prev) => [...prev, newPatient]);
+
+    // Auto-generate 72-hour admission audit task
+    const deadline = new Date();
+    deadline.setDate(deadline.getDate() + 3);
+    const deadlineStr = deadline.toISOString().split("T")[0];
+
+    const auditTask: DiaryTask = {
+      id: `audit72-new-${Date.now()}`,
+      type: "patient",
+      title: "72-Hour Admission Audit",
+      description: `Complete 72-hour post-admission audit for ${newPatientName.trim()}. Must be completed by senior staff (Lead/Manager) within 72 hours of admission on ${nowDate} at ${newPatientAdmissionTime}. This task is visible to all Leads and Managers under "My Patients".`,
+      status: "pending",
+      priority: "urgent",
+      category: "assessment",
+      patientId: patientId,
+      patientName: newPatientName.trim(),
+      dueDate: deadlineStr,
+      carryOver: true,
+      ward: wardName,
+      createdAt: nowDate,
+      createdBy: user?.name || "System",
+    } as DiaryTask;
+
+    setTasks((prev) => [...prev, auditTask]);
 
     // Reset form
     setNewPatientName("");
@@ -245,6 +280,9 @@ export default function PatientsPage() {
     setNewPatientBed("");
     setNewPatientLegalStatus("informal");
     setNewPatientAlerts([]);
+    setNewPatientAdmissionTime(
+      `${new Date().getHours().toString().padStart(2, "0")}:${new Date().getMinutes().toString().padStart(2, "0")}`
+    );
     setIsAddPatientModalOpen(false);
   };
 
@@ -564,9 +602,16 @@ export default function PatientsPage() {
                       <User className="w-4 h-4 text-gray-400" />
                       {patient.consultant || "No consultant"}
                     </p>
+                    {patient.wardProfessional && (
+                      <p className="flex items-center gap-2">
+                        <Clipboard className="w-4 h-4 text-teal-500" />
+                        <span className="text-teal-700 font-medium">WP: {patient.wardProfessional}</span>
+                      </p>
+                    )}
                     <p className="flex items-center gap-2">
                       <Calendar className="w-4 h-4 text-gray-400" />
                       Admitted: {new Date(patient.admissionDate).toLocaleDateString("en-GB")}
+                      {patient.admissionTime && ` at ${patient.admissionTime}`}
                     </p>
                     {patient.status !== "discharged" && patient.expectedDischargeDate && (
                       <p className="flex items-center gap-2 text-amber-600 font-medium">
@@ -925,6 +970,22 @@ export default function PatientsPage() {
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
                   autoFocus
                 />
+              </div>
+
+              {/* Admission Time - Always shown */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Admission Time *
+                </label>
+                <input
+                  type="time"
+                  value={newPatientAdmissionTime}
+                  onChange={(e) => setNewPatientAdmissionTime(e.target.value)}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  A 72-hour admission audit task will be auto-generated for Leads and Managers.
+                </p>
               </div>
 
               {/* Advanced Fields - shown when in advanced mode */}

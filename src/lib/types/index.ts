@@ -298,7 +298,7 @@ export interface User {
 export const DEMO_USERS: Omit<User, "id">[] = [
   { name: "Sarah Johnson", role: "normal", ward: "Byron" },
   { name: "Mike Chen", role: "ward_admin", ward: "Byron" },
-  { name: "Emma Wilson", role: "contributor", ward: "Byron" },
+  { name: "Emma Wilson", role: "lead", ward: "Byron" },
   { name: "Dr. James Patel", role: "senior_admin", ward: "Byron" },
 ];
 
@@ -449,7 +449,7 @@ export const DEFAULT_WARD_SETTINGS: Omit<WardSettings, "wardId"> = {
     { id: "dc-6", label: "Community team notified", required: false },
     { id: "dc-7", label: "Property returned", required: false },
   ],
-  dischargeInitiateRoles: ["normal", "ward_admin", "contributor", "senior_admin"],
+  dischargeInitiateRoles: ["normal", "lead", "manager", "ward_admin", "senior_admin"],
   dischargeApproveRoles: ["ward_admin", "senior_admin"],
   pinnedWorkflows: [],
   pinnedGuides: [],

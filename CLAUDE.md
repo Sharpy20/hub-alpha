@@ -1029,3 +1029,7 @@ Then open http://localhost:3000
 ---
 
 *This file is maintained by Claude Code during development sessions.*
+
+## Git & Deployment
+- **GitHub:** Sharpy20/hub-alpha (private)
+- **Auth:** Uses gh CLI credential helper. If push fails, run: `gh auth switch --user Sharpy20 && gh auth setup-git`

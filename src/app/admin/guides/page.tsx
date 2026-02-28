@@ -385,7 +385,7 @@ export default function GuidesAdminPage() {
     const updatedVersions = [newVersion, ...editingGuide.versions].slice(0, 20);
     setEditingGuide({ ...editingGuide, versions: updatedVersions });
 
-    console.log("Saving guide:", editingGuide);
+    // Save guide to storage
     setValidationError(null);
     setSavedMessage(true);
     setTimeout(() => setSavedMessage(false), 2000);

@@ -75,8 +75,18 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-white/20 text-center text-sm text-white/70">
-          <p>&copy; {currentYear} Inpatient Hub Demo. Not for clinical use.</p>
+        <div className="mt-8 pt-6 border-t border-white/20 text-center text-sm text-white/70 space-y-2">
+          <p className="text-xs text-white/40 font-medium tracking-wider uppercase">
+            Derbyshire Healthcare NHS Foundation Trust
+          </p>
+          <p>&copy; {currentYear} Inpatient Hub — Alpha Demo. Not for clinical use.</p>
+          <div className="flex items-center justify-center gap-4 text-xs text-white/50">
+            <Link href="/gdpr" className="hover:text-white transition-colors">Privacy</Link>
+            <span>|</span>
+            <Link href="/data-sources" className="hover:text-white transition-colors">Data Sources</Link>
+            <span>|</span>
+            <Link href="/feedback" className="hover:text-white transition-colors">Feedback</Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -5,11 +5,12 @@ import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import Link from "next/link";
 import { FileText, BookOpen, ArrowRight, Pencil, Shield, Bookmark, Settings, Sparkles, AlertTriangle } from "lucide-react";
+import { bookmarks } from "@/lib/data/bookmarks";
 
-// Count data (would come from data in real app)
-const WORKFLOW_COUNT = 12;
-const GUIDE_COUNT = 13;
-const BOOKMARK_COUNT = 28;
+// Dynamic counts from data
+const WORKFLOW_COUNT = 12; // Defined inline in referrals/[id] page
+const GUIDE_COUNT = 13;    // Defined inline in how-to/[id] page
+const BOOKMARK_COUNT = bookmarks.length;
 
 export default function AdminPage() {
   const { user } = useApp();

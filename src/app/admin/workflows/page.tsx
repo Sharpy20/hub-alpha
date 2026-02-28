@@ -285,7 +285,7 @@ export default function WorkflowsAdminPage() {
     setEditingWorkflow({ ...editingWorkflow, versions: updatedVersions });
 
     // In real app, would save to localStorage/database
-    console.log("Saving workflow:", editingWorkflow);
+    // Save workflow to storage
     setValidationError(null);
     setSavedMessage(true);
     setTimeout(() => setSavedMessage(false), 2000);

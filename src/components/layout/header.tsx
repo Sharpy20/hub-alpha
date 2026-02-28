@@ -220,10 +220,12 @@ export function Header() {
               <div className="relative" ref={settingsDropdownRef}>
                 <button
                   onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
+                  aria-label="More options menu"
+                  aria-expanded={settingsDropdownOpen}
                   className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
                 >
                   More
-                  <ChevronDown className={`w-4 h-4 transition-transform ${settingsDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${settingsDropdownOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                 </button>
 
                 {settingsDropdownOpen && (
@@ -332,15 +334,17 @@ export function Header() {
                 <div className="relative" ref={profileDropdownRef}>
                   <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                    aria-label="My profile menu"
+                    aria-expanded={profileDropdownOpen}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-semibold ${
                       isViewingOtherWard
                         ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
-                    <User className="w-4 h-4" />
+                    <User className="w-4 h-4" aria-hidden="true" />
                     <span className="max-w-[120px] truncate">{user.name}</span>
-                    <ChevronDown className={`w-4 h-4 transition-transform ${profileDropdownOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-4 h-4 transition-transform ${profileDropdownOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
                   </button>
 
                   {profileDropdownOpen && (

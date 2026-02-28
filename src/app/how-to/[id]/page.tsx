@@ -1,7 +1,7 @@
 "use client";
 
 import { MainLayout } from "@/components/layout";
-import { Button, Card, CardContent, Badge } from "@/components/ui";
+import { Button, Card, CardContent, Badge, Breadcrumb } from "@/components/ui";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, Lightbulb, BookOpen, Pencil, UserPlus } from "lucide-react";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
@@ -248,8 +248,7 @@ export default function GuidePage() {
       linkedGuideId: guideId,
     });
 
-    // Log to console (would be audit log in production)
-    console.log(`[AUDIT LOG] ${new Date().toISOString()} - User: ${user?.name} - Accessed guide "${guide.title}" for patient ${patient.name} (${patient.ward} Ward)`);
+    // Audit log - production would use backend audit trail
   };
 
   const handleNext = () => {
@@ -273,6 +272,10 @@ export default function GuidePage() {
   return (
     <MainLayout>
       <div className="space-y-6">
+        <Breadcrumb items={[
+          { label: "How-To Guides", href: "/how-to" },
+          { label: guide.title },
+        ]} />
         {/* Header with gradient */}
         <div className={`bg-gradient-to-r ${config.gradient} rounded-2xl p-6 text-white`}>
           <div className="flex items-center justify-between mb-4">

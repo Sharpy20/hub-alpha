@@ -7,7 +7,7 @@ import { Badge, VerificationBadge } from "@/components/ui";
 import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings } from "@/app/ward-settings-provider";
-import { Lock, ExternalLink, Bookmark, Filter, Star, Check } from "lucide-react";
+import { Lock, ExternalLink, Bookmark, Filter, Star, Check, X, Shield } from "lucide-react";
 
 // Check if icon is an emoji
 function isEmoji(str: string): boolean {
@@ -30,6 +30,7 @@ function BookmarksContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [focusModalUrl, setFocusModalUrl] = useState<string | null>(null);
   const { userFavoriteBookmarks, toggleFavoriteBookmark, defaultBookmarkCategory, setDefaultBookmarkCategory } = useWardSettings();
 
   const categories = ["all", ...getCategories()];
@@ -40,13 +41,19 @@ function BookmarksContent() {
 
   const handleBookmarkClick = (bookmark: typeof bookmarks[0]) => {
     if (bookmark.requiresFocus) {
-      alert(
-        "This link requires FOCUS login.\n\nYou must be connected to the Trust network to access this resource."
-      );
+      setFocusModalUrl(bookmark.url);
+      return;
     }
     if (bookmark.url !== "#") {
       window.open(bookmark.url, "_blank");
     }
+  };
+
+  const handleFocusContinue = () => {
+    if (focusModalUrl && focusModalUrl !== "#") {
+      window.open(focusModalUrl, "_blank");
+    }
+    setFocusModalUrl(null);
   };
 
   const currentConfig = CATEGORY_CONFIG[selectedCategory] || CATEGORY_CONFIG["all"];
@@ -217,6 +224,50 @@ function BookmarksContent() {
           Showing {filteredBookmarks.length} of {bookmarks.length} bookmarks
         </div>
       </div>
+
+      {/* FOCUS Login Required Modal */}
+      {focusModalUrl && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setFocusModalUrl(null)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-white font-bold text-lg">FOCUS Login Required</h3>
+              </div>
+              <button onClick={() => setFocusModalUrl(null)} className="text-white/80 hover:text-white" aria-label="Close modal">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-xl border border-amber-200">
+                <Lock className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-medium text-amber-800">Trust Network Access</p>
+                  <p className="text-xs text-amber-700 mt-1">
+                    This link requires FOCUS login. You must be connected to the Trust network to access this resource.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setFocusModalUrl(null)}
+                  className="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleFocusContinue}
+                  className="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+                >
+                  Open Anyway
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </MainLayout>
   );
 }

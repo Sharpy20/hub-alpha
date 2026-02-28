@@ -69,8 +69,7 @@ export default function DevPanelPage() {
     const session = sessionStorage.getItem("devPanelAuth");
     if (session === "authenticated") {
       setIsAuthenticated(true);
-      // Log access (demo audit)
-      console.log(`[DEV PANEL AUDIT] Accessed at ${new Date().toISOString()}, MODE: ${version}`);
+      // Audit log - production would use backend logging
     }
   }, [version]);
 
@@ -79,8 +78,7 @@ export default function DevPanelPage() {
     if (password === DEV_PANEL_PASSWORD) {
       setIsAuthenticated(true);
       sessionStorage.setItem("devPanelAuth", "authenticated");
-      // Log access (demo audit)
-      console.log(`[DEV PANEL AUDIT] Login at ${new Date().toISOString()}, MODE: ${version}`);
+      // Audit log - production would use backend logging
     } else {
       setPasswordError(true);
       setTimeout(() => setPasswordError(false), 2000);
@@ -564,6 +562,8 @@ function DataCatalogueSection() {
                 <tr><td className="p-2">bed</td><td className="p-2">String</td><td className="p-2">Indirect</td><td className="p-2">Location</td></tr>
                 <tr><td className="p-2">legalStatus</td><td className="p-2">Enum</td><td className="p-2 text-nhs-orange font-medium">Special Cat.</td><td className="p-2">MHA status</td></tr>
                 <tr><td className="p-2">admissionDate</td><td className="p-2">Date</td><td className="p-2">Indirect</td><td className="p-2">When admitted</td></tr>
+                <tr className="bg-green-50"><td className="p-2 font-medium">admissionTime</td><td className="p-2">Time</td><td className="p-2">Indirect</td><td className="p-2">Triggers 72hr audit auto-generation</td></tr>
+                <tr className="bg-green-50"><td className="p-2 font-medium">wardProfessional</td><td className="p-2">String (FK)</td><td className="p-2">Indirect</td><td className="p-2">Assigned staff/lead/manager responsible for patient</td></tr>
                 <tr><td className="p-2">alerts</td><td className="p-2">Array</td><td className="p-2 text-nhs-orange font-medium">Special Cat.</td><td className="p-2">Clinical alerts</td></tr>
               </tbody>
             </table>
@@ -585,24 +585,33 @@ function RBACSection() {
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Role Definitions</h2>
+          <p className="text-xs text-nhs-mid-grey mt-1">Last reviewed: 2026-02-27</p>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="p-3 bg-nhs-pale-grey rounded-lg">
-              <h3 className="font-semibold text-nhs-black">Normal User</h3>
-              <p className="text-sm text-nhs-dark-grey">View content, claim tasks, suggest bookmarks</p>
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <h3 className="font-semibold text-nhs-black">Staff <span className="text-xs font-normal text-nhs-mid-grey">(base role)</span></h3>
+              <p className="text-sm text-nhs-dark-grey">View content, claim tasks, suggest bookmarks. Can be assigned as ward professional for patients.</p>
             </div>
-            <div className="p-3 bg-nhs-pale-grey rounded-lg">
-              <h3 className="font-semibold text-nhs-black">Ward Admin</h3>
-              <p className="text-sm text-nhs-dark-grey">+ Ward settings, discharge approval, view audit logs</p>
+            <div className="p-3 bg-teal-50 rounded-lg border border-teal-200">
+              <h3 className="font-semibold text-nhs-black">Lead</h3>
+              <p className="text-sm text-nhs-dark-grey">+ Filter by staff member tasks, &quot;My Patients&quot; toggle (as ward professional), 72hr admission audit visibility</p>
             </div>
-            <div className="p-3 bg-nhs-pale-grey rounded-lg">
-              <h3 className="font-semibold text-nhs-black">Contributor</h3>
-              <p className="text-sm text-nhs-dark-grey">+ Edit workflows, guides, bookmarks</p>
+            <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
+              <h3 className="font-semibold text-nhs-black">Manager</h3>
+              <p className="text-sm text-nhs-dark-grey">+ Ward settings, discharge approval, grant contributor privileges, all Lead capabilities</p>
             </div>
-            <div className="p-3 bg-nhs-pale-grey rounded-lg">
+            <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+              <h3 className="font-semibold text-nhs-black">Ward Admin <span className="text-xs font-normal text-nhs-mid-grey">(IT/Config)</span></h3>
+              <p className="text-sm text-nhs-dark-grey">+ Ward settings, discharge approval, view audit logs, grant contributor privileges</p>
+            </div>
+            <div className="p-3 bg-rose-50 rounded-lg border border-rose-200">
               <h3 className="font-semibold text-nhs-black">Senior Admin</h3>
-              <p className="text-sm text-nhs-dark-grey">+ User management, system settings, full audit access</p>
+              <p className="text-sm text-nhs-dark-grey">+ User management, system settings, full audit access, delete content</p>
+            </div>
+            <div className="p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border-2 border-dashed border-amber-300">
+              <h3 className="font-semibold text-nhs-black">Contributor <span className="text-xs bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-full font-medium ml-1">FLAG</span></h3>
+              <p className="text-sm text-nhs-dark-grey">Orthogonal privilege (not a role). Can be added to <strong>any</strong> role by Ward Admin or Manager. Grants: edit workflows, guides, bookmarks. Requires creator training completion.</p>
             </div>
           </div>
         </CardContent>
@@ -611,6 +620,7 @@ function RBACSection() {
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Permissions Matrix</h2>
+          <p className="text-xs text-nhs-mid-grey mt-1">Last reviewed: 2026-02-27</p>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -618,10 +628,12 @@ function RBACSection() {
               <thead className="bg-nhs-pale-grey">
                 <tr>
                   <th className="text-left p-2">Feature</th>
-                  <th className="text-center p-2">Normal</th>
+                  <th className="text-center p-2">Staff</th>
+                  <th className="text-center p-2">Lead</th>
+                  <th className="text-center p-2">Manager</th>
                   <th className="text-center p-2">Ward Admin</th>
-                  <th className="text-center p-2">Contributor</th>
                   <th className="text-center p-2">Senior Admin</th>
+                  <th className="text-center p-2 bg-amber-50">+Contributor</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -631,13 +643,8 @@ function RBACSection() {
                   <td className="p-2 text-center text-nhs-green">✓</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
-                </tr>
-                <tr>
-                  <td className="p-2">Suggest new bookmark</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
-                  <td className="p-2 text-center text-nhs-green">✓</td>
-                  <td className="p-2 text-center text-nhs-green">✓</td>
-                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
                 <tr>
                   <td className="p-2">Claim/complete tasks</td>
@@ -645,54 +652,95 @@ function RBACSection() {
                   <td className="p-2 text-center text-nhs-green">✓</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
+                </tr>
+                <tr>
+                  <td className="p-2">Assigned as ward professional</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
+                </tr>
+                <tr>
+                  <td className="p-2">&quot;My Patients&quot; filter + staff filter</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
+                </tr>
+                <tr>
+                  <td className="p-2">72hr admission audit visibility</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
                 <tr>
                   <td className="p-2">Edit content (workflows/guides)</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50 text-nhs-green font-bold">✓</td>
                 </tr>
                 <tr>
                   <td className="p-2">Ward settings</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
-                  <td className="p-2 text-center text-nhs-green">✓</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
                 <tr>
                   <td className="p-2">Approve discharges</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
-                  <td className="p-2 text-center text-nhs-green">✓</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
                 <tr>
-                  <td className="p-2">View audit logs</td>
+                  <td className="p-2">Grant contributor flag</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
-                  <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
                 <tr>
                   <td className="p-2">User management</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
                 <tr>
                   <td className="p-2">Dev Panel access</td>
-                  <td className="p-2 text-center text-nhs-orange">Password</td>
-                  <td className="p-2 text-center text-nhs-orange">Password</td>
-                  <td className="p-2 text-center text-nhs-orange">Password</td>
-                  <td className="p-2 text-center text-nhs-orange">Password</td>
+                  <td className="p-2 text-center text-nhs-orange">Key</td>
+                  <td className="p-2 text-center text-nhs-orange">Key</td>
+                  <td className="p-2 text-center text-nhs-orange">Key</td>
+                  <td className="p-2 text-center text-nhs-orange">Key</td>
+                  <td className="p-2 text-center text-nhs-orange">Key</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="text-xs text-nhs-mid-grey mt-3">
-            Note: Dev Panel uses secondary password in demo. Production would restrict to IT/IG roles.
+            Note: +Contributor is a flag (isContributor) that can be added to any role. Dev Panel uses access key in demo; production would use Trust key vault.
           </p>
         </CardContent>
       </Card>
@@ -1164,7 +1212,8 @@ CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   email TEXT UNIQUE,
-  role TEXT NOT NULL CHECK (role IN ('normal', 'ward_admin', 'contributor', 'senior_admin')),
+  role TEXT NOT NULL CHECK (role IN ('staff', 'lead', 'manager', 'ward_admin', 'senior_admin')),
+  is_contributor BOOLEAN DEFAULT FALSE,  -- Orthogonal flag, any role can have it
   ward TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   last_login TIMESTAMPTZ
@@ -1181,6 +1230,8 @@ CREATE TABLE patients (
   bed TEXT,
   legal_status TEXT,
   admission_date DATE,
+  admission_time TIMESTAMPTZ,           -- Triggers 72hr audit auto-generation
+  ward_professional UUID REFERENCES users(id),  -- Assigned staff/lead/manager
   status TEXT DEFAULT 'active',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -1222,15 +1273,26 @@ CREATE POLICY "Users see own ward patients"
 ON patients FOR SELECT
 USING (ward = (SELECT ward FROM users WHERE id = auth.uid()));
 
--- Ward admins can see all patients in their ward
-CREATE POLICY "Ward admins full patient access"
+-- Managers and admins can manage patients in their ward
+CREATE POLICY "Managers full patient access"
 ON patients FOR ALL
 USING (
   EXISTS (
     SELECT 1 FROM users
     WHERE id = auth.uid()
-    AND role IN ('ward_admin', 'senior_admin')
+    AND role IN ('manager', 'ward_admin', 'senior_admin')
     AND ward = patients.ward
+  )
+);
+
+-- Contributors can edit content regardless of role
+CREATE POLICY "Contributors edit content"
+ON content FOR UPDATE
+USING (
+  EXISTS (
+    SELECT 1 FROM users
+    WHERE id = auth.uid()
+    AND (is_contributor = TRUE OR role IN ('manager', 'senior_admin'))
   )
 );`}</pre>
             </div>

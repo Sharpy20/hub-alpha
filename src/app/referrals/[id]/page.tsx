@@ -1,7 +1,7 @@
 "use client";
 
 import { MainLayout } from "@/components/layout";
-import { Button, Card, CardContent, Badge } from "@/components/ui";
+import { Button, Card, CardContent, Badge, Breadcrumb } from "@/components/ui";
 import { useParams, useRouter } from "next/navigation";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
@@ -1416,8 +1416,7 @@ export default function WorkflowPage() {
       linkedReferralId: workflowId,
     });
 
-    // Log to console (would be audit log in production)
-    console.log(`[AUDIT LOG] ${new Date().toISOString()} - User: ${user?.name} - Accessed referral "${workflow.title}" for patient ${patient.name} (${patient.ward} Ward)`);
+    // Audit log - production would use backend audit trail
   };
 
   const workflowId = params.id as string;
@@ -1501,6 +1500,10 @@ export default function WorkflowPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
+        <Breadcrumb items={[
+          { label: "Referrals", href: "/referrals" },
+          { label: workflow.title },
+        ]} />
         {/* Header with gradient */}
         <div className={`bg-gradient-to-r ${workflow.gradient} rounded-2xl p-6 text-white`}>
           <div className="flex items-center justify-between mb-4">

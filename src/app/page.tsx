@@ -34,10 +34,10 @@ const QUICK_ACTIONS = [
 ];
 
 const VERSION_OPTIONS = [
-  { value: "light", label: "Light", description: "Public info only", icon: "🌱" },
-  { value: "medium", label: "Medium", description: "Internal SOPs + Tasks", icon: "🌿" },
-  { value: "max", label: "Max", description: "Full patient features", icon: "🌳" },
-  { value: "max_plus", label: "Max+", description: "SystemOne integration", icon: "🚀" },
+  { value: "light", label: "Light", description: "Public resources only", sublabel: "No login required", icon: "🌱" },
+  { value: "medium", label: "Medium", description: "Internal SOPs & contacts", sublabel: "Trust network", icon: "🌿" },
+  { value: "max", label: "Max", description: "Ward diary, patients, tasks", sublabel: "Trust infrastructure", icon: "🌳" },
+  { value: "max_plus", label: "Max+", description: "SystemOne integration", sublabel: "API approval needed", icon: "🚀" },
 ] as const;
 
 export default function HomePage() {
@@ -52,14 +52,29 @@ export default function HomePage() {
     <MainLayout>
       <div className="space-y-8">
         {/* Hero Section - Full width, big and welcoming */}
-        <section className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white rounded-2xl p-8 text-center">
+        <section className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white rounded-2xl p-8 text-center relative overflow-hidden">
+          {/* Subtle NHS watermark */}
+          <div className="absolute top-3 right-4 text-white/10 text-xs font-bold tracking-widest select-none">NHS</div>
+          <p className="text-white/60 text-xs font-medium tracking-wider uppercase mb-3">
+            Derbyshire Healthcare NHS Foundation Trust
+          </p>
           <h1 className="text-3xl md:text-4xl font-bold mb-3">
-            {user ? `Welcome, ${user.name}` : "🏥 Inpatient Hub"}
+            {user ? `Welcome, ${user.name}` : "Inpatient Hub"}
           </h1>
           <p className="text-white/80 text-lg max-w-xl mx-auto">
             Quick access to ward resources, referral workflows, and clinical guides.
           </p>
-          {!showTasks && (
+          {user && (
+            <div className="flex items-center justify-center gap-6 mt-5 text-sm text-white/70">
+              <span className="flex items-center gap-1.5">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                {user.ward.charAt(0).toUpperCase() + user.ward.slice(1)} Ward
+              </span>
+              <span className="capitalize">{user.role.replace("_", " ")}</span>
+              {user.isContributor && <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">Contributor</span>}
+            </div>
+          )}
+          {!showTasks && !user && (
             <div className="flex justify-center mt-6">
               <ChevronDown className="w-8 h-8 text-white/60 animate-bounce" />
             </div>
@@ -168,6 +183,9 @@ export default function HomePage() {
                 <p className="font-bold">{opt.icon} {opt.label}</p>
                 <p className={`text-sm ${version === opt.value ? "text-white/80" : "text-gray-500"}`}>
                   {opt.description}
+                </p>
+                <p className={`text-xs mt-0.5 ${version === opt.value ? "text-white/60" : "text-gray-400"}`}>
+                  {opt.sublabel}
                 </p>
               </button>
             ))}

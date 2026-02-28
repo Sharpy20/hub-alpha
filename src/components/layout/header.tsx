@@ -131,7 +131,7 @@ export function Header() {
   const showTasks = hasFeature("ward_tasks");
   const showPatients = hasFeature("patient_list");
   const isViewingOtherWard = user && activeWard !== user.ward;
-  const canAccessAdmin = user && (user.isContributor || user.role === "manager" || user.role === "ward_admin" || user.role === "senior_admin");
+  const canAccessAdmin = !!user;
 
   return (
     <>
@@ -307,7 +307,7 @@ export function Header() {
                       </Link>
                     )}
 
-                    {/* Editor (Admin) - only for contributors */}
+                    {/* Editor (Admin) - visible to all logged-in users */}
                     {canAccessAdmin && (
                       <Link
                         href="/admin"
@@ -319,7 +319,7 @@ export function Header() {
                         </div>
                         <div>
                           <p className="font-semibold text-gray-900">Editor</p>
-                          <p className="text-xs text-gray-500 mt-0.5">Create and edit referral workflows, how-to guides, and bookmarks</p>
+                          <p className="text-xs text-gray-500 mt-0.5">{user?.isContributor ? "Create and edit referral workflows, how-to guides, and bookmarks" : "Request creator privileges to edit content"}</p>
                         </div>
                       </Link>
                     )}
@@ -621,7 +621,7 @@ export function Header() {
                       </div>
                       <div>
                         <p className="font-semibold text-gray-900 text-sm">Editor</p>
-                        <p className="text-xs text-gray-500">Edit workflows and guides</p>
+                        <p className="text-xs text-gray-500">{user?.isContributor ? "Edit workflows and guides" : "Request creator privileges"}</p>
                       </div>
                     </Link>
                   )}

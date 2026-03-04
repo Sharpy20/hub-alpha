@@ -48,8 +48,7 @@ export type FeatureFlag =
   | "patient_tasks"
   | "patient_list"
   | "discharge_flow"
-  | "systemon_sync"
-  | "systemon_notes"
+  | "nexus_sync"
   | "user_management"
   | "audit_logs";
 
@@ -96,8 +95,7 @@ const featureMatrix: Record<AppVersion, FeatureFlag[]> = {
     "patient_tasks",
     "patient_list",
     "discharge_flow",
-    "systemon_sync",
-    "systemon_notes",
+    "nexus_sync",
     "user_management",
     "audit_logs",
   ],

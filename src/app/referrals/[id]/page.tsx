@@ -2,7 +2,7 @@
 
 import { MainLayout } from "@/components/layout";
 import { Button, Card, CardContent, Badge, Breadcrumb } from "@/components/ui";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import {
@@ -20,7 +20,6 @@ import {
   Check,
   Copy,
   Download,
-  Monitor,
   ExternalLink,
   Phone,
   Mail,
@@ -31,8 +30,9 @@ import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { PatientPickerModal } from "@/components/modals";
 import { Patient } from "@/lib/types";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useReferralLog } from "@/app/referral-log-provider";
+import { useTour } from "@/app/tour-provider";
 
 // Workflow data with all referral types
 const WORKFLOWS: Record<string, WorkflowData> = {
@@ -80,9 +80,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           ],
           wagoll: [
             { label: "IMHA Referral Example (WAGOLL)", url: "#", note: "Example only - do not submit" },
-          ],
-          systemOne: [
-            { label: "SystemOne Referral Guide", url: "#" },
           ],
           otherGuides: [
             { label: "IMHA Service Information", url: "#" },
@@ -153,9 +150,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "PICU Referral Example (WAGOLL)", url: "#", note: "Example - shows required detail level" },
           ],
-          systemOne: [
-            { label: "SystemOne PICU Template", url: "#" },
-          ],
           otherGuides: [
             { label: "PICU Admission Criteria", url: "#" },
             { label: "Transfer Checklist", url: "#" },
@@ -220,9 +214,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           ],
           wagoll: [
             { label: "Safeguarding Referral Example", url: "#", note: "Example - note level of detail required" },
-          ],
-          systemOne: [
-            { label: "SystemOne Safeguarding Alert", url: "#" },
           ],
           otherGuides: [
             { label: "Types of Abuse Guide", url: "#" },
@@ -290,9 +281,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "Dietitian Referral Example", url: "#", note: "Include MUST score and weight history" },
           ],
-          systemOne: [
-            { label: "SystemOne Dietitian Referral", url: "#" },
-          ],
           otherGuides: [
             { label: "MUST Assessment Guide", url: "#" },
             { label: "Nutrition Screening Tool", url: "#" },
@@ -356,9 +344,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           ],
           wagoll: [
             { label: "Children's Safeguarding Example", url: "#", note: "Note the level of detail required" },
-          ],
-          systemOne: [
-            { label: "SystemOne Child Alert", url: "#" },
           ],
           otherGuides: [
             { label: "Signs of Abuse in Children", url: "#" },
@@ -425,9 +410,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           ],
           wagoll: [
             { label: "Housing Referral Example", url: "#", note: "Include discharge date and needs" },
-          ],
-          systemOne: [
-            { label: "SystemOne Housing Template", url: "#" },
           ],
           otherGuides: [
             { label: "Duty to Refer Guidance", url: "#" },
@@ -502,9 +484,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "Social Care Referral Example", url: "#", note: "Include care plan, risk assessment & OT assessments (if completed)" },
           ],
-          systemOne: [
-            { label: "SystemOne Social Care Template", url: "#" },
-          ],
           otherGuides: [
             { label: "Care Act Eligibility Guide", url: "#" },
             { label: "S117 Aftercare Flowchart (S117 patients)", url: "#", note: "Print in colour and display on ward" },
@@ -573,7 +552,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "Meeting Request Example", url: "#", note: "Ensure all fields completed — incomplete forms cause delays" },
           ],
-          systemOne: [],
+
           otherGuides: [
             { label: "S117 Aftercare Flowchart", url: "#", note: "Print in colour and display on ward" },
             { label: "Care Act & S117 Referral Process", url: "#" },
@@ -638,9 +617,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           ],
           wagoll: [
             { label: "TV Referral Example", url: "#", note: "Include wound measurements and photos" },
-          ],
-          systemOne: [
-            { label: "SystemOne Wound Template", url: "#" },
           ],
           otherGuides: [
             { label: "Pressure Ulcer Classification", url: "#" },
@@ -707,9 +683,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "Dental Referral Example", url: "#", note: "Include MH history and capacity" },
           ],
-          systemOne: [
-            { label: "SystemOne Dental Notes", url: "#" },
-          ],
           otherGuides: [
             { label: "Emergency Dental Access", url: "#" },
             { label: "Oral Health Assessment Guide", url: "#" },
@@ -773,9 +746,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           ],
           wagoll: [
             { label: "Physio Referral Example", url: "#", note: "Include falls history and mobility level" },
-          ],
-          systemOne: [
-            { label: "SystemOne Physio Template", url: "#" },
           ],
           otherGuides: [
             { label: "Falls Risk Assessment", url: "#" },
@@ -841,9 +811,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "OT Referral Example", url: "#", note: "Include current functional level" },
           ],
-          systemOne: [
-            { label: "SystemOne OT Template", url: "#" },
-          ],
           otherGuides: [
             { label: "Functional Assessment Guide", url: "#" },
             { label: "OT Services Overview", url: "#" },
@@ -908,9 +875,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "SALT Referral Example", url: "#", note: "Include swallowing observations" },
           ],
-          systemOne: [
-            { label: "SystemOne SALT Template", url: "#" },
-          ],
           otherGuides: [
             { label: "Dysphagia Screening Guide", url: "#" },
             { label: "Modified Diet Textures", url: "#" },
@@ -974,9 +938,6 @@ const WORKFLOWS: Record<string, WorkflowData> = {
             { label: "EDT Referral Prompt", url: "#", icon: "📄" },
           ],
           wagoll: [],
-          systemOne: [
-            { label: "SystemOne EDT Template", url: "#" },
-          ],
           otherGuides: [
             { label: "EDT Flow Chart", url: "#" },
             { label: "Discharge Planning Checklist", url: "#" },
@@ -1042,7 +1003,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "ERP Referral Example", url: "#", note: "Include history and current presentation" },
           ],
-          systemOne: [],
+
           otherGuides: [
             { label: "DBT Patient Leaflet", url: "#" },
             { label: "SCM Patient Leaflet", url: "#" },
@@ -1115,7 +1076,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
           wagoll: [
             { label: "DSP Example", url: "#", note: "Shows required level of detail" },
           ],
-          systemOne: [],
+
           otherGuides: [
             { label: "DSP Consent Form Guidance", url: "#" },
             { label: "CTR Process Overview", url: "#" },
@@ -1179,7 +1140,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
             { label: "Benefits Review Referral", url: "#", icon: "📄" },
           ],
           wagoll: [],
-          systemOne: [],
+
           otherGuides: [
             { label: "Welfare Rights Contact List", url: "#" },
             { label: "Benefits During Hospital Stay", url: "#" },
@@ -1247,9 +1208,6 @@ const DEFAULT_WORKFLOW: WorkflowData = {
         wagoll: [
           { label: "Example Referral (WAGOLL)", url: "#", note: "Example only - do not submit" },
         ],
-        systemOne: [
-          { label: "SystemOne Guide", url: "#" },
-        ],
         otherGuides: [
           { label: "Additional Guidance", url: "#" },
         ],
@@ -1299,7 +1257,6 @@ interface WorkflowForm {
 interface WorkflowForms {
   blank: WorkflowForm[];
   wagoll: WorkflowForm[];
-  systemOne: WorkflowForm[];
   otherGuides: WorkflowForm[];
 }
 
@@ -1372,10 +1329,13 @@ const AREA_OPTIONS = [
 export default function WorkflowPage() {
   const params = useParams();
   const router = useRouter();
-  const { hasFeature, user } = useApp();
+  const searchParams = useSearchParams();
+  const { user } = useApp();
   const { addTask } = useTasks();
   const { addReferralLog } = useReferralLog();
   const { canEdit } = useCanEdit();
+  const { isTourActive, setIsInLiveWalkthrough, setCurrentSection, setCurrentSlide } = useTour();
+  const isTourMode = searchParams.get("tour") === "true";
   const [currentStep, setCurrentStep] = useState(0);
   const [referralLogged, setReferralLogged] = useState(false);
   const [criteriaConfirmed, setCriteriaConfirmed] = useState(false);
@@ -1386,13 +1346,10 @@ export default function WorkflowPage() {
   const [patientConsent, setPatientConsent] = useState<"yes" | "no" | null>(null);
   const [patientSection, setPatientSection] = useState<string>("");
   const [selectedArea, setSelectedArea] = useState<"city" | "county" | null>(null);
-  const [systemOnePushed, setSystemOnePushed] = useState(false);
 
   // Patient linking state
   const [showPatientPicker, setShowPatientPicker] = useState(false);
   const [linkedPatient, setLinkedPatient] = useState<Patient | null>(null);
-
-  const hasSystemOneIntegration = hasFeature("systemon_notes");
 
   // Handle patient selection
   const handlePatientSelect = (patient: Patient) => {
@@ -1497,8 +1454,51 @@ export default function WorkflowPage() {
     setReferralLogged(true);
   };
 
+  // Handle returning to tour after completing the walkthrough
+  const handleReturnToTour = () => {
+    setIsInLiveWalkthrough(false);
+    setCurrentSection("task-diary");
+    setCurrentSlide(0);
+    router.push("/");
+  };
+
+  // Auto-return after reaching the last step in tour mode
+  const isLastStep = currentStep === workflow.steps.length - 1;
+  const [tourCompleteShown, setTourCompleteShown] = useState(false);
+  useEffect(() => {
+    if (isTourMode && isLastStep && !tourCompleteShown) {
+      setTourCompleteShown(true);
+    }
+  }, [isTourMode, isLastStep, tourCompleteShown]);
+
   return (
     <MainLayout>
+      {/* Tour mode floating guide */}
+      {isTourMode && isTourActive && (
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+          {tourCompleteShown && (
+            <div className="bg-white rounded-xl shadow-2xl border-2 border-green-300 p-4 max-w-xs animate-bounce">
+              <p className="font-bold text-green-800 mb-1">Nice work!</p>
+              <p className="text-sm text-gray-600">You&apos;ve walked through a real referral. Ready to continue the tour?</p>
+              <button
+                onClick={handleReturnToTour}
+                className="mt-2 w-full py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold text-sm"
+              >
+                Continue Tour →
+              </button>
+            </div>
+          )}
+          {!tourCompleteShown && (
+            <button
+              onClick={handleReturnToTour}
+              className="px-4 py-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+            >
+              ← Return to Tour
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="space-y-6">
         <Breadcrumb items={[
           { label: "Referrals", href: "/referrals" },
@@ -1760,29 +1760,6 @@ export default function WorkflowPage() {
                   </div>
                 )}
 
-                {/* SystemOne Guides */}
-                {step.forms.systemOne.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                      <Monitor className="w-5 h-5 text-purple-600" />
-                      SystemOne Guide
-                    </h3>
-                    <div className="space-y-2">
-                      {step.forms.systemOne.map((form) => (
-                        <a
-                          key={form.label}
-                          href={form.url}
-                          className="flex items-center gap-4 p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl hover:from-purple-100 hover:to-violet-100 transition-colors no-underline border border-purple-200"
-                        >
-                          <span className="text-2xl">💻</span>
-                          <span className="font-semibold text-gray-800 flex-1">{form.label}</span>
-                          <ExternalLink className="w-5 h-5 text-purple-600" />
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* Other Guides - filtered by area if applicable */}
                 {step.forms.otherGuides.length > 0 && (
                   <div>
@@ -1867,38 +1844,6 @@ export default function WorkflowPage() {
                   )}
                 </Button>
 
-                {/* SystemOne Integration - shown for all, functional in Max+ only */}
-                <div className="relative">
-                  <Button
-                    onClick={() => {
-                      if (hasSystemOneIntegration) {
-                        setSystemOnePushed(true);
-                        setTimeout(() => setSystemOnePushed(false), 3000);
-                      }
-                    }}
-                    disabled={!hasSystemOneIntegration}
-                    className={`w-full py-4 text-lg ${
-                      systemOnePushed
-                        ? "bg-green-600 hover:bg-green-700"
-                        : "bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 disabled:opacity-60 disabled:cursor-not-allowed"
-                    }`}
-                  >
-                    {systemOnePushed ? (
-                      <>
-                        <Check className="w-5 h-5 mr-2" /> Pushed to SystemOne!
-                      </>
-                    ) : (
-                      <>
-                        <Monitor className="w-5 h-5 mr-2" /> Push to SystemOne Inpatient Note
-                      </>
-                    )}
-                  </Button>
-                  <p className={`text-sm text-center mt-2 ${hasSystemOneIntegration ? "text-green-600 font-medium" : "text-purple-600"}`}>
-                    {hasSystemOneIntegration
-                      ? "✓ SystemOne integration active (Max+)"
-                      : "🔒 Only available in Max+ version"}
-                  </p>
-                </div>
               </div>
             )}
 

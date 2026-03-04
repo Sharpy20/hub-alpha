@@ -168,6 +168,7 @@ const WARD_TASK_TEMPLATES: Array<{
   isAuditTask?: boolean;
   auditType?: AuditType;
   linkedGuideId?: string;
+  isNexusLinked?: boolean;
 }> = [
   {
     title: "Fridge temperature check",
@@ -177,6 +178,7 @@ const WARD_TASK_TEMPLATES: Array<{
     isAuditTask: true,
     auditType: "fridge_temps",
     linkedGuideId: "fridge-temps",
+    isNexusLinked: true,
   },
   {
     title: "Controlled drugs check",
@@ -185,6 +187,7 @@ const WARD_TASK_TEMPLATES: Array<{
     shift: "early" as const,
     isAuditTask: true,
     auditType: "controlled_drugs",
+    isNexusLinked: true,
   },
   { title: "Safety huddle", description: "Brief team meeting - risks, staffing, priorities", priority: "routine" as const, shift: "early" as const },
   { title: "Medication round (AM)", description: "Morning medication round", priority: "important" as const, shift: "early" as const },
@@ -195,6 +198,7 @@ const WARD_TASK_TEMPLATES: Array<{
     shift: "late" as const,
     isAuditTask: true,
     auditType: "water_temps",
+    isNexusLinked: true,
   },
   { title: "Medication round (PM)", description: "Afternoon medication round", priority: "important" as const, shift: "late" as const },
   { title: "Handover preparation", description: "Prepare handover notes for night staff", priority: "routine" as const, shift: "late" as const },
@@ -205,6 +209,7 @@ const WARD_TASK_TEMPLATES: Array<{
     shift: "late" as const,
     isAuditTask: true,
     auditType: "walkaround",
+    isNexusLinked: true,
   },
   { title: "Night observation round", description: "Complete observation checks", priority: "important" as const, shift: "night" as const },
   { title: "Night medication round", description: "Overnight medication round", priority: "important" as const, shift: "night" as const },
@@ -215,6 +220,7 @@ const WARD_TASK_TEMPLATES: Array<{
     shift: "early" as const,
     isAuditTask: true,
     auditType: "resus_check",
+    isNexusLinked: true,
   },
   {
     title: "Ligature point check",
@@ -223,6 +229,7 @@ const WARD_TASK_TEMPLATES: Array<{
     shift: "night" as const,
     isAuditTask: true,
     auditType: "ligature_check",
+    isNexusLinked: true,
   },
 ];
 
@@ -284,6 +291,7 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
       ...(template.auditType && { auditType: template.auditType }),
       ...(assuranceDashboardUrl && { assuranceDashboardUrl }),
       ...(template.linkedGuideId && { linkedGuideId: template.linkedGuideId }),
+      ...(template.isNexusLinked && { isNexusLinked: true }),
     });
   }
 

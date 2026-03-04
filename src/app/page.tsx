@@ -37,7 +37,7 @@ const VERSION_OPTIONS = [
   { value: "light", label: "Light", description: "Public resources only", sublabel: "No login required", icon: "🌱" },
   { value: "medium", label: "Medium", description: "Internal SOPs & contacts", sublabel: "Trust network", icon: "🌿" },
   { value: "max", label: "Max", description: "Ward diary, patients, tasks", sublabel: "Trust infrastructure", icon: "🌳" },
-  { value: "max_plus", label: "Max+", description: "SystemOne integration", sublabel: "API approval needed", icon: "🚀" },
+  { value: "max_plus", label: "Max+", description: "Nexus Assurance sync", sublabel: "Trust webhook", icon: "🚀" },
 ] as const;
 
 export default function HomePage() {

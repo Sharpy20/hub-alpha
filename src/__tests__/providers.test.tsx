@@ -84,11 +84,10 @@ describe('hasFeature', () => {
     // Max version features
     { version: 'max', feature: 'patient_list', expected: true },
     { version: 'max', feature: 'discharge_flow', expected: true },
-    { version: 'max', feature: 'systemon_sync', expected: false },
+    { version: 'max', feature: 'nexus_sync', expected: false },
 
     // Max+ version features
-    { version: 'max_plus', feature: 'systemon_sync', expected: true },
-    { version: 'max_plus', feature: 'systemon_notes', expected: true },
+    { version: 'max_plus', feature: 'nexus_sync', expected: true },
   ]
 
   test.each(featureTests)(

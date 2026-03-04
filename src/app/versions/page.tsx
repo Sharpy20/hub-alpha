@@ -39,7 +39,7 @@ const VERSIONS = [
       { name: "Ward Diary", included: false },
       { name: "Patient List", included: false },
       { name: "Assurance Dashboard", included: true, note: "Link only" },
-      { name: "SystemOne Integration", included: false },
+      { name: "Nexus Assurance Sync", included: false },
     ],
     security: ["No authentication required", "Public hosting acceptable", "No sensitive data stored"],
     demoNotes: [
@@ -69,7 +69,7 @@ const VERSIONS = [
       { name: "Ward Diary", included: false },
       { name: "Patient List", included: false },
       { name: "Assurance Dashboard", included: true, note: "Link only" },
-      { name: "SystemOne Integration", included: false },
+      { name: "Nexus Assurance Sync", included: false },
     ],
     security: [
       "Behind FOCUS firewall",
@@ -104,7 +104,7 @@ const VERSIONS = [
       { name: "Patient List", included: true },
       { name: "Progress Reports", included: true },
       { name: "Assurance Dashboard", included: true, note: "Link only" },
-      { name: "SystemOne Integration", included: false },
+      { name: "Nexus Assurance Sync", included: false },
     ],
     security: [
       "Behind FOCUS firewall",
@@ -121,15 +121,15 @@ const VERSIONS = [
   {
     id: "max_plus",
     name: "Max+",
-    tagline: "SystemOne Integrated",
+    tagline: "Nexus Integrated",
     color: "amber",
     gradient: "from-amber-500 to-amber-700",
     icon: Zap,
     hosting: "Trust Infrastructure",
-    auth: "SystemOne API Auth",
-    dataLevel: "Full S1 Integration",
+    auth: "Trust SSO + Nexus",
+    dataLevel: "Full Nexus Integration",
     description:
-      "Maximum integration with SystemOne API for task sync and patient data. Requires API approval from TPP.",
+      "Full integration with Nexus Assurance for automated audit compliance tracking. Trust tech team builds the webhook.",
     features: [
       { name: "Bookmarks", included: true },
       { name: "Referral Workflows", included: true },
@@ -140,17 +140,17 @@ const VERSIONS = [
       { name: "Patient List", included: true },
       { name: "Progress Reports", included: true, note: "Auto-delivery" },
       { name: "Assurance Dashboard", included: true, note: "Auto-sync" },
-      { name: "SystemOne Integration", included: true },
+      { name: "Nexus Assurance Sync", included: true },
     ],
     security: [
-      "SystemOne authentication via API",
-      "Ward access based on S1 permissions",
-      "If S1 says you can see a ward, you get access",
+      "Trust SSO authentication",
+      "Nexus webhook via Trust network only",
+      "Ward access based on Trust permissions",
     ],
     demoNotes: [
-      "S1 API prompts shown as preview",
-      "API approval unlikely short-term",
-      "Demonstrates future potential",
+      "Nexus sync shown as preview",
+      "Trust tech team builds the webhook",
+      "Demonstrates compliance automation",
     ],
   },
 ];
@@ -335,7 +335,7 @@ export default function VersionsPage() {
                   { name: "Patient List", light: false, medium: false, max: true, maxPlus: true },
                   { name: "Progress Reports", light: false, medium: false, max: true, maxPlus: "auto" },
                   { name: "Assurance Dashboard", light: "link", medium: "link", max: "link", maxPlus: "sync" },
-                  { name: "SystemOne Sync", light: false, medium: false, max: false, maxPlus: true },
+                  { name: "Nexus Assurance Sync", light: false, medium: false, max: false, maxPlus: true },
                 ].map((row, i) => (
                   <tr key={row.name} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                     <td className="p-3 font-medium text-gray-700">{row.name}</td>

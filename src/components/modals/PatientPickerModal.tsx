@@ -117,7 +117,7 @@ export function PatientPickerModal({
                 <div>
                   <p className="font-medium text-gray-900">Create an Audit Log Entry</p>
                   <p className="text-sm text-gray-600">
-                    An entry will be recorded for SystemOne showing this {type} was accessed for this patient
+                    An audit entry will be recorded showing this {type} was accessed for this patient
                   </p>
                 </div>
               </div>

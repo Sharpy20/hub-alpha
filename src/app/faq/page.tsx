@@ -78,7 +78,7 @@ const FAQ_ITEMS: FAQItem[] = [
           </div>
           <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
             <p className="font-semibold text-orange-800">Max+</p>
-            <p className="text-sm text-orange-700">Adds SystemOne API integration for task sync and case note pushing. Requires API approval.</p>
+            <p className="text-sm text-orange-700">Adds Nexus Assurance integration for automated audit compliance tracking. Trust tech team builds the webhook.</p>
           </div>
         </div>
         <p className="text-sm text-gray-500">

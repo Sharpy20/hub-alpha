@@ -242,7 +242,7 @@ export default function WorkflowsAdminPage() {
       const sampleSteps: WorkflowStep[] = [
         { id: "1", type: "criteria", title: "Confirm Criteria", content: "Verify the patient meets the referral criteria.", checkboxLabel: "I confirm the criteria are met" },
         { id: "2", type: "consent", title: "Patient Consent", content: "Confirm you have discussed the referral with the patient." },
-        { id: "3", type: "forms", title: "Download Forms", content: "Download the required referral form.", forms: { blank: [], wagoll: [], systemOne: [], otherGuides: [] } },
+        { id: "3", type: "forms", title: "Download Forms", content: "Download the required referral form.", forms: { blank: [], wagoll: [], otherGuides: [] } },
         { id: "4", type: "submission", title: "Submit Referral", content: "Send the completed referral.", methods: [{ type: "email", label: "Referral Team", value: "referrals@example.nhs.net" }] },
         { id: "5", type: "casenote", title: "Case Note", content: "Add to patient notes.", clipboardText: "Referral submitted on [DATE]." },
         { id: "6", type: "reminder", title: "Job Diary", content: "Update your job diary.", checkboxLabel: "I have updated my diary" },

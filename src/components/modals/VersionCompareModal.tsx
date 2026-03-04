@@ -26,7 +26,7 @@ const FEATURE_CATEGORIES = [
       { name: "Public workflows (public forms)", light: true, medium: true, max: true, maxPlus: true },
       { name: "Internal workflows (internal SOPs)", light: false, medium: true, max: true, maxPlus: true },
       { name: "Clipboard copy for notes", light: true, medium: true, max: true, maxPlus: true },
-      { name: "Push to SystemOne notes", light: false, medium: false, max: false, maxPlus: true },
+      { name: "Referral tracking log", light: false, medium: false, max: false, maxPlus: true },
     ],
   },
   {
@@ -44,7 +44,7 @@ const FEATURE_CATEGORIES = [
       { name: "Appointments", light: false, medium: false, max: true, maxPlus: true },
       { name: "My Tasks view", light: false, medium: false, max: true, maxPlus: true },
       { name: "Calendar view", light: false, medium: false, max: true, maxPlus: true },
-      { name: "Sync with SystemOne Tasks", light: false, medium: false, max: false, maxPlus: true },
+      { name: "Nexus Assurance auto-sync", light: false, medium: false, max: false, maxPlus: true },
     ],
   },
   {
@@ -53,7 +53,7 @@ const FEATURE_CATEGORIES = [
       { name: "View patients", light: false, medium: false, max: true, maxPlus: true },
       { name: "Activity log", light: false, medium: false, max: true, maxPlus: true },
       { name: "Discharge flow", light: false, medium: false, max: true, maxPlus: true },
-      { name: "SystemOne patient lookup", light: false, medium: false, max: false, maxPlus: true },
+      { name: "Nexus compliance dashboard", light: false, medium: false, max: false, maxPlus: true },
     ],
   },
   {
@@ -99,7 +99,7 @@ export function VersionCompareModal({ isOpen, onClose }: VersionCompareModalProp
           <div className="p-3 bg-amber-50 rounded-lg border-2 border-amber-200">
             <p className="text-2xl mb-1">🚀</p>
             <p className="font-bold text-amber-800">Max+</p>
-            <p className="text-xs text-amber-600">+ SystemOne API</p>
+            <p className="text-xs text-amber-600">+ Nexus Sync</p>
           </div>
         </div>
 

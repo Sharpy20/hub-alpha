@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useApp } from "@/app/providers";
 import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { useTour } from "@/app/tour-provider";
 
 export function Header() {
   const router = useRouter();
@@ -128,6 +129,7 @@ export function Header() {
     senior_admin: "Senior Admin",
   };
 
+  const { startTour } = useTour();
   const showTasks = hasFeature("ward_tasks");
   const showPatients = hasFeature("patient_list");
   const isViewingOtherWard = user && activeWard !== user.ward;
@@ -155,6 +157,22 @@ export function Header() {
                 <p className="text-xl font-black text-gray-900 group-hover:text-indigo-700 transition-colors -mt-0.5">Hub</p>
               </div>
             </Link>
+
+            {/* Interactive Demo Tour button */}
+            <button
+              onClick={startTour}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all animate-pulse hover:animate-none"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span className="hidden lg:inline">Interactive Demo</span>
+            </button>
+            {/* Mobile tour button - icon only */}
+            <button
+              onClick={startTour}
+              className="sm:hidden w-9 h-9 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg flex items-center justify-center shadow-md"
+            >
+              <Sparkles className="w-4 h-4" />
+            </button>
 
             {/* Desktop nav - separate tiles with gaps (item 18c) */}
             <nav className="hidden md:flex items-center gap-3">

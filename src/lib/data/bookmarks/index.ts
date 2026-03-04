@@ -55,15 +55,6 @@ export const bookmarks: Bookmark[] = [
 
   // Clinical Systems
   {
-    id: "systmone",
-    title: "SystmOne",
-    icon: "💻",
-    url: "https://www.tpp-uk.com/products/systmone",
-    category: "Clinical Systems",
-    requiresFocus: true,
-    description: "Clinical records system",
-  },
-  {
     id: "nhs-mail",
     title: "NHS Mail",
     icon: "📧",

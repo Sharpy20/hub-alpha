@@ -17,7 +17,8 @@ import {
   ExternalLink,
   CheckCircle,
   Clock,
-  FileWarning
+  FileWarning,
+  ChevronDown
 } from "lucide-react";
 import { useApp } from "@/app/providers";
 
@@ -44,6 +45,7 @@ const INITIAL_SCHEMA_CONFIG: SchemaConfig = {
 // Navigation sections
 const NAV_SECTIONS = [
   { id: "overview", label: "Overview & Pitch", icon: BookOpen, priority: "must" },
+  { id: "business-case", label: "Business Case", icon: FileText, priority: "must" },
   { id: "technical", label: "Technical Spec", icon: Server, priority: "must" },
   { id: "data-catalogue", label: "Data Catalogue", icon: Database, priority: "should" },
   { id: "rbac", label: "RBAC Matrix", icon: Users, priority: "must" },
@@ -52,7 +54,7 @@ const NAV_SECTIONS = [
   { id: "clinical-safety", label: "Clinical Safety", icon: AlertTriangle, priority: "should" },
   { id: "schemas", label: "Supabase Schemas", icon: Database, priority: "later" },
   { id: "webhooks", label: "Assurance Webhooks", icon: GitBranch, priority: "later" },
-  { id: "systemon", label: "SystmOne (MAX+)", icon: ExternalLink, priority: "later" },
+  { id: "nexus", label: "Nexus Assurance (MAX+)", icon: ExternalLink, priority: "later" },
   { id: "references", label: "References", icon: FileText, priority: "must" },
 ];
 
@@ -213,6 +215,7 @@ export default function DevPanelPage() {
         {/* Main Content */}
         <main className="flex-1 min-w-0">
           {activeSection === "overview" && <OverviewSection />}
+          {activeSection === "business-case" && <BusinessCaseSection />}
           {activeSection === "technical" && <TechnicalSpecSection />}
           {activeSection === "data-catalogue" && <DataCatalogueSection />}
           {activeSection === "rbac" && <RBACSection />}
@@ -221,7 +224,7 @@ export default function DevPanelPage() {
           {activeSection === "clinical-safety" && <ClinicalSafetySection />}
           {activeSection === "schemas" && <SchemasSection schemaStatus={schemaConfig.schemaStatus} />}
           {activeSection === "webhooks" && <WebhooksSection />}
-          {activeSection === "systemon" && <SystmOneSection />}
+          {activeSection === "nexus" && <NexusSection />}
           {activeSection === "references" && <ReferencesSection />}
         </main>
       </div>
@@ -255,7 +258,7 @@ function OverviewSection() {
           </p>
           <p>
             The tool is designed with <strong>four deployment modes</strong> (Light → Max+) allowing
-            incremental adoption from a public demo through to full SystemOne integration.
+            incremental adoption from a public demo through to full Nexus Assurance integration.
           </p>
         </CardContent>
       </Card>
@@ -320,9 +323,9 @@ function OverviewSection() {
                 </tr>
                 <tr>
                   <td><strong>Max+</strong></td>
-                  <td>Trust SSO + S1</td>
-                  <td>Full integration</td>
-                  <td>+ SystemOne sync</td>
+                  <td>Trust SSO + Nexus</td>
+                  <td>Nexus audit sync</td>
+                  <td>+ Nexus Assurance sync</td>
                 </tr>
               </tbody>
             </table>
@@ -338,6 +341,385 @@ function OverviewSection() {
           </div>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function BusinessCaseSection() {
+  const [expanded, setExpanded] = useState<string | null>("executive-summary");
+
+  const sections = [
+    {
+      id: "executive-summary",
+      title: "1. Executive Summary",
+      content: (
+        <div className="prose prose-sm max-w-none text-nhs-dark-grey space-y-3">
+          <p>
+            <strong>Inpatient Hub</strong> is a ward-based clinical reference and task management tool designed
+            to address the fragmented information landscape on mental health inpatient wards. Staff currently
+            spend significant time searching for referral forms, phone numbers, and guidance across multiple
+            systems (FOCUS, SharePoint, paper diaries, personal notes).
+          </p>
+          <p>
+            The Hub consolidates this into a single, accessible platform — starting with zero-cost deployment
+            and scaling through four modes as governance approvals are obtained. This business case seeks approval
+            for a <strong>zero-cost pilot</strong> on one ward to demonstrate value before wider rollout.
+          </p>
+        </div>
+      ),
+    },
+    {
+      id: "background",
+      title: "2. Background & Current State",
+      content: (
+        <div className="space-y-3 text-sm text-nhs-dark-grey">
+          <p>Ward staff at Derbyshire Healthcare NHS Foundation Trust currently rely on:</p>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+              <p className="font-semibold text-red-800">FOCUS Intranet</p>
+              <p className="text-red-700">Information scattered across pages; hard to navigate under time pressure</p>
+            </div>
+            <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+              <p className="font-semibold text-red-800">SharePoint / Shared Drives</p>
+              <p className="text-red-700">Forms buried in folder structures; version control issues</p>
+            </div>
+            <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+              <p className="font-semibold text-red-800">Paper Ward Diaries</p>
+              <p className="text-red-700">No audit trail; tasks easily missed during handovers</p>
+            </div>
+            <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+              <p className="font-semibold text-red-800">Personal Notes / Memory</p>
+              <p className="text-red-700">Knowledge lost when staff leave; steep learning curve for new starters</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "case-for-change",
+      title: "3. Case for Change",
+      content: (
+        <div className="space-y-3 text-sm text-nhs-dark-grey">
+          <ul className="space-y-2">
+            <li className="flex gap-2">
+              <span className="text-red-500 font-bold">•</span>
+              <span><strong>New staff can&apos;t find forms</strong> — Referral processes rely on asking colleagues, leading to delays and inconsistency</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-red-500 font-bold">•</span>
+              <span><strong>No audit trail for tasks</strong> — Paper diaries don&apos;t provide evidence of task completion for CQC inspections</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-red-500 font-bold">•</span>
+              <span><strong>Manual compliance tracking</strong> — Fridge temps, drug checks, and walkarounds recorded on paper or separate systems</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-red-500 font-bold">•</span>
+              <span><strong>Poor handovers</strong> — Critical tasks fall through gaps between shifts without a shared digital record</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-red-500 font-bold">•</span>
+              <span><strong>Steep learning curve</strong> — Bank and agency staff take weeks to learn ward processes that could be guided digitally</span>
+            </li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      id: "options",
+      title: "4. Options Appraisal",
+      content: (
+        <div className="grid sm:grid-cols-3 gap-4 text-sm">
+          <div className="p-4 bg-red-50 rounded-xl border-2 border-red-200">
+            <h4 className="font-bold text-red-800 mb-2">Option A: Do Nothing</h4>
+            <p className="text-red-700 mb-3">Continue with current systems. Staff keep using paper diaries, FOCUS searches, and personal notes.</p>
+            <div className="space-y-1 text-red-600">
+              <p>• Ongoing inefficiency</p>
+              <p>• No audit improvement</p>
+              <p>• Risk remains unchanged</p>
+            </div>
+            <div className="mt-3 p-2 bg-red-100 rounded text-center">
+              <p className="font-semibold text-red-800">Not Recommended</p>
+            </div>
+          </div>
+          <div className="p-4 bg-amber-50 rounded-xl border-2 border-amber-200">
+            <h4 className="font-bold text-amber-800 mb-2">Option B: Full Implementation</h4>
+            <p className="text-amber-700 mb-3">Deploy Max version across all wards simultaneously with patient data integration.</p>
+            <div className="space-y-1 text-amber-600">
+              <p>• Higher risk</p>
+              <p>• Longer lead time</p>
+              <p>• Requires DPIA upfront</p>
+            </div>
+            <div className="mt-3 p-2 bg-amber-100 rounded text-center">
+              <p className="font-semibold text-amber-800">Higher Risk</p>
+            </div>
+          </div>
+          <div className="p-4 bg-green-50 rounded-xl border-2 border-green-300 ring-2 ring-green-400">
+            <h4 className="font-bold text-green-800 mb-2">Option C: Phased Rollout</h4>
+            <p className="text-green-700 mb-3">Start with a free pilot on one ward, expand based on results, then integrate with Trust systems.</p>
+            <div className="space-y-1 text-green-600">
+              <p>• Zero initial cost</p>
+              <p>• Low risk start</p>
+              <p>• Evidence-based scaling</p>
+            </div>
+            <div className="mt-3 p-2 bg-green-200 rounded text-center">
+              <p className="font-bold text-green-800">✓ Recommended</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "financial",
+      title: "5. Financial Case",
+      content: (
+        <div className="space-y-4 text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-nhs-pale-grey">
+                <tr>
+                  <th className="text-left p-3">Phase</th>
+                  <th className="text-left p-3">Infrastructure</th>
+                  <th className="text-left p-3">Development</th>
+                  <th className="text-left p-3">Monthly Cost</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                <tr className="bg-green-50">
+                  <td className="p-3 font-semibold">Pilot (1 ward)</td>
+                  <td className="p-3">Vercel free tier</td>
+                  <td className="p-3">Internal (ward staff)</td>
+                  <td className="p-3 font-bold text-green-700">£0</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold">Ward Rollout (all wards)</td>
+                  <td className="p-3">Vercel free tier + Supabase free tier</td>
+                  <td className="p-3">Internal (ward staff)</td>
+                  <td className="p-3 font-bold text-green-700">£0</td>
+                </tr>
+                <tr>
+                  <td className="p-3 font-semibold">Trust-wide</td>
+                  <td className="p-3">Supabase Pro + Trust hosting</td>
+                  <td className="p-3">Internal dev support</td>
+                  <td className="p-3 font-semibold">~£25/month</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+            <p className="text-green-800 font-medium">The pilot phase requires zero financial investment. Costs only arise if the tool proves valuable enough to scale.</p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "benefits",
+      title: "6. Benefits",
+      content: (
+        <div className="grid sm:grid-cols-2 gap-4 text-sm">
+          <div className="space-y-3">
+            <h4 className="font-bold text-nhs-dark-blue">Clinical Benefits</h4>
+            <div className="space-y-2">
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <p className="text-blue-800">Standardised referral workflows reduce errors and missed steps</p>
+              </div>
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <p className="text-blue-800">Digital audit trail for compliance evidence (CQC-ready)</p>
+              </div>
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <p className="text-blue-800">Consistent guidance available to all staff, including bank/agency</p>
+              </div>
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <p className="text-blue-800">Improved handovers with shared task visibility across shifts</p>
+              </div>
+            </div>
+          </div>
+          <div className="space-y-3">
+            <h4 className="font-bold text-nhs-dark-blue">Operational Benefits</h4>
+            <div className="space-y-2">
+              <div className="p-2 bg-green-50 rounded-lg">
+                <p className="text-green-800">Reduced onboarding time for new and temporary staff</p>
+              </div>
+              <div className="p-2 bg-green-50 rounded-lg">
+                <p className="text-green-800">Digital ward diary replaces paper with searchable records</p>
+              </div>
+              <div className="p-2 bg-green-50 rounded-lg">
+                <p className="text-green-800">Task claiming prevents duplicate work</p>
+              </div>
+              <div className="p-2 bg-green-50 rounded-lg">
+                <p className="text-green-800">Nexus integration automates compliance tracking (Max+)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "risks",
+      title: "7. Risks & Mitigations",
+      content: (
+        <div className="overflow-x-auto text-sm">
+          <table className="w-full">
+            <thead className="bg-nhs-pale-grey">
+              <tr>
+                <th className="text-left p-2">Risk</th>
+                <th className="text-left p-2">Likelihood</th>
+                <th className="text-left p-2">Impact</th>
+                <th className="text-left p-2">Mitigation</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              <tr>
+                <td className="p-2">Low staff adoption</td>
+                <td className="p-2">Medium</td>
+                <td className="p-2">Medium</td>
+                <td className="p-2">Ward champion model; start with most motivated ward; iterative feedback</td>
+              </tr>
+              <tr>
+                <td className="p-2">Data security concerns</td>
+                <td className="p-2">Low</td>
+                <td className="p-2">High</td>
+                <td className="p-2">Pilot has zero PII; phased approach aligns security controls with data sensitivity</td>
+              </tr>
+              <tr>
+                <td className="p-2">Technical failure</td>
+                <td className="p-2">Low</td>
+                <td className="p-2">Low</td>
+                <td className="p-2">Paper diary remains as fallback; tool supplements, not replaces existing systems</td>
+              </tr>
+              <tr>
+                <td className="p-2">Scope creep</td>
+                <td className="p-2">Medium</td>
+                <td className="p-2">Medium</td>
+                <td className="p-2">Fixed version tiers prevent feature creep; changes require governance approval</td>
+              </tr>
+              <tr>
+                <td className="p-2">Clinical safety</td>
+                <td className="p-2">Low</td>
+                <td className="p-2">High</td>
+                <td className="p-2">Tool is reference/task aid only — no clinical decisions automated; DCB 0129 review planned</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      ),
+    },
+    {
+      id: "implementation",
+      title: "8. Implementation Plan",
+      content: (
+        <div className="space-y-4 text-sm">
+          <div className="flex gap-4 items-start">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
+            <div className="flex-1">
+              <h4 className="font-bold text-nhs-black">Pilot Phase — One Ward</h4>
+              <p className="text-nhs-dark-grey mt-1">Deploy Light version on Byron Ward. Staff use bookmarks, referral workflows, and how-to guides. Gather feedback over 4-6 weeks. Zero cost, zero PII, no governance approvals needed beyond ward manager.</p>
+            </div>
+          </div>
+          <div className="flex gap-4 items-start">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white flex items-center justify-center font-bold flex-shrink-0">2</div>
+            <div className="flex-1">
+              <h4 className="font-bold text-nhs-black">Expand to All Wards</h4>
+              <p className="text-nhs-dark-grey mt-1">If pilot succeeds, roll out to remaining wards. Add ward diary functionality (Max version). Requires ward manager buy-in and basic access controls. Still no external costs with free-tier infrastructure.</p>
+            </div>
+          </div>
+          <div className="flex gap-4 items-start">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center font-bold flex-shrink-0">3</div>
+            <div className="flex-1">
+              <h4 className="font-bold text-nhs-black">Trust Integration</h4>
+              <p className="text-nhs-dark-grey mt-1">Integrate with Nexus Assurance for automated audit compliance. Requires Trust tech team involvement for webhook setup. DPIA and clinical safety review at this stage. Estimated £25/month infrastructure cost.</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "recommendation",
+      title: "9. Recommendation",
+      content: (
+        <div className="space-y-4 text-sm">
+          <div className="bg-green-50 border-2 border-green-300 rounded-xl p-6 text-center">
+            <p className="text-2xl mb-2">✓</p>
+            <h4 className="font-bold text-green-800 text-lg mb-2">Approve Pilot Phase</h4>
+            <p className="text-green-700">
+              Deploy the Light version of Inpatient Hub for alpha testing on Byron Ward at
+              <strong> zero cost</strong>. The pilot will run for 4-6 weeks with feedback collected
+              from ward staff. Results will inform the decision on wider rollout.
+            </p>
+          </div>
+          <div className="bg-nhs-pale-grey rounded-lg p-4">
+            <p className="text-nhs-dark-grey">
+              <strong>What we&apos;re asking for:</strong> Permission to trial the tool on one ward.
+              No budget required. No PII involved. The tool supplements existing systems — it doesn&apos;t
+              replace anything. Staff can stop using it at any time.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "approvals",
+      title: "10. Approvals Required",
+      content: (
+        <div className="space-y-2 text-sm">
+          {[
+            { role: "Ward Manager", scope: "Pilot approval for Byron Ward", phase: "Pilot" },
+            { role: "Matron", scope: "Awareness and support for pilot", phase: "Pilot" },
+            { role: "Digital Services", scope: "Technical review and hosting approval", phase: "Rollout" },
+            { role: "Information Governance", scope: "DPIA review (when PII introduced)", phase: "Trust-wide" },
+            { role: "Clinical Safety Officer", scope: "DCB 0129/0160 assessment", phase: "Trust-wide" },
+          ].map((item) => (
+            <div key={item.role} className="flex items-center gap-3 p-3 bg-nhs-pale-grey rounded-lg">
+              <div className="w-5 h-5 border-2 border-nhs-mid-grey rounded flex-shrink-0" />
+              <div className="flex-1">
+                <span className="font-semibold text-nhs-black">{item.role}</span>
+                <span className="text-nhs-dark-grey"> — {item.scope}</span>
+              </div>
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                item.phase === "Pilot" ? "bg-green-100 text-green-700" :
+                item.phase === "Rollout" ? "bg-blue-100 text-blue-700" :
+                "bg-amber-100 text-amber-700"
+              }`}>{item.phase}</span>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-nhs-black">Business Case</h1>
+        <p className="text-nhs-dark-grey mt-1">Phased rollout proposal for Trust approval</p>
+      </div>
+
+      <div className="bg-nhs-blue/10 border border-nhs-blue rounded-lg p-4">
+        <p className="text-sm text-nhs-black">
+          <strong>Purpose:</strong> This business case follows the structure of approved Trust proposals
+          (e.g. Temperature Monitoring system). It seeks approval for a zero-cost pilot phase
+          before any investment or governance changes are required.
+        </p>
+      </div>
+
+      <div className="space-y-2">
+        {sections.map((section) => (
+          <div key={section.id} className="border border-gray-200 rounded-xl overflow-hidden">
+            <button
+              onClick={() => setExpanded(expanded === section.id ? null : section.id)}
+              className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors text-left"
+            >
+              <span className="font-semibold text-nhs-black">{section.title}</span>
+              <ChevronDown className={`w-5 h-5 text-nhs-mid-grey transition-transform ${expanded === section.id ? "rotate-180" : ""}`} />
+            </button>
+            {expanded === section.id && (
+              <div className="p-4 pt-0 bg-white border-t border-gray-100">
+                {section.content}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -370,7 +752,7 @@ function TechnicalSpecSection() {
               <ul className="text-sm space-y-1 text-nhs-dark-grey">
                 <li>• Light: Browser localStorage</li>
                 <li>• Medium+: Supabase (PostgreSQL)</li>
-                <li>• Max+: SystemOne API adapter</li>
+                <li>• Max+: Nexus webhook receiver</li>
               </ul>
             </div>
             <div>
@@ -412,7 +794,7 @@ function TechnicalSpecSection() {
 │         │                        │                    │     │
 │         ▼                        ▼                    ▼     │
 │  ┌─────────────┐    ┌─────────────────┐    ┌─────────────┐  │
-│  │  Supabase   │    │  Power Automate │    │  SystemOne  │  │
+│  │  Supabase   │    │  Power Automate │    │   Nexus     │  │
 │  │  (Medium+)  │    │  (Assurance)    │    │   (Max+)    │  │
 │  └─────────────┘    └─────────────────┘    └─────────────┘  │
 │                                                             │
@@ -438,15 +820,15 @@ function TechnicalSpecSection() {
 │  │                 │    │                 │                │
 │  │  • Pages        │    │  • /api/tasks   │                │
 │  │  • Components   │    │  • /api/patients│                │
-│  │  • State mgmt   │    │  • /api/systemon│                │
+│  │  • State mgmt   │    │  • /api/nexus   │                │
 │  └─────────────────┘    └────────┬────────┘                │
 │                                  │                          │
 │                    ┌─────────────┼─────────────┐           │
 │                    │             │             │           │
 │                    ▼             ▼             ▼           │
 │            ┌───────────┐ ┌───────────┐ ┌───────────┐       │
-│            │ Supabase  │ │ Webhook   │ │ S1 Adapter│       │
-│            │ Client    │ │ Worker    │ │ (Max+)    │       │
+│            │ Supabase  │ │ Webhook   │ │ Nexus     │       │
+│            │ Client    │ │ Worker    │ │ Receiver  │       │
 │            └───────────┘ └───────────┘ └───────────┘       │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
@@ -821,7 +1203,7 @@ User                          Portal                        External
             </li>
             <li className="flex gap-2">
               <span className="w-6 h-6 rounded-full bg-nhs-bright-blue text-white flex items-center justify-center text-xs flex-shrink-0">6</span>
-              <span>(Max+) Sync status back to SystemOne Tasks</span>
+              <span>(Max+) Nexus auto-completes linked audit tasks</span>
             </li>
           </ol>
         </CardContent>
@@ -980,8 +1362,8 @@ function DPIASection() {
             <p className="text-nhs-dark-grey">User → Portal → Supabase (encrypted in transit, at rest). UK region.</p>
           </div>
           <div className="bg-nhs-pale-grey p-4 rounded-lg">
-            <h3 className="font-semibold text-nhs-dark-grey mb-2">Max+ (SystemOne)</h3>
-            <p className="text-nhs-dark-grey">User → Portal → S1 API (Trust network only). No data stored in portal; read/write via API.</p>
+            <h3 className="font-semibold text-nhs-dark-grey mb-2">Max+ (Nexus Assurance)</h3>
+            <p className="text-nhs-dark-grey">Nexus → Webhook → Portal (Trust network only). One-way inbound sync marks audit tasks as complete.</p>
           </div>
         </CardContent>
       </Card>
@@ -1045,8 +1427,8 @@ function DPIASection() {
             <li>Right to restrict processing</li>
           </ul>
           <p className="mt-3">
-            The portal does not create new patient records; it surfaces data from SystemOne (Max+)
-            or stores minimal operational data for task tracking.
+            The portal does not create new patient records; it stores minimal operational data
+            for task tracking. In Max+ mode, Nexus sends audit completion events via webhook.
           </p>
         </CardContent>
       </Card>
@@ -1373,62 +1755,129 @@ Body:
   );
 }
 
-function SystmOneSection() {
+function NexusSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-nhs-black">SystmOne Integration (MAX+)</h1>
-        <p className="text-nhs-dark-grey mt-1">TPP API preview and mock specs</p>
+        <h1 className="text-2xl font-bold text-nhs-black">Nexus Assurance Integration (MAX+)</h1>
+        <p className="text-nhs-dark-grey mt-1">Automated audit compliance sync</p>
       </div>
 
-      <div className="bg-nhs-purple/10 border border-nhs-purple rounded-lg p-4">
+      <div className="bg-amber-50 border border-amber-300 rounded-lg p-4">
         <p className="text-sm text-nhs-black">
-          <strong>PREVIEW ONLY</strong> — This section documents the planned SystmOne integration.
-          No live API calls are made. Requires TPP API approval before implementation.
+          <strong>PLANNED</strong> — Nexus Assurance is the Trust&apos;s internal compliance platform.
+          The integration uses a one-way inbound webhook (Nexus → Hub) to auto-complete audit tasks.
+          The Trust tech team builds and maintains the webhook on their side.
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-bold text-nhs-black">Integration Points</h2>
+          <h2 className="text-lg font-bold text-nhs-black">What is Nexus?</h2>
+        </CardHeader>
+        <CardContent className="prose prose-sm max-w-none text-nhs-dark-grey">
+          <p>
+            Nexus Assurance is the Trust&apos;s internal compliance and audit platform. Staff currently
+            log into Nexus separately to record completion of routine audit tasks such as fridge
+            temperature checks, controlled drug counts, and environmental walkarounds.
+          </p>
+          <p>
+            The Hub integration means that when a staff member completes an audit on Nexus,
+            the corresponding task on the Hub is automatically marked as complete — removing
+            the need to update both systems manually.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <h2 className="text-lg font-bold text-nhs-black">Integration Model</h2>
         </CardHeader>
         <CardContent className="space-y-3 text-sm text-nhs-dark-grey">
           <div className="p-3 bg-nhs-pale-grey rounded-lg">
-            <h3 className="font-semibold text-nhs-black">Patient List Sync</h3>
-            <p>Pull current ward patients from S1 → display in portal</p>
+            <h3 className="font-semibold text-nhs-black">Direction: One-Way Inbound</h3>
+            <p>Nexus → Hub only. The Hub never writes to Nexus. This keeps the integration simple and avoids additional approval requirements.</p>
           </div>
           <div className="p-3 bg-nhs-pale-grey rounded-lg">
-            <h3 className="font-semibold text-nhs-black">Task Sync</h3>
-            <p>Bidirectional sync between portal tasks and S1 Tasks module</p>
+            <h3 className="font-semibold text-nhs-black">Mechanism: Webhook</h3>
+            <p>The Trust tech team configures Nexus to POST a webhook when an audit is completed. The Hub receives and processes the event.</p>
           </div>
           <div className="p-3 bg-nhs-pale-grey rounded-lg">
-            <h3 className="font-semibold text-nhs-black">Case Notes Push</h3>
-            <p>Write referral completion notes to patient record</p>
+            <h3 className="font-semibold text-nhs-black">Scope: Audit Tasks Only</h3>
+            <p>Only applies to ward tasks flagged as audit tasks (fridge temps, controlled drugs, walkarounds, etc.). General tasks are unaffected.</p>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-bold text-nhs-black">TPP API Approval Checklist</h2>
+          <h2 className="text-lg font-bold text-nhs-black">Webhook Specification</h2>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className="bg-nhs-pale-grey p-4 rounded-lg font-mono text-xs overflow-x-auto">
+            <pre>{`POST /api/nexus/task-complete
+
+{
+  "event": "audit_completed",
+  "auditType": "fridge_temps",
+  "ward": "byron",
+  "completedBy": "Staff_A",
+  "completedAt": "2026-03-04T08:15:00Z",
+  "nexusRefId": "NX-2026-0304-001"
+}
+
+Response: 200 OK
+{ "matched": true, "taskId": "wt-byron-1" }`}</pre>
+          </div>
+          <p className="text-xs text-nhs-mid-grey mt-2">
+            The webhook is authenticated via a shared secret in the request header (X-Nexus-Token).
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <h2 className="text-lg font-bold text-nhs-black">Linked Task Types</h2>
+        </CardHeader>
+        <CardContent>
+          <div className="grid sm:grid-cols-2 gap-2">
             {[
-              "Application registered with TPP",
-              "API access request submitted",
-              "Permissions scope agreed",
-              "Test environment access granted",
-              "DPIA updated for S1 integration",
-              "Clinical safety review completed",
-              "Production approval received"
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 p-2 bg-nhs-pale-grey rounded">
-                <div className="w-4 h-4 border-2 border-nhs-mid-grey rounded" />
-                <span className="text-sm text-nhs-dark-grey">{item}</span>
+              { icon: "🌡️", label: "Fridge Temperature Checks", type: "fridge_temps" },
+              { icon: "💧", label: "Water Temperature Checks", type: "water_temps" },
+              { icon: "💊", label: "Controlled Drugs Count", type: "controlled_drugs" },
+              { icon: "🚶", label: "Shift Walkaround", type: "walkaround" },
+              { icon: "❤️‍🩹", label: "Resus Equipment Check", type: "resus_check" },
+              { icon: "🔥", label: "Fire Safety Check", type: "fire_safety" },
+              { icon: "🔍", label: "Ligature Point Check", type: "ligature_check" },
+            ].map((item) => (
+              <div key={item.type} className="flex items-center gap-2 p-2 bg-nhs-pale-grey rounded text-sm">
+                <span>{item.icon}</span>
+                <span className="text-nhs-dark-grey">{item.label}</span>
+                <code className="ml-auto text-xs text-nhs-mid-grey">{item.type}</code>
               </div>
             ))}
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <h2 className="text-lg font-bold text-nhs-black">Implementation Notes</h2>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {[
+            "Trust tech team builds the webhook on the Nexus side",
+            "Hub provides the /api/nexus/task-complete endpoint",
+            "Authentication via shared secret (rotated quarterly)",
+            "No PII transmitted — only audit type, ward, and staff ID",
+            "Fallback: if webhook fails, staff can still mark task complete manually",
+            "DPIA update required for Max+ deployment",
+          ].map((item, i) => (
+            <div key={i} className="flex items-center gap-3 p-2 bg-nhs-pale-grey rounded">
+              <CheckCircle className="w-4 h-4 text-nhs-green flex-shrink-0" />
+              <span className="text-sm text-nhs-dark-grey">{item}</span>
+            </div>
+          ))}
         </CardContent>
       </Card>
     </div>
@@ -1488,7 +1937,7 @@ function ReferencesSection() {
         <CardContent className="text-sm text-nhs-dark-grey">
           <p className="mb-3">Internal documentation (requires FOCUS access):</p>
           <ul className="space-y-1">
-            <li>• SystemOne API Research: <code>/docs/progress reviews/SystemOne-API-Guide.md</code></li>
+            <li>• Nexus Integration Spec: See Dev Panel &gt; Nexus Assurance section</li>
             <li>• Project Evaluation: <code>/docs/evaluations/</code></li>
             <li>• CLAUDE.md: Project decisions and roadmap</li>
           </ul>

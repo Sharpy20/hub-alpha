@@ -284,12 +284,12 @@ export default function MyTasksPage() {
           </div>
         </div>
 
-        {/* SystemOne tip banner */}
-        <div className="overflow-hidden bg-red-50 border border-red-200 rounded-xl">
-          <div className="animate-marquee whitespace-nowrap py-2 text-red-600 font-medium text-sm">
-            <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
-            <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
-            <span className="mx-8">💡 Tip: Sync with SystemOne tasks only available in Max+ version of app</span>
+        {/* Nexus tip banner */}
+        <div className="overflow-hidden bg-blue-50 border border-blue-200 rounded-xl">
+          <div className="animate-marquee whitespace-nowrap py-2 text-blue-600 font-medium text-sm">
+            <span className="mx-8">💡 Tip: Nexus Assurance auto-sync is available in Max+ version of the app</span>
+            <span className="mx-8">💡 Tip: Nexus Assurance auto-sync is available in Max+ version of the app</span>
+            <span className="mx-8">💡 Tip: Nexus Assurance auto-sync is available in Max+ version of the app</span>
           </div>
         </div>
 

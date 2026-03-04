@@ -85,7 +85,7 @@ export interface Workflow {
   criteriaUrl?: string;
   relatedGuides?: string[];
   relatedBookmarks?: string[];
-  submissionMethod: "email" | "phone" | "portal" | "systemon" | "mixed";
+  submissionMethod: "email" | "phone" | "portal" | "mixed";
   submissionDetails: {
     email?: string;
     phone?: string;
@@ -177,6 +177,9 @@ export interface WardTask extends BaseTask {
   isAuditTask?: boolean;
   auditType?: AuditType;
   assuranceDashboardUrl?: string; // FOCUS link to complete audit on dashboard
+  // Nexus Assurance integration (Max+)
+  isNexusLinked?: boolean;
+  nexusCompletedAt?: string;
 }
 
 // Patient Task - one-off tasks for specific patients

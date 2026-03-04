@@ -167,7 +167,6 @@ export interface WorkflowStep {
   forms?: {
     blank?: { label: string; url: string }[];
     wagoll?: { label: string; url: string; note?: string }[];
-    systemOne?: { label: string; url: string }[];
     otherGuides?: { label: string; url: string }[];
   };
   methods?: { type: "email" | "phone" | "portal"; label: string; value: string }[];
@@ -317,7 +316,7 @@ export function FlowchartEditor({
       newStep.clipboardText = "Referral submitted on [DATE].";
     }
     if (type === "forms") {
-      newStep.forms = { blank: [], wagoll: [], systemOne: [], otherGuides: [] };
+      newStep.forms = { blank: [], wagoll: [], otherGuides: [] };
     }
     if (type === "submission") {
       newStep.methods = [];

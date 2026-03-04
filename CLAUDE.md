@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 29 January 2026
+> **Last Updated:** 4 March 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -147,7 +147,7 @@ The following fields exist on `Patient` but are **commented out in reports** to 
 - `admissionDate` - When admitted
 - `room`, `bed` - Location details
 - `namedNurse`, `consultant` - Staff assignments
-- `alerts` - Clinical alerts (handled via SystemOne)
+- `alerts` - Clinical alerts (handled via clinical systems)
 
 Reports currently show only: **ward** and **name**
 
@@ -168,7 +168,7 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | **Light** | Public resources only | Demo login | None | Public Vercel |
 | **Medium** | + Internal content (non-public phones, emails, SOPs) | Trust auth | None | FOCUS/restricted |
 | **Max** | + Ward Diary, Patient List, My Tasks | Trust auth | Yes | Trust infra, DIPA |
-| **Max+** | + SystemOne API integration | Trust auth | Yes | Trust infra, API approval |
+| **Max+** | + Nexus Assurance integration | Trust auth | Yes | Trust infra, webhook |
 
 ### Feature Matrix
 
@@ -183,7 +183,7 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | Public workflows (public forms) | Y | Y | Y | Y |
 | Internal workflows (internal SOPs) | - | Y | Y | Y |
 | Clipboard copy for notes | Y | Y | Y | Y |
-| Push to SystemOne notes | - | - | - | Y |
+| Referral tracking log | - | - | - | Y |
 | **HOW-TO GUIDES** |||||
 | Public guides (generic clinical) | Y | Y | Y | Y |
 | Internal SOPs (trust-specific) | - | Y | Y | Y |
@@ -193,7 +193,7 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | Appointments | - | - | Y | Y |
 | My Tasks view | - | - | Y | Y |
 | Calendar view | - | - | Y | Y |
-| Sync with SystemOne Tasks | - | - | - | Y |
+| Nexus Assurance auto-sync | - | - | - | Y |
 | **ASSURANCE DASHBOARD** |||||
 | Audit tasks (fridge temps, etc.) | Link | Link | Link | Auto-sync |
 | Dashboard link on tasks | Y | Y | Y | Y |
@@ -208,7 +208,7 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | View patients | - | - | Y | Y |
 | Activity log | - | - | Y | Y |
 | Discharge flow | - | - | Y | Y |
-| SystemOne patient lookup | - | - | - | Y |
+| Nexus compliance dashboard | - | - | - | Y |
 | **ADMIN** |||||
 | Content editing (workflows/guides) | Y | Y | Y | Y |
 | User management | - | - | Y | Y |
@@ -219,7 +219,7 @@ NEXT_PUBLIC_APP_VERSION = light | medium | max | max_plus
 | **DATA** |||||
 | Local storage only | Y | - | - | - |
 | Supabase persistence | - | Y | Y | Y |
-| SystemOne API | - | - | - | Y |
+| Nexus webhook | - | - | - | Y |
 
 ---
 
@@ -266,7 +266,7 @@ inpatient-hub/
 │   │   ├── users/page.tsx           # Medium+
 │   │   └── logs/page.tsx            # Medium+
 │   │
-│   ├── api/systemon/                # Max+ only
+│   ├── api/nexus/                   # Max+ only
 │   │   ├── tasks/route.ts
 │   │   ├── patients/route.ts
 │   │   └── notes/route.ts
@@ -300,7 +300,7 @@ inpatient-hub/
 │   ├── types/
 │   ├── hooks/
 │   ├── utils/
-│   └── api/systemon/                # Max+ API client
+│   └── api/nexus/                   # Max+ Nexus webhook
 │
 ├── public/images/
 ├── CLAUDE.md
@@ -435,7 +435,7 @@ All referral workflows follow this consistent structure:
    "Where to send this referral"
    - Email: example@service.org.uk
    - Phone: 01234 567890
-   - [If via SystemOne] → Link to SystemOne guide
+   - [If via clinical system] → Link to relevant guide
    - Portal/website link if applicable
 
 6. CASE NOTE PROMPT
@@ -475,7 +475,7 @@ interface Workflow {
   relatedGuides?: string[];
   relatedBookmarks?: string[];
   // Submission details
-  submissionMethod: 'email' | 'phone' | 'portal' | 'systemon' | 'mixed';
+  submissionMethod: 'email' | 'phone' | 'portal' | 'mixed';
   submissionDetails: {
     email?: string;
     phone?: string;
@@ -539,42 +539,29 @@ When `requiresFocus: true`:
 
 ---
 
-## SYSTEMONE API (Max+)
+## NEXUS ASSURANCE INTEGRATION (Max+)
 
-### Planned Integration Points
+### Overview
+Nexus Assurance is the Trust's internal compliance platform. The Hub integration uses a one-way inbound webhook (Nexus → Hub) to auto-complete audit tasks when completed on Nexus.
 
-1. **Task Sync** - Bidirectional sync between Hub and S1 Tasks
-2. **Patient Lookup** - Pull patient list from S1
-3. **Case Notes Push** - After workflow completion
+### Integration Model
+- **Direction:** One-way inbound (Nexus → Hub)
+- **Mechanism:** Webhook (`POST /api/nexus/task-complete`)
+- **Scope:** Audit tasks only (fridge temps, controlled drugs, walkarounds, etc.)
+- **Auth:** Shared secret via `X-Nexus-Token` header
+- **Owner:** Trust tech team builds the webhook on the Nexus side
 
-### Workflow Completion Modal
+### Linked Task Types
+- Fridge temperature checks
+- Water temperature checks
+- Controlled drugs count
+- Shift walkarounds
+- Resus equipment checks
+- Fire safety checks
+- Ligature point checks
 
-When a referral workflow completes in Max+ version:
-
-```
-+------------------------------------------+
-| Referral Complete                        |
-|                                          |
-| Add to patient case notes?               |
-|                                          |
-| "Referred to City Advocacy (POhWER)      |
-|  on 24/01/2026. Contact: 01onal..."      |
-|                                          |
-| [ Copy to Clipboard ] [ Push to S1 ]     |
-|                                          |
-| Patient: [Dropdown]                      |
-+------------------------------------------+
-```
-
-### API Endpoints (Placeholder)
-
-```
-GET  /api/systemon/tasks?patient_id={id}
-POST /api/systemon/tasks
-PUT  /api/systemon/tasks/{id}
-GET  /api/systemon/patients?ward={ward}
-POST /api/systemon/notes
-```
+### Feature Flag
+- `nexus_sync` — enabled in Max+ mode only
 
 ---
 
@@ -628,11 +615,18 @@ POST /api/systemon/notes
 - [x] Discharge audit log modal
 - [x] Ward admin discharge confirmation
 
-### Phase 8: SystemOne (Max+) ← PLANNED
-- [ ] API client structure
-- [ ] Task sync UI
-- [ ] Case notes modal
-- [x] API integration research document (docs/progress reviews/)
+### Phase 8: Nexus Integration (Max+) (COMPLETE)
+- [x] Nexus feature flag (`nexus_sync`)
+- [x] Nexus-linked audit tasks in demo data
+- [x] Dev Panel Nexus section with webhook spec
+- [x] Version pages updated (SystemOne → Nexus)
+
+### Phase 8b: Business Case & Demo Tour (COMPLETE)
+- [x] Business Case section in Dev Panel (10 accordion sections)
+- [x] Interactive Demo Tour with tour provider
+- [x] Tour button in header (gradient, pulsing)
+- [x] Live IMHA referral walkthrough in tour mode
+- [x] Visual mockups (diary, tasks, Nexus, Kanban, GDPR)
 
 ### Phase 9: Polish
 - [ ] Mobile responsive
@@ -752,7 +746,7 @@ Working through in order. Marking complete as fixed.
 |---|--------|-------------|
 | 34 | [x] | Patient tasks modal - clicking tasks/appointments now opens TaskDetailModal for viewing/editing |
 | 35 | [x] | Add task modal - patient name field changed from free text to searchable dropdown of active ward patients |
-| 36 | [x] | Ward diary - SystemOne sync tip banner now hidden in Max+ version (only shows for Light/Medium/Max) |
+| 36 | [x] | Ward diary - Sync tip banner updated (now shows Nexus sync in Max+ version) |
 | 37 | [x] | Removed PatientNamesModal from Ward Diary and My Tasks (was not persisting changes) |
 | 38 | [x] | Added "Add Patient" button and modal to Patients page (name, room, bed, legal status) |
 | 39 | [x] | Add Patient modal - Simple/Advanced toggle with alerts selection from ALERTS_POOL |
@@ -771,7 +765,7 @@ Working through in order. Marking complete as fixed.
 | 47 | [x] | Patient list - clicking a task/appointment in patient modal should open TaskDetailModal |
 | 48 | [x] | Add task modal - ensure patient name is ALWAYS a searchable dropdown (not free text) across all entry points |
 | 49 | [x] | Ward diary - group tasks by priority with colored borders, urgent tasks at top of each group |
-| 50 | [x] | SystemOne sync banner - ONLY show in Max+ version (currently showing in wrong versions) |
+| 50 | [x] | Nexus sync banner - ONLY show in Max+ version |
 | 51 | [x] | Ward diary - remove ability to add patients to patient list from diary view (never existed/already removed) |
 | 52 | [x] | Add patient modal - make room, bed, and MHA status all optional fields |
 | 53 | [x] | Add patient modal - include alerts selection (ligature risk, absconding risk, etc.) |
@@ -782,7 +776,7 @@ Working through in order. Marking complete as fixed.
 | # | Status | Description |
 |---|--------|-------------|
 | 55 | [x] | Dev Panel route created with password gate (`Eft3&d3`) |
-| 56 | [x] | Dev Panel left nav with 11 sections (Overview, Technical, Data Catalogue, RBAC, User Flows, DPIA, Clinical Safety, Schemas, Webhooks, SystmOne, References) |
+| 56 | [x] | Dev Panel left nav with 12 sections (Overview, Business Case, Technical, Data Catalogue, RBAC, User Flows, DPIA, Clinical Safety, Schemas, Webhooks, Nexus, References) |
 | 57 | [x] | Schema Status Widget showing DRAFT status |
 | 58 | [x] | DPIA draft scaffold with 7 sections |
 | 59 | [x] | Clinical Safety section with hazard log starter |
@@ -802,87 +796,83 @@ Working through in order. Marking complete as fixed.
 
 ## CURRENT FOCUS
 
-**Immediate Next Steps:**
-1. ~~Complete Phase 5: Admin features~~ → Dev Panel now priority for IT meeting
-2. Expand Dev Panel content for stakeholder meeting (1 week)
-3. Mobile responsiveness pass
-4. Prepare for user testing
+**TO-DO LIST:**
 
-**Recently Completed (28 Jan 2026 - Session 6):**
-- ✅ Patient tasks modal now opens TaskDetailModal for viewing/editing
-- ✅ Add task modal patient field changed to searchable dropdown
-- ✅ SystemOne sync banner hidden in Max+ version
-- ✅ Removed non-functional PatientNamesModal
-- ✅ Added "Add Patient" feature to Patients page with Simple/Advanced toggle
-- ✅ Created comprehensive Ward Admin Settings page with 6 configuration tabs
-- ✅ Added WardSettingsProvider for ward-scoped settings
-- ✅ User bookmark favorites on home page (My Favorites section)
-- ✅ Star toggle on bookmarks page to manage favorites
-- ✅ Ran full 10-perspective project evaluation
-- ✅ Fixed Next.js security vulnerability (16.1.4 → 16.1.6)
-- ✅ Fixed failing unit tests (40/40 now pass)
+### UX & Visual Customisation
+| # | Status | Description |
+|---|--------|-------------|
+| 71 | [ ] | **Light/Dark mode toggle** - user preference saved to localStorage, respects system preference, toggle in profile/settings dropdown |
+| 72 | [ ] | **Visual customisation options** - font size (small/medium/large), compact vs comfortable spacing, high contrast mode for accessibility |
+| 73 | [ ] | **Colour theme options** - NHS Blue (default), NHS Dark, Warm, High Contrast — applied via CSS custom properties |
 
-**Recently Completed (27 Jan 2026 - Session 5):**
-- ✅ Assurance Dashboard integration designed (Light-Max: link-only, Max+: auto-sync)
-- ✅ Added AuditType to types (fridge_temps, water_temps, walkaround, controlled_drugs, resus_check, fire_safety, ligature_check)
-- ✅ Added AUDIT_TYPE_CONFIG with icons and dashboard paths
-- ✅ Extended WardTask with isAuditTask, auditType, assuranceDashboardUrl fields
-- ✅ Updated ward task templates with audit tasks linked to Assurance Dashboard
-- ✅ Created "Fridge Temperature Recording" how-to guide (6 steps)
-- ✅ Documented Assurance Dashboard webhook spec in API research doc
-- ✅ Updated version comparison page with Assurance Dashboard feature (Link vs Sync)
-- ✅ Updated feature matrix in CLAUDE.md
-- ✅ Created Patient Progress Reports page (/reports)
-- ✅ Report scope selection: All wards, single ward, or pick patients
-- ✅ Engaging report card design with patient info, task stats, alerts
-- ✅ Max+ scheduled delivery: Email or MS Teams (daily/weekly/on-demand)
-- ✅ Added Reports link to header navigation (Max/Max+ only)
-- ✅ Updated version comparison with Progress Reports feature
+### Dev Panel & Governance
+| # | Status | Description |
+|---|--------|-------------|
+| 62 | [ ] | Complete remaining Dev Panel sections (expand content) |
+| 63 | [ ] | Add "Export to PDF" buttons |
+| 64 | [ ] | Add Q&A Pack for stakeholders |
+| 65 | [ ] | Add Role-specific Evaluations section |
 
-**Recently Completed (26 Jan 2026 - Session 4):**
-- ✅ Expanded day view in ward diary with shift filters
-- ✅ Compact task cards (shift labels as tooltips)
-- ✅ Data sources link added to Settings dropdown
-- ✅ Renamed "Ward Diary" to "Diary" and "My Tasks" to "Tasks" in header
-- ✅ Fixed footer text contrast issues
-- ✅ Bookmark management for contributors (new admin page)
-- ✅ Derbyshire MH Helpline moved to top of Crisis Support
-- ✅ Project evaluation document created (10 perspectives)
-- ✅ Error boundaries added
-- ✅ Accessibility improvements (focus indicators, ARIA labels, reduced motion)
-- ✅ Security headers added
-- ✅ FAQ page created
-- ✅ GDPR data retention section added
-- ✅ Custom 404 page
-- ✅ Page meta titles
-- ✅ Back to top button
-- ✅ Print styles
-- ✅ Confirmation dialogs component
-- ✅ Loading skeleton components
-- ✅ Empty state improvements
-- ✅ "Request a Feature" category in community feedback with "is related to..." dropdown
-- ✅ Task cards: referral/guide links moved to right side (same row as claim/steal)
+### Polish & Quality
+| # | Status | Description |
+|---|--------|-------------|
+| 74 | [ ] | Mobile responsiveness pass (all pages) |
+| 75 | [ ] | Loading skeletons on data-heavy pages (patients, tasks, diary) |
+| 76 | [ ] | Keyboard navigation for ward diary |
+| 77 | [ ] | End-to-end walkthrough testing |
+| 78 | [ ] | WCAG 2.1 AA accessibility audit |
+| 79 | [ ] | Expand print stylesheet for reports |
 
-**Previously Completed (26 Jan 2026 - Earlier):**
-- ✅ Login flow now uses staff dropdown per ward instead of free text name entry
-- ✅ Each ward has "Ward Admin" as first staff member at top of list
-- ✅ Role is determined by staff selection (read-only display)
-- ✅ Ward diary "Quick Guide" renamed to "Diary Key"
-- ✅ Add task modal enhanced with one-off vs repeating task toggle
-- ✅ One-off tasks get date picker, repeating tasks get day selection
-- ✅ Leadership approval checkbox only shows for repeating tasks
-- ✅ New "View repeat ward tasks" modal with Mon-Sun weekly overview and edit/delete
+### Phase 8: Nexus Integration & Business Case — COMPLETE
+| # | Status | Description |
+|---|--------|-------------|
+| 80 | [x] | Nexus Assurance integration (replaced SystemOne) |
+| 81 | [x] | Business Case section in Dev Panel |
+| 82 | [x] | Interactive Demo Tour with live walkthrough |
 
-**Previously Completed (25 Jan 2026):**
-- ✅ All 20 snag list items completed
-- Ward task system with cross-ward viewing
-- Patient list with transfer and discharge workflows
-- Discharge audit log with ward admin confirmation
-- SystemOne API research document
-- Version compare modal
-- Patient tasks modal (click patient name)
-- Enhanced patient transfer with per-task options
-- Repeating ward tasks with day selection and approval toggle
+---
+
+**Recently Completed (28 Feb 2026 - Session 8):**
+- ✅ Renamed "Normal User" role to "Staff" across entire codebase (7+ files)
+- ✅ Changed "Contributor" from standalone role to orthogonal `isContributor` flag on any role
+- ✅ Added Lead and Manager roles (5 roles: Staff, Lead, Manager, Ward Admin, Senior Admin)
+- ✅ Ward Professional field on patients — selectable from Staff/Lead/Manager only
+- ✅ WP changeable via inline dropdown on patient cards + Add Patient modal
+- ✅ Creator privileges request flow on admin page (visible to all logged-in users)
+- ✅ Editor link now visible to all users (non-contributors see "Request creator privileges")
+- ✅ Priority-based task tile colors across diary and My Tasks
+- ✅ My Patients toggle and Lead staff filter in diary/task views
+- ✅ 72-hour admission audit tasks auto-generated for new patients
+- ✅ Removed console.log statements with PII (4 files)
+- ✅ Replaced browser alert() for FOCUS bookmarks with styled modal
+- ✅ Updated Dev Panel: RBAC, permissions matrix, data catalogue, schemas (5 roles + contributor flag)
+- ✅ Dynamic admin dashboard bookmark count from actual data
+- ✅ ARIA labels on header dropdown buttons
+- ✅ NHS trust branding in hero section and footer
+- ✅ Breadcrumb component on referral and how-to detail pages
+- ✅ Enhanced version switcher with descriptive sublabels
+- ✅ Quick footer links (Privacy | Data Sources | Feedback)
+
+**Previously Completed (29 Jan 2026 - Session 7):**
+- ✅ Dev Panel with password gate, 11 sections, governance docs
+- ✅ Content verification system with VerificationBadge
+- ✅ Priority-grouped tasks in ward diary
+
+**Previously Completed (28 Jan 2026 - Session 6):**
+- ✅ Patient tasks modal, searchable patient dropdown, Add Patient with Simple/Advanced
+- ✅ Ward Admin Settings page (6 tabs), WardSettingsProvider
+- ✅ Bookmark favorites on home page, star toggle
+
+**Previously Completed (27 Jan 2026 - Session 5):**
+- ✅ Assurance Dashboard integration, Patient Progress Reports page
+- ✅ Audit task types, fridge temp guide, scheduled report delivery
+
+**Previously Completed (26 Jan 2026 - Session 4):**
+- ✅ Major polish pass: error boundaries, accessibility, FAQ, 404, skeletons, print styles
+- ✅ Login flow rework, bookmark management, community feedback
+
+**Previously Completed (25 Jan 2026 - Session 3):**
+- ✅ Ward tasks, patient list, transfers, discharge, 20 snag items
 
 ---
 
@@ -948,7 +938,7 @@ Then open http://localhost:3000
 - [x] Recent discharges list with confirmation status
 - [x] Discharge audit modal with task completion log
 - [x] Ward admin discharge confirmation workflow
-- [x] SystemOne API research document created
+- [x] Nexus integration research completed
 - [x] CLAUDE.md roadmap updated
 
 **New Components:**
@@ -958,7 +948,7 @@ Then open http://localhost:3000
 - `src/app/patients/page.tsx`
 
 **New Documents:**
-- `docs/progress reviews/SystemOne-API-Guide.md`
+- Dev Panel: Nexus Assurance section
 
 **Build Status:** All builds pass successfully
 
@@ -1012,7 +1002,7 @@ Then open http://localhost:3000
 - [x] Clinical Safety section (DCB 0129/0160, hazard log starter)
 - [x] Supabase Schemas section (draft tables, RLS policies)
 - [x] Assurance Webhooks spec with Power Automate example
-- [x] SystmOne (MAX+) preview section with approval checklist
+- [x] Nexus Assurance (MAX+) section with webhook spec and linked task types
 - [x] References section (Trust policies, external standards)
 - [x] Dev Panel link on GDPR page
 - [x] Documentation Sync Workflow added to CLAUDE.md
@@ -1024,7 +1014,53 @@ Then open http://localhost:3000
 - Navigate to GDPR & Privacy page → small "dev panel" link at bottom
 - Password: `Eft3&d3`
 
-**Build Status:** Pending verification
+**Build Status:** All builds pass successfully
+
+### 28 February 2026 - Session 8 (Roles Rework & Audit Polish)
+**Completed:**
+- [x] Renamed "Normal User" role to "Staff" across 7+ files
+- [x] Changed "Contributor" from standalone role to `isContributor` boolean flag on any role
+- [x] Added Lead and Manager roles (5 roles total: Staff, Lead, Manager, Ward Admin, Senior Admin)
+- [x] Added Ward Professional field to patients — selectable from Staff/Lead/Manager (not admin roles)
+- [x] WP changeable via inline dropdown on patient cards and in Add Patient modal
+- [x] `getWardProfessionalCandidates()` helper function in staff data
+- [x] Creator privileges request flow on admin dashboard (accessible to all logged-in users)
+- [x] Editor link visible to all users in header (non-contributors see "Request creator privileges")
+- [x] Priority-based task tile colors across ward diary and My Tasks
+- [x] My Patients toggle and Lead staff filter in diary/task views
+- [x] 72-hour admission audit tasks auto-generated for new patients
+- [x] Full product audit: security, accessibility, UX, governance
+- [x] Removed all console.log with PII (4 files)
+- [x] Replaced FOCUS badge browser alert() with styled modal dialog
+- [x] Updated Dev Panel: RBAC roles/permissions, data catalogue, Supabase schemas, RLS policies
+- [x] Dynamic bookmark count on admin dashboard
+- [x] ARIA labels on header dropdowns
+- [x] NHS trust branding in hero section and footer
+- [x] Breadcrumb component on referral/how-to detail pages
+- [x] Enhanced version switcher with sublabels
+- [x] Quick footer links row (Privacy | Data Sources | Feedback)
+
+**Key Files Modified:**
+- `src/lib/types/index.ts` — UserRole union, DEMO_USERS, dischargeInitiateRoles
+- `src/app/providers.tsx` — UserRole type
+- `src/lib/data/staff/index.ts` — Role generation, getWardProfessionalCandidates
+- `src/lib/data/tasks/index.ts` — WP generation from candidates
+- `src/components/layout/header.tsx` — Editor link for all users, ARIA labels
+- `src/app/admin/page.tsx` — Creator request flow, dynamic counts
+- `src/app/patients/page.tsx` — WP editing, WP in Add Patient
+- `src/app/bookmarks/page.tsx` — FOCUS styled modal
+- `src/app/dev-panel/page.tsx` — RBAC, schemas, data catalogue updates
+- `src/app/page.tsx` — NHS branding, version switcher
+- `src/components/layout/footer.tsx` — Trust branding, quick links
+- `src/components/ui/Breadcrumb.tsx` — New component
+
+**Commits:**
+- `1bfa660` — Lead/Manager roles, contributor flag, My Patients filter, priority tile colors
+- `910207b` — Rename normal to staff, changeable ward professional, creator request flow
+- `ee2036e` — Audit: security fixes, ARIA labels, NHS branding, breadcrumbs, dev panel updates
+- `be25560` — Fix: Editor link visible to all users for creator privilege requests
+
+**Build Status:** All builds pass successfully
 
 ---
 

@@ -776,7 +776,6 @@ export default function PatientsPage() {
         patient={selectedPatient}
         patientTasks={selectedPatient ? getPatientTasks(selectedPatient.id) : []}
         isWardAdmin={user?.role === "ward_admin" || user?.role === "senior_admin"}
-        isMaxPlus={hasFeature("systemon_sync")}
         onConfirmDischarge={handleConfirmDischarge}
       />
 
@@ -1138,7 +1137,7 @@ export default function PatientsPage() {
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
                 <p>
-                  <strong>Note:</strong> In Max+ version, patients would be synced from SystemOne.
+                  <strong>Note:</strong> In a live deployment, patients would be managed via the Trust&apos;s clinical systems.
                   This manual entry is for demo purposes.
                 </p>
               </div>

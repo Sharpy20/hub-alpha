@@ -18,7 +18,11 @@ import {
   CheckCircle,
   Clock,
   FileWarning,
-  ChevronDown
+  ChevronDown,
+  Map,
+  Lightbulb,
+  Sparkles,
+  ArrowRight
 } from "lucide-react";
 import { useApp } from "@/app/providers";
 
@@ -55,6 +59,7 @@ const NAV_SECTIONS = [
   { id: "schemas", label: "Supabase Schemas", icon: Database, priority: "later" },
   { id: "webhooks", label: "Assurance Webhooks", icon: GitBranch, priority: "later" },
   { id: "nexus", label: "Nexus Assurance (MAX+)", icon: ExternalLink, priority: "later" },
+  { id: "roadmap", label: "Roadmap", icon: Map, priority: "must" },
   { id: "references", label: "References", icon: FileText, priority: "must" },
 ];
 
@@ -225,6 +230,7 @@ export default function DevPanelPage() {
           {activeSection === "schemas" && <SchemasSection schemaStatus={schemaConfig.schemaStatus} />}
           {activeSection === "webhooks" && <WebhooksSection />}
           {activeSection === "nexus" && <NexusSection />}
+          {activeSection === "roadmap" && <RoadmapSection />}
           {activeSection === "references" && <ReferencesSection />}
         </main>
       </div>
@@ -1880,6 +1886,394 @@ Response: 200 OK
           ))}
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function RoadmapSection() {
+  const [expanded, setExpanded] = useState<string | null>("poc");
+
+  const stages = [
+    {
+      id: "poc",
+      phase: "Phase 1",
+      title: "Proof of Concept",
+      status: "current",
+      gradient: "from-green-500 to-emerald-600",
+      icon: "🧪",
+      items: [
+        {
+          title: "Showcase to Clinical Leads",
+          description: "Present the working demo to ward managers and matrons. Focus on the referral workflows and task diary — the features that solve the most immediate pain points.",
+          status: "next",
+        },
+        {
+          title: "Build in More Live Data",
+          description: "Populate the demo with realistic ward content — real referral pathways, actual phone numbers (where public), genuine how-to guides. The closer to real life, the more convincing the demo.",
+          status: "planned",
+        },
+        {
+          title: "Cold Demo to Unknown Ward",
+          description: "Present to a ward team who don't know the developer. This removes bias and provides brutally honest feedback. The questions to answer:",
+          status: "planned",
+          questions: [
+            "Is this actually needed? Or are existing tools good enough?",
+            "Are we solving a real-world problem? Does this match what staff actually struggle with?",
+            "Is this the right approach? Or would a different solution work better?",
+            "What impact could it have — positive and negative? What are the risks of adoption?",
+          ],
+        },
+        {
+          title: "Build Out on Feedback",
+          description: "Iterate based on what real staff say. Remove features nobody wants. Add things we hadn't thought of. The tool should be shaped by its users, not assumptions.",
+          status: "planned",
+        },
+      ],
+    },
+    {
+      id: "approval",
+      phase: "Phase 2",
+      title: "Approval & Data Decisions",
+      status: "future",
+      gradient: "from-blue-500 to-indigo-600",
+      icon: "📋",
+      items: [
+        {
+          title: "What Data is Essential?",
+          description: "Determine the minimum data needed for the tool to be useful. Every field stored is a governance question to answer.",
+          status: "planned",
+          decisions: [
+            {
+              question: "Patient data — what's the minimum?",
+              options: ["Name + ward + named professional only", "Add diagnosis and legal status", "Full clinical record link"],
+            },
+            {
+              question: "Staff data — what do we need?",
+              options: ["Job title and ward only", "Add shift patterns", "Full rota integration"],
+            },
+          ],
+        },
+        {
+          title: "Is Job Title and Date Enough?",
+          description: "For task tracking, do we need to store who did what and when — or do we need more?",
+          status: "planned",
+          decisions: [
+            {
+              question: "Referral documentation approach",
+              options: [
+                "Just record that a referral was sent (date + type)",
+                "Store a copy of the completed referral form",
+                "Prompt staff to upload to SystmOne each time",
+                "Just mark the SystmOne task as complete",
+              ],
+            },
+          ],
+        },
+        {
+          title: "SystmOne Update Frequency",
+          description: "At what point are we updating the clinical record system — and who does it?",
+          status: "planned",
+          decisions: [
+            {
+              question: "When do records get updated?",
+              options: [
+                "After each task completion",
+                "Weekly batch update",
+                "Monthly summary",
+                "On discharge only (single document)",
+              ],
+            },
+            {
+              question: "Who is responsible for the update?",
+              options: [
+                "The staff member who completed the task",
+                "Named nurse at end of shift",
+                "Ward admin on discharge",
+                "Automated via webhook (Max+)",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "developing",
+      phase: "Phase 3",
+      title: "Development & Security",
+      status: "future",
+      gradient: "from-purple-500 to-violet-600",
+      icon: "🔨",
+      items: [
+        {
+          title: "Trust Provides Code Skeleton",
+          description: "Trust Digital Services provide the approved hosting framework and security baseline. Ward staff populate the actual clinical content — referral workflows, how-to guides, bookmark libraries.",
+          status: "planned",
+        },
+        {
+          title: "Security Audit",
+          description: "Trust IT Security review the current codebase, hosting configuration, and data flows. Any issues identified are resolved before ward staff begin populating live content.",
+          status: "planned",
+        },
+        {
+          title: "Ward Content Population",
+          description: "Clinical staff (not developers) populate the referral workflows and guides with real, verified content. Each item goes through a verification process before going live.",
+          status: "planned",
+        },
+      ],
+    },
+    {
+      id: "implementation",
+      phase: "Phase 4",
+      title: "Implementation",
+      status: "future",
+      gradient: "from-amber-500 to-orange-600",
+      icon: "🚀",
+      items: [
+        {
+          title: "Start with One Ward / Team",
+          description: "Pilot on a single ward to prove value before expanding. Two options to consider:",
+          status: "planned",
+          decisions: [
+            {
+              question: "Which ward pilots first?",
+              options: [
+                "Mike's ward (Byron) — developer is on-site, can fix issues in real-time, deep understanding of workflows. Risk: too close to the problem, may miss blind spots",
+                "A different ward — honest, unbiased feedback, tests if the tool is intuitive without the developer present. Risk: slower issue resolution, may need a ward champion",
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-nhs-black">Roadmap</h1>
+        <p className="text-nhs-dark-grey mt-1">From proof of concept to ward implementation</p>
+      </div>
+
+      {/* Timeline visual */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        {stages.map((stage, i) => (
+          <button
+            key={stage.id}
+            onClick={() => setExpanded(expanded === stage.id ? null : stage.id)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${
+              expanded === stage.id
+                ? `bg-gradient-to-r ${stage.gradient} text-white shadow-lg`
+                : stage.status === "current"
+                  ? "bg-green-100 text-green-800 border-2 border-green-300"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            <span>{stage.icon}</span>
+            <span>{stage.phase}</span>
+            {stage.status === "current" && expanded !== stage.id && (
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            )}
+            {i < stages.length - 1 && <ArrowRight className="w-3 h-3 ml-1 text-gray-400" />}
+          </button>
+        ))}
+      </div>
+
+      {/* Stage detail */}
+      {stages.map((stage) =>
+        expanded === stage.id ? (
+          <div key={stage.id} className="space-y-4">
+            <div className={`bg-gradient-to-r ${stage.gradient} rounded-2xl p-5 text-white`}>
+              <div className="flex items-center gap-3">
+                <span className="text-3xl">{stage.icon}</span>
+                <div>
+                  <p className="text-sm font-medium text-white/70">{stage.phase}</p>
+                  <h2 className="text-xl font-bold">{stage.title}</h2>
+                </div>
+                {stage.status === "current" && (
+                  <span className="ml-auto px-3 py-1 bg-white/20 rounded-full text-xs font-bold">WE ARE HERE</span>
+                )}
+              </div>
+            </div>
+
+            {stage.items.map((item, i) => (
+              <Card key={i}>
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-3">
+                    <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${stage.gradient} text-white flex items-center justify-center font-bold text-sm flex-shrink-0`}>
+                      {i + 1}
+                    </div>
+                    <div className="flex-1 space-y-3">
+                      <div>
+                        <h3 className="font-bold text-nhs-black text-lg">{item.title}</h3>
+                        <p className="text-sm text-nhs-dark-grey mt-1">{item.description}</p>
+                      </div>
+
+                      {/* Key questions */}
+                      {"questions" in item && item.questions && (
+                        <div className="space-y-2">
+                          {item.questions.map((q, qi) => (
+                            <div key={qi} className="flex items-start gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                              <span className="text-amber-500 font-bold mt-0.5">?</span>
+                              <p className="text-sm text-amber-800 font-medium">{q}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Decision points */}
+                      {"decisions" in item && item.decisions && (
+                        <div className="space-y-3">
+                          {item.decisions.map((d, di) => (
+                            <div key={di} className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                              <p className="font-semibold text-nhs-black text-sm mb-2">{d.question}</p>
+                              <div className="space-y-1.5">
+                                {d.options.map((opt, oi) => (
+                                  <div key={oi} className="flex items-start gap-2 p-2 bg-white rounded-lg border border-gray-100">
+                                    <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex-shrink-0 mt-0.5" />
+                                    <p className="text-sm text-nhs-dark-grey">{opt}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : null
+      )}
+
+      {/* AI Suggestions Section */}
+      <div className="mt-8">
+        <div className="bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-1">
+          <div className="bg-white rounded-xl p-6 space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-nhs-black">AI-Generated Suggestions</h2>
+                <p className="text-xs text-nhs-mid-grey">Potential upgrades and opportunities identified by Claude — not yet reviewed</p>
+              </div>
+            </div>
+
+            <div className="bg-violet-50 border border-violet-200 rounded-lg p-3 text-sm text-violet-800">
+              <strong>Note:</strong> These are AI-generated suggestions for consideration. They have not been
+              reviewed or approved by the project owner. Some may not be feasible, desirable, or appropriate.
+              Treat as a brainstorm, not a plan.
+            </div>
+
+            <div className="space-y-3">
+              {/* Quick wins */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Lightbulb className="w-4 h-4 text-amber-500" />
+                  <h3 className="font-bold text-sm text-nhs-black">Quick Wins (Low effort, high visibility)</h3>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {[
+                    {
+                      title: "Shift Handover Summary",
+                      desc: "Auto-generate a handover document at shift end: outstanding tasks, completed work, patient updates. One click to copy or print.",
+                    },
+                    {
+                      title: "New Starter Pack",
+                      desc: "Guided first-login experience that walks new staff through key workflows relevant to their role. Bank and agency staff get a condensed version.",
+                    },
+                    {
+                      title: "Ward Dashboard",
+                      desc: "At-a-glance home screen showing bed occupancy, outstanding tasks, upcoming appointments, and compliance status for the shift.",
+                    },
+                    {
+                      title: "Offline Mode (Light)",
+                      desc: "Cache bookmarks and guides for use when Wi-Fi drops. Ward areas often have poor connectivity — critical reference info should always be available.",
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                      <p className="font-semibold text-sm text-nhs-black">{item.title}</p>
+                      <p className="text-xs text-nhs-dark-grey mt-1">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Medium-term */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Lightbulb className="w-4 h-4 text-blue-500" />
+                  <h3 className="font-bold text-sm text-nhs-black">Medium-Term (Requires some planning)</h3>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {[
+                    {
+                      title: "Task Analytics",
+                      desc: "Track patterns: which tasks are most frequently overdue, which shifts are busiest, which referrals take longest. Data-driven ward improvement.",
+                    },
+                    {
+                      title: "Cross-Ward Communication",
+                      desc: "When a patient transfers, the receiving ward gets a handover pack: outstanding tasks, recent activity, key contacts. No more phone-tag between wards.",
+                    },
+                    {
+                      title: "Smart Notifications",
+                      desc: "Configurable alerts: overdue tasks, approaching appointments, compliance deadlines. Push to Teams/email rather than building a notification system.",
+                    },
+                    {
+                      title: "Template Library",
+                      desc: "Allow wards to create and share workflow templates. Byron Ward builds a great IMHA workflow? Other wards can adopt it with one click.",
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                      <p className="font-semibold text-sm text-nhs-black">{item.title}</p>
+                      <p className="text-xs text-nhs-dark-grey mt-1">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Strategic */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Lightbulb className="w-4 h-4 text-purple-500" />
+                  <h3 className="font-bold text-sm text-nhs-black">Strategic (Bigger conversations needed)</h3>
+                </div>
+                <div className="space-y-2">
+                  {[
+                    {
+                      title: "Power Automate Integration",
+                      desc: "Use Microsoft Power Automate (already available in the Trust) to bridge the Hub with Teams, Outlook, and SharePoint. Auto-create Teams messages when tasks are assigned, email reminders for overdue items.",
+                    },
+                    {
+                      title: "CQC Evidence Pack Generator",
+                      desc: "Automatically compile compliance evidence from completed audit tasks, handover logs, and referral tracking. When CQC inspectors visit, pull a report showing ward activity for any date range.",
+                    },
+                    {
+                      title: "Multi-Trust Potential",
+                      desc: "The four-tier version model means any NHS Trust could deploy the Light version immediately with their own content. The architecture is Trust-agnostic — only the data is specific.",
+                    },
+                    {
+                      title: "Meet with SystmOne Team (TPP)",
+                      desc: "Arrange an exploratory meeting with The Phoenix Partnership (TPP) in Leeds — developers of SystmOne, the clinical system used across the Trust. Even if full API integration isn't on the roadmap now, understanding their partnership programme, webhook capabilities, and data-sharing frameworks could open doors. TPP have a clinical integration team who work with NHS organisations on exactly these kinds of ward-level tools. A 30-minute conversation could reveal integration possibilities we haven't considered — read-only access to task lists, patient context lookups, or event notifications when records are updated.",
+                    },
+                    {
+                      title: "AI-Assisted Workflow Builder",
+                      desc: "Use AI to help ward staff create new referral workflows from existing documents. Upload a PDF referral form → AI extracts the steps, contacts, and criteria → staff review and approve → workflow goes live. Dramatically reduces the effort to build new content.",
+                    },
+                  ].map((item, i) => (
+                    <div key={i} className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                      <p className="font-semibold text-sm text-nhs-black">{item.title}</p>
+                      <p className="text-xs text-nhs-dark-grey mt-1">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -36,6 +36,31 @@ const SECTION_LABELS: Record<TourSection, string> = {
   complete: "Done",
 };
 
+const SECTION_SLIDE_COUNTS: Record<TourSection, number> = {
+  welcome: 1,
+  referrals: 1,
+  "task-diary": 3,
+  "daily-tasks": 1,
+  "nexus-sync": 1,
+  claiming: 1,
+  gdpr: 1,
+  complete: 1,
+};
+
+const TOTAL_PAGES = Object.values(SECTION_SLIDE_COUNTS).reduce((a, b) => a + b, 0);
+
+function getPageNumber(section: TourSection, slide: number): number {
+  let page = 0;
+  for (const s of SECTION_ORDER) {
+    if (s === section) {
+      page += slide + 1;
+      break;
+    }
+    page += SECTION_SLIDE_COUNTS[s];
+  }
+  return page;
+}
+
 export function TourModal() {
   const {
     isTourActive,
@@ -69,10 +94,19 @@ export function TourModal() {
   };
 
   const sectionIndex = SECTION_ORDER.indexOf(currentSection);
+  const currentPage = getPageNumber(currentSection, currentSlide);
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
       <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
+        {/* Page number badge - top left, clearly visible */}
+        <div className="absolute top-3 left-3 z-10">
+          <div className="flex items-center gap-1.5 bg-indigo-600 text-white px-3 py-1.5 rounded-full shadow-lg">
+            <span className="text-sm font-bold">{currentPage}</span>
+            <span className="text-xs text-indigo-200">/ {TOTAL_PAGES}</span>
+          </div>
+        </div>
+
         {/* Close button */}
         <button
           onClick={endTour}

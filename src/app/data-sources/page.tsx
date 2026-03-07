@@ -259,7 +259,7 @@ export default function DataSourcesPage() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Data Sources Audit Log</h1>
           <p className="text-gray-600 mt-2">
-            Transparency record of all data sources used in the Inpatient Hub application.
+            Transparency record of all data sources used in the wardHub application.
           </p>
         </div>
 
@@ -408,7 +408,7 @@ export default function DataSourcesPage() {
         <Card>
           <CardContent className="p-4 text-center text-sm text-gray-500">
             <p>
-              This audit log is maintained as part of the Inpatient Hub GDPR compliance.
+              This audit log is maintained as part of the wardHub GDPR compliance.
               Last updated: 26 January 2026
             </p>
             <p className="mt-2">

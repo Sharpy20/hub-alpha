@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Referral Hub | Inpatient Hub",
+  title: "Referral Hub | wardHub",
   description: "Step-by-step workflows for common referrals",
 };
 

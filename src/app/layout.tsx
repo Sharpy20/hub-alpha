@@ -18,8 +18,8 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "Inpatient Hub - Ward Resources & Referrals",
-  description: "NHS ward management tool for quick access to resources, referrals, and guides",
+  title: "wardHub - Ward Resources, Guides & Diary",
+  description: "wardHub - NHS ward management tool for quick access to resources, referrals, and guides",
   icons: {
     icon: "/favicon.ico",
   },

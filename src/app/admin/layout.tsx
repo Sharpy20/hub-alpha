@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard | Inpatient Hub",
+  title: "Admin Dashboard | wardHub",
   description: "Content management and administration",
 };
 

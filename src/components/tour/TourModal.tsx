@@ -5,45 +5,42 @@ import { TourWelcome } from "./TourWelcome";
 import { TourSlideshow } from "./TourSlideshow";
 import {
   DiaryMockup,
-  AddTaskMockup,
-  AppointmentMockup,
   NexusBadgeMockup,
   KanbanMockup,
-  GdprMockup,
 } from "./TourVisuals";
-import { X, ArrowRight, CheckCircle } from "lucide-react";
+import { X, ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const SECTION_ORDER: TourSection[] = [
   "welcome",
   "referrals",
   "task-diary",
-  "daily-tasks",
-  "nexus-sync",
-  "claiming",
-  "gdpr",
+  "diary-integration",
+  "nexus-nudge",
+  "nexus-detail",
+  "kanban",
   "complete",
 ];
 
 const SECTION_LABELS: Record<TourSection, string> = {
   welcome: "Welcome",
-  referrals: "Referrals",
-  "task-diary": "Task Diary",
-  "daily-tasks": "Daily Tasks",
-  "nexus-sync": "Nexus Sync",
-  claiming: "Claiming",
-  gdpr: "GDPR",
+  referrals: "Guides",
+  "task-diary": "Diary",
+  "diary-integration": "Integration",
+  "nexus-nudge": "Audits",
+  "nexus-detail": "Nexus",
+  kanban: "Your Tasks",
   complete: "Done",
 };
 
 const SECTION_SLIDE_COUNTS: Record<TourSection, number> = {
   welcome: 1,
   referrals: 1,
-  "task-diary": 3,
-  "daily-tasks": 1,
-  "nexus-sync": 1,
-  claiming: 1,
-  gdpr: 1,
+  "task-diary": 1,
+  "diary-integration": 1,
+  "nexus-nudge": 1,
+  "nexus-detail": 1,
+  kanban: 1,
   complete: 1,
 };
 
@@ -69,15 +66,12 @@ export function TourModal() {
     setCurrentSection,
     currentSlide,
     setCurrentSlide,
-    nextSlide,
-    prevSlide,
     setIsInLiveWalkthrough,
   } = useTour();
   const router = useRouter();
 
   if (!isTourActive) return null;
 
-  // Don't show modal when in live walkthrough (user is on the referral page)
   const { isInLiveWalkthrough } = useTour();
   if (isInLiveWalkthrough) return null;
 
@@ -93,13 +87,20 @@ export function TourModal() {
     }
   };
 
+  const prevSection = () => {
+    const idx = SECTION_ORDER.indexOf(currentSection);
+    if (idx > 0) {
+      advanceToSection(SECTION_ORDER[idx - 1]);
+    }
+  };
+
   const sectionIndex = SECTION_ORDER.indexOf(currentSection);
   const currentPage = getPageNumber(currentSection, currentSlide);
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
       <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
-        {/* Page number badge - top left, clearly visible */}
+        {/* Page number badge */}
         <div className="absolute top-3 left-3 z-10">
           <div className="flex items-center gap-1.5 bg-indigo-600 text-white px-3 py-1.5 rounded-full shadow-lg">
             <span className="text-sm font-bold">{currentPage}</span>
@@ -150,20 +151,19 @@ export function TourModal() {
             />
           )}
 
-          {/* REFERRALS */}
+          {/* REFERRALS - "wardHub is packed full of interactive guides" */}
           {currentSection === "referrals" && (
             <div className="space-y-4 text-center">
               <div className="py-2">
-                <h3 className="font-bold text-xl text-gray-900">Referral Workflows</h3>
+                <h3 className="font-bold text-xl text-gray-900">Interactive Guides</h3>
                 <p className="text-sm text-gray-600 mt-2 max-w-md mx-auto">
-                  New staff don&apos;t know how to make referrals. The Hub provides interactive,
-                  step-by-step SOPs — no more hunting through SharePoint or asking colleagues.
+                  wardHub is packed full of interactive guides &mdash; try one for yourself!
                 </p>
               </div>
 
               <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-200">
                 <p className="text-sm text-indigo-800 font-medium mb-3">
-                  Try it yourself — walk through a real IMHA referral workflow:
+                  Walk through a real IMHA referral, step by step:
                 </p>
                 <button
                   onClick={() => {
@@ -177,109 +177,132 @@ export function TourModal() {
               </div>
 
               <p className="text-xs text-gray-400">
-                Click through the steps, then return here to continue the tour.
+                Hit &ldquo;Return to Tour&rdquo; when you&apos;re done.
               </p>
 
-              <button
-                onClick={nextSection}
-                className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                Skip to next section →
-              </button>
+              <div className="flex items-center justify-between px-2 pt-2">
+                <button
+                  onClick={prevSection}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Back
+                </button>
+                <button
+                  onClick={nextSection}
+                  className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  Skip to next &rarr;
+                </button>
+              </div>
             </div>
           )}
 
-          {/* TASK DIARY */}
+          {/* TASK DIARY - "more than a set of interactive guides" */}
           {currentSection === "task-diary" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "The Ward Diary",
-                  narrative: "Coordinating jobs is the biggest challenge on the ward. The Hub gives every shift a shared, digital task board.",
+                  title: "More Than Guides",
+                  narrative: "wardHub is more than a set of interactive guides \u2014 a simple electronic diary helps you and your ward stay organised.",
                   visual: <DiaryMockup />,
-                },
-                {
-                  title: "Link Tasks to Referrals",
-                  narrative: "After making a referral, create a patient task linked to it. Staff can see at a glance what needs chasing.",
-                  visual: <AddTaskMockup />,
-                },
-                {
-                  title: "Schedule Appointments",
-                  narrative: "Book follow-up appointments linked to referrals — like a Section 117 meeting after an IMHA referral.",
-                  visual: <AppointmentMockup />,
                 },
               ]}
               currentSlide={currentSlide}
-              onNext={nextSlide}
-              onPrev={prevSlide}
+              onNext={nextSection}
+              onPrev={prevSection}
               onComplete={nextSection}
             />
           )}
 
-          {/* DAILY TASKS */}
-          {currentSection === "daily-tasks" && (
+          {/* DIARY INTEGRATION - seamless integration */}
+          {currentSection === "diary-integration" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "Daily Audit Tasks",
-                  narrative: "Small daily jobs we lose track of — fridge temps, drug checks, walkarounds. Each one links to a guide showing how to complete it.",
+                  title: "Everything Connected",
+                  narrative: "Diary items seamlessly integrate between patient, staff member and step-by-step guide. Leaving a full auditable log for the patient electronic records on discharge.",
+                  visual: (
+                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden max-w-md mx-auto">
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 text-white text-center">
+                        <p className="font-bold text-sm">Linked Task Example</p>
+                      </div>
+                      <div className="p-4 space-y-3">
+                        <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                          <p className="text-xs font-semibold text-indigo-500 uppercase">Guide</p>
+                          <p className="text-sm font-bold text-indigo-800">IMHA / Advocacy Referral</p>
+                        </div>
+                        <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                          <p className="text-xs font-semibold text-blue-500 uppercase">Patient</p>
+                          <p className="text-sm font-bold text-blue-800">Alex Morgan &mdash; Room 4, Byron Ward</p>
+                        </div>
+                        <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                          <p className="text-xs font-semibold text-purple-500 uppercase">Assigned To</p>
+                          <p className="text-sm font-bold text-purple-800">Sarah Chen (Named Nurse)</p>
+                        </div>
+                        <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                          <p className="text-xs font-semibold text-green-500 uppercase">Audit Trail</p>
+                          <p className="text-sm text-green-800">Created &rarr; Claimed &rarr; In Progress &rarr; Complete</p>
+                          <p className="text-xs text-green-600 mt-1">Full log compiled on discharge</p>
+                        </div>
+                      </div>
+                    </div>
+                  ),
+                },
+              ]}
+              currentSlide={currentSlide}
+              onNext={nextSection}
+              onPrev={prevSection}
+              onComplete={nextSection}
+            />
+          )}
+
+          {/* NEXUS NUDGE - audit compliance */}
+          {currentSection === "nexus-nudge" && (
+            <TourSlideshow
+              slides={[
+                {
+                  title: "Improve Audit Compliance",
+                  narrative: "Gentle nudges to complete those daily assurance dashboard items on Nexus. Nudges stop when Nexus reports the job completed.",
                   visual: <NexusBadgeMockup completed={false} />,
                 },
               ]}
               currentSlide={currentSlide}
-              onNext={nextSlide}
-              onPrev={prevSlide}
+              onNext={nextSection}
+              onPrev={prevSection}
               onComplete={nextSection}
             />
           )}
 
-          {/* NEXUS SYNC */}
-          {currentSection === "nexus-sync" && (
+          {/* NEXUS DETAIL - fridge temp with links */}
+          {currentSection === "nexus-detail" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "Nexus Auto-Complete",
-                  narrative: "Someone completed fridge temps on Nexus Assurance without logging into the Hub? No worries — it auto-completes the task here too.",
+                  title: "Linked to Guides & Nexus",
+                  narrative: "Each job tile holds direct links to the Nexus audit and links to a guide showing how to complete the real-world task. Great for new starters.",
                   visual: <NexusBadgeMockup completed={true} />,
                 },
               ]}
               currentSlide={currentSlide}
-              onNext={nextSlide}
-              onPrev={prevSlide}
+              onNext={nextSection}
+              onPrev={prevSection}
               onComplete={nextSection}
             />
           )}
 
-          {/* CLAIMING */}
-          {currentSection === "claiming" && (
+          {/* KANBAN - your own diary view */}
+          {currentSection === "kanban" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "Claim & Track Tasks",
-                  narrative: "What if someone else was already working on it? Staff claim tasks to prevent duplicate work. The Kanban board shows what you own.",
+                  title: "Your Own Diary View",
+                  narrative: "See jobs you have picked up and track your progress. Shared with the ward diary view \u2014 team communication done for you.",
                   visual: <KanbanMockup />,
                 },
               ]}
               currentSlide={currentSlide}
-              onNext={nextSlide}
-              onPrev={prevSlide}
-              onComplete={nextSection}
-            />
-          )}
-
-          {/* GDPR */}
-          {currentSection === "gdpr" && (
-            <TourSlideshow
-              slides={[
-                {
-                  title: "Data Protection",
-                  narrative: "Minimal data, maximum audit trail. On discharge, everything compiles into a single document for the patient record.",
-                  visual: <GdprMockup />,
-                },
-              ]}
-              currentSlide={currentSlide}
-              onNext={nextSlide}
-              onPrev={prevSlide}
+              onNext={nextSection}
+              onPrev={prevSection}
               onComplete={nextSection}
               completeLabel="Finish Tour"
             />
@@ -294,7 +317,7 @@ export function TourModal() {
               <div>
                 <h2 className="text-2xl font-black text-gray-900">Tour Complete!</h2>
                 <p className="text-gray-500 mt-2 max-w-md mx-auto">
-                  You&apos;ve seen the key features. Explore the app yourself, or check the Dev Panel
+                  You&apos;ve seen the key features. Explore wardHub yourself, or check the Dev Panel
                   for the full technical documentation and business case.
                 </p>
               </div>
@@ -315,6 +338,12 @@ export function TourModal() {
                   View Dev Panel
                 </button>
               </div>
+              <button
+                onClick={prevSection}
+                className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                &larr; Go back
+              </button>
             </div>
           )}
         </div>

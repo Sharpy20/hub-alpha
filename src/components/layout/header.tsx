@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Bookmark, FileText, BookOpen, LayoutGrid, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Bookmark, FileText, BookOpen, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 
 export function Header() {
   const router = useRouter();
-  const { user, setUser, version, setVersion, hasFeature, activeWard, setActiveWard, allWards } = useApp();
+  const { user, setUser, activeWard, setActiveWard, allWards } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [settingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
@@ -17,7 +17,6 @@ export function Header() {
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const settingsDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle selection changes with feedback and auto-close
   const handleWardChange = (ward: string) => {
     setActiveWard(ward);
     setSavedFeedback("Ward");
@@ -38,16 +37,6 @@ export function Header() {
     }
   };
 
-  const handleVersionChange = (newVersion: "light" | "medium" | "max" | "max_plus") => {
-    setVersion(newVersion);
-    setSavedFeedback("Version");
-    setTimeout(() => {
-      setSavedFeedback(null);
-      setProfileDropdownOpen(false);
-    }, 800);
-  };
-
-  // Mobile handlers
   const handleMobileWardChange = (ward: string) => {
     setActiveWard(ward);
     setSavedFeedback("Ward");
@@ -68,39 +57,21 @@ export function Header() {
     }
   };
 
-  const handleMobileVersionChange = (newVersion: "light" | "medium" | "max" | "max_plus") => {
-    setVersion(newVersion);
-    setSavedFeedback("Version");
-    setTimeout(() => {
-      setSavedFeedback(null);
-      setMobileMenuOpen(false);
-    }, 800);
-  };
-
   const handleLogout = async () => {
-    // Clear user state
     setUser(null);
     setMobileMenuOpen(false);
     setProfileDropdownOpen(false);
-
-    // Clear all localStorage items
-    localStorage.removeItem("inpatient_hub_user");
-    localStorage.removeItem("inpatient_hub_version");
-    localStorage.removeItem("inpatient_hub_gdpr");
-    localStorage.removeItem("inpatient_hub_active_ward");
-
-    // Call logout API to clear the site access cookie
+    localStorage.removeItem("wardhub_user");
+    localStorage.removeItem("wardhub_gdpr");
+    localStorage.removeItem("wardhub_active_ward");
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } catch {
       // Continue with redirect even if API call fails
     }
-
-    // Redirect to password page
     router.push("/password");
   };
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
@@ -114,13 +85,6 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const versionLabels = {
-    light: { label: "Light", icon: "🌱" },
-    medium: { label: "Medium", icon: "🌿" },
-    max: { label: "Max", icon: "🌳" },
-    max_plus: { label: "Max+", icon: "🚀" },
-  };
-
   const roleLabels: Record<string, string> = {
     staff: "Staff",
     lead: "Lead",
@@ -130,30 +94,26 @@ export function Header() {
   };
 
   const { startTour } = useTour();
-  const showTasks = hasFeature("ward_tasks");
-  const showPatients = hasFeature("patient_list");
   const isViewingOtherWard = user && activeWard !== user.ward;
   const canAccessAdmin = !!user;
 
   return (
     <>
-      {/* Skip link for accessibility - visible on focus */}
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
 
-      {/* Header with white/clear background */}
       <header className="bg-white sticky top-0 z-30 shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
 
-            {/* Logo and title - clickable to home (replaces Home link - item 18a) */}
+            {/* Logo - wardHub branding */}
             <Link href="/" className="flex items-center gap-2 group">
               <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-                <span className="text-xl">🏥</span>
+                <span className="text-xl">&#x1F3E5;</span>
               </div>
               <div className="leading-none">
-                <p className="text-xs font-bold text-gray-500 group-hover:text-indigo-500 transition-colors">Inpatient</p>
+                <p className="text-xs font-bold text-gray-500 group-hover:text-indigo-500 transition-colors">ward</p>
                 <p className="text-xl font-black text-gray-900 group-hover:text-indigo-700 transition-colors -mt-0.5">Hub</p>
               </div>
             </Link>
@@ -166,7 +126,6 @@ export function Header() {
               <Sparkles className="w-4 h-4" />
               <span className="hidden lg:inline">Interactive Demo</span>
             </button>
-            {/* Mobile tour button - icon only */}
             <button
               onClick={startTour}
               className="sm:hidden w-9 h-9 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg flex items-center justify-center shadow-md"
@@ -174,67 +133,41 @@ export function Header() {
               <Sparkles className="w-4 h-4" />
             </button>
 
-            {/* Desktop nav - separate tiles with gaps (item 18c) */}
+            {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-3">
-              {/* Ward Tools Group - Diary, Tasks, Patients */}
-              {(showTasks || showPatients) && (
-                <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
-                  {showTasks && (
-                    <>
-                      <Link
-                        href="/tasks"
-                        className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
-                      >
-                        <CalendarDays className="w-4 h-4" />
-                        Diary
-                      </Link>
-                      <Link
-                        href="/my-tasks"
-                        className="px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
-                      >
-                        <ClipboardList className="w-4 h-4" />
-                        Tasks
-                      </Link>
-                    </>
-                  )}
-                  {showPatients && (
-                    <Link
-                      href="/patients"
-                      className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
-                    >
-                      <Users className="w-4 h-4" />
-                      Patients
-                    </Link>
-                  )}
-                </div>
-              )}
-
-              {/* Resources Group - Bookmarks, Referrals, Guides */}
+              {/* Ward Tools Group */}
               <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
-                <Link
-                  href="/bookmarks"
-                  className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
-                >
-                  <Bookmark className="w-4 h-4" />
-                  Bookmarks
+                <Link href="/tasks" className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                  <CalendarDays className="w-4 h-4" />
+                  Diary
                 </Link>
-                <Link
-                  href="/referrals"
-                  className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
-                >
-                  <FileText className="w-4 h-4" />
-                  Referrals
+                <Link href="/my-tasks" className="px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                  <ClipboardList className="w-4 h-4" />
+                  Tasks
                 </Link>
-                <Link
-                  href="/how-to"
-                  className="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  Guides
+                <Link href="/patients" className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                  <Users className="w-4 h-4" />
+                  Patients
                 </Link>
               </div>
 
-              {/* More dropdown (renamed from Settings) */}
+              {/* Resources Group */}
+              <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
+                <Link href="/bookmarks" className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                  <Bookmark className="w-4 h-4" />
+                  Bookmarks
+                </Link>
+                <Link href="/referrals" className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                  <FileText className="w-4 h-4" />
+                  Guides
+                </Link>
+                <Link href="/how-to" className="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                  <BookOpen className="w-4 h-4" />
+                  How-To
+                </Link>
+              </div>
+
+              {/* More dropdown */}
               <div className="relative" ref={settingsDropdownRef}>
                 <button
                   onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
@@ -243,102 +176,35 @@ export function Header() {
                   className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
                 >
                   More
-                  <ChevronDown className={`w-4 h-4 transition-transform ${settingsDropdownOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${settingsDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
                 </button>
 
                 {settingsDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
-                    {/* Intro Guide */}
-                    <Link
-                      href="/intro-guide"
-                      onClick={() => setSettingsDropdownOpen(false)}
-                      className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
-                    >
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <HelpCircle className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">Intro Guide</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Learn how to use Inpatient Hub with visual guides and tips</p>
-                      </div>
+                    <Link href="/intro-guide" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">Intro Guide</p><p className="text-xs text-gray-500 mt-0.5">Learn how to use wardHub with visual guides and tips</p></div>
                     </Link>
-
-                    {/* FAQ */}
-                    <Link
-                      href="/faq"
-                      onClick={() => setSettingsDropdownOpen(false)}
-                      className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
-                    >
-                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <CircleHelp className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">FAQ</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Frequently asked questions about the app</p>
-                      </div>
+                    <Link href="/faq" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><CircleHelp className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">FAQ</p><p className="text-xs text-gray-500 mt-0.5">Frequently asked questions about the app</p></div>
                     </Link>
-
-                    {/* Feedback */}
-                    <Link
-                      href="/feedback"
-                      onClick={() => setSettingsDropdownOpen(false)}
-                      className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
-                    >
-                      <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <MessageSquare className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">Feedback</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Share ideas, report issues, and help shape this tool during alpha</p>
-                      </div>
+                    <Link href="/feedback" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">Feedback</p><p className="text-xs text-gray-500 mt-0.5">Share ideas, report issues, and help shape this tool during alpha</p></div>
                     </Link>
-
-                    {/* Data Sources Audit */}
-                    <Link
-                      href="/data-sources"
-                      onClick={() => setSettingsDropdownOpen(false)}
-                      className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
-                    >
-                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Database className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">Data Sources</p>
-                        <p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p>
-                      </div>
+                    <Link href="/data-sources" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">Data Sources</p><p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p></div>
                     </Link>
-
-                    {/* Patient Reports - only for Max/Max+ */}
-                    {showPatients && (
-                      <Link
-                        href="/reports"
-                        onClick={() => setSettingsDropdownOpen(false)}
-                        className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100"
-                      >
-                        <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <BarChart3 className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">Progress Reports</p>
-                          <p className="text-xs text-gray-500 mt-0.5">Generate patient progress audits for wards or individuals</p>
-                        </div>
-                      </Link>
-                    )}
-
-                    {/* Editor (Admin) - visible to all logged-in users */}
+                    <Link href="/reports" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">Progress Reports</p><p className="text-xs text-gray-500 mt-0.5">Generate patient progress audits for wards or individuals</p></div>
+                    </Link>
                     {canAccessAdmin && (
-                      <Link
-                        href="/admin"
-                        onClick={() => setSettingsDropdownOpen(false)}
-                        className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Pencil className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900">Editor</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{user?.isContributor ? "Create and edit referral workflows, how-to guides, and bookmarks" : "Request creator privileges to edit content"}</p>
-                        </div>
+                      <Link href="/admin" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors">
+                        <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-5 h-5 text-white" /></div>
+                        <div><p className="font-semibold text-gray-900">Editor</p><p className="text-xs text-gray-500 mt-0.5">{user?.isContributor ? "Create and edit guides, how-to articles, and bookmarks" : "Request creator privileges to edit content"}</p></div>
                       </Link>
                     )}
                   </div>
@@ -346,7 +212,7 @@ export function Header() {
               </div>
             </nav>
 
-            {/* My Profile dropdown - combines version/role/user/ward (item 18c) */}
+            {/* My Profile dropdown */}
             <div className="hidden md:flex items-center gap-2">
               {user ? (
                 <div className="relative" ref={profileDropdownRef}>
@@ -356,24 +222,22 @@ export function Header() {
                     aria-expanded={profileDropdownOpen}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors font-semibold ${
                       isViewingOtherWard
-                        ? 'bg-amber-100 text-amber-800 hover:bg-amber-200'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? "bg-amber-100 text-amber-800 hover:bg-amber-200"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                   >
                     <User className="w-4 h-4" aria-hidden="true" />
                     <span className="max-w-[120px] truncate">{user.name}</span>
-                    <ChevronDown className={`w-4 h-4 transition-transform ${profileDropdownOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                    <ChevronDown className={`w-4 h-4 transition-transform ${profileDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
                   </button>
 
                   {profileDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
-                      {/* User info header */}
                       <div className="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
                         <p className="font-bold text-lg">{user.name}</p>
                         <p className="text-sm text-white/80">{roleLabels[user.role] || user.role}</p>
                       </div>
 
-                      {/* Saved feedback banner */}
                       {savedFeedback && (
                         <div className="p-3 bg-emerald-50 border-b border-emerald-200 flex items-center gap-2 text-emerald-700">
                           <Check className="w-4 h-4" />
@@ -381,7 +245,6 @@ export function Header() {
                         </div>
                       )}
 
-                      {/* Ward selector */}
                       <div className="p-3 border-b border-gray-100">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                           <Building2 className="w-3 h-3 inline mr-1" />
@@ -394,18 +257,17 @@ export function Header() {
                               onClick={() => handleWardChange(ward)}
                               className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
                                 activeWard === ward
-                                  ? 'bg-indigo-100 text-indigo-700'
-                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                  ? "bg-indigo-100 text-indigo-700"
+                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                               }`}
                             >
                               {ward}
-                              {ward === user.ward && ' ★'}
+                              {ward === user.ward && " \u2605"}
                             </button>
                           ))}
                         </div>
                       </div>
 
-                      {/* Role selector (demo mode) */}
                       <div className="p-3 border-b border-gray-100">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                           <User className="w-3 h-3 inline mr-1" />
@@ -418,8 +280,8 @@ export function Header() {
                               onClick={() => handleRoleChange(role)}
                               className={`px-2 py-1.5 rounded text-xs font-medium transition-colors ${
                                 user.role === role
-                                  ? 'bg-emerald-100 text-emerald-700'
-                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                  ? "bg-emerald-100 text-emerald-700"
+                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                               }`}
                             >
                               {roleLabels[role]}
@@ -428,38 +290,6 @@ export function Header() {
                         </div>
                       </div>
 
-                      {/* Version selector (item 12 - role/version switcher) */}
-                      <div className="p-3 border-b border-gray-100">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                          <Sparkles className="w-3 h-3 inline mr-1" />
-                          Demo Version
-                        </p>
-                        <div className="grid grid-cols-2 gap-1">
-                          {(Object.entries(versionLabels) as [string, { label: string; icon: string }][]).map(([key, val]) => (
-                            <button
-                              key={key}
-                              onClick={() => handleVersionChange(key as "light" | "medium" | "max" | "max_plus")}
-                              className={`px-2 py-1.5 rounded text-xs font-medium transition-colors ${
-                                version === key
-                                  ? 'bg-purple-100 text-purple-700'
-                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                              }`}
-                            >
-                              {val.icon} {val.label}
-                            </button>
-                          ))}
-                        </div>
-                        <Link
-                          href="/versions"
-                          onClick={() => setProfileDropdownOpen(false)}
-                          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold transition-colors"
-                        >
-                          <LayoutGrid className="w-3.5 h-3.5" />
-                          Compare All Features
-                        </Link>
-                      </div>
-
-                      {/* Logout */}
                       <button
                         onClick={handleLogout}
                         className="w-full px-4 py-3 text-left text-sm font-medium text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
@@ -487,11 +317,7 @@ export function Header() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -500,153 +326,57 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200">
             <nav className="flex flex-col px-4 py-2">
-              {showTasks && (
-                <>
-                  <Link
-                    href="/tasks"
-                    className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <CalendarDays className="w-5 h-5 text-indigo-600" />
-                    Diary
-                  </Link>
-                  <Link
-                    href="/my-tasks"
-                    className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <ClipboardList className="w-5 h-5 text-purple-600" />
-                    Tasks
-                  </Link>
-                </>
-              )}
-              {showPatients && (
-                <Link
-                  href="/patients"
-                  className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Users className="w-5 h-5 text-teal-600" />
-                  Patients
-                </Link>
-              )}
-              <Link
-                href="/bookmarks"
-                className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Bookmark className="w-5 h-5 text-amber-600" />
-                Bookmarks
+              <Link href="/tasks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <CalendarDays className="w-5 h-5 text-indigo-600" /> Diary
               </Link>
-              <Link
-                href="/referrals"
-                className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <FileText className="w-5 h-5 text-rose-600" />
-                Referrals
+              <Link href="/my-tasks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <ClipboardList className="w-5 h-5 text-purple-600" /> Tasks
               </Link>
-              <Link
-                href="/how-to"
-                className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <BookOpen className="w-5 h-5 text-emerald-600" />
-                Guides
+              <Link href="/patients" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <Users className="w-5 h-5 text-teal-600" /> Patients
+              </Link>
+              <Link href="/bookmarks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <Bookmark className="w-5 h-5 text-amber-600" /> Bookmarks
+              </Link>
+              <Link href="/referrals" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <FileText className="w-5 h-5 text-rose-600" /> Guides
+              </Link>
+              <Link href="/how-to" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <BookOpen className="w-5 h-5 text-emerald-600" /> How-To
               </Link>
 
-              {/* More section */}
               <div className="py-3 border-b border-gray-100">
-                <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">
-                  More
-                </p>
+                <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">More</p>
                 <div className="space-y-2">
-                  <Link
-                    href="/intro-guide"
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <HelpCircle className="w-4 h-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">Intro Guide</p>
-                      <p className="text-xs text-gray-500">Learn how to use the app</p>
-                    </div>
+                  <Link href="/intro-guide" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Intro Guide</p><p className="text-xs text-gray-500">Learn how to use the app</p></div>
                   </Link>
-                  <Link
-                    href="/faq"
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <CircleHelp className="w-4 h-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">FAQ</p>
-                      <p className="text-xs text-gray-500">Common questions answered</p>
-                    </div>
+                  <Link href="/faq" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><CircleHelp className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">FAQ</p><p className="text-xs text-gray-500">Common questions answered</p></div>
                   </Link>
-                  <Link
-                    href="/feedback"
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <MessageSquare className="w-4 h-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">Feedback</p>
-                      <p className="text-xs text-gray-500">Share ideas and report issues</p>
-                    </div>
+                  <Link href="/feedback" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Feedback</p><p className="text-xs text-gray-500">Share ideas and report issues</p></div>
                   </Link>
-                  <Link
-                    href="/data-sources"
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Database className="w-4 h-4 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">Data Sources</p>
-                      <p className="text-xs text-gray-500">Audit log of all information</p>
-                    </div>
+                  <Link href="/data-sources" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Data Sources</p><p className="text-xs text-gray-500">Audit log of all information</p></div>
                   </Link>
-                  {showPatients && (
-                    <Link
-                      href="/reports"
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <BarChart3 className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm">Progress Reports</p>
-                        <p className="text-xs text-gray-500">Generate patient audits</p>
-                      </div>
-                    </Link>
-                  )}
+                  <Link href="/reports" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Progress Reports</p><p className="text-xs text-gray-500">Generate patient audits</p></div>
+                  </Link>
                   {canAccessAdmin && (
-                    <Link
-                      href="/admin"
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Pencil className="w-4 h-4 text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900 text-sm">Editor</p>
-                        <p className="text-xs text-gray-500">{user?.isContributor ? "Edit workflows and guides" : "Request creator privileges"}</p>
-                      </div>
+                    <Link href="/admin" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                      <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-4 h-4 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900 text-sm">Editor</p><p className="text-xs text-gray-500">{user?.isContributor ? "Edit guides and content" : "Request creator privileges"}</p></div>
                     </Link>
                   )}
                 </div>
               </div>
 
-              {/* Mobile Saved feedback banner */}
               {savedFeedback && (
                 <div className="py-3 px-4 bg-emerald-50 border-b border-emerald-200 flex items-center gap-2 text-emerald-700">
                   <Check className="w-4 h-4" />
@@ -654,8 +384,7 @@ export function Header() {
                 </div>
               )}
 
-              {/* Mobile Ward Switcher */}
-              {showTasks && user && (
+              {user && (
                 <div className="py-3 border-b border-gray-100">
                   <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">View Ward</p>
                   <div className="flex flex-wrap gap-2">
@@ -665,19 +394,18 @@ export function Header() {
                         onClick={() => handleMobileWardChange(ward)}
                         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                           activeWard === ward
-                            ? 'bg-indigo-100 text-indigo-700'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? "bg-indigo-100 text-indigo-700"
+                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                         }`}
                       >
                         {ward}
-                        {ward === user.ward && ' (Home)'}
+                        {ward === user.ward && " (Home)"}
                       </button>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Mobile Role Switcher */}
               {user && (
                 <div className="py-3 border-b border-gray-100">
                   <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">Demo Role</p>
@@ -688,8 +416,8 @@ export function Header() {
                         onClick={() => handleMobileRoleChange(role)}
                         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                           user.role === role
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                         }`}
                       >
                         {roleLabels[role]}
@@ -699,42 +427,12 @@ export function Header() {
                 </div>
               )}
 
-              {/* Mobile Version Switcher */}
-              {user && (
-                <div className="py-3 border-b border-gray-100">
-                  <p className="text-xs text-gray-500 font-semibold uppercase mb-2">Demo Version</p>
-                  <div className="flex flex-wrap gap-2">
-                    {(Object.entries(versionLabels) as [string, { label: string; icon: string }][]).map(([key, val]) => (
-                      <button
-                        key={key}
-                        onClick={() => handleMobileVersionChange(key as "light" | "medium" | "max" | "max_plus")}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                          version === key
-                            ? 'bg-purple-100 text-purple-700'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        }`}
-                      >
-                        {val.icon} {val.label}
-                      </button>
-                    ))}
-                  </div>
-                  <Link
-                    href="/versions"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold transition-colors"
-                  >
-                    <LayoutGrid className="w-4 h-4" />
-                    Compare All Features
-                  </Link>
-                </div>
-              )}
-
               {user ? (
                 <div className="py-3 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-bold text-gray-900">{user.name}</p>
                     <p className="text-xs text-gray-500 capitalize">
-                      {user.ward} · {user.role.replace("_", " ")}
+                      {user.ward} &middot; {user.role.replace("_", " ")}
                     </p>
                   </div>
                   <button

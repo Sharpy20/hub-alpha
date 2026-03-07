@@ -10,10 +10,10 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
           <div>
-            <h3 className="font-bold text-lg mb-3">Inpatient Hub</h3>
+            <h3 className="font-bold text-lg mb-3">wardHub</h3>
             <p className="text-sm text-white/70">
-              A ward management tool for NHS inpatient staff. Quick access to
-              resources, referral workflows, and clinical guides.
+              A reference and task management tool built around the needs of an
+              inpatient ward. Interactive guides and a simple electronic jobs diary.
             </p>
           </div>
 
@@ -22,35 +22,23 @@ export function Footer() {
             <h3 className="font-bold text-lg mb-3">Quick Links</h3>
             <ul className="space-y-2 text-sm text-white/70">
               <li>
-                <Link
-                  href="/bookmarks"
-                  className="hover:text-white transition-colors"
-                >
+                <Link href="/bookmarks" className="hover:text-white transition-colors">
                   Bookmarks
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/referrals"
-                  className="hover:text-white transition-colors"
-                >
-                  Referral Hub
+                <Link href="/referrals" className="hover:text-white transition-colors">
+                  Interactive Guides
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/how-to"
-                  className="hover:text-white transition-colors"
-                >
-                  How-To Guides
+                <Link href="/how-to" className="hover:text-white transition-colors">
+                  How-To Articles
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/gdpr"
-                  className="hover:text-white transition-colors"
-                >
-                  GDPR & Privacy
+                <Link href="/gdpr" className="hover:text-white transition-colors">
+                  GDPR &amp; Privacy
                 </Link>
               </li>
             </ul>
@@ -60,7 +48,7 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-3">Support</h3>
             <p className="text-sm text-white/70 mb-2">
-              This is a demo version with fictional data.
+              This is a demo with fictional data.
             </p>
             <p className="text-sm text-white/70 mb-4">
               For the live version, contact your ward administrator.
@@ -79,7 +67,7 @@ export function Footer() {
           <p className="text-xs text-white/40 font-medium tracking-wider uppercase">
             Derbyshire Healthcare NHS Foundation Trust
           </p>
-          <p>&copy; {currentYear} Inpatient Hub — Alpha Demo. Not for clinical use.</p>
+          <p>&copy; {currentYear} wardHub &mdash; Alpha Demo. Not for clinical use.</p>
           <div className="flex items-center justify-center gap-4 text-xs text-white/50">
             <Link href="/gdpr" className="hover:text-white transition-colors">Privacy</Link>
             <span>|</span>

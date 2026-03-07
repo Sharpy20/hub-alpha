@@ -24,7 +24,6 @@ import {
   Sparkles,
   ArrowRight
 } from "lucide-react";
-import { useApp } from "@/app/providers";
 
 // Dev panel password (demo only - production would use env/vault)
 const DEV_PANEL_PASSWORD = "Eft3&d3";
@@ -64,7 +63,6 @@ const NAV_SECTIONS = [
 ];
 
 export default function DevPanelPage() {
-  const { version } = useApp();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
@@ -78,7 +76,7 @@ export default function DevPanelPage() {
       setIsAuthenticated(true);
       // Audit log - production would use backend logging
     }
-  }, [version]);
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -212,7 +210,7 @@ export default function DevPanelPage() {
 
             {/* Mode indicator */}
             <div className="text-xs text-center text-nhs-mid-grey">
-              Current Mode: <span className="font-semibold uppercase">{version}</span>
+              wardHub Demo
             </div>
           </div>
         </aside>
@@ -254,17 +252,17 @@ function OverviewSection() {
         </CardHeader>
         <CardContent className="prose prose-sm max-w-none">
           <p>
-            <strong>Inpatient Hub</strong> is a ward-based clinical reference and task management tool
-            designed to reduce time spent searching for information and improve task coordination.
+            <strong>wardHub</strong> is a ward-based clinical reference and task management tool.
+            Interactive guides walk staff through referrals and ward processes step-by-step.
+            A simple electronic diary replaces the paper ward diary with a shared, auditable record.
           </p>
           <p>
-            Staff can access referral workflows, how-to guides, and useful bookmarks from any device.
-            In higher deployment tiers, it also provides ward diary functionality for task tracking
-            and patient list management.
+            No training needed &mdash; staff log in and go. Gentle nudges remind staff to complete
+            daily assurance items on Nexus, and stop automatically when the job is done.
           </p>
           <p>
-            The tool is designed with <strong>four deployment modes</strong> (Light → Max+) allowing
-            incremental adoption from a public demo through to full Nexus Assurance integration.
+            Built by ward staff, for ward staff. Zero cost to pilot. Designed to run on Trust IT
+            infrastructure when ready.
           </p>
         </CardContent>
       </Card>
@@ -277,72 +275,41 @@ function OverviewSection() {
           <div>
             <h3 className="text-base font-semibold text-nhs-dark-blue">The Problem</h3>
             <p>
-              Ward staff spend significant time searching for referral forms, phone numbers,
-              and clinical guidance. Task handovers rely on paper diaries or memory.
-              Information is scattered across SharePoint, FOCUS, and personal notes.
+              Ward staff spend time searching for referral forms, phone numbers, and clinical guidance
+              across FOCUS, SharePoint, and personal notes. Task handovers rely on a paper diary
+              with no audit trail. New starters take weeks to learn ward processes. Referrals that
+              should be made on admission get forgotten until discharge is planned.
             </p>
           </div>
 
           <div>
             <h3 className="text-base font-semibold text-nhs-dark-blue">The Solution</h3>
             <p>
-              A single, mobile-friendly portal that consolidates:
+              wardHub brings together three things in one place:
             </p>
             <ul>
-              <li><strong>Bookmarks</strong> — Quick links to frequently used resources</li>
-              <li><strong>Referral Workflows</strong> — Step-by-step guides with forms and templates</li>
-              <li><strong>How-To Guides</strong> — Clinical guidance (NEWS2, seizures, etc.)</li>
-              <li><strong>Ward Diary</strong> — Task tracking with claim/handover (Max+)</li>
-              <li><strong>Patient List</strong> — Discharge tracking and transfers (Max+)</li>
+              <li><strong>Interactive Guides</strong> &mdash; Step-by-step walkthroughs for referrals, assessments, and ward processes</li>
+              <li><strong>Electronic Jobs Diary</strong> &mdash; Shared task tracking with claim/handover, replacing the paper diary</li>
+              <li><strong>Nexus Nudges</strong> &mdash; Gentle reminders for daily assurance items that stop when Nexus confirms completion</li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-base font-semibold text-nhs-dark-blue">Deployment Modes</h3>
-            <table className="text-sm">
-              <thead>
-                <tr>
-                  <th>Mode</th>
-                  <th>Auth</th>
-                  <th>Data</th>
-                  <th>Features</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Light</strong></td>
-                  <td>Demo login</td>
-                  <td>Public only</td>
-                  <td>Bookmarks, Referrals, Guides</td>
-                </tr>
-                <tr>
-                  <td><strong>Medium</strong></td>
-                  <td>Trust auth</td>
-                  <td>Internal (no PII)</td>
-                  <td>+ Internal content</td>
-                </tr>
-                <tr>
-                  <td><strong>Max</strong></td>
-                  <td>Trust SSO</td>
-                  <td>PII included</td>
-                  <td>+ Ward Diary, Patients</td>
-                </tr>
-                <tr>
-                  <td><strong>Max+</strong></td>
-                  <td>Trust SSO + Nexus</td>
-                  <td>Nexus audit sync</td>
-                  <td>+ Nexus Assurance sync</td>
-                </tr>
-              </tbody>
-            </table>
+            <h3 className="text-base font-semibold text-nhs-dark-blue">Key Differentiators</h3>
+            <ul>
+              <li><strong>No training required</strong> &mdash; the interactive guides ARE the training</li>
+              <li><strong>Built by ward staff</strong> &mdash; designed by people who do the job every day</li>
+              <li><strong>Zero cost</strong> &mdash; runs on Trust IT infrastructure with no licensing fees</li>
+              <li><strong>Auditable</strong> &mdash; full log of who did what, compiled on discharge</li>
+            </ul>
           </div>
 
           <div>
             <h3 className="text-base font-semibold text-nhs-dark-blue">Governance Fit</h3>
             <p>
-              Each mode has appropriate controls. Light has no PII and public hosting.
-              Max+ requires DPIA, clinical safety review, and API approval before deployment.
-              The tool is designed to slot into existing Trust IG frameworks.
+              The demo uses fictional data only. When deployed on Trust infrastructure, patient data
+              handling follows existing IG frameworks. DPIA and DCB 0129/0160 clinical safety review
+              planned before any live deployment with real data.
             </p>
           </div>
         </CardContent>
@@ -361,15 +328,15 @@ function BusinessCaseSection() {
       content: (
         <div className="prose prose-sm max-w-none text-nhs-dark-grey space-y-3">
           <p>
-            <strong>Inpatient Hub</strong> is a ward-based clinical reference and task management tool designed
-            to address the fragmented information landscape on mental health inpatient wards. Staff currently
-            spend significant time searching for referral forms, phone numbers, and guidance across multiple
-            systems (FOCUS, SharePoint, paper diaries, personal notes).
+            <strong>wardHub</strong> is a ward-based clinical reference and task management tool. It brings together
+            interactive step-by-step guides for common ward tasks (referrals, assessments, processes), a simple
+            electronic jobs diary to improve communication flow between shifts, and gentle nudges to complete
+            daily assurance items on Nexus.
           </p>
           <p>
-            The Hub consolidates this into a single, accessible platform — starting with zero-cost deployment
-            and scaling through four modes as governance approvals are obtained. This business case seeks approval
-            for a <strong>zero-cost pilot</strong> on one ward to demonstrate value before wider rollout.
+            The tool requires <strong>no training</strong> &mdash; staff log in and go. Interactive guides walk them
+            through each process. The electronic diary replaces the paper ward diary with a shared, auditable record.
+            Nexus nudges stop automatically when the job is marked complete on the assurance dashboard.
           </p>
         </div>
       ),
@@ -379,23 +346,23 @@ function BusinessCaseSection() {
       title: "2. Background & Current State",
       content: (
         <div className="space-y-3 text-sm text-nhs-dark-grey">
-          <p>Ward staff at Derbyshire Healthcare NHS Foundation Trust currently rely on:</p>
+          <p>Ward staff at Derbyshire Healthcare NHS Foundation Trust currently face:</p>
           <div className="grid sm:grid-cols-2 gap-3">
             <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-              <p className="font-semibold text-red-800">FOCUS Intranet</p>
-              <p className="text-red-700">Information scattered across pages; hard to navigate under time pressure</p>
+              <p className="font-semibold text-red-800">FOCUS Gaps</p>
+              <p className="text-red-700">The intranet holds useful information but it&apos;s scattered, hard to navigate under time pressure, and doesn&apos;t guide staff through multi-step processes</p>
             </div>
             <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-              <p className="font-semibold text-red-800">SharePoint / Shared Drives</p>
-              <p className="text-red-700">Forms buried in folder structures; version control issues</p>
+              <p className="font-semibold text-red-800">Paper Ward Diary</p>
+              <p className="text-red-700">No audit trail, tasks missed during handovers, no way to track who claimed what or whether follow-ups happened</p>
             </div>
             <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-              <p className="font-semibold text-red-800">Paper Ward Diaries</p>
-              <p className="text-red-700">No audit trail; tasks easily missed during handovers</p>
+              <p className="font-semibold text-red-800">Delayed Discharges</p>
+              <p className="text-red-700">Referrals that should have been made on admission get forgotten &mdash; discovered weeks later when discharge is planned, causing avoidable delays</p>
             </div>
             <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-              <p className="font-semibold text-red-800">Personal Notes / Memory</p>
-              <p className="text-red-700">Knowledge lost when staff leave; steep learning curve for new starters</p>
+              <p className="font-semibold text-red-800">Onboarding Gap</p>
+              <p className="text-red-700">New starters, bank, and agency staff take weeks to learn ward processes that could be guided step-by-step from day one</p>
             </div>
           </div>
         </div>
@@ -408,24 +375,24 @@ function BusinessCaseSection() {
         <div className="space-y-3 text-sm text-nhs-dark-grey">
           <ul className="space-y-2">
             <li className="flex gap-2">
-              <span className="text-red-500 font-bold">•</span>
-              <span><strong>New staff can&apos;t find forms</strong> — Referral processes rely on asking colleagues, leading to delays and inconsistency</span>
+              <span className="text-red-500 font-bold">&bull;</span>
+              <span><strong>Delayed discharges from missed referrals</strong> &mdash; An IMHA referral not made on admission means the patient waits weeks longer than necessary. wardHub prompts the referral and tracks follow-up automatically</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-red-500 font-bold">•</span>
-              <span><strong>No audit trail for tasks</strong> — Paper diaries don&apos;t provide evidence of task completion for CQC inspections</span>
+              <span className="text-red-500 font-bold">&bull;</span>
+              <span><strong>Compliance tracking is manual</strong> &mdash; Fridge temps, controlled drugs counts, walkarounds &mdash; all checked on Nexus but not linked to the ward diary. wardHub nudges staff and stops when Nexus confirms completion</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-red-500 font-bold">•</span>
-              <span><strong>Manual compliance tracking</strong> — Fridge temps, drug checks, and walkarounds recorded on paper or separate systems</span>
+              <span className="text-red-500 font-bold">&bull;</span>
+              <span><strong>Paper diaries have no audit trail</strong> &mdash; CQC inspectors ask &ldquo;show me evidence this was done.&rdquo; A paper diary can&apos;t. wardHub logs who did what, when, with full history on discharge</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-red-500 font-bold">•</span>
-              <span><strong>Poor handovers</strong> — Critical tasks fall through gaps between shifts without a shared digital record</span>
+              <span className="text-red-500 font-bold">&bull;</span>
+              <span><strong>Handover gaps between shifts</strong> &mdash; Critical tasks fall through without a shared digital record. wardHub carries tasks forward automatically and shows the whole team what&apos;s outstanding</span>
             </li>
             <li className="flex gap-2">
-              <span className="text-red-500 font-bold">•</span>
-              <span><strong>Steep learning curve</strong> — Bank and agency staff take weeks to learn ward processes that could be guided digitally</span>
+              <span className="text-red-500 font-bold">&bull;</span>
+              <span><strong>New staff can&apos;t find anything</strong> &mdash; &ldquo;Where&apos;s the IMHA form?&rdquo; &ldquo;What number do I call for the dietitian?&rdquo; wardHub answers these instantly with interactive guides</span>
             </li>
           </ul>
         </div>
@@ -438,35 +405,35 @@ function BusinessCaseSection() {
         <div className="grid sm:grid-cols-3 gap-4 text-sm">
           <div className="p-4 bg-red-50 rounded-xl border-2 border-red-200">
             <h4 className="font-bold text-red-800 mb-2">Option A: Do Nothing</h4>
-            <p className="text-red-700 mb-3">Continue with current systems. Staff keep using paper diaries, FOCUS searches, and personal notes.</p>
+            <p className="text-red-700 mb-3">Continue with paper diaries, FOCUS searches, and hoping new starters ask the right person.</p>
             <div className="space-y-1 text-red-600">
-              <p>• Ongoing inefficiency</p>
-              <p>• No audit improvement</p>
-              <p>• Risk remains unchanged</p>
+              <p>&bull; Ongoing inefficiency</p>
+              <p>&bull; No audit improvement</p>
+              <p>&bull; Discharge delays continue</p>
             </div>
             <div className="mt-3 p-2 bg-red-100 rounded text-center">
               <p className="font-semibold text-red-800">Not Recommended</p>
             </div>
           </div>
           <div className="p-4 bg-amber-50 rounded-xl border-2 border-amber-200">
-            <h4 className="font-bold text-amber-800 mb-2">Option B: Full Implementation</h4>
-            <p className="text-amber-700 mb-3">Deploy Max version across all wards simultaneously with patient data integration.</p>
+            <h4 className="font-bold text-amber-800 mb-2">Option B: Commercial Product</h4>
+            <p className="text-amber-700 mb-3">Procure a commercial ward management system. Lengthy procurement, training burden, annual licensing.</p>
             <div className="space-y-1 text-amber-600">
-              <p>• Higher risk</p>
-              <p>• Longer lead time</p>
-              <p>• Requires DPIA upfront</p>
+              <p>&bull; High cost (&pound;10k+ p/a)</p>
+              <p>&bull; 6-12 month procurement</p>
+              <p>&bull; Training required</p>
             </div>
             <div className="mt-3 p-2 bg-amber-100 rounded text-center">
-              <p className="font-semibold text-amber-800">Higher Risk</p>
+              <p className="font-semibold text-amber-800">Expensive &amp; Slow</p>
             </div>
           </div>
           <div className="p-4 bg-green-50 rounded-xl border-2 border-green-300 ring-2 ring-green-400">
-            <h4 className="font-bold text-green-800 mb-2">Option C: Phased Rollout</h4>
-            <p className="text-green-700 mb-3">Start with a free pilot on one ward, expand based on results, then integrate with Trust systems.</p>
+            <h4 className="font-bold text-green-800 mb-2">Option C: wardHub</h4>
+            <p className="text-green-700 mb-3">Built by ward staff, for ward staff. Free to pilot, hosted on Trust IT infrastructure when ready. No training needed.</p>
             <div className="space-y-1 text-green-600">
-              <p>• Zero initial cost</p>
-              <p>• Low risk start</p>
-              <p>• Evidence-based scaling</p>
+              <p>&bull; Zero cost pilot</p>
+              <p>&bull; No training burden</p>
+              <p>&bull; Trust IT hosts when ready</p>
             </div>
             <div className="mt-3 p-2 bg-green-200 rounded text-center">
               <p className="font-bold text-green-800">✓ Recommended</p>
@@ -485,35 +452,35 @@ function BusinessCaseSection() {
               <thead className="bg-nhs-pale-grey">
                 <tr>
                   <th className="text-left p-3">Phase</th>
-                  <th className="text-left p-3">Infrastructure</th>
+                  <th className="text-left p-3">Hosting</th>
                   <th className="text-left p-3">Development</th>
-                  <th className="text-left p-3">Monthly Cost</th>
+                  <th className="text-left p-3">Cost</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 <tr className="bg-green-50">
                   <td className="p-3 font-semibold">Pilot (1 ward)</td>
-                  <td className="p-3">Vercel free tier</td>
-                  <td className="p-3">Internal (ward staff)</td>
-                  <td className="p-3 font-bold text-green-700">£0</td>
+                  <td className="p-3">External free tier</td>
+                  <td className="p-3">Ward staff (in role)</td>
+                  <td className="p-3 font-bold text-green-700">&pound;0</td>
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold">Ward Rollout (all wards)</td>
-                  <td className="p-3">Vercel free tier + Supabase free tier</td>
-                  <td className="p-3">Internal (ward staff)</td>
-                  <td className="p-3 font-bold text-green-700">£0</td>
+                  <td className="p-3 font-semibold">Ward Rollout</td>
+                  <td className="p-3">Trust IT infrastructure</td>
+                  <td className="p-3">Ward staff (in role)</td>
+                  <td className="p-3 font-bold text-green-700">&pound;0</td>
                 </tr>
                 <tr>
-                  <td className="p-3 font-semibold">Trust-wide</td>
-                  <td className="p-3">Supabase Pro + Trust hosting</td>
-                  <td className="p-3">Internal dev support</td>
-                  <td className="p-3 font-semibold">~£25/month</td>
+                  <td className="p-3 font-semibold">Trust-wide + Nexus</td>
+                  <td className="p-3">Trust IT infrastructure</td>
+                  <td className="p-3">Ward staff + IT support</td>
+                  <td className="p-3 font-semibold">&pound;0 (Trust hosted)</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-            <p className="text-green-800 font-medium">The pilot phase requires zero financial investment. Costs only arise if the tool proves valuable enough to scale.</p>
+            <p className="text-green-800 font-medium">wardHub is designed to run on Trust IT infrastructure at no additional cost. The pilot uses free-tier external hosting. When the Trust is ready, it moves to internal servers with no licensing fees.</p>
           </div>
         </div>
       ),
@@ -522,38 +489,52 @@ function BusinessCaseSection() {
       id: "benefits",
       title: "6. Benefits",
       content: (
-        <div className="grid sm:grid-cols-2 gap-4 text-sm">
-          <div className="space-y-3">
-            <h4 className="font-bold text-nhs-dark-blue">Clinical Benefits</h4>
-            <div className="space-y-2">
-              <div className="p-2 bg-blue-50 rounded-lg">
-                <p className="text-blue-800">Standardised referral workflows reduce errors and missed steps</p>
-              </div>
-              <div className="p-2 bg-blue-50 rounded-lg">
-                <p className="text-blue-800">Digital audit trail for compliance evidence (CQC-ready)</p>
-              </div>
-              <div className="p-2 bg-blue-50 rounded-lg">
-                <p className="text-blue-800">Consistent guidance available to all staff, including bank/agency</p>
-              </div>
-              <div className="p-2 bg-blue-50 rounded-lg">
-                <p className="text-blue-800">Improved handovers with shared task visibility across shifts</p>
+        <div className="space-y-4 text-sm">
+          <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border-2 border-amber-300">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">&#11088;</span>
+              <h4 className="font-bold text-amber-800 text-lg">Massive Win: Reduced Onboarding</h4>
+            </div>
+            <p className="text-amber-900">
+              New starters, bank staff, and agency nurses can walk onto the ward and immediately follow
+              step-by-step guides for any process. No shadowing period needed for basic tasks. No
+              &ldquo;where do I find the form?&rdquo; questions. This alone saves hours per new starter
+              and reduces errors from day one.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <h4 className="font-bold text-nhs-dark-blue">Clinical Benefits</h4>
+              <div className="space-y-2">
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <p className="text-blue-800">Referrals made on admission, not discovered at discharge &mdash; reducing delayed discharges</p>
+                </div>
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <p className="text-blue-800">Full auditable log compiled on discharge for patient records</p>
+                </div>
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <p className="text-blue-800">Nexus nudges improve daily assurance compliance without nagging</p>
+                </div>
+                <div className="p-2 bg-blue-50 rounded-lg">
+                  <p className="text-blue-800">Improved handovers &mdash; shared task visibility across shifts</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="space-y-3">
-            <h4 className="font-bold text-nhs-dark-blue">Operational Benefits</h4>
-            <div className="space-y-2">
-              <div className="p-2 bg-green-50 rounded-lg">
-                <p className="text-green-800">Reduced onboarding time for new and temporary staff</p>
-              </div>
-              <div className="p-2 bg-green-50 rounded-lg">
-                <p className="text-green-800">Digital ward diary replaces paper with searchable records</p>
-              </div>
-              <div className="p-2 bg-green-50 rounded-lg">
-                <p className="text-green-800">Task claiming prevents duplicate work</p>
-              </div>
-              <div className="p-2 bg-green-50 rounded-lg">
-                <p className="text-green-800">Nexus integration automates compliance tracking (Max+)</p>
+            <div className="space-y-3">
+              <h4 className="font-bold text-nhs-dark-blue">Operational Benefits</h4>
+              <div className="space-y-2">
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <p className="text-green-800">Electronic diary replaces paper &mdash; searchable, auditable, CQC-ready</p>
+                </div>
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <p className="text-green-800">Task claiming prevents duplicate work across the team</p>
+                </div>
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <p className="text-green-800">Zero training cost &mdash; interactive guides ARE the training</p>
+                </div>
+                <div className="p-2 bg-green-50 rounded-lg">
+                  <p className="text-green-800">Built by ward staff who understand the problems first-hand</p>
+                </div>
               </div>
             </div>
           </div>
@@ -619,21 +600,21 @@ function BusinessCaseSection() {
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
             <div className="flex-1">
               <h4 className="font-bold text-nhs-black">Pilot Phase — One Ward</h4>
-              <p className="text-nhs-dark-grey mt-1">Deploy Light version on Byron Ward. Staff use bookmarks, referral workflows, and how-to guides. Gather feedback over 4-6 weeks. Zero cost, zero PII, no governance approvals needed beyond ward manager.</p>
+              <p className="text-nhs-dark-grey mt-1">Deploy wardHub on Byron Ward with demo data. Staff use interactive guides, bookmarks, and the electronic diary. Gather feedback over 4-6 weeks. Zero cost, zero PII, no governance approvals needed beyond ward manager.</p>
             </div>
           </div>
           <div className="flex gap-4 items-start">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white flex items-center justify-center font-bold flex-shrink-0">2</div>
             <div className="flex-1">
               <h4 className="font-bold text-nhs-black">Expand to All Wards</h4>
-              <p className="text-nhs-dark-grey mt-1">If pilot succeeds, roll out to remaining wards. Add ward diary functionality (Max version). Requires ward manager buy-in and basic access controls. Still no external costs with free-tier infrastructure.</p>
+              <p className="text-nhs-dark-grey mt-1">If pilot succeeds, roll out to remaining wards on Trust IT infrastructure. Real patient data introduced with appropriate access controls. Requires ward manager buy-in and DPIA approval. Zero external costs.</p>
             </div>
           </div>
           <div className="flex gap-4 items-start">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white flex items-center justify-center font-bold flex-shrink-0">3</div>
             <div className="flex-1">
               <h4 className="font-bold text-nhs-black">Trust Integration</h4>
-              <p className="text-nhs-dark-grey mt-1">Integrate with Nexus Assurance for automated audit compliance. Requires Trust tech team involvement for webhook setup. DPIA and clinical safety review at this stage. Estimated £25/month infrastructure cost.</p>
+              <p className="text-nhs-dark-grey mt-1">Integrate with Nexus Assurance for automated audit compliance. Requires Trust tech team involvement for webhook setup. Clinical safety review at this stage. Zero additional infrastructure cost &mdash; runs on existing Trust servers.</p>
             </div>
           </div>
         </div>
@@ -648,7 +629,7 @@ function BusinessCaseSection() {
             <p className="text-2xl mb-2">✓</p>
             <h4 className="font-bold text-green-800 text-lg mb-2">Approve Pilot Phase</h4>
             <p className="text-green-700">
-              Deploy the Light version of Inpatient Hub for alpha testing on Byron Ward at
+              Deploy wardHub for alpha testing on Byron Ward at
               <strong> zero cost</strong>. The pilot will run for 4-6 weeks with feedback collected
               from ward staff. Results will inform the decision on wider rollout.
             </p>
@@ -792,7 +773,7 @@ function TechnicalSpecSection() {
 │                      TRUST BOUNDARY                          │
 │  ┌──────────┐                                               │
 │  │  Staff   │ ◄───────► ┌─────────────────┐                 │
-│  │  (User)  │           │  Inpatient Hub  │                 │
+│  │  (User)  │           │  wardHub  │                 │
 │  └──────────┘           │    (Portal)     │                 │
 │                         └────────┬────────┘                 │
 │                                  │                          │
@@ -818,7 +799,7 @@ function TechnicalSpecSection() {
           <div className="bg-nhs-pale-grey p-4 rounded-lg font-mono text-xs overflow-x-auto">
             <pre>{`
 ┌─────────────────────────────────────────────────────────────┐
-│                    INPATIENT HUB                            │
+│                    WARDHUB                            │
 │                                                             │
 │  ┌─────────────────┐    ┌─────────────────┐                │
 │  │   Web App       │    │   API Routes    │                │
@@ -1274,7 +1255,7 @@ function DPIASection() {
         <CardContent className="space-y-4 text-sm">
           <div>
             <h3 className="font-semibold text-nhs-dark-grey">Project Name</h3>
-            <p className="text-nhs-dark-grey">Inpatient Hub (Ward Portal)</p>
+            <p className="text-nhs-dark-grey">wardHub (Ward Portal)</p>
           </div>
           <div>
             <h3 className="font-semibold text-nhs-dark-grey">Purpose</h3>
@@ -1556,7 +1537,7 @@ function ClinicalSafetySection() {
           <h2 className="text-lg font-bold text-nhs-black">Safety Case Outline</h2>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-nhs-dark-grey">
-          <p><strong>Claim:</strong> Inpatient Hub is safe to deploy for its intended use.</p>
+          <p><strong>Claim:</strong> wardHub is safe to deploy for its intended use.</p>
           <p><strong>Argument:</strong></p>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>All identified hazards have been assessed and controlled</li>

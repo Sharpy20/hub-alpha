@@ -156,7 +156,7 @@ const VERSIONS = [
 ];
 
 export default function VersionsPage() {
-  const { version } = useApp();
+  const version = "max_plus";
 
   return (
     <MainLayout>
@@ -177,7 +177,7 @@ export default function VersionsPage() {
             <div>
               <h1 className="text-3xl font-bold">Version Comparison</h1>
               <p className="text-white/80 mt-1">
-                Understanding the different deployment options for Inpatient Hub
+                Understanding the different deployment options for wardHub
               </p>
             </div>
           </div>

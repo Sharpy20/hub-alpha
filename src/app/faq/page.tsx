@@ -15,12 +15,12 @@ interface FAQItem {
 const FAQ_ITEMS: FAQItem[] = [
   {
     id: "what-is",
-    question: "What is Inpatient Hub?",
+    question: "What is wardHub?",
     icon: <HelpCircle className="w-5 h-5" />,
     answer: (
       <div className="space-y-3">
         <p>
-          Inpatient Hub is a ward resource tool designed for inpatient mental health staff at Derbyshire Healthcare NHS Foundation Trust. It brings together:
+          wardHub is a ward resource tool designed for inpatient mental health staff at Derbyshire Healthcare NHS Foundation Trust. It brings together:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Quick access bookmarks to frequently used services and helplines</li>
@@ -62,7 +62,7 @@ const FAQ_ITEMS: FAQItem[] = [
     icon: <Layers className="w-5 h-5" />,
     answer: (
       <div className="space-y-3">
-        <p>Inpatient Hub has four versions with progressively more features:</p>
+        <p>wardHub has multiple versions with progressively more features:</p>
         <div className="space-y-2">
           <div className="p-3 bg-green-50 rounded-lg border border-green-200">
             <p className="font-semibold text-green-800">Light</p>
@@ -114,14 +114,14 @@ const FAQ_ITEMS: FAQItem[] = [
     answer: (
       <div className="space-y-3">
         <p>
-          Yes, Inpatient Hub is designed to work on mobile devices. While some features work best on larger screens (like the ward diary calendar view), core features like bookmarks, referral workflows, and how-to guides are fully mobile-friendly.
+          Yes, wardHub is designed to work on mobile devices. While some features work best on larger screens (like the ward diary calendar view), core features like bookmarks, referral workflows, and how-to guides are fully mobile-friendly.
         </p>
         <p>
           For the best experience on mobile:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Use the hamburger menu to access navigation</li>
-          <li>Tap the Inpatient Hub logo to return home</li>
+          <li>Tap the wardHub logo to return home</li>
           <li>Use the mobile-optimised task views for diary features</li>
         </ul>
         <p className="text-sm text-gray-500">
@@ -181,7 +181,7 @@ const FAQ_ITEMS: FAQItem[] = [
           <strong>The demo version is NOT for clinical use.</strong> It contains fictional patient data and is intended for demonstration and feedback purposes only.
         </p>
         <p>
-          When deployed on Trust infrastructure (Medium/Max/Max+ versions), Inpatient Hub is designed to support clinical workflows including:
+          When deployed on Trust infrastructure (Medium/Max/Max+ versions), wardHub is designed to support clinical workflows including:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Referral tracking and documentation</li>
@@ -267,7 +267,7 @@ export default function FAQPage() {
             <div>
               <h1 className="text-3xl font-bold">Frequently Asked Questions</h1>
               <p className="text-white/80 mt-1">
-                Common questions about Inpatient Hub and how to use it
+                Common questions about wardHub and how to use it
               </p>
             </div>
           </div>

@@ -22,7 +22,7 @@ interface VerificationContextType {
 
 const VerificationContext = createContext<VerificationContextType | undefined>(undefined);
 
-const STORAGE_KEY = "inpatient-hub-verification";
+const STORAGE_KEY = "wardhub-verification";
 
 // Default: all content starts as AI generated
 const DEFAULT_VERIFICATION: VerificationInfo = {

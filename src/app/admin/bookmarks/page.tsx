@@ -49,7 +49,7 @@ export default function AdminBookmarksPage() {
 
   // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("inpatient_hub_bookmarks");
+    const saved = localStorage.getItem("wardhub_bookmarks");
     if (saved) {
       try {
         setBookmarks(JSON.parse(saved));
@@ -62,7 +62,7 @@ export default function AdminBookmarksPage() {
   // Save to localStorage
   const saveBookmarks = (newBookmarks: BookmarkType[]) => {
     setBookmarks(newBookmarks);
-    localStorage.setItem("inpatient_hub_bookmarks", JSON.stringify(newBookmarks));
+    localStorage.setItem("wardhub_bookmarks", JSON.stringify(newBookmarks));
     setSaveMessage("Saved!");
     setTimeout(() => setSaveMessage(null), 2000);
   };

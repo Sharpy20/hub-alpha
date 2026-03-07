@@ -4,28 +4,26 @@ import { MainLayout } from "@/components/layout";
 import { BookmarkCarousel } from "@/components/bookmarks";
 import { TodayWidget } from "@/components/diary";
 import { useApp } from "@/app/providers";
-import { useWardSettings } from "@/app/ward-settings-provider";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, Star, Plus, ExternalLink } from "lucide-react";
-import { bookmarks } from "@/lib/data/bookmarks";
+import { ArrowRight, ChevronDown } from "lucide-react";
 
 const QUICK_ACTIONS = [
   {
-    icon: "📋",
-    label: "Make a Referral",
-    description: "Step-by-step referral guides",
+    icon: "\uD83D\uDCCB",
+    label: "Interactive Guides",
+    description: "Step-by-step guides for referrals, processes and ward tasks",
     href: "/referrals",
     gradient: "from-indigo-500 to-indigo-700",
   },
   {
-    icon: "📖",
-    label: "How-To Guides",
-    description: "Clinical procedures & SOPs",
+    icon: "\uD83D\uDCD6",
+    label: "How-To Articles",
+    description: "Clinical procedures, observations and practical guides",
     href: "/how-to",
     gradient: "from-emerald-500 to-emerald-700",
   },
   {
-    icon: "🆘",
+    icon: "\uD83C\uDD98",
     label: "Crisis Numbers",
     description: "Emergency contacts",
     href: "/bookmarks?category=Crisis%20Support",
@@ -33,36 +31,23 @@ const QUICK_ACTIONS = [
   },
 ];
 
-const VERSION_OPTIONS = [
-  { value: "light", label: "Light", description: "Public resources only", sublabel: "No login required", icon: "🌱" },
-  { value: "medium", label: "Medium", description: "Internal SOPs & contacts", sublabel: "Trust network", icon: "🌿" },
-  { value: "max", label: "Max", description: "Ward diary, patients, tasks", sublabel: "Trust infrastructure", icon: "🌳" },
-  { value: "max_plus", label: "Max+", description: "Nexus Assurance sync", sublabel: "Trust webhook", icon: "🚀" },
-] as const;
-
 export default function HomePage() {
-  const { user, version, setVersion, hasFeature } = useApp();
-  const { userFavoriteBookmarks, toggleFavoriteBookmark } = useWardSettings();
-  const showTasks = hasFeature("ward_tasks");
-
-  // Get favorite bookmark objects
-  const favoriteBookmarks = bookmarks.filter((b) => userFavoriteBookmarks.includes(b.id));
+  const { user } = useApp();
 
   return (
     <MainLayout>
       <div className="space-y-8">
-        {/* Hero Section - Full width, big and welcoming */}
+        {/* Hero Section */}
         <section className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white rounded-2xl p-8 text-center relative overflow-hidden">
-          {/* Subtle NHS watermark */}
           <div className="absolute top-3 right-4 text-white/10 text-xs font-bold tracking-widest select-none">NHS</div>
           <p className="text-white/60 text-xs font-medium tracking-wider uppercase mb-3">
             Derbyshire Healthcare NHS Foundation Trust
           </p>
           <h1 className="text-3xl md:text-4xl font-bold mb-3">
-            {user ? `Welcome, ${user.name}` : "Inpatient Hub"}
+            {user ? `Welcome, ${user.name}` : "wardHub"}
           </h1>
           <p className="text-white/80 text-lg max-w-xl mx-auto">
-            Quick access to ward resources, referral workflows, and clinical guides.
+            Interactive guides, ward diary and quick access to the resources you need.
           </p>
           {user && (
             <div className="flex items-center justify-center gap-6 mt-5 text-sm text-white/70">
@@ -74,55 +59,14 @@ export default function HomePage() {
               {user.isContributor && <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">Contributor</span>}
             </div>
           )}
-          {!showTasks && !user && (
+          {!user && (
             <div className="flex justify-center mt-6">
               <ChevronDown className="w-8 h-8 text-white/60 animate-bounce" />
             </div>
           )}
         </section>
 
-        {/* User Favorites Section */}
-        {favoriteBookmarks.length > 0 && (
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                <Star className="w-6 h-6 text-amber-500 fill-amber-500" />
-                My Favorites
-              </h2>
-              <Link
-                href="/bookmarks"
-                className="text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
-              >
-                Manage
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {favoriteBookmarks.slice(0, 8).map((bookmark) => (
-                <a
-                  key={bookmark.id}
-                  href={bookmark.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group bg-white border-2 border-gray-100 rounded-xl p-4 hover:border-amber-300 hover:shadow-md transition-all no-underline"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <span className="text-2xl">{bookmark.icon}</span>
-                    <ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-amber-500 transition-colors" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 group-hover:text-amber-600 transition-colors">
-                    {bookmark.title}
-                  </h3>
-                  {bookmark.phone && (
-                    <p className="text-xs text-gray-500 mt-1">{bookmark.phone}</p>
-                  )}
-                </a>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Bookmark Carousel - Full width section */}
+        {/* Bookmark Carousel */}
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             Quick Links
@@ -130,7 +74,7 @@ export default function HomePage() {
           <BookmarkCarousel />
         </section>
 
-        {/* Quick Actions - Full width, stacked, colorful */}
+        {/* Quick Actions */}
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             I need to...
@@ -143,12 +87,8 @@ export default function HomePage() {
                     <span className="text-4xl">{action.icon}</span>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold">
-                      {action.label}
-                    </h3>
-                    <p className="text-white/80 text-base">
-                      {action.description}
-                    </p>
+                    <h3 className="text-xl font-bold">{action.label}</h3>
+                    <p className="text-white/80 text-base">{action.description}</p>
                   </div>
                   <ArrowRight className="w-6 h-6 text-white/70 flex-shrink-0" />
                 </div>
@@ -157,52 +97,16 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Today's Tasks Widget - Only for Medium+ */}
-        {showTasks && (
-          <section>
-            <TodayWidget />
-          </section>
-        )}
+        {/* Today's Tasks Widget */}
+        <section>
+          <TodayWidget />
+        </section>
 
-        {/* Version switcher - for demo */}
-        <section className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">
-            ⚙️ Demo Version Switcher
-          </h3>
-          <div className="grid grid-cols-2 gap-3">
-            {VERSION_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setVersion(opt.value)}
-                className={`p-4 rounded-xl text-left transition-all ${
-                  version === opt.value
-                    ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg"
-                    : "bg-white text-gray-900 border-2 border-transparent hover:border-indigo-300"
-                }`}
-              >
-                <p className="font-bold">{opt.icon} {opt.label}</p>
-                <p className={`text-sm ${version === opt.value ? "text-white/80" : "text-gray-500"}`}>
-                  {opt.description}
-                </p>
-                <p className={`text-xs mt-0.5 ${version === opt.value ? "text-white/60" : "text-gray-400"}`}>
-                  {opt.sublabel}
-                </p>
-              </button>
-            ))}
-          </div>
-          <Link
-            href="/versions"
-            className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors"
-          >
-            📊 Compare All Features
+        {/* GDPR link */}
+        <section className="text-center">
+          <Link href="/gdpr" className="text-sm text-indigo-600 hover:text-indigo-800">
+            GDPR &amp; Privacy
           </Link>
-          <p className="text-center text-sm text-gray-500 mt-3">
-            Current: <strong className="text-gray-900">{version.toUpperCase()}</strong>
-            {" · "}
-            <Link href="/gdpr" className="text-indigo-600 hover:text-indigo-800">
-              GDPR & Privacy
-            </Link>
-          </p>
         </section>
       </div>
     </MainLayout>

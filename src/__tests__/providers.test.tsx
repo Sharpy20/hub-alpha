@@ -1,5 +1,5 @@
-import { render, screen, act } from '@testing-library/react'
-import { Providers, useApp, AppVersion, FeatureFlag } from '@/app/providers'
+import { render } from '@testing-library/react'
+import { Providers, useApp, FeatureFlag } from '@/app/providers'
 import { ReactNode } from 'react'
 
 // Mock localStorage
@@ -39,14 +39,6 @@ describe('Providers', () => {
     localStorageMock.clear()
   })
 
-  it('provides default version as light', () => {
-    let context: ReturnType<typeof useApp> | null = null
-    renderWithProviders(
-      <TestConsumer onReady={(ctx) => { context = ctx }} />
-    )
-    expect(context?.version).toBe('light')
-  })
-
   it('provides allWards array', () => {
     let context: ReturnType<typeof useApp> | null = null
     renderWithProviders(
@@ -63,44 +55,24 @@ describe('hasFeature', () => {
     localStorageMock.clear()
   })
 
-  const featureTests: Array<{
-    version: AppVersion
-    feature: FeatureFlag
-    expected: boolean
-  }> = [
-    // Light version features
-    { version: 'light', feature: 'bookmarks', expected: true },
-    { version: 'light', feature: 'workflows', expected: true },
-    { version: 'light', feature: 'guides', expected: true },
-    { version: 'light', feature: 'ward_tasks', expected: false },
-    { version: 'light', feature: 'patient_list', expected: false },
-
-    // Medium version features (viewable resources only, no ward features)
-    { version: 'medium', feature: 'bookmarks_focus', expected: true },
-    { version: 'medium', feature: 'workflows_internal', expected: true },
-    { version: 'medium', feature: 'ward_tasks', expected: false },
-    { version: 'medium', feature: 'patient_list', expected: false },
-
-    // Max version features
-    { version: 'max', feature: 'patient_list', expected: true },
-    { version: 'max', feature: 'discharge_flow', expected: true },
-    { version: 'max', feature: 'nexus_sync', expected: false },
-
-    // Max+ version features
-    { version: 'max_plus', feature: 'nexus_sync', expected: true },
+  const features: FeatureFlag[] = [
+    'bookmarks',
+    'workflows',
+    'guides',
+    'ward_tasks',
+    'patient_list',
+    'discharge_flow',
+    'nexus_sync',
   ]
 
-  test.each(featureTests)(
-    '$version version should have $feature = $expected',
-    ({ version, feature, expected }) => {
-      localStorageMock.setItem('inpatient_hub_version', version)
-
+  test.each(features)(
+    'hasFeature(%s) always returns true',
+    (feature) => {
       let context: ReturnType<typeof useApp> | null = null
       renderWithProviders(
         <TestConsumer onReady={(ctx) => { context = ctx }} />
       )
-
-      expect(context?.hasFeature(feature)).toBe(expected)
+      expect(context?.hasFeature(feature)).toBe(true)
     }
   )
 })

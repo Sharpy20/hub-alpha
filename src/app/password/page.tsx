@@ -46,7 +46,7 @@ export default function PasswordPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-nhs-blue/10 mb-4">
               <Lock className="w-8 h-8 text-nhs-blue" />
             </div>
-            <h1 className="text-2xl font-bold text-nhs-blue">Inpatient Hub</h1>
+            <h1 className="text-2xl font-bold text-nhs-blue">wardHub</h1>
             <p className="text-nhs-dark-grey mt-2">
               Early Testing Access
             </p>

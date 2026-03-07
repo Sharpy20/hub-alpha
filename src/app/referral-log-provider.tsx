@@ -15,7 +15,7 @@ interface ReferralLogContextType {
 
 const ReferralLogContext = createContext<ReferralLogContextType | null>(null);
 
-const STORAGE_KEY = "inpatient-hub-referral-logs";
+const STORAGE_KEY = "wardhub-referral-logs";
 
 export function ReferralLogProvider({ children }: { children: ReactNode }) {
   const [referralLogs, setReferralLogs] = useState<ReferralLog[]>([]);

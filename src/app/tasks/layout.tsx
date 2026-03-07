@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Ward Diary | Inpatient Hub",
+  title: "Ward Diary | wardHub",
   description: "Ward task management and scheduling",
 };
 

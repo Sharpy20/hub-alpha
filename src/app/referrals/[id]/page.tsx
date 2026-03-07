@@ -111,9 +111,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
-        content: "Don't forget to update your job diary with this task.",
-        checkboxLabel: "I have added/updated my job diary",
+        title: "Follow-up Task",
+        content: "Would you like to schedule a follow-up task for this referral?",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -176,9 +176,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add PICU follow-up to your job diary.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -243,9 +243,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up to track safeguarding outcome.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -307,9 +307,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add dietitian review follow-up to your diary.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -372,9 +372,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for Starting Point feedback.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -438,9 +438,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for housing assessment outcome.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -514,9 +514,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for social care assessment. If S117 patient, ensure S117 meeting is booked (7 days notice required) — a S117 meeting MUST take place before discharge.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -580,7 +580,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up to confirm Social Worker attendance. The S117 meeting MUST take place before discharge — do not proceed with discharge until confirmed.\n\nIf you have any questions, speak with a member of the leadership team or contact Katie from Social Care directly.",
         checkboxLabel: "I have added the S117 meeting to my job diary and will follow up on Social Worker confirmation",
       },
@@ -645,9 +645,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for TV review.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -709,9 +709,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for dental appointment.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -773,9 +773,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for physio assessment.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -837,9 +837,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for OT assessment.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -902,9 +902,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for SALT assessment.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -964,9 +964,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add EDT follow-up to your job diary.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -1030,9 +1030,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add ERP follow-up to track assessment date.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -1104,7 +1104,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "CTR reviews have specific timescales - add diary entries for follow-up.",
         checkboxLabel: "I have added/updated my job diary for CTR timescales",
       },
@@ -1167,9 +1167,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
       {
         id: "reminder",
         type: "reminder",
-        title: "Job Diary",
+        title: "Follow-up Task",
         content: "Add follow-up for benefits review outcome.",
-        checkboxLabel: "I have added/updated my job diary",
+        checkboxLabel: "",
       },
       {
         id: "gdpr",
@@ -1232,9 +1232,9 @@ const DEFAULT_WORKFLOW: WorkflowData = {
     {
       id: "reminder",
       type: "reminder",
-      title: "Job Diary",
+      title: "Follow-up Task",
       content: "Don't forget to update your job diary.",
-      checkboxLabel: "I have added/updated my job diary",
+      checkboxLabel: "",
     },
     {
       id: "gdpr",
@@ -1339,7 +1339,7 @@ export default function WorkflowPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [referralLogged, setReferralLogged] = useState(false);
   const [criteriaConfirmed, setCriteriaConfirmed] = useState(false);
-  const [reminderConfirmed, setReminderConfirmed] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // IMHA-specific state
@@ -1404,7 +1404,7 @@ export default function WorkflowPage() {
     if (step.type === "consent") return patientConsent !== null;
     if (step.type === "section") return patientSection !== "";
     if (step.type === "area") return selectedArea !== null;
-    if (step.type === "reminder") return reminderConfirmed;
+    if (step.type === "reminder") return true;
     return true;
   };
 
@@ -1848,17 +1848,51 @@ export default function WorkflowPage() {
             )}
 
             {step.type === "reminder" && (
-              <label className="flex items-start gap-4 p-5 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl cursor-pointer border-2 border-orange-200 hover:border-orange-400 transition-colors">
-                <input
-                  type="checkbox"
-                  checked={reminderConfirmed}
-                  onChange={(e) => setReminderConfirmed(e.target.checked)}
-                  className="mt-1 w-6 h-6 rounded border-orange-400 text-orange-600 focus:ring-orange-500"
-                />
-                <span className="text-gray-800 font-medium text-lg">
-                  {step.checkboxLabel}
-                </span>
-              </label>
+              <div className="space-y-4">
+                <div className="p-5 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border-2 border-indigo-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Calendar className="w-6 h-6 text-indigo-600" />
+                    <span className="text-gray-800 font-semibold text-lg">Schedule a follow-up task?</span>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-4">
+                    e.g. &ldquo;Chase by telephone if no response in 7 days&rdquo;
+                  </p>
+                  <button
+                    onClick={() => {
+                      if (linkedPatient) {
+                        const futureDate = new Date();
+                        futureDate.setDate(futureDate.getDate() + 7);
+                        addTask({
+                          id: `task-followup-${Date.now()}`,
+                          type: "patient",
+                          title: `Follow up: ${workflow.title}`,
+                          category: "referral",
+                          patientName: linkedPatient.name,
+                          ward: linkedPatient.ward,
+                          priority: "routine",
+                          status: "pending",
+                          dueDate: futureDate.toISOString().split("T")[0],
+                          createdAt: new Date().toISOString().split("T")[0],
+                          createdBy: user?.name || "Unknown",
+                          carryOver: true,
+                          linkedReferralId: workflowId,
+                        });
+                        setShowFireworks(true);
+                        setTimeout(() => setShowFireworks(false), 3000);
+                      } else {
+                        setShowPatientPicker(true);
+                      }
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm"
+                  >
+                    <Calendar className="w-4 h-4" /> + Add Follow-up Task
+                  </button>
+                  {showFireworks && (
+                    <p className="text-green-600 text-sm font-medium mt-2">Follow-up task added to diary!</p>
+                  )}
+                </div>
+                <p className="text-xs text-gray-400 text-center">This is optional &mdash; skip ahead if not needed.</p>
+              </div>
             )}
 
             {step.type === "gdpr" && (
@@ -1907,8 +1941,11 @@ export default function WorkflowPage() {
                 </Button>
               )}
               <Button
-                onClick={() => router.push("/referrals")}
-                className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                onClick={() => {
+                  setShowFireworks(true);
+                  setTimeout(() => router.push("/referrals"), 2500);
+                }}
+                className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 relative overflow-hidden"
               >
                 <Check className="w-5 h-5 mr-2" />
                 Complete
@@ -1925,6 +1962,34 @@ export default function WorkflowPage() {
             </Button>
           )}
         </div>
+
+        {/* Fireworks celebration overlay */}
+        {showFireworks && isComplete && (
+          <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+            <div className="text-center animate-bounce">
+              <div className="text-6xl mb-2">🎉</div>
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl px-8 py-4 shadow-2xl border-2 border-green-300">
+                <p className="text-2xl font-black text-green-600">Well done!</p>
+                <p className="text-sm text-gray-500 mt-1">Referral complete</p>
+              </div>
+            </div>
+            <div className="absolute inset-0 overflow-hidden">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-3 h-3 rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `-5%`,
+                    backgroundColor: ["#DA291C", "#005EB8", "#007F3B", "#FFB81C", "#330072", "#AE2573"][i % 6],
+                    animation: `confetti-fall ${1.5 + Math.random() * 2}s ease-in forwards`,
+                    animationDelay: `${Math.random() * 0.5}s`,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Step guide at bottom */}
         <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-6">

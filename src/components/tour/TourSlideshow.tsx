@@ -24,14 +24,16 @@ export function TourSlideshow({ slides, currentSlide, onNext, onPrev, onComplete
   return (
     <div className="space-y-4">
       {/* Slide indicator */}
-      <div className="flex items-center justify-center gap-1.5">
-        {slides.map((_, i) => (
-          <div
-            key={i}
-            className={`h-1.5 rounded-full transition-all ${i === currentSlide ? "w-8 bg-indigo-500" : "w-1.5 bg-gray-300"}`}
-          />
-        ))}
-      </div>
+      {slides.length > 1 && (
+        <div className="flex items-center justify-center gap-1.5">
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              className={`h-1.5 rounded-full transition-all ${i === currentSlide ? "w-8 bg-indigo-500" : "w-1.5 bg-gray-300"}`}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Title & narrative */}
       <div className="text-center px-4">
@@ -44,14 +46,11 @@ export function TourSlideshow({ slides, currentSlide, onNext, onPrev, onComplete
         {slide.visual}
       </div>
 
-      {/* Navigation */}
+      {/* Navigation - back button always enabled */}
       <div className="flex items-center justify-between px-2">
         <button
           onClick={onPrev}
-          disabled={currentSlide === 0}
-          className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-            currentSlide === 0 ? "text-gray-300 cursor-not-allowed" : "text-gray-600 hover:bg-gray-100"
-          }`}
+          className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
         >
           <ChevronLeft className="w-4 h-4" /> Back
         </button>

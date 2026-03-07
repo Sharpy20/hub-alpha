@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "GDPR & Privacy | Inpatient Hub",
-  description: "Information about data protection and privacy in Inpatient Hub",
+  title: "GDPR & Privacy | wardHub",
+  description: "Information about data protection and privacy in wardHub",
 };
 
 export default function GdprLayout({

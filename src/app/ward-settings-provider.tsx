@@ -16,9 +16,9 @@ interface WardSettingsContextType {
 const WardSettingsContext = createContext<WardSettingsContextType | null>(null);
 
 // Storage keys
-const WARD_SETTINGS_KEY = "inpatient-hub-ward-settings";
-const USER_FAVORITES_KEY = "inpatient-hub-user-favorites";
-const DEFAULT_BOOKMARK_CATEGORY_KEY = "inpatient-hub-default-bookmark-category";
+const WARD_SETTINGS_KEY = "wardhub-ward-settings";
+const USER_FAVORITES_KEY = "wardhub-user-favorites";
+const DEFAULT_BOOKMARK_CATEGORY_KEY = "wardhub-default-bookmark-category";
 
 export function WardSettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Record<string, WardSettings>>({});

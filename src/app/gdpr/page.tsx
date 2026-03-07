@@ -36,7 +36,7 @@ export default function GdprPage() {
         <div>
           <h1 className="text-3xl font-bold text-nhs-black">GDPR & Privacy</h1>
           <p className="text-nhs-dark-grey mt-1">
-            Information about data protection and privacy in Inpatient Hub
+            Information about data protection and privacy in wardHub
           </p>
         </div>
 
@@ -49,7 +49,7 @@ export default function GdprPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-nhs-dark-grey">
-              This is a demonstration version of Inpatient Hub. It contains:
+              This is a demonstration version of wardHub. It contains:
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>
@@ -77,7 +77,7 @@ export default function GdprPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-nhs-dark-grey">
-              When deployed as a live system, Inpatient Hub will:
+              When deployed as a live system, wardHub will:
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>
@@ -140,7 +140,7 @@ export default function GdprPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-nhs-dark-grey">
-              In this demo (Light) version of Inpatient Hub:
+              In this demo (Light) version of wardHub:
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>

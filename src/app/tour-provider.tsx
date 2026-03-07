@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-export type TourSection = "welcome" | "referrals" | "task-diary" | "daily-tasks" | "nexus-sync" | "claiming" | "gdpr" | "complete";
+export type TourSection = "welcome" | "referrals" | "task-diary" | "diary-integration" | "nexus-nudge" | "nexus-detail" | "kanban" | "complete";
 
 interface TourContextType {
   isTourActive: boolean;
@@ -14,7 +14,6 @@ interface TourContextType {
   setCurrentSlide: (slide: number) => void;
   nextSlide: () => void;
   prevSlide: () => void;
-  // Track whether user is in live referral walkthrough
   isInLiveWalkthrough: boolean;
   setIsInLiveWalkthrough: (v: boolean) => void;
 }

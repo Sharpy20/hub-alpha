@@ -655,7 +655,7 @@ export default function FeedbackPage() {
               <h2 className="font-bold text-amber-900">Alpha Development Stage</h2>
               <p className="text-amber-800 text-sm mt-1">
                 Your feedback is incredibly valuable right now! Help make this tool wonderful by sharing your ideas,
-                reporting issues, and suggesting improvements. Every bit of input helps shape Inpatient Hub into
+                reporting issues, and suggesting improvements. Every bit of input helps shape wardHub into
                 something truly useful for all ward staff.
               </p>
             </div>

@@ -76,7 +76,7 @@ function NavVisual() {
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="bg-gray-50 p-2 flex items-center gap-2 border-b">
           <div className="w-6 h-6 bg-indigo-500 rounded flex items-center justify-center text-white text-xs">H</div>
-          <span className="text-sm font-bold">Inpatient Hub</span>
+          <span className="text-sm font-bold">wardHub</span>
           <div className="flex-1" />
           <div className="flex gap-1">
             <div className="px-2 py-1 bg-indigo-50 rounded text-xs text-indigo-700 font-medium">Ward Diary</div>
@@ -269,7 +269,7 @@ const guideSections: GuideSection[] = [
     color: "from-blue-500 to-cyan-500",
     slides: [
       {
-        title: "Welcome to Inpatient Hub",
+        title: "Welcome to wardHub",
         description: "Your central resource for ward tasks, referrals, and clinical guides. This quick guide will show you around.",
         tips: [
           "Works on desktop, tablet, and mobile",
@@ -443,7 +443,7 @@ export default function IntroGuidePage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold">Intro Guide</h1>
-              <p className="text-white/80">Learn how to use Inpatient Hub</p>
+              <p className="text-white/80">Learn how to use wardHub</p>
             </div>
           </div>
         </div>

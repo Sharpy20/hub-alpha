@@ -1,7 +1,7 @@
 import { toast } from 'sonner'
 
 /**
- * Toast notification utilities for Inpatient Hub
+ * Toast notification utilities for wardHub
  * Uses sonner for lightweight, accessible notifications
  */
 

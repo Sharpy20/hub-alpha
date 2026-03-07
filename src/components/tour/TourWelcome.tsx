@@ -21,30 +21,30 @@ export function TourWelcome({ onStart, onSkip }: TourWelcomeProps) {
       </div>
 
       <div>
-        <h2 className="text-2xl font-black text-gray-900">Welcome to the Inpatient Hub</h2>
+        <h2 className="text-2xl font-black text-gray-900">Welcome to wardHub</h2>
         <p className="text-gray-500 mt-2 max-w-md mx-auto">
-          Let us show you what the Hub can do. This interactive tour walks through the key features
-          staff use every day on the ward.
+          Interactive walkthroughs for many of the tasks ward staff regularly work on.
+          Pulled together into a simple electronic jobs diary to improve communication flow.
         </p>
       </div>
 
       {/* Feature preview cards */}
       <div className="grid grid-cols-2 gap-3 max-w-md mx-auto text-left">
         <div className="p-3 bg-indigo-50 rounded-xl border border-indigo-200">
-          <p className="text-sm font-bold text-indigo-800">📋 Referral SOPs</p>
-          <p className="text-xs text-indigo-600">Step-by-step guidance</p>
+          <p className="text-sm font-bold text-indigo-800">Interactive Guides</p>
+          <p className="text-xs text-indigo-600">Step-by-step walkthroughs</p>
         </div>
         <div className="p-3 bg-purple-50 rounded-xl border border-purple-200">
-          <p className="text-sm font-bold text-purple-800">📅 Task Diary</p>
-          <p className="text-xs text-purple-600">Coordinate ward jobs</p>
+          <p className="text-sm font-bold text-purple-800">Jobs Diary</p>
+          <p className="text-xs text-purple-600">Stay organised as a team</p>
         </div>
         <div className="p-3 bg-amber-50 rounded-xl border border-amber-200">
-          <p className="text-sm font-bold text-amber-800">🔗 Nexus Sync</p>
-          <p className="text-xs text-amber-600">Auto-complete audits</p>
+          <p className="text-sm font-bold text-amber-800">Audit Nudges</p>
+          <p className="text-xs text-amber-600">Gentle reminders, auto-complete</p>
         </div>
         <div className="p-3 bg-green-50 rounded-xl border border-green-200">
-          <p className="text-sm font-bold text-green-800">🔒 GDPR Safe</p>
-          <p className="text-xs text-green-600">Minimal data, full audit</p>
+          <p className="text-sm font-bold text-green-800">No Training Needed</p>
+          <p className="text-xs text-green-600">Just log in and go</p>
         </div>
       </div>
 

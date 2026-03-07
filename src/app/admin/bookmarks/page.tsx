@@ -18,10 +18,16 @@ import {
   Shield,
   Search,
   Save,
+  Send,
+  Clock,
+  CheckCircle,
+  XCircle,
+  User,
 } from "lucide-react";
 import { bookmarks as initialBookmarks, getCategories } from "@/lib/data/bookmarks";
 import { Bookmark as BookmarkType } from "@/lib/types";
 import { ConfirmDialog } from "@/components/ui";
+import { useWardSettings } from "@/app/ward-settings-provider";
 
 export default function AdminBookmarksPage() {
   const { user } = useApp();
@@ -37,8 +43,12 @@ export default function AdminBookmarksPage() {
     bookmarkId: null,
   });
 
+  const { pendingRecommendations, approveRecommendation, dismissRecommendation } = useWardSettings();
   const categories = getCategories();
   const isSeniorAdmin = user?.role === "senior_admin";
+  const canReview = user?.isContributor || user?.role === "senior_admin";
+  const pending = pendingRecommendations.filter((r) => r.status === "pending");
+  const [approveCategory, setApproveCategory] = useState<Record<string, string>>({});
 
   // Redirect if not contributor or admin
   useEffect(() => {
@@ -183,6 +193,81 @@ export default function AdminBookmarksPage() {
               <p className="text-sm text-blue-700">
                 You can edit bookmark titles, URLs, descriptions, and icons. Only Senior Admins can change categories or delete bookmarks.
               </p>
+            </div>
+          </div>
+        )}
+
+        {/* Pending Recommendations */}
+        {canReview && pending.length > 0 && (
+          <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-xl p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <Send className="w-5 h-5 text-emerald-600" />
+              <h2 className="text-lg font-bold text-emerald-800">
+                Pending Recommendations ({pending.length})
+              </h2>
+            </div>
+            <p className="text-sm text-emerald-700">
+              Staff have suggested these personal bookmarks to be added for everyone.
+            </p>
+            <div className="space-y-3">
+              {pending.map((rec) => (
+                <div key={rec.id} className="bg-white rounded-xl p-4 border border-emerald-200 flex items-center gap-4">
+                  <span className="text-2xl">{rec.bookmark.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900">{rec.bookmark.title}</h3>
+                    <p className="text-sm text-gray-500 truncate">{rec.bookmark.url}</p>
+                    {rec.bookmark.description && (
+                      <p className="text-xs text-gray-400 mt-0.5">{rec.bookmark.description}</p>
+                    )}
+                    <div className="flex items-center gap-3 mt-1.5 text-xs text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <User className="w-3 h-3" />
+                        {rec.recommendedBy}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {new Date(rec.recommendedAt).toLocaleDateString()}
+                      </span>
+                      <span className="px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">
+                        Suggested: {rec.suggestedCategory}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <select
+                      value={approveCategory[rec.id] || rec.suggestedCategory}
+                      onChange={(e) => setApproveCategory((prev) => ({ ...prev, [rec.id]: e.target.value }))}
+                      className="text-xs px-2 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                      <option value="Not sure / Other">Not sure / Other</option>
+                    </select>
+                    <button
+                      onClick={() => {
+                        const cat = approveCategory[rec.id] || rec.suggestedCategory;
+                        const finalCat = cat === "Not sure / Other" ? categories[0] : cat;
+                        const newBookmark = approveRecommendation(rec.id, finalCat);
+                        if (newBookmark) {
+                          saveBookmarks([...bookmarks, newBookmark]);
+                        }
+                      }}
+                      className="p-2 text-emerald-600 hover:bg-emerald-100 rounded-lg transition-colors"
+                      title="Approve"
+                    >
+                      <CheckCircle className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => dismissRecommendation(rec.id)}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Dismiss"
+                    >
+                      <XCircle className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}

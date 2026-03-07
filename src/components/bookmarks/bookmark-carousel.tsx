@@ -9,6 +9,7 @@ import type { Bookmark } from "@/lib/types";
 import Link from "next/link";
 
 const MY_FAVOURITES = "My Favourites";
+const MY_PERSONAL = "My Personal";
 
 interface WheelItemProps {
   bookmark: Bookmark;
@@ -84,15 +85,19 @@ function WheelConnector({ index, total }: { index: number; total: number }) {
 }
 
 export function BookmarkCarousel() {
-  const { defaultBookmarkCategory, userFavoriteBookmarks } = useWardSettings();
+  const { defaultBookmarkCategory, userFavoriteBookmarks, personalBookmarks } = useWardSettings();
   const hasFavourites = userFavoriteBookmarks.length > 0;
+  const hasPersonal = personalBookmarks.length > 0;
 
-  // Build categories list with My Favourites at the front (only if user has favourites)
+  // Build categories list with My Favourites and My Personal at the front
   const categories = useMemo(() => {
     const base = getCategories();
-    return hasFavourites ? [MY_FAVOURITES, ...base] : base;
+    const front: string[] = [];
+    if (hasFavourites) front.push(MY_FAVOURITES);
+    if (hasPersonal) front.push(MY_PERSONAL);
+    return [...front, ...base];
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasFavourites]);
+  }, [hasFavourites, hasPersonal]);
 
   // Find the index of the default category
   const defaultIndex = useMemo(() => {
@@ -109,8 +114,18 @@ export function BookmarkCarousel() {
 
   const currentCategory = categories[currentCategoryIndex];
 
-  const categoryBookmarks = currentCategory === MY_FAVOURITES
+  const categoryBookmarks: Bookmark[] = currentCategory === MY_FAVOURITES
     ? bookmarks.filter((b) => userFavoriteBookmarks.includes(b.id))
+    : currentCategory === MY_PERSONAL
+    ? personalBookmarks.map((pb) => ({
+        id: pb.id,
+        title: pb.title,
+        icon: pb.icon,
+        url: pb.url,
+        category: "My Personal",
+        requiresFocus: false,
+        description: pb.description,
+      }))
     : bookmarks.filter((b) => b.category === currentCategory);
 
   // Show max 8 bookmarks for the wheel
@@ -134,6 +149,7 @@ export function BookmarkCarousel() {
   const getCategoryIcon = (category: string): string => {
     const iconMap: Record<string, string> = {
       [MY_FAVOURITES]: "Star",
+      [MY_PERSONAL]: "User",
       "Clinical Systems": "Monitor",
       "Crisis Support": "Phone",
       "Trust Resources": "Building2",
@@ -173,6 +189,8 @@ export function BookmarkCarousel() {
         <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 rounded-full flex flex-col items-center justify-center text-white text-center shadow-xl z-10 ${
           currentCategory === MY_FAVOURITES
             ? "bg-gradient-to-br from-amber-400 to-orange-500"
+            : currentCategory === MY_PERSONAL
+            ? "bg-gradient-to-br from-violet-500 to-purple-700"
             : "bg-gradient-to-br from-nhs-blue to-nhs-dark-blue"
         }`}>
           <DynamicIcon

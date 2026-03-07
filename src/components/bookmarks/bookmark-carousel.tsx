@@ -84,29 +84,28 @@ function WheelConnector({ index, total }: { index: number; total: number }) {
 }
 
 export function BookmarkCarousel() {
-  const baseCategories = getCategories();
   const { defaultBookmarkCategory, userFavoriteBookmarks } = useWardSettings();
+  const hasFavourites = userFavoriteBookmarks.length > 0;
 
   // Build categories list with My Favourites at the front (only if user has favourites)
   const categories = useMemo(() => {
-    if (userFavoriteBookmarks.length > 0) {
-      return [MY_FAVOURITES, ...baseCategories];
-    }
-    return baseCategories;
-  }, [baseCategories, userFavoriteBookmarks.length]);
+    const base = getCategories();
+    return hasFavourites ? [MY_FAVOURITES, ...base] : base;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasFavourites]);
 
-  // Find the index of the default category, or 0 if not found
-  const getDefaultCategoryIndex = () => {
-    const index = categories.indexOf(defaultBookmarkCategory);
-    return index >= 0 ? index : 0;
-  };
+  // Find the index of the default category
+  const defaultIndex = useMemo(() => {
+    const idx = categories.indexOf(defaultBookmarkCategory);
+    return idx >= 0 ? idx : 0;
+  }, [categories, defaultBookmarkCategory]);
 
-  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(getDefaultCategoryIndex);
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(defaultIndex);
 
-  // Update index when default category changes
+  // Only reset when the default category preference actually changes
   useEffect(() => {
-    setCurrentCategoryIndex(getDefaultCategoryIndex());
-  }, [defaultBookmarkCategory, categories]);
+    setCurrentCategoryIndex(defaultIndex);
+  }, [defaultIndex]);
 
   const currentCategory = categories[currentCategoryIndex];
 

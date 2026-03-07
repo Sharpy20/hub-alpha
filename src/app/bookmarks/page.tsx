@@ -17,6 +17,7 @@ function isEmoji(str: string): boolean {
 // Category colors and icons
 const CATEGORY_CONFIG: Record<string, { gradient: string; icon: string }> = {
   "all": { gradient: "from-slate-600 to-slate-800", icon: "📚" },
+  "My Favourites": { gradient: "from-amber-400 to-orange-500", icon: "⭐" },
   "Crisis Support": { gradient: "from-red-500 to-red-700", icon: "🚨" },
   "Clinical Systems": { gradient: "from-blue-500 to-blue-700", icon: "💻" },
   "HR & Pay": { gradient: "from-green-500 to-green-700", icon: "💰" },
@@ -33,10 +34,12 @@ function BookmarksContent() {
   const [focusModalUrl, setFocusModalUrl] = useState<string | null>(null);
   const { userFavoriteBookmarks, toggleFavoriteBookmark, defaultBookmarkCategory, setDefaultBookmarkCategory } = useWardSettings();
 
-  const categories = ["all", ...getCategories()];
+  const categories = ["all", ...(userFavoriteBookmarks.length > 0 ? ["My Favourites"] : []), ...getCategories()];
   const filteredBookmarks =
     selectedCategory === "all"
       ? bookmarks
+      : selectedCategory === "My Favourites"
+      ? bookmarks.filter((b) => userFavoriteBookmarks.includes(b.id))
       : bookmarks.filter((b) => b.category === selectedCategory);
 
   const handleBookmarkClick = (bookmark: typeof bookmarks[0]) => {

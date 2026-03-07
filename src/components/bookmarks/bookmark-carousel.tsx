@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Lock } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { ChevronLeft, ChevronRight, Lock, Star } from "lucide-react";
 import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings } from "@/app/ward-settings-provider";
 import type { Bookmark } from "@/lib/types";
 import Link from "next/link";
+
+const MY_FAVOURITES = "My Favourites";
 
 interface WheelItemProps {
   bookmark: Bookmark;
@@ -82,8 +84,16 @@ function WheelConnector({ index, total }: { index: number; total: number }) {
 }
 
 export function BookmarkCarousel() {
-  const categories = getCategories();
-  const { defaultBookmarkCategory } = useWardSettings();
+  const baseCategories = getCategories();
+  const { defaultBookmarkCategory, userFavoriteBookmarks } = useWardSettings();
+
+  // Build categories list with My Favourites at the front (only if user has favourites)
+  const categories = useMemo(() => {
+    if (userFavoriteBookmarks.length > 0) {
+      return [MY_FAVOURITES, ...baseCategories];
+    }
+    return baseCategories;
+  }, [baseCategories, userFavoriteBookmarks.length]);
 
   // Find the index of the default category, or 0 if not found
   const getDefaultCategoryIndex = () => {
@@ -96,13 +106,13 @@ export function BookmarkCarousel() {
   // Update index when default category changes
   useEffect(() => {
     setCurrentCategoryIndex(getDefaultCategoryIndex());
-  }, [defaultBookmarkCategory]);
+  }, [defaultBookmarkCategory, categories]);
 
   const currentCategory = categories[currentCategoryIndex];
 
-  const categoryBookmarks = bookmarks.filter(
-    (b) => b.category === currentCategory
-  );
+  const categoryBookmarks = currentCategory === MY_FAVOURITES
+    ? bookmarks.filter((b) => userFavoriteBookmarks.includes(b.id))
+    : bookmarks.filter((b) => b.category === currentCategory);
 
   // Show max 8 bookmarks for the wheel
   const maxSpokes = 8;
@@ -124,6 +134,7 @@ export function BookmarkCarousel() {
   // Get category icon based on category name
   const getCategoryIcon = (category: string): string => {
     const iconMap: Record<string, string> = {
+      [MY_FAVOURITES]: "Star",
       "Clinical Systems": "Monitor",
       "Crisis Support": "Phone",
       "Trust Resources": "Building2",
@@ -160,7 +171,11 @@ export function BookmarkCarousel() {
         </button>
 
         {/* Center hub */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 bg-gradient-to-br from-nhs-blue to-nhs-dark-blue rounded-full flex flex-col items-center justify-center text-white text-center shadow-xl z-10">
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 rounded-full flex flex-col items-center justify-center text-white text-center shadow-xl z-10 ${
+          currentCategory === MY_FAVOURITES
+            ? "bg-gradient-to-br from-amber-400 to-orange-500"
+            : "bg-gradient-to-br from-nhs-blue to-nhs-dark-blue"
+        }`}>
           <DynamicIcon
             name={getCategoryIcon(currentCategory)}
             className="w-8 h-8 mb-2"

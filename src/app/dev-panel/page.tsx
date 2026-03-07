@@ -242,7 +242,7 @@ function OverviewSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-nhs-black">Ward Portal — Overview</h1>
+        <h1 className="text-2xl font-bold text-nhs-black">wardHub — Overview</h1>
         <p className="text-nhs-dark-grey mt-1">Technical documentation and governance pack</p>
       </div>
 
@@ -252,17 +252,16 @@ function OverviewSection() {
         </CardHeader>
         <CardContent className="prose prose-sm max-w-none">
           <p>
-            <strong>wardHub</strong> is a ward-based clinical reference and task management tool.
-            Interactive guides walk staff through referrals and ward processes step-by-step.
-            A simple electronic diary replaces the paper ward diary with a shared, auditable record.
+            <strong>wardHub</strong> is a reference and task management tool built around the needs of an inpatient ward.
+            Referral processes are presented as interactive step-by-step guides &mdash; pulling together official forms,
+            Trust SOPs, good examples, and service admission criteria.
           </p>
           <p>
-            No training needed &mdash; staff log in and go. Gentle nudges remind staff to complete
-            daily assurance items on Nexus, and stop automatically when the job is done.
+            As a bonus, these link through to a simple electronic jobs diary, helping individuals stay organised
+            and improving team communication between shifts.
           </p>
           <p>
-            Built by ward staff, for ward staff. Zero cost to pilot. Designed to run on Trust IT
-            infrastructure when ready.
+            No training needed &mdash; just log in and go. Built by ward staff who do the job every day.
           </p>
         </CardContent>
       </Card>
@@ -273,12 +272,12 @@ function OverviewSection() {
         </CardHeader>
         <CardContent className="prose prose-sm max-w-none space-y-4">
           <div>
-            <h3 className="text-base font-semibold text-nhs-dark-blue">The Problem</h3>
+            <h3 className="text-base font-semibold text-nhs-dark-blue">The Gap</h3>
             <p>
-              Ward staff spend time searching for referral forms, phone numbers, and clinical guidance
-              across FOCUS, SharePoint, and personal notes. Task handovers rely on a paper diary
-              with no audit trail. New starters take weeks to learn ward processes. Referrals that
-              should be made on admission get forgotten until discharge is planned.
+              FOCUS has a depth of knowledge around Trust systems, but falls short on external workflows
+              used daily on the ward. Tasks are scattered across emails, Teams, handovers, whiteboards, and
+              bits of paper. New starters rely on colleagues being free to show them processes. Referrals
+              that should happen on admission sometimes get missed.
             </p>
           </div>
 
@@ -295,21 +294,21 @@ function OverviewSection() {
           </div>
 
           <div>
-            <h3 className="text-base font-semibold text-nhs-dark-blue">Key Differentiators</h3>
+            <h3 className="text-base font-semibold text-nhs-dark-blue">Why It Could Work</h3>
             <ul>
-              <li><strong>No training required</strong> &mdash; the interactive guides ARE the training</li>
+              <li><strong>No training required</strong> &mdash; the interactive guides are the training</li>
               <li><strong>Built by ward staff</strong> &mdash; designed by people who do the job every day</li>
-              <li><strong>Zero cost</strong> &mdash; runs on Trust IT infrastructure with no licensing fees</li>
-              <li><strong>Auditable</strong> &mdash; full log of who did what, compiled on discharge</li>
+              <li><strong>Resources grow organically</strong> &mdash; users add bookmarks, request guides, flag gaps</li>
+              <li><strong>Trust hosted</strong> &mdash; runs on Trust IT infrastructure, no external dependencies</li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-base font-semibold text-nhs-dark-blue">Governance Fit</h3>
             <p>
-              The demo uses fictional data only. When deployed on Trust infrastructure, patient data
-              handling follows existing IG frameworks. DPIA and DCB 0129/0160 clinical safety review
-              planned before any live deployment with real data.
+              Pilot phase uses light, real use &mdash; a few non-essential tasks to test the workflows.
+              When deployed more broadly, patient data handling follows existing IG frameworks.
+              DPIA and DCB 0129/0160 clinical safety review planned for fuller rollout.
             </p>
           </div>
         </CardContent>

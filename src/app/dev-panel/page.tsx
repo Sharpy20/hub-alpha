@@ -435,7 +435,7 @@ function BusinessCaseSection() {
           </div>
           <div className="bg-nhs-pale-grey rounded-lg p-3 mt-2">
             <p className="text-nhs-dark-grey">
-              wardHub isn&apos;t a replacement for FOCUS or any existing system. It sits alongside them and fills in some gaps &mdash;
+              wardHub isn&apos;t a replacement for FOCUS, SystmOne, or any existing system. It sits alongside them and fills in some gaps &mdash;
               particularly around external referral workflows, task visibility between shifts, and helping new staff find their feet quickly.
               If it turns out not to be useful, we just stop. Nothing is disrupted.
             </p>

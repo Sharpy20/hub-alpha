@@ -546,6 +546,9 @@ function BusinessCaseSection() {
               </div>
             </div>
           </div>
+          <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-center">
+            <p className="text-slate-600 text-xs">wardHub is a resource and coordination tool &mdash; not a performance management tool. It supports staff, not monitors them.</p>
+          </div>
         </div>
       ),
     },
@@ -586,13 +589,25 @@ function BusinessCaseSection() {
                 <td className="p-2">Scope creep</td>
                 <td className="p-2">Medium</td>
                 <td className="p-2">Medium</td>
-                <td className="p-2">Fixed version tiers prevent feature creep; changes require governance approval</td>
+                <td className="p-2">Clear governance process; changes require approval before deployment</td>
               </tr>
               <tr>
                 <td className="p-2">Clinical safety</td>
                 <td className="p-2">Low</td>
                 <td className="p-2">High</td>
                 <td className="p-2">Tool is reference/task aid only — no clinical decisions automated; DCB 0129 review planned</td>
+              </tr>
+              <tr>
+                <td className="p-2">Out-of-date content</td>
+                <td className="p-2">Medium</td>
+                <td className="p-2">Medium</td>
+                <td className="p-2">Verification badges flag content age; contributors can update guides; broken link reporting built in</td>
+              </tr>
+              <tr>
+                <td className="p-2">Ongoing maintenance</td>
+                <td className="p-2">Low</td>
+                <td className="p-2">Low</td>
+                <td className="p-2">Minimal overhead &mdash; content maintained by ward staff via contributor role; no server management in pilot</td>
               </tr>
             </tbody>
           </table>
@@ -608,7 +623,8 @@ function BusinessCaseSection() {
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
             <div className="flex-1">
               <h4 className="font-bold text-nhs-black">Pilot Phase — One Ward</h4>
-              <p className="text-nhs-dark-grey mt-1">Try wardHub on one ward with light, real use &mdash; a few non-essential tasks to test the workflows and diary. Resources build organically as users add their own bookmarks, request new guides, and flag gaps. Gather feedback over 4-6 weeks. See if it&apos;s actually useful.</p>
+              <p className="text-nhs-dark-grey mt-1">Try wardHub on one ward with real use. It&apos;s up to the ward how much they use &mdash; whether that&apos;s just the bookmarks and guides, or the diary for everything. Resources build organically as staff add bookmarks, request guides, and flag gaps. Gather feedback over 4-6 weeks.</p>
+              <p className="text-nhs-dark-grey mt-2 text-xs"><strong>Pilot owner:</strong> Ward NIC &mdash; <strong>Success criteria:</strong> Staff find it useful, resources grow organically, no negative impact on existing workflows.</p>
             </div>
           </div>
           <div className="flex gap-4 items-start">

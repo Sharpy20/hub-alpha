@@ -93,7 +93,8 @@ export function Header() {
     senior_admin: "Senior Admin",
   };
 
-  const { startTour } = useTour();
+  const { startTour, tourDismissed, hasBeenStarted } = useTour();
+  const shouldPulse = !tourDismissed && !hasBeenStarted;
   const isViewingOtherWard = user && activeWard !== user.ward;
   const canAccessAdmin = !!user;
 
@@ -121,7 +122,7 @@ export function Header() {
             {/* Interactive Demo Tour button */}
             <button
               onClick={startTour}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all animate-pulse hover:animate-none"
+              className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all ${shouldPulse ? "animate-pulse hover:animate-none" : ""}`}
             >
               <Sparkles className="w-4 h-4" />
               <span className="hidden lg:inline">Interactive Demo</span>

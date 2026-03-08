@@ -8,7 +8,7 @@ import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings, PersonalBookmark } from "@/app/ward-settings-provider";
 import { useApp } from "@/app/providers";
-import { Lock, ExternalLink, Bookmark, Filter, Star, Check, X, Shield, Plus, Pencil, Trash2, Send, User } from "lucide-react";
+import { Lock, ExternalLink, Bookmark, Filter, Star, Check, X, Shield, Plus, Pencil, Trash2, Send, User, Search } from "lucide-react";
 
 // Check if icon is an emoji
 function isEmoji(str: string): boolean {
@@ -35,6 +35,7 @@ function BookmarksContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("category") || "all";
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+  const [searchQuery, setSearchQuery] = useState("");
   const [focusModalUrl, setFocusModalUrl] = useState<string | null>(null);
   const [showAddPersonal, setShowAddPersonal] = useState(false);
   const [editingPersonal, setEditingPersonal] = useState<PersonalBookmark | null>(null);
@@ -56,7 +57,7 @@ function BookmarksContent() {
   ];
 
   // Build filtered list - for "all", include personal bookmarks too
-  const filteredBookmarks =
+  const categoryFiltered =
     selectedCategory === "all"
       ? bookmarks
       : selectedCategory === "My Favourites"
@@ -65,6 +66,13 @@ function BookmarksContent() {
       : selectedCategory === "My Personal"
       ? []  // handled separately below
       : bookmarks.filter((b) => b.category === selectedCategory);
+
+  const filteredBookmarks = searchQuery.trim()
+    ? categoryFiltered.filter((b) => {
+        const q = searchQuery.toLowerCase();
+        return b.title.toLowerCase().includes(q) || (b.description && b.description.toLowerCase().includes(q));
+      })
+    : categoryFiltered;
 
   const isPersonalView = selectedCategory === "My Personal";
 
@@ -106,6 +114,18 @@ function BookmarksContent() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Search bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+          />
         </div>
 
         {/* Category filter */}

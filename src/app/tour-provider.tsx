@@ -16,6 +16,8 @@ interface TourContextType {
   prevSlide: () => void;
   isInLiveWalkthrough: boolean;
   setIsInLiveWalkthrough: (v: boolean) => void;
+  tourDismissed: boolean;
+  hasBeenStarted: boolean;
 }
 
 const TourContext = createContext<TourContextType | undefined>(undefined);
@@ -25,12 +27,20 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const [currentSection, setCurrentSection] = useState<TourSection>("welcome");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isInLiveWalkthrough, setIsInLiveWalkthrough] = useState(false);
+  const [hasBeenStarted, setHasBeenStarted] = useState(false);
+  const [tourDismissed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("wardhub_tour_dismissed") === "true";
+    }
+    return false;
+  });
 
   const startTour = () => {
     setIsTourActive(true);
     setCurrentSection("welcome");
     setCurrentSlide(0);
     setIsInLiveWalkthrough(false);
+    setHasBeenStarted(true);
   };
 
   const endTour = () => {
@@ -57,6 +67,8 @@ export function TourProvider({ children }: { children: ReactNode }) {
         prevSlide,
         isInLiveWalkthrough,
         setIsInLiveWalkthrough,
+        tourDismissed,
+        hasBeenStarted,
       }}
     >
       {children}

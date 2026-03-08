@@ -30,11 +30,6 @@ function WheelItem({ bookmark, index, total, radius }: WheelItemProps) {
   const y = Math.sin(angleRad) * radius;
 
   const handleClick = () => {
-    if (bookmark.requiresFocus) {
-      alert(
-        "This link requires FOCUS login.\n\nYou must be connected to the Trust network to access this resource."
-      );
-    }
     if (bookmark.url !== "#") {
       window.open(bookmark.url, "_blank");
     }

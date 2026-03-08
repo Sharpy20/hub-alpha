@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { Badge, VerificationBadge } from "@/components/ui";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Filter, Pencil } from "lucide-react";
+import { ArrowRight, BookOpen, Filter, Pencil, Search } from "lucide-react";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 
 const GUIDES = [
@@ -136,10 +136,18 @@ export default function HowToPage() {
   const { canEdit } = useCanEdit();
   const allCategories = [...new Set(GUIDES.map((g) => g.category))];
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredGuides = selectedCategory === "all"
+  const categoryFiltered = selectedCategory === "all"
     ? GUIDES
     : GUIDES.filter((g) => g.category === selectedCategory);
+
+  const filteredGuides = searchQuery.trim()
+    ? categoryFiltered.filter((g) => {
+        const q = searchQuery.toLowerCase();
+        return g.title.toLowerCase().includes(q) || g.description.toLowerCase().includes(q);
+      })
+    : categoryFiltered;
 
   const currentConfig = CATEGORY_CONFIG[selectedCategory] || CATEGORY_CONFIG["all"];
 
@@ -173,6 +181,18 @@ export default function HowToPage() {
               </Link>
             )}
           </div>
+        </div>
+
+        {/* Search bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+          />
         </div>
 
         {/* Category filter */}

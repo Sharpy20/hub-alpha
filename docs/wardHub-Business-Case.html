@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wardHub - Business Case</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', Arial, sans-serif;
+    color: #212B32;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 30px;
+    background: white;
+  }
+
+  h1 {
+    color: #005EB8;
+    font-size: 28px;
+    margin-bottom: 4px;
+  }
+
+  h2 {
+    color: #005EB8;
+    font-size: 20px;
+    margin-top: 32px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #E8EDEE;
+  }
+
+  h3 {
+    color: #003087;
+    font-size: 16px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  p { margin-bottom: 10px; }
+
+  .subtitle {
+    color: #425563;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .purpose-box {
+    background: #EEF4FB;
+    border: 1px solid #005EB8;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+
+  .callout {
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 12px 0;
+  }
+
+  .callout-blue { background: #EEF4FB; border: 1px solid #B8D4F0; }
+  .callout-amber { background: #FFF8E8; border: 1px solid #F0D888; }
+  .callout-green { background: #E8F5EE; border: 1px solid #88C8A0; }
+  .callout-grey { background: #F5F6F7; border: 1px solid #D8DDE0; }
+
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .callout-blue .callout-title { color: #005EB8; }
+  .callout-amber .callout-title { color: #8B6914; }
+  .callout-green .callout-title { color: #005F2B; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 12px 0;
+  }
+
+  .option-card {
+    border-radius: 10px;
+    padding: 18px;
+  }
+
+  .option-grey {
+    background: #F5F6F7;
+    border: 2px solid #D8DDE0;
+  }
+
+  .option-green {
+    background: #E8F5EE;
+    border: 2px solid #88C8A0;
+  }
+
+  .option-card h3 { margin-top: 0; }
+
+  ul, ol {
+    margin: 8px 0 12px 20px;
+  }
+
+  li { margin-bottom: 6px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+
+  th {
+    background: #E8EDEE;
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 700;
+    color: #212B32;
+  }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #E8EDEE;
+  }
+
+  .cost { font-weight: 700; color: #007F3B; }
+
+  .big-win {
+    background: linear-gradient(to right, #FFF8E8, #FFF0D0);
+    border: 2px solid #F0C848;
+    border-radius: 10px;
+    padding: 18px;
+    margin: 12px 0;
+  }
+
+  .big-win h3 {
+    color: #8B6914;
+    font-size: 18px;
+    margin-top: 0;
+  }
+
+  .risk-table td:nth-child(2),
+  .risk-table td:nth-child(3) {
+    text-align: center;
+    width: 90px;
+  }
+
+  .phase {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin: 16px 0;
+  }
+
+  .phase-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: white;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+
+  .phase-1 { background: #007F3B; }
+  .phase-2 { background: #005EB8; }
+  .phase-3 { background: #ED8B00; }
+
+  .recommendation-box {
+    background: #E8F5EE;
+    border: 2px solid #88C8A0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin: 16px 0;
+  }
+
+  .recommendation-box h3 {
+    color: #005F2B;
+    font-size: 20px;
+    margin-top: 4px;
+  }
+
+  .approval-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #F5F6F7;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .approval-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #768692;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .approval-phase {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 12px;
+  }
+
+  .phase-pilot { background: #E8F5EE; color: #005F2B; }
+  .phase-rollout { background: #EEF4FB; color: #005EB8; }
+  .phase-trust { background: #FFF8E8; color: #8B6914; }
+
+  .footer-note {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #E8EDEE;
+    font-size: 12px;
+    color: #768692;
+    text-align: center;
+  }
+
+  .alongside-box {
+    background: #F5F6F7;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+
+  strong { font-weight: 700; }
+
+  @media print {
+    body { padding: 20px; }
+    h2 { page-break-after: avoid; }
+    .two-col { page-break-inside: avoid; }
+    .big-win { page-break-inside: avoid; }
+    .recommendation-box { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>wardHub</h1>
+<p class="subtitle">Business Case &mdash; Phased Rollout Proposal</p>
+
+<div class="purpose-box">
+  <strong>Purpose:</strong> This is an informal proposal to share something we've been working on at ward level.
+  We're not asking for budget or big changes &mdash; just a chance to pilot it and see if it's useful.
+</div>
+
+<!-- Section 1 -->
+<h2>1. Executive Summary</h2>
+
+<p><strong>wardHub</strong> is a reference and task management tool built around the needs of an inpatient ward.
+Referral processes are presented as interactive step-by-step guides &mdash; pulling together official forms,
+Trust SOPs, good examples, and service admission criteria into one place.</p>
+
+<p>As a nice bonus, these can all link through to a simple electronic jobs diary, helping individuals stay
+organised and improving team communication between shifts.</p>
+
+<p>Implemented well, this tool needs no staff training &mdash; just log in and go.</p>
+
+<!-- Section 2 -->
+<h2>2. Background &amp; Current State</h2>
+
+<p>Ward staff manage a wide range of processes daily. Some are well supported, others less so:</p>
+
+<div class="two-col">
+  <div class="callout callout-blue">
+    <div class="callout-title">FOCUS</div>
+    <p>A depth of knowledge, especially around Trust systems. Falls short on external workflows and processes
+    used daily on the ward &mdash; referrals, community services, external agency contacts.</p>
+  </div>
+  <div class="callout callout-amber">
+    <div class="callout-title">Jobs Everywhere</div>
+    <p>Patient tasks generated in MDMs, meetings, rapid reviews, handovers, audits, 1:1s &mdash; communicated
+    out via emails, Teams, group chats, handover, case notes, verbally, diaries, whiteboards, bits of paper.</p>
+  </div>
+  <div class="callout callout-amber">
+    <div class="callout-title">Delayed Discharges</div>
+    <p>Tasks are getting missed or avoided. Referrals that should happen on admission get forgotten.
+    Discharges are being affected.</p>
+  </div>
+  <div class="callout callout-amber">
+    <div class="callout-title">Local Knowledge</div>
+    <p>So many processes &mdash; everyone needs to be shown at least once but no one is free to teach.
+    A common complaint of students, preceptees, and new starters.</p>
+  </div>
+</div>
+
+<!-- Section 3 -->
+<h2>3. Case for Change</h2>
+
+<ul>
+  <li><strong>New staff can't find forms</strong> &mdash; Referral processes rely on asking colleagues, leading to
+  delays and inconsistency. wardHub puts every form, SOP, and example in one guided workflow.</li>
+  <li><strong>No audit trail for tasks</strong> &mdash; Paper diaries are harder to audit, and even harder when
+  tasks are scattered between personal diaries, emails, chats, and whiteboards. A shared digital record
+  makes everything visible.</li>
+  <li><strong>Compliance tracking</strong> &mdash; Ward audits are well provisioned through the Nexus platform
+  with compliance tracking already in place. Wards fall down when they forget to do the task. wardHub gives
+  gentle nudges when audits are due and stops nudging when Nexus reports they're done &mdash; aiming to
+  improve compliance.</li>
+  <li><strong>Poor handovers</strong> &mdash; Critical tasks fall through the gaps between shifts without a shared
+  digital record. wardHub carries tasks forward automatically and shows the whole team what's outstanding.</li>
+  <li><strong>Steep learning curve</strong> &mdash; Bank and agency staff take weeks to learn ward processes that
+  could be guided digitally from day one.</li>
+</ul>
+
+<!-- Section 4 -->
+<h2>4. Options</h2>
+
+<p>There are really only two options here:</p>
+
+<div class="two-col">
+  <div class="option-card option-grey">
+    <h3>Continue as we are</h3>
+    <p>Nothing changes. Staff keep using the tools they have now.</p>
+    <ul>
+      <li>FOCUS for Trust information</li>
+      <li>Tasks across emails, Teams, handovers, paper</li>
+      <li>New starters learn by asking around</li>
+      <li>Referrals rely on local knowledge</li>
+    </ul>
+    <p style="text-align:center; color:#768692; font-size:13px; margin-top:12px;">
+      This is fine &mdash; it's what we do now
+    </p>
+  </div>
+  <div class="option-card option-green">
+    <h3>Try wardHub alongside</h3>
+    <p>Give it a go on one ward. See if staff find it useful. Nothing to lose.</p>
+    <ul>
+      <li>No budget needed</li>
+      <li>No training needed</li>
+      <li>Doesn't replace anything</li>
+      <li>Staff can stop using it anytime</li>
+      <li>Runs on Trust IT infrastructure</li>
+    </ul>
+    <p style="text-align:center; color:#005F2B; font-weight:600; font-size:13px; margin-top:12px;">
+      Low risk &mdash; easy to try, easy to stop
+    </p>
+  </div>
+</div>
+
+<div class="alongside-box">
+  wardHub isn't a replacement for FOCUS, SystmOne, or any existing system. It sits alongside them and fills in
+  some gaps &mdash; particularly around external referral workflows, task visibility between shifts, and helping
+  new staff find their feet quickly. If it turns out not to be useful, we just stop. Nothing is disrupted.
+</div>
+
+<!-- Section 5 -->
+<h2>5. Financial Case</h2>
+
+<p>wardHub is designed to run on <strong>Trust IT infrastructure only</strong>. Two routes are available:</p>
+
+<div class="two-col">
+  <div class="callout callout-blue">
+    <div class="callout-title">Route A: Trust IT Build</div>
+    <p>Trust IT team rebuild or adopt the codebase onto Trust infrastructure. Full ownership and control.</p>
+  </div>
+  <div class="callout callout-blue">
+    <div class="callout-title">Route B: Security Audit</div>
+    <p>Trust IT security-audit the existing code and approve it for deployment on Trust servers as-is.</p>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Detail</th>
+      <th>Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Hosting</strong></td>
+      <td>Trust IT infrastructure (existing servers)</td>
+      <td class="cost">Minimal / included</td>
+    </tr>
+    <tr>
+      <td><strong>Development</strong></td>
+      <td>Ward staff (built in role)</td>
+      <td class="cost">&pound;0</td>
+    </tr>
+    <tr>
+      <td><strong>Licensing</strong></td>
+      <td>Open source stack &mdash; no vendor fees</td>
+      <td class="cost">&pound;0</td>
+    </tr>
+    <tr>
+      <td><strong>Monthly running</strong></td>
+      <td>Lightweight web app on Trust servers</td>
+      <td class="cost">Minimal</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Either route keeps wardHub on Trust-managed infrastructure. No external hosting dependency.
+Monthly running costs are minimal for a lightweight web application.</p>
+
+<!-- Section 6 -->
+<h2>6. Benefits</h2>
+
+<div class="big-win">
+  <h3>Significant Win: Reduced Onboarding</h3>
+  <p>New starters, bank staff, and agency nurses could walk onto the ward and immediately follow step-by-step
+  guides for any process. No waiting to be shown. No "where do I find the form?" questions. This alone could
+  save hours per new starter and reduce errors from day one.</p>
+</div>
+
+<div class="two-col">
+  <div>
+    <h3>Potential Clinical Benefits</h3>
+    <ul>
+      <li>Earlier referrals &mdash; prompts at admission could reduce delayed discharges</li>
+      <li>Shared task visibility should improve handovers between shifts</li>
+      <li>Nexus nudges &mdash; measurable improvements in compliance tracking predicted</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Potential Operational Benefits</h3>
+    <ul>
+      <li>Task claiming prevents duplicate work &mdash; a common recording issue on the ward</li>
+      <li>Shared digital diary &mdash; searchable, auditable, easier to evidence</li>
+      <li>Interactive guides are the training &mdash; no separate learning curve</li>
+    </ul>
+  </div>
+</div>
+
+<p style="text-align: center; font-size: 0.85em; color: #425563; background: #F8F9FA; border: 1px solid #E8EDEE; border-radius: 8px; padding: 12px; margin-top: 16px;">
+  wardHub is a resource and coordination tool &mdash; not a performance management tool. It supports staff, not monitors them.
+</p>
+
+<!-- Section 7 -->
+<h2>7. Risks &amp; Mitigations</h2>
+
+<table class="risk-table">
+  <thead>
+    <tr>
+      <th>Risk</th>
+      <th>Likelihood</th>
+      <th>Impact</th>
+      <th>Mitigation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Low staff adoption</td>
+      <td>Medium</td>
+      <td>Medium</td>
+      <td>Ward champion model; start with most motivated ward; iterative feedback</td>
+    </tr>
+    <tr>
+      <td>Data security concerns</td>
+      <td>Low</td>
+      <td>High</td>
+      <td>Phased approach aligns security controls with data sensitivity</td>
+    </tr>
+    <tr>
+      <td>Technical failure</td>
+      <td>Low</td>
+      <td>Low</td>
+      <td>Paper diary remains as fallback; tool supplements, not replaces existing systems</td>
+    </tr>
+    <tr>
+      <td>Scope creep</td>
+      <td>Medium</td>
+      <td>Medium</td>
+      <td>Clear governance process; changes require approval before deployment</td>
+    </tr>
+    <tr>
+      <td>Clinical safety</td>
+      <td>Low</td>
+      <td>High</td>
+      <td>Tool is reference/task aid only &mdash; no clinical decisions automated; DCB 0129 review planned</td>
+    </tr>
+    <tr>
+      <td>Out-of-date content</td>
+      <td>Medium</td>
+      <td>Medium</td>
+      <td>Verification badges flag content age; contributors can update guides; broken link reporting built in</td>
+    </tr>
+    <tr>
+      <td>Ongoing maintenance</td>
+      <td>Low</td>
+      <td>Low</td>
+      <td>Minimal overhead &mdash; content maintained by ward staff via contributor role; no server management in pilot</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Section 8 -->
+<h2>8. Implementation Plan</h2>
+
+<div class="phase">
+  <div class="phase-number phase-1">1</div>
+  <div>
+    <h3>Pilot Phase &mdash; One Ward</h3>
+    <p>Try wardHub on one ward with real use. It's up to the ward how much they use &mdash; whether that's
+    just the bookmarks and guides, or the diary for everything. Resources build organically as staff add
+    bookmarks, request guides, and flag gaps. Gather feedback over 4-6 weeks.</p>
+    <p style="font-size: 0.8em; margin-top: 0.5em;"><strong>Pilot owner:</strong> Ward NIC &mdash; <strong>Success criteria:</strong> Staff find it useful, resources grow organically, no negative impact on existing workflows.</p>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-number phase-2">2</div>
+  <div>
+    <h3>Expand to All Wards</h3>
+    <p>If the pilot goes well and staff find it useful, explore rolling out to other wards on Trust IT
+    infrastructure. Fuller use of the diary and task system with appropriate access controls. Requires
+    ward manager buy-in and DPIA approval.</p>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-number phase-3">3</div>
+  <div>
+    <h3>Trust Integration</h3>
+    <p>If there's appetite, explore Nexus Assurance integration for automated audit nudges. Would need
+    Trust tech team involvement (webhook, Power Automate, or hard-coded into Nexus). Clinical safety
+    review at this stage.</p>
+  </div>
+</div>
+
+<!-- Section 9 -->
+<h2>9. Recommendation</h2>
+
+<div class="recommendation-box">
+  <p style="font-size: 24px; margin-bottom: 8px;">&#10003;</p>
+  <h3>Come and Have a Look</h3>
+  <p>We've built something on the ward that we think could be genuinely useful.<br>
+  We'd love for you to see it, kick the tyres, and tell us what you think.</p>
+</div>
+
+<div class="alongside-box">
+  <strong>What we're asking for:</strong> Permission to trial the tool on one ward with light, real use.
+  No budget required. It sits alongside existing systems &mdash; it doesn't replace anything. Staff can
+  stop using it at any time. If it's useful, great. If not, nothing lost.
+</div>
+
+<!-- Section 10 -->
+<h2>10. Approvals Required</h2>
+
+<div class="approval-row">
+  <div class="approval-checkbox"></div>
+  <div><strong>Ward Manager</strong> &mdash; Pilot approval for Byron Ward</div>
+  <span class="approval-phase phase-pilot">Pilot</span>
+</div>
+<div class="approval-row">
+  <div class="approval-checkbox"></div>
+  <div><strong>Matron</strong> &mdash; Awareness and support for pilot</div>
+  <span class="approval-phase phase-pilot">Pilot</span>
+</div>
+<div class="approval-row">
+  <div class="approval-checkbox"></div>
+  <div><strong>Digital Services</strong> &mdash; Technical review and hosting approval</div>
+  <span class="approval-phase phase-rollout">Rollout</span>
+</div>
+<div class="approval-row">
+  <div class="approval-checkbox"></div>
+  <div><strong>Information Governance</strong> &mdash; DPIA review (when PII introduced)</div>
+  <span class="approval-phase phase-trust">Trust-wide</span>
+</div>
+<div class="approval-row">
+  <div class="approval-checkbox"></div>
+  <div><strong>Clinical Safety Officer</strong> &mdash; DCB 0129/0160 assessment</div>
+  <span class="approval-phase phase-trust">Trust-wide</span>
+</div>
+
+<div class="footer-note">
+  wardHub &mdash; Business Case &mdash; March 2026<br>
+  Prepared by Mike, Ward NIC, Derbyshire Healthcare NHS Foundation Trust
+</div>
+
+</body>
+</html>

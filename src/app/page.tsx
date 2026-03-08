@@ -5,7 +5,7 @@ import { BookmarkCarousel } from "@/components/bookmarks";
 import { TodayWidget } from "@/components/diary";
 import { useApp } from "@/app/providers";
 import Link from "next/link";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Sparkles } from "lucide-react";
 
 const QUICK_ACTIONS = [
   {
@@ -100,6 +100,44 @@ export default function HomePage() {
         {/* Today's Tasks Widget */}
         <section>
           <TodayWidget />
+        </section>
+
+        {/* What's New */}
+        <section>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Sparkles className="w-6 h-6 text-amber-500" />
+            What&apos;s New
+          </h2>
+          <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
+            <div className="p-4 flex items-start gap-3">
+              <span className="text-lg">&#x2B50;</span>
+              <div>
+                <p className="font-semibold text-gray-900 text-sm">Personal Bookmarks</p>
+                <p className="text-xs text-gray-500 mt-0.5">Add your own quick links, star favourites, and recommend bookmarks for the whole team.</p>
+              </div>
+            </div>
+            <div className="p-4 flex items-start gap-3">
+              <span className="text-lg">&#x1F50D;</span>
+              <div>
+                <p className="font-semibold text-gray-900 text-sm">Search Everything</p>
+                <p className="text-xs text-gray-500 mt-0.5">Quickly find bookmarks, guides and how-to articles with the new search bars.</p>
+              </div>
+            </div>
+            <div className="p-4 flex items-start gap-3">
+              <span className="text-lg">&#x1F3AC;</span>
+              <div>
+                <p className="font-semibold text-gray-900 text-sm">Interactive Demo Tour</p>
+                <p className="text-xs text-gray-500 mt-0.5">New to wardHub? Try the guided tour from the header button.</p>
+              </div>
+            </div>
+            <div className="p-4 flex items-start gap-3">
+              <span className="text-lg">&#x1F4CB;</span>
+              <div>
+                <p className="font-semibold text-gray-900 text-sm">Business Case</p>
+                <p className="text-xs text-gray-500 mt-0.5">Full business case and governance documentation available in the Dev Panel.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* GDPR link */}

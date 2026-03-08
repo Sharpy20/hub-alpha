@@ -10,6 +10,7 @@ import {
 } from "./TourVisuals";
 import { X, ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const SECTION_ORDER: TourSection[] = [
   "welcome",
@@ -69,6 +70,14 @@ export function TourModal() {
     setIsInLiveWalkthrough,
   } = useTour();
   const router = useRouter();
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+
+  const handleEndTour = () => {
+    if (dontShowAgain) {
+      localStorage.setItem("wardhub_tour_dismissed", "true");
+    }
+    endTour();
+  };
 
   if (!isTourActive) return null;
 
@@ -110,7 +119,7 @@ export function TourModal() {
 
         {/* Close button */}
         <button
-          onClick={endTour}
+          onClick={handleEndTour}
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors z-10"
         >
           <X className="w-4 h-4 text-gray-500" />
@@ -147,7 +156,7 @@ export function TourModal() {
           {currentSection === "welcome" && (
             <TourWelcome
               onStart={() => advanceToSection("referrals")}
-              onSkip={endTour}
+              onSkip={handleEndTour}
             />
           )}
 
@@ -323,14 +332,14 @@ export function TourModal() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
-                  onClick={endTour}
+                  onClick={handleEndTour}
                   className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold hover:shadow-lg transition-all"
                 >
                   Start Exploring
                 </button>
                 <button
                   onClick={() => {
-                    endTour();
+                    handleEndTour();
                     router.push("/dev-panel");
                   }}
                   className="px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-colors"
@@ -338,6 +347,15 @@ export function TourModal() {
                   View Dev Panel
                 </button>
               </div>
+              <label className="flex items-center gap-2 justify-center text-sm text-gray-500 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={dontShowAgain}
+                  onChange={(e) => setDontShowAgain(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                Don&apos;t show this again
+              </label>
               <button
                 onClick={prevSection}
                 className="text-sm text-gray-400 hover:text-gray-600 transition-colors"

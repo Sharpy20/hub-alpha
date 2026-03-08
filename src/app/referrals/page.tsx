@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { Badge, VerificationBadge } from "@/components/ui";
 import Link from "next/link";
-import { ArrowRight, ClipboardList, Clock, Filter, Pencil } from "lucide-react";
+import { ArrowRight, ClipboardList, Clock, Filter, Pencil, Search } from "lucide-react";
 import { useReferralLog } from "@/app/referral-log-provider";
 import { useApp } from "@/app/providers";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
@@ -167,11 +167,19 @@ export default function ReferralsPage() {
   const { getPendingCount } = useReferralLog();
   const allCategories = [...new Set(REFERRALS.map((r) => r.category))];
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const pendingCount = getPendingCount();
 
-  const filteredReferrals = selectedCategory === "all"
+  const categoryFiltered = selectedCategory === "all"
     ? REFERRALS
     : REFERRALS.filter((r) => r.category === selectedCategory);
+
+  const filteredReferrals = searchQuery.trim()
+    ? categoryFiltered.filter((r) => {
+        const q = searchQuery.toLowerCase();
+        return r.title.toLowerCase().includes(q) || r.description.toLowerCase().includes(q);
+      })
+    : categoryFiltered;
 
   const currentConfig = CATEGORY_CONFIG[selectedCategory] || CATEGORY_CONFIG["all"];
 
@@ -219,6 +227,18 @@ export default function ReferralsPage() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Search bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+          />
         </div>
 
         {/* Category filter */}

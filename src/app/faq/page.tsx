@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MainLayout } from "@/components/layout";
-import { ChevronDown, HelpCircle, Shield, Smartphone, Users, Lock, AlertCircle, Stethoscope, Layers } from "lucide-react";
+import { ChevronDown, HelpCircle, Shield, Smartphone, Users, Lock, AlertCircle, Stethoscope } from "lucide-react";
 import Link from "next/link";
 
 interface FAQItem {
@@ -26,8 +26,8 @@ const FAQ_ITEMS: FAQItem[] = [
           <li>Quick access bookmarks to frequently used services and helplines</li>
           <li>Step-by-step referral workflows with copy-to-clipboard case note prompts</li>
           <li>How-to guides for clinical procedures and ward tasks</li>
-          <li>Ward diary and task management (in higher versions)</li>
-          <li>Patient list and discharge tracking (in Max/Max+ versions)</li>
+          <li>Ward diary and task management</li>
+          <li>Patient list and discharge tracking</li>
         </ul>
         <p>
           The goal is to reduce time spent searching for information and streamline common ward processes.
@@ -42,47 +42,16 @@ const FAQ_ITEMS: FAQItem[] = [
     answer: (
       <div className="space-y-3">
         <p>
-          <strong>In the demo version (Light):</strong> All data is stored locally in your browser. No patient information should be entered, and no data is sent to external servers.
+          In the current demo, all data is stored locally in your browser. No patient information should be entered, and no data is sent to external servers.
         </p>
         <p>
-          <strong>In Trust-deployed versions (Medium/Max/Max+):</strong> Data will be stored on Trust-approved infrastructure with full encryption, audit logging, and compliance with NHS Data Security and Protection Toolkit requirements.
+          When deployed on Trust infrastructure, data will be stored with full encryption, audit logging, and NHS DSPT compliance.
         </p>
         <p>
-          All versions are designed with privacy by default - the Light version contains no real patient data, only fictional demonstration data and publicly available contact information.
+          The demo is designed with privacy by default - it contains no real patient data, only fictional demonstration data and publicly available contact information.
         </p>
         <p className="text-sm text-gray-500">
           See our <Link href="/gdpr" className="text-indigo-600 hover:underline">GDPR & Privacy page</Link> for more details.
-        </p>
-      </div>
-    ),
-  },
-  {
-    id: "versions",
-    question: "What are the different versions?",
-    icon: <Layers className="w-5 h-5" />,
-    answer: (
-      <div className="space-y-3">
-        <p>wardHub has multiple versions with progressively more features:</p>
-        <div className="space-y-2">
-          <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-            <p className="font-semibold text-green-800">Light</p>
-            <p className="text-sm text-green-700">Public bookmarks, referral workflows, and how-to guides. Demo login only. No patient data.</p>
-          </div>
-          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="font-semibold text-blue-800">Medium</p>
-            <p className="text-sm text-blue-700">Adds internal SOPs, ward task diary, and Trust authentication. No patient-identifiable data.</p>
-          </div>
-          <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
-            <p className="font-semibold text-purple-800">Max</p>
-            <p className="text-sm text-purple-700">Adds patient list, discharge tracking, and patient-linked tasks. Requires Trust infrastructure and DIPA approval.</p>
-          </div>
-          <div className="p-3 bg-orange-50 rounded-lg border border-orange-200">
-            <p className="font-semibold text-orange-800">Max+</p>
-            <p className="text-sm text-orange-700">Adds Nexus Assurance integration for automated audit compliance tracking. Trust tech team builds the webhook.</p>
-          </div>
-        </div>
-        <p className="text-sm text-gray-500">
-          <Link href="/versions" className="text-indigo-600 hover:underline">Compare all features</Link> to see what each version includes.
         </p>
       </div>
     ),
@@ -114,18 +83,10 @@ const FAQ_ITEMS: FAQItem[] = [
     answer: (
       <div className="space-y-3">
         <p>
-          Yes, wardHub is designed to work on mobile devices. While some features work best on larger screens (like the ward diary calendar view), core features like bookmarks, referral workflows, and how-to guides are fully mobile-friendly.
+          wardHub is designed for use on ward desktop computers and Trust devices. Mobile access is not currently a priority as personal phones are not permitted on the ward.
         </p>
         <p>
-          For the best experience on mobile:
-        </p>
-        <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>Use the hamburger menu to access navigation</li>
-          <li>Tap the wardHub logo to return home</li>
-          <li>Use the mobile-optimised task views for diary features</li>
-        </ul>
-        <p className="text-sm text-gray-500">
-          Note: On Trust devices, you may need to use an approved browser and be connected to the Trust network for full functionality.
+          If accessing from a Trust tablet or similar device, the interface will adapt to the screen size, but the best experience is on a desktop browser.
         </p>
       </div>
     ),
@@ -137,16 +98,19 @@ const FAQ_ITEMS: FAQItem[] = [
     answer: (
       <div className="space-y-3">
         <p>
-          Content editing is role-based:
+          wardHub has five roles, and content editing depends on whether you have creator privileges:
         </p>
         <ul className="list-disc list-inside space-y-2 ml-2">
-          <li><strong>Contributors</strong> can create and edit workflows, guides, and bookmarks</li>
-          <li><strong>Senior Admins</strong> can approve content changes and manage user roles</li>
-          <li><strong>Ward Admins</strong> can manage ward-specific settings and approve certain actions</li>
-          <li><strong>Normal Users</strong> can view all content and suggest new bookmarks</li>
+          <li><strong>Staff</strong> can view all content and suggest new bookmarks</li>
+          <li><strong>Lead</strong> and <strong>Manager</strong> have additional ward oversight capabilities</li>
+          <li><strong>Ward Admin</strong> can manage ward-specific settings and approve certain actions</li>
+          <li><strong>Senior Admin</strong> can approve content changes and manage user roles</li>
         </ul>
         <p>
-          In the demo version, you can switch roles using the My Profile menu to see how different roles work.
+          Any role can request <strong>creator privileges</strong> — this is a separate flag, not a role. Users with creator privileges can create and edit workflows, guides, and bookmarks.
+        </p>
+        <p>
+          In the demo, you can switch roles using the My Profile menu to see how different roles work.
         </p>
       </div>
     ),
@@ -181,7 +145,7 @@ const FAQ_ITEMS: FAQItem[] = [
           <strong>The demo version is NOT for clinical use.</strong> It contains fictional patient data and is intended for demonstration and feedback purposes only.
         </p>
         <p>
-          When deployed on Trust infrastructure (Medium/Max/Max+ versions), wardHub is designed to support clinical workflows including:
+          When deployed on Trust infrastructure, wardHub is designed to support clinical workflows including:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Referral tracking and documentation</li>

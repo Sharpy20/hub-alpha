@@ -400,17 +400,44 @@ function BusinessCaseSection() {
     },
     {
       id: "options",
-      title: "4. Options Appraisal",
+      title: "4. Options",
       content: (
         <div className="space-y-4 text-sm">
-          <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-5 h-5 text-amber-600" />
-              <h4 className="font-bold text-amber-800">To Be Revisited</h4>
+          <p className="text-nhs-dark-grey">There are really only two options here:</p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="p-5 bg-gray-50 rounded-xl border-2 border-gray-200">
+              <h4 className="font-bold text-gray-700 mb-3">Continue as we are</h4>
+              <p className="text-gray-600 mb-3">Nothing changes. Staff keep using the tools they have now.</p>
+              <div className="space-y-2 text-gray-500">
+                <p>&bull; FOCUS for Trust information</p>
+                <p>&bull; Tasks across emails, Teams, handovers, paper</p>
+                <p>&bull; New starters learn by asking around</p>
+                <p>&bull; Referrals rely on local knowledge</p>
+              </div>
+              <div className="mt-4 p-2 bg-gray-100 rounded text-center">
+                <p className="text-gray-500 text-xs">This is fine &mdash; it&apos;s what we do now</p>
+              </div>
             </div>
-            <p className="text-amber-700">
-              This section will be completed after version control and deployment model decisions are finalised.
-              The options appraisal will compare the current approach against alternatives in more detail.
+            <div className="p-5 bg-green-50 rounded-xl border-2 border-green-300">
+              <h4 className="font-bold text-green-800 mb-3">Try wardHub alongside</h4>
+              <p className="text-green-700 mb-3">Give it a go on one ward. See if staff find it useful. Nothing to lose.</p>
+              <div className="space-y-2 text-green-600">
+                <p>&bull; No budget needed</p>
+                <p>&bull; No training needed</p>
+                <p>&bull; Doesn&apos;t replace anything</p>
+                <p>&bull; Staff can stop using it anytime</p>
+                <p>&bull; Runs on Trust IT infrastructure</p>
+              </div>
+              <div className="mt-4 p-2 bg-green-200 rounded text-center">
+                <p className="font-semibold text-green-800 text-xs">Low risk &mdash; easy to try, easy to stop</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-nhs-pale-grey rounded-lg p-3 mt-2">
+            <p className="text-nhs-dark-grey">
+              wardHub isn&apos;t a replacement for FOCUS or any existing system. It sits alongside them and fills in some gaps &mdash;
+              particularly around external referral workflows, task visibility between shifts, and helping new staff find their feet quickly.
+              If it turns out not to be useful, we just stop. Nothing is disrupted.
             </p>
           </div>
         </div>

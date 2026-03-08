@@ -56,7 +56,7 @@ const NAV_SECTIONS = [
   { id: "dpia", label: "DPIA Draft", icon: Shield, priority: "must" },
   { id: "clinical-safety", label: "Clinical Safety", icon: AlertTriangle, priority: "should" },
   { id: "schemas", label: "Supabase Schemas", icon: Database, priority: "later" },
-  { id: "webhooks", label: "Assurance Webhooks", icon: GitBranch, priority: "later" },
+  { id: "webhooks", label: "Assurance Integration", icon: GitBranch, priority: "later" },
   { id: "nexus", label: "Nexus Assurance (MAX+)", icon: ExternalLink, priority: "later" },
   { id: "roadmap", label: "Roadmap", icon: Map, priority: "must" },
   { id: "references", label: "References", icon: FileText, priority: "must" },
@@ -870,13 +870,25 @@ function DataCatalogueSection() {
                   <td className="p-2 font-medium">Patients</td>
                   <td className="p-2"><span className="text-nhs-red">Yes</span></td>
                   <td className="p-2">Max+</td>
-                  <td className="p-2">Supabase / S1</td>
+                  <td className="p-2">Supabase</td>
                 </tr>
                 <tr>
                   <td className="p-2 font-medium">Audit Logs</td>
                   <td className="p-2"><span className="text-nhs-orange">User IDs</span></td>
                   <td className="p-2">Medium+</td>
                   <td className="p-2">Supabase</td>
+                </tr>
+                <tr className="bg-green-50">
+                  <td className="p-2 font-medium">Personal Bookmarks</td>
+                  <td className="p-2"><span className="text-nhs-green">No</span></td>
+                  <td className="p-2">All</td>
+                  <td className="p-2">localStorage (per user)</td>
+                </tr>
+                <tr className="bg-green-50">
+                  <td className="p-2 font-medium">Bookmark Recommendations</td>
+                  <td className="p-2"><span className="text-nhs-green">No</span></td>
+                  <td className="p-2">All</td>
+                  <td className="p-2">localStorage</td>
                 </tr>
               </tbody>
             </table>
@@ -1074,6 +1086,33 @@ function RBACSection() {
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
                   <td className="p-2 text-center bg-amber-50">-</td>
+                </tr>
+                <tr>
+                  <td className="p-2">Personal bookmarks (add/edit/delete own)</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
+                </tr>
+                <tr>
+                  <td className="p-2">Recommend bookmark for everyone</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50">-</td>
+                </tr>
+                <tr>
+                  <td className="p-2">Approve bookmark recommendations</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-red">✗</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center bg-amber-50 text-nhs-green font-bold">✓</td>
                 </tr>
                 <tr>
                   <td className="p-2">Dev Panel access</td>
@@ -1655,8 +1694,8 @@ function WebhooksSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-nhs-black">Assurance Webhooks</h1>
-        <p className="text-nhs-dark-grey mt-1">Power Automate integration spec</p>
+        <h1 className="text-2xl font-bold text-nhs-black">Assurance Integration</h1>
+        <p className="text-nhs-dark-grey mt-1">Nexus sync &mdash; webhook, Power Automate, or hard-coded</p>
       </div>
 
       <Card>
@@ -1665,12 +1704,27 @@ function WebhooksSection() {
         </CardHeader>
         <CardContent className="text-sm text-nhs-dark-grey space-y-3">
           <p>
-            Ward tasks marked as "audit tasks" (fridge temps, controlled drugs, etc.) can
-            automatically sync with the Trust's Assurance Dashboard via Power Automate webhooks.
+            Ward tasks marked as &quot;audit tasks&quot; (fridge temps, controlled drugs, etc.) can
+            automatically sync with Nexus Assurance. wardHub provides the receiving endpoint &mdash;
+            the mechanism for sending the signal is flexible:
           </p>
-          <p>
-            <strong>Light–Max:</strong> Link-only integration (button opens Assurance Dashboard)<br />
-            <strong>Max+:</strong> Auto-sync via webhooks when task completed
+          <div className="grid sm:grid-cols-3 gap-3 mt-2">
+            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="font-semibold text-blue-800">Webhook</p>
+              <p className="text-xs text-blue-700">Nexus POSTs directly to wardHub endpoint on task completion</p>
+            </div>
+            <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+              <p className="font-semibold text-purple-800">Power Automate</p>
+              <p className="text-xs text-purple-700">M365 flow triggers on Nexus event and calls wardHub. Uses existing licensing.</p>
+            </div>
+            <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+              <p className="font-semibold text-green-800">Hard-coded in Nexus</p>
+              <p className="text-xs text-green-700">Trust IT adds the outbound call directly into Nexus. Most reliable if supported.</p>
+            </div>
+          </div>
+          <p className="mt-2">
+            <strong>Light–Max:</strong> Link-only integration (button opens Nexus dashboard)<br />
+            <strong>Max+:</strong> Auto-sync via chosen mechanism when task completed
           </p>
         </CardContent>
       </Card>
@@ -1732,8 +1786,8 @@ function NexusSection() {
       <div className="bg-amber-50 border border-amber-300 rounded-lg p-4">
         <p className="text-sm text-nhs-black">
           <strong>PLANNED</strong> — Nexus Assurance is the Trust&apos;s internal compliance platform.
-          The integration uses a one-way inbound webhook (Nexus → Hub) to auto-complete audit tasks.
-          The Trust tech team builds and maintains the webhook on their side.
+          The integration is one-way inbound (Nexus → Hub) to auto-complete audit tasks.
+          How the signal gets from Nexus to wardHub is flexible &mdash; see integration options below.
         </p>
       </div>
 
@@ -1765,8 +1819,21 @@ function NexusSection() {
             <p>Nexus → Hub only. The Hub never writes to Nexus. This keeps the integration simple and avoids additional approval requirements.</p>
           </div>
           <div className="p-3 bg-nhs-pale-grey rounded-lg">
-            <h3 className="font-semibold text-nhs-black">Mechanism: Webhook</h3>
-            <p>The Trust tech team configures Nexus to POST a webhook when an audit is completed. The Hub receives and processes the event.</p>
+            <h3 className="font-semibold text-nhs-black">Mechanism: Three Options</h3>
+            <div className="mt-2 space-y-2">
+              <div className="p-2 bg-white rounded border border-gray-200">
+                <p className="font-medium text-nhs-black">Option A: Webhook</p>
+                <p className="text-sm">Trust tech team configures Nexus to POST a webhook when an audit is completed. wardHub receives and processes the event.</p>
+              </div>
+              <div className="p-2 bg-white rounded border border-gray-200">
+                <p className="font-medium text-nhs-black">Option B: Power Automate</p>
+                <p className="text-sm">A Power Automate flow triggers on Nexus completion and calls the wardHub endpoint. Uses existing Trust M365 licensing.</p>
+              </div>
+              <div className="p-2 bg-white rounded border border-gray-200">
+                <p className="font-medium text-nhs-black">Option C: Hard-coded in Nexus</p>
+                <p className="text-sm">Trust IT builds the call directly into Nexus code. Most reliable, least flexible &mdash; but simplest if Nexus already supports outbound events.</p>
+              </div>
+            </div>
           </div>
           <div className="p-3 bg-nhs-pale-grey rounded-lg">
             <h3 className="font-semibold text-nhs-black">Scope: Audit Tasks Only</h3>
@@ -1832,11 +1899,11 @@ Response: 200 OK
         </CardHeader>
         <CardContent className="space-y-2">
           {[
-            "Trust tech team builds the webhook on the Nexus side",
-            "Hub provides the /api/nexus/task-complete endpoint",
+            "Trust tech team chooses integration method (webhook, Power Automate, or hard-coded)",
+            "wardHub provides the /api/nexus/task-complete endpoint regardless of method",
             "Authentication via shared secret (rotated quarterly)",
             "No PII transmitted — only audit type, ward, and staff ID",
-            "Fallback: if webhook fails, staff can still mark task complete manually",
+            "Fallback: if integration fails, staff can still mark task complete manually",
             "DPIA update required for Max+ deployment",
           ].map((item, i) => (
             <div key={i} className="flex items-center gap-3 p-2 bg-nhs-pale-grey rounded">
@@ -1868,8 +1935,8 @@ function RoadmapSection() {
           status: "next",
         },
         {
-          title: "Build in More Live Data",
-          description: "Populate the demo with realistic ward content — real referral pathways, actual phone numbers (where public), genuine how-to guides. The closer to real life, the more convincing the demo.",
+          title: "Build Resources Organically",
+          description: "Start with light, real use — a few non-essential tasks to test workflows. Resources grow as users add their own bookmarks, request new guides, and flag gaps. The content is shaped by the people who use it.",
           status: "planned",
         },
         {

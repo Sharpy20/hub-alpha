@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 4 March 2026
+> **Last Updated:** 12 March 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -97,8 +97,8 @@ git remote -v
 
 **Dev Panel Access:**
 - Entry: Small link on GDPR page ("dev panel")
-- Password: `Eft3&d3` (demo only - production uses Trust key vault)
-- In-memory session token (clears on page refresh)
+- No password required (removed Session 11) — dismissible "test data" notice shown instead
+- Production will use Trust key vault authentication
 
 ---
 
@@ -775,7 +775,7 @@ Working through in order. Marking complete as fixed.
 
 | # | Status | Description |
 |---|--------|-------------|
-| 55 | [x] | Dev Panel route created with password gate (`Eft3&d3`) |
+| 55 | [x] | Dev Panel route created (password gate removed Session 11) |
 | 56 | [x] | Dev Panel left nav with 12 sections (Overview, Business Case, Technical, Data Catalogue, RBAC, User Flows, DPIA, Clinical Safety, Schemas, Webhooks, Nexus, References) |
 | 57 | [x] | Schema Status Widget showing DRAFT status |
 | 58 | [x] | DPIA draft scaffold with 7 sections |
@@ -791,6 +791,20 @@ Working through in order. Marking complete as fixed.
 | 68 | [x] | Role-based verification modal (Report Problem, Feedback, Verify Now) |
 | 69 | [x] | Dev Panel link styled as prominent button on GDPR page |
 | 70 | [x] | Documentation Sync added to CRITICAL RULES (#7) |
+
+## SNAG LIST (12 Mar 2026 - Session 11)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 83 | [x] | Interactive tour rewrite — shorter punchier copy, centred balanced text, Mike's tone |
+| 84 | [x] | Search on referrals + how-to pages — confirmed already existed, no changes needed |
+| 85 | [x] | Claim/Steal/Drop wording — "Steal" renamed to "Take Over", tooltips on all action buttons |
+| 86 | [x] | Editor admin page reordered to match header nav: Bookmarks → Guides → How-To |
+| 87 | [x] | Diary settings cog — unified view controls (simple/detailed, hide completed, show ward tasks) with localStorage |
+| 88 | [x] | Simple diary view — 2-line compact task cards, completed hidden automatically, no priority borders |
+| 89 | [x] | Site-wide password removed — middleware passes everyone through, /password redirects to home |
+| 90 | [x] | Dev panel password removed — replaced with dismissible "test data" notice banner |
+| 91 | [x] | Logout redirects to /login instead of /password |
 
 ---
 
@@ -832,7 +846,16 @@ Working through in order. Marking complete as fixed.
 
 ---
 
-**Recently Completed (28 Feb 2026 - Session 8):**
+**Recently Completed (12 Mar 2026 - Session 11):**
+- ✅ Interactive tour rewritten with Mike's tone (8 screens, shorter punchier copy)
+- ✅ "Steal" renamed to "Take Over" with descriptive tooltips on Claim/Take Over/Drop
+- ✅ Editor admin reordered: Bookmarks → Guides → How-To (matches header nav)
+- ✅ Diary settings cog: simple/detailed view toggle, hide completed, show ward tasks — all persisted to localStorage
+- ✅ Simple diary view: 2-line compact cards, completed tasks auto-hidden
+- ✅ Site-wide password protection removed (open for testing)
+- ✅ Dev panel password gate removed, replaced with dismissible "test data" notice
+
+**Previously Completed (28 Feb 2026 - Session 8):**
 - ✅ Renamed "Normal User" role to "Staff" across entire codebase (7+ files)
 - ✅ Changed "Contributor" from standalone role to orthogonal `isContributor` flag on any role
 - ✅ Added Lead and Manager roles (5 roles: Staff, Lead, Manager, Ward Admin, Senior Admin)
@@ -1059,6 +1082,43 @@ Then open http://localhost:3000
 - `910207b` — Rename normal to staff, changeable ward professional, creator request flow
 - `ee2036e` — Audit: security fixes, ARIA labels, NHS branding, breadcrumbs, dev panel updates
 - `be25560` — Fix: Editor link visible to all users for creator privilege requests
+
+**Build Status:** All builds pass successfully
+
+### 12 March 2026 - Session 11 (Design Refresh & Password Removal)
+**Completed:**
+- [x] Interactive tour rewritten — 8 screens with Mike's tone: "Your ward's go-to guide", "Walk through a referral", "A simple diary for the ward", "Diary to guide in one tap", "Never miss an audit", "Guides help you finish it", "Your own space", "Have a play"
+- [x] Tour text centred with balanced word wrap (CSS `text-wrap: balance`, `max-w-xs/sm`)
+- [x] "Steal" → "Take Over" across diary, my-tasks, and task detail modal
+- [x] Tooltips added: Claim ("Assign this task to yourself"), Take Over ("Assigned to {name} — reassign to yourself"), Drop ("Release this task so others can pick it up")
+- [x] Editor admin page cards reordered: Bookmarks → Guides → How-To (matches header nav)
+- [x] Editor card labels updated: "Workflows" → "Guides", "Guides" → "How-To"
+- [x] Diary settings cog (Settings2 icon) replacing scattered toggles
+- [x] Settings popover: Simple/Detailed view toggle, Hide completed checkbox, Show ward tasks checkbox
+- [x] All diary settings persisted to localStorage (`wardhub_diary_view`, `wardhub_hide_completed`, `wardhub_show_ward_tasks`)
+- [x] SimpleTaskCard component: single-row compact cards (icon + title + patient + action button)
+- [x] Simple view: completed tasks auto-hidden, no priority group borders, tighter spacing
+- [x] Site-wide password middleware removed — all routes open
+- [x] /password page redirects to home
+- [x] Dev panel password gate removed, dismissible amber "test data" notice added
+- [x] Logout redirects to /login (was /password)
+- [x] Unused imports cleaned up (Lock, Button, useEffect from dev-panel)
+
+**Key Files Modified:**
+- `src/components/tour/TourWelcome.tsx` — Rewritten welcome screen
+- `src/components/tour/TourModal.tsx` — All 8 tour screens rewritten
+- `src/components/tour/TourSlideshow.tsx` — Centred text with balanced wrap
+- `src/app/tasks/page.tsx` — SimpleTaskCard, diary settings cog, Take Over wording, settings persistence
+- `src/components/modals/TaskDetailModal.tsx` — Take Over wording + tooltips
+- `src/app/admin/page.tsx` — Reordered cards: Bookmarks → Guides → How-To
+- `src/middleware.ts` — Password protection removed
+- `src/app/password/page.tsx` — Redirects to home
+- `src/app/dev-panel/page.tsx` — Password gate removed, test data notice added
+- `src/components/layout/header.tsx` — Logout goes to /login
+
+**Commits:**
+- `2c6146f` — Design refresh: tour rewrite, claim wording, editor order, diary settings cog
+- `e3cb85e` — Remove password gates from site and dev panel
 
 **Build Status:** All builds pass successfully
 

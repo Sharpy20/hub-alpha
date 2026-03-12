@@ -69,7 +69,7 @@ export function Header() {
     } catch {
       // Continue with redirect even if API call fails
     }
-    router.push("/password");
+    router.push("/login");
   };
 
   useEffect(() => {

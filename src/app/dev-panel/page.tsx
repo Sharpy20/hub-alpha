@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MainLayout } from "@/components/layout";
-import { Card, CardContent, CardHeader, Button } from "@/components/ui";
+import { Card, CardContent, CardHeader } from "@/components/ui";
 import {
-  Lock,
+  X,
   FileText,
   Database,
   Shield,
@@ -25,8 +25,7 @@ import {
   ArrowRight
 } from "lucide-react";
 
-// Dev panel password (demo only - production would use env/vault)
-const DEV_PANEL_PASSWORD = "Eft3&d3";
+// Dev panel password removed for demo — open access
 
 // Schema status (would be managed by state in real implementation)
 type SchemaStatus = "LIVE" | "DRAFT" | "UNKNOWN";
@@ -63,79 +62,9 @@ const NAV_SECTIONS = [
 ];
 
 export default function DevPanelPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
   const [schemaConfig] = useState<SchemaConfig>(INITIAL_SCHEMA_CONFIG);
-
-  // Check for existing session (in-memory only, clears on page refresh)
-  useEffect(() => {
-    const session = sessionStorage.getItem("devPanelAuth");
-    if (session === "authenticated") {
-      setIsAuthenticated(true);
-      // Audit log - production would use backend logging
-    }
-  }, []);
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === DEV_PANEL_PASSWORD) {
-      setIsAuthenticated(true);
-      sessionStorage.setItem("devPanelAuth", "authenticated");
-      // Audit log - production would use backend logging
-    } else {
-      setPasswordError(true);
-      setTimeout(() => setPasswordError(false), 2000);
-    }
-  };
-
-  // Password gate
-  if (!isAuthenticated) {
-    return (
-      <MainLayout>
-        <div className="max-w-md mx-auto mt-20">
-          <Card>
-            <CardHeader>
-              <h1 className="text-xl font-bold text-nhs-black flex items-center gap-2">
-                <Lock className="w-5 h-5 text-nhs-blue" />
-                Developer Panel Access
-              </h1>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-nhs-dark-grey mb-4">
-                This area contains technical documentation and governance materials.
-                Enter the access code to continue.
-              </p>
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Access code"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-nhs-blue ${
-                      passwordError ? "border-nhs-red bg-red-50" : "border-gray-300"
-                    }`}
-                    autoFocus
-                  />
-                  {passwordError && (
-                    <p className="text-sm text-nhs-red mt-1">Incorrect access code</p>
-                  )}
-                </div>
-                <Button type="submit" variant="primary" className="w-full">
-                  Access Panel
-                </Button>
-              </form>
-              <p className="text-xs text-nhs-mid-grey mt-4 text-center">
-                Demo mode: hardcoded password. Production uses Trust key vault.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </MainLayout>
-    );
-  }
+  const [showTestNotice, setShowTestNotice] = useState(true);
 
   // Schema status badge
   const SchemaStatusBadge = () => {
@@ -161,6 +90,23 @@ export default function DevPanelPage() {
 
   return (
     <MainLayout>
+      {/* Test data notice */}
+      {showTestNotice && (
+        <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start justify-between gap-3">
+          <div>
+            <p className="font-semibold text-amber-800 text-sm">Test data only</p>
+            <p className="text-amber-700 text-xs mt-0.5">
+              Everything here is demo data. No password needed currently.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowTestNotice(false)}
+            className="text-amber-400 hover:text-amber-600 flex-shrink-0"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       <div className="flex gap-6">
         {/* Left Navigation */}
         <aside className="w-64 flex-shrink-0">

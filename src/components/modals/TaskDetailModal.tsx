@@ -424,11 +424,12 @@ export function TaskDetailModal({
                 </button>
               )}
 
-              {/* Claim/Unclaim/Steal buttons */}
+              {/* Claim/Drop/Take Over buttons */}
               {!isCompleted && !isClaimed && (
                 <button
                   onClick={handleClaim}
                   className="px-4 py-2 bg-amber-100 text-amber-700 rounded-lg font-medium hover:bg-amber-200 transition-colors flex items-center gap-2"
+                  title="Assign this task to yourself"
                 >
                   <Hand className="w-4 h-4" />
                   Claim Task
@@ -438,18 +439,20 @@ export function TaskDetailModal({
                 <button
                   onClick={handleClaim}
                   className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center gap-2"
+                  title="Release this task so others can pick it up"
                 >
                   <Hand className="w-4 h-4" />
-                  Unclaim
+                  Drop
                 </button>
               )}
               {!isCompleted && isClaimed && !isClaimedByMe && (
                 <button
                   onClick={handleSteal}
                   className="px-4 py-2 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors flex items-center gap-2"
+                  title={`Assigned to ${task.claimedBy} — reassign to yourself`}
                 >
                   <Hand className="w-4 h-4" />
-                  Steal Task
+                  Take Over
                 </button>
               )}
 

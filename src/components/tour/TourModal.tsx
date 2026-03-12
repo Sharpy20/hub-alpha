@@ -160,19 +160,22 @@ export function TourModal() {
             />
           )}
 
-          {/* REFERRALS - "wardHub is packed full of interactive guides" */}
+          {/* REFERRALS - walk through a common referral */}
           {currentSection === "referrals" && (
             <div className="space-y-4 text-center">
               <div className="py-2">
-                <h3 className="font-bold text-xl text-gray-900">Interactive Guides</h3>
-                <p className="text-sm text-gray-600 mt-2 max-w-md mx-auto">
-                  wardHub is packed full of interactive guides &mdash; try one for yourself!
+                <h3 className="font-bold text-xl text-gray-900">
+                  Walk through a referral
+                </h3>
+                <p className="text-sm text-gray-600 mt-2 max-w-xs mx-auto leading-relaxed">
+                  Step by step. Forms, examples,
+                  who to contact. One click, done.
                 </p>
               </div>
 
               <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-200">
                 <p className="text-sm text-indigo-800 font-medium mb-3">
-                  Walk through a real IMHA referral, step by step:
+                  Try a real IMHA referral:
                 </p>
                 <button
                   onClick={() => {
@@ -206,13 +209,13 @@ export function TourModal() {
             </div>
           )}
 
-          {/* TASK DIARY - "more than a set of interactive guides" */}
+          {/* TASK DIARY - a simple electronic diary */}
           {currentSection === "task-diary" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "More Than Guides",
-                  narrative: "wardHub is more than a set of interactive guides \u2014 a simple electronic diary helps you and your ward stay organised.",
+                  title: "A simple diary for the ward",
+                  narrative: "If you let it, wardHub keeps your team organised too. One shared diary, everyone on the same page.",
                   visual: <DiaryMockup />,
                 },
               ]}
@@ -223,17 +226,17 @@ export function TourModal() {
             />
           )}
 
-          {/* DIARY INTEGRATION - seamless integration */}
+          {/* DIARY INTEGRATION - diary to guide in one tap */}
           {currentSection === "diary-integration" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "Everything Connected",
-                  narrative: "Diary items seamlessly integrate between patient, staff member and step-by-step guide. Leaving a full auditable log for the patient electronic records on discharge.",
+                  title: "Diary to guide in one tap",
+                  narrative: "A task in the diary links straight to the referral you need. No searching, no guessing.",
                   visual: (
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden max-w-md mx-auto">
+                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden max-w-sm mx-auto">
                       <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 text-white text-center">
-                        <p className="font-bold text-sm">Linked Task Example</p>
+                        <p className="font-bold text-sm">Linked task</p>
                       </div>
                       <div className="p-4 space-y-3">
                         <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
@@ -242,14 +245,14 @@ export function TourModal() {
                         </div>
                         <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
                           <p className="text-xs font-semibold text-blue-500 uppercase">Patient</p>
-                          <p className="text-sm font-bold text-blue-800">Alex Morgan &mdash; Room 4, Byron Ward</p>
+                          <p className="text-sm font-bold text-blue-800">Alex Morgan &mdash; Room 4</p>
                         </div>
                         <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
-                          <p className="text-xs font-semibold text-purple-500 uppercase">Assigned To</p>
+                          <p className="text-xs font-semibold text-purple-500 uppercase">Assigned to</p>
                           <p className="text-sm font-bold text-purple-800">Sarah Chen (Named Nurse)</p>
                         </div>
                         <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                          <p className="text-xs font-semibold text-green-500 uppercase">Audit Trail</p>
+                          <p className="text-xs font-semibold text-green-500 uppercase">Audit trail</p>
                           <p className="text-sm text-green-800">Created &rarr; Claimed &rarr; In Progress &rarr; Complete</p>
                           <p className="text-xs text-green-600 mt-1">Full log compiled on discharge</p>
                         </div>
@@ -265,13 +268,13 @@ export function TourModal() {
             />
           )}
 
-          {/* NEXUS NUDGE - audit compliance */}
+          {/* NEXUS NUDGE - never miss an audit */}
           {currentSection === "nexus-nudge" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "Improve Audit Compliance",
-                  narrative: "Gentle nudges to complete those daily assurance dashboard items on Nexus. Nudges stop when Nexus reports the job completed.",
+                  title: "Never miss an audit",
+                  narrative: "Connected to the Trust's assurance dashboards. Overdue? You'll know.",
                   visual: <NexusBadgeMockup completed={false} />,
                 },
               ]}
@@ -282,13 +285,13 @@ export function TourModal() {
             />
           )}
 
-          {/* NEXUS DETAIL - fridge temp with links */}
+          {/* NEXUS DETAIL - guides help you finish it */}
           {currentSection === "nexus-detail" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "Linked to Guides & Nexus",
-                  narrative: "Each job tile holds direct links to the Nexus audit and links to a guide showing how to complete the real-world task. Great for new starters.",
+                  title: "Guides help you finish it",
+                  narrative: "Links and step-by-step guides to complete the audit there and then. Great for new starters.",
                   visual: <NexusBadgeMockup completed={true} />,
                 },
               ]}
@@ -299,13 +302,13 @@ export function TourModal() {
             />
           )}
 
-          {/* KANBAN - your own diary view */}
+          {/* KANBAN - your own space */}
           {currentSection === "kanban" && (
             <TourSlideshow
               slides={[
                 {
-                  title: "Your Own Diary View",
-                  narrative: "See jobs you have picked up and track your progress. Shared with the ward diary view \u2014 team communication done for you.",
+                  title: "Your own space",
+                  narrative: "Minimal on the surface. Behind the scenes, your team sees what you're working on. No duplication.",
                   visual: <KanbanMockup />,
                 },
               ]}
@@ -317,17 +320,14 @@ export function TourModal() {
             />
           )}
 
-          {/* COMPLETE */}
+          {/* COMPLETE - have a play */}
           {currentSection === "complete" && (
             <div className="text-center space-y-6 py-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-xl mx-auto">
-                <CheckCircle className="w-10 h-10 text-white" />
-              </div>
               <div>
-                <h2 className="text-2xl font-black text-gray-900">Tour Complete!</h2>
-                <p className="text-gray-500 mt-2 max-w-md mx-auto">
-                  You&apos;ve seen the key features. Explore wardHub yourself, or check the Dev Panel
-                  for the full technical documentation and business case.
+                <h2 className="text-2xl font-black text-gray-900">Have a play</h2>
+                <p className="text-gray-500 mt-3 max-w-sm mx-auto leading-relaxed">
+                  Demo mode. Fake data. Everything resets
+                  when you close the page. You can&apos;t break anything.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -335,7 +335,7 @@ export function TourModal() {
                   onClick={handleEndTour}
                   className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-bold hover:shadow-lg transition-all"
                 >
-                  Start Exploring
+                  Start exploring
                 </button>
                 <button
                   onClick={() => {

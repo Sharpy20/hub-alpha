@@ -35,10 +35,12 @@ export function TourSlideshow({ slides, currentSlide, onNext, onPrev, onComplete
         </div>
       )}
 
-      {/* Title & narrative */}
+      {/* Title & narrative - centred with balanced wrap */}
       <div className="text-center px-4">
-        <h3 className="font-bold text-lg text-gray-900">{slide.title}</h3>
-        <p className="text-sm text-gray-600 mt-1">{slide.narrative}</p>
+        <h3 className="font-bold text-xl text-gray-900">{slide.title}</h3>
+        <p className="text-sm text-gray-600 mt-2 max-w-xs mx-auto leading-relaxed" style={{ textWrap: "balance" } as React.CSSProperties}>
+          {slide.narrative}
+        </p>
       </div>
 
       {/* Visual */}

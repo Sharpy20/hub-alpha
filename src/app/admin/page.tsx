@@ -120,57 +120,9 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Content Admin cards */}
+        {/* Content Admin cards - order matches header nav: Bookmarks, Guides, How-To */}
         {isContentAdmin && (
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Workflows card */}
-          <Link href="/admin/workflows" className="block no-underline">
-            <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-rose-300 hover:shadow-lg transition-all cursor-pointer group">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-700 rounded-xl flex items-center justify-center">
-                  <FileText className="w-7 h-7 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors">
-                    Workflows
-                  </h2>
-                  <p className="text-gray-500">{WORKFLOW_COUNT} referrals</p>
-                </div>
-              </div>
-              <p className="text-gray-600 mb-4 text-sm">
-                Edit referral workflows, steps, forms, and case note templates.
-              </p>
-              <div className="flex items-center gap-2 text-rose-600 font-semibold group-hover:gap-3 transition-all text-sm">
-                Manage
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </div>
-          </Link>
-
-          {/* Guides card */}
-          <Link href="/admin/guides" className="block no-underline">
-            <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-emerald-300 hover:shadow-lg transition-all cursor-pointer group">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl flex items-center justify-center">
-                  <BookOpen className="w-7 h-7 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
-                    Guides
-                  </h2>
-                  <p className="text-gray-500">{GUIDE_COUNT} how-to guides</p>
-                </div>
-              </div>
-              <p className="text-gray-600 mb-4 text-sm">
-                Edit how-to guides, add content, steps, and helpful tips.
-              </p>
-              <div className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all text-sm">
-                Manage
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </div>
-          </Link>
-
           {/* Bookmarks card */}
           <Link href="/admin/bookmarks" className="block no-underline">
             <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-amber-300 hover:shadow-lg transition-all cursor-pointer group">
@@ -189,6 +141,54 @@ export default function AdminPage() {
                 Edit bookmarks, links, and descriptions.{user.role === "senior_admin" ? " Manage categories." : ""}
               </p>
               <div className="flex items-center gap-2 text-amber-600 font-semibold group-hover:gap-3 transition-all text-sm">
+                Manage
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </Link>
+
+          {/* Guides card */}
+          <Link href="/admin/workflows" className="block no-underline">
+            <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-rose-300 hover:shadow-lg transition-all cursor-pointer group">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-700 rounded-xl flex items-center justify-center">
+                  <FileText className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors">
+                    Guides
+                  </h2>
+                  <p className="text-gray-500">{WORKFLOW_COUNT} referral guides</p>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4 text-sm">
+                Edit referral guides, steps, forms, and case note templates.
+              </p>
+              <div className="flex items-center gap-2 text-rose-600 font-semibold group-hover:gap-3 transition-all text-sm">
+                Manage
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </div>
+          </Link>
+
+          {/* How-To card */}
+          <Link href="/admin/guides" className="block no-underline">
+            <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-emerald-300 hover:shadow-lg transition-all cursor-pointer group">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl flex items-center justify-center">
+                  <BookOpen className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
+                    How-To
+                  </h2>
+                  <p className="text-gray-500">{GUIDE_COUNT} how-to guides</p>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-4 text-sm">
+                Edit how-to guides, add content, steps, and helpful tips.
+              </p>
+              <div className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all text-sm">
                 Manage
                 <ArrowRight className="w-4 h-4" />
               </div>

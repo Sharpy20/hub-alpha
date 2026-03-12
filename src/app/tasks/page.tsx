@@ -30,6 +30,7 @@ import {
   Sun,
   Moon,
   Sunset,
+  Settings2,
 } from "lucide-react";
 import {
   DiaryTask,
@@ -197,13 +198,13 @@ function TaskCard({
                         onSteal(task.id);
                       }}
                       className="flex items-center gap-1 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors"
-                      title="Take over this task"
+                      title={`Assigned to ${task.claimedBy} — reassign to yourself`}
                     >
                       <Hand className="w-2.5 h-2.5" />
-                      Steal
+                      Take Over
                     </button>
                   )}
-                  {/* Unclaim button - if claimed by me */}
+                  {/* Drop button - if claimed by me */}
                   {isClaimedByMe && onClaim && (
                     <button
                       onClick={(e) => {
@@ -211,6 +212,7 @@ function TaskCard({
                         onClaim(task.id);
                       }}
                       className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
+                      title="Release this task so others can pick it up"
                     >
                       <Hand className="w-2.5 h-2.5" />
                       Drop
@@ -262,6 +264,7 @@ function TaskCard({
                       onClaim(task.id);
                     }}
                     className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
+                    title="Assign this task to yourself"
                   >
                     <Hand className="w-2.5 h-2.5" />
                     Claim
@@ -331,6 +334,84 @@ function TaskCard({
   );
 }
 
+// Simple (compact) Task Card - 2-line view
+function SimpleTaskCard({
+  task,
+  onClaim,
+  onSteal,
+  onClick,
+  currentUserName,
+}: {
+  task: DiaryTask;
+  onClaim?: (id: string) => void;
+  onSteal?: (id: string) => void;
+  onClick?: (task: DiaryTask) => void;
+  currentUserName?: string;
+}) {
+  const isClaimed = !!task.claimedBy;
+  const isClaimedByMe = task.claimedBy === currentUserName;
+  const priorityConfig = PRIORITY_CONFIG[task.priority];
+  const gradient = priorityConfig.gradient;
+
+  let icon = "📌";
+  if (task.type === "ward") {
+    icon = SHIFT_CONFIG[task.shift].icon;
+  } else if (task.type === "patient") {
+    icon = TASK_CATEGORY_CONFIG[task.category].icon;
+  } else if (task.type === "appointment") {
+    icon = "📅";
+  }
+
+  return (
+    <div
+      onClick={() => onClick?.(task)}
+      className="rounded-lg overflow-hidden cursor-pointer hover:shadow-md hover:scale-[1.01] transition-all"
+    >
+      <div className={`bg-gradient-to-r ${gradient} px-2.5 py-1.5 flex items-center gap-2`}>
+        <span className="text-sm flex-shrink-0">{icon}</span>
+        <h4 className="font-semibold text-white text-xs truncate flex-1 min-w-0">
+          {task.title}
+        </h4>
+        {(task.type === "patient" || task.type === "appointment") && task.patientName && (
+          <span className="text-white/80 text-[10px] flex-shrink-0 truncate max-w-[120px]">
+            👤 {task.patientName}
+          </span>
+        )}
+        {!isClaimed && onClaim && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onClaim(task.id); }}
+            className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0"
+            title="Assign this task to yourself"
+          >
+            <Hand className="w-2.5 h-2.5" />
+            Claim
+          </button>
+        )}
+        {isClaimed && !isClaimedByMe && onSteal && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onSteal(task.id); }}
+            className="flex items-center gap-0.5 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors flex-shrink-0"
+            title={`Assigned to ${task.claimedBy} — reassign to yourself`}
+          >
+            <Hand className="w-2.5 h-2.5" />
+            Take Over
+          </button>
+        )}
+        {isClaimed && isClaimedByMe && onClaim && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onClaim(task.id); }}
+            className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0"
+            title="Release this task so others can pick it up"
+          >
+            <Hand className="w-2.5 h-2.5" />
+            Drop
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // Priority order: urgent first, then important, then routine
 const PRIORITY_ORDER: Record<string, number> = {
   urgent: 0,
@@ -354,6 +435,7 @@ function PriorityGroupedTasks({
   onTaskClick,
   currentUserName,
   compact,
+  diaryView = "detailed",
 }: {
   tasks: DiaryTask[];
   onToggleComplete: (id: string) => void;
@@ -362,6 +444,7 @@ function PriorityGroupedTasks({
   onTaskClick?: (task: DiaryTask) => void;
   currentUserName?: string;
   compact?: boolean;
+  diaryView?: "simple" | "detailed";
 }) {
   // Sort tasks by priority (urgent first)
   const sortedTasks = [...tasks].sort((a, b) => {
@@ -383,27 +466,53 @@ function PriorityGroupedTasks({
     (p) => groupedTasks[p] && groupedTasks[p].length > 0
   );
 
+  // Render function for a single task based on view mode
+  const renderTask = (task: DiaryTask) => {
+    if (diaryView === "simple") {
+      return (
+        <SimpleTaskCard
+          key={task.id}
+          task={task}
+          onClaim={onClaim}
+          onSteal={onSteal}
+          onClick={onTaskClick}
+          currentUserName={currentUserName}
+        />
+      );
+    }
+    return (
+      <TaskCard
+        key={task.id}
+        task={task}
+        onToggleComplete={onToggleComplete}
+        onClaim={onClaim}
+        onSteal={onSteal}
+        onClick={onTaskClick}
+        currentUserName={currentUserName}
+        compact={compact}
+      />
+    );
+  };
+
   // If only one priority or no tasks, render without grouping borders
   if (priorityKeys.length <= 1) {
     return (
-      <div className="space-y-2">
-        {sortedTasks.map((task) => (
-          <TaskCard
-            key={task.id}
-            task={task}
-            onToggleComplete={onToggleComplete}
-            onClaim={onClaim}
-            onSteal={onSteal}
-            onClick={onTaskClick}
-            currentUserName={currentUserName}
-            compact={compact}
-          />
-        ))}
+      <div className={diaryView === "simple" ? "space-y-1" : "space-y-2"}>
+        {sortedTasks.map(renderTask)}
       </div>
     );
   }
 
-  // Multiple priorities - render with group borders
+  // Simple view skips priority grouping borders
+  if (diaryView === "simple") {
+    return (
+      <div className="space-y-1">
+        {sortedTasks.map(renderTask)}
+      </div>
+    );
+  }
+
+  // Multiple priorities - render with group borders (detailed view)
   return (
     <div className="space-y-3">
       {priorityKeys.map((priority) => {
@@ -422,18 +531,7 @@ function PriorityGroupedTasks({
               <span className="text-xs text-gray-500">({priorityTasks.length})</span>
             </div>
             <div className="space-y-2">
-              {priorityTasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onToggleComplete={onToggleComplete}
-                  onClaim={onClaim}
-                  onSteal={onSteal}
-                  onClick={onTaskClick}
-                  currentUserName={currentUserName}
-                  compact={compact}
-                />
-              ))}
+              {priorityTasks.map(renderTask)}
             </div>
           </div>
         );
@@ -499,6 +597,8 @@ function DayColumn({
   tasks,
   isFocused,
   hideCompleted,
+  diaryView = "detailed",
+  showWardTasksSetting = true,
   onToggleComplete,
   onClaim,
   onSteal,
@@ -513,6 +613,8 @@ function DayColumn({
   tasks: DiaryTask[];
   isFocused: boolean;
   hideCompleted: boolean;
+  diaryView?: "simple" | "detailed";
+  showWardTasksSetting?: boolean;
   onToggleComplete: (id: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
@@ -557,11 +659,13 @@ function DayColumn({
   const patientTasks = tasks.filter((t) => t.type === "patient") as PatientTask[];
   const appointments = tasks.filter((t) => t.type === "appointment") as Appointment[];
 
+  // Simple view always hides completed tasks
+  const shouldHideCompleted = hideCompleted || diaryView === "simple";
   const filterCompleted = (items: DiaryTask[]) =>
-    hideCompleted ? items.filter((t) => t.status !== "completed") : items;
+    shouldHideCompleted ? items.filter((t) => t.status !== "completed") : items;
 
-  // Only show ward tasks for today
-  const showWardTasks = isToday;
+  // Only show ward tasks for today + respect settings toggle
+  const showWardTasks = isToday && showWardTasksSetting;
   const visibleWardTasks = showWardTasks ? filterCompleted(wardTasks) : [];
   const visiblePatientTasks = filterCompleted(patientTasks);
   const visibleAppointments = filterCompleted(appointments);
@@ -643,6 +747,7 @@ function DayColumn({
             onTaskClick={onTaskClick}
             currentUserName={currentUserName}
             compact={!isFocused}
+            diaryView={diaryView}
           />
         </CollapsibleSection>
 
@@ -662,6 +767,7 @@ function DayColumn({
             onTaskClick={onTaskClick}
             currentUserName={currentUserName}
             compact={!isFocused}
+            diaryView={diaryView}
           />
         </CollapsibleSection>
 
@@ -681,6 +787,7 @@ function DayColumn({
             onTaskClick={onTaskClick}
             currentUserName={currentUserName}
             compact={!isFocused}
+            diaryView={diaryView}
           />
         </CollapsibleSection>
 
@@ -1988,7 +2095,26 @@ export default function TasksPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const columnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  const [hideCompleted, setHideCompleted] = useState(false);
+  // Diary view settings - persisted to localStorage
+  const [diaryView, setDiaryView] = useState<"simple" | "detailed">(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("wardhub_diary_view") as "simple" | "detailed") || "detailed";
+    }
+    return "detailed";
+  });
+  const [hideCompleted, setHideCompleted] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("wardhub_hide_completed") === "true";
+    }
+    return false;
+  });
+  const [showWardTasksSetting, setShowWardTasksSetting] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("wardhub_show_ward_tasks") !== "false";
+    }
+    return true;
+  });
+  const [showDiarySettings, setShowDiarySettings] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [focusedDate, setFocusedDate] = useState<string>("");
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
@@ -2021,6 +2147,17 @@ export default function TasksPage() {
       setFocusedDate(todayStr);
     }
   }, [focusedDate, todayStr]);
+
+  // Persist diary settings to localStorage
+  useEffect(() => {
+    localStorage.setItem("wardhub_diary_view", diaryView);
+  }, [diaryView]);
+  useEffect(() => {
+    localStorage.setItem("wardhub_hide_completed", String(hideCompleted));
+  }, [hideCompleted]);
+  useEffect(() => {
+    localStorage.setItem("wardhub_show_ward_tasks", String(showWardTasksSetting));
+  }, [showWardTasksSetting]);
 
   // Handle escape key to close expanded view
   useEffect(() => {
@@ -2346,17 +2483,80 @@ export default function TasksPage() {
           )}
 
           <div className="flex items-center gap-2 ml-auto">
-            <button
-              onClick={() => setHideCompleted(!hideCompleted)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
-                hideCompleted
-                  ? "bg-amber-100 text-amber-800"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {hideCompleted ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              {hideCompleted ? "Active only" : "Hide done"}
-            </button>
+            {/* Diary settings cog */}
+            <div className="relative">
+              <button
+                onClick={() => setShowDiarySettings(!showDiarySettings)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all ${
+                  showDiarySettings
+                    ? "bg-indigo-100 text-indigo-700 ring-2 ring-indigo-300"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+                title="Diary settings"
+              >
+                <Settings2 className="w-5 h-5" />
+              </button>
+              {showDiarySettings && (
+                <div className="absolute top-full mt-1 right-0 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-56 py-2">
+                  <div className="px-3 py-1.5 border-b border-gray-100">
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">View</p>
+                  </div>
+                  <div className="px-2 py-1.5">
+                    <div className="flex gap-1">
+                      <button
+                        onClick={() => setDiaryView("simple")}
+                        className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                          diaryView === "simple"
+                            ? "bg-indigo-100 text-indigo-700"
+                            : "text-gray-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        Simple
+                      </button>
+                      <button
+                        onClick={() => setDiaryView("detailed")}
+                        className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                          diaryView === "detailed"
+                            ? "bg-indigo-100 text-indigo-700"
+                            : "text-gray-600 hover:bg-gray-50"
+                        }`}
+                      >
+                        Detailed
+                      </button>
+                    </div>
+                  </div>
+                  <div className="px-3 py-1.5 border-t border-gray-100 mt-1">
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Filters</p>
+                  </div>
+                  <label className="flex items-center justify-between px-3 py-1.5 hover:bg-gray-50 cursor-pointer">
+                    <span className="text-xs text-gray-700">Hide completed</span>
+                    <input
+                      type="checkbox"
+                      checked={hideCompleted}
+                      onChange={(e) => setHideCompleted(e.target.checked)}
+                      className="rounded border-gray-300 text-indigo-600 w-3.5 h-3.5"
+                    />
+                  </label>
+                  <label className="flex items-center justify-between px-3 py-1.5 hover:bg-gray-50 cursor-pointer">
+                    <span className="text-xs text-gray-700">Show ward tasks</span>
+                    <input
+                      type="checkbox"
+                      checked={showWardTasksSetting}
+                      onChange={(e) => setShowWardTasksSetting(e.target.checked)}
+                      className="rounded border-gray-300 text-indigo-600 w-3.5 h-3.5"
+                    />
+                  </label>
+                  <div className="px-3 pt-2 pb-1 border-t border-gray-100 mt-1">
+                    <button
+                      onClick={() => setShowDiarySettings(false)}
+                      className="w-full py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200"
+                    >
+                      Done
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <button
               onClick={() => setShowStaffModal(true)}
@@ -2416,6 +2616,8 @@ export default function TasksPage() {
                 tasks={getTasksForDate(date)}
                 isFocused={date === focusedDate}
                 hideCompleted={hideCompleted}
+                diaryView={diaryView}
+                showWardTasksSetting={showWardTasksSetting}
                 onToggleComplete={handleToggleComplete}
                 onClaim={handleClaim}
                 onSteal={handleSteal}

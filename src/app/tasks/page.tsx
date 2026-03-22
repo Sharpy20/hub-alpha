@@ -2014,8 +2014,8 @@ function ExpandedDayView({
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Ward Tasks Column - only show for today */}
-              {isToday && showWardTasks && (earlyTasks.length > 0 || lateTasks.length > 0 || nightTasks.length > 0) && (
+              {/* Ward Tasks Column */}
+              {showWardTasks && (earlyTasks.length > 0 || lateTasks.length > 0 || nightTasks.length > 0) && (
                 <div className="space-y-6">
                   <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                     🏥 Ward Tasks

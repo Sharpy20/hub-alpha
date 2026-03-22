@@ -902,10 +902,17 @@ function AddTaskModal({
   const [requiresApproval, setRequiresApproval] = useState(false);
   const effectiveDefault = defaultDate || formatDate(new Date());
   const [wardTaskDate, setWardTaskDate] = useState(effectiveDefault);
-  const [taskDate, setTaskDate] = useState(effectiveDefault); // Date for patient tasks
+  const [taskDate, setTaskDate] = useState(effectiveDefault);
+  const [appointmentDate, setAppointmentDate] = useState(effectiveDefault);
+
+  // Reset dates when defaultDate changes (e.g. opening modal from a different day)
+  useEffect(() => {
+    setWardTaskDate(effectiveDefault);
+    setTaskDate(effectiveDefault);
+    setAppointmentDate(effectiveDefault);
+  }, [effectiveDefault]);
 
   // Appointment specific
-  const [appointmentDate, setAppointmentDate] = useState(effectiveDefault);
   const [timeType, setTimeType] = useState<"preset" | "exact">("preset");
   const [presetTime, setPresetTime] = useState<"morning" | "afternoon" | "evening" | "night">("morning");
   const [exactTime, setExactTime] = useState("09:00");

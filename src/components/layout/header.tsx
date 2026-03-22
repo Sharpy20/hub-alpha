@@ -170,8 +170,8 @@ export function Header() {
                   </div>
 
                   {/* Bouncing arrow pointing at Demo Mode */}
-                  <span className="text-indigo-500 animate-bounce text-lg">&larr;</span>
                   <span className="text-xs text-indigo-600 font-medium">Try different roles!</span>
+                  <span className="text-indigo-500 text-lg animate-[bounce-right_1s_infinite]">&rarr;</span>
                 </>
               ) : (
                 <>

@@ -76,17 +76,25 @@ export default function MyTasksPage() {
     setSelectedTask(task);
   };
 
-  // Apply My Patients and staff filters
+  // Get discharged patient IDs
+  const dischargedPatientIds = DEMO_PATIENTS
+    .filter(p => p.status === "discharged")
+    .map(p => p.id);
+
+  // Apply filters
   const filteredTasks = tasks.filter((task) => {
-    // My Patients filter
+    // Remove completed tasks for discharged patients
+    if (task.status === "completed" && (task.type === "patient" || task.type === "appointment") && task.patientId && dischargedPatientIds.includes(task.patientId)) {
+      return false;
+    }
+    // My Patients filter (additive — shows WP patient tasks alongside claimed tasks)
     if (showMyPatients && myPatientIds.length > 0) {
       if (task.type === "patient" || task.type === "appointment") {
-        if (!task.patientId || !myPatientIds.includes(task.patientId)) return false;
+        // Include if it's a WP patient task OR if it's claimed by the user
+        const isMyPatientTask = task.patientId && myPatientIds.includes(task.patientId);
+        const isClaimedByMe = task.claimedBy === user?.name;
+        if (!isMyPatientTask && !isClaimedByMe) return false;
       }
-    }
-    // Staff filter (Lead/Manager)
-    if (selectedStaffFilter.length > 0) {
-      if (task.claimedBy && !selectedStaffFilter.includes(task.claimedBy)) return false;
     }
     return true;
   });
@@ -202,7 +210,7 @@ export default function MyTasksPage() {
             Ward Diary
           </Link>
 
-          {/* My Patients toggle */}
+          {/* Add my patients tasks toggle */}
           <button
             onClick={() => setShowMyPatients(!showMyPatients)}
             className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all ${
@@ -210,92 +218,13 @@ export default function MyTasksPage() {
                 ? "bg-teal-100 text-teal-800 ring-2 ring-teal-300"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
-            title="Filter to patients where you are the ward professional"
+            title="Include tasks for patients where you are the ward professional"
           >
             <UserSquare2 className="w-5 h-5" />
-            <span className="hidden sm:inline">My Patients</span>
+            <span className="hidden sm:inline">{showMyPatients ? "My Patients Added" : "Add My Patients Tasks"}</span>
           </button>
 
-          {/* Lead/Manager staff filter */}
-          {isLeadOrManager && (
-            <div className="relative">
-              <button
-                onClick={() => setShowStaffFilterDropdown(!showStaffFilterDropdown)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all ${
-                  selectedStaffFilter.length > 0
-                    ? "bg-purple-100 text-purple-800 ring-2 ring-purple-300"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-                title="Filter by staff member's tasks"
-              >
-                <Filter className="w-5 h-5" />
-                <span className="hidden sm:inline">
-                  {selectedStaffFilter.length > 0 ? `Staff (${selectedStaffFilter.length})` : "Staff Filter"}
-                </span>
-              </button>
-              {showStaffFilterDropdown && (
-                <div className="absolute top-full mt-1 left-0 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-64 max-h-72 overflow-y-auto">
-                  <div className="p-2 border-b border-gray-100">
-                    <button
-                      onClick={() => setSelectedStaffFilter([])}
-                      className="text-xs text-indigo-600 hover:text-indigo-800 font-medium"
-                    >
-                      Clear all
-                    </button>
-                  </div>
-                  {wardStaffList.map((staff) => (
-                    <label
-                      key={staff.id}
-                      className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedStaffFilter.includes(staff.name)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedStaffFilter((prev) => [...prev, staff.name]);
-                          } else {
-                            setSelectedStaffFilter((prev) => prev.filter((n) => n !== staff.name));
-                          }
-                        }}
-                        className="rounded border-gray-300 text-purple-600"
-                      />
-                      <span className="text-sm text-gray-700">{staff.name}</span>
-                      <span className="text-xs text-gray-400 ml-auto capitalize">{staff.role.replace("_", " ")}</span>
-                    </label>
-                  ))}
-                  <div className="p-2 border-t border-gray-100">
-                    <button
-                      onClick={() => setShowStaffFilterDropdown(false)}
-                      className="w-full py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200"
-                    >
-                      Done
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="flex items-center gap-2 ml-auto">
-            <button
-              onClick={() => setShowStaffModal(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
-              title="Manage Staff Names"
-            >
-              <Users className="w-5 h-5" />
-              <span className="hidden sm:inline">Staff</span>
-            </button>
-
-            <button
-              onClick={() => setShowStaffTasksModal(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
-              title="View Staff Tasks"
-            >
-              <ClipboardList className="w-5 h-5" />
-              <span className="hidden sm:inline">Staff Tasks</span>
-            </button>
-          </div>
+          <div className="flex items-center gap-2 ml-auto" />
         </div>
 
         {/* Info banner */}
@@ -335,7 +264,7 @@ export default function MyTasksPage() {
             </div>
             <div>
               <p className="font-medium text-gray-900 mb-1">✅ Completed</p>
-              <p className="text-gray-500">Drop tasks here or click &quot;Done&quot; to mark them complete.</p>
+              <p className="text-gray-500">Drop tasks here or click &quot;Done&quot; to mark them complete. Completed tasks will be removed when a patient is discharged.</p>
             </div>
           </div>
         </div>

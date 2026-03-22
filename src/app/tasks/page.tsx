@@ -26,6 +26,7 @@ import {
   Pencil,
   Trash2,
   Maximize2,
+  Minimize2,
   ArrowLeft,
   Filter,
   Sun,
@@ -655,10 +656,10 @@ function DayColumn({
 
   // Compute default expanded states based on day type
   // Past days: appointments only
-  // Today: all sections
-  // Future: patient tasks + appointments
+  // Today or focused future day: all sections
+  // Future (unfocused): patient tasks + appointments
   const getDefaultExpanded = (): SectionExpandState => ({
-    wardTasks: isToday,
+    wardTasks: isToday || (isFutureDay && isFocused),
     patientTasks: isToday || isFutureDay,
     appointments: true, // Always expanded for all days
   });
@@ -687,8 +688,8 @@ function DayColumn({
   const filterCompleted = (items: DiaryTask[]) =>
     shouldHideCompleted ? items.filter((t) => t.status !== "completed") : items;
 
-  // Only show ward tasks for today + respect settings toggle
-  const showWardTasks = isToday && showWardTasksSetting;
+  // Show ward tasks on today, or when a future day is expanded (focused)
+  const showWardTasks = (isToday || (isFutureDay && isFocused)) && showWardTasksSetting;
   const visibleWardTasks = showWardTasks ? filterCompleted(wardTasks) : [];
   const visiblePatientTasks = filterCompleted(patientTasks);
   const visibleAppointments = filterCompleted(appointments);
@@ -726,7 +727,7 @@ function DayColumn({
             : "bg-gray-50 text-gray-700"
         }`}
       >
-        {/* Expand button */}
+        {/* Expand/Collapse button */}
         {onExpand && (
           <button
             onClick={(e) => {
@@ -738,10 +739,10 @@ function DayColumn({
                 ? "hover:bg-white/20 text-white/80 hover:text-white"
                 : "hover:bg-gray-200 text-gray-400 hover:text-gray-600"
             }`}
-            title="Expand day view"
-            aria-label="Expand day view"
+            title={isFocused ? "Collapse day view" : "Expand day view"}
+            aria-label={isFocused ? "Collapse day view" : "Expand day view"}
           >
-            <Maximize2 className="w-4 h-4" />
+            {isFocused ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
         )}
         <div className="text-center">
@@ -2163,6 +2164,11 @@ function TasksPageInner() {
   // My Patients toggle - forced on in My Diary mode
   const [showMyPatients, setShowMyPatients] = useState(isMyDiaryMode);
 
+  // Sync showMyPatients with mode changes (same component, different query param)
+  useEffect(() => {
+    setShowMyPatients(isMyDiaryMode);
+  }, [isMyDiaryMode]);
+
   // Lead/Manager staff filter - pick staff to view their tasks
   const [selectedStaffFilter, setSelectedStaffFilter] = useState<string[]>([]);
   const [showStaffFilterDropdown, setShowStaffFilterDropdown] = useState(false);
@@ -2650,24 +2656,6 @@ function TasksPageInner() {
             </div>
 
             <button
-              onClick={() => setShowStaffModal(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
-              title="Manage Staff Names"
-            >
-              <Users className="w-5 h-5" />
-              <span className="hidden sm:inline">Staff</span>
-            </button>
-
-            <button
-              onClick={() => setShowStaffTasksModal(true)}
-              className="flex items-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all"
-              title="View Staff Tasks"
-            >
-              <ClipboardList className="w-5 h-5" />
-              <span className="hidden sm:inline">Staff Tasks</span>
-            </button>
-
-            <button
               onClick={() => setShowAddModal(true)}
               className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-all"
             >
@@ -2713,7 +2701,7 @@ function TasksPageInner() {
                 showAddButton={true}
                 onAddTask={() => setShowAddModal(true)}
                 onClick={() => scrollToDate(date)}
-                onExpand={() => setExpandedDay(date)}
+                onExpand={() => setExpandedDay(expandedDay === date ? null : date)}
                 isDragOver={dragOverDate === date}
                 onTaskDragStart={handleTaskDragStart}
                 onDayDragOver={(e) => handleDayDragOver(e, date)}

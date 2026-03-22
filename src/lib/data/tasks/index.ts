@@ -233,14 +233,14 @@ const WARD_TASK_TEMPLATES: Array<{
   },
 ];
 
-// Generate ward tasks - 12 per ward (includes audit tasks)
+// Generate ward tasks - 6 per ward (includes audit tasks)
 const generateWardTasks = (ward: string, startId: number): WardTask[] => {
   const staff = WARD_STAFF[ward];
   const tasks: WardTask[] = [];
   let id = startId;
 
-  // Generate 12 ward tasks (includes audit tasks)
-  for (let i = 0; i < 12; i++) {
+  // Generate 6 ward tasks (reduced for cleaner demo)
+  for (let i = 0; i < 6; i++) {
     const template = WARD_TASK_TEMPLATES[i % WARD_TASK_TEMPLATES.length];
     const staffMember = staff[i % staff.length];
 
@@ -329,9 +329,10 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
   const tasks: PatientTask[] = [];
   let id = startId;
 
-  // Generate tasks for ALL patients (up to 20)
-  for (let i = 0; i < wardPatients.length; i++) {
-    const patient = wardPatients[i];
+  // Generate tasks for half the patients (cleaner demo)
+  const taskPatients = wardPatients.filter((_, idx) => idx % 2 === 0);
+  for (let i = 0; i < taskPatients.length; i++) {
+    const patient = taskPatients[i];
     const template = PATIENT_TASK_TEMPLATES[i % PATIENT_TASK_TEMPLATES.length];
     const staffMember = staff[i % staff.length];
 
@@ -443,43 +444,6 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
     createdBy: "MHA Office",
   });
 
-  appointments.push({
-    id: `apt${id++}`,
-    type: "appointment",
-    title: "Psychology Session",
-    description: "Individual therapy session",
-    status: "pending",
-    priority: "routine",
-    patientId: wardPatients[1].id,
-    patientName: wardPatients[1].name,
-    appointmentDate: todayStr,
-    appointmentTime: "11:30",
-    location: "Therapy Room 2",
-    attendees: ["Psychology"],
-    ward,
-    createdAt: todayStr,
-    createdBy: "Psychology",
-  });
-
-  appointments.push({
-    id: `apt${id++}`,
-    type: "appointment",
-    title: "Family Visit",
-    description: "Scheduled family visit",
-    status: "completed",
-    priority: "routine",
-    patientId: wardPatients[3].id,
-    patientName: wardPatients[3].name,
-    appointmentDate: todayStr,
-    appointmentTime: "AM",
-    location: "Visiting Room",
-    ward,
-    createdAt: yesterdayStr,
-    createdBy: staff[2],
-    completedAt: todayStr,
-    completedBy: staff[2],
-  });
-
   // Future appointments
   appointments.push({
     id: `apt${id++}`,
@@ -515,23 +479,6 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
     ward,
     createdAt: todayStr,
     createdBy: doctors[0],
-  });
-
-  appointments.push({
-    id: `apt${id++}`,
-    type: "appointment",
-    title: "GP Visit",
-    description: "Annual health check",
-    status: "pending",
-    priority: "routine",
-    patientId: wardPatients[0].id,
-    patientName: wardPatients[0].name,
-    appointmentDate: dayAfterStr,
-    appointmentTime: "PM",
-    location: "Clinic Room",
-    ward,
-    createdAt: todayStr,
-    createdBy: staff[0],
   });
 
   return appointments;
@@ -570,7 +517,7 @@ const generateAllAppointments = (): Appointment[] => {
 
   for (const ward of WARDS) {
     appointments.push(...generateAppointments(ward, startId));
-    startId += 7;
+    startId += 4;
   }
 
   return appointments;
@@ -587,7 +534,9 @@ const generateAdmissionAuditTasks = (): PatientTask[] => {
     const leadsManagers = getLeadsAndManagers(ward);
     const creatorName = leadsManagers.length > 0 ? leadsManagers[0].name : "System";
 
-    for (const patient of wardPatients) {
+    // Generate for every other patient (cleaner demo)
+    const auditPatients = wardPatients.filter((_, idx) => idx % 2 === 0);
+    for (const patient of auditPatients) {
       // Calculate 72hr deadline from admission
       const admissionDate = new Date(patient.admissionDate);
       const deadline = addDays(admissionDate, 3);

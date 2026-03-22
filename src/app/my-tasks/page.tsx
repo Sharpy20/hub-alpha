@@ -284,15 +284,6 @@ export default function MyTasksPage() {
           </div>
         </div>
 
-        {/* Nexus tip banner */}
-        <div className="overflow-hidden bg-blue-50 border border-blue-200 rounded-xl">
-          <div className="animate-marquee whitespace-nowrap py-2 text-blue-600 font-medium text-sm">
-            <span className="mx-8">💡 Tip: Nexus Assurance auto-sync is available in Max+ version of the app</span>
-            <span className="mx-8">💡 Tip: Nexus Assurance auto-sync is available in Max+ version of the app</span>
-            <span className="mx-8">💡 Tip: Nexus Assurance auto-sync is available in Max+ version of the app</span>
-          </div>
-        </div>
-
         {/* Info banner */}
         {myClaimedTasks.length === 0 && (
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">

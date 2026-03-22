@@ -314,6 +314,26 @@ export default function GuidesAdminPage() {
   const [editingStep, setEditingStep] = useState<GuideStep | null>(null);
   const [savedMessage, setSavedMessage] = useState(false);
   const [validationError, setValidationError] = useState<string[] | null>(null);
+  const [showNewModal, setShowNewModal] = useState(false);
+
+  const handleCreateNew = (useTemplate: boolean) => {
+    const templateSteps: GuideStep[] = useTemplate ? [
+      { id: "gt1", type: "content", title: "Overview", content: "Describe the purpose and scope of this guide." },
+      { id: "gt2", type: "content", title: "Steps", content: "Walk through the key steps.", tip: "Include helpful tips for each step." },
+      { id: "gt3", type: "endpoint", title: "Summary", content: "Key points to remember." },
+    ] : [];
+    setEditingGuide({
+      id: `new-${Date.now()}`,
+      title: "New Guide",
+      description: "Description of this guide",
+      icon: "\uD83D\uDCD6",
+      category: "Uncategorised",
+      steps: templateSteps,
+      versions: [],
+    });
+    setShowNewModal(false);
+    setValidationError(null);
+  };
   const [previewMode, setPreviewMode] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [draggedType, setDraggedType] = useState<string | null>(null);
@@ -563,9 +583,9 @@ export default function GuidesAdminPage() {
                   <p className="text-white/80">{editingGuide.category} · {editingGuide.steps.length} steps</p>
                 </div>
               </div>
-              <Button
+              <button
                 onClick={handleSaveGuide}
-                className={`${savedMessage ? "bg-green-600" : "bg-white text-emerald-700 hover:bg-emerald-50"}`}
+                className={`inline-flex items-center justify-center font-semibold rounded-lg px-4 py-2 transition-colors ${savedMessage ? "bg-green-600 text-white" : "bg-white text-emerald-700 hover:bg-emerald-50"}`}
               >
                 {savedMessage ? (
                   <>Saved!</>
@@ -575,7 +595,7 @@ export default function GuidesAdminPage() {
                     Save Guide
                   </>
                 )}
-              </Button>
+              </button>
             </div>
           </div>
 
@@ -950,18 +970,55 @@ export default function GuidesAdminPage() {
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back to Admin</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-              <BookOpen className="w-8 h-8" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
+                <BookOpen className="w-8 h-8" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">Guide Editor</h1>
+                <p className="text-white/80 mt-1">
+                  Edit and manage how-to guides
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold">Guide Editor</h1>
-              <p className="text-white/80 mt-1">
-                Edit and manage how-to guides
-              </p>
-            </div>
+            <button
+              onClick={() => setShowNewModal(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              New Guide
+            </button>
           </div>
         </div>
+
+        {/* New guide modal */}
+        {showNewModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowNewModal(false)}>
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-xl font-bold text-gray-900">Create New Guide</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={() => handleCreateNew(false)}
+                  className="w-full p-4 text-left bg-gray-50 hover:bg-gray-100 rounded-xl border-2 border-gray-200 hover:border-emerald-300 transition-all"
+                >
+                  <p className="font-semibold text-gray-900">Start blank</p>
+                  <p className="text-sm text-gray-500 mt-1">Empty canvas — drag in steps from scratch</p>
+                </button>
+                <button
+                  onClick={() => handleCreateNew(true)}
+                  className="w-full p-4 text-left bg-emerald-50 hover:bg-emerald-100 rounded-xl border-2 border-emerald-200 hover:border-emerald-400 transition-all"
+                >
+                  <p className="font-semibold text-gray-900">Start from template</p>
+                  <p className="text-sm text-gray-500 mt-1">3-step content template pre-populated</p>
+                </button>
+              </div>
+              <button onClick={() => setShowNewModal(false)} className="w-full py-2 text-gray-500 hover:text-gray-700 text-sm font-medium">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Info box */}
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">

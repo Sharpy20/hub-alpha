@@ -273,6 +273,8 @@ export function FlowchartEditor({
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [validation, setValidation] = useState<{ valid: boolean; errors: string[] }>({ valid: true, errors: [] });
   const [editingBranchPath, setEditingBranchPath] = useState<string | null>(null);
+  const [justSavedStepId, setJustSavedStepId] = useState<string | null>(null);
+  const [errorStepIds, setErrorStepIds] = useState<string[]>([]);
 
   // Validate on steps change
   useEffect(() => {
@@ -350,10 +352,9 @@ export function FlowchartEditor({
     handleDragEnd();
   };
 
-  const handleDropIntoBranch = (stepId: string, branchIndex: number, insertIndex: number) => {
-    if (!draggedType) return;
-
-    const newStep = createNewStep(draggedType);
+  const handleDropIntoBranch = (stepId: string, branchIndex: number, insertIndex: number, preCreatedStep?: WorkflowStep) => {
+    const newStep = preCreatedStep || (draggedType ? createNewStep(draggedType) : null);
+    if (!newStep) return;
 
     const updateStepBranch = (stepList: WorkflowStep[]): WorkflowStep[] => {
       return stepList.map(step => {
@@ -419,6 +420,9 @@ export function FlowchartEditor({
 
     onChange(updateStepInList(steps));
     setEditingStep(null);
+    // Show "step saved" toast
+    setJustSavedStepId(updatedStep.id);
+    setTimeout(() => setJustSavedStepId(null), 3000);
   };
 
   const handleSaveVersion = (note?: string) => {
@@ -544,6 +548,31 @@ export function FlowchartEditor({
                 </div>
               </div>
             </div>
+            {/* Pinned End Point - always visible */}
+            <div className="p-3 border-t-2 border-dashed border-gray-300 bg-gray-50">
+              {(() => {
+                const endpointConfig = STEP_TYPE_CONFIG["endpoint"];
+                const EndIcon = endpointConfig.icon;
+                return (
+                  <div
+                    draggable
+                    onDragStart={() => handleToolboxDragStart("endpoint")}
+                    onDragEnd={handleDragEnd}
+                    className={`p-2 rounded-lg border-2 ${endpointConfig.borderColor} ${endpointConfig.bgColor} cursor-grab active:cursor-grabbing hover:shadow-md transition-all`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${endpointConfig.color} flex items-center justify-center`}>
+                        <EndIcon className="w-3.5 h-3.5 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-xs text-gray-800">End Point</p>
+                        <p className="text-xs text-gray-500">Finish a branch</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
           </div>
 
           {/* Validation Status */}
@@ -603,15 +632,29 @@ export function FlowchartEditor({
               onClick={() => setPreviewMode(!previewMode)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 previewMode
-                  ? "bg-indigo-100 text-indigo-700"
+                  ? "bg-indigo-600 text-white hover:bg-indigo-700"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
               <Eye className="w-4 h-4 inline mr-1" />
-              {previewMode ? "Editing" : "Preview"}
+              {previewMode ? "Exit Preview" : "Preview"}
             </button>
           </div>
         </div>
+
+        {/* Preview mode banner */}
+        {previewMode && (
+          <div className="mb-4 px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-indigo-700 text-sm font-medium text-center">
+            Preview mode — this is how users will see the workflow
+          </div>
+        )}
+
+        {/* Just-saved toast */}
+        {justSavedStepId && (
+          <div className="mb-4 px-4 py-2 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm font-medium text-center animate-pulse">
+            Step saved. Drop another step below, or add an End Point to finish.
+          </div>
+        )}
 
         {/* Start node */}
         <div className="flex flex-col items-center">
@@ -650,6 +693,7 @@ export function FlowchartEditor({
             onDrop={handleDrop}
             onDropIntoBranch={handleDropIntoBranch}
             onEditBranchStep={(s) => setEditingStep(s)}
+            onCreateStep={createNewStep}
           />
         ))}
 
@@ -707,6 +751,7 @@ function StepBlock({
   onDrop,
   onDropIntoBranch,
   onEditBranchStep,
+  onCreateStep,
 }: {
   step: WorkflowStep;
   index: number;
@@ -720,8 +765,9 @@ function StepBlock({
   onDragOver: (e: React.DragEvent, index: number) => void;
   onDragLeave: () => void;
   onDrop: (index: number) => void;
-  onDropIntoBranch: (stepId: string, branchIndex: number, insertIndex: number) => void;
+  onDropIntoBranch: (stepId: string, branchIndex: number, insertIndex: number, preCreatedStep?: WorkflowStep) => void;
   onEditBranchStep: (step: WorkflowStep) => void;
+  onCreateStep: (type: string) => WorkflowStep;
 }) {
   const config = STEP_TYPE_CONFIG[step.type];
   const Icon = config.icon;
@@ -878,13 +924,31 @@ function StepBlock({
                   })}
                 </div>
 
-                {branch.steps.length === 0 && (
-                  <div className="text-xs text-gray-400 py-2">
-                    No steps in this branch
+                {branch.steps.length === 0 && !previewMode && (
+                  <div className="text-center py-2 space-y-1">
+                    <p className="text-xs text-gray-400">Drop a step here, or:</p>
+                    <button
+                      onClick={() => {
+                        const endpointStep = onCreateStep("endpoint");
+                        onDropIntoBranch(step.id, branchIdx, 0, endpointStep);
+                      }}
+                      className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-md transition-colors font-medium"
+                    >
+                      + Add Endpoint
+                    </button>
                   </div>
+                )}
+                {branch.steps.length === 0 && previewMode && (
+                  <div className="text-xs text-gray-400 py-2">(empty)</div>
                 )}
               </div>
             ))}
+          </div>
+          {/* Branch reconnection label */}
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <div className="h-px flex-1 bg-gray-300" />
+            <span className="text-xs text-gray-400 font-medium px-2">All paths continue below</span>
+            <div className="h-px flex-1 bg-gray-300" />
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bot, CheckCircle, Flag, MessageSquare, RefreshCw, X } from "lucide-react";
+import { CheckCircle, Flag, MessageSquare, RefreshCw, X } from "lucide-react";
 import { useApp } from "@/app/providers";
 import { useVerification, VerifiableContentType } from "@/app/verification-provider";
 import Link from "next/link";
@@ -59,9 +59,9 @@ export function VerificationBadge({
         className={`inline-flex items-center rounded-full font-medium transition-all hover:opacity-80 ${sizeClasses} ${
           isVerified
             ? "bg-green-100 text-green-700 hover:bg-green-200"
-            : "bg-amber-100 text-amber-700 hover:bg-amber-200"
+            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
         }`}
-        title={isVerified ? `Verified by ${verification?.verifiedBy}` : "AI Generated - Click for options"}
+        title={isVerified ? `Verified by ${verification?.verifiedBy}` : "Demo Content - Click for options"}
       >
         {isVerified ? (
           <>
@@ -70,8 +70,8 @@ export function VerificationBadge({
           </>
         ) : (
           <>
-            <Bot className={iconSize} />
-            <span>AI Generated</span>
+            <Flag className={iconSize} />
+            <span>Demo Content</span>
           </>
         )}
       </button>
@@ -116,9 +116,9 @@ export function VerificationBadge({
                       </span>
                     </>
                   ) : (
-                    <span className="inline-flex items-center gap-1 text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full text-xs font-medium">
-                      <Bot className="w-3 h-3" />
-                      AI Generated - Needs Verification
+                    <span className="inline-flex items-center gap-1 text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full text-xs font-medium">
+                      <Flag className="w-3 h-3" />
+                      Demo Content - Needs Verification
                     </span>
                   )}
                 </div>

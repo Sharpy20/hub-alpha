@@ -336,7 +336,8 @@ export default function GuidePage() {
                 Link to Patient
               </button>
             )}
-            <p className="text-white/60 text-xs text-center mt-2">
+            <p className="text-white/80 text-sm text-center mt-2 flex items-center justify-center gap-1.5">
+              <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
               Linking creates a job diary task and audit log entry
             </p>
           </div>
@@ -419,39 +420,41 @@ export default function GuidePage() {
           </CardContent>
         </Card>
 
-        {/* Navigation */}
-        <div className="flex justify-between gap-4">
-          <Button
-            variant="outline"
+        {/* Side navigation buttons - fixed to viewport edges */}
+        {currentStep > 0 && (
+          <button
             onClick={handlePrev}
-            disabled={currentStep === 0}
-            className="flex-1 py-4 text-lg border-2"
+            className="fixed left-0 top-1/2 -translate-y-1/2 z-40 w-10 h-32 bg-gray-900/10 hover:bg-gray-900/20 backdrop-blur-sm rounded-r-xl flex items-center justify-center transition-all group"
+            aria-label="Previous step"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Previous
-          </Button>
+            <ArrowLeft className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
+          </button>
+        )}
+        {!isComplete && (
+          <button
+            onClick={handleNext}
+            className="fixed right-0 top-1/2 -translate-y-1/2 z-40 w-10 h-32 bg-gray-900/10 hover:bg-gray-900/20 backdrop-blur-sm rounded-l-xl flex items-center justify-center transition-all group"
+            aria-label="Next step"
+          >
+            <ArrowRight className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
+          </button>
+        )}
 
-          {isComplete ? (
+        {/* Completion actions (final step only) */}
+        {isComplete && (
+          <div className="flex justify-center">
             <Button
               onClick={() => {
                 setCompletedSteps([...completedSteps, step.id]);
-                router.push("/how-to");
+                router.push("/guides");
               }}
-              className={`flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700`}
+              className="py-4 px-8 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
             >
               <Check className="w-5 h-5 mr-2" />
               Complete Guide
             </Button>
-          ) : (
-            <Button
-              onClick={handleNext}
-              className={`flex-1 py-4 text-lg bg-gradient-to-r ${config.gradient} hover:opacity-90`}
-            >
-              Next
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Quick links */}
         <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-6">

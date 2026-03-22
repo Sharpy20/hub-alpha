@@ -139,7 +139,6 @@ export default function PatientsPage() {
     const query = searchQuery.toLowerCase();
     return (
       patient.name.toLowerCase().includes(query) ||
-      patient.room.toLowerCase().includes(query) ||
       (patient.preferredName?.toLowerCase().includes(query) ?? false)
     );
   });
@@ -450,7 +449,7 @@ export default function PatientsPage() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search patients by name or room..."
+              placeholder="Search patients by name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
@@ -554,12 +553,7 @@ export default function PatientsPage() {
                         </p>
                       )}
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-600">
-                        {patient.room}
-                        {patient.bed && ` (${patient.bed})`}
-                      </p>
-                    </div>
+                    <div className="text-right" />
                   </div>
 
                   {/* Status Badges */}
@@ -574,39 +568,6 @@ export default function PatientsPage() {
                     >
                       {legalConfig.label}
                     </span>
-                  </div>
-
-                  {/* Alerts */}
-                  <div className="mb-3">
-                    {patient.alerts && patient.alerts.length > 0 ? (
-                      <div className="flex flex-wrap gap-1 items-center">
-                        {patient.alerts.map((alert, idx) => (
-                          <span
-                            key={idx}
-                            className="flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 rounded text-xs font-medium"
-                          >
-                            <AlertTriangle className="w-3 h-3" />
-                            {alert}
-                          </span>
-                        ))}
-                        <button
-                          onClick={() => openEditAlertsModal(patient)}
-                          className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
-                          title="Edit alerts"
-                        >
-                          Edit
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => openEditAlertsModal(patient)}
-                        className="flex items-center gap-1 px-2 py-1 text-xs text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
-                        title="Add alerts"
-                      >
-                        <Plus className="w-3 h-3" />
-                        Add alerts
-                      </button>
-                    )}
                   </div>
 
                   {/* Info */}
@@ -865,7 +826,7 @@ export default function PatientsPage() {
                   {selectedPatient.name}
                 </p>
                 <p className="text-gray-500">
-                  {selectedPatient.room}{selectedPatient.bed && ` (${selectedPatient.bed})`}
+                  {selectedPatient.ward} Ward
                 </p>
               </div>
 

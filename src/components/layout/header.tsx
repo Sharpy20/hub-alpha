@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ClipboardList, ChevronDown, Building2, Users, Bookmark, FileText, BookOpen, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Bookmark, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 
@@ -136,35 +136,19 @@ export function Header() {
 
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-3">
-              {/* Ward Tools Group */}
+              {/* Main nav items */}
               <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
                 <Link href="/tasks" className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
                   <CalendarDays className="w-4 h-4" />
                   Diary
                 </Link>
-                <Link href="/my-tasks" className="px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                  <ClipboardList className="w-4 h-4" />
-                  Tasks
-                </Link>
-                <Link href="/patients" className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                  <Users className="w-4 h-4" />
-                  Patients
-                </Link>
-              </div>
-
-              {/* Resources Group */}
-              <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
                 <Link href="/bookmarks" className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
                   <Bookmark className="w-4 h-4" />
                   Bookmarks
                 </Link>
-                <Link href="/referrals" className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                <Link href="/guides" className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
                   <FileText className="w-4 h-4" />
                   Guides
-                </Link>
-                <Link href="/how-to" className="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                  <BookOpen className="w-4 h-4" />
-                  How-To
                 </Link>
               </div>
 
@@ -182,6 +166,10 @@ export function Header() {
 
                 {settingsDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
+                    <Link href="/patients" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">Patients</p><p className="text-xs text-gray-500 mt-0.5">View and manage patient list, transfers and discharges</p></div>
+                    </Link>
                     <Link href="/intro-guide" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                       <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-5 h-5 text-white" /></div>
                       <div><p className="font-semibold text-gray-900">Intro Guide</p><p className="text-xs text-gray-500 mt-0.5">Learn how to use wardHub with visual guides and tips</p></div>
@@ -227,8 +215,8 @@ export function Header() {
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                   >
-                    <User className="w-4 h-4" aria-hidden="true" />
-                    <span className="max-w-[120px] truncate">{user.name}</span>
+                    <Sparkles className="w-4 h-4" aria-hidden="true" />
+                    <span className="max-w-[120px] truncate">Demo Mode</span>
                     <ChevronDown className={`w-4 h-4 transition-transform ${profileDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
                   </button>
 
@@ -330,25 +318,20 @@ export function Header() {
               <Link href="/tasks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <CalendarDays className="w-5 h-5 text-indigo-600" /> Diary
               </Link>
-              <Link href="/my-tasks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <ClipboardList className="w-5 h-5 text-purple-600" /> Tasks
-              </Link>
-              <Link href="/patients" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <Users className="w-5 h-5 text-teal-600" /> Patients
-              </Link>
               <Link href="/bookmarks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <Bookmark className="w-5 h-5 text-amber-600" /> Bookmarks
               </Link>
-              <Link href="/referrals" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/guides" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <FileText className="w-5 h-5 text-rose-600" /> Guides
-              </Link>
-              <Link href="/how-to" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <BookOpen className="w-5 h-5 text-emerald-600" /> How-To
               </Link>
 
               <div className="py-3 border-b border-gray-100">
                 <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">More</p>
                 <div className="space-y-2">
+                  <Link href="/patients" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Patients</p><p className="text-xs text-gray-500">Patient list and transfers</p></div>
+                  </Link>
                   <Link href="/intro-guide" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Intro Guide</p><p className="text-xs text-gray-500">Learn how to use the app</p></div>

@@ -1565,7 +1565,8 @@ export default function WorkflowPage() {
                 Link to Patient
               </button>
             )}
-            <p className="text-white/60 text-xs text-center mt-2">
+            <p className="text-white/80 text-sm text-center mt-2 flex items-center justify-center gap-1.5">
+              <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
               Linking creates a job diary task and audit log entry
             </p>
           </div>
@@ -1909,59 +1910,59 @@ export default function WorkflowPage() {
           </CardContent>
         </Card>
 
-        {/* Navigation */}
-        <div className="flex justify-between gap-4">
-          <Button
-            variant="outline"
+        {/* Side navigation buttons - fixed to viewport edges */}
+        {currentStep > 0 && (
+          <button
             onClick={handlePrev}
-            disabled={currentStep === 0}
-            className="flex-1 py-4 text-lg border-2"
+            className="fixed left-0 top-1/2 -translate-y-1/2 z-40 w-10 h-32 bg-gray-900/10 hover:bg-gray-900/20 backdrop-blur-sm rounded-r-xl flex items-center justify-center transition-all group"
+            aria-label="Previous step"
           >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Previous
-          </Button>
+            <ArrowLeft className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
+          </button>
+        )}
+        {!isComplete && (
+          <button
+            onClick={handleNext}
+            disabled={!canProceed()}
+            className="fixed right-0 top-1/2 -translate-y-1/2 z-40 w-10 h-32 bg-gray-900/10 hover:bg-gray-900/20 backdrop-blur-sm rounded-l-xl flex items-center justify-center transition-all group disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label="Next step"
+          >
+            <ArrowRight className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
+          </button>
+        )}
 
-          {isComplete ? (
-            <div className="flex-1 flex gap-2">
-              {!referralLogged ? (
-                <Button
-                  onClick={handleLogReferral}
-                  className="flex-1 py-4 text-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
-                >
-                  <ClipboardList className="w-5 h-5 mr-2" />
-                  Log to Chase Log
-                </Button>
-              ) : (
-                <Button
-                  disabled
-                  className="flex-1 py-4 text-lg bg-amber-100 text-amber-700 cursor-not-allowed"
-                >
-                  <Check className="w-5 h-5 mr-2" />
-                  Logged
-                </Button>
-              )}
+        {/* Completion actions (final step only) */}
+        {isComplete && (
+          <div className="flex gap-3">
+            {!referralLogged ? (
               <Button
-                onClick={() => {
-                  setShowFireworks(true);
-                  setTimeout(() => router.push("/referrals"), 2500);
-                }}
-                className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 relative overflow-hidden"
+                onClick={handleLogReferral}
+                className="flex-1 py-4 text-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700"
+              >
+                <ClipboardList className="w-5 h-5 mr-2" />
+                Log to Chase Log
+              </Button>
+            ) : (
+              <Button
+                disabled
+                className="flex-1 py-4 text-lg bg-amber-100 text-amber-700 cursor-not-allowed"
               >
                 <Check className="w-5 h-5 mr-2" />
-                Complete
+                Logged
               </Button>
-            </div>
-          ) : (
+            )}
             <Button
-              onClick={handleNext}
-              disabled={!canProceed()}
-              className={`flex-1 py-4 text-lg bg-gradient-to-r ${workflow.gradient} hover:opacity-90 disabled:opacity-50`}
+              onClick={() => {
+                setShowFireworks(true);
+                setTimeout(() => router.push("/guides"), 2500);
+              }}
+              className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 relative overflow-hidden"
             >
-              Next
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <Check className="w-5 h-5 mr-2" />
+              Complete
             </Button>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Fireworks celebration overlay */}
         {showFireworks && isComplete && (

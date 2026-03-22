@@ -10,6 +10,7 @@ import {
   ArrowLeft,
   FileText,
   Pencil,
+  Plus,
   Save,
   ChevronDown,
   Shield,
@@ -207,6 +208,32 @@ export default function WorkflowsAdminPage() {
   const [editingWorkflow, setEditingWorkflow] = useState<EditingWorkflow | null>(null);
   const [savedMessage, setSavedMessage] = useState(false);
   const [validationError, setValidationError] = useState<string[] | null>(null);
+  const [showNewModal, setShowNewModal] = useState(false);
+
+  const TEMPLATE_STEPS: WorkflowStep[] = [
+    { id: "t1", type: "criteria", title: "Confirm Criteria", content: "Verify the patient meets the referral criteria.", checkboxLabel: "I confirm the criteria are met" },
+    { id: "t2", type: "consent", title: "Patient Consent", content: "Confirm you have discussed the referral with the patient." },
+    { id: "t3", type: "forms", title: "Download Forms", content: "Download the required referral form.", forms: { blank: [], wagoll: [], otherGuides: [] } },
+    { id: "t4", type: "submission", title: "Submit Referral", content: "Send the completed referral.", methods: [] },
+    { id: "t5", type: "casenote", title: "Case Note", content: "Add to patient notes.", clipboardText: "Referral submitted on [DATE]." },
+    { id: "t6", type: "reminder", title: "Job Diary", content: "Update your job diary.", checkboxLabel: "I have updated my diary" },
+    { id: "t7", type: "gdpr", title: "GDPR Reminder", content: "Delete local copies of patient data." },
+    { id: "t8", type: "endpoint", title: "Complete", content: "Referral workflow complete." },
+  ];
+
+  const handleCreateNew = (useTemplate: boolean) => {
+    setEditingWorkflow({
+      id: `new-${Date.now()}`,
+      title: "New Workflow",
+      description: "Description of this workflow",
+      icon: "\uD83D\uDCCB",
+      category: "Uncategorised",
+      steps: useTemplate ? TEMPLATE_STEPS : [],
+      versions: [],
+    });
+    setShowNewModal(false);
+    setValidationError(null);
+  };
 
   // Redirect if not a content admin
   const hasContentAccess = user && (
@@ -325,9 +352,9 @@ export default function WorkflowsAdminPage() {
                   <p className="text-white/80">{editingWorkflow.category} · {editingWorkflow.steps.length} steps</p>
                 </div>
               </div>
-              <Button
+              <button
                 onClick={handleSaveWorkflow}
-                className={`${savedMessage ? "bg-green-600" : "bg-white text-rose-700 hover:bg-rose-50"}`}
+                className={`inline-flex items-center justify-center font-semibold rounded-lg px-4 py-2 transition-colors ${savedMessage ? "bg-green-600 text-white" : "bg-white text-rose-700 hover:bg-rose-50"}`}
               >
                 {savedMessage ? (
                   <>Saved!</>
@@ -337,7 +364,7 @@ export default function WorkflowsAdminPage() {
                     Save Workflow
                   </>
                 )}
-              </Button>
+              </button>
             </div>
           </div>
 
@@ -459,18 +486,55 @@ export default function WorkflowsAdminPage() {
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Back to Admin</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-              <FileText className="w-8 h-8" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
+                <FileText className="w-8 h-8" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">Workflow Editor</h1>
+                <p className="text-white/80 mt-1">
+                  Edit and manage referral workflows
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold">Workflow Editor</h1>
-              <p className="text-white/80 mt-1">
-                Edit and manage referral workflows
-              </p>
-            </div>
+            <button
+              onClick={() => setShowNewModal(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              New Workflow
+            </button>
           </div>
         </div>
+
+        {/* New workflow modal */}
+        {showNewModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowNewModal(false)}>
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-xl font-bold text-gray-900">Create New Workflow</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={() => handleCreateNew(false)}
+                  className="w-full p-4 text-left bg-gray-50 hover:bg-gray-100 rounded-xl border-2 border-gray-200 hover:border-rose-300 transition-all"
+                >
+                  <p className="font-semibold text-gray-900">Start blank</p>
+                  <p className="text-sm text-gray-500 mt-1">Empty canvas — drag in steps from scratch</p>
+                </button>
+                <button
+                  onClick={() => handleCreateNew(true)}
+                  className="w-full p-4 text-left bg-rose-50 hover:bg-rose-100 rounded-xl border-2 border-rose-200 hover:border-rose-400 transition-all"
+                >
+                  <p className="font-semibold text-gray-900">Start from template</p>
+                  <p className="text-sm text-gray-500 mt-1">Standard 8-step referral flow pre-populated</p>
+                </button>
+              </div>
+              <button onClick={() => setShowNewModal(false)} className="w-full py-2 text-gray-500 hover:text-gray-700 text-sm font-medium">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Info box */}
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">

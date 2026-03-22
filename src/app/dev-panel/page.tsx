@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader } from "@/components/ui";
 import {
@@ -22,7 +23,8 @@ import {
   Map,
   Lightbulb,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Printer
 } from "lucide-react";
 
 // Dev panel password removed for demo — open access
@@ -133,6 +135,11 @@ export default function DevPanelPage() {
                 {NAV_SECTIONS.map((section) => {
                   const Icon = section.icon;
                   const isActive = activeSection === section.id;
+                  const priorityConfig = {
+                    must: { dot: "bg-nhs-green", label: "Core" },
+                    should: { dot: "bg-amber-400", label: "Planned" },
+                    later: { dot: "bg-gray-300", label: "Future" },
+                  }[section.priority] || { dot: "bg-gray-300", label: "" };
                   return (
                     <button
                       key={section.id}
@@ -145,19 +152,24 @@ export default function DevPanelPage() {
                     >
                       <Icon className="w-4 h-4 flex-shrink-0" />
                       <span className="flex-1">{section.label}</span>
-                      {section.priority === "must" && !isActive && (
-                        <span className="w-2 h-2 rounded-full bg-nhs-green" title="Priority section" />
+                      {!isActive && (
+                        <span className={`w-2 h-2 rounded-full ${priorityConfig.dot}`} title={priorityConfig.label} />
                       )}
                     </button>
                   );
                 })}
               </nav>
+              <div className="mt-2 pt-2 border-t border-gray-100 px-3 flex items-center gap-3 text-[10px] text-nhs-mid-grey">
+                <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-nhs-green" /> Core</span>
+                <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-amber-400" /> Planned</span>
+                <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-gray-300" /> Future</span>
+              </div>
             </Card>
 
             {/* Mode indicator */}
-            <div className="text-xs text-center text-nhs-mid-grey">
-              wardHub Demo
-            </div>
+            <Link href="/" className="block text-xs text-center text-nhs-mid-grey hover:text-nhs-blue transition-colors no-underline mt-2">
+              &larr; Back to wardHub
+            </Link>
           </div>
         </aside>
 
@@ -265,6 +277,15 @@ function OverviewSection() {
 
 function BusinessCaseSection() {
   const [expanded, setExpanded] = useState<string | null>("executive-summary");
+  const [printMode, setPrintMode] = useState(false);
+
+  const handlePrint = () => {
+    setPrintMode(true);
+    setTimeout(() => {
+      window.print();
+      setPrintMode(false);
+    }, 300);
+  };
 
   const sections = [
     {
@@ -645,9 +666,18 @@ function BusinessCaseSection() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-nhs-black">Business Case</h1>
-        <p className="text-nhs-dark-grey mt-1">Phased rollout proposal for Trust approval</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-nhs-black">Business Case</h1>
+          <p className="text-nhs-dark-grey mt-1">Phased rollout proposal for Trust approval</p>
+        </div>
+        <button
+          onClick={handlePrint}
+          className="print:hidden inline-flex items-center gap-2 px-4 py-2 bg-nhs-blue text-white font-semibold rounded-lg hover:bg-nhs-dark-blue transition-colors text-sm"
+        >
+          <Printer className="w-4 h-4" />
+          Print Version
+        </button>
       </div>
 
       <div className="bg-nhs-blue/10 border border-nhs-blue rounded-lg p-4">
@@ -658,22 +688,30 @@ function BusinessCaseSection() {
       </div>
 
       <div className="space-y-2">
-        {sections.map((section) => (
-          <div key={section.id} className="border border-gray-200 rounded-xl overflow-hidden">
-            <button
-              onClick={() => setExpanded(expanded === section.id ? null : section.id)}
-              className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors text-left"
-            >
-              <span className="font-semibold text-nhs-black">{section.title}</span>
-              <ChevronDown className={`w-5 h-5 text-nhs-mid-grey transition-transform ${expanded === section.id ? "rotate-180" : ""}`} />
-            </button>
-            {expanded === section.id && (
-              <div className="p-4 pt-0 bg-white border-t border-gray-100">
+        {sections.map((section) => {
+          const isOpen = expanded === section.id || printMode;
+          return (
+            <div key={section.id} className={`border border-gray-200 rounded-xl overflow-hidden ${printMode ? "break-inside-avoid" : ""}`}>
+              <button
+                onClick={() => !printMode && setExpanded(expanded === section.id ? null : section.id)}
+                aria-expanded={isOpen}
+                aria-controls={`bc-${section.id}`}
+                className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors text-left print:hover:bg-white"
+              >
+                <span className="font-semibold text-nhs-black">{section.title}</span>
+                <ChevronDown className={`w-5 h-5 text-nhs-mid-grey transition-transform print:hidden ${isOpen ? "rotate-180" : ""}`} />
+              </button>
+              <div
+                id={`bc-${section.id}`}
+                role="region"
+                className={isOpen ? "p-4 pt-0 bg-white border-t border-gray-100" : "sr-only"}
+                aria-hidden={!isOpen}
+              >
                 {section.content}
               </div>
-            )}
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -2305,6 +2343,7 @@ function ReferencesSection() {
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Trust Policies</h2>
+          <p className="text-xs text-nhs-mid-grey mt-1">Internal documents — requires FOCUS intranet access</p>
         </CardHeader>
         <CardContent className="space-y-2">
           {[
@@ -2326,16 +2365,25 @@ function ReferencesSection() {
           <h2 className="text-lg font-bold text-nhs-black">External Standards</h2>
         </CardHeader>
         <CardContent className="space-y-2">
-          {[
-            "DCB 0129 — Clinical Risk Management (Manufacture)",
-            "DCB 0160 — Clinical Risk Management (Deployment)",
-            "Data Security and Protection Toolkit (DSPT)",
-            "Cyber Essentials Plus",
-            "UK GDPR / Data Protection Act 2018"
-          ].map((standard, i) => (
-            <div key={i} className="p-3 bg-nhs-pale-grey rounded-lg">
-              <p className="text-sm text-nhs-dark-grey">{standard}</p>
-            </div>
+          {([
+            { label: "DCB 0129 — Clinical Risk Management (Manufacture)", url: "https://digital.nhs.uk/data-and-information/information-standards/information-standards-and-data-collections-including-extractions/publications-and-notifications/standards-and-collections/dcb0129-clinical-risk-management-its-application-in-the-manufacture-of-health-it-systems" },
+            { label: "DCB 0160 — Clinical Risk Management (Deployment)", url: "https://digital.nhs.uk/data-and-information/information-standards/information-standards-and-data-collections-including-extractions/publications-and-notifications/standards-and-collections/dcb0160-clinical-risk-management-its-application-in-the-deployment-and-use-of-health-it-systems" },
+            { label: "Data Security and Protection Toolkit (DSPT)", url: "https://www.dsptoolkit.nhs.uk/" },
+            { label: "Cyber Essentials Plus", url: undefined },
+            { label: "UK GDPR / Data Protection Act 2018", url: "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/" },
+          ] as { label: string; url?: string }[]).map((standard, i) => (
+            standard.url ? (
+              <a key={i} href={standard.url} target="_blank" rel="noopener noreferrer" className="block p-3 bg-nhs-pale-grey hover:bg-blue-50 rounded-lg transition-colors no-underline group">
+                <p className="text-sm text-nhs-dark-grey group-hover:text-nhs-blue flex items-center gap-2">
+                  {standard.label}
+                  <ExternalLink className="w-3 h-3 text-nhs-mid-grey group-hover:text-nhs-blue flex-shrink-0" />
+                </p>
+              </a>
+            ) : (
+              <div key={i} className="p-3 bg-nhs-pale-grey rounded-lg">
+                <p className="text-sm text-nhs-dark-grey">{standard.label}</p>
+              </div>
+            )
           ))}
         </CardContent>
       </Card>

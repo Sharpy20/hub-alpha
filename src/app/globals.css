@@ -230,8 +230,8 @@ footer a:hover {
    Clean printing for workflows and guides
    ============================================ */
 @media print {
-  /* Hide navigation, footer, buttons */
-  header, footer, nav, .no-print, button:not(.print-include) {
+  /* Hide navigation, footer, buttons, sidebars */
+  header, footer, nav, aside, .no-print, button:not(.print-include) {
     display: none !important;
   }
 

@@ -2586,17 +2586,6 @@ export default function TasksPage() {
           </div>
         </div>
 
-        {/* Nexus sync banner - only show in Max+ version */}
-        {hasFeature("nexus_sync") && (
-          <div className="overflow-hidden bg-green-50 border border-green-200 rounded-xl">
-            <div className="animate-marquee whitespace-nowrap py-2 text-green-600 font-medium text-sm">
-              <span className="mx-8">✅ Nexus Assurance sync enabled - Audit tasks auto-complete when done on Nexus</span>
-              <span className="mx-8">✅ Nexus Assurance sync enabled - Audit tasks auto-complete when done on Nexus</span>
-              <span className="mx-8">✅ Nexus Assurance sync enabled - Audit tasks auto-complete when done on Nexus</span>
-            </div>
-          </div>
-        )}
-
         {/* Scrollable diary */}
         <div
           ref={scrollContainerRef}

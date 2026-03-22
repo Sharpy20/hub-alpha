@@ -1863,61 +1863,12 @@ function ExpandedDayView({
       {/* Header */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {/* Minimize button — mirrors the expand icon */}
-            <button
-              onClick={onClose}
-              className="p-2.5 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
-              title="Collapse back to overview"
-              aria-label="Collapse back to overview"
-            >
-              <Minimize2 className="w-5 h-5" />
-            </button>
-
-            {/* Day navigation */}
-            <button
-              onClick={() => {
-                const idx = dates.indexOf(date);
-                if (idx > 0 && onChangeDate) onChangeDate(dates[idx - 1]);
-              }}
-              disabled={dates.indexOf(date) <= 0}
-              className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Previous day"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            <div className="text-center min-w-[160px]">
-              <h1 className="text-2xl font-bold">{formatDisplayDate(date)}</h1>
-              <p className="text-white/70 text-sm">
-                {new Date(date + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long" })}
-              </p>
-            </div>
-
-            <button
-              onClick={() => {
-                const idx = dates.indexOf(date);
-                if (idx < dates.length - 1 && onChangeDate) onChangeDate(dates[idx + 1]);
-              }}
-              disabled={dates.indexOf(date) >= dates.length - 1}
-              className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Next day"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-
-            {/* Today jump */}
-            {date !== todayDate && (
-              <button
-                onClick={() => onChangeDate?.(todayDate)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm font-medium"
-              >
-                <CalendarDays className="w-4 h-4" />
-                Today
-              </button>
-            )}
+          <div>
+            <h1 className="text-2xl font-bold">{formatDisplayDate(date)}</h1>
+            <p className="text-white/70 text-sm">
+              {new Date(date + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+            </p>
           </div>
-
           <div className="flex items-center gap-3">
             <span className="bg-white/20 px-3 py-1.5 rounded-full text-sm font-medium">
               {totalFiltered} task{totalFiltered !== 1 ? "s" : ""} showing
@@ -1935,9 +1886,79 @@ function ExpandedDayView({
         </div>
       </div>
 
-      {/* Filter Bar */}
-      <div className="bg-white border-b border-gray-200 p-4">
+      {/* Navigation + Filter Bar */}
+      <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto">
+          {/* Day navigation row */}
+          <div className="flex items-center gap-3 mb-4">
+            {/* < Previous */}
+            <button
+              onClick={() => {
+                const idx = dates.indexOf(date);
+                if (idx > 0 && onChangeDate) onChangeDate(dates[idx - 1]);
+              }}
+              disabled={dates.indexOf(date) <= 0}
+              className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Previous day"
+            >
+              <ChevronLeft className="w-5 h-5 text-gray-700" />
+            </button>
+
+            {/* Day label */}
+            <span className="font-bold text-gray-900 text-lg min-w-[100px] text-center">
+              {formatDisplayDate(date)}
+            </span>
+
+            {/* > Next */}
+            <button
+              onClick={() => {
+                const idx = dates.indexOf(date);
+                if (idx < dates.length - 1 && onChangeDate) onChangeDate(dates[idx + 1]);
+              }}
+              disabled={dates.indexOf(date) >= dates.length - 1}
+              className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Next day"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-700" />
+            </button>
+
+            {/* Separator */}
+            <div className="w-px h-6 bg-gray-300" />
+
+            {/* Date picker */}
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => onChangeDate?.(e.target.value)}
+              className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+
+            {/* Jump to today */}
+            {date !== todayDate && (
+              <button
+                onClick={() => onChangeDate?.(todayDate)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg transition-colors text-sm font-medium hover:bg-indigo-200"
+              >
+                <CalendarDays className="w-4 h-4" />
+                Today
+              </button>
+            )}
+
+            {/* Minimize — back to overview */}
+            <div className="ml-auto">
+              <button
+                onClick={onClose}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium text-gray-700"
+                title="Collapse back to overview"
+                aria-label="Collapse back to overview"
+              >
+                <Minimize2 className="w-4 h-4" />
+                Overview
+              </button>
+            </div>
+          </div>
+
+          {/* Filter controls */}
           <div className="flex flex-wrap items-center gap-4">
             {/* Shift filters - only show for today */}
             {isToday && (

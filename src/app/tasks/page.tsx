@@ -2086,120 +2086,93 @@ function ExpandedDayView({
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Ward Tasks Column */}
-              {showWardTasks && (earlyTasks.length > 0 || lateTasks.length > 0 || nightTasks.length > 0) && (
-                <div className="space-y-6">
-                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                    🏥 Ward Tasks
-                    <span className="text-sm font-normal text-gray-500">
-                      ({wardTasks.length})
-                    </span>
-                  </h2>
-
-                  {/* Early Shift */}
-                  {showEarly && earlyTasks.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center">
-                          <Sun className="w-4 h-4 text-white" />
+              {/* Ward Tasks Column — always show header */}
+              <div className="space-y-6">
+                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  🏥 Ward Tasks
+                  <span className="text-sm font-normal text-gray-500">
+                    ({wardTasks.length})
+                  </span>
+                </h2>
+                {showWardTasks && (earlyTasks.length > 0 || lateTasks.length > 0 || nightTasks.length > 0) ? (
+                  <>
+                    {showEarly && earlyTasks.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center">
+                            <Sun className="w-4 h-4 text-white" />
+                          </div>
+                          <h3 className="font-semibold text-gray-800">Early Shift</h3>
+                          <span className="text-xs text-gray-500">({earlyTasks.length})</span>
                         </div>
-                        <h3 className="font-semibold text-gray-800">Early Shift</h3>
-                        <span className="text-xs text-gray-500">({earlyTasks.length})</span>
+                        <PriorityGroupedTasks tasks={earlyTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
-                      <PriorityGroupedTasks
-                        tasks={earlyTasks}
-                        onToggleComplete={onToggleComplete}
-                        onClaim={onClaim}
-                        onSteal={onSteal}
-                        onTaskClick={onTaskClick}
-                        currentUserName={currentUserName}
-                      />
-                    </div>
-                  )}
-
-                  {/* Late Shift */}
-                  {showLate && lateTasks.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
-                          <Sunset className="w-4 h-4 text-white" />
+                    )}
+                    {showLate && lateTasks.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
+                            <Sunset className="w-4 h-4 text-white" />
+                          </div>
+                          <h3 className="font-semibold text-gray-800">Late Shift</h3>
+                          <span className="text-xs text-gray-500">({lateTasks.length})</span>
                         </div>
-                        <h3 className="font-semibold text-gray-800">Late Shift</h3>
-                        <span className="text-xs text-gray-500">({lateTasks.length})</span>
+                        <PriorityGroupedTasks tasks={lateTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
-                      <PriorityGroupedTasks
-                        tasks={lateTasks}
-                        onToggleComplete={onToggleComplete}
-                        onClaim={onClaim}
-                        onSteal={onSteal}
-                        onTaskClick={onTaskClick}
-                        currentUserName={currentUserName}
-                      />
-                    </div>
-                  )}
-
-                  {/* Night Shift */}
-                  {showNight && nightTasks.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-700 flex items-center justify-center">
-                          <Moon className="w-4 h-4 text-white" />
+                    )}
+                    {showNight && nightTasks.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-700 flex items-center justify-center">
+                            <Moon className="w-4 h-4 text-white" />
+                          </div>
+                          <h3 className="font-semibold text-gray-800">Night Shift</h3>
+                          <span className="text-xs text-gray-500">({nightTasks.length})</span>
                         </div>
-                        <h3 className="font-semibold text-gray-800">Night Shift</h3>
-                        <span className="text-xs text-gray-500">({nightTasks.length})</span>
+                        <PriorityGroupedTasks tasks={nightTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
-                      <PriorityGroupedTasks
-                        tasks={nightTasks}
-                        onToggleComplete={onToggleComplete}
-                        onClaim={onClaim}
-                        onSteal={onSteal}
-                        onTaskClick={onTaskClick}
-                        currentUserName={currentUserName}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
+                    )}
+                  </>
+                ) : (
+                  <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
+                    None scheduled — tap to add ward task
+                  </button>
+                )}
+              </div>
 
-              {/* Patient Tasks Column */}
-              {showPatientTasks && patientTasks.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
-                    👤 Patient Tasks
-                    <span className="text-sm font-normal text-gray-500">
-                      ({patientTasks.length})
-                    </span>
-                  </h2>
-                  <PriorityGroupedTasks
-                    tasks={patientTasks}
-                    onToggleComplete={onToggleComplete}
-                    onClaim={onClaim}
-                    onSteal={onSteal}
-                    onTaskClick={onTaskClick}
-                    currentUserName={currentUserName}
-                  />
-                </div>
-              )}
+              {/* Patient Tasks Column — always show header */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
+                  👤 Patient Tasks
+                  <span className="text-sm font-normal text-gray-500">
+                    ({patientTasks.length})
+                  </span>
+                </h2>
+                {showPatientTasks && patientTasks.length > 0 ? (
+                  <PriorityGroupedTasks tasks={patientTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                ) : (
+                  <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
+                    None scheduled — tap to add patient task
+                  </button>
+                )}
+              </div>
 
-              {/* Appointments Column */}
-              {showAppointments && appointments.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
-                    📅 Appointments
-                    <span className="text-sm font-normal text-gray-500">
-                      ({appointments.length})
-                    </span>
-                  </h2>
-                  <PriorityGroupedTasks
-                    tasks={appointments}
-                    onToggleComplete={onToggleComplete}
-                    onClaim={onClaim}
-                    onSteal={onSteal}
-                    onTaskClick={onTaskClick}
-                    currentUserName={currentUserName}
-                  />
-                </div>
-              )}
+              {/* Appointments Column — always show header */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
+                  📅 Appointments
+                  <span className="text-sm font-normal text-gray-500">
+                    ({appointments.length})
+                  </span>
+                </h2>
+                {showAppointments && appointments.length > 0 ? (
+                  <PriorityGroupedTasks tasks={appointments} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                ) : (
+                  <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
+                    None scheduled — tap to add appointment
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>

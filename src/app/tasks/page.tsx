@@ -1811,6 +1811,11 @@ function ExpandedDayView({
   onAddTask,
   onChangeDate,
   dates = [],
+  diaryView,
+  onDiaryViewChange,
+  onHideCompletedChange,
+  showWardTasksSetting,
+  onShowWardTasksChange,
 }: {
   date: string;
   tasks: DiaryTask[];
@@ -1824,7 +1829,13 @@ function ExpandedDayView({
   onAddTask?: () => void;
   onChangeDate?: (date: string) => void;
   dates?: string[];
+  diaryView: "simple" | "detailed";
+  onDiaryViewChange: (view: "simple" | "detailed") => void;
+  onHideCompletedChange: (val: boolean) => void;
+  showWardTasksSetting: boolean;
+  onShowWardTasksChange: (val: boolean) => void;
 }) {
+  const [showSettings, setShowSettings] = useState(false);
   // Shift filter state - which shifts to show
   const [showEarly, setShowEarly] = useState(true);
   const [showLate, setShowLate] = useState(true);
@@ -2009,6 +2020,44 @@ function ExpandedDayView({
                 onChange={(e) => onChangeDate?.(e.target.value)}
                 className="px-2 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
+              <div className="w-px h-5 bg-gray-300" />
+              {/* Settings cog */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowSettings(!showSettings)}
+                  className={`p-1.5 rounded-lg transition-colors ${showSettings ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 hover:bg-gray-200 text-gray-600"}`}
+                  title="Diary settings"
+                >
+                  <Settings2 className="w-4 h-4" />
+                </button>
+                {showSettings && (
+                  <div className="absolute top-full mt-1 right-0 bg-white border border-gray-200 rounded-xl shadow-lg z-50 w-56 py-2">
+                    <div className="px-3 py-1.5 border-b border-gray-100">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">View</p>
+                    </div>
+                    <div className="px-2 py-1.5">
+                      <div className="flex gap-1">
+                        <button onClick={() => onDiaryViewChange("simple")} className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${diaryView === "simple" ? "bg-indigo-100 text-indigo-700" : "text-gray-600 hover:bg-gray-50"}`}>Simple</button>
+                        <button onClick={() => onDiaryViewChange("detailed")} className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${diaryView === "detailed" ? "bg-indigo-100 text-indigo-700" : "text-gray-600 hover:bg-gray-50"}`}>Detailed</button>
+                      </div>
+                    </div>
+                    <div className="px-3 py-1.5 border-t border-gray-100 mt-1">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Filters</p>
+                    </div>
+                    <label className="flex items-center justify-between px-3 py-1.5 hover:bg-gray-50 cursor-pointer">
+                      <span className="text-xs text-gray-700">Hide completed</span>
+                      <input type="checkbox" checked={hideCompleted} onChange={(e) => onHideCompletedChange(e.target.checked)} className="rounded border-gray-300 text-indigo-600 w-3.5 h-3.5" />
+                    </label>
+                    <label className="flex items-center justify-between px-3 py-1.5 hover:bg-gray-50 cursor-pointer">
+                      <span className="text-xs text-gray-700">Show ward tasks</span>
+                      <input type="checkbox" checked={showWardTasksSetting} onChange={(e) => onShowWardTasksChange(e.target.checked)} className="rounded border-gray-300 text-indigo-600 w-3.5 h-3.5" />
+                    </label>
+                    <div className="px-3 pt-2 pb-1 border-t border-gray-100 mt-1">
+                      <button onClick={() => setShowSettings(false)} className="w-full py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200">Done</button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -2847,6 +2896,11 @@ function TasksPageInner() {
           onAddTask={() => setShowAddModal(true)}
           onChangeDate={(newDate) => setExpandedDay(newDate)}
           dates={dates}
+          diaryView={diaryView}
+          onDiaryViewChange={setDiaryView}
+          onHideCompletedChange={setHideCompleted}
+          showWardTasksSetting={showWardTasksSetting}
+          onShowWardTasksChange={setShowWardTasksSetting}
         />
       )}
 

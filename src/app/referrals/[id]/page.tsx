@@ -1914,20 +1914,20 @@ export default function WorkflowPage() {
         {currentStep > 0 && (
           <button
             onClick={handlePrev}
-            className="fixed left-0 top-1/2 -translate-y-1/2 z-40 w-10 h-32 bg-gray-900/10 hover:bg-gray-900/20 backdrop-blur-sm rounded-r-xl flex items-center justify-center transition-all group"
+            className="fixed left-0 top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-r-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16"
             aria-label="Previous step"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
+            <ArrowLeft className="w-7 h-7 text-white" />
           </button>
         )}
         {!isComplete && (
           <button
             onClick={handleNext}
             disabled={!canProceed()}
-            className="fixed right-0 top-1/2 -translate-y-1/2 z-40 w-10 h-32 bg-gray-900/10 hover:bg-gray-900/20 backdrop-blur-sm rounded-l-xl flex items-center justify-center transition-all group disabled:opacity-30 disabled:cursor-not-allowed"
+            className="fixed right-0 top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:w-14"
             aria-label="Next step"
           >
-            <ArrowRight className="w-5 h-5 text-gray-600 group-hover:text-gray-900 transition-colors" />
+            <ArrowRight className="w-7 h-7 text-white" />
           </button>
         )}
 

@@ -874,11 +874,13 @@ function AddTaskModal({
   onClose,
   onAdd,
   activeWard,
+  defaultDate,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (task: Partial<DiaryTask>) => void;
   activeWard: string;
+  defaultDate?: string;
 }) {
   const [taskType, setTaskType] = useState<"ward" | "patient" | "appointment">("ward");
   const [title, setTitle] = useState("");
@@ -898,10 +900,12 @@ function AddTaskModal({
   const [recurringDays, setRecurringDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]); // Default all days
   const [selectedShift, setSelectedShift] = useState<"early" | "late" | "night">("early");
   const [requiresApproval, setRequiresApproval] = useState(false);
-  const [wardTaskDate, setWardTaskDate] = useState(formatDate(new Date())); // Date for one-off ward tasks
+  const effectiveDefault = defaultDate || formatDate(new Date());
+  const [wardTaskDate, setWardTaskDate] = useState(effectiveDefault);
+  const [taskDate, setTaskDate] = useState(effectiveDefault); // Date for patient tasks
 
   // Appointment specific
-  const [appointmentDate, setAppointmentDate] = useState(formatDate(new Date()));
+  const [appointmentDate, setAppointmentDate] = useState(effectiveDefault);
   const [timeType, setTimeType] = useState<"preset" | "exact">("preset");
   const [presetTime, setPresetTime] = useState<"morning" | "afternoon" | "evening" | "night">("morning");
   const [exactTime, setExactTime] = useState("09:00");
@@ -924,7 +928,7 @@ function AddTaskModal({
       title,
       priority,
       status: "pending" as const,
-      dueDate: formatDate(new Date()),
+      dueDate: taskType === "ward" ? (isRecurring ? effectiveDefault : wardTaskDate) : taskDate,
       createdAt: formatDate(new Date()),
       createdBy: "Current User",
       ward: "Byron",
@@ -1462,6 +1466,18 @@ function AddTaskModal({
 
         {taskType === "patient" && (
           <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+            <input
+              type="date"
+              value={taskDate}
+              onChange={(e) => setTaskDate(e.target.value)}
+              className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
+            />
+          </div>
+        )}
+
+        {taskType === "patient" && (
+          <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(TASK_CATEGORY_CONFIG).map(([key, config]) => (
@@ -1859,7 +1875,7 @@ function ExpandedDayView({
   const totalFiltered = wardTasks.length + patientTasks.length + appointments.length;
 
   return (
-    <div className="fixed inset-0 bg-gray-50 z-40 overflow-hidden flex flex-col">
+    <div className="fixed top-[57px] left-0 right-0 bottom-0 bg-gray-50 z-20 overflow-hidden flex flex-col">
       {/* Filter Bar */}
       <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto">
@@ -2774,6 +2790,7 @@ function TasksPageInner() {
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddTask}
         activeWard={activeWard}
+        defaultDate={expandedDay || focusedDate || todayStr}
       />
 
       <StaffManagementModal

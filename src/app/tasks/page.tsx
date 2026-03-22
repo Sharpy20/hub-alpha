@@ -1786,6 +1786,8 @@ function ExpandedDayView({
   currentUserName,
   onClose,
   onAddTask,
+  onChangeDate,
+  dates = [],
 }: {
   date: string;
   tasks: DiaryTask[];
@@ -1797,6 +1799,8 @@ function ExpandedDayView({
   currentUserName?: string;
   onClose: () => void;
   onAddTask?: () => void;
+  onChangeDate?: (date: string) => void;
+  dates?: string[];
 }) {
   // Shift filter state - which shifts to show
   const [showEarly, setShowEarly] = useState(true);
@@ -1860,20 +1864,60 @@ function ExpandedDayView({
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
+            {/* Minimize button — mirrors the expand icon */}
             <button
               onClick={onClose}
-              className="flex items-center gap-2 px-3 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
+              className="p-2.5 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
+              title="Collapse back to overview"
+              aria-label="Collapse back to overview"
             >
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-medium">Back to Overview</span>
+              <Minimize2 className="w-5 h-5" />
             </button>
-            <div>
+
+            {/* Day navigation */}
+            <button
+              onClick={() => {
+                const idx = dates.indexOf(date);
+                if (idx > 0 && onChangeDate) onChangeDate(dates[idx - 1]);
+              }}
+              disabled={dates.indexOf(date) <= 0}
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Previous day"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            <div className="text-center min-w-[160px]">
               <h1 className="text-2xl font-bold">{formatDisplayDate(date)}</h1>
-              <p className="text-white/70">
-                {new Date(date).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+              <p className="text-white/70 text-sm">
+                {new Date(date + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long" })}
               </p>
             </div>
+
+            <button
+              onClick={() => {
+                const idx = dates.indexOf(date);
+                if (idx < dates.length - 1 && onChangeDate) onChangeDate(dates[idx + 1]);
+              }}
+              disabled={dates.indexOf(date) >= dates.length - 1}
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Next day"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+
+            {/* Today jump */}
+            {date !== todayDate && (
+              <button
+                onClick={() => onChangeDate?.(todayDate)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-sm font-medium"
+              >
+                <CalendarDays className="w-4 h-4" />
+                Today
+              </button>
+            )}
           </div>
+
           <div className="flex items-center gap-3">
             <span className="bg-white/20 px-3 py-1.5 rounded-full text-sm font-medium">
               {totalFiltered} task{totalFiltered !== 1 ? "s" : ""} showing
@@ -2796,6 +2840,8 @@ function TasksPageInner() {
           currentUserName={user?.name}
           onClose={() => setExpandedDay(null)}
           onAddTask={() => setShowAddModal(true)}
+          onChangeDate={(newDate) => setExpandedDay(newDate)}
+          dates={dates}
         />
       )}
 

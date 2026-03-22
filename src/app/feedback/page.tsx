@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import {
-  supabase,
   FeedbackPost,
   FeedbackComment,
   FEEDBACK_CATEGORIES,
@@ -475,151 +474,94 @@ export default function FeedbackPage() {
     setUsernameState(name);
   }, [user]);
 
-  // Fetch posts and comments
-  const fetchData = useCallback(async () => {
+  // Load feedback from localStorage (demo mode — no Supabase)
+  const STORAGE_KEY = "wardhub_feedback";
+
+  const loadFromStorage = useCallback(() => {
     try {
-      setLoading(true);
-      setError(null);
-
-      // Fetch posts
-      const { data: postsData, error: postsError } = await supabase
-        .from("feedback_posts")
-        .select("*")
-        .order(sortBy === "popular" ? "upvotes" : "created_at", { ascending: false });
-
-      if (postsError) throw postsError;
-
-      // Fetch comments
-      const { data: commentsData, error: commentsError } = await supabase
-        .from("feedback_comments")
-        .select("*")
-        .order("created_at", { ascending: true });
-
-      if (commentsError) throw commentsError;
-
-      // Fetch user's votes
-      const { data: votesData, error: votesError } = await supabase
-        .from("feedback_votes")
-        .select("*")
-        .eq("user_id", userId);
-
-      if (votesError) throw votesError;
-
-      setPosts(postsData || []);
-      setComments(commentsData || []);
-
-      // Build set of voted items
-      const votes = new Set<string>();
-      votesData?.forEach((vote) => {
-        if (vote.post_id) votes.add(`post-${vote.post_id}`);
-        if (vote.comment_id) votes.add(`comment-${vote.comment_id}`);
-      });
-      setUserVotes(votes);
-    } catch (err) {
-      console.error("Error fetching feedback:", err);
-      setError("Failed to load discussions. Please try again.");
-    } finally {
-      setLoading(false);
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const data = JSON.parse(stored);
+        setPosts(data.posts || []);
+        setComments(data.comments || []);
+        const votes = new Set<string>(data.votes || []);
+        setUserVotes(votes);
+      }
+    } catch {
+      // ignore parse errors
     }
-  }, [sortBy, userId]);
+    setLoading(false);
+  }, []);
+
+  const saveToStorage = useCallback((newPosts: FeedbackPost[], newComments: FeedbackComment[], newVotes: Set<string>) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      posts: newPosts,
+      comments: newComments,
+      votes: Array.from(newVotes),
+    }));
+  }, []);
 
   useEffect(() => {
     if (userId) {
-      fetchData();
+      loadFromStorage();
     }
-  }, [userId, fetchData]);
+  }, [userId, loadFromStorage]);
 
-  // Handle creating a new post
-  const handleCreatePost = async (title: string, content: string, category: FeedbackCategory, subCategory: string | null) => {
-    try {
-      const { error } = await supabase.from("feedback_posts").insert({
-        title,
-        content,
-        category,
-        sub_category: subCategory,
-        author_name: username,
-        author_id: userId,
-        upvotes: 0,
-      });
-
-      if (error) throw error;
-      fetchData();
-    } catch (err) {
-      console.error("Error creating post:", err);
-      alert("Failed to create post. Please try again.");
-    }
+  // Handle creating a new post (localStorage demo)
+  const handleCreatePost = (title: string, content: string, category: FeedbackCategory, subCategory: string | null) => {
+    const newPost: FeedbackPost = {
+      id: `post-${Date.now()}`,
+      title,
+      content,
+      category,
+      sub_category: subCategory,
+      author_name: username,
+      author_id: userId,
+      upvotes: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    const newPosts = [newPost, ...posts];
+    setPosts(newPosts);
+    saveToStorage(newPosts, comments, userVotes);
   };
 
-  // Handle voting on a post
-  const handleVote = async (postId: string) => {
+  // Handle voting on a post (localStorage demo)
+  const handleVote = (postId: string) => {
     const voteKey = `post-${postId}`;
     const hasVoted = userVotes.has(voteKey);
-
-    try {
-      if (hasVoted) {
-        // Remove vote
-        await supabase
-          .from("feedback_votes")
-          .delete()
-          .eq("user_id", userId)
-          .eq("post_id", postId);
-
-        // Decrement upvotes
-        const post = posts.find((p) => p.id === postId);
-        if (post) {
-          await supabase
-            .from("feedback_posts")
-            .update({ upvotes: Math.max(0, post.upvotes - 1) })
-            .eq("id", postId);
-        }
-
-        setUserVotes((prev) => {
-          const next = new Set(prev);
-          next.delete(voteKey);
-          return next;
-        });
-      } else {
-        // Add vote
-        await supabase.from("feedback_votes").insert({
-          user_id: userId,
-          post_id: postId,
-        });
-
-        // Increment upvotes
-        const post = posts.find((p) => p.id === postId);
-        if (post) {
-          await supabase
-            .from("feedback_posts")
-            .update({ upvotes: post.upvotes + 1 })
-            .eq("id", postId);
-        }
-
-        setUserVotes((prev) => new Set(prev).add(voteKey));
+    const newVotes = new Set(userVotes);
+    const newPosts = posts.map((p) => {
+      if (p.id === postId) {
+        return { ...p, upvotes: hasVoted ? Math.max(0, p.upvotes - 1) : p.upvotes + 1 };
       }
-
-      fetchData();
-    } catch (err) {
-      console.error("Error voting:", err);
+      return p;
+    });
+    if (hasVoted) {
+      newVotes.delete(voteKey);
+    } else {
+      newVotes.add(voteKey);
     }
+    setPosts(newPosts);
+    setUserVotes(newVotes);
+    saveToStorage(newPosts, comments, newVotes);
   };
 
-  // Handle adding a comment
-  const handleComment = async (postId: string, content: string) => {
-    try {
-      const { error } = await supabase.from("feedback_comments").insert({
-        post_id: postId,
-        content,
-        author_name: username,
-        author_id: userId,
-        upvotes: 0,
-      });
-
-      if (error) throw error;
-      fetchData();
-    } catch (err) {
-      console.error("Error adding comment:", err);
-      alert("Failed to add reply. Please try again.");
-    }
+  // Handle adding a comment (localStorage demo)
+  const handleComment = (postId: string, content: string) => {
+    const newComment: FeedbackComment = {
+      id: `comment-${Date.now()}`,
+      post_id: postId,
+      parent_id: null,
+      content,
+      author_name: username,
+      author_id: userId,
+      upvotes: 0,
+      created_at: new Date().toISOString(),
+    };
+    const newComments = [...comments, newComment];
+    setComments(newComments);
+    saveToStorage(posts, newComments, userVotes);
   };
 
   // Filter posts
@@ -757,7 +699,7 @@ export default function FeedbackPage() {
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700">
             {error}
             <button
-              onClick={fetchData}
+              onClick={loadFromStorage}
               className="ml-2 text-red-800 underline hover:no-underline"
             >
               Retry

@@ -1088,7 +1088,7 @@ function RBACSection() {
                   <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
                 <tr>
-                  <td className="p-2">Approve discharges</td>
+                  <td className="p-2">Approve discharges <span className="text-xs text-gray-500 block" title="Staff can initiate a discharge request; Ward Admin performs final confirmation via audit log review">(Staff initiate; Ward Admin confirm)</span></td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-red">✗</td>
                   <td className="p-2 text-center text-nhs-green">✓</td>
@@ -2109,10 +2109,25 @@ function RoadmapSection() {
       </div>
 
       {/* Timeline visual */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+      <div
+        className="flex items-center gap-2 overflow-x-auto pb-2"
+        role="tablist"
+        aria-label="Roadmap phases"
+        onKeyDown={(e) => {
+          const currentIdx = stages.findIndex(s => s.id === expanded);
+          if (e.key === "ArrowRight" && currentIdx < stages.length - 1) {
+            setExpanded(stages[currentIdx + 1].id);
+          } else if (e.key === "ArrowLeft" && currentIdx > 0) {
+            setExpanded(stages[currentIdx - 1].id);
+          }
+        }}
+      >
         {stages.map((stage, i) => (
           <button
             key={stage.id}
+            role="tab"
+            aria-selected={expanded === stage.id}
+            tabIndex={expanded === stage.id ? 0 : -1}
             onClick={() => setExpanded(expanded === stage.id ? null : stage.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm whitespace-nowrap transition-all ${
               expanded === stage.id

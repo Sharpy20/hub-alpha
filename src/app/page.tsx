@@ -1,11 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout";
 import { BookmarkCarousel } from "@/components/bookmarks";
 import { TodayWidget } from "@/components/diary";
 import { useApp } from "@/app/providers";
+import { useTour } from "@/app/tour-provider";
 import Link from "next/link";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, X, Sparkles } from "lucide-react";
 
 const QUICK_ACTIONS = [
   {
@@ -26,10 +28,62 @@ const QUICK_ACTIONS = [
 
 export default function HomePage() {
   const { user } = useApp();
+  const { startTour, hasBeenStarted } = useTour();
+  const [bannerDismissed, setBannerDismissed] = useState(true);
+
+  useEffect(() => {
+    const dismissed = localStorage.getItem("wardhub_onboarding_dismissed");
+    setBannerDismissed(dismissed === "true");
+  }, []);
+
+  const isAdminRole = user?.role === "senior_admin" || user?.role === "ward_admin";
+  const showOnboarding = user && !bannerDismissed && !hasBeenStarted && !isAdminRole;
+
+  const dismissBanner = () => {
+    setBannerDismissed(true);
+    localStorage.setItem("wardhub_onboarding_dismissed", "true");
+  };
 
   return (
     <MainLayout>
       <div className="space-y-8">
+        {/* Onboarding banner for new users */}
+        {showOnboarding && (
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-4 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">New to wardHub?</p>
+                <p className="text-sm text-gray-600">Take the 2-minute guided tour to see what it can do.</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => { startTour(); dismissBanner(); }}
+                className="px-4 py-2 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-xl font-semibold text-sm hover:shadow-md transition-all no-underline"
+              >
+                Start Tour
+              </button>
+              <Link
+                href="/intro-guide"
+                onClick={dismissBanner}
+                className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all no-underline"
+              >
+                Intro Guide
+              </Link>
+              <button
+                onClick={dismissBanner}
+                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-white/50 transition-colors"
+                aria-label="Dismiss onboarding banner"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white rounded-2xl px-6 py-4 text-center relative overflow-hidden">
           <div className="absolute top-2 right-3 text-white/10 text-xs font-bold tracking-widest select-none">NHS</div>

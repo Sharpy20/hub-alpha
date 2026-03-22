@@ -2415,6 +2415,11 @@ function TasksPageInner() {
       }
 
       if (task.type === "ward") {
+        // Recurring ward tasks show on every matching day of the week
+        if (task.isRecurring && task.recurringDays && task.recurringDays.length > 0) {
+          const targetDayOfWeek = new Date(date + "T12:00:00").getDay();
+          return task.recurringDays.includes(targetDayOfWeek);
+        }
         return task.dueDate === date;
       } else if (task.type === "patient") {
         if (isTargetToday && task.carryOver && task.status !== "completed" && task.status !== "cancelled") {

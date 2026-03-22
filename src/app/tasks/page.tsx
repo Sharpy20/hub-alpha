@@ -1889,76 +1889,7 @@ function ExpandedDayView({
       {/* Navigation + Filter Bar */}
       <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto">
-          {/* Day navigation row */}
-          <div className="flex items-center gap-3 mb-4">
-            {/* < Previous */}
-            <button
-              onClick={() => {
-                const idx = dates.indexOf(date);
-                if (idx > 0 && onChangeDate) onChangeDate(dates[idx - 1]);
-              }}
-              disabled={dates.indexOf(date) <= 0}
-              className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Previous day"
-            >
-              <ChevronLeft className="w-5 h-5 text-gray-700" />
-            </button>
-
-            {/* Day label */}
-            <span className="font-bold text-gray-900 text-lg min-w-[100px] text-center">
-              {formatDisplayDate(date)}
-            </span>
-
-            {/* > Next */}
-            <button
-              onClick={() => {
-                const idx = dates.indexOf(date);
-                if (idx < dates.length - 1 && onChangeDate) onChangeDate(dates[idx + 1]);
-              }}
-              disabled={dates.indexOf(date) >= dates.length - 1}
-              className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Next day"
-            >
-              <ChevronRight className="w-5 h-5 text-gray-700" />
-            </button>
-
-            {/* Separator */}
-            <div className="w-px h-6 bg-gray-300" />
-
-            {/* Date picker */}
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => onChangeDate?.(e.target.value)}
-              className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
-
-            {/* Jump to today */}
-            {date !== todayDate && (
-              <button
-                onClick={() => onChangeDate?.(todayDate)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg transition-colors text-sm font-medium hover:bg-indigo-200"
-              >
-                <CalendarDays className="w-4 h-4" />
-                Today
-              </button>
-            )}
-
-            {/* Minimize — back to overview */}
-            <div className="ml-auto">
-              <button
-                onClick={onClose}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm font-medium text-gray-700"
-                title="Collapse back to overview"
-                aria-label="Collapse back to overview"
-              >
-                <Minimize2 className="w-4 h-4" />
-                Overview
-              </button>
-            </div>
-          </div>
-
-          {/* Filter controls */}
+          {/* Filter controls + day navigation on same row */}
           <div className="flex flex-wrap items-center gap-4">
             {/* Shift filters - only show for today */}
             {isToday && (
@@ -2036,6 +1967,51 @@ function ExpandedDayView({
               >
                 📅 Appointments
               </button>
+            </div>
+
+            {/* Day navigation — far right */}
+            <div className="flex items-center gap-2 ml-auto">
+              <button
+                onClick={() => {
+                  const idx = dates.indexOf(date);
+                  if (idx > 0 && onChangeDate) onChangeDate(dates[idx - 1]);
+                }}
+                disabled={dates.indexOf(date) <= 0}
+                className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Previous day"
+              >
+                <ChevronLeft className="w-4 h-4 text-gray-700" />
+              </button>
+              <span className="font-semibold text-gray-900 text-sm min-w-[70px] text-center">
+                {formatDisplayDate(date)}
+              </span>
+              <button
+                onClick={() => {
+                  const idx = dates.indexOf(date);
+                  if (idx < dates.length - 1 && onChangeDate) onChangeDate(dates[idx + 1]);
+                }}
+                disabled={dates.indexOf(date) >= dates.length - 1}
+                className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Next day"
+              >
+                <ChevronRight className="w-4 h-4 text-gray-700" />
+              </button>
+              <div className="w-px h-5 bg-gray-300" />
+              <button
+                onClick={onClose}
+                className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                title="Back to overview"
+                aria-label="Back to overview"
+              >
+                <Minimize2 className="w-4 h-4 text-gray-700" />
+              </button>
+              <div className="w-px h-5 bg-gray-300" />
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => onChangeDate?.(e.target.value)}
+                className="px-2 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
             </div>
           </div>
         </div>

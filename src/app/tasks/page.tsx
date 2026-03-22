@@ -654,20 +654,28 @@ function DayColumn({
   const isFutureDay = !isPastDay && date !== todayDate;
   const isToday = date === todayDate;
 
-  // Compute default expanded states based on day type
-  // Past days: appointments only
-  // Today or focused future day: all sections
-  // Future (unfocused): patient tasks + appointments
-  const getDefaultExpanded = (): SectionExpandState => ({
-    wardTasks: isToday || (isFutureDay && isFocused),
-    patientTasks: isToday || isFutureDay,
-    appointments: true, // Always expanded for all days
-  });
+  // Section expanded/collapsed rules:
+  // PAST:   ward tasks=hidden, patient tasks=collapsed, appointments=expanded
+  // TODAY:  ward tasks=expanded, patient tasks=expanded, appointments=expanded
+  // FUTURE: ward tasks=collapsed, patient tasks=collapsed, appointments=expanded
+  // FOCUSED (any day): all sections expanded
+  const getExpandedForState = (): SectionExpandState => {
+    if (isFocused) return { wardTasks: true, patientTasks: true, appointments: true };
+    if (isToday) return { wardTasks: true, patientTasks: true, appointments: true };
+    if (isPastDay) return { wardTasks: false, patientTasks: false, appointments: true };
+    // Future
+    return { wardTasks: false, patientTasks: false, appointments: true };
+  };
 
-  // Use state to allow user toggling, initialized with smart defaults
-  const [expandedState, setExpandedState] = useState<SectionExpandState>(getDefaultExpanded);
+  const [expandedState, setExpandedState] = useState<SectionExpandState>(getExpandedForState);
+  const [prevFocused, setPrevFocused] = useState(isFocused);
 
-  // Toggle function that actually works
+  // Re-compute when focus changes (expand all on focus, restore defaults on unfocus)
+  if (isFocused !== prevFocused) {
+    setPrevFocused(isFocused);
+    setExpandedState(getExpandedForState());
+  }
+
   const toggleSection = (section: keyof SectionExpandState) => {
     setExpandedState(prev => ({
       ...prev,
@@ -683,14 +691,14 @@ function DayColumn({
   const patientTasks = tasks.filter((t) => t.type === "patient") as PatientTask[];
   const appointments = tasks.filter((t) => t.type === "appointment") as Appointment[];
 
-  // Simple view always hides completed tasks
   const shouldHideCompleted = hideCompleted || diaryView === "simple";
   const filterCompleted = (items: DiaryTask[]) =>
     shouldHideCompleted ? items.filter((t) => t.status !== "completed") : items;
 
-  // Show ward tasks on today, or when a future day is expanded (focused)
-  const showWardTasks = (isToday || (isFutureDay && isFocused)) && showWardTasksSetting;
-  const visibleWardTasks = showWardTasks ? filterCompleted(wardTasks) : [];
+  // Ward tasks visible on: today (always), future days (show section but maybe collapsed),
+  // past days (hidden entirely — no section shown)
+  const showWardTasksSection = (isToday || isFutureDay) && showWardTasksSetting;
+  const visibleWardTasks = showWardTasksSection ? filterCompleted(wardTasks) : [];
   const visiblePatientTasks = filterCompleted(patientTasks);
   const visibleAppointments = filterCompleted(appointments);
 

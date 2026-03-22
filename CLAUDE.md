@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 12 March 2026
+> **Last Updated:** 22 March 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -846,7 +846,35 @@ Working through in order. Marking complete as fixed.
 
 ---
 
-**Recently Completed (12 Mar 2026 - Session 11):**
+**Recently Completed (22 Mar 2026 - Session 12 — Pre-Demo Overhaul):**
+- ✅ Nav restructured: [Diary] [Bookmarks] [Guides] [Patients] + [More] + [Help] + [Demo Mode]
+- ✅ Unified /guides page merging referrals + how-to with tab filters (Referrals/Assessments/Tasks)
+- ✅ Three-way diary toggle: Ward Diary / My Diary / My Jobs
+- ✅ Drag-and-drop tasks between day columns in ward diary
+- ✅ Recurring ward tasks show on all matching days (not just today)
+- ✅ Expanded day view: header stays visible, settings cog, day nav with date picker, floating + button
+- ✅ Expand/collapse icon toggle on day columns (Maximize2/Minimize2)
+- ✅ All three column headers always visible in expanded view (empty = "None scheduled — tap to add")
+- ✅ Add Task date defaults to viewed day, not today
+- ✅ Day column expand rules fixed: past=collapsed, today=expanded, future=collapsed, focused=all expanded
+- ✅ Help button with toolbar mode (Interactive Demo, Intro Guide, FAQ, Feedback + "Try different roles!" arrow)
+- ✅ New Staff management page (/staff) — directory with multi-ward assignment, Lead+ editable
+- ✅ Patient list: removed alerts and room/bed, kept name/ward/WP/Dr/tasks
+- ✅ Side nav arrows on guide viewers (NHS blue, tall, fixed to viewport edges)
+- ✅ Editor improvements: Create New with templates, branch empty states, preview fix, pinned End Point
+- ✅ Dev panel: priority dot legend, clickable external links, RBAC discharge wording, print button, accessibility
+- ✅ Feedback page: fixed Supabase error, switched to localStorage-based storage
+- ✅ Onboarding banner for new users (dismissible, not shown to Admin roles)
+- ✅ "AI Generated" badges → "Demo Content" (muted grey)
+- ✅ Removed Max+ ticker, What's New section, shrunk home banner
+- ✅ Demo diary items reduced ~50% for cleaner presentation
+- ✅ Daily clinic checks added to ward task templates (early shift, daily)
+- ✅ Full code audit: npm audit fix (0 vulnerabilities), dead code removed, .claude/ gitignored
+- ✅ 10-hat project evaluation completed (docs/evaluations/2026-03-22_project-evaluation.md)
+
+**Status: DEMO-READY.** Trust approval meeting pending.
+
+**Previously Completed (12 Mar 2026 - Session 11):**
 - ✅ Interactive tour rewritten with Mike's tone (8 screens, shorter punchier copy)
 - ✅ "Steal" renamed to "Take Over" with descriptive tooltips on Claim/Take Over/Drop
 - ✅ Editor admin reordered: Bookmarks → Guides → How-To (matches header nav)
@@ -1121,6 +1149,44 @@ Then open http://localhost:3000
 - `e3cb85e` — Remove password gates from site and dev panel
 
 **Build Status:** All builds pass successfully
+
+### 22 March 2026 - Session 12 (Pre-Demo Overhaul)
+**Completed:**
+- [x] Full nav restructure: merged Diary+Tasks, merged Guides+How-To, moved Patients to main nav
+- [x] Three-way diary toggle: Ward Diary / My Diary (WP filter) / My Jobs (kanban)
+- [x] Drag-and-drop task rescheduling between day columns
+- [x] Recurring ward tasks display on all matching days
+- [x] Expanded day view overhaul: header stays visible, settings cog, day nav, floating + button
+- [x] Day column expand/collapse rules fixed (persistent bug from multiple sessions)
+- [x] Help toolbar with Interactive Demo, Intro Guide, FAQ, Feedback tabs
+- [x] Staff management page (/staff) with multi-ward assignment
+- [x] Patient list cleanup (removed alerts, room/bed)
+- [x] Side navigation arrows on guide/workflow viewers
+- [x] Editor improvements (Create New, branch UX, preview fix)
+- [x] Dev panel improvements (priority dots, links, RBAC, print, accessibility)
+- [x] Feedback page fixed (localStorage instead of Supabase)
+- [x] New user onboarding banner
+- [x] Demo polish (badges, ticker removal, banner shrink, diary item reduction)
+- [x] Daily clinic checks ward task added
+- [x] Full code audit + npm audit fix (0 vulnerabilities)
+- [x] 10-hat project evaluation generated
+
+**Key Files Modified:**
+- `src/app/tasks/page.tsx` — Major diary restructure (3-way toggle, drag-drop, expand rules, settings in expanded view)
+- `src/app/my-tasks/page.tsx` — Renamed to My Jobs, removed staff controls
+- `src/app/my-diary/page.tsx` — NEW: My Diary redirect
+- `src/app/guides/page.tsx` — NEW: Unified guides page
+- `src/app/staff/page.tsx` — NEW: Staff management page
+- `src/app/feedback/page.tsx` — Fixed: localStorage instead of Supabase
+- `src/components/layout/header.tsx` — Nav restructure, Help toolbar, Demo Mode
+- `src/components/admin/FlowchartEditor.tsx` — Editor improvements
+- `src/app/dev-panel/page.tsx` — Accessibility, print, RBAC, links
+- `src/app/page.tsx` — Onboarding banner, shrunk banner, removed What's New
+
+**New Documents:**
+- `docs/evaluations/2026-03-22_project-evaluation.md` — Full 10-hat evaluation
+
+**Build Status:** All builds pass. 0 npm vulnerabilities. Git clean (Sharpy20 only).
 
 ---
 

@@ -189,6 +189,7 @@ const WARD_TASK_TEMPLATES: Array<{
     auditType: "controlled_drugs",
     isNexusLinked: true,
   },
+  { title: "Daily clinic checks", description: "Complete daily clinical environment checks — documentation, equipment, patient safety board", priority: "important" as const, shift: "early" as const },
   { title: "Safety huddle", description: "Brief team meeting - risks, staffing, priorities", priority: "routine" as const, shift: "early" as const },
   { title: "Medication round (AM)", description: "Morning medication round", priority: "important" as const, shift: "early" as const },
   {

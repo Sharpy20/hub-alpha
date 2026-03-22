@@ -153,23 +153,24 @@ export default function MyTasksPage() {
   return (
     <MainLayout>
       <div className="space-y-6">
-        {/* View toggle: Ward Diary / My Tasks */}
-        <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1 w-fit">
-          <Link href="/tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
-            Ward Diary
-          </Link>
-          <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
-            My Tasks
-          </div>
-        </div>
-
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Tasks</h1>
-            <p className="text-gray-600">
-              {user.name} · {user.ward} Ward
-            </p>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">My Diary</h1>
+              <p className="text-gray-600">
+                {user.name} · {user.ward} Ward
+              </p>
+            </div>
+            {/* View toggle */}
+            <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1">
+              <Link href="/tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
+                Ward Diary
+              </Link>
+              <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
+                My Diary
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">

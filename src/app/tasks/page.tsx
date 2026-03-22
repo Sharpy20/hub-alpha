@@ -1860,33 +1860,7 @@ function ExpandedDayView({
 
   return (
     <div className="fixed inset-0 bg-gray-50 z-40 overflow-hidden flex flex-col">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 shadow-lg">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">{formatDisplayDate(date)}</h1>
-            <p className="text-white/70 text-sm">
-              {new Date(date + "T12:00:00").toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="bg-white/20 px-3 py-1.5 rounded-full text-sm font-medium">
-              {totalFiltered} task{totalFiltered !== 1 ? "s" : ""} showing
-            </span>
-            {onAddTask && (
-              <button
-                onClick={onAddTask}
-                className="flex items-center gap-2 px-4 py-2 bg-white text-indigo-600 rounded-xl font-medium hover:bg-white/90 transition-colors"
-              >
-                <Plus className="w-5 h-5" />
-                Add Task
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation + Filter Bar */}
+      {/* Filter Bar */}
       <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto">
           {/* Filter controls + day navigation on same row */}
@@ -2159,12 +2133,17 @@ function ExpandedDayView({
         </div>
       </div>
 
-      {/* Footer with keyboard hint */}
-      <div className="bg-white border-t border-gray-200 p-3 text-center">
-        <p className="text-sm text-gray-500">
-          Press <kbd className="px-2 py-1 bg-gray-100 rounded text-xs font-mono">Esc</kbd> or click Back to return to overview
-        </p>
-      </div>
+      {/* Floating Add Task button */}
+      {onAddTask && (
+        <button
+          onClick={onAddTask}
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-110 transition-all flex items-center justify-center"
+          title="Add Task"
+          aria-label="Add Task"
+        >
+          <Plus className="w-7 h-7" />
+        </button>
+      )}
     </div>
   );
 }

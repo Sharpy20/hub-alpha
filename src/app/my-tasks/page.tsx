@@ -157,7 +157,7 @@ export default function MyTasksPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Diary</h1>
+              <h1 className="text-3xl font-bold text-gray-900">My Jobs</h1>
               <p className="text-gray-600">
                 {user.name} · {user.ward} Ward
               </p>
@@ -167,8 +167,11 @@ export default function MyTasksPage() {
               <Link href="/tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
                 Ward Diary
               </Link>
-              <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
+              <Link href="/my-diary" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
                 My Diary
+              </Link>
+              <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
+                My Jobs
               </div>
             </div>
           </div>

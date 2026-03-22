@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
@@ -90,6 +91,7 @@ function TaskCard({
   onClick,
   currentUserName,
   compact = false,
+  onDragStart,
 }: {
   task: DiaryTask;
   onToggleComplete: (id: string) => void;
@@ -98,6 +100,7 @@ function TaskCard({
   onClick?: (task: DiaryTask) => void;
   currentUserName?: string;
   compact?: boolean;
+  onDragStart?: (e: React.DragEvent, taskId: string, taskType: string) => void;
 }) {
   const isCompleted = task.status === "completed";
   const isOverdue = task.status === "overdue";
@@ -134,8 +137,10 @@ function TaskCard({
 
   return (
     <div
+      draggable
+      onDragStart={(e) => onDragStart?.(e, task.id, task.type)}
       onClick={() => onClick?.(task)}
-      className={`rounded-xl overflow-hidden transition-all cursor-pointer ${
+      className={`rounded-xl overflow-hidden transition-all cursor-grab active:cursor-grabbing ${
         isCompleted ? "opacity-60" : "hover:shadow-lg hover:scale-[1.02]"
       } ${compact ? "text-sm" : ""}`}
     >
@@ -341,12 +346,14 @@ function SimpleTaskCard({
   onSteal,
   onClick,
   currentUserName,
+  onDragStart,
 }: {
   task: DiaryTask;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
   onClick?: (task: DiaryTask) => void;
   currentUserName?: string;
+  onDragStart?: (e: React.DragEvent, taskId: string, taskType: string) => void;
 }) {
   const isClaimed = !!task.claimedBy;
   const isClaimedByMe = task.claimedBy === currentUserName;
@@ -364,8 +371,10 @@ function SimpleTaskCard({
 
   return (
     <div
+      draggable
+      onDragStart={(e) => onDragStart?.(e, task.id, task.type)}
       onClick={() => onClick?.(task)}
-      className="rounded-lg overflow-hidden cursor-pointer hover:shadow-md hover:scale-[1.01] transition-all"
+      className="rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:shadow-md hover:scale-[1.01] transition-all"
     >
       <div className={`bg-gradient-to-r ${gradient} px-2.5 py-1.5 flex items-center gap-2`}>
         <span className="text-sm flex-shrink-0">{icon}</span>
@@ -436,6 +445,7 @@ function PriorityGroupedTasks({
   currentUserName,
   compact,
   diaryView = "detailed",
+  onTaskDragStart,
 }: {
   tasks: DiaryTask[];
   onToggleComplete: (id: string) => void;
@@ -445,6 +455,7 @@ function PriorityGroupedTasks({
   currentUserName?: string;
   compact?: boolean;
   diaryView?: "simple" | "detailed";
+  onTaskDragStart?: (e: React.DragEvent, taskId: string, taskType: string) => void;
 }) {
   // Sort tasks by priority (urgent first)
   const sortedTasks = [...tasks].sort((a, b) => {
@@ -477,6 +488,7 @@ function PriorityGroupedTasks({
           onSteal={onSteal}
           onClick={onTaskClick}
           currentUserName={currentUserName}
+          onDragStart={onTaskDragStart}
         />
       );
     }
@@ -490,6 +502,7 @@ function PriorityGroupedTasks({
         onClick={onTaskClick}
         currentUserName={currentUserName}
         compact={compact}
+        onDragStart={onTaskDragStart}
       />
     );
   };
@@ -608,6 +621,11 @@ function DayColumn({
   onAddTask,
   onClick,
   onExpand,
+  isDragOver,
+  onTaskDragStart,
+  onDayDragOver,
+  onDayDragLeave,
+  onDayDrop,
 }: {
   date: string;
   tasks: DiaryTask[];
@@ -624,6 +642,11 @@ function DayColumn({
   onAddTask?: () => void;
   onClick?: () => void;
   onExpand?: () => void;
+  isDragOver?: boolean;
+  onTaskDragStart?: (e: React.DragEvent, taskId: string, taskType: string) => void;
+  onDayDragOver?: (e: React.DragEvent) => void;
+  onDayDragLeave?: () => void;
+  onDayDrop?: (e: React.DragEvent) => void;
 }) {
   const todayDate = formatDate(new Date());
   const isPastDay = isPast(date) && date !== todayDate;
@@ -676,10 +699,15 @@ function DayColumn({
   return (
     <div
       onClick={onClick}
+      onDragOver={onDayDragOver}
+      onDragLeave={onDayDragLeave}
+      onDrop={onDayDrop}
       className={`flex-shrink-0 transition-all duration-300 cursor-pointer ${
         isFocused ? "w-80" : "w-52"
       } bg-white rounded-xl border-2 ${
-        isFocused
+        isDragOver
+          ? "border-nhs-blue border-dashed shadow-xl bg-blue-50/50"
+          : isFocused
           ? "border-indigo-400 shadow-xl"
           : isToday
           ? "border-indigo-200"
@@ -748,6 +776,7 @@ function DayColumn({
             currentUserName={currentUserName}
             compact={!isFocused}
             diaryView={diaryView}
+            onTaskDragStart={onTaskDragStart}
           />
         </CollapsibleSection>
 
@@ -768,6 +797,7 @@ function DayColumn({
             currentUserName={currentUserName}
             compact={!isFocused}
             diaryView={diaryView}
+            onTaskDragStart={onTaskDragStart}
           />
         </CollapsibleSection>
 
@@ -788,6 +818,7 @@ function DayColumn({
             currentUserName={currentUserName}
             compact={!isFocused}
             diaryView={diaryView}
+            onTaskDragStart={onTaskDragStart}
           />
         </CollapsibleSection>
 
@@ -2090,6 +2121,16 @@ function ExpandedDayView({
 
 // Main Tasks Page
 export default function TasksPage() {
+  return (
+    <Suspense>
+      <TasksPageInner />
+    </Suspense>
+  );
+}
+
+function TasksPageInner() {
+  const searchParams = useSearchParams();
+  const isMyDiaryMode = searchParams.get("view") === "my-diary";
   const { user, hasFeature, activeWard } = useApp();
   const { tasks, setTasks, claimTask, toggleComplete, updateTask, addTask } = useTasks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -2119,8 +2160,8 @@ export default function TasksPage() {
   const [focusedDate, setFocusedDate] = useState<string>("");
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
-  // My Patients toggle - filters to tasks for patients where current user is wardProfessional
-  const [showMyPatients, setShowMyPatients] = useState(false);
+  // My Patients toggle - forced on in My Diary mode
+  const [showMyPatients, setShowMyPatients] = useState(isMyDiaryMode);
 
   // Lead/Manager staff filter - pick staff to view their tasks
   const [selectedStaffFilter, setSelectedStaffFilter] = useState<string[]>([]);
@@ -2131,6 +2172,41 @@ export default function TasksPage() {
   const [showStaffTasksModal, setShowStaffTasksModal] = useState(false);
   const [showRepeatTasksModal, setShowRepeatTasksModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
+
+  // Drag and drop between days
+  const [dragOverDate, setDragOverDate] = useState<string | null>(null);
+  const [dragToast, setDragToast] = useState<string | null>(null);
+
+  const handleTaskDragStart = (e: React.DragEvent, taskId: string, taskType: string) => {
+    e.dataTransfer.setData("taskId", taskId);
+    e.dataTransfer.setData("taskType", taskType);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDayDragOver = (e: React.DragEvent, date: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverDate(date);
+  };
+
+  const handleDayDragLeave = () => {
+    setDragOverDate(null);
+  };
+
+  const handleDayDrop = (e: React.DragEvent, targetDate: string) => {
+    e.preventDefault();
+    setDragOverDate(null);
+    const taskId = e.dataTransfer.getData("taskId");
+    const taskType = e.dataTransfer.getData("taskType");
+    if (!taskId) return;
+
+    const dateField = taskType === "appointment" ? "appointmentDate" : "dueDate";
+    updateTask(taskId, { [dateField]: targetDate });
+
+    const dayLabel = new Date(targetDate + "T12:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+    setDragToast(`Task moved to ${dayLabel}`);
+    setTimeout(() => setDragToast(null), 2000);
+  };
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; taskId: string | null }>({
     isOpen: false,
     taskId: null,
@@ -2344,18 +2420,33 @@ export default function TasksPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">📋 Ward Diary</h1>
+              <h1 className="text-3xl font-bold text-gray-900">{isMyDiaryMode ? "📋 My Diary" : "📋 Ward Diary"}</h1>
               <p className="text-gray-600">
-                {activeWard} Ward · {formatDisplayDate(focusedDate || todayStr)}
+                {isMyDiaryMode ? `${user?.name} · ` : ""}{activeWard} Ward · {formatDisplayDate(focusedDate || todayStr)}
               </p>
             </div>
             {/* View toggle */}
             <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1">
-              <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
-                Ward Diary
-              </div>
+              {isMyDiaryMode ? (
+                <Link href="/tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
+                  Ward Diary
+                </Link>
+              ) : (
+                <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
+                  Ward Diary
+                </div>
+              )}
+              {isMyDiaryMode ? (
+                <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
+                  My Diary
+                </div>
+              ) : (
+                <Link href="/my-diary" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
+                  My Diary
+                </Link>
+              )}
               <Link href="/my-tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
-                My Diary
+                My Jobs
               </Link>
             </div>
           </div>
@@ -2409,31 +2500,20 @@ export default function TasksPage() {
             </button>
           </div>
 
-          <button
-            onClick={() => setShowRepeatTasksModal(true)}
-            className="flex items-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-700 rounded-xl font-medium hover:bg-indigo-200 transition-all"
-            title="View Repeating Ward Tasks"
-          >
-            <Repeat className="w-5 h-5" />
-            <span className="hidden sm:inline">Repeat Tasks</span>
-          </button>
+          {/* Repeat Tasks - Manager/Senior Admin only */}
+          {(user?.role === "manager" || user?.role === "senior_admin") && !isMyDiaryMode && (
+            <button
+              onClick={() => setShowRepeatTasksModal(true)}
+              className="flex items-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-700 rounded-xl font-medium hover:bg-indigo-200 transition-all"
+              title="Edit scheduled repeating tasks"
+            >
+              <Repeat className="w-5 h-5" />
+              <span className="hidden sm:inline">Repeat Tasks</span>
+            </button>
+          )}
 
-          {/* My Patients toggle */}
-          <button
-            onClick={() => setShowMyPatients(!showMyPatients)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all ${
-              showMyPatients
-                ? "bg-teal-100 text-teal-800 ring-2 ring-teal-300"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-            title="Filter to patients where you are the ward professional"
-          >
-            <UserSquare2 className="w-5 h-5" />
-            <span className="hidden sm:inline">My Patients</span>
-          </button>
-
-          {/* Lead/Manager staff filter */}
-          {isLeadOrManager && (
+          {/* Staff Tasks filter - Lead/Manager/Ward Admin only, Ward Diary only */}
+          {(user?.role === "lead" || user?.role === "manager" || user?.role === "ward_admin") && !isMyDiaryMode && (
             <div className="relative">
               <button
                 onClick={() => setShowStaffFilterDropdown(!showStaffFilterDropdown)}
@@ -2446,7 +2526,7 @@ export default function TasksPage() {
               >
                 <Filter className="w-5 h-5" />
                 <span className="hidden sm:inline">
-                  {selectedStaffFilter.length > 0 ? `Staff (${selectedStaffFilter.length})` : "Staff Filter"}
+                  {selectedStaffFilter.length > 0 ? `Staff (${selectedStaffFilter.length})` : "Staff Tasks"}
                 </span>
               </button>
               {showStaffFilterDropdown && (
@@ -2597,6 +2677,13 @@ export default function TasksPage() {
           </div>
         </div>
 
+        {/* Drag toast */}
+        {dragToast && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-nhs-blue text-white px-4 py-2 rounded-xl shadow-lg font-medium text-sm animate-pulse">
+            {dragToast}
+          </div>
+        )}
+
         {/* Scrollable diary */}
         <div
           ref={scrollContainerRef}
@@ -2627,6 +2714,11 @@ export default function TasksPage() {
                 onAddTask={() => setShowAddModal(true)}
                 onClick={() => scrollToDate(date)}
                 onExpand={() => setExpandedDay(date)}
+                isDragOver={dragOverDate === date}
+                onTaskDragStart={handleTaskDragStart}
+                onDayDragOver={(e) => handleDayDragOver(e, date)}
+                onDayDragLeave={handleDayDragLeave}
+                onDayDrop={(e) => handleDayDrop(e, date)}
               />
             </div>
           ))}

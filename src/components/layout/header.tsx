@@ -150,6 +150,10 @@ export function Header() {
                   <FileText className="w-4 h-4" />
                   Guides
                 </Link>
+                <Link href="/patients" className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                  <Users className="w-4 h-4" />
+                  Patients
+                </Link>
               </div>
 
               {/* More dropdown */}
@@ -166,9 +170,9 @@ export function Header() {
 
                 {settingsDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
-                    <Link href="/patients" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900">Patients</p><p className="text-xs text-gray-500 mt-0.5">View and manage patient list, transfers and discharges</p></div>
+                    <Link href="/staff" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">Staff</p><p className="text-xs text-gray-500 mt-0.5">View and manage staff directory and ward assignments</p></div>
                     </Link>
                     <Link href="/intro-guide" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                       <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-5 h-5 text-white" /></div>
@@ -324,13 +328,16 @@ export function Header() {
               <Link href="/guides" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <FileText className="w-5 h-5 text-rose-600" /> Guides
               </Link>
+              <Link href="/patients" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <Users className="w-5 h-5 text-teal-600" /> Patients
+              </Link>
 
               <div className="py-3 border-b border-gray-100">
                 <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">More</p>
                 <div className="space-y-2">
-                  <Link href="/patients" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>
-                    <div><p className="font-semibold text-gray-900 text-sm">Patients</p><p className="text-xs text-gray-500">Patient list and transfers</p></div>
+                  <Link href="/staff" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Staff</p><p className="text-xs text-gray-500">Staff directory and ward assignments</p></div>
                   </Link>
                   <Link href="/intro-guide" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-4 h-4 text-white" /></div>

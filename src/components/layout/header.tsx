@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useApp } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Bookmark, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3 } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Bookmark, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 
@@ -13,6 +13,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [settingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
+  const [helpMode, setHelpMode] = useState(false);
   const [savedFeedback, setSavedFeedback] = useState<string | null>(null);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const settingsDropdownRef = useRef<HTMLDivElement>(null);
@@ -136,73 +137,110 @@ export function Header() {
 
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-3">
-              {/* Main nav items */}
-              <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
-                <Link href="/tasks" className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                  <CalendarDays className="w-4 h-4" />
-                  Diary
-                </Link>
-                <Link href="/bookmarks" className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                  <Bookmark className="w-4 h-4" />
-                  Bookmarks
-                </Link>
-                <Link href="/guides" className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                  <FileText className="w-4 h-4" />
-                  Guides
-                </Link>
-                <Link href="/patients" className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                  <Users className="w-4 h-4" />
-                  Patients
-                </Link>
-              </div>
+              {helpMode ? (
+                <>
+                  {/* Help mode toolbar */}
+                  <div className="flex items-center gap-1 p-1 bg-blue-50 rounded-xl border border-blue-200">
+                    <button
+                      onClick={() => setHelpMode(false)}
+                      className="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      Back
+                    </button>
+                    <button
+                      onClick={() => { startTour(); setHelpMode(false); }}
+                      className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white font-semibold flex items-center gap-1.5 transition-colors text-sm hover:shadow-md"
+                    >
+                      <Play className="w-4 h-4" />
+                      Interactive Demo
+                    </button>
+                    <Link href="/intro-guide" onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
+                      <HelpCircle className="w-4 h-4" />
+                      Intro Guide
+                    </Link>
+                    <Link href="/faq" onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
+                      <CircleHelp className="w-4 h-4" />
+                      FAQ
+                    </Link>
+                    <Link href="/feedback" onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
+                      <MessageSquare className="w-4 h-4" />
+                      Feedback
+                    </Link>
+                  </div>
 
-              {/* More dropdown */}
-              <div className="relative" ref={settingsDropdownRef}>
-                <button
-                  onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
-                  aria-label="More options menu"
-                  aria-expanded={settingsDropdownOpen}
-                  className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
-                >
-                  More
-                  <ChevronDown className={`w-4 h-4 transition-transform ${settingsDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
-                </button>
+                  {/* Bouncing arrow pointing at Demo Mode */}
+                  <span className="text-indigo-500 animate-bounce text-lg">&larr;</span>
+                  <span className="text-xs text-indigo-600 font-medium">Try different roles!</span>
+                </>
+              ) : (
+                <>
+                  {/* Normal nav items */}
+                  <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
+                    <Link href="/tasks" className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                      <CalendarDays className="w-4 h-4" />
+                      Diary
+                    </Link>
+                    <Link href="/bookmarks" className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                      <Bookmark className="w-4 h-4" />
+                      Bookmarks
+                    </Link>
+                    <Link href="/guides" className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                      <FileText className="w-4 h-4" />
+                      Guides
+                    </Link>
+                    <Link href="/patients" className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                      <Users className="w-4 h-4" />
+                      Patients
+                    </Link>
+                  </div>
 
-                {settingsDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
-                    <Link href="/staff" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900">Staff</p><p className="text-xs text-gray-500 mt-0.5">View and manage staff directory and ward assignments</p></div>
-                    </Link>
-                    <Link href="/intro-guide" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-5 h-5 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900">Intro Guide</p><p className="text-xs text-gray-500 mt-0.5">Learn how to use wardHub with visual guides and tips</p></div>
-                    </Link>
-                    <Link href="/faq" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><CircleHelp className="w-5 h-5 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900">FAQ</p><p className="text-xs text-gray-500 mt-0.5">Frequently asked questions about the app</p></div>
-                    </Link>
-                    <Link href="/feedback" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-5 h-5 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900">Feedback</p><p className="text-xs text-gray-500 mt-0.5">Share ideas, report issues, and help shape this tool during alpha</p></div>
-                    </Link>
-                    <Link href="/data-sources" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-5 h-5 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900">Data Sources</p><p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p></div>
-                    </Link>
-                    <Link href="/reports" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-5 h-5 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900">Progress Reports</p><p className="text-xs text-gray-500 mt-0.5">Generate patient progress audits for wards or individuals</p></div>
-                    </Link>
-                    {canAccessAdmin && (
-                      <Link href="/admin" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors">
-                        <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-5 h-5 text-white" /></div>
-                        <div><p className="font-semibold text-gray-900">Editor</p><p className="text-xs text-gray-500 mt-0.5">{user?.isContributor ? "Create and edit guides, how-to articles, and bookmarks" : "Request creator privileges to edit content"}</p></div>
-                      </Link>
+                  {/* More dropdown */}
+                  <div className="relative" ref={settingsDropdownRef}>
+                    <button
+                      onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
+                      aria-label="More options menu"
+                      aria-expanded={settingsDropdownOpen}
+                      className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
+                    >
+                      More
+                      <ChevronDown className={`w-4 h-4 transition-transform ${settingsDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                    </button>
+
+                    {settingsDropdownOpen && (
+                      <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
+                        <Link href="/staff" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
+                          <div><p className="font-semibold text-gray-900">Staff</p><p className="text-xs text-gray-500 mt-0.5">Staff directory and ward assignments</p></div>
+                        </Link>
+                        <Link href="/data-sources" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                          <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-5 h-5 text-white" /></div>
+                          <div><p className="font-semibold text-gray-900">Data Sources</p><p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p></div>
+                        </Link>
+                        <Link href="/reports" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                          <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-5 h-5 text-white" /></div>
+                          <div><p className="font-semibold text-gray-900">Progress Reports</p><p className="text-xs text-gray-500 mt-0.5">Generate patient progress audits</p></div>
+                        </Link>
+                        {canAccessAdmin && (
+                          <Link href="/admin" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors">
+                            <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-5 h-5 text-white" /></div>
+                            <div><p className="font-semibold text-gray-900">Editor</p><p className="text-xs text-gray-500 mt-0.5">{user?.isContributor ? "Create and edit content" : "Request creator privileges"}</p></div>
+                          </Link>
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
-              </div>
+
+                  {/* Help button */}
+                  <button
+                    onClick={() => setHelpMode(true)}
+                    className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold flex items-center gap-1.5 transition-colors text-sm border border-blue-200"
+                  >
+                    <HelpCircle className="w-4 h-4" />
+                    Help
+                  </button>
+                </>
+              )}
             </nav>
 
             {/* My Profile dropdown */}
@@ -339,18 +377,6 @@ export function Header() {
                     <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Staff</p><p className="text-xs text-gray-500">Staff directory and ward assignments</p></div>
                   </Link>
-                  <Link href="/intro-guide" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-4 h-4 text-white" /></div>
-                    <div><p className="font-semibold text-gray-900 text-sm">Intro Guide</p><p className="text-xs text-gray-500">Learn how to use the app</p></div>
-                  </Link>
-                  <Link href="/faq" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><CircleHelp className="w-4 h-4 text-white" /></div>
-                    <div><p className="font-semibold text-gray-900 text-sm">FAQ</p><p className="text-xs text-gray-500">Common questions answered</p></div>
-                  </Link>
-                  <Link href="/feedback" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-4 h-4 text-white" /></div>
-                    <div><p className="font-semibold text-gray-900 text-sm">Feedback</p><p className="text-xs text-gray-500">Share ideas and report issues</p></div>
-                  </Link>
                   <Link href="/data-sources" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Data Sources</p><p className="text-xs text-gray-500">Audit log of all information</p></div>
@@ -365,6 +391,28 @@ export function Header() {
                       <div><p className="font-semibold text-gray-900 text-sm">Editor</p><p className="text-xs text-gray-500">{user?.isContributor ? "Edit guides and content" : "Request creator privileges"}</p></div>
                     </Link>
                   )}
+                </div>
+              </div>
+
+              <div className="py-3 border-b border-gray-100">
+                <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">Help</p>
+                <div className="space-y-2">
+                  <button onClick={() => { startTour(); setMobileMenuOpen(false); }} className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors text-left">
+                    <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center flex-shrink-0"><Play className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Interactive Demo</p><p className="text-xs text-gray-500">Guided tour of wardHub</p></div>
+                  </button>
+                  <Link href="/intro-guide" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Intro Guide</p><p className="text-xs text-gray-500">Visual walkthrough</p></div>
+                  </Link>
+                  <Link href="/faq" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><CircleHelp className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">FAQ</p><p className="text-xs text-gray-500">Common questions</p></div>
+                  </Link>
+                  <Link href="/feedback" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Feedback</p><p className="text-xs text-gray-500">Share ideas and report issues</p></div>
+                  </Link>
                 </div>
               </div>
 

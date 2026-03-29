@@ -925,6 +925,48 @@ function DataCatalogueSection() {
 
       <Card>
         <CardHeader>
+          <h2 className="text-lg font-bold text-nhs-black">Contact Data Classification</h2>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-nhs-dark-grey mb-4">
+            Bookmarks, referral contacts, and guide content follow a two-tier classification to protect trust-sensitive information in the public demo while keeping real data ready for authenticated deployment.
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-nhs-pale-grey">
+                <tr>
+                  <th className="text-left p-2">Classification</th>
+                  <th className="text-left p-2">Rule</th>
+                  <th className="text-left p-2">Demo Display</th>
+                  <th className="text-left p-2">Examples</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                <tr className="bg-green-50">
+                  <td className="p-2 font-medium text-nhs-green">Public</td>
+                  <td className="p-2">Findable on a public .gov.uk, .nhs.uk, or charity website</td>
+                  <td className="p-2">Shown live</td>
+                  <td className="p-2 text-xs">Samaritans (116 123), Derbyshire SAB website, Call Derbyshire (01629 533190), EMAS PTS (0300 300 3434), BNF, NICE</td>
+                </tr>
+                <tr className="bg-amber-50">
+                  <td className="p-2 font-medium text-nhs-orange">Trust-sensitive</td>
+                  <td className="p-2">Direct-dial, internal extension, named staff mobile, @nhs.net email, FOCUS URL, or internal system URL</td>
+                  <td className="p-2"><code className="bg-gray-100 px-1 rounded text-xs">[INTERNAL - See FOCUS]</code> with FOCUS badge</td>
+                  <td className="p-2 text-xs">Safeguarding advice line, MASH direct numbers, ward extensions, Datix URLs, SystmOne SOPs, named staff contacts</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
+            <p className="text-sm text-blue-800">
+              <span className="font-semibold">How it works:</span> Trust-sensitive data is stored in code comments alongside each bookmark or guide step. When authentication is enabled, a single flag change (<code className="bg-blue-100 px-1 rounded text-xs">requiresFocus: false</code>) reveals the real data. No data entry needed at go-live — it&apos;s already there.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Patient Entity (Max+)</h2>
         </CardHeader>
         <CardContent>

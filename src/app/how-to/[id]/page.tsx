@@ -28,6 +28,10 @@ const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: s
   restraint: { icon: "🤝", gradient: "from-slate-500 to-slate-700", category: "MHA & Legal" },
   "admission-checklist": { icon: "✅", gradient: "from-emerald-500 to-emerald-700", category: "Admin" },
   "fridge-temps": { icon: "🌡️", gradient: "from-cyan-500 to-cyan-700", category: "Ward Procedures" },
+  "safeguarding-adults-referral": { icon: "🛡️", gradient: "from-red-600 to-red-800", category: "Safeguarding" },
+  "safeguarding-children-referral": { icon: "👶", gradient: "from-pink-600 to-pink-800", category: "Safeguarding" },
+  "domestic-abuse-guide": { icon: "🏠", gradient: "from-purple-600 to-purple-800", category: "Safeguarding" },
+  "peer-conflict-guide": { icon: "⚠️", gradient: "from-amber-600 to-amber-800", category: "Safeguarding" },
 };
 
 // Demo guide content - multiple guides
@@ -165,6 +169,166 @@ const GUIDES: Record<string, GuideData> = {
         title: "Documentation Summary",
         content: "For each check, record:\n\n• Date and time\n• Current temperature\n• Min/Max readings (if available)\n• Your name/signature\n• Any actions taken if out of range\n\nThe Assurance Dashboard maintains an audit trail for CQC inspections and Trust governance.",
         tip: "Keep a backup paper log on the fridge as well - useful if dashboard is temporarily unavailable.",
+      },
+    ],
+  },
+  "safeguarding-adults-referral": {
+    id: "safeguarding-adults-referral",
+    title: "Making a Good Safeguarding Adults Referral",
+    description: "Section 42 Care Act 2014 — when and how to refer",
+    steps: [
+      {
+        id: "1",
+        title: "Check the Criteria",
+        content: "Section 42 of the Care Act 2014 sets out three conditions — all must apply:\n\n1. The adult has care and support needs (whether or not met by the Local Authority)\n2. The adult is experiencing, or at risk of, abuse or neglect\n3. As a result of those needs, is unable to protect themselves\n\nThere is no 'significant harm' threshold. Action should be proportionate to the risk and wherever possible in line with the person's wishes.",
+        tip: "If unsure, ring the DHCFT Safeguarding Advice Line to talk it through. You won't be judged for asking.",
+      },
+      {
+        id: "2",
+        title: "10 Categories of Abuse",
+        content: "The Care Act recognises these categories:\n\n1. Physical abuse\n2. Emotional/psychological abuse\n3. Sexual abuse\n4. Neglect and acts of omission\n5. Financial or material abuse\n6. Discriminatory abuse\n7. Organisational abuse\n8. Self-neglect\n9. Domestic abuse\n10. Modern slavery\n\nNeglect is the most commonly reported category. Remember: pressure ulcers can be a safeguarding concern.",
+      },
+      {
+        id: "3",
+        title: "What to Include",
+        content: "Read the referral form questions carefully and answer as fully as possible:\n\n• What have you seen? Where, when?\n• What have you heard? When, who from?\n• Basic info about the adult — what care needs do they have? Why can't they protect themselves?\n• Basic info about the person causing harm — do they have care needs? Position of trust?\n• Why are you worried? What type of abuse?\n• What is the impact now? What if agencies don't get involved?\n• What have you tried already? What protective factors are in place?\n• Separate facts from opinions — state your professional opinion clearly with evidence\n• Does the adult have capacity for this decision?\n• What does the adult want to happen?",
+        tip: "You're not telling a story — you're sharing concerns about an adult at risk. Keep them at the centre: what is a day in their life?",
+      },
+      {
+        id: "4",
+        title: "Common Pitfalls",
+        content: "Avoid these mistakes:\n\nUsing 'Unknown' or leaving answers blank — explain why you don't know.\n\nSanitising language — when quoting someone, use their actual words including swearing. This could become court evidence.\n\nNot enough detail — don't write 'chaotic lifestyle'. Instead: missed last 4 appointments, homeless (sleeping rough? with friends?), 1 litre vodka per day, witnessed X threatening Y.\n\nVictim-blaming language — never imply the adult is responsible for the abuse. Reflect coercion and lack of control.\n\nDelays — if you're worried, refer now. Timely referrals save lives.",
+      },
+      {
+        id: "5",
+        title: "Consent",
+        content: "Best practice is to get consent before referring. However:\n\n• Don't let consent stop you if you're genuinely worried\n• You can override consent if there's immediate risk of harm or risk to your own safety\n• If you can't get consent, explain why in the referral\n• Always try to inform the person you're making a referral, even if consent wasn't obtained\n• Consider whether the person has capacity to consent — if not, refer for advocacy",
+        tip: "Having consent is ideal but not essential. A referral without consent is better than no referral at all.",
+      },
+      {
+        id: "6",
+        title: "Submit the Referral",
+        content: "Ring and discuss the case first, then submit the form.\n\nDerbyshire County:\n• Office hours (Mon-Fri 8am-8pm, Sat 9:30am-4pm): [INTERNAL - See FOCUS]\n• Out of hours: [INTERNAL - See FOCUS]\n• Online form: derbyshiresab.org.uk/professionals/safeguarding-adult-referrals\n\nDerby City:\n• MASH (Mon-Fri 9am-5pm): [INTERNAL - See FOCUS]\n• Out of hours (Careline): [INTERNAL - See FOCUS]\n• Email: AdultsMASH@derby.gov.uk\n• Online form: secure.derby.gov.uk/forms/?formid=345",
+      },
+      {
+        id: "7",
+        title: "After the Referral",
+        content: "Safeguarding is everybody's responsibility — submitting the referral is not the finish line.\n\n• Document the referral in patient notes\n• Log on Datix if required (see criteria in guide)\n• Add a follow-up task to your diary\n• The S.42 enquiry may task your team with further actions\n• If the same concerns keep being raised without resolution, escalate to the Assistant Director of Safeguarding",
+        tip: "39% of Derby City and 54% of Derbyshire County referrals become S.42 enquiries. That means many referrals don't meet threshold — but it's always better to refer than to stay silent.",
+      },
+    ],
+  },
+  "safeguarding-children-referral": {
+    id: "safeguarding-children-referral",
+    title: "Safeguarding Children — Starting Point Referral",
+    description: "When you're worried about a child (under 18)",
+    steps: [
+      {
+        id: "1",
+        title: "When to Refer",
+        content: "You should refer when you have concerns about a child (under 18) who may be at risk of:\n\n• Physical abuse or harm\n• Emotional abuse or neglect\n• Sexual abuse or exploitation\n• Neglect (basic needs not met)\n\nThis includes children of your patients where parenting capacity may be affected by mental illness, substance use, or domestic abuse.",
+        tip: "Think Family — always consider whether your adult patient has dependent children. Their mental health can directly affect those children's safety.",
+      },
+      {
+        id: "2",
+        title: "Think Family",
+        content: "On a mental health ward, children's safeguarding often starts with the adult patient:\n\n• Does your patient have children or regular contact with children?\n• Is their mental health affecting their ability to parent safely?\n• Is there domestic abuse in the home?\n• Are there substance misuse concerns?\n• Is there a partner or family member who can keep the children safe?\n\nYou don't need to be certain harm is happening. Professional concern is enough to refer.",
+      },
+      {
+        id: "3",
+        title: "Contact Starting Point",
+        content: "Starting Point is Derby and Derbyshire's contact and referral service for children's safeguarding.\n\n• 24 hours: [INTERNAL - See FOCUS]\n• Non-urgent email: starting.point@derbyshire.gov.uk\n• Online: ddscp.org.uk/worried-about-child/\n\nIn an emergency, always call 999 first.",
+      },
+      {
+        id: "4",
+        title: "What to Include",
+        content: "When making your referral:\n\n• Child's name, date of birth, address, school\n• Parent/carer details\n• Nature of your concern — be specific\n• How long have concerns been present?\n• What have you observed directly?\n• What has the parent/child told you?\n• Was the parent informed of the referral?\n• Are there other agencies involved?\n• Your details and how to contact you",
+      },
+      {
+        id: "5",
+        title: "After the Referral",
+        content: "• Document the referral in the patient's notes (the parent is your patient)\n• Note the child's details separately if needed\n• Add a follow-up to your diary\n• Be prepared for Starting Point to contact you for more information\n• If concerns escalate before you hear back, call Starting Point again",
+        tip: "Safeguarding children overrides normal patient confidentiality. You do not need the parent's consent to refer if a child may be at risk.",
+      },
+    ],
+  },
+  "domestic-abuse-guide": {
+    id: "domestic-abuse-guide",
+    title: "Recognising and Responding to Domestic Abuse",
+    description: "Guidance for identifying and supporting patients affected by domestic abuse",
+    steps: [
+      {
+        id: "1",
+        title: "What is Domestic Abuse?",
+        content: "The Domestic Abuse Act 2021 defines it as behaviour by a person aged 16+ towards someone they are personally connected to, that is:\n\n• Physical or sexual abuse\n• Violent or threatening behaviour\n• Controlling or coercive behaviour\n• Economic abuse\n• Psychological, emotional or other abuse\n\nIt includes behaviour between current or former partners, and between family members. It is not limited to physical violence.",
+        tip: "In the year ending March 2019, an estimated 2.4 million people experienced domestic abuse — 1.6 million women and 786,000 men.",
+      },
+      {
+        id: "2",
+        title: "Professional Curiosity",
+        content: "Professional curiosity means actively trying to understand what's happening, rather than accepting things at face value.\n\n• Test your assumptions about families\n• Consider information from multiple sources\n• See past the obvious\n• Question what you observe and hear\n• Look, listen, ask direct questions, check, and reflect on ALL information\n\nSafeguarding reviews repeatedly highlight failures of professional curiosity. If something doesn't feel right, dig deeper.",
+        tip: "Every patient contact is an opportunity to consider domestic abuse — face to face, virtual or phone. The type of contact should not define whether you ask.",
+      },
+      {
+        id: "3",
+        title: "Signs to Look For",
+        content: "Physical signs:\n• Unexplained injuries or injuries inconsistent with explanation\n• Multiple injuries at different stages of healing\n• Injuries during pregnancy\n\nBehavioural signs:\n• Low self-confidence, withdrawn, submissive\n• Always checking with partner, letting partner speak for them\n• Frequent missed or cancelled appointments\n\nTelephone indicators:\n• Short one-word responses\n• Sense someone is listening on speakerphone\n• Tense discussion of home environment\n\nIn older people:\n• May not identify abuse as abuse\n• Rely on perpetrator for care\n• Injuries attributed to age rather than abuse",
+      },
+      {
+        id: "4",
+        title: "Questions You Can Ask",
+        content: "These are starting points, not a script — use professional judgement:\n\n• What's life like for you at home?\n• Are there times when you've felt unsafe?\n• Does your partner/family member ever frighten or threaten you?\n• Have you been hurt?\n• All couples argue — how do you resolve conflict?\n• You seem worried about your partner. Can you tell me more?\n• Do you have support from family or friends?\n• Do you have access to money for food, clothes, bills?\n\nIf on the phone: first check if anyone is present or within earshot. Use closed yes/no questions if the patient isn't safe to talk freely.",
+        tip: "Concerns that asking about DA may increase risk should never prevent the conversation. Not asking prevents identification of risk entirely.",
+      },
+      {
+        id: "5",
+        title: "Responding to Disclosure",
+        content: "It can be extremely difficult for someone to disclose. Your response matters.\n\nDO:\n• Be sensitive, non-judgemental, practical, supportive, discreet\n• Prioritise safety over work efficiency\n• Allocate private time and space to listen\n• Recognise that hearing disclosures can be traumatic — seek support yourself\n\nDO NOT:\n• Seek proof of abuse\n• Contact the abuser\n• Promise you can fix it\n• Judge their choices",
+      },
+      {
+        id: "6",
+        title: "DASH Risk Assessment",
+        content: "If domestic abuse is suspected or disclosed, consider using the CAADA-DASH risk assessment — even when the victim may not recognise it as abuse.\n\nThe DASH helps identify high-risk cases that may need MARAC (Multi-Agency Risk Assessment Conference) referral.\n\nForms available in multiple languages at:\nsaferderbyshire.gov.uk/what-we-do/domestic-abuse/marac/\n\nFor general domestic abuse information and support:\nsaferderbyshire.gov.uk/what-we-do/domestic-abuse/",
+      },
+      {
+        id: "7",
+        title: "Where to Get Help",
+        content: "For the patient:\n• National DA Helpline: 0808 2000 247 (24hr, free)\n• Safer Derbyshire website for local services\n\nFor professional advice:\n• DHCFT Safeguarding Team: [INTERNAL - See FOCUS]\n• MASH Health Advisors: [INTERNAL - See FOCUS]\n\nIf children are in the household:\n• Always consider a children's safeguarding referral\n• Starting Point: [INTERNAL - See FOCUS]\n\nIn immediate danger: call 999",
+        tip: "Document your concerns and actions in the patient's notes. If you suspect DA but the patient doesn't disclose, record your professional concerns and revisit at future contacts.",
+      },
+    ],
+  },
+  "peer-conflict-guide": {
+    id: "peer-conflict-guide",
+    title: "Peer-on-Peer Conflict — When to Escalate",
+    description: "Managing patient conflict on the ward and knowing when to make a safeguarding referral",
+    steps: [
+      {
+        id: "1",
+        title: "Levels of Conflict",
+        content: "Not all conflict is safeguarding. Consider the level:\n\nLow level:\nArguments, irritability, verbal disputes — manage therapeutically through de-escalation and the ward environment.\n\nEscalating:\nThreats, intimidation, persistent bullying — impacting wellbeing and safety. Keep records. Ask yourself: what am I doing to protect this patient?\n\nHigh risk:\nPhysical assault, coercion, sexualised behaviours, targeting of vulnerable patients — these are safeguarding and/or criminal matters.",
+        tip: "Rule of thumb: ward-level conflict = manage therapeutically. Conflict causing risk of serious harm = escalate via safeguarding.",
+      },
+      {
+        id: "2",
+        title: "When to Make a Referral",
+        content: "Escalate to safeguarding when:\n\n• There is risk of significant harm — a patient has been, or is at risk of being, seriously harmed by another patient\n• Power imbalance — a patient lacking capacity is being targeted or exploited (consider a capacity assessment)\n• Repeated incidents — conflict persists despite staff interventions, suggesting a pattern of abuse\n• Sexual safety concerns — any sexual activity on a ward needs careful scrutiny around capacity, consent and risk\n• Neglect — if staff response has been inadequate, raise internally and consider safeguarding\n• Systematic failure — raise internally but consider safeguarding for external scrutiny",
+      },
+      {
+        id: "3",
+        title: "Immediate Steps",
+        content: "Before or alongside a safeguarding referral:\n\n• Separate the patients immediately\n• Medical review if required\n• Review bed spaces — move patients if necessary\n• Consider observation levels\n• Update risk plans\n• Document the incident factually in EPR and Datix\n• Bring to MDT, ward round, and handover\n• Involve HoN, medics, and Safeguarding Team as needed\n• Open and transparent conversation with family/carers (with consent or best interests)\n• Does the patient have an advocate?\n• Do Police need to be informed?",
+        tip: "A risk strategy meeting can be helpful for complex situations before deciding on the referral.",
+      },
+      {
+        id: "4",
+        title: "Staff Responsibilities",
+        content: "Nursing staff:\n• Immediate response, documentation, de-escalation\n\nWard Manager / Lead Nurse:\n• Lead the review, ensure MDT discussion, coordinate safeguarding referral\n\nSafeguarding Link Nurse/Practitioner:\n• Liaise with Safeguarding Team, support staff with the referral\n\nMedical staff:\n• Review patients, assess capacity, amend risk plans",
+      },
+      {
+        id: "5",
+        title: "Making the Referral",
+        content: "When making a peer-on-peer safeguarding referral:\n\n• Use patients' full names — not initials\n• Include Police incident number if Police have been informed\n• If consent was not obtained, justify why it was overridden\n• If stating the patient lacks capacity, ensure a referral to advocacy is also made\n• Include what immediate measures have been put in place to prevent further harm\n\nContact:\n• DHCFT Safeguarding Team: [INTERNAL - See FOCUS]\n• MASH Health Advisors: [INTERNAL - See FOCUS]",
       },
     ],
   },

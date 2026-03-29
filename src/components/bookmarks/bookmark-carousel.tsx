@@ -147,6 +147,7 @@ export function BookmarkCarousel() {
       [MY_PERSONAL]: "User",
       "Clinical Systems": "Monitor",
       "Crisis Support": "Phone",
+      "Safeguarding": "Shield",
       "Trust Resources": "Building2",
       "External Services": "ExternalLink",
       "Training": "GraduationCap",

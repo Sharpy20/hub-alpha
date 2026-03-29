@@ -818,6 +818,14 @@ Working through in order. Marking complete as fixed.
 | 97 | [x] | Removed "Medication round (AM)" from ward task templates |
 | 98 | [x] | My Diary: ward tasks claimed by other staff no longer show (only your claims + unclaimed) |
 | 99 | [x] | Add Task modal: "Assign to Ward" / "Assign to Myself" toggle (auto-claims when Myself selected) |
+| 100 | [x] | Safeguarding Hub banner on home page with 999 emergency strip, 4 quick-link cards, decision helper |
+| 101 | [x] | 15 safeguarding bookmarks (new "Safeguarding" category) — FOCUS placeholders for internal numbers |
+| 102 | [x] | Safeguarding Adults Referral guide (S.42 Care Act, 7 steps, content from trust training docs) |
+| 103 | [x] | Safeguarding Children guide (Starting Point referral, Think Family, 5 steps) |
+| 104 | [x] | Domestic Abuse Recognition guide (DA Act 2021, professional curiosity, DASH, 7 steps) |
+| 105 | [x] | Peer-on-Peer Conflict guide (levels, when to escalate, staff responsibilities, 5 steps) |
+| 106 | [x] | Interactive decision helper on home page ("Not sure? Help me decide" — yes/no flow to correct pathway) |
+| 107 | [x] | Safeguarding bookmark strip on home page (horizontal scroll, public links only) |
 
 ---
 
@@ -859,7 +867,12 @@ Working through in order. Marking complete as fixed.
 
 ---
 
-**Recently Completed (29 Mar 2026 - Session 13 — Diary & Guide Improvements):**
+**Recently Completed (29 Mar 2026 - Session 13 — Diary Fixes + Safeguarding Hub):**
+- ✅ **Safeguarding Hub** on home page: bold red banner, 999 strip, 4 quick-link cards, decision helper
+- ✅ Interactive "Not sure? Help me decide" flow — walks staff through to correct pathway
+- ✅ 15 safeguarding bookmarks (new category) — DHCFT advice, MASH, referral forms, DASH, MCA, cuckooing
+- ✅ 4 safeguarding how-to guides: Adults Referral, Children/Starting Point, Domestic Abuse, Peer Conflict
+- ✅ Content sourced from DHCFT Level 3 training PowerPoint + 4 trust guidance documents
 - ✅ Guide choice-flow expanded: Safeguarding Adults + Housing/DTR now have area step (city/county filtering)
 - ✅ Smart clipboard: all guide case notes auto-fill date, patient name, staff name, and area choices
 - ✅ My Diary filter fixed: only shows ward tasks you claimed or unclaimed ones (not other people's)
@@ -1235,6 +1248,47 @@ Then open http://localhost:3000
 
 **Commits:**
 - `77104d9` — Diary & guide improvements: smart clipboard, My Diary filter, task assignment
+
+**Build Status:** All builds pass. Pushed to Vercel via Sharpy20.
+
+### 29 March 2026 - Session 13b (Safeguarding Hub)
+**Completed:**
+- [x] Safeguarding Hub banner on home page — bold red gradient, shield icon, "Recognise. Respond. Refer."
+- [x] 999 emergency strip always visible in the banner
+- [x] 4 quick-link cards: Adults Referral, Worried About a Child, Domestic Abuse, Patient Conflict
+- [x] Interactive decision helper: "Not sure? Help me decide" — yes/no flow to correct guide
+- [x] Horizontal safeguarding bookmark strip below banner (public links only)
+- [x] 15 new safeguarding bookmarks in new "Safeguarding" category
+- [x] Internal numbers stored with real data in comments, displayed as [INTERNAL - See FOCUS]
+- [x] 4 safeguarding how-to guides with content from trust training materials:
+  - Making a Good Safeguarding Adults Referral (7 steps, S.42 criteria, pitfalls, consent)
+  - Safeguarding Children — Starting Point Referral (5 steps, Think Family)
+  - Recognising and Responding to Domestic Abuse (7 steps, DA Act, professional curiosity, DASH)
+  - Peer-on-Peer Conflict — When to Escalate (5 steps, levels, responsibilities)
+- [x] Safeguarding category icon added to bookmark carousel ("Shield")
+
+**Source Documents Used:**
+- `E:\Hub\temp\Presentation.pptx` — DHCFT Level 3 Safeguarding training (60+ slides)
+- `docs/data dump from work to sort/Safeguarding updater 2026/`:
+  - Making a good safeguarding referral.docx
+  - Guidance for Identifying when Domestic Abuse may be a Concern.docx
+  - Peer on Peer Conflict and Safeguarding final.docx
+  - Safeguarding referrals info.docx
+
+**Key Design Decisions:**
+- Safeguarding is NOT a new nav item — it's a prominent banner section on the home page
+- Phone numbers use FOCUS placeholders but real numbers stored in code comments for later switch
+- Decision helper uses local state, resets on "Start over" — no persistence needed
+- Bookmarks show in both the safeguarding strip and main /bookmarks page under Safeguarding filter
+
+**Key Files Modified:**
+- `src/app/page.tsx` — SafeguardingSection component with banner, cards, decision helper, bookmark strip
+- `src/lib/data/bookmarks/index.ts` — 15 new safeguarding bookmarks
+- `src/app/how-to/[id]/page.tsx` — 4 new guide definitions + GUIDE_CONFIG entries
+- `src/components/bookmarks/bookmark-carousel.tsx` — Added "Safeguarding" to icon map
+
+**Commits:**
+- `4db6fcd` — Add Safeguarding Hub: home page banner, 15 bookmarks, 4 guides
 
 **Build Status:** All builds pass. Pushed to Vercel via Sharpy20.
 

@@ -875,12 +875,14 @@ function AddTaskModal({
   onAdd,
   activeWard,
   defaultDate,
+  currentUserName,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (task: Partial<DiaryTask>) => void;
   activeWard: string;
   defaultDate?: string;
+  currentUserName?: string;
 }) {
   const [taskType, setTaskType] = useState<"ward" | "patient" | "appointment">("ward");
   const [title, setTitle] = useState("");
@@ -918,6 +920,9 @@ function AddTaskModal({
   const [exactTime, setExactTime] = useState("09:00");
   const [duration, setDuration] = useState("");
 
+  // Assignment toggle: "myself" or "ward"
+  const [assignTo, setAssignTo] = useState<"ward" | "myself">("ward");
+
   // Appointment enhancements - linked referral, guide, and details
   const [apptLinkedReferral, setApptLinkedReferral] = useState("");
   const [apptLinkedGuide, setApptLinkedGuide] = useState("");
@@ -931,13 +936,17 @@ function AddTaskModal({
   const handleSubmit = () => {
     if (!title.trim()) return;
 
+    const claimFields = assignTo === "myself" && currentUserName
+      ? { claimedBy: currentUserName, claimedAt: formatDate(new Date()), status: "in_progress" as const }
+      : { status: "pending" as const };
+
     const baseTask = {
       title,
       priority,
-      status: "pending" as const,
+      ...claimFields,
       dueDate: taskType === "ward" ? (isRecurring ? effectiveDefault : wardTaskDate) : taskDate,
       createdAt: formatDate(new Date()),
-      createdBy: "Current User",
+      createdBy: currentUserName || "Current User",
       ward: "Byron",
     };
 
@@ -998,6 +1007,7 @@ function AddTaskModal({
     setPresetTime("morning");
     setExactTime("09:00");
     setDuration("");
+    setAssignTo("ward");
     onClose();
   };
 
@@ -1564,6 +1574,37 @@ function AddTaskModal({
                 <span className="text-sm capitalize">{p}</span>
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* Assign to toggle */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Assign to</label>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => setAssignTo("ward")}
+              className={`p-3 rounded-xl text-center transition-all ${
+                assignTo === "ward"
+                  ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <span className="text-xl block">🏥</span>
+              <span className="text-xs font-medium">Ward</span>
+              <span className="text-[10px] block opacity-75">Anyone can claim</span>
+            </button>
+            <button
+              onClick={() => setAssignTo("myself")}
+              className={`p-3 rounded-xl text-center transition-all ${
+                assignTo === "myself"
+                  ? "bg-gradient-to-r from-green-500 to-green-700 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              <span className="text-xl block">👤</span>
+              <span className="text-xs font-medium">Myself</span>
+              <span className="text-[10px] block opacity-75">Claim it straight away</span>
+            </button>
           </div>
         </div>
 
@@ -2424,12 +2465,25 @@ function TasksPageInner() {
       // Filter by active ward
       if (task.ward !== activeWard) return false;
 
-      // "My Patients" filter - only show patient tasks/appointments for my patients
-      if (showMyPatients && myPatientIds.length > 0) {
+      // My Diary mode - filter to "my stuff" only
+      if (isMyDiaryMode) {
+        if (task.type === "patient" || task.type === "appointment") {
+          // Only show patient tasks/appointments for my WP patients or tasks I claimed
+          if (myPatientIds.length > 0) {
+            const isMyPatient = task.patientId && myPatientIds.includes(task.patientId);
+            const isClaimedByMe = task.claimedBy === user?.name;
+            if (!isMyPatient && !isClaimedByMe) return false;
+          }
+        }
+        if (task.type === "ward") {
+          // Only show ward tasks I claimed or unclaimed ones I could pick up
+          if (task.claimedBy && task.claimedBy !== user?.name) return false;
+        }
+      } else if (showMyPatients && myPatientIds.length > 0) {
+        // Ward Diary with My Patients toggle on
         if (task.type === "patient" || task.type === "appointment") {
           if (!task.patientId || !myPatientIds.includes(task.patientId)) return false;
         }
-        // Ward tasks still show (not patient-specific)
       }
 
       // Lead/Manager staff filter - show only tasks claimed by selected staff
@@ -2820,6 +2874,7 @@ function TasksPageInner() {
         onAdd={handleAddTask}
         activeWard={activeWard}
         defaultDate={expandedDay || focusedDate || todayStr}
+        currentUserName={user?.name}
       />
 
       <StaffManagementModal

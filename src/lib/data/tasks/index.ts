@@ -169,6 +169,7 @@ const WARD_TASK_TEMPLATES: Array<{
   auditType?: AuditType;
   linkedGuideId?: string;
   isNexusLinked?: boolean;
+  recurringDays?: number[];
 }> = [
   {
     title: "Fridge temperature check",
@@ -191,7 +192,6 @@ const WARD_TASK_TEMPLATES: Array<{
   },
   { title: "Daily clinic checks", description: "Complete daily clinical environment checks — documentation, equipment, patient safety board", priority: "important" as const, shift: "early" as const },
   { title: "Safety huddle", description: "Brief team meeting - risks, staffing, priorities", priority: "routine" as const, shift: "early" as const },
-  { title: "Medication round (AM)", description: "Morning medication round", priority: "important" as const, shift: "early" as const },
   {
     title: "Water temperature check",
     description: "Check hot water outlets and record on Assurance Dashboard",
@@ -200,6 +200,7 @@ const WARD_TASK_TEMPLATES: Array<{
     isAuditTask: true,
     auditType: "water_temps",
     isNexusLinked: true,
+    recurringDays: [0],
   },
   { title: "Medication round (PM)", description: "Afternoon medication round", priority: "important" as const, shift: "late" as const },
   { title: "Handover preparation", description: "Prepare handover notes for night staff", priority: "routine" as const, shift: "late" as const },
@@ -280,7 +281,7 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
       shift: template.shift,
       dueDate: todayStr,
       isRecurring: true,
-      recurringDays: [0, 1, 2, 3, 4, 5, 6],
+      recurringDays: template.recurringDays || [0, 1, 2, 3, 4, 5, 6],
       carryOver: false,
       ward,
       createdAt: todayStr,

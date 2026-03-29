@@ -203,14 +203,20 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         checkboxLabel: "I confirm this meets adult safeguarding criteria",
       },
       {
+        id: "area",
+        type: "area",
+        title: "Select Area",
+        content: "Which local authority area is the patient from? This determines where to send the safeguarding referral.",
+      },
+      {
         id: "forms",
         type: "forms",
         title: "Download Forms & Guides",
         content: "Download the appropriate forms and guides for your area.",
         forms: {
           blank: [
-            { label: "Derby City SAR Form", url: "#", icon: "📄" },
-            { label: "Derbyshire County SAR Form", url: "#", icon: "📄" },
+            { label: "Derby City SAR Form", url: "#", icon: "📄", area: "city" },
+            { label: "Derbyshire County SAR Form", url: "#", icon: "📄", area: "county" },
           ],
           wagoll: [
             { label: "Safeguarding Referral Example", url: "#", note: "Example - note level of detail required" },
@@ -228,9 +234,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to the appropriate local authority:",
         methods: [
-          { type: "phone", label: "Derby City (Call Derbyshire)", value: "01onal 629 533190" },
-          { type: "email", label: "Derby City Email", value: "safeguardingadultsreferral@derby.gov.uk" },
-          { type: "phone", label: "Derbyshire County", value: "01629 533190" },
+          { type: "phone", label: "Derby City (Call Derbyshire)", value: "01onal 629 533190", area: "city" },
+          { type: "email", label: "Derby City Email", value: "safeguardingadultsreferral@derby.gov.uk", area: "city" },
+          { type: "phone", label: "Derbyshire County", value: "01629 533190", area: "county" },
         ],
       },
       {
@@ -399,14 +405,20 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         checkboxLabel: "I confirm the patient meets homeless referral criteria and consents",
       },
       {
+        id: "area",
+        type: "area",
+        title: "Select Area",
+        content: "Which local authority area does the patient need housing support from?",
+      },
+      {
         id: "forms",
         type: "forms",
         title: "Download Forms & Guides",
         content: "Download the Duty to Refer forms.",
         forms: {
           blank: [
-            { label: "Derby City Duty to Refer", url: "#", icon: "📄" },
-            { label: "Derbyshire County Duty to Refer", url: "#", icon: "📄" },
+            { label: "Derby City Duty to Refer", url: "#", icon: "📄", area: "city" },
+            { label: "Derbyshire County Duty to Refer", url: "#", icon: "📄", area: "county" },
           ],
           wagoll: [
             { label: "Housing Referral Example", url: "#", note: "Include discharge date and needs" },
@@ -423,9 +435,9 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to the local authority housing team:",
         methods: [
-          { type: "email", label: "Derby City Housing", value: "housing.options@derby.gov.uk" },
-          { type: "phone", label: "Derby Housing Line", value: "01332 640000" },
-          { type: "email", label: "County Housing", value: "housing@derbyshire.gov.uk" },
+          { type: "email", label: "Derby City Housing", value: "housing.options@derby.gov.uk", area: "city" },
+          { type: "phone", label: "Derby Housing Line", value: "01332 640000", area: "city" },
+          { type: "email", label: "County Housing", value: "housing@derbyshire.gov.uk", area: "county" },
         ],
       },
       {
@@ -1388,15 +1400,48 @@ export default function WorkflowPage() {
     year: "numeric",
   });
 
-  // Generate dynamic case note for IMHA
+  // Generate dynamic case note — fills in choices, patient name, staff name, date
   const generateCaseNote = () => {
-    if (workflowId !== "imha-advocacy") return step.clipboardText || "";
+    // IMHA has fully custom text
+    if (workflowId === "imha-advocacy") {
+      const areaName = selectedArea === "city" ? "Derby City Advocacy (POhWER)" : "Derbyshire County (Cloverleaf)";
+      const areaEmail = selectedArea === "city" ? "derbyadvocacy@pohwer.net" : "referrals@cloverleaf-advocacy.co.uk";
+      const sectionText = patientSection === "informal" ? "Informal" : patientSection?.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase()) || "[SECTION]";
+      const patientText = linkedPatient ? `Patient: ${linkedPatient.name}. ` : "";
+      const staffText = user?.name ? ` Referral completed by ${user.name}.` : "";
 
-    const areaName = selectedArea === "city" ? "Derby City Advocacy (POhWER)" : "Derbyshire County (Cloverleaf)";
-    const areaEmail = selectedArea === "city" ? "derbyadvocacy@pohwer.net" : "referrals@cloverleaf-advocacy.co.uk";
-    const sectionText = patientSection === "informal" ? "Informal" : patientSection?.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase()) || "[SECTION]";
+      return `${patientText}Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. Patient is detained under ${sectionText} and would benefit from independent advocacy support.${staffText}`;
+    }
 
-    return `Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. Patient is detained under ${sectionText} and would benefit from independent advocacy support.`;
+    // All other workflows — smart-replace placeholders in clipboardText
+    let text = step.clipboardText || "";
+
+    // Replace [DATE] with today
+    text = text.replace(/\[DATE\]/g, todayDate);
+
+    // Replace area placeholders based on user selection
+    if (selectedArea) {
+      text = text.replace(/\[DERBY CITY\/DERBYSHIRE COUNTY\]/g, selectedArea === "city" ? "Derby City" : "Derbyshire County");
+      text = text.replace(/\[DERBY\/COUNTY\]/g, selectedArea === "city" ? "Derby City" : "Derbyshire County");
+    }
+
+    // Replace section/legal status if available
+    if (patientSection) {
+      const sectionText = patientSection === "informal" ? "Informal" : patientSection.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase());
+      text = text.replace(/\[SECTION\]/g, sectionText);
+    }
+
+    // Add patient name if linked
+    if (linkedPatient) {
+      text = `Patient: ${linkedPatient.name}. ${text}`;
+    }
+
+    // Add staff name
+    if (user?.name) {
+      text = `${text} Completed by ${user.name}.`;
+    }
+
+    return text;
   };
 
   const canProceed = () => {
@@ -1824,10 +1869,10 @@ export default function WorkflowPage() {
             {step.type === "casenote" && (step.clipboardText || step.isDynamic) && (
               <div className="space-y-4">
                 <div className="p-5 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl font-mono text-base leading-relaxed border-2 border-amber-200">
-                  {step.isDynamic ? generateCaseNote() : step.clipboardText}
+                  {generateCaseNote()}
                 </div>
                 <Button
-                  onClick={() => handleCopy(step.isDynamic ? generateCaseNote() : step.clipboardText!)}
+                  onClick={() => handleCopy(generateCaseNote())}
                   className={`w-full py-4 text-lg ${
                     copied
                       ? "bg-green-600 hover:bg-green-700"

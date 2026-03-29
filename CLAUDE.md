@@ -806,6 +806,19 @@ Working through in order. Marking complete as fixed.
 | 90 | [x] | Dev panel password removed — replaced with dismissible "test data" notice banner |
 | 91 | [x] | Logout redirects to /login instead of /password |
 
+## SNAG LIST (29 Mar 2026 - Session 13)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 92 | [x] | Guide choice-flow: Safeguarding Adults now has area selection step (city/county) with filtered forms and contacts |
+| 93 | [x] | Guide choice-flow: Housing / Duty to Refer now has area selection step with filtered forms and contacts |
+| 94 | [x] | Clipboard copy: all guides now auto-fill [DATE] with today, patient name (if linked), and staff name |
+| 95 | [x] | Clipboard copy: area placeholders ([DERBY CITY/DERBYSHIRE COUNTY]) auto-replaced based on user choice |
+| 96 | [x] | Water temperature check now Sunday-only recurring task (was every day) |
+| 97 | [x] | Removed "Medication round (AM)" from ward task templates |
+| 98 | [x] | My Diary: ward tasks claimed by other staff no longer show (only your claims + unclaimed) |
+| 99 | [x] | Add Task modal: "Assign to Ward" / "Assign to Myself" toggle (auto-claims when Myself selected) |
+
 ---
 
 ## CURRENT FOCUS
@@ -846,7 +859,15 @@ Working through in order. Marking complete as fixed.
 
 ---
 
-**Recently Completed (22 Mar 2026 - Session 12 — Pre-Demo Overhaul):**
+**Recently Completed (29 Mar 2026 - Session 13 — Diary & Guide Improvements):**
+- ✅ Guide choice-flow expanded: Safeguarding Adults + Housing/DTR now have area step (city/county filtering)
+- ✅ Smart clipboard: all guide case notes auto-fill date, patient name, staff name, and area choices
+- ✅ My Diary filter fixed: only shows ward tasks you claimed or unclaimed ones (not other people's)
+- ✅ Water temperature check changed to Sunday-only recurring task
+- ✅ Medication round (AM) removed from ward task templates
+- ✅ Add Task modal: new "Assign to Ward" / "Assign to Myself" toggle
+
+**Previously Completed (22 Mar 2026 - Session 12 — Pre-Demo Overhaul):**
 - ✅ Nav restructured: [Diary] [Bookmarks] [Guides] [Patients] + [More] + [Help] + [Demo Mode]
 - ✅ Unified /guides page merging referrals + how-to with tab filters (Referrals/Assessments/Tasks)
 - ✅ Three-way diary toggle: Ward Diary / My Diary / My Jobs
@@ -1187,6 +1208,35 @@ Then open http://localhost:3000
 - `docs/evaluations/2026-03-22_project-evaluation.md` — Full 10-hat evaluation
 
 **Build Status:** All builds pass. 0 npm vulnerabilities. Git clean (Sharpy20 only).
+
+### 29 March 2026 - Session 13 (Diary & Guide Improvements)
+**Completed:**
+- [x] Guide choice-flow: Safeguarding Adults and Housing/DTR now have area selection step (city/county)
+- [x] Area selection filters forms, guides, and submission contacts automatically
+- [x] Smart clipboard copy: all guide case notes auto-fill [DATE], patient name, staff name, area choices
+- [x] IMHA clipboard now also includes patient and staff names
+- [x] My Diary filter fixed: ward tasks claimed by other staff no longer appear
+- [x] My Diary shows: unclaimed ward tasks + ward tasks you claimed + your WP patient tasks
+- [x] Water temperature check changed from daily to Sunday-only (recurringDays: [0])
+- [x] Removed "Medication round (AM)" from ward task templates
+- [x] Add Task modal: "Assign to Ward" / "Assign to Myself" toggle
+- [x] Assign to Myself auto-claims the task with current user name
+
+**Key Design Decisions:**
+- Guide choice-flow uses simple React state scoped to the workflow viewer — forgotten on navigate away
+- Clipboard text replacement is additive: fills what it can, leaves [PLACEHOLDER] brackets for anything not answered
+- Patient name prepended, staff name appended to case note text
+- My Diary ward task rule: show if unclaimed OR claimedBy === current user
+
+**Key Files Modified:**
+- `src/app/referrals/[id]/page.tsx` — Smart clipboard, area steps for safeguarding + housing
+- `src/app/tasks/page.tsx` — My Diary filter fix, task assignment toggle
+- `src/lib/data/tasks/index.ts` — Water temps Sunday-only, removed Medication AM, per-template recurringDays
+
+**Commits:**
+- `77104d9` — Diary & guide improvements: smart clipboard, My Diary filter, task assignment
+
+**Build Status:** All builds pass. Pushed to Vercel via Sharpy20.
 
 ---
 

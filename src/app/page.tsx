@@ -126,74 +126,65 @@ function SafeguardingSection() {
   const sgBookmarks = bookmarks.filter(b => b.category === "Safeguarding" && !b.requiresFocus);
 
   return (
-    <section className="space-y-4">
-      {/* Banner */}
-      <div className="bg-gradient-to-br from-red-700 via-red-800 to-red-900 text-white rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-              <Shield className="w-7 h-7" />
+    <section>
+      <div className="bg-white rounded-2xl border-2 border-gray-200 p-5">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+              <Shield className="w-5 h-5 text-red-700" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold">Safeguarding Hub</h2>
-              <p className="text-white/70 text-sm">Recognise. Respond. Refer.</p>
+              <h2 className="text-xl font-bold text-gray-900">Safeguarding</h2>
+              <p className="text-gray-500 text-xs">Recognise. Respond. Refer.</p>
             </div>
           </div>
-
-          {/* Emergency strip */}
-          <div className="bg-white/10 backdrop-blur rounded-xl px-4 py-2.5 mb-5 flex items-center gap-3">
-            <span className="text-lg">🚨</span>
-            <p className="text-sm font-medium">If someone is in <span className="font-bold">immediate danger</span>, call <span className="font-bold text-lg">999</span></p>
-          </div>
-
-          {/* Quick link cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-            {SG_QUICK_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="no-underline">
-                <div className="bg-white/10 hover:bg-white/20 backdrop-blur rounded-xl p-3 text-center transition-all hover:scale-105 h-full">
-                  <span className="text-2xl block mb-1">{link.icon}</span>
-                  <p className="text-sm font-bold text-white leading-tight">{link.label}</p>
-                  <p className="text-[11px] text-white/60 mt-0.5">{link.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          {/* Decision helper */}
-          <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-            <SafeguardingDecisionHelper />
-          </div>
-        </div>
-      </div>
-
-      {/* Safeguarding bookmarks strip */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-            <Shield className="w-4 h-4 text-red-600" />
-            Safeguarding Links
-          </h3>
           <Link href="/bookmarks?category=Safeguarding" className="text-xs text-indigo-600 hover:text-indigo-800 no-underline flex items-center gap-1">
-            View all <ChevronRight className="w-3 h-3" />
+            All links <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {sgBookmarks.slice(0, 8).map((bm) => (
-            <a
-              key={bm.id}
-              href={bm.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-red-50 rounded-lg border border-gray-100 hover:border-red-200 transition-colors no-underline"
-              title={bm.description}
-            >
-              <span className="text-lg">{bm.icon}</span>
-              <span className="text-xs font-medium text-gray-700 whitespace-nowrap">{bm.title}</span>
-            </a>
+
+        {/* Emergency strip */}
+        <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-2.5 mb-4 flex items-center gap-3">
+          <span className="text-lg">🚨</span>
+          <p className="text-sm font-medium text-red-900">If someone is in <span className="font-bold">immediate danger</span>, call <span className="font-bold text-lg">999</span></p>
+        </div>
+
+        {/* Quick link cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+          {SG_QUICK_LINKS.map((link) => (
+            <Link key={link.href} href={link.href} className="no-underline">
+              <div className="bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-200 rounded-xl p-3 text-center transition-all hover:scale-105 h-full">
+                <span className="text-2xl block mb-1">{link.icon}</span>
+                <p className="text-sm font-bold text-gray-900 leading-tight">{link.label}</p>
+                <p className="text-[11px] text-gray-500 mt-0.5">{link.description}</p>
+              </div>
+            </Link>
           ))}
+        </div>
+
+        {/* Decision helper */}
+        <div className="bg-gray-50 rounded-xl p-4 mb-4">
+          <SafeguardingDecisionHelper />
+        </div>
+
+        {/* Bookmark strip */}
+        <div className="border-t border-gray-100 pt-3">
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {sgBookmarks.slice(0, 8).map((bm) => (
+              <a
+                key={bm.id}
+                href={bm.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-shrink-0 flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-red-50 rounded-lg border border-gray-100 hover:border-red-200 transition-colors no-underline"
+                title={bm.description}
+              >
+                <span className="text-lg">{bm.icon}</span>
+                <span className="text-xs font-medium text-gray-700 whitespace-nowrap">{bm.title}</span>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -243,6 +243,19 @@ export function TodayWidget() {
         </div>
       </div>
 
+      {/* Quick nav */}
+      <div className="grid grid-cols-3 gap-2 mb-4">
+        <Link href="/tasks" className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
+          Team Diary
+        </Link>
+        <Link href="/tasks?view=my-diary" className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
+          My Diary
+        </Link>
+        <Link href="/my-tasks" className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
+          My Jobs
+        </Link>
+      </div>
+
       {/* Three columns */}
       <div className="grid grid-cols-3 gap-3 mb-4">
         <TaskColumn
@@ -271,23 +284,7 @@ export function TodayWidget() {
         />
       </div>
 
-      {/* Footer links - matching lighter button styles */}
-      <div className="flex gap-3">
-        <Link
-          href="/tasks"
-          className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-medium hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md transition-all"
-        >
-          Diary
-          <ChevronRight className="w-4 h-4" />
-        </Link>
-        <Link
-          href="/my-tasks"
-          className="flex-1 flex items-center justify-center gap-2 p-3 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-medium hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md transition-all"
-        >
-          Tasks
-          <ChevronRight className="w-4 h-4" />
-        </Link>
-      </div>
+      {/* Footer removed - nav buttons now at top */}
     </div>
   );
 }

@@ -33,6 +33,7 @@ import {
   Moon,
   Sunset,
   Settings2,
+  UserPlus,
 } from "lucide-react";
 import {
   DiaryTask,
@@ -2468,11 +2469,14 @@ function TasksPageInner() {
       // My Diary mode - filter to "my stuff" only
       if (isMyDiaryMode) {
         if (task.type === "patient" || task.type === "appointment") {
-          // Only show patient tasks/appointments for my WP patients or tasks I claimed
-          if (myPatientIds.length > 0) {
+          const isClaimedByMe = task.claimedBy === user?.name;
+          if (showMyPatients && myPatientIds.length > 0) {
+            // Show tasks I claimed OR tasks for my WP patients (even if claimed by others)
             const isMyPatient = task.patientId && myPatientIds.includes(task.patientId);
-            const isClaimedByMe = task.claimedBy === user?.name;
             if (!isMyPatient && !isClaimedByMe) return false;
+          } else {
+            // My tasks only - only show tasks I personally claimed
+            if (!isClaimedByMe) return false;
           }
         }
         if (task.type === "ward") {
@@ -2637,6 +2641,22 @@ function TasksPageInner() {
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
+
+          {/* My Diary: patient tasks toggle */}
+          {isMyDiaryMode && (
+            <button
+              onClick={() => setShowMyPatients(!showMyPatients)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium text-sm transition-all ${
+                showMyPatients
+                  ? "bg-purple-100 text-purple-800 ring-2 ring-purple-300"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+              title={showMyPatients ? "Showing tasks for your patients too (claimed by anyone)" : "Showing only tasks you personally claimed"}
+            >
+              <UserPlus className="w-4 h-4" />
+              {showMyPatients ? "My tasks + my patients" : "My tasks only"}
+            </button>
+          )}
 
           {/* Repeat Tasks - Manager/Senior Admin only */}
           {(user?.role === "manager" || user?.role === "senior_admin") && !isMyDiaryMode && (

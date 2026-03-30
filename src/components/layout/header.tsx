@@ -6,6 +6,7 @@ import { useApp } from "@/app/providers";
 import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Bookmark, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
+import { getStaffByWard } from "@/lib/data/staff";
 
 export function Header() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export function Header() {
   const [settingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
   const [helpMode, setHelpMode] = useState(false);
   const [savedFeedback, setSavedFeedback] = useState<string | null>(null);
+  const [showUserPicker, setShowUserPicker] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const settingsDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -319,6 +321,42 @@ export function Header() {
                             </button>
                           ))}
                         </div>
+                      </div>
+
+                      {/* Specific User picker */}
+                      <div className="p-3 border-b border-gray-100">
+                        <button
+                          onClick={() => setShowUserPicker(!showUserPicker)}
+                          className="w-full flex items-center justify-between text-xs font-semibold text-gray-400 uppercase tracking-wider"
+                        >
+                          <span className="flex items-center gap-1">
+                            <Users className="w-3 h-3" />
+                            Specific User
+                          </span>
+                          <ChevronDown className={`w-3 h-3 transition-transform ${showUserPicker ? "rotate-180" : ""}`} />
+                        </button>
+                        {showUserPicker && (
+                          <div className="mt-2 max-h-48 overflow-y-auto space-y-0.5">
+                            {getStaffByWard(activeWard.charAt(0).toUpperCase() + activeWard.slice(1)).map((staff) => (
+                              <button
+                                key={staff.id}
+                                onClick={() => {
+                                  setUser({ ...user, name: staff.name, role: staff.role, isContributor: staff.isContributor });
+                                  setSavedFeedback("User");
+                                  setShowUserPicker(false);
+                                }}
+                                className={`w-full px-2 py-1.5 rounded text-left text-xs transition-colors flex items-center justify-between ${
+                                  user.name === staff.name
+                                    ? "bg-indigo-100 text-indigo-700"
+                                    : "hover:bg-gray-100 text-gray-700"
+                                }`}
+                              >
+                                <span className="font-medium truncate">{staff.name}</span>
+                                <span className="text-[10px] text-gray-400 ml-2 flex-shrink-0 italic">{roleLabels[staff.role]}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <button

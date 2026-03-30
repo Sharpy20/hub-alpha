@@ -182,7 +182,7 @@ export interface WardTask extends BaseTask {
   nexusCompletedAt?: string;
 }
 
-// Patient Task - one-off tasks for specific patients
+// Patient Task - one-off or repeating tasks for specific patients
 export interface PatientTask extends BaseTask {
   type: "patient";
   category: PatientTaskCategory;
@@ -192,6 +192,9 @@ export interface PatientTask extends BaseTask {
   linkedReferralId?: string; // Links to referral workflow
   linkedGuideId?: string;
   carryOver: boolean; // If outstanding, moves to today
+  // Repeating patient tasks (e.g. weekly weight check, fortnightly review)
+  repeatIntervalDays?: number; // 7, 14, 28, or custom
+  repeatUntil?: string; // Optional end date for repeating
 }
 
 // Appointment - scheduled events

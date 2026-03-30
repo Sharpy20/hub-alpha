@@ -280,7 +280,7 @@ export const bookmarks: Bookmark[] = [
     category: "Safeguarding",
     requiresFocus: true,
     description: "Trust safeguarding team advice line (Option 1)",
-    phone: "[INTERNAL - See FOCUS]",
+    phone: "Hidden in demo mode",
     // Real: 01332 623730 Option 1
   },
   {
@@ -301,7 +301,7 @@ export const bookmarks: Bookmark[] = [
     category: "Safeguarding",
     requiresFocus: true,
     description: "Adult safeguarding referrals (Mon-Fri 8am-8pm, Sat 9:30am-4pm)",
-    phone: "[INTERNAL - See FOCUS]",
+    phone: "Hidden in demo mode",
     // Real: 01629 533190 (office), 01629 532600 (out of hours)
   },
   {
@@ -312,7 +312,7 @@ export const bookmarks: Bookmark[] = [
     category: "Safeguarding",
     requiresFocus: true,
     description: "Derby City adult safeguarding (Mon-Fri 9am-5pm)",
-    phone: "[INTERNAL - See FOCUS]",
+    phone: "Hidden in demo mode",
     // Real: 01332 642855, out of hours Careline 01332 956606, AdultsMASH@derby.gov.uk
   },
   {
@@ -349,7 +349,7 @@ export const bookmarks: Bookmark[] = [
     url: "https://www.derbyshiresab.org.uk/site-elements/documents/pdf/adult-safeguarding-decision-making-guidance.pdf",
     category: "Safeguarding",
     requiresFocus: false,
-    description: "When to make a safeguarding referral — flowchart and guidance",
+    description: "When to make a safeguarding referral – flowchart and guidance",
   },
   {
     id: "sg-starting-point",
@@ -394,7 +394,7 @@ export const bookmarks: Bookmark[] = [
     url: "https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/921428/Mental-capacity-act-code-of-practice.pdf",
     category: "Safeguarding",
     requiresFocus: false,
-    description: "Mental Capacity Act 2005 — statutory code of practice",
+    description: "Mental Capacity Act 2005 – statutory code of practice",
   },
   {
     id: "sg-cuckooing",

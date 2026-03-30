@@ -27,7 +27,7 @@ import {
   Printer
 } from "lucide-react";
 
-// Dev panel password removed for demo — open access
+// Dev panel password removed for demo – open access
 
 // Schema status (would be managed by state in real implementation)
 type SchemaStatus = "LIVE" | "DRAFT" | "UNKNOWN";
@@ -200,7 +200,7 @@ function OverviewSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-nhs-black">wardHub — Overview</h1>
+        <h1 className="text-2xl font-bold text-nhs-black">wardHub – Overview</h1>
         <p className="text-nhs-dark-grey mt-1">Technical documentation and governance pack</p>
       </div>
 
@@ -562,7 +562,7 @@ function BusinessCaseSection() {
                 <td className="p-2">Clinical safety</td>
                 <td className="p-2">Low</td>
                 <td className="p-2">High</td>
-                <td className="p-2">Tool is reference/task aid only — no clinical decisions automated; DCB 0129 review planned</td>
+                <td className="p-2">Tool is reference/task aid only – no clinical decisions automated; DCB 0129 review planned</td>
               </tr>
               <tr>
                 <td className="p-2">Out-of-date content</td>
@@ -589,7 +589,7 @@ function BusinessCaseSection() {
           <div className="flex gap-4 items-start">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
             <div className="flex-1">
-              <h4 className="font-bold text-nhs-black">Pilot Phase — One Ward</h4>
+              <h4 className="font-bold text-nhs-black">Pilot Phase – One Ward</h4>
               <p className="text-nhs-dark-grey mt-1">Try wardHub on one ward with real use. It&apos;s up to the ward how much they use &mdash; whether that&apos;s just the bookmarks and guides, or the diary for everything. Resources build organically as staff add bookmarks, request guides, and flag gaps. Gather feedback over 4-6 weeks.</p>
               <p className="text-nhs-dark-grey mt-2 text-xs"><strong>Pilot owner:</strong> Ward NIC &mdash; <strong>Success criteria:</strong> Staff find it useful, resources grow organically, no negative impact on existing workflows.</p>
             </div>
@@ -650,7 +650,7 @@ function BusinessCaseSection() {
               <div className="w-5 h-5 border-2 border-nhs-mid-grey rounded flex-shrink-0" />
               <div className="flex-1">
                 <span className="font-semibold text-nhs-black">{item.role}</span>
-                <span className="text-nhs-dark-grey"> — {item.scope}</span>
+                <span className="text-nhs-dark-grey"> – {item.scope}</span>
               </div>
               <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                 item.phase === "Pilot" ? "bg-green-100 text-green-700" :
@@ -951,7 +951,7 @@ function DataCatalogueSection() {
                 <tr className="bg-amber-50">
                   <td className="p-2 font-medium text-nhs-orange">Trust-sensitive</td>
                   <td className="p-2">Direct-dial, internal extension, named staff mobile, @nhs.net email, FOCUS URL, or internal system URL</td>
-                  <td className="p-2"><code className="bg-gray-100 px-1 rounded text-xs">[INTERNAL - See FOCUS]</code> with FOCUS badge</td>
+                  <td className="p-2"><code className="bg-gray-100 px-1 rounded text-xs">Hidden in demo mode</code> with FOCUS badge</td>
                   <td className="p-2 text-xs">Safeguarding advice line, MASH direct numbers, ward extensions, Datix URLs, SystmOne SOPs, named staff contacts</td>
                 </tr>
               </tbody>
@@ -959,7 +959,7 @@ function DataCatalogueSection() {
           </div>
           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
             <p className="text-sm text-blue-800">
-              <span className="font-semibold">How it works:</span> Trust-sensitive data is stored in code comments alongside each bookmark or guide step. When authentication is enabled, a single flag change (<code className="bg-blue-100 px-1 rounded text-xs">requiresFocus: false</code>) reveals the real data. No data entry needed at go-live — it&apos;s already there.
+              <span className="font-semibold">How it works:</span> Trust-sensitive data is stored in code comments alongside each bookmark or guide step. When authentication is enabled, a single flag change (<code className="bg-blue-100 px-1 rounded text-xs">requiresFocus: false</code>) reveals the real data. No data entry needed at go-live – it&apos;s already there.
             </p>
           </div>
         </CardContent>
@@ -1367,14 +1367,14 @@ function DPIASection() {
           <div>
             <h3 className="font-semibold text-nhs-dark-grey">Primary Basis</h3>
             <p className="text-nhs-dark-grey">
-              <strong>Article 6(1)(e)</strong> — Processing necessary for performance of a task
+              <strong>Article 6(1)(e)</strong> – Processing necessary for performance of a task
               carried out in the public interest (provision of healthcare).
             </p>
           </div>
           <div>
             <h3 className="font-semibold text-nhs-dark-grey">Special Category Data (Health)</h3>
             <p className="text-nhs-dark-grey">
-              <strong>Article 9(2)(h)</strong> — Processing necessary for medical diagnosis,
+              <strong>Article 9(2)(h)</strong> – Processing necessary for medical diagnosis,
               provision of health treatment, and management of health systems.
             </p>
           </div>
@@ -1650,7 +1650,7 @@ function SchemasSection({ schemaStatus }: { schemaStatus: SchemaStatus }) {
       {schemaStatus === "DRAFT" && (
         <div className="bg-nhs-warm-yellow/20 border border-nhs-warm-yellow rounded-lg p-4">
           <p className="text-sm text-nhs-black">
-            <strong>DRAFT SCHEMA</strong> — These are proposed schemas. Replace with live Supabase
+            <strong>DRAFT SCHEMA</strong> – These are proposed schemas. Replace with live Supabase
             export when available.
           </p>
         </div>
@@ -1854,7 +1854,7 @@ function NexusSection() {
 
       <div className="bg-amber-50 border border-amber-300 rounded-lg p-4">
         <p className="text-sm text-nhs-black">
-          <strong>PLANNED</strong> — Nexus Assurance is the Trust&apos;s internal compliance platform.
+          <strong>PLANNED</strong> – Nexus Assurance is the Trust&apos;s internal compliance platform.
           The integration is one-way inbound (Nexus → Hub) to auto-complete audit tasks.
           How the signal gets from Nexus to wardHub is flexible &mdash; see integration options below.
         </p>
@@ -1872,7 +1872,7 @@ function NexusSection() {
           </p>
           <p>
             The Hub integration means that when a staff member completes an audit on Nexus,
-            the corresponding task on the Hub is automatically marked as complete — removing
+            the corresponding task on the Hub is automatically marked as complete – removing
             the need to update both systems manually.
           </p>
         </CardContent>
@@ -1971,7 +1971,7 @@ Response: 200 OK
             "Trust tech team chooses integration method (webhook, Power Automate, or hard-coded)",
             "wardHub provides the /api/nexus/task-complete endpoint regardless of method",
             "Authentication via shared secret (rotated quarterly)",
-            "No PII transmitted — only audit type, ward, and staff ID",
+            "No PII transmitted – only audit type, ward, and staff ID",
             "Fallback: if integration fails, staff can still mark task complete manually",
             "DPIA update required for Max+ deployment",
           ].map((item, i) => (
@@ -2000,12 +2000,12 @@ function RoadmapSection() {
       items: [
         {
           title: "Showcase to Clinical Leads",
-          description: "Present the working demo to ward managers and matrons. Focus on the referral workflows and task diary — the features that solve the most immediate pain points.",
+          description: "Present the working demo to ward managers and matrons. Focus on the referral workflows and task diary – the features that solve the most immediate pain points.",
           status: "next",
         },
         {
           title: "Build Resources Organically",
-          description: "Start with light, real use — a few non-essential tasks to test workflows. Resources grow as users add their own bookmarks, request new guides, and flag gaps. The content is shaped by the people who use it.",
+          description: "Start with light, real use – a few non-essential tasks to test workflows. Resources grow as users add their own bookmarks, request new guides, and flag gaps. The content is shaped by the people who use it.",
           status: "planned",
         },
         {
@@ -2016,7 +2016,7 @@ function RoadmapSection() {
             "Is this actually needed? Or are existing tools good enough?",
             "Are we solving a real-world problem? Does this match what staff actually struggle with?",
             "Is this the right approach? Or would a different solution work better?",
-            "What impact could it have — positive and negative? What are the risks of adoption?",
+            "What impact could it have – positive and negative? What are the risks of adoption?",
           ],
         },
         {
@@ -2040,18 +2040,18 @@ function RoadmapSection() {
           status: "planned",
           decisions: [
             {
-              question: "Patient data — what's the minimum?",
+              question: "Patient data – what's the minimum?",
               options: ["Name + ward + named professional only", "Add diagnosis and legal status", "Full clinical record link"],
             },
             {
-              question: "Staff data — what do we need?",
+              question: "Staff data – what do we need?",
               options: ["Job title and ward only", "Add shift patterns", "Full rota integration"],
             },
           ],
         },
         {
           title: "Is Job Title and Date Enough?",
-          description: "For task tracking, do we need to store who did what and when — or do we need more?",
+          description: "For task tracking, do we need to store who did what and when – or do we need more?",
           status: "planned",
           decisions: [
             {
@@ -2067,7 +2067,7 @@ function RoadmapSection() {
         },
         {
           title: "SystmOne Update Frequency",
-          description: "At what point are we updating the clinical record system — and who does it?",
+          description: "At what point are we updating the clinical record system – and who does it?",
           status: "planned",
           decisions: [
             {
@@ -2102,7 +2102,7 @@ function RoadmapSection() {
       items: [
         {
           title: "Trust Provides Code Skeleton",
-          description: "Trust Digital Services provide the approved hosting framework and security baseline. Ward staff populate the actual clinical content — referral workflows, how-to guides, bookmark libraries.",
+          description: "Trust Digital Services provide the approved hosting framework and security baseline. Ward staff populate the actual clinical content – referral workflows, how-to guides, bookmark libraries.",
           status: "planned",
         },
         {
@@ -2133,8 +2133,8 @@ function RoadmapSection() {
             {
               question: "Which ward pilots first?",
               options: [
-                "Mike's ward (Byron) — developer is on-site, can fix issues in real-time, deep understanding of workflows. Risk: too close to the problem, may miss blind spots",
-                "A different ward — honest, unbiased feedback, tests if the tool is intuitive without the developer present. Risk: slower issue resolution, may need a ward champion",
+                "Mike's ward (Byron) – developer is on-site, can fix issues in real-time, deep understanding of workflows. Risk: too close to the problem, may miss blind spots",
+                "A different ward – honest, unbiased feedback, tests if the tool is intuitive without the developer present. Risk: slower issue resolution, may need a ward champion",
               ],
             },
           ],
@@ -2268,7 +2268,7 @@ function RoadmapSection() {
               </div>
               <div>
                 <h2 className="text-lg font-bold text-nhs-black">AI-Generated Suggestions</h2>
-                <p className="text-xs text-nhs-mid-grey">Potential upgrades and opportunities identified by Claude — not yet reviewed</p>
+                <p className="text-xs text-nhs-mid-grey">Potential upgrades and opportunities identified by Claude – not yet reviewed</p>
               </div>
             </div>
 
@@ -2301,7 +2301,7 @@ function RoadmapSection() {
                     },
                     {
                       title: "Offline Mode (Light)",
-                      desc: "Cache bookmarks and guides for use when Wi-Fi drops. Ward areas often have poor connectivity — critical reference info should always be available.",
+                      desc: "Cache bookmarks and guides for use when Wi-Fi drops. Ward areas often have poor connectivity – critical reference info should always be available.",
                     },
                   ].map((item, i) => (
                     <div key={i} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -2363,11 +2363,11 @@ function RoadmapSection() {
                     },
                     {
                       title: "Multi-Trust Potential",
-                      desc: "The four-tier version model means any NHS Trust could deploy the Light version immediately with their own content. The architecture is Trust-agnostic — only the data is specific.",
+                      desc: "The four-tier version model means any NHS Trust could deploy the Light version immediately with their own content. The architecture is Trust-agnostic – only the data is specific.",
                     },
                     {
                       title: "Meet with SystmOne Team (TPP)",
-                      desc: "Arrange an exploratory meeting with The Phoenix Partnership (TPP) in Leeds — developers of SystmOne, the clinical system used across the Trust. Even if full API integration isn't on the roadmap now, understanding their partnership programme, webhook capabilities, and data-sharing frameworks could open doors. TPP have a clinical integration team who work with NHS organisations on exactly these kinds of ward-level tools. A 30-minute conversation could reveal integration possibilities we haven't considered — read-only access to task lists, patient context lookups, or event notifications when records are updated.",
+                      desc: "Arrange an exploratory meeting with The Phoenix Partnership (TPP) in Leeds – developers of SystmOne, the clinical system used across the Trust. Even if full API integration isn't on the roadmap now, understanding their partnership programme, webhook capabilities, and data-sharing frameworks could open doors. TPP have a clinical integration team who work with NHS organisations on exactly these kinds of ward-level tools. A 30-minute conversation could reveal integration possibilities we haven't considered – read-only access to task lists, patient context lookups, or event notifications when records are updated.",
                     },
                     {
                       title: "AI-Assisted Workflow Builder",
@@ -2400,7 +2400,7 @@ function ReferencesSection() {
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Trust Policies</h2>
-          <p className="text-xs text-nhs-mid-grey mt-1">Internal documents — requires FOCUS intranet access</p>
+          <p className="text-xs text-nhs-mid-grey mt-1">Internal documents – requires FOCUS intranet access</p>
         </CardHeader>
         <CardContent className="space-y-2">
           {[
@@ -2423,8 +2423,8 @@ function ReferencesSection() {
         </CardHeader>
         <CardContent className="space-y-2">
           {([
-            { label: "DCB 0129 — Clinical Risk Management (Manufacture)", url: "https://digital.nhs.uk/data-and-information/information-standards/information-standards-and-data-collections-including-extractions/publications-and-notifications/standards-and-collections/dcb0129-clinical-risk-management-its-application-in-the-manufacture-of-health-it-systems" },
-            { label: "DCB 0160 — Clinical Risk Management (Deployment)", url: "https://digital.nhs.uk/data-and-information/information-standards/information-standards-and-data-collections-including-extractions/publications-and-notifications/standards-and-collections/dcb0160-clinical-risk-management-its-application-in-the-deployment-and-use-of-health-it-systems" },
+            { label: "DCB 0129 – Clinical Risk Management (Manufacture)", url: "https://digital.nhs.uk/data-and-information/information-standards/information-standards-and-data-collections-including-extractions/publications-and-notifications/standards-and-collections/dcb0129-clinical-risk-management-its-application-in-the-manufacture-of-health-it-systems" },
+            { label: "DCB 0160 – Clinical Risk Management (Deployment)", url: "https://digital.nhs.uk/data-and-information/information-standards/information-standards-and-data-collections-including-extractions/publications-and-notifications/standards-and-collections/dcb0160-clinical-risk-management-its-application-in-the-deployment-and-use-of-health-it-systems" },
             { label: "Data Security and Protection Toolkit (DSPT)", url: "https://www.dsptoolkit.nhs.uk/" },
             { label: "Cyber Essentials Plus", url: undefined },
             { label: "UK GDPR / Data Protection Act 2018", url: "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/" },

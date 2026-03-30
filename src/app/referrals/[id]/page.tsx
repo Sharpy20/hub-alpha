@@ -1362,6 +1362,7 @@ export default function WorkflowPage() {
   // Patient linking state
   const [showPatientPicker, setShowPatientPicker] = useState(false);
   const [linkedPatient, setLinkedPatient] = useState<Patient | null>(null);
+  const [pendingFollowUp, setPendingFollowUp] = useState(false);
 
   // Handle patient selection
   const handlePatientSelect = (patient: Patient) => {
@@ -1385,7 +1386,29 @@ export default function WorkflowPage() {
       linkedReferralId: workflowId,
     });
 
-    // Audit log - production would use backend audit trail
+    // If user clicked follow-up button before linking a patient, create the follow-up now
+    if (pendingFollowUp) {
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 7);
+      addTask({
+        id: `task-followup-${Date.now()}`,
+        type: "patient",
+        title: `Follow up: ${workflow.title}`,
+        category: "referral",
+        patientName: patient.name,
+        ward: patient.ward,
+        priority: "routine",
+        status: "pending",
+        dueDate: futureDate.toISOString().split("T")[0],
+        createdAt: today,
+        createdBy: user?.name || "Unknown",
+        carryOver: true,
+        linkedReferralId: workflowId,
+      });
+      setPendingFollowUp(false);
+      setShowFireworks(true);
+      setTimeout(() => setShowFireworks(false), 3000);
+    }
   };
 
   const workflowId = params.id as string;
@@ -1902,6 +1925,8 @@ export default function WorkflowPage() {
                   </div>
                   <p className="text-gray-600 text-sm mb-4">
                     e.g. &ldquo;Chase by telephone if no response in 7 days&rdquo;
+                    <br />
+                    e.g. &ldquo;Revisit assessment in 14 days&rdquo;
                   </p>
                   <button
                     onClick={() => {
@@ -1926,6 +1951,7 @@ export default function WorkflowPage() {
                         setShowFireworks(true);
                         setTimeout(() => setShowFireworks(false), 3000);
                       } else {
+                        setPendingFollowUp(true);
                         setShowPatientPicker(true);
                       }
                     }}

@@ -857,6 +857,21 @@ Working through in order. Marking complete as fixed.
 
 ---
 
+## MIGRATION NOTE (30 Mar 2026)
+
+**Mike is moving E:\Hub to a cloud drive and switching computers.**
+
+On first session on the new machine:
+1. Copy `E:\Hub\tmp-migration\MEMORY.md` to `~/.claude/projects/<project-path>/memory/MEMORY.md`
+   - The `<project-path>` is based on the repo's absolute path with separators replaced (e.g. `E--Hub` or similar)
+   - Claude creates this folder structure on first run - check `~/.claude/projects/` after launching once
+2. Run `gh auth login` as **Sharpy20** and then `gh auth setup-git`
+3. Run `npm install` in the repo
+4. Delete `E:\Hub\tmp-migration/` once MEMORY.md is in place
+5. Remove this migration note from CLAUDE.md
+
+---
+
 ## CURRENT FOCUS
 
 **TO-DO LIST:**

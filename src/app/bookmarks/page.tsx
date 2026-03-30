@@ -27,6 +27,15 @@ const CATEGORY_CONFIG: Record<string, { gradient: string; icon: string }> = {
   "Policies & Guidance": { gradient: "from-amber-500 to-amber-700", icon: "📋" },
   "Communication": { gradient: "from-pink-500 to-pink-700", icon: "💬" },
   "External Services": { gradient: "from-teal-500 to-teal-700", icon: "🔗" },
+  "Safeguarding": { gradient: "from-red-600 to-rose-700", icon: "🛡️" },
+  "Mental Health Act": { gradient: "from-indigo-600 to-violet-700", icon: "⚖️" },
+  "Patient Safety": { gradient: "from-rose-500 to-red-600", icon: "🛟" },
+  "Infection Control": { gradient: "from-emerald-500 to-green-700", icon: "🦠" },
+  "Pharmacy": { gradient: "from-cyan-500 to-blue-600", icon: "💊" },
+  "Wellbeing": { gradient: "from-orange-400 to-rose-500", icon: "❤️" },
+  "Chaplaincy": { gradient: "from-violet-400 to-purple-600", icon: "🙏" },
+  "Estates & Facilities": { gradient: "from-gray-500 to-gray-700", icon: "🏗️" },
+  "IT Support": { gradient: "from-sky-500 to-blue-700", icon: "🖥️" },
 };
 
 const COMMON_EMOJIS = ["🔗", "📞", "💚", "🧠", "🏥", "💻", "📧", "📝", "💰", "📅", "📚", "📋", "💊", "⚖️", "🗣️", "💜", "🛡️", "👶", "📹", "🏠", "☎️"];

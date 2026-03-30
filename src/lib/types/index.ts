@@ -46,6 +46,15 @@ export const BOOKMARK_CATEGORIES = [
   "Policies & Guidance",
   "Communication",
   "External Services",
+  "Safeguarding",
+  "Mental Health Act",
+  "Patient Safety",
+  "Infection Control",
+  "Pharmacy",
+  "Wellbeing",
+  "Chaplaincy",
+  "Estates & Facilities",
+  "IT Support",
 ] as const;
 
 export type BookmarkCategory = (typeof BOOKMARK_CATEGORIES)[number];

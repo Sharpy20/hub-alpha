@@ -151,7 +151,19 @@ export function BookmarkCarousel() {
       "Trust Resources": "Building2",
       "External Services": "ExternalLink",
       "Training": "GraduationCap",
+      "Training & Learning": "GraduationCap",
       "Guidelines": "FileText",
+      "Policies & Guidance": "FileText",
+      "HR & Pay": "Banknote",
+      "Communication": "MessageSquare",
+      "Mental Health Act": "Scale",
+      "Patient Safety": "HeartPulse",
+      "Infection Control": "ShieldCheck",
+      "Pharmacy": "Pill",
+      "Wellbeing": "Heart",
+      "Chaplaincy": "Church",
+      "Estates & Facilities": "Building",
+      "IT Support": "Laptop",
     };
     return iconMap[category] || "Folder";
   };

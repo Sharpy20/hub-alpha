@@ -79,9 +79,10 @@ function NavVisual() {
           <span className="text-sm font-bold">wardHub</span>
           <div className="flex-1" />
           <div className="flex gap-1">
-            <div className="px-2 py-1 bg-indigo-50 rounded text-xs text-indigo-700 font-medium">Team Diary</div>
-            <div className="px-2 py-1 bg-purple-50 rounded text-xs text-purple-700 font-medium">My Tasks</div>
+            <div className="px-2 py-1 bg-indigo-50 rounded text-xs text-indigo-700 font-medium">Diary</div>
             <div className="px-2 py-1 bg-amber-50 rounded text-xs text-amber-700 font-medium">Bookmarks</div>
+            <div className="px-2 py-1 bg-emerald-50 rounded text-xs text-emerald-700 font-medium">Guides</div>
+            <div className="px-2 py-1 bg-teal-50 rounded text-xs text-teal-700 font-medium">Patients</div>
           </div>
         </div>
         <div className="p-3 text-center text-gray-400 text-sm">
@@ -140,11 +141,11 @@ function MyTasksVisual() {
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="bg-purple-500 text-white p-2 text-sm font-bold flex items-center gap-2">
           <ClipboardList className="w-4 h-4" />
-          My Tasks (Kanban Board)
+          My Jobs (Kanban Board)
         </div>
         <div className="p-3 flex gap-2">
           <div className="flex-1 bg-gray-50 rounded p-2">
-            <div className="text-xs font-bold text-gray-700 mb-2">To Do</div>
+            <div className="text-xs font-bold text-gray-700 mb-2">Not Started</div>
             <div className="bg-white rounded p-2 text-xs border shadow-sm mb-1">Task 1</div>
             <div className="bg-white rounded p-2 text-xs border shadow-sm">Task 2</div>
           </div>
@@ -274,7 +275,7 @@ const guideSections: GuideSection[] = [
         tips: [
           "Works on desktop, tablet, and mobile",
           "All data is demo data - explore freely!",
-          "Use the Settings menu to find this guide again"
+          "Find this guide again via Help in the top nav"
         ],
         visual: <HomeVisual />,
       },
@@ -282,11 +283,11 @@ const guideSections: GuideSection[] = [
         title: "Navigation",
         description: "The top navigation bar gives you quick access to all main areas. Click any button to jump to that section.",
         tips: [
-          "Team Diary - View and manage team tasks",
-          "My Tasks - Your personal task board",
+          "Diary - Team Diary, My Diary, and My Jobs views",
           "Bookmarks - Quick links to useful resources",
-          "Referrals - Step-by-step referral workflows",
-          "Guides - Clinical how-to guides"
+          "Guides - Referral workflows and clinical how-to guides",
+          "Patients - Patient list, transfers, and discharge",
+          "More/Help/Demo Mode - Extra tools and settings"
         ],
         visual: <NavVisual />,
       },
@@ -299,22 +300,23 @@ const guideSections: GuideSection[] = [
     color: "from-indigo-500 to-purple-500",
     slides: [
       {
-        title: "Your Ward Calendar",
-        description: "The Team Diary shows all tasks for your ward across different days. You can see yesterday, today, and upcoming days at a glance.",
+        title: "Three Views in One",
+        description: "The Diary page has a three-way toggle at the top: Team Diary, My Diary, and My Jobs. Team Diary shows everything for the ward. My Diary filters to your tasks. My Jobs gives you a Kanban board.",
         tips: [
-          "Click on a task to see details or take action",
-          "Tasks are color-coded by type",
-          "Expand/collapse sections to focus on what matters"
+          "Team Diary - all tasks for the ward, all staff",
+          "My Diary - your claimed tasks plus your patients",
+          "My Jobs - Kanban board (Not Started / In Progress / Done)",
+          "Drag and drop tasks between days to reschedule"
         ],
         visual: <WardDiaryVisual />,
       },
       {
         title: "Task Types",
-        description: "There are three main task types in the diary:",
+        description: "Three task types, colour-coded so you can tell them apart at a glance:",
         tips: [
-          "Team Tasks (amber) - Recurring shift tasks like checks and handovers",
-          "Patient Tasks (purple) - Specific tasks for individual patients",
-          "Appointments (blue) - Scheduled meetings and reviews"
+          "Team Tasks (amber) - shift tasks like checks, handovers, audits",
+          "Patient Tasks (purple) - tasks for individual patients (can repeat weekly/fortnightly)",
+          "Appointments (blue) - scheduled meetings, tribunals, ward rounds"
         ],
         visual: <WardDiaryVisual />,
       },
@@ -322,17 +324,17 @@ const guideSections: GuideSection[] = [
   },
   {
     id: "my-tasks",
-    title: "My Tasks",
+    title: "My Jobs",
     icon: <ClipboardList className="w-5 h-5" />,
     color: "from-purple-500 to-pink-500",
     slides: [
       {
         title: "Your Personal Kanban Board",
-        description: "My Tasks shows only the tasks you've claimed. It's organised as a Kanban board with three columns.",
+        description: "My Jobs shows only the tasks you have claimed, laid out as a Kanban board with three columns: Not Started, In Progress, and Done.",
         tips: [
           "Claim tasks from the Team Diary to add them here",
-          "Drag tasks between columns to update status",
-          "Click a task to edit details or mark complete"
+          "Drag tasks between columns to update their status",
+          "Click a task to edit details, mark complete, or drop it"
         ],
         visual: <MyTasksVisual />,
       },
@@ -345,12 +347,13 @@ const guideSections: GuideSection[] = [
     color: "from-emerald-500 to-teal-500",
     slides: [
       {
-        title: "Profile & Settings",
-        description: "Click your name in the top-right to access your profile. Here you can switch wards, change demo settings, and log out.",
+        title: "Demo Mode Menu",
+        description: "Click 'Demo Mode' in the top-right to open the profile menu. Switch wards, roles, pick a specific staff member, and change the visual theme.",
         tips: [
-          "Switch wards to view other ward's tasks",
+          "Switch wards to view another ward's tasks",
           "Change demo role to see different permissions",
-          "Changes save automatically"
+          "Specific User - log in as any staff member on the ward",
+          "Style Theme - try iOS, Material, Windows, or Samsung looks"
         ],
         visual: <ProfileVisual />,
       },
@@ -377,17 +380,18 @@ const guideSections: GuideSection[] = [
   },
   {
     id: "settings",
-    title: "Settings Menu",
-    icon: <Settings className="w-5 h-5" />,
+    title: "Help & More",
+    icon: <HelpCircle className="w-5 h-5" />,
     color: "from-slate-500 to-slate-700",
     slides: [
       {
-        title: "Settings & Tools",
-        description: "The Settings menu in the navigation bar contains helpful tools:",
+        title: "Help & More Menus",
+        description: "The top nav has a Help button and a More dropdown with extra features:",
         tips: [
-          "Intro Guide - This guide! Come back anytime",
-          "Feedback - Share ideas and report issues during alpha",
-          "Editor - Create/edit workflows and guides (Contributors only)"
+          "Help - Interactive Demo, this Intro Guide, FAQ, and Feedback",
+          "More - Editor (create/edit guides), Staff list, Reports, Data Sources",
+          "Editor is open to everyone, but only Contributors can publish changes",
+          "Safeguarding resources are on the home page - scroll down"
         ],
         visual: <SettingsVisual />,
       },
@@ -626,8 +630,8 @@ export default function IntroGuidePage() {
                 <ClipboardList className="w-4 h-4 text-purple-600" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">My Tasks</p>
-                <p className="text-xs text-gray-500">Your claimed tasks only</p>
+                <p className="font-semibold text-gray-900 text-sm">My Jobs</p>
+                <p className="text-xs text-gray-500">Your claimed tasks (Kanban board)</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -653,8 +657,8 @@ export default function IntroGuidePage() {
                 <FileText className="w-4 h-4 text-rose-600" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">Referrals</p>
-                <p className="text-xs text-gray-500">Step-by-step workflows</p>
+                <p className="font-semibold text-gray-900 text-sm">Guides</p>
+                <p className="text-xs text-gray-500">Referral workflows and how-to guides</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -662,8 +666,8 @@ export default function IntroGuidePage() {
                 <BookOpen className="w-4 h-4 text-emerald-600" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">Guides</p>
-                <p className="text-xs text-gray-500">Clinical how-to guides</p>
+                <p className="font-semibold text-gray-900 text-sm">Safeguarding</p>
+                <p className="text-xs text-gray-500">Home page hub with decision helper</p>
               </div>
             </div>
           </div>

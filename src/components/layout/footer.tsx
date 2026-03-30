@@ -67,7 +67,7 @@ export function Footer() {
           <p className="text-xs text-white/40 font-medium tracking-wider uppercase">
             Derbyshire Healthcare NHS Foundation Trust
           </p>
-          <p>&copy; {currentYear} wardHub &mdash; Alpha Demo. Not for clinical use.</p>
+          <p>&copy; {currentYear} wardHub &ndash; Alpha Demo. Not for clinical use.</p>
           <div className="flex items-center justify-center gap-4 text-xs text-white/50">
             <Link href="/gdpr" className="hover:text-white transition-colors">Privacy</Link>
             <span>|</span>

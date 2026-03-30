@@ -278,6 +278,15 @@ export default function HomePage() {
           )}
         </section>
 
+        {/* Live demo notice */}
+        <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
+          <span className="text-lg flex-shrink-0">🔧</span>
+          <div>
+            <p className="text-sm font-medium text-amber-900">This site is under active development.</p>
+            <p className="text-xs text-amber-700 mt-0.5">Things may change between visits. All data is fictional. Not for clinical use.</p>
+          </div>
+        </div>
+
         {/* Bookmark Carousel */}
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">

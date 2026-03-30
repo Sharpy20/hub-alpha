@@ -727,7 +727,7 @@ function DayColumn({
       onDragLeave={onDayDragLeave}
       onDrop={onDayDrop}
       className={`flex-shrink-0 transition-all duration-300 cursor-pointer ${
-        isFocused ? "w-72 sm:w-80" : "w-44 sm:w-52"
+        isFocused ? "w-80 sm:w-96" : "w-48 sm:w-52"
       } bg-white rounded-xl border-2 ${
         isDragOver
           ? "border-nhs-blue border-dashed shadow-xl bg-blue-50/50"
@@ -2355,7 +2355,7 @@ function TasksPageInner() {
   });
   const [showDiarySettings, setShowDiarySettings] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [focusedDate, setFocusedDate] = useState<string>("");
+  const [focusedDate, setFocusedDate] = useState<string>(() => formatDate(new Date()));
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
   // My Patients toggle - forced on in My Diary mode

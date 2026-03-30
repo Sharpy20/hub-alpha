@@ -849,6 +849,11 @@ Working through in order. Marking complete as fixed.
 | 122 | [x] | Intro guide deep review - updated nav, renamed My Jobs, added three-way toggle, safeguarding, themes |
 | 123 | [x] | Diary UX declutter - animated sections, compact headers, inline expand button |
 | 124 | [x] | Changed "[INTERNAL - See FOCUS]" to "Hidden in demo mode" across bookmarks, guides, and dev panel |
+| 125 | [x] | Live demo disclaimer on home page ("This site is under active development") |
+| 126 | [x] | FOCUS data integrated: 52 new bookmarks (89 total) across 8 new categories |
+| 127 | [x] | Diary scroll fix: today centred on load (focusedDate initialised to today) |
+| 128 | [x] | Diary width fix: focused column wider (w-80/w-96) so tasks are readable |
+| 129 | [x] | Removed Weekly Schedule grid from Repeat Team Tasks modal (cluttered duplicate) |
 
 ---
 

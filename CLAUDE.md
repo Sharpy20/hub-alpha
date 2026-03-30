@@ -843,11 +843,12 @@ Working through in order. Marking complete as fixed.
 | 116 | [x] | Full rename: "Ward Diary" to "Team Diary", "Ward Tasks" to "Team Tasks" across 15 files (~70 replacements) |
 | 117 | [x] | Demo mode: "Specific User" picker shows 20 staff from current ward with name + role |
 | 118 | [x] | Editor: merged Guides + How-To cards into one, removed Ward Settings card |
-| 119 | [ ] | **DEFERRED** Repeatable patient tasks (every 7/14/28 days or custom) |
-| 120 | [ ] | **DEFERRED** Style themes (iPhone/Android/Windows feel) |
-| 121 | [ ] | **DEFERRED** Em dash removal + full site content audit |
-| 122 | [ ] | **DEFERRED** Intro guide content update (depends on rename) |
-| 123 | [ ] | **DEFERRED** Diary UX declutter (expand/collapse feel, minimize icon position) |
+| 119 | [x] | Repeatable patient tasks (daily/weekly/fortnightly/4-weekly) with interval picker in Add Task modal |
+| 120 | [x] | Style themes (NHS Default, iOS, Material, Windows Fluent, Samsung OneUI) in Demo Mode dropdown |
+| 121 | [x] | Em dash removal - zero em dashes remaining in src/, 39 HTML entities fixed in Dev Panel |
+| 122 | [x] | Intro guide deep review - updated nav, renamed My Jobs, added three-way toggle, safeguarding, themes |
+| 123 | [x] | Diary UX declutter - animated sections, compact headers, inline expand button |
+| 124 | [x] | Changed "[INTERNAL - See FOCUS]" to "Hidden in demo mode" across bookmarks, guides, and dev panel |
 
 ---
 
@@ -858,22 +859,22 @@ Working through in order. Marking complete as fixed.
 ### UX & Visual Customisation
 | # | Status | Description |
 |---|--------|-------------|
-| 71 | [ ] | **Light/Dark mode toggle** - user preference saved to localStorage, respects system preference, toggle in profile/settings dropdown |
-| 72 | [ ] | **Visual customisation options** - font size (small/medium/large), compact vs comfortable spacing, high contrast mode for accessibility |
-| 73 | [ ] | **Colour theme options** - NHS Blue (default), NHS Dark, Warm, High Contrast — applied via CSS custom properties |
+| 71 | [x] | **Light/Dark mode toggle** - Light/Dark/Auto in Demo Mode dropdown, persisted to localStorage |
+| 72 | [x] | **Style themes** - 5 themes (NHS, iOS, Material, Windows Fluent, Samsung OneUI) via CSS custom properties |
+| 73 | [x] | **Appearance settings** - Dark mode CSS overrides for all key elements |
 
 ### Dev Panel & Governance
 | # | Status | Description |
 |---|--------|-------------|
-| 62 | [ ] | Complete remaining Dev Panel sections (expand content) |
-| 63 | [ ] | Add "Export to PDF" buttons |
-| 64 | [ ] | Add Q&A Pack for stakeholders |
-| 65 | [ ] | Add Role-specific Evaluations section |
+| 62 | [x] | Dev Panel sections expanded (content + em dash cleanup) |
+| 63 | [x] | Print buttons on Q&A Pack and Evaluations sections |
+| 64 | [x] | Q&A Pack - 12 stakeholder questions with answers |
+| 65 | [x] | Role-specific Evaluations - 5 perspectives (Staff, Manager, IT, IG, Patient) |
 
 ### Polish & Quality
 | # | Status | Description |
 |---|--------|-------------|
-| 74 | [ ] | Mobile responsiveness pass (all pages) |
+| 74 | [x] | Mobile responsiveness pass (quick actions, bookmarks, diary, safeguarding grid, intro guide) |
 | 75 | [ ] | Loading skeletons on data-heavy pages (patients, tasks, diary) |
 | 76 | [ ] | Keyboard navigation for ward diary |
 | 77 | [ ] | End-to-end walkthrough testing |
@@ -902,6 +903,17 @@ Working through in order. Marking complete as fixed.
 - ✅ Editor: merged Guides + How-To cards, removed Ward Settings
 - ✅ Contact data classification table added to Dev Panel
 - ✅ FOCUS data collection: 300+ entries across 6 Chrome Claude sessions saved to docs/
+
+**Recently Completed (30 Mar 2026 - Session 15 - Overnight Batch):**
+- ✅ #124: "[INTERNAL - See FOCUS]" replaced with "Hidden in demo mode" across bookmarks, guides, dev panel
+- ✅ #121: Em dash removal - zero em dashes in src/, 39 HTML entities fixed in dev panel
+- ✅ #119: Repeatable patient tasks - daily/weekly/fortnightly/4-weekly with interval picker and repeat icon
+- ✅ #120: Style themes - 5 themes (NHS, iOS, Material, Windows Fluent, Samsung OneUI) with CSS variables
+- ✅ #122: Intro guide deep review - updated nav, My Jobs, three-way toggle, safeguarding, themes
+- ✅ #123: Diary UX declutter - animated expand/collapse, compact headers, inline minimize button
+- ✅ #71-73: Light/Dark mode toggle (Light/Dark/Auto) with dark CSS overrides
+- ✅ #74: Mobile responsiveness - quick actions, bookmarks header, diary columns, safeguarding grid
+- ✅ #62-65: Dev Panel expansion - Q&A Pack (12 questions), Role Evaluations (5 perspectives), print buttons
 
 **Previously Completed (29 Mar 2026 - Session 13 — Diary Fixes + Safeguarding Hub):**
 - ✅ **Safeguarding Hub** on home page: bold red banner, 999 strip, 4 quick-link cards, decision helper

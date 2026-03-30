@@ -91,38 +91,9 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Ward Admin cards */}
-        {isWardAdmin && (
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* Ward Settings card */}
-            <Link href="/admin/ward-settings" className="block no-underline">
-              <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer group">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <Settings className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                      Ward Settings
-                    </h2>
-                    <p className="text-gray-500">Configure your ward</p>
-                  </div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm">
-                  Patient entry fields, task categories, shifts, discharge checklist, and more.
-                </p>
-                <div className="flex items-center gap-2 text-indigo-600 font-semibold group-hover:gap-3 transition-all text-sm">
-                  Configure
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            </Link>
-          </div>
-        )}
-
-        {/* Content Admin cards - order matches header nav: Bookmarks, Guides, How-To */}
+        {/* Content Admin cards */}
         {isContentAdmin && (
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-6">
           {/* Bookmarks card */}
           <Link href="/admin/bookmarks" className="block no-underline">
             <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-amber-300 hover:shadow-lg transition-all cursor-pointer group">
@@ -147,7 +118,7 @@ export default function AdminPage() {
             </div>
           </Link>
 
-          {/* Guides card */}
+          {/* Guides card (merged referral guides + how-to guides) */}
           <Link href="/admin/workflows" className="block no-underline">
             <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-rose-300 hover:shadow-lg transition-all cursor-pointer group">
               <div className="flex items-center gap-4 mb-4">
@@ -158,37 +129,13 @@ export default function AdminPage() {
                   <h2 className="text-xl font-bold text-gray-900 group-hover:text-rose-600 transition-colors">
                     Guides
                   </h2>
-                  <p className="text-gray-500">{WORKFLOW_COUNT} referral guides</p>
+                  <p className="text-gray-500">{WORKFLOW_COUNT} referral + {GUIDE_COUNT} how-to guides</p>
                 </div>
               </div>
               <p className="text-gray-600 mb-4 text-sm">
-                Edit referral guides, steps, forms, and case note templates.
+                Edit referral workflows, how-to guides, steps, forms, and case note templates.
               </p>
               <div className="flex items-center gap-2 text-rose-600 font-semibold group-hover:gap-3 transition-all text-sm">
-                Manage
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </div>
-          </Link>
-
-          {/* How-To card */}
-          <Link href="/admin/guides" className="block no-underline">
-            <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-emerald-300 hover:shadow-lg transition-all cursor-pointer group">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-xl flex items-center justify-center">
-                  <BookOpen className="w-7 h-7 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors">
-                    How-To
-                  </h2>
-                  <p className="text-gray-500">{GUIDE_COUNT} how-to guides</p>
-                </div>
-              </div>
-              <p className="text-gray-600 mb-4 text-sm">
-                Edit how-to guides, add content, steps, and helpful tips.
-              </p>
-              <div className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-3 transition-all text-sm">
                 Manage
                 <ArrowRight className="w-4 h-4" />
               </div>

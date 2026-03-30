@@ -173,7 +173,7 @@ export default function MyTasksPage() {
             {/* View toggle */}
             <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1">
               <Link href="/tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
-                Ward Diary
+                Team Diary
               </Link>
               <Link href="/my-diary" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
                 My Diary
@@ -207,7 +207,7 @@ export default function MyTasksPage() {
             className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all no-underline"
           >
             <CalendarDays className="w-5 h-5" />
-            Ward Diary
+            Team Diary
           </Link>
 
           {/* Add my patients tasks toggle */}
@@ -234,7 +234,7 @@ export default function MyTasksPage() {
             <div>
               <p className="font-medium text-blue-800">No tasks claimed yet</p>
               <p className="text-sm text-blue-600 mt-1">
-                Go to the <Link href="/tasks" className="underline font-medium">Ward Diary</Link> and
+                Go to the <Link href="/tasks" className="underline font-medium">Team Diary</Link> and
                 click &quot;Claim&quot; on tasks to add them to your personal board. Claimed tasks will
                 appear here where you can track your progress.
               </p>
@@ -256,11 +256,11 @@ export default function MyTasksPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
               <p className="font-medium text-gray-900 mb-1">📋 Today</p>
-              <p className="text-gray-500">Tasks you&apos;ve claimed from the Ward Diary. These are your priorities for today.</p>
+              <p className="text-gray-500">Tasks you&apos;ve claimed from the Team Diary. These are your priorities for today.</p>
             </div>
             <div>
               <p className="font-medium text-gray-900 mb-1">🔄 In Progress</p>
-              <p className="text-gray-500">Drag tasks here when you start working on them. The Ward Diary shows &quot;{user.name} working on&quot;.</p>
+              <p className="text-gray-500">Drag tasks here when you start working on them. The Team Diary shows &quot;{user.name} working on&quot;.</p>
             </div>
             <div>
               <p className="font-medium text-gray-900 mb-1">✅ Completed</p>

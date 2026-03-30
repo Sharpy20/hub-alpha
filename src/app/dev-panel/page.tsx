@@ -882,7 +882,7 @@ function DataCatalogueSection() {
                   <td className="p-2">Supabase</td>
                 </tr>
                 <tr>
-                  <td className="p-2 font-medium">Ward Tasks</td>
+                  <td className="p-2 font-medium">Team Tasks</td>
                   <td className="p-2"><span className="text-nhs-green">No</span></td>
                   <td className="p-2">Max+</td>
                   <td className="p-2">Supabase</td>
@@ -1261,7 +1261,7 @@ User                          Portal                        External
             </li>
             <li className="flex gap-2">
               <span className="w-6 h-6 rounded-full bg-nhs-blue text-white flex items-center justify-center text-xs flex-shrink-0">2</span>
-              <span>Task appears on Ward Diary for due date/shift</span>
+              <span>Task appears on Team Diary for due date/shift</span>
             </li>
             <li className="flex gap-2">
               <span className="w-6 h-6 rounded-full bg-nhs-blue text-white flex items-center justify-center text-xs flex-shrink-0">3</span>

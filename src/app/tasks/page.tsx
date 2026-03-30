@@ -661,9 +661,9 @@ function DayColumn({
   const isToday = date === todayDate;
 
   // Section expanded/collapsed rules:
-  // PAST:   ward tasks=hidden, patient tasks=collapsed, appointments=expanded
-  // TODAY:  ward tasks=expanded, patient tasks=expanded, appointments=expanded
-  // FUTURE: ward tasks=collapsed, patient tasks=collapsed, appointments=expanded
+  // PAST:   team tasks=hidden, patient tasks=collapsed, appointments=expanded
+  // TODAY:  team tasks=expanded, patient tasks=expanded, appointments=expanded
+  // FUTURE: team tasks=collapsed, patient tasks=collapsed, appointments=expanded
   // FOCUSED (any day): all sections expanded
   const getExpandedForState = (): SectionExpandState => {
     if (isFocused) return { wardTasks: true, patientTasks: true, appointments: true };
@@ -774,9 +774,9 @@ function DayColumn({
 
       {/* Tasks content - always show, with compact mode for non-focused */}
       <div className={`${isFocused ? "p-3" : "p-2"} max-h-[65vh] overflow-y-auto`}>
-        {/* Ward Tasks */}
+        {/* Team Tasks */}
         <CollapsibleSection
-          title="Ward Tasks"
+          title="Team Tasks"
           icon="🏥"
           count={visibleWardTasks.length}
           expanded={wardTasksExpanded}
@@ -1057,7 +1057,7 @@ function AddTaskModal({
 
         <div className="grid grid-cols-3 gap-2 mb-4">
           {[
-            { type: "ward" as const, icon: "🏥", label: "Ward Task" },
+            { type: "ward" as const, icon: "🏥", label: "Team Task" },
             { type: "patient" as const, icon: "👤", label: "Patient Task" },
             { type: "appointment" as const, icon: "📅", label: "Appointment" },
           ].map((opt) => (
@@ -1542,7 +1542,7 @@ function AddTaskModal({
           </div>
         )}
 
-        {/* How-to guide link - for non-referral patient tasks and ward tasks */}
+        {/* How-to guide link - for non-referral patient tasks and team tasks */}
         {((taskType === "patient" && category !== "referral") || taskType === "ward") && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1634,7 +1634,7 @@ function AddTaskModal({
   );
 }
 
-// Repeat Ward Tasks Modal - shows Mon-Sun overview
+// Repeat Team Tasks Modal - shows Mon-Sun overview
 function RepeatWardTasksModal({
   isOpen,
   onClose,
@@ -1650,7 +1650,7 @@ function RepeatWardTasksModal({
 }) {
   if (!isOpen) return null;
 
-  // Filter only recurring ward tasks
+  // Filter only recurring team tasks
   const recurringTasks = tasks.filter((t) => t.isRecurring);
 
   // Days of the week
@@ -1676,7 +1676,7 @@ function RepeatWardTasksModal({
           <div className="flex items-center gap-3">
             <Repeat className="w-6 h-6" />
             <div>
-              <h2 className="text-xl font-bold">Repeating Ward Tasks</h2>
+              <h2 className="text-xl font-bold">Repeating Team Tasks</h2>
               <p className="text-white/70 text-sm">{recurringTasks.length} recurring task{recurringTasks.length !== 1 ? "s" : ""}</p>
             </div>
           </div>
@@ -1690,12 +1690,12 @@ function RepeatWardTasksModal({
           {recurringTasks.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-5xl mb-4">🔄</p>
-              <p className="text-gray-700 font-semibold text-lg">No repeating ward tasks yet</p>
+              <p className="text-gray-700 font-semibold text-lg">No repeating team tasks yet</p>
               <p className="text-gray-500 text-sm mt-2 max-w-xs mx-auto">
                 Repeating tasks help ensure routine ward activities happen every shift.
               </p>
               <p className="text-gray-400 text-xs mt-3">
-                Create a ward task and toggle &quot;Repeating Task&quot; to add it here
+                Create a team task and toggle &quot;Repeating Task&quot; to add it here
               </p>
             </div>
           ) : (
@@ -1917,7 +1917,7 @@ function ExpandedDayView({
       return true;
     });
 
-    // Filter ward tasks by shift
+    // Filter team tasks by shift
     filtered = filtered.filter(t => {
       if (t.type === "ward") {
         const wardTask = t as WardTask;
@@ -1935,7 +1935,7 @@ function ExpandedDayView({
   const patientTasks = filterTasks(tasks.filter(t => t.type === "patient")) as PatientTask[];
   const appointments = filterTasks(tasks.filter(t => t.type === "appointment")) as Appointment[];
 
-  // Group ward tasks by shift
+  // Group team tasks by shift
   const earlyTasks = wardTasks.filter(t => t.shift === "early");
   const lateTasks = wardTasks.filter(t => t.shift === "late");
   const nightTasks = wardTasks.filter(t => t.shift === "night");
@@ -2002,7 +2002,7 @@ function ExpandedDayView({
                       : "bg-gray-100 text-gray-400 line-through"
                   }`}
                 >
-                  🏥 Ward Tasks
+                  🏥 Team Tasks
                 </button>
               )}
               <button
@@ -2099,7 +2099,7 @@ function ExpandedDayView({
                       <input type="checkbox" checked={hideCompleted} onChange={(e) => onHideCompletedChange(e.target.checked)} className="rounded border-gray-300 text-indigo-600 w-3.5 h-3.5" />
                     </label>
                     <label className="flex items-center justify-between px-3 py-1.5 hover:bg-gray-50 cursor-pointer">
-                      <span className="text-xs text-gray-700">Show ward tasks</span>
+                      <span className="text-xs text-gray-700">Show team tasks</span>
                       <input type="checkbox" checked={showWardTasksSetting} onChange={(e) => onShowWardTasksChange(e.target.checked)} className="rounded border-gray-300 text-indigo-600 w-3.5 h-3.5" />
                     </label>
                     <div className="px-3 pt-2 pb-1 border-t border-gray-100 mt-1">
@@ -2136,10 +2136,10 @@ function ExpandedDayView({
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Ward Tasks Column — always show header */}
+              {/* Team Tasks Column — always show header */}
               <div className="space-y-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  🏥 Ward Tasks
+                  🏥 Team Tasks
                   <span className="text-sm font-normal text-gray-500">
                     ({wardTasks.length})
                   </span>
@@ -2185,7 +2185,7 @@ function ExpandedDayView({
                   </>
                 ) : (
                   <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
-                    None scheduled — tap to add ward task
+                    None scheduled — tap to add team task
                   </button>
                 )}
               </div>
@@ -2463,7 +2463,7 @@ function TasksPageInner() {
   // Get staff for lead/manager staff filter
   const wardStaffList = isLeadOrManager ? getStaffByWard(activeWard) : [];
 
-  // Get ward tasks for repeat modal
+  // Get team tasks for repeat modal
   const wardTasks = tasks.filter((t) => t.type === "ward" && t.ward === activeWard) as WardTask[];
 
   // Get tasks for a specific date, filtered by activeWard + optional filters
@@ -2488,11 +2488,11 @@ function TasksPageInner() {
           }
         }
         if (task.type === "ward") {
-          // Only show ward tasks I claimed or unclaimed ones I could pick up
+          // Only show team tasks I claimed or unclaimed ones I could pick up
           if (task.claimedBy && task.claimedBy !== user?.name) return false;
         }
       } else if (showMyPatients && myPatientIds.length > 0) {
-        // Ward Diary with My Patients toggle on
+        // Team Diary with My Patients toggle on
         if (task.type === "patient" || task.type === "appointment") {
           if (!task.patientId || !myPatientIds.includes(task.patientId)) return false;
         }
@@ -2505,7 +2505,7 @@ function TasksPageInner() {
       }
 
       if (task.type === "ward") {
-        // Recurring ward tasks show on every matching day of the week
+        // Recurring team tasks show on every matching day of the week
         const days = Array.isArray(task.recurringDays) ? task.recurringDays : [];
         if (task.isRecurring && days.length > 0) {
           const targetDayOfWeek = new Date(date + "T12:00:00").getDay();
@@ -2533,7 +2533,7 @@ function TasksPageInner() {
       <MainLayout>
         <div className="text-center py-16">
           <p className="text-6xl mb-4">🔒</p>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Ward Diary</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Team Diary</h1>
           <p className="text-gray-500 mb-4">
             This feature requires <span className="font-semibold text-purple-600">Max</span> version or higher.
           </p>
@@ -2571,7 +2571,7 @@ function TasksPageInner() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{isMyDiaryMode ? "📋 My Diary" : "📋 Ward Diary"}</h1>
+              <h1 className="text-3xl font-bold text-gray-900">{isMyDiaryMode ? "📋 My Diary" : "📋 Team Diary"}</h1>
               <p className="text-gray-600">
                 {isMyDiaryMode ? `${user?.name} · ` : ""}{activeWard} Ward · {formatDisplayDate(focusedDate || todayStr)}
               </p>
@@ -2580,11 +2580,11 @@ function TasksPageInner() {
             <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1">
               {isMyDiaryMode ? (
                 <Link href="/tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
-                  Ward Diary
+                  Team Diary
                 </Link>
               ) : (
                 <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
-                  Ward Diary
+                  Team Diary
                 </div>
               )}
               {isMyDiaryMode ? (
@@ -2679,7 +2679,7 @@ function TasksPageInner() {
             </button>
           )}
 
-          {/* Staff Tasks filter - Lead/Manager/Ward Admin only, Ward Diary only */}
+          {/* Staff Tasks filter - Lead/Manager/Ward Admin only, Team Diary only */}
           {(user?.role === "lead" || user?.role === "manager" || user?.role === "ward_admin") && !isMyDiaryMode && (
             <div className="relative">
               <button
@@ -2796,7 +2796,7 @@ function TasksPageInner() {
                     />
                   </label>
                   <label className="flex items-center justify-between px-3 py-1.5 hover:bg-gray-50 cursor-pointer">
-                    <span className="text-xs text-gray-700">Show ward tasks</span>
+                    <span className="text-xs text-gray-700">Show team tasks</span>
                     <input
                       type="checkbox"
                       checked={showWardTasksSetting}
@@ -2878,7 +2878,7 @@ function TasksPageInner() {
           <h3 className="font-semibold text-gray-900 mb-3">📚 Diary Key</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             <div>
-              <p className="font-medium text-gray-900 mb-1">🏥 Ward Tasks</p>
+              <p className="font-medium text-gray-900 mb-1">🏥 Team Tasks</p>
               <p className="text-gray-500">Shift-based (today only)</p>
             </div>
             <div>

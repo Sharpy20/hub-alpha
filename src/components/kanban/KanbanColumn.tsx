@@ -74,7 +74,7 @@ export function KanbanColumn({
               </p>
               <p className="text-xs mt-1 text-gray-300">
                 {title === "Not Started"
-                  ? "Claim tasks from the Ward Diary"
+                  ? "Claim tasks from the Team Diary"
                   : title === "In Progress"
                   ? "Drag tasks here when working"
                   : "Complete tasks to see them here"}

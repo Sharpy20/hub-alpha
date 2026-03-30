@@ -151,7 +151,7 @@ const GUIDES: Record<string, GuideData> = {
         id: "3",
         title: "Recording on Assurance Dashboard",
         content: "1. Log into FOCUS and navigate to Assurance Dashboard\n2. Select 'Fridge Temperature' audit\n3. Select your ward\n4. Enter the current temperature reading\n5. If min/max available, enter those too\n6. Add any notes if temperature was out of range\n7. Submit the audit\n\nThe dashboard will flag any out-of-range readings automatically.",
-        tip: "In Max+ version, completing on the dashboard will auto-complete this task in the Ward Diary.",
+        tip: "In Max+ version, completing on the dashboard will auto-complete this task in the Team Diary.",
       },
       {
         id: "4",

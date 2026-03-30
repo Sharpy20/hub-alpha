@@ -6,7 +6,7 @@ export function DiaryMockup() {
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden max-w-md mx-auto">
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-3 text-white text-center">
-        <p className="font-bold text-sm">Ward Diary — Byron Ward</p>
+        <p className="font-bold text-sm">Team Diary — Byron Ward</p>
         <p className="text-xs text-white/70">Week View</p>
       </div>
       <div className="grid grid-cols-3 gap-px bg-gray-200">

@@ -52,7 +52,7 @@ function HomeVisual() {
           <span className="font-bold text-gray-800">Quick Actions</span>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          <div className="bg-indigo-50 rounded p-2 text-xs font-medium text-indigo-700">Ward Diary</div>
+          <div className="bg-indigo-50 rounded p-2 text-xs font-medium text-indigo-700">Team Diary</div>
           <div className="bg-purple-50 rounded p-2 text-xs font-medium text-purple-700">My Tasks</div>
           <div className="bg-amber-50 rounded p-2 text-xs font-medium text-amber-700">Bookmarks</div>
           <div className="bg-rose-50 rounded p-2 text-xs font-medium text-rose-700">Referrals</div>
@@ -79,7 +79,7 @@ function NavVisual() {
           <span className="text-sm font-bold">wardHub</span>
           <div className="flex-1" />
           <div className="flex gap-1">
-            <div className="px-2 py-1 bg-indigo-50 rounded text-xs text-indigo-700 font-medium">Ward Diary</div>
+            <div className="px-2 py-1 bg-indigo-50 rounded text-xs text-indigo-700 font-medium">Team Diary</div>
             <div className="px-2 py-1 bg-purple-50 rounded text-xs text-purple-700 font-medium">My Tasks</div>
             <div className="px-2 py-1 bg-amber-50 rounded text-xs text-amber-700 font-medium">Bookmarks</div>
           </div>
@@ -103,7 +103,7 @@ function WardDiaryVisual() {
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="bg-indigo-500 text-white p-2 text-sm font-bold flex items-center gap-2">
           <CalendarDays className="w-4 h-4" />
-          Ward Diary
+          Team Diary
         </div>
         <div className="p-3">
           <div className="flex gap-2 mb-3">
@@ -120,7 +120,7 @@ function WardDiaryVisual() {
           <div className="space-y-1">
             <div className="flex items-center gap-2 bg-amber-50 rounded p-2 text-xs">
               <div className="w-2 h-2 bg-amber-500 rounded-full" />
-              <span>Ward Task: Morning checks</span>
+              <span>Team Task: Morning checks</span>
             </div>
             <div className="flex items-center gap-2 bg-purple-50 rounded p-2 text-xs">
               <div className="w-2 h-2 bg-purple-500 rounded-full" />
@@ -282,7 +282,7 @@ const guideSections: GuideSection[] = [
         title: "Navigation",
         description: "The top navigation bar gives you quick access to all main areas. Click any button to jump to that section.",
         tips: [
-          "Ward Diary - View and manage ward tasks",
+          "Team Diary - View and manage team tasks",
           "My Tasks - Your personal task board",
           "Bookmarks - Quick links to useful resources",
           "Referrals - Step-by-step referral workflows",
@@ -294,13 +294,13 @@ const guideSections: GuideSection[] = [
   },
   {
     id: "ward-diary",
-    title: "Ward Diary",
+    title: "Team Diary",
     icon: <CalendarDays className="w-5 h-5" />,
     color: "from-indigo-500 to-purple-500",
     slides: [
       {
         title: "Your Ward Calendar",
-        description: "The Ward Diary shows all tasks for your ward across different days. You can see yesterday, today, and upcoming days at a glance.",
+        description: "The Team Diary shows all tasks for your ward across different days. You can see yesterday, today, and upcoming days at a glance.",
         tips: [
           "Click on a task to see details or take action",
           "Tasks are color-coded by type",
@@ -312,7 +312,7 @@ const guideSections: GuideSection[] = [
         title: "Task Types",
         description: "There are three main task types in the diary:",
         tips: [
-          "Ward Tasks (amber) - Recurring shift tasks like checks and handovers",
+          "Team Tasks (amber) - Recurring shift tasks like checks and handovers",
           "Patient Tasks (purple) - Specific tasks for individual patients",
           "Appointments (blue) - Scheduled meetings and reviews"
         ],
@@ -330,7 +330,7 @@ const guideSections: GuideSection[] = [
         title: "Your Personal Kanban Board",
         description: "My Tasks shows only the tasks you've claimed. It's organised as a Kanban board with three columns.",
         tips: [
-          "Claim tasks from the Ward Diary to add them here",
+          "Claim tasks from the Team Diary to add them here",
           "Drag tasks between columns to update status",
           "Click a task to edit details or mark complete"
         ],
@@ -617,8 +617,8 @@ export default function IntroGuidePage() {
                 <CalendarDays className="w-4 h-4 text-indigo-600" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">Ward Diary</p>
-                <p className="text-xs text-gray-500">View all ward tasks by day</p>
+                <p className="font-semibold text-gray-900 text-sm">Team Diary</p>
+                <p className="text-xs text-gray-500">View all team tasks by day</p>
               </div>
             </div>
             <div className="flex items-start gap-3">

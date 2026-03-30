@@ -37,9 +37,9 @@ const FEATURE_CATEGORIES = [
     ],
   },
   {
-    name: "Ward Diary & Tasks",
+    name: "Team Diary & Tasks",
     features: [
-      { name: "Ward tasks", light: false, medium: false, max: true, maxPlus: true },
+      { name: "Team tasks", light: false, medium: false, max: true, maxPlus: true },
       { name: "Patient tasks", light: false, medium: false, max: true, maxPlus: true },
       { name: "Appointments", light: false, medium: false, max: true, maxPlus: true },
       { name: "My Tasks view", light: false, medium: false, max: true, maxPlus: true },

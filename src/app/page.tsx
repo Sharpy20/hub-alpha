@@ -259,7 +259,7 @@ export default function HomePage() {
             {user ? `Welcome, ${user.name}` : "wardHub"}
           </h1>
           <p className="text-white/80 text-base max-w-xl mx-auto">
-            Interactive guides, ward diary and quick access to the resources you need.
+            Interactive guides, team diary and quick access to the resources you need.
           </p>
           {user && (
             <div className="flex items-center justify-center gap-6 mt-2 text-sm text-white/70">

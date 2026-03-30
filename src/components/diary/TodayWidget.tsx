@@ -264,12 +264,12 @@ export function TodayWidget() {
       {/* Three columns */}
       <div className="grid grid-cols-3 gap-3 mb-4">
         <TaskColumn
-          title="Ward Tasks"
+          title="Team Tasks"
           icon="🏥"
           tasks={wardTasks}
           gradient="from-amber-500 to-orange-600"
           onToggleComplete={handleToggleComplete}
-          emptyMessage="No ward tasks"
+          emptyMessage="No team tasks"
         />
         <TaskColumn
           title="Patient Tasks"

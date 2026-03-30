@@ -26,7 +26,7 @@ const FAQ_ITEMS: FAQItem[] = [
           <li>Quick access bookmarks to frequently used services and helplines</li>
           <li>Step-by-step referral workflows with copy-to-clipboard case note prompts</li>
           <li>How-to guides for clinical procedures and ward tasks</li>
-          <li>Ward diary and task management</li>
+          <li>Team diary and task management</li>
           <li>Patient list and discharge tracking</li>
         </ul>
         <p>
@@ -149,7 +149,7 @@ const FAQ_ITEMS: FAQItem[] = [
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Referral tracking and documentation</li>
-          <li>Ward task management</li>
+          <li>Team task management</li>
           <li>Patient discharge planning</li>
           <li>Quick access to clinical resources</li>
         </ul>

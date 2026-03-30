@@ -890,7 +890,15 @@ Working through in order. Marking complete as fixed.
 
 ---
 
-**Recently Completed (30 Mar 2026 - Session 14 — Bug Fixes, Rename & UX):**
+**Recently Completed (30 Mar 2026 - Session 15b - FOCUS Integration):**
+- ✅ Live demo disclaimer added to home page (friendly dev note below hero)
+- ✅ Footer em dash fixed (&mdash; to &ndash;)
+- ✅ FOCUS data integrated: 52 new bookmarks across 8 new categories (89 total, up from 37)
+- ✅ New categories: Mental Health Act, Patient Safety, Infection Control, Pharmacy, Wellbeing, Chaplaincy, Estates & Facilities, IT Support
+- ✅ Category configs and carousel icons updated for all new categories
+- ✅ Trust-internal numbers shown as "Hidden in demo mode" with real data in code comments
+
+**Previously Completed (30 Mar 2026 - Session 14 — Bug Fixes, Rename & UX):**
 - ✅ Follow-up task bug fixed (created task after patient picker, added second example)
 - ✅ TodayWidget: 3 nav buttons (Team Diary / My Diary / My Jobs) replacing footer links
 - ✅ Safeguarding section merged into one clean white card (dropped heavy red gradient)

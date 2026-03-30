@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useApp } from "@/app/providers";
+import { useApp, STYLE_THEMES, type StyleTheme } from "@/app/providers";
 import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Bookmark, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
@@ -10,7 +10,7 @@ import { getStaffByWard } from "@/lib/data/staff";
 
 export function Header() {
   const router = useRouter();
-  const { user, setUser, activeWard, setActiveWard, allWards } = useApp();
+  const { user, setUser, activeWard, setActiveWard, allWards, styleTheme, setStyleTheme } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [settingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
@@ -357,6 +357,33 @@ export function Header() {
                             ))}
                           </div>
                         )}
+                      </div>
+
+                      {/* Style theme picker */}
+                      <div className="p-3 border-b border-gray-100">
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                          🎨 Style Theme
+                        </p>
+                        <div className="grid grid-cols-5 gap-1">
+                          {(Object.entries(STYLE_THEMES) as [StyleTheme, typeof STYLE_THEMES[StyleTheme]][]).map(([key, config]) => (
+                            <button
+                              key={key}
+                              onClick={() => {
+                                setStyleTheme(key);
+                                setSavedFeedback("Theme");
+                              }}
+                              className={`p-1.5 rounded text-center transition-all ${
+                                styleTheme === key
+                                  ? "bg-indigo-100 text-indigo-700 ring-2 ring-indigo-400"
+                                  : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                              }`}
+                              title={config.description}
+                            >
+                              <span className="text-base block">{config.icon}</span>
+                              <span className="text-[9px] font-medium leading-tight block">{config.label}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                       <button

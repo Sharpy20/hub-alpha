@@ -10,6 +10,17 @@ const capitalizeWard = (ward: string): string => {
 
 export type UserRole = "staff" | "lead" | "manager" | "ward_admin" | "senior_admin";
 
+// Style themes
+export type StyleTheme = "nhs" | "ios" | "material" | "fluent" | "oneui";
+
+export const STYLE_THEMES: Record<StyleTheme, { label: string; icon: string; description: string }> = {
+  nhs: { label: "NHS Default", icon: "🏥", description: "Clean NHS styling" },
+  ios: { label: "iOS", icon: "🍎", description: "Apple Calendar feel" },
+  material: { label: "Material", icon: "🤖", description: "Google Calendar feel" },
+  fluent: { label: "Windows", icon: "🪟", description: "Windows Calendar feel" },
+  oneui: { label: "Samsung", icon: "📱", description: "Samsung Calendar feel" },
+};
+
 interface User {
   name: string;
   role: UserRole;
@@ -41,6 +52,8 @@ interface AppContextType {
   activeWard: string;
   setActiveWard: (ward: string) => void;
   allWards: readonly string[];
+  styleTheme: StyleTheme;
+  setStyleTheme: (theme: StyleTheme) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -49,6 +62,7 @@ export function Providers({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [gdprAccepted, setGdprAccepted] = useState(false);
   const [activeWard, setActiveWardState] = useState<string>(capitalizeWard(WARD_IDS[0]));
+  const [styleTheme, setStyleThemeState] = useState<StyleTheme>("nhs");
 
   useEffect(() => {
     const savedUser = localStorage.getItem("wardhub_user") || localStorage.getItem("inpatient_hub_user");
@@ -67,6 +81,11 @@ export function Providers({ children }: { children: ReactNode }) {
     const savedActiveWard = localStorage.getItem("wardhub_active_ward") || localStorage.getItem("inpatient_hub_active_ward");
     if (savedActiveWard) {
       setActiveWardState(savedActiveWard);
+    }
+    const savedTheme = localStorage.getItem("wardhub_style_theme") as StyleTheme | null;
+    if (savedTheme && savedTheme in STYLE_THEMES) {
+      setStyleThemeState(savedTheme);
+      document.documentElement.setAttribute("data-theme", savedTheme);
     }
   }, []);
 
@@ -90,6 +109,12 @@ export function Providers({ children }: { children: ReactNode }) {
     localStorage.setItem("wardhub_active_ward", ward);
   };
 
+  const setStyleTheme = (theme: StyleTheme) => {
+    setStyleThemeState(theme);
+    localStorage.setItem("wardhub_style_theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
+  };
+
   // All features always enabled – no version gating
   const hasFeature = (_feature: FeatureFlag): boolean => true;
 
@@ -104,6 +129,8 @@ export function Providers({ children }: { children: ReactNode }) {
         activeWard,
         setActiveWard,
         allWards: WARD_IDS.map(capitalizeWard),
+        styleTheme,
+        setStyleTheme,
       }}
     >
       {children}

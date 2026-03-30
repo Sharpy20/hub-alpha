@@ -147,11 +147,12 @@ function TaskCard({
       draggable
       onDragStart={(e) => onDragStart?.(e, task.id, task.type)}
       onClick={() => onClick?.(task)}
-      className={`rounded-xl overflow-hidden transition-all cursor-grab active:cursor-grabbing ${
+      className={`overflow-hidden transition-all cursor-grab active:cursor-grabbing theme-card ${
         isCompleted ? "opacity-60" : "hover:shadow-lg hover:scale-[1.02]"
       } ${compact ? "text-sm" : ""}`}
+      style={{ borderRadius: "var(--theme-card-radius)", boxShadow: "var(--theme-card-shadow)" }}
     >
-      <div className={`bg-gradient-to-r ${gradient} ${compact ? "p-2" : "p-2.5"}`}>
+      <div className={`bg-gradient-to-r ${gradient} ${compact ? "p-2" : "p-2.5"}`} style={{ borderRadius: "var(--theme-card-radius)" }}>
         <div className="flex items-start gap-2">
           <button
             onClick={(e) => {
@@ -2655,12 +2656,12 @@ function TasksPageInner() {
 
   return (
     <MainLayout>
-      <div className="space-y-4">
+      <div className="space-y-4 theme-page min-h-screen -m-4 p-4" style={{ backgroundColor: "var(--theme-page-bg)" }}>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{isMyDiaryMode ? "📋 My Diary" : "📋 Team Diary"}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 theme-heading">{isMyDiaryMode ? "📋 My Diary" : "📋 Team Diary"}</h1>
               <p className="text-gray-600">
                 {isMyDiaryMode ? `${user?.name} · ` : ""}{activeWard} Ward · {formatDisplayDate(focusedDate || todayStr)}
               </p>

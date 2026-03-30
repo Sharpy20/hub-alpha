@@ -465,7 +465,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
   "social-care": {
     id: "social-care",
     title: "Social Care (Derby City)",
-    description: "Care Act assessment, S117 referrals & Enablement — Derby City Council Mental Health Social Care",
+    description: "Care Act assessment, S117 referrals & Enablement – Derby City Council Mental Health Social Care",
     icon: "👥",
     gradient: "from-amber-500 to-amber-700",
     steps: [
@@ -473,20 +473,20 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         id: "criteria",
         type: "criteria",
         title: "Confirm Criteria",
-        content: "Patient has potential Care Act needs, requires Enablement input, or requires Adult Social Care attendance for S117 meetings.\n\nBefore referral, confirm:\n• Patient is a Derby City resident (check usual address / funding authority)\n• If S117 — confirm who has S117 aftercare responsibility\n• What was the patient's address when they were made subject to Section 3?\n\nMHA Office number to check if Derby City are S117 responsible: 01332 623700 ext 33333",
+        content: "Patient has potential Care Act needs, requires Enablement input, or requires Adult Social Care attendance for S117 meetings.\n\nBefore referral, confirm:\n• Patient is a Derby City resident (check usual address / funding authority)\n• If S117 – confirm who has S117 aftercare responsibility\n• What was the patient's address when they were made subject to Section 3?\n\nMHA Office number to check if Derby City are S117 responsible: 01332 623700 ext 33333",
         checkboxLabel: "I confirm the patient is a Derby City resident and meets criteria for this referral",
       },
       {
         id: "section",
         type: "section",
         title: "S117 Status",
-        content: "Is the patient under Section 3, or have they been on a Section 3 in this or a previous admission?\n\nThis determines the referral pathway:\n• S117 patients — require both a Care Act/S117 referral AND a S117 meeting before discharge\n• Non-S117 patients — follow the standard Care Act referral process\n\n⚠️ IMPORTANT: S117 discharge meetings MUST take place regardless of whether the patient was admitted informally, under Section 2, or Section 3. This is essential to ensure the discharge plan remains robust and prevents re-admission.",
+        content: "Is the patient under Section 3, or have they been on a Section 3 in this or a previous admission?\n\nThis determines the referral pathway:\n• S117 patients – require both a Care Act/S117 referral AND a S117 meeting before discharge\n• Non-S117 patients – follow the standard Care Act referral process\n\n⚠️ IMPORTANT: S117 discharge meetings MUST take place regardless of whether the patient was admitted informally, under Section 2, or Section 3. This is essential to ensure the discharge plan remains robust and prevents re-admission.",
       },
       {
         id: "forms",
         type: "forms",
         title: "Download Forms & Guides",
-        content: "Download the relevant referral forms. The Enablement referral form is embedded within the social care referral form — you do not need to complete the full referral form if your request is solely for Enablement input.",
+        content: "Download the relevant referral forms. The Enablement referral form is embedded within the social care referral form – you do not need to complete the full referral form if your request is solely for Enablement input.",
         forms: {
           blank: [
             { label: "Derby City Social Care / S117 Referral Form", url: "#", icon: "📄", note: "Includes embedded Enablement referral section" },
@@ -508,7 +508,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         id: "submission",
         type: "submission",
         title: "Submit Referral",
-        content: "All referrals MUST go through duty. Send referral form + supporting documents (care plan, risk assessment, OT assessments if completed). Nursing assessment required if funding may be needed.\n\n⚠️ Missing information or documents? Referral may be closed if relevant information has not been obtained — the ward will be required to resubmit, which may cause delays.\n\nFor S117 meeting requests: Send the meeting request form to the same email (7 days notice required).\n\nNote: If the patient has housing needs (regardless of S117 status), 'Duty to Refer' is the correct process — see the Housing / Duty to Refer workflow.",
+        content: "All referrals MUST go through duty. Send referral form + supporting documents (care plan, risk assessment, OT assessments if completed). Nursing assessment required if funding may be needed.\n\n⚠️ Missing information or documents? Referral may be closed if relevant information has not been obtained – the ward will be required to resubmit, which may cause delays.\n\nFor S117 meeting requests: Send the meeting request form to the same email (7 days notice required).\n\nNote: If the patient has housing needs (regardless of S117 status), 'Duty to Refer' is the correct process – see the Housing / Duty to Refer workflow.",
         methods: [
           { type: "email", label: "Derby City MH Social Care (All referrals & S117 meeting requests)", value: "MHSOCIALCARE@DERBY.GOV.UK" },
           { type: "phone", label: "Derby City MH Social Care Team", value: "01332 640777" },
@@ -527,21 +527,21 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         id: "reminder",
         type: "reminder",
         title: "Follow-up Task",
-        content: "Add follow-up for social care assessment. If S117 patient, ensure S117 meeting is booked (7 days notice required) — a S117 meeting MUST take place before discharge.",
+        content: "Add follow-up for social care assessment. If S117 patient, ensure S117 meeting is booked (7 days notice required) – a S117 meeting MUST take place before discharge.",
         checkboxLabel: "",
       },
       {
         id: "gdpr",
         type: "gdpr",
         title: "GDPR Reminder",
-        content: "Ensure patient is aware of and consents to social care referral where possible. Delete completed referral forms from your computer if no longer needed — do not store patient data locally.",
+        content: "Ensure patient is aware of and consents to social care referral where possible. Delete completed referral forms from your computer if no longer needed – do not store patient data locally.",
       },
     ],
   },
   "s117-meeting": {
     id: "s117-meeting",
     title: "S117 Meeting Request",
-    description: "Request Mental Health Social Care attendance at S117 aftercare meeting — Derby City (7 days notice)",
+    description: "Request Mental Health Social Care attendance at S117 aftercare meeting – Derby City (7 days notice)",
     icon: "⚖️",
     gradient: "from-purple-600 to-purple-800",
     steps: [
@@ -549,7 +549,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         id: "criteria",
         type: "criteria",
         title: "Confirm Criteria",
-        content: "The patient is or has been subject to Section 117 aftercare and requires a S117 discharge meeting.\n\n⚠️ CRITICAL: A S117 discharge meeting MUST take place regardless of whether the patient was admitted informally, under Section 2, or under Section 3. This is essential to ensure the discharge plan remains robust and continues to prevent re-admission — which is the core purpose of S117 aftercare.\n\nThis meeting requires Mental Health Social Care attendance. Please ensure you give at least 7 days' notice (reduced from the previous 14-day requirement, approved by Karamjit Chhoker, Head of Service).\n\nIf your request is more urgent than 7 days, contact the team directly on 01332 640 777.",
+        content: "The patient is or has been subject to Section 117 aftercare and requires a S117 discharge meeting.\n\n⚠️ CRITICAL: A S117 discharge meeting MUST take place regardless of whether the patient was admitted informally, under Section 2, or under Section 3. This is essential to ensure the discharge plan remains robust and continues to prevent re-admission – which is the core purpose of S117 aftercare.\n\nThis meeting requires Mental Health Social Care attendance. Please ensure you give at least 7 days' notice (reduced from the previous 14-day requirement, approved by Karamjit Chhoker, Head of Service).\n\nIf your request is more urgent than 7 days, contact the team directly on 01332 640 777.",
         checkboxLabel: "I confirm this patient requires a S117 meeting and I understand this is mandatory before discharge",
       },
       {
@@ -562,7 +562,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
             { label: "DCC Mental Health Meeting Attendance Request Form", url: "#", icon: "📋", note: "Updated: 7 days notice required (reduced from 14)" },
           ],
           wagoll: [
-            { label: "Meeting Request Example", url: "#", note: "Ensure all fields completed — incomplete forms cause delays" },
+            { label: "Meeting Request Example", url: "#", note: "Ensure all fields completed – incomplete forms cause delays" },
           ],
 
           otherGuides: [
@@ -593,7 +593,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         id: "reminder",
         type: "reminder",
         title: "Follow-up Task",
-        content: "Add follow-up to confirm Social Worker attendance. The S117 meeting MUST take place before discharge — do not proceed with discharge until confirmed.\n\nIf you have any questions, speak with a member of the leadership team or contact Katie from Social Care directly.",
+        content: "Add follow-up to confirm Social Worker attendance. The S117 meeting MUST take place before discharge – do not proceed with discharge until confirmed.\n\nIf you have any questions, speak with a member of the leadership team or contact Katie from Social Care directly.",
         checkboxLabel: "I have added the S117 meeting to my job diary and will follow up on Social Worker confirmation",
       },
       {
@@ -1423,7 +1423,7 @@ export default function WorkflowPage() {
     year: "numeric",
   });
 
-  // Generate dynamic case note — fills in choices, patient name, staff name, date
+  // Generate dynamic case note – fills in choices, patient name, staff name, date
   const generateCaseNote = () => {
     // IMHA has fully custom text
     if (workflowId === "imha-advocacy") {
@@ -1436,7 +1436,7 @@ export default function WorkflowPage() {
       return `${patientText}Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. Patient is detained under ${sectionText} and would benefit from independent advocacy support.${staffText}`;
     }
 
-    // All other workflows — smart-replace placeholders in clipboardText
+    // All other workflows – smart-replace placeholders in clipboardText
     let text = step.clipboardText || "";
 
     // Replace [DATE] with today

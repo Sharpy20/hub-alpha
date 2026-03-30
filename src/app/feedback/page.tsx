@@ -474,7 +474,7 @@ export default function FeedbackPage() {
     setUsernameState(name);
   }, [user]);
 
-  // Load feedback from localStorage (demo mode — no Supabase)
+  // Load feedback from localStorage (demo mode – no Supabase)
   const STORAGE_KEY = "wardhub_feedback";
 
   const loadFromStorage = useCallback(() => {

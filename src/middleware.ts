@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Password protection removed — site is open for testing
+// Password protection removed – site is open for testing
 // Keeping middleware shell in case we need it later
 
 export function middleware(request: NextRequest) {

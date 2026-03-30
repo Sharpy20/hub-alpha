@@ -28,7 +28,7 @@ const QUICK_ACTIONS = [
 ];
 
 const SG_QUICK_LINKS = [
-  { icon: "🛡️", label: "Safeguarding Adults", description: "S.42 referral — step by step", href: "/how-to/safeguarding-adults-referral" },
+  { icon: "🛡️", label: "Safeguarding Adults", description: "S.42 referral – step by step", href: "/how-to/safeguarding-adults-referral" },
   { icon: "👶", label: "Worried About a Child", description: "Starting Point referral", href: "/how-to/safeguarding-children-referral" },
   { icon: "🏠", label: "Domestic Abuse", description: "Recognise, respond, refer", href: "/how-to/domestic-abuse-guide" },
   { icon: "⚠️", label: "Patient Conflict", description: "When to escalate", href: "/how-to/peer-conflict-guide" },
@@ -53,8 +53,8 @@ function SafeguardingDecisionHelper() {
       <div className="text-center space-y-3">
         <p className="text-sm font-semibold text-gray-800">Is the person you're worried about 18 or over?</p>
         <div className="flex gap-3 justify-center">
-          <button onClick={() => setStep(2)} className="px-5 py-2 bg-white text-gray-800 font-semibold rounded-xl hover:bg-gray-50 border border-gray-200 text-sm">Yes — adult</button>
-          <button onClick={() => setStep(5)} className="px-5 py-2 bg-white text-gray-800 font-semibold rounded-xl hover:bg-gray-50 border border-gray-200 text-sm">No — child</button>
+          <button onClick={() => setStep(2)} className="px-5 py-2 bg-white text-gray-800 font-semibold rounded-xl hover:bg-gray-50 border border-gray-200 text-sm">Yes – adult</button>
+          <button onClick={() => setStep(5)} className="px-5 py-2 bg-white text-gray-800 font-semibold rounded-xl hover:bg-gray-50 border border-gray-200 text-sm">No – child</button>
         </div>
         <button onClick={reset} className="text-xs text-gray-500 hover:text-gray-700">Start over</button>
       </div>
@@ -95,7 +95,7 @@ function SafeguardingDecisionHelper() {
         <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-xl font-semibold text-sm">
           <Phone className="w-4 h-4" /> Ring the advice line to talk it through
         </div>
-        <p className="text-xs text-gray-600">DHCFT Safeguarding Advice Line — they'll help you decide</p>
+        <p className="text-xs text-gray-600">DHCFT Safeguarding Advice Line – they'll help you decide</p>
         <div className="flex gap-3 justify-center">
           <Link href="/how-to/safeguarding-adults-referral" className="px-5 py-2 bg-amber-600 text-white font-semibold rounded-xl hover:bg-amber-700 text-sm no-underline">
             Open the guide anyway

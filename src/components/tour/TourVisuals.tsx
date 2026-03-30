@@ -1,12 +1,12 @@
 "use client";
 
-// Styled React div mockups simulating app screenshots — no image files needed
+// Styled React div mockups simulating app screenshots – no image files needed
 
 export function DiaryMockup() {
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden max-w-md mx-auto">
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-3 text-white text-center">
-        <p className="font-bold text-sm">Team Diary — Byron Ward</p>
+        <p className="font-bold text-sm">Team Diary – Byron Ward</p>
         <p className="text-xs text-white/70">Week View</p>
       </div>
       <div className="grid grid-cols-3 gap-px bg-gray-200">
@@ -49,7 +49,7 @@ export function AddTaskMockup() {
         </div>
         <div>
           <label className="text-xs font-semibold text-gray-500">Patient</label>
-          <div className="mt-1 p-2 bg-blue-50 rounded border border-blue-200 text-sm text-blue-700">Alex Morgan — Room 4</div>
+          <div className="mt-1 p-2 bg-blue-50 rounded border border-blue-200 text-sm text-blue-700">Alex Morgan – Room 4</div>
         </div>
         <div>
           <label className="text-xs font-semibold text-gray-500">Link a Referral</label>
@@ -134,7 +134,7 @@ export function KanbanMockup() {
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden max-w-lg mx-auto">
       <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-3 text-white text-center">
-        <p className="font-bold text-sm">My Tasks — Kanban Board</p>
+        <p className="font-bold text-sm">My Tasks – Kanban Board</p>
       </div>
       <div className="grid grid-cols-3 gap-px bg-gray-200 p-px">
         <div className="bg-gray-50 p-2">

@@ -54,7 +54,7 @@ import {
 } from "@/components/modals";
 import { ConfirmDialog } from "@/components/ui";
 
-// Helper functions — use local date to avoid UTC midnight timezone drift
+// Helper functions – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -179,6 +179,16 @@ function TaskCard({
                   Overdue
                 </span>
               )}
+              {task.type === "patient" && task.repeatIntervalDays && (
+                <span className="text-white/70 text-[10px] flex-shrink-0" title={`Repeats every ${task.repeatIntervalDays} days`}>
+                  🔄
+                </span>
+              )}
+              {task.type === "ward" && task.isRecurring && (
+                <span className="text-white/70 text-[10px] flex-shrink-0" title="Repeating team task">
+                  🔄
+                </span>
+              )}
             </div>
 
             {/* Appointment time subtitle */}
@@ -210,7 +220,7 @@ function TaskCard({
                         onSteal(task.id);
                       }}
                       className="flex items-center gap-1 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors"
-                      title={`Assigned to ${task.claimedBy} — reassign to yourself`}
+                      title={`Assigned to ${task.claimedBy} – reassign to yourself`}
                     >
                       <Hand className="w-2.5 h-2.5" />
                       Take Over
@@ -407,7 +417,7 @@ function SimpleTaskCard({
           <button
             onClick={(e) => { e.stopPropagation(); onSteal(task.id); }}
             className="flex items-center gap-0.5 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors flex-shrink-0"
-            title={`Assigned to ${task.claimedBy} — reassign to yourself`}
+            title={`Assigned to ${task.claimedBy} – reassign to yourself`}
           >
             <Hand className="w-2.5 h-2.5" />
             Take Over
@@ -702,7 +712,7 @@ function DayColumn({
     shouldHideCompleted ? items.filter((t) => t.status !== "completed") : items;
 
   // Ward tasks visible on: today (always), future days (show section but maybe collapsed),
-  // past days (hidden entirely — no section shown)
+  // past days (hidden entirely – no section shown)
   const showWardTasksSection = (isToday || isFutureDay) && showWardTasksSetting;
   const visibleWardTasks = showWardTasksSection ? filterCompleted(wardTasks) : [];
   const visiblePatientTasks = filterCompleted(patientTasks);
@@ -903,6 +913,10 @@ function AddTaskModal({
   const [linkedReferral, setLinkedReferral] = useState("");
   const [linkedGuide, setLinkedGuide] = useState("");
 
+  // Patient task repeating
+  const [patientRepeat, setPatientRepeat] = useState(false);
+  const [repeatIntervalDays, setRepeatIntervalDays] = useState(7);
+
   // Ward task specific - repeating vs one-off
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurringDays, setRecurringDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]); // Default all days
@@ -965,6 +979,7 @@ function AddTaskModal({
         linkedReferralId: category === "referral" ? (linkedReferral || undefined) : undefined,
         linkedGuideId: category !== "referral" ? (linkedGuide || undefined) : undefined,
         carryOver: true,
+        repeatIntervalDays: patientRepeat ? repeatIntervalDays : undefined,
       });
     } else if (taskType === "appointment") {
       const timeValue = timeType === "preset"
@@ -1006,6 +1021,8 @@ function AddTaskModal({
     // Reset form
     setTitle("");
     setPatientName("");
+    setPatientRepeat(false);
+    setRepeatIntervalDays(7);
     setLinkedReferral("");
     setLinkedGuide("");
     setAppointmentDate(formatDate(new Date()));
@@ -1496,6 +1513,65 @@ function AddTaskModal({
               onChange={(e) => setTaskDate(e.target.value)}
               className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
             />
+          </div>
+        )}
+
+        {/* Patient task repeat toggle */}
+        {taskType === "patient" && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Repeats?</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setPatientRepeat(false)}
+                className={`p-3 rounded-xl text-center transition-all ${
+                  !patientRepeat
+                    ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span className="text-xl block">📌</span>
+                <span className="text-xs font-medium">One-off</span>
+              </button>
+              <button
+                onClick={() => setPatientRepeat(true)}
+                className={`p-3 rounded-xl text-center transition-all ${
+                  patientRepeat
+                    ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span className="text-xl block">🔄</span>
+                <span className="text-xs font-medium">Repeating</span>
+              </button>
+            </div>
+            {patientRepeat && (
+              <div className="mt-3 p-3 border border-indigo-200 rounded-xl bg-indigo-50">
+                <p className="text-xs font-medium text-indigo-800 mb-2">Repeat every:</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { days: 7, label: "Weekly" },
+                    { days: 14, label: "Fortnightly" },
+                    { days: 28, label: "4 weeks" },
+                    { days: 1, label: "Daily" },
+                  ].map((opt) => (
+                    <button
+                      key={opt.days}
+                      onClick={() => setRepeatIntervalDays(opt.days)}
+                      className={`p-2 rounded-lg text-center text-xs font-medium transition-all ${
+                        repeatIntervalDays === opt.days
+                          ? "bg-indigo-600 text-white"
+                          : "bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-100"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-indigo-600 mt-2">
+                  Task will appear every {repeatIntervalDays} day{repeatIntervalDays > 1 ? "s" : ""} from {taskDate}
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -2027,7 +2103,7 @@ function ExpandedDayView({
               </button>
             </div>
 
-            {/* Day navigation — far right */}
+            {/* Day navigation – far right */}
             <div className="flex items-center gap-2 ml-auto">
               <button
                 onClick={() => {
@@ -2136,7 +2212,7 @@ function ExpandedDayView({
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Team Tasks Column — always show header */}
+              {/* Team Tasks Column – always show header */}
               <div className="space-y-6">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                   🏥 Team Tasks
@@ -2185,12 +2261,12 @@ function ExpandedDayView({
                   </>
                 ) : (
                   <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
-                    None scheduled — tap to add team task
+                    None scheduled – tap to add team task
                   </button>
                 )}
               </div>
 
-              {/* Patient Tasks Column — always show header */}
+              {/* Patient Tasks Column – always show header */}
               <div>
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
                   👤 Patient Tasks
@@ -2202,12 +2278,12 @@ function ExpandedDayView({
                   <PriorityGroupedTasks tasks={patientTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                 ) : (
                   <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
-                    None scheduled — tap to add patient task
+                    None scheduled – tap to add patient task
                   </button>
                 )}
               </div>
 
-              {/* Appointments Column — always show header */}
+              {/* Appointments Column – always show header */}
               <div>
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
                   📅 Appointments
@@ -2219,7 +2295,7 @@ function ExpandedDayView({
                   <PriorityGroupedTasks tasks={appointments} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                 ) : (
                   <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
-                    None scheduled — tap to add appointment
+                    None scheduled – tap to add appointment
                   </button>
                 )}
               </div>
@@ -2513,6 +2589,19 @@ function TasksPageInner() {
         }
         return task.dueDate === date;
       } else if (task.type === "patient") {
+        // Repeating patient tasks show on interval dates
+        if (task.repeatIntervalDays && task.repeatIntervalDays > 0) {
+          const startDate = new Date(task.dueDate + "T12:00:00");
+          const targetDate = new Date(date + "T12:00:00");
+          if (targetDate < startDate) return false;
+          // Check if repeatUntil is set and target is past it
+          if (task.repeatUntil) {
+            const untilDate = new Date(task.repeatUntil + "T12:00:00");
+            if (targetDate > untilDate) return false;
+          }
+          const diffDays = Math.round((targetDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+          return diffDays % task.repeatIntervalDays === 0;
+        }
         if (isTargetToday && task.carryOver && task.status !== "completed" && task.status !== "cancelled") {
           const taskDate = new Date(task.dueDate);
           const targetDate = new Date(date);

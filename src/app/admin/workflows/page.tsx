@@ -519,7 +519,7 @@ export default function WorkflowsAdminPage() {
                   className="w-full p-4 text-left bg-gray-50 hover:bg-gray-100 rounded-xl border-2 border-gray-200 hover:border-rose-300 transition-all"
                 >
                   <p className="font-semibold text-gray-900">Start blank</p>
-                  <p className="text-sm text-gray-500 mt-1">Empty canvas — drag in steps from scratch</p>
+                  <p className="text-sm text-gray-500 mt-1">Empty canvas – drag in steps from scratch</p>
                 </button>
                 <button
                   onClick={() => handleCreateNew(true)}

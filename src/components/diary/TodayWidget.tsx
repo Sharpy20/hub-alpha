@@ -17,7 +17,7 @@ import {
 } from "@/lib/data/tasks";
 import { useApp } from "@/app/providers";
 
-// Helper — use local date to avoid UTC midnight timezone drift
+// Helper – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");

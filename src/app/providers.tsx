@@ -90,7 +90,7 @@ export function Providers({ children }: { children: ReactNode }) {
     localStorage.setItem("wardhub_active_ward", ward);
   };
 
-  // All features always enabled — no version gating
+  // All features always enabled – no version gating
   const hasFeature = (_feature: FeatureFlag): boolean => true;
 
   return (

@@ -190,7 +190,7 @@ const WARD_TASK_TEMPLATES: Array<{
     auditType: "controlled_drugs",
     isNexusLinked: true,
   },
-  { title: "Daily clinic checks", description: "Complete daily clinical environment checks — documentation, equipment, patient safety board", priority: "important" as const, shift: "early" as const },
+  { title: "Daily clinic checks", description: "Complete daily clinical environment checks – documentation, equipment, patient safety board", priority: "important" as const, shift: "early" as const },
   { title: "Safety huddle", description: "Brief team meeting - risks, staffing, priorities", priority: "routine" as const, shift: "early" as const },
   {
     title: "Water temperature check",
@@ -317,10 +317,10 @@ const PATIENT_TASK_TEMPLATES = [
   { title: "OT assessment", description: "Arrange occupational therapy assessment", category: "referral" as const, priority: "routine" as const },
   { title: "1:1 nursing notes", description: "Complete 1:1 engagement documentation", category: "documentation" as const, priority: "routine" as const },
   { title: "Medication review", description: "Arrange medication review with doctor", category: "documentation" as const, priority: "important" as const },
-  { title: "Weekly weight check", description: "Record weekly weight", category: "documentation" as const, priority: "routine" as const },
+  { title: "Weekly weight check", description: "Record weekly weight", category: "documentation" as const, priority: "routine" as const, repeatIntervalDays: 7 },
   { title: "Psychology referral", description: "Refer for psychological assessment", category: "referral" as const, priority: "routine" as const },
   { title: "Section paperwork check", description: "Verify MHA paperwork is in order", category: "documentation" as const, priority: "important" as const },
-  { title: "Physical health review", description: "Complete physical health assessment", category: "documentation" as const, priority: "routine" as const },
+  { title: "Physical health review", description: "Complete physical health assessment", category: "documentation" as const, priority: "routine" as const, repeatIntervalDays: 14 },
   { title: "Contact CMHT", description: "Liaise with community team", category: "phone_call" as const, priority: "routine" as const },
 ];
 
@@ -388,6 +388,7 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
       createdBy: staff[(i + 3) % staff.length], // Different creator
       ...(template.linkedReferralId && { linkedReferralId: template.linkedReferralId }),
       ...(template.linkedGuideId && { linkedGuideId: template.linkedGuideId }),
+      ...((template as any).repeatIntervalDays && { repeatIntervalDays: (template as any).repeatIntervalDays }),
       ...(claimedBy && { claimedBy, claimedAt }),
       ...(completedBy && { completedBy, completedAt }),
     });

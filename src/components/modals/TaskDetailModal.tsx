@@ -449,7 +449,7 @@ export function TaskDetailModal({
                 <button
                   onClick={handleSteal}
                   className="px-4 py-2 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors flex items-center gap-2"
-                  title={`Assigned to ${task.claimedBy} — reassign to yourself`}
+                  title={`Assigned to ${task.claimedBy} – reassign to yourself`}
                 >
                   <Hand className="w-4 h-4" />
                   Take Over

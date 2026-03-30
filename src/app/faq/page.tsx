@@ -107,7 +107,7 @@ const FAQ_ITEMS: FAQItem[] = [
           <li><strong>Senior Admin</strong> can approve content changes and manage user roles</li>
         </ul>
         <p>
-          Any role can request <strong>creator privileges</strong> — this is a separate flag, not a role. Users with creator privileges can create and edit workflows, guides, and bookmarks.
+          Any role can request <strong>creator privileges</strong> – this is a separate flag, not a role. Users with creator privileges can create and edit workflows, guides, and bookmarks.
         </p>
         <p>
           In the demo, you can switch roles using the My Profile menu to see how different roles work.

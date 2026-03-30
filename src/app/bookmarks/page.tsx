@@ -187,7 +187,7 @@ function BookmarksContent() {
             {/* Add button */}
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-500">
-                Your personal bookmarks — only visible to you
+                Your personal bookmarks – only visible to you
               </p>
               <button
                 onClick={() => { setEditingPersonal(null); setShowAddPersonal(true); }}

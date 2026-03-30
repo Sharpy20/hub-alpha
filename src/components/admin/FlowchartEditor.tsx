@@ -645,7 +645,7 @@ export function FlowchartEditor({
         {/* Preview mode banner */}
         {previewMode && (
           <div className="mb-4 px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-lg text-indigo-700 text-sm font-medium text-center">
-            Preview mode — this is how users will see the workflow
+            Preview mode – this is how users will see the workflow
           </div>
         )}
 

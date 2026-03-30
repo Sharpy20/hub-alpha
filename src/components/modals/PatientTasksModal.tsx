@@ -76,7 +76,7 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick
             </div>
             <div>
               <span className="text-gray-500">Named Nurse:</span>{" "}
-              <span className="font-medium text-gray-900">{patient.namedNurse || "—"}</span>
+              <span className="font-medium text-gray-900">{patient.namedNurse || "–"}</span>
             </div>
           </div>
         </div>

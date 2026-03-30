@@ -87,7 +87,7 @@ export default function MyTasksPage() {
     if (task.status === "completed" && (task.type === "patient" || task.type === "appointment") && task.patientId && dischargedPatientIds.includes(task.patientId)) {
       return false;
     }
-    // My Patients filter (additive — shows WP patient tasks alongside claimed tasks)
+    // My Patients filter (additive – shows WP patient tasks alongside claimed tasks)
     if (showMyPatients && myPatientIds.length > 0) {
       if (task.type === "patient" || task.type === "appointment") {
         // Include if it's a WP patient task OR if it's claimed by the user

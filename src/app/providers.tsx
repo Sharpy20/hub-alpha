@@ -43,6 +43,8 @@ export type FeatureFlag =
   | "user_management"
   | "audit_logs";
 
+export type ColorMode = "light" | "dark" | "system";
+
 interface AppContextType {
   user: User | null;
   setUser: (user: User | null) => void;
@@ -54,6 +56,9 @@ interface AppContextType {
   allWards: readonly string[];
   styleTheme: StyleTheme;
   setStyleTheme: (theme: StyleTheme) => void;
+  colorMode: ColorMode;
+  setColorMode: (mode: ColorMode) => void;
+  isDark: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -63,6 +68,8 @@ export function Providers({ children }: { children: ReactNode }) {
   const [gdprAccepted, setGdprAccepted] = useState(false);
   const [activeWard, setActiveWardState] = useState<string>(capitalizeWard(WARD_IDS[0]));
   const [styleTheme, setStyleThemeState] = useState<StyleTheme>("nhs");
+  const [colorMode, setColorModeState] = useState<ColorMode>("light");
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem("wardhub_user") || localStorage.getItem("inpatient_hub_user");
@@ -86,6 +93,11 @@ export function Providers({ children }: { children: ReactNode }) {
     if (savedTheme && savedTheme in STYLE_THEMES) {
       setStyleThemeState(savedTheme);
       document.documentElement.setAttribute("data-theme", savedTheme);
+    }
+    const savedColorMode = localStorage.getItem("wardhub_color_mode") as ColorMode | null;
+    if (savedColorMode) {
+      setColorModeState(savedColorMode);
+      applyColorMode(savedColorMode);
     }
   }, []);
 
@@ -115,6 +127,23 @@ export function Providers({ children }: { children: ReactNode }) {
     document.documentElement.setAttribute("data-theme", theme);
   };
 
+  const applyColorMode = (mode: ColorMode) => {
+    let dark = false;
+    if (mode === "dark") {
+      dark = true;
+    } else if (mode === "system") {
+      dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    setIsDark(dark);
+    document.documentElement.classList.toggle("dark", dark);
+  };
+
+  const setColorMode = (mode: ColorMode) => {
+    setColorModeState(mode);
+    localStorage.setItem("wardhub_color_mode", mode);
+    applyColorMode(mode);
+  };
+
   // All features always enabled – no version gating
   const hasFeature = (_feature: FeatureFlag): boolean => true;
 
@@ -131,6 +160,9 @@ export function Providers({ children }: { children: ReactNode }) {
         allWards: WARD_IDS.map(capitalizeWard),
         styleTheme,
         setStyleTheme,
+        colorMode,
+        setColorMode,
+        isDark,
       }}
     >
       {children}

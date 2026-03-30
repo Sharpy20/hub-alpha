@@ -151,6 +151,39 @@
   border-radius: 1.5rem;
 }
 
+/* ============================================
+   DARK MODE
+   ============================================ */
+.dark {
+  --background: #1a1a2e;
+  --foreground: #e4e4e7;
+  --nhs-pale-grey: #2a2a3e;
+  --theme-page-bg: #141425;
+  --theme-card-bg: #1e1e32;
+  --theme-card-border: 1px solid #2d2d44;
+  --theme-card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  color-scheme: dark;
+}
+.dark body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Dark mode overrides for common elements */
+.dark .bg-white { background-color: #1e1e32 !important; }
+.dark .bg-gray-50 { background-color: #242438 !important; }
+.dark .bg-gray-100 { background-color: #2a2a3e !important; }
+.dark .border-gray-200 { border-color: #2d2d44 !important; }
+.dark .border-gray-100 { border-color: #2d2d44 !important; }
+.dark .text-gray-900 { color: #e4e4e7 !important; }
+.dark .text-gray-800 { color: #d4d4d8 !important; }
+.dark .text-gray-700 { color: #a1a1aa !important; }
+.dark .text-gray-600 { color: #a1a1aa !important; }
+.dark .text-gray-500 { color: #71717a !important; }
+.dark .text-gray-400 { color: #52525b !important; }
+.dark .shadow-xl { box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important; }
+.dark .shadow-lg { box-shadow: 0 3px 12px rgba(0,0,0,0.35) !important; }
+
 /* Apply theme to diary page */
 .theme-page {
   background-color: var(--theme-page-bg);

@@ -590,27 +590,25 @@ function CollapsibleSection({
   if (count === 0) return null;
 
   return (
-    <div className="mb-3">
+    <div className="mb-2">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+        className="w-full flex items-center justify-between px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors group"
       >
-        <div className="flex items-center gap-2">
-          <span>{icon}</span>
-          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm">{icon}</span>
+          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
             {title}
           </span>
-          <span className="bg-gray-200 text-gray-600 text-xs px-1.5 py-0.5 rounded-full font-medium">
+          <span className="bg-gray-100 text-gray-500 text-[10px] px-1.5 py-0.5 rounded-full font-medium min-w-[20px] text-center">
             {count}
           </span>
         </div>
-        {expanded ? (
-          <ChevronUp className="w-4 h-4 text-gray-400" />
-        ) : (
-          <ChevronDown className="w-4 h-4 text-gray-400" />
-        )}
+        <ChevronDown className={`w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
       </button>
-      {expanded && <div className="mt-2">{children}</div>}
+      <div className={`overflow-hidden transition-all duration-200 ease-in-out ${expanded ? "max-h-[2000px] opacity-100 mt-1.5" : "max-h-0 opacity-0"}`}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -742,7 +740,7 @@ function DayColumn({
     >
       {/* Day header */}
       <div
-        className={`p-3 transition-all relative ${
+        className={`px-3 py-2.5 transition-all ${
           isFocused
             ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
             : isToday
@@ -752,33 +750,32 @@ function DayColumn({
             : "bg-gray-50 text-gray-700"
         }`}
       >
-        {/* Expand/Collapse button */}
-        {onExpand && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onExpand();
-            }}
-            className={`absolute top-2 right-2 p-1.5 rounded-lg transition-colors ${
-              isFocused
-                ? "hover:bg-white/20 text-white/80 hover:text-white"
-                : "hover:bg-gray-200 text-gray-400 hover:text-gray-600"
-            }`}
-            title={isFocused ? "Collapse day view" : "Expand day view"}
-            aria-label={isFocused ? "Collapse day view" : "Expand day view"}
-          >
-            {isFocused ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-          </button>
-        )}
-        <div className="text-center">
-          <p className={`font-bold ${isFocused ? "text-lg" : "text-sm"}`}>
-            {formatDisplayDate(date)}
-          </p>
-          <p className={`text-xs ${isFocused ? "text-white/70" : "opacity-70"}`}>
-            {new Date(date).toLocaleDateString("en-GB", { weekday: "long" })}
-          </p>
-          {!isFocused && totalVisible > 0 && (
-            <p className="text-xs mt-1 font-medium">{totalVisible} task{totalVisible !== 1 ? 's' : ''}</p>
+        <div className="flex items-center justify-between">
+          <div className={isFocused ? "text-left" : "text-center flex-1"}>
+            <p className={`font-bold ${isFocused ? "text-base" : "text-sm"}`}>
+              {formatDisplayDate(date)}
+            </p>
+            <p className={`text-[11px] ${isFocused ? "text-white/70" : "opacity-60"}`}>
+              {new Date(date).toLocaleDateString("en-GB", { weekday: "short" })}
+              {!isFocused && totalVisible > 0 && ` · ${totalVisible}`}
+            </p>
+          </div>
+          {onExpand && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onExpand();
+              }}
+              className={`p-1 rounded-md transition-colors ${
+                isFocused
+                  ? "hover:bg-white/20 text-white/80"
+                  : "hover:bg-gray-200/50 text-gray-400"
+              }`}
+              title={isFocused ? "Collapse" : "Expand"}
+              aria-label={isFocused ? "Collapse day view" : "Expand day view"}
+            >
+              {isFocused ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+            </button>
           )}
         </div>
       </div>

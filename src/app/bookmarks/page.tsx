@@ -99,18 +99,18 @@ function BookmarksContent() {
     <MainLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className={`bg-gradient-to-r ${currentConfig.gradient} rounded-2xl p-6 text-white`}>
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
-              <span className="text-4xl">{currentConfig.icon}</span>
+        <div className={`bg-gradient-to-r ${currentConfig.gradient} rounded-2xl p-4 sm:p-6 text-white`}>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
+              <span className="text-2xl sm:text-4xl">{currentConfig.icon}</span>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-2">
-                <Bookmark className="w-7 h-7" />
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-3xl font-bold flex items-center gap-2">
+                <Bookmark className="w-5 h-5 sm:w-7 sm:h-7" />
                 Bookmarks
               </h1>
-              <p className="text-white/80 mt-1">
-                Quick links to clinical systems, resources, and external services
+              <p className="text-white/80 mt-1 text-sm sm:text-base">
+                Quick links to clinical systems and resources
               </p>
             </div>
           </div>

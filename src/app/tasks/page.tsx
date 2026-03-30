@@ -727,7 +727,7 @@ function DayColumn({
       onDragLeave={onDayDragLeave}
       onDrop={onDayDrop}
       className={`flex-shrink-0 transition-all duration-300 cursor-pointer ${
-        isFocused ? "w-80" : "w-52"
+        isFocused ? "w-72 sm:w-80" : "w-44 sm:w-52"
       } bg-white rounded-xl border-2 ${
         isDragOver
           ? "border-nhs-blue border-dashed shadow-xl bg-blue-50/50"
@@ -1828,7 +1828,7 @@ function RepeatWardTasksModal({
               <div className="border-t border-gray-200 pt-4">
                 <h3 className="font-semibold text-gray-900 mb-3">Weekly Schedule</h3>
                 <div className="overflow-x-auto">
-                  <div className="grid grid-cols-7 gap-3 min-w-[900px]">
+                  <div className="grid grid-cols-7 gap-1 sm:gap-3 min-w-[600px] sm:min-w-[900px]">
                     {/* Day headers */}
                     {DAY_ABBREVS.map((day, idx) => (
                       <div

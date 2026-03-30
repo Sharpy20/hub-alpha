@@ -51,11 +51,11 @@ function HomeVisual() {
           </div>
           <span className="font-bold text-gray-800">Quick Actions</span>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-indigo-50 rounded p-2 text-xs font-medium text-indigo-700">Team Diary</div>
-          <div className="bg-purple-50 rounded p-2 text-xs font-medium text-purple-700">My Tasks</div>
-          <div className="bg-amber-50 rounded p-2 text-xs font-medium text-amber-700">Bookmarks</div>
-          <div className="bg-rose-50 rounded p-2 text-xs font-medium text-rose-700">Referrals</div>
+        <div className="grid grid-cols-2 gap-1 sm:gap-2">
+          <div className="bg-indigo-50 rounded p-1.5 sm:p-2 text-xs font-medium text-indigo-700">Team Diary</div>
+          <div className="bg-purple-50 rounded p-1.5 sm:p-2 text-xs font-medium text-purple-700">My Jobs</div>
+          <div className="bg-amber-50 rounded p-1.5 sm:p-2 text-xs font-medium text-amber-700">Bookmarks</div>
+          <div className="bg-rose-50 rounded p-1.5 sm:p-2 text-xs font-medium text-rose-700">Guides</div>
         </div>
       </div>
       <div className="bg-white rounded-lg p-3 border border-gray-200">

@@ -151,7 +151,7 @@ function SafeguardingSection() {
         </div>
 
         {/* Quick link cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-4">
           {SG_QUICK_LINKS.map((link) => (
             <Link key={link.href} href={link.href} className="no-underline">
               <div className="bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-200 rounded-xl p-3 text-center transition-all hover:scale-105 h-full">
@@ -294,15 +294,15 @@ export default function HomePage() {
           <div className="space-y-4">
             {QUICK_ACTIONS.map((action) => (
               <Link key={action.href} href={action.href} className="block no-underline">
-                <div className={`rounded-xl p-6 flex items-center gap-5 bg-gradient-to-r ${action.gradient} text-white hover:shadow-xl hover:scale-[1.02] transition-all`}>
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-4xl">{action.icon}</span>
+                <div className={`rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-5 bg-gradient-to-r ${action.gradient} text-white hover:shadow-xl hover:scale-[1.02] transition-all`}>
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span className="text-2xl sm:text-4xl">{action.icon}</span>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold">{action.label}</h3>
-                    <p className="text-white/80 text-base">{action.description}</p>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg sm:text-xl font-bold">{action.label}</h3>
+                    <p className="text-white/80 text-sm sm:text-base truncate">{action.description}</p>
                   </div>
-                  <ArrowRight className="w-6 h-6 text-white/70 flex-shrink-0" />
+                  <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-white/70 flex-shrink-0 hidden sm:block" />
                 </div>
               </Link>
             ))}

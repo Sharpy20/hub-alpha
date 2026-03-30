@@ -76,6 +76,7 @@ git remote -v
 5. **NHS Styling** - Follow NHS Identity guidelines (colours, typography, accessibility)
 6. **Project Isolation** - NEVER reference, import from, or link to any other projects (see Security section above)
 7. **Documentation Sync** - After ANY feature change, follow the Documentation Sync Workflow (update CLAUDE.md → Dev Panel → GDPR if needed)
+8. **No Em Dashes** - Never use em dashes (—) anywhere in code or content. Use hyphens (-) or en dashes (–) instead
 
 ---
 
@@ -827,6 +828,27 @@ Working through in order. Marking complete as fixed.
 | 106 | [x] | Interactive decision helper on home page ("Not sure? Help me decide" — yes/no flow to correct pathway) |
 | 107 | [x] | Safeguarding bookmark strip on home page (horizontal scroll, public links only) |
 
+## SNAG LIST (30 Mar 2026 - Session 14)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 108 | [x] | Follow-up task bug: button now creates task after patient picker selection (was silently failing) |
+| 109 | [x] | Follow-up task: added second example "Revisit assessment in 14 days" |
+| 110 | [x] | TodayWidget: replaced 2 footer links with 3 top-row nav buttons (Team Diary, My Diary, My Jobs) |
+| 111 | [x] | Safeguarding: merged Hub banner + Links strip into one clean white card |
+| 112 | [x] | My Diary: visible toggle "My tasks only" / "My tasks + my patients" with filter logic fix |
+| 113 | [x] | Kanban: "Today" column renamed to "Not Started" |
+| 114 | [x] | Repeat tasks: defensive Array.isArray() checks on recurringDays |
+| 115 | [x] | Date hardening: formatDate() uses local date components (fixes midnight UTC drift) |
+| 116 | [x] | Full rename: "Ward Diary" to "Team Diary", "Ward Tasks" to "Team Tasks" across 15 files (~70 replacements) |
+| 117 | [x] | Demo mode: "Specific User" picker shows 20 staff from current ward with name + role |
+| 118 | [x] | Editor: merged Guides + How-To cards into one, removed Ward Settings card |
+| 119 | [ ] | **DEFERRED** Repeatable patient tasks (every 7/14/28 days or custom) |
+| 120 | [ ] | **DEFERRED** Style themes (iPhone/Android/Windows feel) |
+| 121 | [ ] | **DEFERRED** Em dash removal + full site content audit |
+| 122 | [ ] | **DEFERRED** Intro guide content update (depends on rename) |
+| 123 | [ ] | **DEFERRED** Diary UX declutter (expand/collapse feel, minimize icon position) |
+
 ---
 
 ## CURRENT FOCUS
@@ -867,7 +889,21 @@ Working through in order. Marking complete as fixed.
 
 ---
 
-**Recently Completed (29 Mar 2026 - Session 13 — Diary Fixes + Safeguarding Hub):**
+**Recently Completed (30 Mar 2026 - Session 14 — Bug Fixes, Rename & UX):**
+- ✅ Follow-up task bug fixed (created task after patient picker, added second example)
+- ✅ TodayWidget: 3 nav buttons (Team Diary / My Diary / My Jobs) replacing footer links
+- ✅ Safeguarding section merged into one clean white card (dropped heavy red gradient)
+- ✅ My Diary toggle: visible "My tasks only" vs "My tasks + my patients" with working filter
+- ✅ Kanban "Not Started" column (was "Today")
+- ✅ Repeat tasks display: defensive Array.isArray() checks prevent ghost tasks
+- ✅ Date hardening: local date components prevent midnight UTC timezone drift
+- ✅ Full rename: "Ward Diary/Tasks" to "Team Diary/Tasks" across 15 files (~70 replacements)
+- ✅ Demo mode: Specific User picker (20 staff from current ward, name + role)
+- ✅ Editor: merged Guides + How-To cards, removed Ward Settings
+- ✅ Contact data classification table added to Dev Panel
+- ✅ FOCUS data collection: 300+ entries across 6 Chrome Claude sessions saved to docs/
+
+**Previously Completed (29 Mar 2026 - Session 13 — Diary Fixes + Safeguarding Hub):**
 - ✅ **Safeguarding Hub** on home page: bold red banner, 999 strip, 4 quick-link cards, decision helper
 - ✅ Interactive "Not sure? Help me decide" flow — walks staff through to correct pathway
 - ✅ 15 safeguarding bookmarks (new category) — DHCFT advice, MASH, referral forms, DASH, MCA, cuckooing
@@ -1289,6 +1325,37 @@ Then open http://localhost:3000
 
 **Commits:**
 - `4db6fcd` — Add Safeguarding Hub: home page banner, 15 bookmarks, 4 guides
+
+**Build Status:** All builds pass. Pushed to Vercel via Sharpy20.
+
+### 30 March 2026 - Session 14 (Bug Fixes, Rename & UX Tweaks)
+**Completed (6 commits):**
+- [x] `56852ce` - Follow-up task bug: pendingFollowUp flag, second example text
+- [x] `3e2d61c` - TodayWidget nav, safeguarding merge, My Diary patient toggle
+- [x] `057ba73` - Kanban "Not Started", repeat tasks fix, date hardening
+- [x] `9d407f3` - Full rename Ward to Team across 15 files + docs
+- [x] `40690c6` - Specific User picker in Demo Mode
+- [x] `6593947` - Editor: merge Guides/How-To, remove Ward Settings
+
+**FOCUS Data Collection (Chrome Claude):**
+- 6 sessions, 300+ structured entries saved to docs/focus-data-collection/
+- Covers: safeguarding, clinical referrals (all CMHTs), IT, estates, HR, pharmacy, IPC, MHA, restrictive practices, wellbeing, chaplaincy, counter fraud
+- Data classified: public (show live) vs trust-sensitive (FOCUS placeholder)
+- Contact Data Classification table added to Dev Panel
+
+**Deferred Items:**
+- Repeatable patient tasks (7/14/28 day intervals)
+- Style themes (iPhone/Android/Windows feel)
+- Em dash removal + full content audit
+- Intro guide update (post-rename)
+- Diary UX declutter
+
+**Key Design Decisions:**
+- "Team Diary/Tasks" replaces "Ward Diary/Tasks" everywhere in UI (types stay WardTask)
+- My Diary toggle: "My tasks only" vs "My tasks + my patients" (shows WP patient tasks from any claimant)
+- Safeguarding section: single white card, not heavy red gradient
+- Specific User picker: collapsible, current ward staff only, shows role in italic
+- formatDate() now uses local date components to prevent midnight UTC drift
 
 **Build Status:** All builds pass. Pushed to Vercel via Sharpy20.
 

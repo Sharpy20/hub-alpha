@@ -18,7 +18,7 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   const myTasks = tasks.filter((t) => t.claimedBy === currentUserName);
 
   // Separate into columns
-  // "Today" = claimed tasks that are pending (not in_progress or completed)
+  // "Not Started" = claimed tasks that are pending (not in_progress or completed)
   const todayTasks = myTasks.filter(
     (t) => t.status === "pending" || t.status === "overdue"
   );
@@ -37,7 +37,7 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   };
 
   const handleDropToday = (taskId: string) => {
-    // Move to "Today" (pending status)
+    // Move to "Not Started" (pending status)
     onUpdateTask(taskId, { status: "pending" });
     setDraggingTask(null);
   };
@@ -87,7 +87,7 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   return (
     <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 px-1 snap-x snap-mandatory sm:snap-none">
       <KanbanColumn
-        title="Today"
+        title="Not Started"
         icon="📋"
         tasks={todayTasks}
         gradient="from-amber-500 to-orange-600"

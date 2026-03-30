@@ -63,17 +63,17 @@ export function KanbanColumn({
           <div className="h-full flex items-center justify-center text-gray-400">
             <div className="text-center px-4">
               <p className="text-4xl mb-2">
-                {title === "Today" ? "📋" : title === "In Progress" ? "🔄" : "🎉"}
+                {title === "Not Started" ? "📋" : title === "In Progress" ? "🔄" : "🎉"}
               </p>
               <p className="text-sm font-medium">
-                {title === "Today"
+                {title === "Not Started"
                   ? "No tasks claimed"
                   : title === "In Progress"
                   ? "Nothing in progress"
                   : "Nothing completed yet"}
               </p>
               <p className="text-xs mt-1 text-gray-300">
-                {title === "Today"
+                {title === "Not Started"
                   ? "Claim tasks from the Ward Diary"
                   : title === "In Progress"
                   ? "Drag tasks here when working"

@@ -17,8 +17,13 @@ import {
 } from "@/lib/data/tasks";
 import { useApp } from "@/app/providers";
 
-// Helper
-const formatDate = (date: Date) => date.toISOString().split("T")[0];
+// Helper — use local date to avoid UTC midnight timezone drift
+const formatDate = (date: Date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+};
 
 // Mini Task Card for widget
 function MiniTaskCard({

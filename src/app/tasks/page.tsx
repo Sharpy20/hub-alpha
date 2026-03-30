@@ -54,8 +54,13 @@ import {
 } from "@/components/modals";
 import { ConfirmDialog } from "@/components/ui";
 
-// Helper functions
-const formatDate = (date: Date) => date.toISOString().split("T")[0];
+// Helper functions — use local date to avoid UTC midnight timezone drift
+const formatDate = (date: Date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+};
 const addDays = (date: Date, days: number) => {
   const result = new Date(date);
   result.setDate(result.getDate() + days);
@@ -1652,9 +1657,12 @@ function RepeatWardTasksModal({
   const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const DAY_ABBREVS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  // Get tasks for a specific day
+  // Get tasks for a specific day (defensive array check)
   const getTasksForDay = (dayIndex: number): WardTask[] => {
-    return recurringTasks.filter((t) => t.recurringDays?.includes(dayIndex));
+    return recurringTasks.filter((t) => {
+      const days = Array.isArray(t.recurringDays) ? t.recurringDays : [];
+      return days.includes(dayIndex);
+    });
   };
 
   return (
@@ -2498,9 +2506,10 @@ function TasksPageInner() {
 
       if (task.type === "ward") {
         // Recurring ward tasks show on every matching day of the week
-        if (task.isRecurring && task.recurringDays && task.recurringDays.length > 0) {
+        const days = Array.isArray(task.recurringDays) ? task.recurringDays : [];
+        if (task.isRecurring && days.length > 0) {
           const targetDayOfWeek = new Date(date + "T12:00:00").getDay();
-          return task.recurringDays.includes(targetDayOfWeek);
+          return days.includes(targetDayOfWeek);
         }
         return task.dueDate === date;
       } else if (task.type === "patient") {

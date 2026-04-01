@@ -392,7 +392,7 @@ export function Header() {
                       {/* Style theme picker */}
                       <div className="p-3 border-b border-gray-100">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                          🎨 Style Theme
+                          🎨 Style Theme (Diary)
                         </p>
                         <div className="grid grid-cols-5 gap-1">
                           {(Object.entries(STYLE_THEMES) as [StyleTheme, typeof STYLE_THEMES[StyleTheme]][]).map(([key, config]) => (

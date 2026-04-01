@@ -38,7 +38,7 @@ function WheelItem({ bookmark, index, total, radius }: WheelItemProps) {
   return (
     <button
       onClick={handleClick}
-      className="absolute w-24 h-24 bg-white rounded-full flex flex-col items-center justify-center text-center p-2 shadow-lg border-3 border-transparent hover:border-nhs-blue hover:scale-110 hover:shadow-xl transition-all z-10 group"
+      className="absolute w-24 h-24 bg-nhs-white rounded-full flex flex-col items-center justify-center text-center p-2 shadow-lg border-3 border-transparent hover:border-nhs-blue hover:scale-110 hover:shadow-xl transition-all z-10 group"
       style={{
         left: `calc(50% + ${x}px - 48px)`,
         top: `calc(50% + ${y}px - 48px)`,
@@ -169,7 +169,7 @@ export function BookmarkCarousel() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-nhs-pale-grey p-6">
+    <div className="bg-nhs-white rounded-xl shadow-sm border border-nhs-pale-grey p-6">
       {/* Wheel container */}
       <div className="relative w-[440px] h-[440px] mx-auto max-w-full">
         {/* Connector lines */}
@@ -180,14 +180,14 @@ export function BookmarkCarousel() {
         {/* Navigation buttons */}
         <button
           onClick={prevCategory}
-          className="absolute top-1/2 -left-4 md:-left-14 -translate-y-1/2 w-11 h-11 bg-white border-2 border-nhs-blue rounded-full flex items-center justify-center text-nhs-blue hover:bg-nhs-blue hover:text-white hover:scale-110 transition-all z-20 shadow-md"
+          className="absolute top-1/2 -left-4 md:-left-14 -translate-y-1/2 w-11 h-11 bg-nhs-white border-2 border-nhs-blue rounded-full flex items-center justify-center text-nhs-blue hover:bg-nhs-blue hover:text-white hover:scale-110 transition-all z-20 shadow-md"
           aria-label="Previous category"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button
           onClick={nextCategory}
-          className="absolute top-1/2 -right-4 md:-right-14 -translate-y-1/2 w-11 h-11 bg-white border-2 border-nhs-blue rounded-full flex items-center justify-center text-nhs-blue hover:bg-nhs-blue hover:text-white hover:scale-110 transition-all z-20 shadow-md"
+          className="absolute top-1/2 -right-4 md:-right-14 -translate-y-1/2 w-11 h-11 bg-nhs-white border-2 border-nhs-blue rounded-full flex items-center justify-center text-nhs-blue hover:bg-nhs-blue hover:text-white hover:scale-110 transition-all z-20 shadow-md"
           aria-label="Next category"
         >
           <ChevronRight className="w-6 h-6" />

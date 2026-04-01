@@ -89,6 +89,51 @@ const isPast = (dateStr: string) => {
   return dateStr < todayStr;
 };
 
+// Theme-aware accent colour helper
+function getTaskAccent(theme: string, taskType: string): { accent: string; tint: string; text: string; muted: string } {
+  type T = Record<string, { accent: string; tint: string; text: string; muted: string }>;
+  const MAP: Record<string, T> = {
+    ios: {
+      ward:        { accent: "#007AFF", tint: "#ffffff", text: "#000000", muted: "#8E8E93" },
+      patient:     { accent: "#FF3B30", tint: "#ffffff", text: "#000000", muted: "#8E8E93" },
+      appointment: { accent: "#FF9500", tint: "#ffffff", text: "#000000", muted: "#8E8E93" },
+    },
+    material: {
+      ward:        { accent: "#1A73E8", tint: "#E8F0FE", text: "#3C4043", muted: "#70757A" },
+      patient:     { accent: "#D93025", tint: "#FCE8E6", text: "#3C4043", muted: "#70757A" },
+      appointment: { accent: "#E37400", tint: "#FEF7E0", text: "#3C4043", muted: "#70757A" },
+    },
+    fluent: {
+      ward:        { accent: "#818CF8", tint: "#1E1B52", text: "#C7D2FE", muted: "#818CF8" },
+      patient:     { accent: "#F472B6", tint: "#1E1B52", text: "#FBCFE8", muted: "#F472B6" },
+      appointment: { accent: "#FBBF24", tint: "#1E1B52", text: "#FDE68A", muted: "#FBBF24" },
+    },
+    oneui: {
+      ward:        { accent: "#6E8EBF", tint: "#ffffff", text: "#37352F", muted: "#9B9A97" },
+      patient:     { accent: "#E16B55", tint: "#ffffff", text: "#37352F", muted: "#9B9A97" },
+      appointment: { accent: "#C4994E", tint: "#ffffff", text: "#37352F", muted: "#9B9A97" },
+    },
+  };
+  return MAP[theme]?.[taskType] ?? { accent: "#005EB8", tint: "#ffffff", text: "#212B32", muted: "#768692" };
+}
+
+// Linked resources (shared between NHS and non-NHS renders)
+function TaskLinkedResources({ task, accent }: { task: DiaryTask; accent?: string }) {
+  const hasReferral = (task.type === "patient" || task.type === "appointment") && task.linkedReferralId;
+  const hasGuide = !!task.linkedGuideId;
+  if (!hasReferral && !hasGuide) return null;
+  return (
+    <div className="flex items-center gap-2 flex-shrink-0">
+      {hasReferral && (
+        <Link href={`/referrals/${task.linkedReferralId}`} className="text-[10px] no-underline" style={accent ? { color: accent } : { color: "rgba(255,255,255,0.8)" }} onClick={(e) => e.stopPropagation()} title="View linked referral">📋</Link>
+      )}
+      {hasGuide && (
+        <Link href={`/how-to/${task.linkedGuideId}`} className="text-[10px] no-underline" style={accent ? { color: accent } : { color: "rgba(255,255,255,0.8)" }} onClick={(e) => e.stopPropagation()} title="View linked guide">📖</Link>
+      )}
+    </div>
+  );
+}
+
 // Task Card Component
 function TaskCard({
   task,
@@ -109,13 +154,14 @@ function TaskCard({
   compact?: boolean;
   onDragStart?: (e: React.DragEvent, taskId: string, taskType: string) => void;
 }) {
+  const { styleTheme } = useApp();
   const isCompleted = task.status === "completed";
   const isOverdue = task.status === "overdue";
   const isInProgress = task.status === "in_progress";
   const isClaimed = !!task.claimedBy;
   const isClaimedByMe = task.claimedBy === currentUserName;
 
-  // Priority-based gradient colors
+  // Priority-based gradient colors (NHS default)
   const priorityConfig = PRIORITY_CONFIG[task.priority];
   const gradient = priorityConfig.gradient;
 
@@ -129,7 +175,7 @@ function TaskCard({
     const shiftConfig = SHIFT_CONFIG[task.shift];
     icon = shiftConfig.icon;
     iconTooltip = `${shiftConfig.label} Shift`;
-    typeTag = `${shiftConfig.label} · Ward`;
+    typeTag = `${shiftConfig.label} · Team`;
   } else if (task.type === "patient") {
     const catConfig = TASK_CATEGORY_CONFIG[task.category];
     icon = catConfig.icon;
@@ -142,216 +188,215 @@ function TaskCard({
     typeTag = "Appointment";
   }
 
+  // ── NHS DEFAULT: existing gradient card, unchanged ──────────────────────────
+  if (styleTheme === "nhs") {
+    return (
+      <div
+        draggable
+        onDragStart={(e) => onDragStart?.(e, task.id, task.type)}
+        onClick={() => onClick?.(task)}
+        className={`overflow-hidden transition-all cursor-grab active:cursor-grabbing theme-card ${
+          isCompleted ? "opacity-60" : "hover:shadow-lg hover:scale-[1.02]"
+        } ${compact ? "text-sm" : ""}`}
+        style={{ borderRadius: "var(--theme-card-radius)", boxShadow: "var(--theme-card-shadow)" }}
+      >
+        <div className={`bg-gradient-to-r ${gradient} ${compact ? "p-2" : "p-2.5"}`} style={{ borderRadius: "var(--theme-card-radius)" }}>
+          <div className="flex items-start gap-2">
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleComplete(task.id); }}
+              className={`flex-shrink-0 w-5 h-5 rounded-full border-2 border-white/50 flex items-center justify-center transition-all ${
+                isCompleted ? "bg-white/30" : "hover:bg-white/20"
+              }`}
+            >
+              {isCompleted && <Check className="w-3 h-3 text-white" />}
+            </button>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className={compact ? "text-base" : "text-lg"} title={iconTooltip}>{icon}</span>
+                <h4 className={`font-semibold text-white truncate ${isCompleted ? "line-through" : ""} ${compact ? "text-xs" : "text-sm"}`}>
+                  {task.title}
+                </h4>
+                {isOverdue && <span className="bg-red-500 text-white text-[10px] px-1 py-0.5 rounded font-medium flex-shrink-0">Overdue</span>}
+                {task.type === "patient" && task.repeatIntervalDays && <span className="text-white/70 text-[10px] flex-shrink-0" title={`Repeats every ${task.repeatIntervalDays} days`}>🔄</span>}
+                {task.type === "ward" && task.isRecurring && <span className="text-white/70 text-[10px] flex-shrink-0" title="Repeating team task">🔄</span>}
+              </div>
+              {subtitle && <p className="text-white/70 text-xs truncate">{subtitle}</p>}
+              {typeTag && <span className="inline-block text-white/70 text-[10px] bg-white/15 rounded px-1.5 py-0.5 mt-0.5 w-fit">{typeTag}</span>}
+              {(task.type === "patient" || task.type === "appointment") && task.patientName && (
+                <p className={`text-white font-medium truncate ${compact ? "text-xs" : "text-sm"}`}>👤 {task.patientName}</p>
+              )}
+              {isClaimed && !isCompleted && (
+                <div className="flex items-center justify-between gap-1.5 mt-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {!isClaimedByMe && onSteal && (
+                      <button onClick={(e) => { e.stopPropagation(); onSteal(task.id); }} className="flex items-center gap-1 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors" title={`Assigned to ${task.claimedBy} – reassign to yourself`}>
+                        <Hand className="w-2.5 h-2.5" /> Take Over
+                      </button>
+                    )}
+                    {isClaimedByMe && onClaim && (
+                      <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors" title="Release this task so others can pick it up">
+                        <Hand className="w-2.5 h-2.5" /> Drop
+                      </button>
+                    )}
+                    <span className="text-white/80 text-[10px] flex items-center gap-1"><Hand className="w-2.5 h-2.5" />{isInProgress ? `${task.claimedBy} working` : task.claimedBy}</span>
+                  </div>
+                  <TaskLinkedResources task={task} />
+                </div>
+              )}
+              {!isCompleted && !isClaimed && (onClaim || ((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) || task.linkedGuideId) && (
+                <div className="flex items-center justify-between gap-1.5 mt-1">
+                  {onClaim ? (
+                    <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors" title="Assign this task to yourself">
+                      <Hand className="w-2.5 h-2.5" /> Claim
+                    </button>
+                  ) : <div />}
+                  <TaskLinkedResources task={task} />
+                </div>
+              )}
+              {isCompleted && (((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) || task.linkedGuideId) && (
+                <div className="flex items-center justify-end gap-2 mt-1"><TaskLinkedResources task={task} /></div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── NON-NHS THEMES: theme-aware renders ─────────────────────────────────────
+  const { accent, tint, text: textPrimary, muted: textMuted } = getTaskAccent(styleTheme, task.type);
+  const isNotion = styleTheme === "oneui";
+  const isFantastical = styleTheme === "fluent";
+
+  const wrapperStyle: React.CSSProperties = isFantastical
+    ? { borderRadius: 0 }
+    : isNotion
+    ? { borderRadius: 0, borderBottom: "1px solid #E9E9E7" }
+    : { borderRadius: "var(--theme-card-radius)", overflow: "hidden", boxShadow: "var(--theme-card-shadow)" };
+
+  const innerStyle: React.CSSProperties = isNotion
+    ? { background: "#ffffff", padding: compact ? "6px 4px" : "8px 4px" }
+    : isFantastical
+    ? { background: "#1E1B52", borderLeft: `2px solid ${accent}`, borderTop: "0.5px solid rgba(255,255,255,0.05)", padding: compact ? "8px 10px" : "10px 12px" }
+    : styleTheme === "material"
+    ? { background: tint, borderLeft: `3px solid ${accent}`, padding: compact ? "8px 10px" : "10px 12px" }
+    : /* ios */ { background: "#ffffff", borderLeft: `4px solid ${accent}`, padding: compact ? "8px 10px" : "10px 12px", borderRadius: "var(--theme-card-radius)" };
+
   return (
     <div
       draggable
       onDragStart={(e) => onDragStart?.(e, task.id, task.type)}
       onClick={() => onClick?.(task)}
-      className={`overflow-hidden transition-all cursor-grab active:cursor-grabbing theme-card ${
-        isCompleted ? "opacity-60" : "hover:shadow-lg hover:scale-[1.02]"
-      } ${compact ? "text-sm" : ""}`}
-      style={{ borderRadius: "var(--theme-card-radius)", boxShadow: "var(--theme-card-shadow)" }}
+      className={`overflow-hidden transition-all cursor-grab active:cursor-grabbing ${isCompleted ? "opacity-60" : ""}`}
+      style={wrapperStyle}
     >
-      <div className={`bg-gradient-to-r ${gradient} ${compact ? "p-2" : "p-2.5"}`} style={{ borderRadius: "var(--theme-card-radius)" }}>
-        <div className="flex items-start gap-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleComplete(task.id);
-            }}
-            className={`flex-shrink-0 w-5 h-5 rounded-full border-2 border-white/50 flex items-center justify-center transition-all ${
-              isCompleted ? "bg-white/30" : "hover:bg-white/20"
-            }`}
-          >
-            {isCompleted && <Check className="w-3 h-3 text-white" />}
-          </button>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className={compact ? "text-base" : "text-lg"} title={iconTooltip}>{icon}</span>
-              <h4
-                className={`font-semibold text-white truncate ${
-                  isCompleted ? "line-through" : ""
-                } ${compact ? "text-xs" : "text-sm"}`}
-              >
-                {task.title}
-              </h4>
-              {isOverdue && (
-                <span className="bg-red-500 text-white text-[10px] px-1 py-0.5 rounded font-medium flex-shrink-0">
-                  Overdue
-                </span>
+      <div style={innerStyle}>
+        {isNotion ? (
+          // ── Notion: flat database row ────────────────────────────────────────
+          <div className="flex items-start gap-2 w-full">
+            <div className="flex-shrink-0 mt-1.5" style={{ width: 8, height: 8, borderRadius: "50%", background: accent }} />
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleComplete(task.id); }}
+              className="flex-shrink-0 w-4 h-4 border flex items-center justify-center mt-0.5"
+              style={{ borderColor: isCompleted ? "#2EAADC" : "#D1D1D1", borderRadius: 3, background: isCompleted ? "#2EAADC" : "#ffffff" }}
+            >
+              {isCompleted && <Check className="w-2.5 h-2.5 text-white" />}
+            </button>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4
+                  className={`truncate ${compact ? "text-xs" : "text-sm"}`}
+                  style={{ color: isCompleted ? "#9B9A97" : "#37352F", fontWeight: 400 }}
+                >
+                  {task.title}
+                </h4>
+                {isOverdue && <span className="text-[10px] px-1 py-0.5 rounded" style={{ background: "#FCE8E6", color: "#D93025" }}>Overdue</span>}
+                {(task.type === "patient" && task.repeatIntervalDays) || (task.type === "ward" && task.isRecurring) ? <span className="text-[10px]" style={{ color: "#9B9A97" }}>🔄</span> : null}
+              </div>
+              {(task.type === "patient" || task.type === "appointment") && task.patientName && (
+                <p style={{ color: "#9B9A97", fontSize: "11px", fontFamily: '"Courier New", monospace' }}>👤 {task.patientName}</p>
               )}
-              {task.type === "patient" && task.repeatIntervalDays && (
-                <span className="text-white/70 text-[10px] flex-shrink-0" title={`Repeats every ${task.repeatIntervalDays} days`}>
-                  🔄
-                </span>
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                {!isCompleted && !isClaimed && onClaim && (
+                  <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} style={{ color: accent, fontSize: 10 }} title="Assign this task to yourself">+ Claim</button>
+                )}
+                {isClaimed && !isClaimedByMe && onSteal && (
+                  <button onClick={(e) => { e.stopPropagation(); onSteal(task.id); }} style={{ color: "#D97706", fontSize: 10 }} title={`Assigned to ${task.claimedBy}`}>Take Over</button>
+                )}
+                {isClaimed && isClaimedByMe && onClaim && (
+                  <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} style={{ color: "#9B9A97", fontSize: 10 }}>Drop</button>
+                )}
+                {isClaimed && <span style={{ color: "#9B9A97", fontSize: 10 }}>{isInProgress ? `${task.claimedBy} working` : task.claimedBy}</span>}
+                <TaskLinkedResources task={task} accent={accent} />
+              </div>
+            </div>
+          </div>
+        ) : (
+          // ── iOS / Google Material / Fantastical: card structure ──────────────
+          <div className="flex items-start gap-2">
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleComplete(task.id); }}
+              className="flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all"
+              style={{ borderColor: isCompleted ? accent : `${accent}80`, background: isCompleted ? `${accent}30` : "transparent" }}
+            >
+              {isCompleted && <Check className="w-3 h-3" style={{ color: accent }} />}
+            </button>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className={compact ? "text-sm" : "text-base"} title={iconTooltip}>{icon}</span>
+                <h4
+                  className={`font-semibold truncate ${compact ? "text-xs" : "text-sm"} ${isCompleted ? "line-through" : ""}`}
+                  style={{ color: textPrimary }}
+                >
+                  {task.title}
+                </h4>
+                {isOverdue && <span className="text-[10px] px-1 py-0.5 rounded font-medium flex-shrink-0" style={{ background: "#ef444420", color: "#ef4444" }}>Overdue</span>}
+                {task.type === "patient" && task.repeatIntervalDays && <span className="text-[10px] flex-shrink-0" style={{ color: textMuted }}>🔄</span>}
+                {task.type === "ward" && task.isRecurring && <span className="text-[10px] flex-shrink-0" style={{ color: textMuted }}>🔄</span>}
+              </div>
+              {subtitle && <p className="text-xs truncate" style={{ color: textMuted }}>{subtitle}</p>}
+              {typeTag && (
+                <span className="inline-block text-[10px] rounded px-1.5 py-0.5 mt-0.5 w-fit" style={{ color: accent, background: `${accent}20` }}>{typeTag}</span>
               )}
-              {task.type === "ward" && task.isRecurring && (
-                <span className="text-white/70 text-[10px] flex-shrink-0" title="Repeating team task">
-                  🔄
-                </span>
+              {(task.type === "patient" || task.type === "appointment") && task.patientName && (
+                <p className={`font-medium truncate ${compact ? "text-xs" : "text-sm"}`} style={{ color: textPrimary }}>👤 {task.patientName}</p>
+              )}
+              {isClaimed && !isCompleted && (
+                <div className="flex items-center justify-between gap-1.5 mt-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {!isClaimedByMe && onSteal && (
+                      <button onClick={(e) => { e.stopPropagation(); onSteal(task.id); }} className="flex items-center gap-0.5 text-[10px] rounded px-1.5 py-0.5 transition-colors" style={{ border: "1px solid #F59E0B", color: "#D97706" }} title={`Assigned to ${task.claimedBy} – reassign to yourself`}>
+                        <Hand className="w-2.5 h-2.5" /> Take Over
+                      </button>
+                    )}
+                    {isClaimedByMe && onClaim && (
+                      <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-0.5 text-[10px] rounded px-1.5 py-0.5 transition-colors" style={{ border: `1px solid ${textMuted}`, color: textMuted }} title="Release this task so others can pick it up">
+                        <Hand className="w-2.5 h-2.5" /> Drop
+                      </button>
+                    )}
+                    <span className="text-[10px] flex items-center gap-0.5" style={{ color: textMuted }}>
+                      <Hand className="w-2.5 h-2.5" />{isInProgress ? `${task.claimedBy} working` : task.claimedBy}
+                    </span>
+                  </div>
+                  <TaskLinkedResources task={task} accent={accent} />
+                </div>
+              )}
+              {!isCompleted && !isClaimed && (onClaim || ((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) || task.linkedGuideId) && (
+                <div className="flex items-center justify-between gap-1.5 mt-1">
+                  {onClaim ? (
+                    <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-0.5 text-[10px] rounded px-1.5 py-0.5 transition-colors" style={{ border: `1px solid ${accent}`, color: accent }} title="Assign this task to yourself">
+                      <Hand className="w-2.5 h-2.5" /> Claim
+                    </button>
+                  ) : <div />}
+                  <TaskLinkedResources task={task} accent={accent} />
+                </div>
+              )}
+              {isCompleted && (((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) || task.linkedGuideId) && (
+                <div className="flex items-center justify-end gap-2 mt-1"><TaskLinkedResources task={task} accent={accent} /></div>
               )}
             </div>
-
-            {/* Appointment time subtitle */}
-            {subtitle && <p className="text-white/70 text-xs truncate">{subtitle}</p>}
-
-            {/* Type tag */}
-            {typeTag && (
-              <span className="inline-block text-white/70 text-[10px] bg-white/15 rounded px-1.5 py-0.5 mt-0.5 w-fit">
-                {typeTag}
-              </span>
-            )}
-
-            {/* Patient name */}
-            {(task.type === "patient" || task.type === "appointment") && task.patientName && (
-              <p className={`text-white font-medium truncate ${compact ? "text-xs" : "text-sm"}`}>
-                👤 {task.patientName}
-              </p>
-            )}
-
-            {/* Claimed status row with steal/unclaim buttons inline + linked resources on right */}
-            {isClaimed && !isCompleted && (
-              <div className="flex items-center justify-between gap-1.5 mt-1">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {/* Steal button - if claimed by someone else */}
-                  {!isClaimedByMe && onSteal && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSteal(task.id);
-                      }}
-                      className="flex items-center gap-1 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors"
-                      title={`Assigned to ${task.claimedBy} – reassign to yourself`}
-                    >
-                      <Hand className="w-2.5 h-2.5" />
-                      Take Over
-                    </button>
-                  )}
-                  {/* Drop button - if claimed by me */}
-                  {isClaimedByMe && onClaim && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onClaim(task.id);
-                      }}
-                      className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
-                      title="Release this task so others can pick it up"
-                    >
-                      <Hand className="w-2.5 h-2.5" />
-                      Drop
-                    </button>
-                  )}
-                  <span className="text-white/80 text-[10px] flex items-center gap-1">
-                    <Hand className="w-2.5 h-2.5" />
-                    {isInProgress ? `${task.claimedBy} working` : task.claimedBy}
-                  </span>
-                </div>
-                {/* Linked resources - right side */}
-                {((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
-                 ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId) ? (
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {(task.type === "patient" || task.type === "appointment") && task.linkedReferralId && (
-                      <Link
-                        href={`/referrals/${task.linkedReferralId}`}
-                        className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
-                        onClick={(e) => e.stopPropagation()}
-                        title="View linked referral"
-                      >
-                        <span>📋</span>
-                      </Link>
-                    )}
-                    {(task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId && (
-                      <Link
-                        href={`/how-to/${task.linkedGuideId}`}
-                        className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
-                        onClick={(e) => e.stopPropagation()}
-                        title="View linked guide"
-                      >
-                        <span>📖</span>
-                      </Link>
-                    )}
-                  </div>
-                ) : null}
-              </div>
-            )}
-
-            {/* Claim button row - only if not claimed + linked resources on right */}
-            {!isCompleted && !isClaimed && (onClaim ||
-              ((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
-              ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId)) && (
-              <div className="flex items-center justify-between gap-1.5 mt-1">
-                {onClaim ? (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClaim(task.id);
-                    }}
-                    className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors"
-                    title="Assign this task to yourself"
-                  >
-                    <Hand className="w-2.5 h-2.5" />
-                    Claim
-                  </button>
-                ) : <div />}
-                {/* Linked resources - right side */}
-                {((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
-                 ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId) ? (
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {(task.type === "patient" || task.type === "appointment") && task.linkedReferralId && (
-                      <Link
-                        href={`/referrals/${task.linkedReferralId}`}
-                        className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
-                        onClick={(e) => e.stopPropagation()}
-                        title="View linked referral"
-                      >
-                        <span>📋</span>
-                      </Link>
-                    )}
-                    {(task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId && (
-                      <Link
-                        href={`/how-to/${task.linkedGuideId}`}
-                        className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
-                        onClick={(e) => e.stopPropagation()}
-                        title="View linked guide"
-                      >
-                        <span>📖</span>
-                      </Link>
-                    )}
-                  </div>
-                ) : null}
-              </div>
-            )}
-
-            {/* Linked resources only - when completed and has links */}
-            {isCompleted && (
-              ((task.type === "patient" || task.type === "appointment") && task.linkedReferralId) ||
-              ((task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId)
-            ) && (
-              <div className="flex items-center justify-end gap-2 mt-1">
-                {(task.type === "patient" || task.type === "appointment") && task.linkedReferralId && (
-                  <Link
-                    href={`/referrals/${task.linkedReferralId}`}
-                    className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
-                    onClick={(e) => e.stopPropagation()}
-                    title="View linked referral"
-                  >
-                    <span>📋</span>
-                  </Link>
-                )}
-                {(task.type === "ward" || task.type === "patient" || task.type === "appointment") && task.linkedGuideId && (
-                  <Link
-                    href={`/how-to/${task.linkedGuideId}`}
-                    className="flex items-center gap-0.5 text-white/80 text-[10px] hover:text-white no-underline"
-                    onClick={(e) => e.stopPropagation()}
-                    title="View linked guide"
-                  >
-                    <span>📖</span>
-                  </Link>
-                )}
-              </div>
-            )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -373,6 +418,7 @@ function SimpleTaskCard({
   currentUserName?: string;
   onDragStart?: (e: React.DragEvent, taskId: string, taskType: string) => void;
 }) {
+  const { styleTheme } = useApp();
   const isClaimed = !!task.claimedBy;
   const isClaimedByMe = task.claimedBy === currentUserName;
   const priorityConfig = PRIORITY_CONFIG[task.priority];
@@ -387,52 +433,58 @@ function SimpleTaskCard({
     icon = "📅";
   }
 
+  // NHS: gradient card
+  if (styleTheme === "nhs") {
+    return (
+      <div draggable onDragStart={(e) => onDragStart?.(e, task.id, task.type)} onClick={() => onClick?.(task)} className="rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:shadow-md hover:scale-[1.01] transition-all">
+        <div className={`bg-gradient-to-r ${gradient} px-2.5 py-1.5 flex items-center gap-2`}>
+          <span className="text-sm flex-shrink-0">{icon}</span>
+          <h4 className="font-semibold text-white text-xs truncate flex-1 min-w-0">{task.title}</h4>
+          {(task.type === "patient" || task.type === "appointment") && task.patientName && (
+            <span className="text-white/80 text-[10px] flex-shrink-0 truncate max-w-[120px]">👤 {task.patientName}</span>
+          )}
+          {!isClaimed && onClaim && (
+            <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0" title="Assign this task to yourself"><Hand className="w-2.5 h-2.5" /> Claim</button>
+          )}
+          {isClaimed && !isClaimedByMe && onSteal && (
+            <button onClick={(e) => { e.stopPropagation(); onSteal(task.id); }} className="flex items-center gap-0.5 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors flex-shrink-0" title={`Assigned to ${task.claimedBy} – reassign to yourself`}><Hand className="w-2.5 h-2.5" /> Take Over</button>
+          )}
+          {isClaimed && isClaimedByMe && onClaim && (
+            <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0" title="Release this task so others can pick it up"><Hand className="w-2.5 h-2.5" /> Drop</button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Non-NHS: theme-aware simple card
+  const { accent, tint, text: textColor } = getTaskAccent(styleTheme, task.type);
+  const isFantastical = styleTheme === "fluent";
+  const isNotion = styleTheme === "oneui";
+
+  const rowStyle: React.CSSProperties = isNotion
+    ? { borderBottom: "1px solid #E9E9E7", padding: "5px 0", display: "flex", alignItems: "center", gap: "8px" }
+    : isFantastical
+    ? { background: "#1E1B52", borderLeft: `2px solid ${accent}`, padding: "5px 8px", display: "flex", alignItems: "center", gap: "6px" }
+    : { background: tint, borderLeft: `${styleTheme === "material" ? 3 : 4}px solid ${accent}`, padding: "5px 8px", display: "flex", alignItems: "center", gap: "6px", borderRadius: "var(--theme-card-radius)" };
+
   return (
-    <div
-      draggable
-      onDragStart={(e) => onDragStart?.(e, task.id, task.type)}
-      onClick={() => onClick?.(task)}
-      className="rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:shadow-md hover:scale-[1.01] transition-all"
-    >
-      <div className={`bg-gradient-to-r ${gradient} px-2.5 py-1.5 flex items-center gap-2`}>
-        <span className="text-sm flex-shrink-0">{icon}</span>
-        <h4 className="font-semibold text-white text-xs truncate flex-1 min-w-0">
-          {task.title}
-        </h4>
+    <div draggable onDragStart={(e) => onDragStart?.(e, task.id, task.type)} onClick={() => onClick?.(task)} className="cursor-grab active:cursor-grabbing transition-all overflow-hidden">
+      <div style={rowStyle}>
+        {isNotion && <div style={{ width: 7, height: 7, borderRadius: "50%", background: accent, flexShrink: 0 }} />}
+        {!isNotion && <span className="text-sm flex-shrink-0">{icon}</span>}
+        <h4 className="text-xs truncate flex-1 min-w-0" style={{ color: textColor, fontWeight: isNotion ? 400 : 600 }}>{task.title}</h4>
         {(task.type === "patient" || task.type === "appointment") && task.patientName && (
-          <span className="text-white/80 text-[10px] flex-shrink-0 truncate max-w-[120px]">
-            👤 {task.patientName}
-          </span>
+          <span className="text-[10px] flex-shrink-0 truncate max-w-[100px]" style={{ color: isNotion ? "#9B9A97" : `${textColor}90` }}>👤 {task.patientName}</span>
         )}
         {!isClaimed && onClaim && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onClaim(task.id); }}
-            className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0"
-            title="Assign this task to yourself"
-          >
-            <Hand className="w-2.5 h-2.5" />
-            Claim
-          </button>
+          <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="text-[10px] flex-shrink-0 rounded px-1.5 py-0.5 transition-colors" style={{ border: `1px solid ${accent}`, color: accent }} title="Assign this task to yourself">Claim</button>
         )}
         {isClaimed && !isClaimedByMe && onSteal && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onSteal(task.id); }}
-            className="flex items-center gap-0.5 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors flex-shrink-0"
-            title={`Assigned to ${task.claimedBy} – reassign to yourself`}
-          >
-            <Hand className="w-2.5 h-2.5" />
-            Take Over
-          </button>
+          <button onClick={(e) => { e.stopPropagation(); onSteal(task.id); }} className="text-[10px] flex-shrink-0 rounded px-1.5 py-0.5 transition-colors" style={{ border: "1px solid #F59E0B", color: "#D97706" }} title={`Assigned to ${task.claimedBy}`}>Take Over</button>
         )}
         {isClaimed && isClaimedByMe && onClaim && (
-          <button
-            onClick={(e) => { e.stopPropagation(); onClaim(task.id); }}
-            className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0"
-            title="Release this task so others can pick it up"
-          >
-            <Hand className="w-2.5 h-2.5" />
-            Drop
-          </button>
+          <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="text-[10px] flex-shrink-0 rounded px-1.5 py-0.5 transition-colors" style={{ border: "1px solid #9B9A97", color: "#9B9A97" }} title="Release this task">Drop</button>
         )}
       </div>
     </div>
@@ -589,22 +641,29 @@ function CollapsibleSection({
 }) {
   if (count === 0) return null;
 
+  const { styleTheme } = useApp();
+  const isFantastical = styleTheme === "fluent";
+  const isNotion = styleTheme === "oneui";
+  const sectionTextColor = isFantastical ? "#818CF8" : isNotion ? "#9B9A97" : "#6B7280";
+  const sectionBadgeBg = isFantastical ? "rgba(99,102,241,0.2)" : isNotion ? "#F7F7F5" : "#F3F4F6";
+
   return (
     <div className="mb-2">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors group"
+        className="w-full flex items-center justify-between px-2 py-1 rounded-lg transition-colors group"
+        style={{ color: sectionTextColor }}
       >
         <div className="flex items-center gap-1.5">
           <span className="text-sm">{icon}</span>
-          <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wide">
+          <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: sectionTextColor }}>
             {title}
           </span>
-          <span className="bg-gray-100 text-gray-500 text-[10px] px-1.5 py-0.5 rounded-full font-medium min-w-[20px] text-center">
+          <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium min-w-[20px] text-center" style={{ background: sectionBadgeBg, color: sectionTextColor }}>
             {count}
           </span>
         </div>
-        <ChevronDown className={`w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`} style={{ color: sectionTextColor }} />
       </button>
       <div className={`overflow-hidden transition-all duration-200 ease-in-out ${expanded ? "max-h-[2000px] opacity-100 mt-1.5" : "max-h-0 opacity-0"}`}>
         {children}
@@ -717,8 +776,29 @@ function DayColumn({
   const visiblePatientTasks = filterCompleted(patientTasks);
   const visibleAppointments = filterCompleted(appointments);
 
+  const { styleTheme } = useApp();
   const totalVisible =
     visibleWardTasks.length + visiblePatientTasks.length + visibleAppointments.length;
+
+  // Theme-aware column styling
+  const isFantastical = styleTheme === "fluent";
+  const colBorderColor = isDragOver
+    ? "#005EB8"
+    : isFocused
+    ? "var(--theme-col-border-focused)"
+    : isToday
+    ? "var(--theme-col-border-today)"
+    : "var(--theme-col-border-default)";
+  const colBgColor = isDragOver ? (isFantastical ? "#1E1B4B" : "rgba(219,234,254,0.3)") : "var(--theme-col-bg)";
+
+  // Header styles per state
+  const headerStyle: React.CSSProperties = isFocused
+    ? { background: `linear-gradient(to right, var(--theme-col-header-focused-from), var(--theme-col-header-focused-to))`, color: "#ffffff" }
+    : isToday
+    ? { backgroundColor: "var(--theme-col-header-today-bg)", color: "var(--theme-col-header-today-text)" }
+    : isPastDay
+    ? { backgroundColor: "var(--theme-col-header-past-bg)", color: "var(--theme-col-header-past-text)" }
+    : { backgroundColor: "var(--theme-col-header-future-bg)", color: "var(--theme-col-header-future-text)" };
 
   return (
     <div
@@ -728,34 +808,17 @@ function DayColumn({
       onDrop={onDayDrop}
       className={`flex-shrink-0 transition-all duration-300 cursor-pointer ${
         isFocused ? "w-80 sm:w-96" : "w-48 sm:w-52"
-      } bg-white rounded-xl border-2 ${
-        isDragOver
-          ? "border-nhs-blue border-dashed shadow-xl bg-blue-50/50"
-          : isFocused
-          ? "border-indigo-400 shadow-xl"
-          : isToday
-          ? "border-indigo-200"
-          : "border-gray-200 hover:border-gray-300"
-      } overflow-hidden`}
+      } rounded-xl border-2 ${isDragOver ? "border-dashed shadow-xl" : isFocused ? "shadow-xl" : ""} overflow-hidden`}
+      style={{ borderColor: colBorderColor, backgroundColor: colBgColor }}
     >
       {/* Day header */}
-      <div
-        className={`px-3 py-2.5 transition-all ${
-          isFocused
-            ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
-            : isToday
-            ? "bg-indigo-100 text-indigo-800"
-            : isPastDay
-            ? "bg-gray-100 text-gray-500"
-            : "bg-gray-50 text-gray-700"
-        }`}
-      >
+      <div className="px-3 py-2.5 transition-all" style={headerStyle}>
         <div className="flex items-center justify-between">
           <div className={isFocused ? "text-left" : "text-center flex-1"}>
             <p className={`font-bold ${isFocused ? "text-base" : "text-sm"}`}>
               {formatDisplayDate(date)}
             </p>
-            <p className={`text-[11px] ${isFocused ? "text-white/70" : "opacity-60"}`}>
+            <p className="text-[11px] opacity-70">
               {new Date(date).toLocaleDateString("en-GB", { weekday: "short" })}
               {!isFocused && totalVisible > 0 && ` · ${totalVisible}`}
             </p>
@@ -766,11 +829,7 @@ function DayColumn({
                 e.stopPropagation();
                 onExpand();
               }}
-              className={`p-1 rounded-md transition-colors ${
-                isFocused
-                  ? "hover:bg-white/20 text-white/80"
-                  : "hover:bg-gray-200/50 text-gray-400"
-              }`}
+              className="p-1 rounded-md transition-colors hover:bg-white/20 opacity-70 hover:opacity-100"
               title={isFocused ? "Collapse" : "Expand"}
               aria-label={isFocused ? "Collapse day view" : "Expand day view"}
             >

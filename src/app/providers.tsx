@@ -14,11 +14,11 @@ export type UserRole = "staff" | "lead" | "manager" | "ward_admin" | "senior_adm
 export type StyleTheme = "nhs" | "ios" | "material" | "fluent" | "oneui";
 
 export const STYLE_THEMES: Record<StyleTheme, { label: string; icon: string; description: string }> = {
-  nhs: { label: "NHS Default", icon: "🏥", description: "Clean NHS styling" },
-  ios: { label: "iOS", icon: "🍎", description: "Apple Calendar feel" },
-  material: { label: "Material", icon: "🤖", description: "Google Calendar feel" },
-  fluent: { label: "Windows", icon: "🪟", description: "Windows Calendar feel" },
-  oneui: { label: "Samsung", icon: "📱", description: "Samsung Calendar feel" },
+  nhs: { label: "NHS Default", icon: "🏥", description: "Standard NHS styling" },
+  ios: { label: "Apple", icon: "🍎", description: "Clean, airy Apple Calendar feel" },
+  material: { label: "Google", icon: "🔵", description: "Google Calendar with left-border cards" },
+  fluent: { label: "Fantastical", icon: "🌌", description: "Dark indigo premium look" },
+  oneui: { label: "Notion", icon: "📋", description: "Minimal database-style layout" },
 };
 
 interface User {

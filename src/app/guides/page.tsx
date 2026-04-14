@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout";
 import { Badge, VerificationBadge } from "@/components/ui";
 import Link from "next/link";
@@ -18,15 +18,15 @@ interface GuideItem {
   viewerPath: string;
 }
 
-// All guides in one flat list - no categories/tabs
+// All guides in one flat list - pinned order for "All" view, reorderable via editor
 const ALL_GUIDES: GuideItem[] = [
-  // Named Nurse Tools
-  { id: "mh-talking-points", title: "Named Nurse Talking Points", description: "23 patient-facing mental health guides - print as leaflets for patients and families", icon: "\uD83E\uDDE0", gradient: "from-gray-800 to-gray-900", category: "Named Nurse Tools", viewerPath: "/patient-guides" },
-  // Referrals
+  // Pinned top 4 (most developed guides for demo)
   { id: "imha-advocacy", title: "IMHA / Advocacy", description: "Independent Mental Health Advocate for all patients (informal and detained)", icon: "\uD83D\uDDE3\uFE0F", gradient: "from-indigo-500 to-indigo-700", category: "Legal & Advocacy", viewerPath: "/guides/imha-advocacy" },
-  { id: "picu", title: "PICU Referral", description: "Psychiatric Intensive Care Unit transfers", icon: "\uD83C\uDFE5", gradient: "from-rose-500 to-rose-700", category: "Urgent Care", viewerPath: "/guides/picu" },
+  { id: "mh-talking-points", title: "Named Nurse Talking Points", description: "23 patient-facing mental health guides - print as leaflets for patients and families", icon: "\uD83E\uDDE0", gradient: "from-gray-800 to-gray-900", category: "Named Nurse Tools", viewerPath: "/patient-guides" },
   { id: "safeguarding", title: "Safeguarding Adults - Making a Referral", description: "S.42 referral - report concerns, Derby City or County", icon: "\uD83D\uDEE1\uFE0F", gradient: "from-red-600 to-red-800", category: "Safeguarding", viewerPath: "/guides/safeguarding" },
   { id: "safeguarding-children", title: "Safeguarding Children - Making a Referral", description: "Starting Point referral for child concerns", icon: "\uD83D\uDC76", gradient: "from-pink-500 to-pink-700", category: "Safeguarding", viewerPath: "/guides/safeguarding-children" },
+  // Referrals
+  { id: "picu", title: "PICU Referral", description: "Psychiatric Intensive Care Unit transfers", icon: "\uD83C\uDFE5", gradient: "from-rose-500 to-rose-700", category: "Urgent Care", viewerPath: "/guides/picu" },
   { id: "homeless-discharge", title: "Housing / Duty to Refer", description: "Homeless discharge and accommodation support", icon: "\uD83C\uDFE0", gradient: "from-orange-500 to-orange-700", category: "Social & Housing", viewerPath: "/guides/homeless-discharge" },
   { id: "social-care", title: "Social Care (Derby City)", description: "Care Act assessment, S117 referrals & Enablement", icon: "\uD83D\uDC65", gradient: "from-amber-500 to-amber-700", category: "Social & Housing", viewerPath: "/guides/social-care" },
   { id: "s117-meeting", title: "S117 Meeting Request", description: "Request Social Care attendance at S117 discharge meeting", icon: "\u2696\uFE0F", gradient: "from-purple-600 to-purple-800", category: "Legal & Advocacy", viewerPath: "/guides/s117-meeting" },
@@ -78,15 +78,36 @@ export default function GuidesPage() {
   const { getPendingCount } = useReferralLog();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [customOrder, setCustomOrder] = useState<{ id: string; category: string }[] | null>(null);
   const pendingCount = getPendingCount();
 
+  // Load custom order from localStorage (set via editor)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("wardhub_guide_order");
+      if (saved) setCustomOrder(JSON.parse(saved));
+    } catch { /* use default */ }
+  }, []);
+
+  // Apply custom order if available
+  const orderedGuides = customOrder
+    ? customOrder
+        .map(co => {
+          const guide = ALL_GUIDES.find(g => g.id === co.id);
+          return guide ? { ...guide, category: co.category } : null;
+        })
+        .filter((g): g is GuideItem => g !== null)
+        // Append any new guides not in the saved order
+        .concat(ALL_GUIDES.filter(g => !customOrder.some(co => co.id === g.id)))
+    : ALL_GUIDES;
+
   // Get all categories
-  const allCategories = [...new Set(ALL_GUIDES.map((g) => g.category))];
+  const allCategories = [...new Set(orderedGuides.map((g) => g.category))];
 
   // Filter by category
   const categoryFiltered = selectedCategory === "all"
-    ? ALL_GUIDES
-    : ALL_GUIDES.filter((g) => g.category === selectedCategory);
+    ? orderedGuides
+    : orderedGuides.filter((g) => g.category === selectedCategory);
 
   // Filter by search
   const filteredGuides = searchQuery.trim()

@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
+  ArrowUp,
+  ArrowDown,
   FileText,
   Pencil,
   Plus,
@@ -16,6 +18,7 @@ import {
   Shield,
   Workflow,
   AlertTriangle,
+  GripVertical,
 } from "lucide-react";
 import { FlowchartEditor, WorkflowStep, WorkflowVersion } from "@/components/admin/FlowchartEditor";
 
@@ -591,7 +594,157 @@ export default function WorkflowsAdminPage() {
         <div className="text-center text-sm text-gray-500">
           {WORKFLOWS.length} workflows available
         </div>
+
+        {/* Guide Display Order */}
+        <GuideOrderEditor />
       </div>
     </MainLayout>
   );
 }
+
+// ---- Guide Order Editor ----
+const GUIDE_CATEGORIES = [
+  "Named Nurse Tools", "Legal & Advocacy", "Urgent Care", "Safeguarding",
+  "Social & Housing", "Allied Health", "Physical Health", "Discharge Planning",
+  "Psychology", "Specialist Pathways", "Clinical Assessment", "Legal",
+  "Ward Procedures", "Emergency",
+];
+
+function GuideOrderEditor() {
+  const [guideOrder, setGuideOrder] = useState<{ id: string; title: string; icon: string; category: string }[]>([]);
+  const [savedMsg, setSavedMsg] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    // Load from localStorage or use default from the guides page data
+    const saved = localStorage.getItem("wardhub_guide_order");
+    if (saved) {
+      try { setGuideOrder(JSON.parse(saved)); return; } catch { /* fall through */ }
+    }
+    // Default order - fetch from the page (we'll use an import-free approach by hardcoding the IDs)
+    fetch("/guides")
+      .then(() => {
+        // Use the default order from ALL_GUIDES
+        setGuideOrder(DEFAULT_GUIDE_ORDER);
+      })
+      .catch(() => setGuideOrder(DEFAULT_GUIDE_ORDER));
+  }, []);
+
+  const moveUp = (index: number) => {
+    if (index === 0) return;
+    const newOrder = [...guideOrder];
+    [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+    setGuideOrder(newOrder);
+  };
+
+  const moveDown = (index: number) => {
+    if (index === guideOrder.length - 1) return;
+    const newOrder = [...guideOrder];
+    [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
+    setGuideOrder(newOrder);
+  };
+
+  const changeCategory = (index: number, newCategory: string) => {
+    const newOrder = [...guideOrder];
+    newOrder[index] = { ...newOrder[index], category: newCategory };
+    setGuideOrder(newOrder);
+  };
+
+  const handleSave = () => {
+    localStorage.setItem("wardhub_guide_order", JSON.stringify(guideOrder));
+    setSavedMsg(true);
+    setTimeout(() => setSavedMsg(false), 2000);
+  };
+
+  return (
+    <div className="bg-white rounded-xl border-2 border-indigo-200 overflow-hidden">
+      <button onClick={() => setIsOpen(!isOpen)} className="w-full p-5 flex items-center justify-between hover:bg-indigo-50 transition-colors">
+        <div className="flex items-center gap-3">
+          <GripVertical className="w-6 h-6 text-indigo-500" />
+          <div className="text-left">
+            <h2 className="text-lg font-bold text-gray-900">Guide Display Order</h2>
+            <p className="text-sm text-gray-500">Reorder guides and change categories for the /guides page</p>
+          </div>
+        </div>
+        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+      </button>
+
+      {isOpen && (
+        <div className="border-t border-indigo-200">
+          <div className="p-4 bg-indigo-50 flex items-center justify-between">
+            <p className="text-sm text-indigo-700">{guideOrder.length} guides - use arrows to reorder, dropdown to recategorise</p>
+            <button onClick={handleSave} className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${savedMsg ? "bg-green-600 text-white" : "bg-indigo-600 text-white hover:bg-indigo-700"}`}>
+              {savedMsg ? "Saved!" : "Save Order"}
+            </button>
+          </div>
+          <div className="max-h-[500px] overflow-y-auto divide-y divide-gray-100">
+            {guideOrder.map((guide, index) => (
+              <div key={guide.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50">
+                <span className="text-xs text-gray-400 w-6 text-right font-mono">{index + 1}</span>
+                <div className="flex flex-col gap-0.5">
+                  <button onClick={() => moveUp(index)} disabled={index === 0} className="p-0.5 rounded hover:bg-gray-200 disabled:opacity-20 disabled:cursor-not-allowed"><ArrowUp className="w-3.5 h-3.5 text-gray-500" /></button>
+                  <button onClick={() => moveDown(index)} disabled={index === guideOrder.length - 1} className="p-0.5 rounded hover:bg-gray-200 disabled:opacity-20 disabled:cursor-not-allowed"><ArrowDown className="w-3.5 h-3.5 text-gray-500" /></button>
+                </div>
+                <span className="text-lg">{guide.icon}</span>
+                <span className="font-medium text-gray-900 text-sm flex-1 truncate">{guide.title}</span>
+                <select value={guide.category} onChange={(e) => changeCategory(index, e.target.value)} className="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white text-gray-600 max-w-[160px]">
+                  {GUIDE_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                </select>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Default guide order (matches ALL_GUIDES in guides/page.tsx)
+const DEFAULT_GUIDE_ORDER = [
+  { id: "imha-advocacy", title: "IMHA / Advocacy", icon: "\uD83D\uDDE3\uFE0F", category: "Legal & Advocacy" },
+  { id: "mh-talking-points", title: "Named Nurse Talking Points", icon: "\uD83E\uDDE0", category: "Named Nurse Tools" },
+  { id: "safeguarding", title: "Safeguarding Adults - Making a Referral", icon: "\uD83D\uDEE1\uFE0F", category: "Safeguarding" },
+  { id: "safeguarding-children", title: "Safeguarding Children - Making a Referral", icon: "\uD83D\uDC76", category: "Safeguarding" },
+  { id: "picu", title: "PICU Referral", icon: "\uD83C\uDFE5", category: "Urgent Care" },
+  { id: "homeless-discharge", title: "Housing / Duty to Refer", icon: "\uD83C\uDFE0", category: "Social & Housing" },
+  { id: "social-care", title: "Social Care (Derby City)", icon: "\uD83D\uDC65", category: "Social & Housing" },
+  { id: "s117-meeting", title: "S117 Meeting Request", icon: "\u2696\uFE0F", category: "Legal & Advocacy" },
+  { id: "dietitian", title: "Dietitian Referral", icon: "\uD83E\uDD57", category: "Allied Health" },
+  { id: "tissue-viability", title: "Tissue Viability", icon: "\uD83E\uDE79", category: "Physical Health" },
+  { id: "dental", title: "Dental Referral", icon: "\uD83E\uDDB7", category: "Physical Health" },
+  { id: "physio", title: "Physiotherapy", icon: "\uD83C\uDFC3", category: "Allied Health" },
+  { id: "ot", title: "Occupational Therapy", icon: "\uD83E\uDDE9", category: "Allied Health" },
+  { id: "speech-therapy", title: "Speech & Language", icon: "\uD83D\uDCAC", category: "Allied Health" },
+  { id: "edt", title: "Early Discharge Team", icon: "\uD83D\uDEAA", category: "Discharge Planning" },
+  { id: "erp", title: "Emotional Regulation (ERP/DBT)", icon: "\uD83E\uDDE0", category: "Psychology" },
+  { id: "ctr-dsp", title: "CTR / DSP Review", icon: "\uD83D\uDCCB", category: "Specialist Pathways" },
+  { id: "benefits-review", title: "Benefits Review", icon: "\uD83D\uDCB7", category: "Social & Housing" },
+  { id: "news2", title: "NEWS2 Observations", icon: "\uD83D\uDCCA", category: "Physical Health" },
+  { id: "blood-glucose", title: "Blood Glucose Monitoring", icon: "\uD83E\uDE78", category: "Physical Health" },
+  { id: "mental-state-exam", title: "Mental State Examination", icon: "\uD83E\uDDE0", category: "Clinical Assessment" },
+  { id: "risk-assessment", title: "Risk Assessment", icon: "\u26A0\uFE0F", category: "Clinical Assessment" },
+  { id: "abc-chart", title: "ABC Charts", icon: "\uD83D\uDCCB", category: "Clinical Assessment" },
+  { id: "capacity-assessment", title: "Capacity Assessment", icon: "\u2696\uFE0F", category: "Legal" },
+  { id: "dols", title: "DoLS Ward Guidance", icon: "\uD83D\uDD12", category: "Legal" },
+  { id: "mha-statuses", title: "MHA Statuses", icon: "\u2696\uFE0F", category: "Legal" },
+  { id: "section-17", title: "Section 17 Leave", icon: "\uD83D\uDEAA", category: "Legal" },
+  { id: "domestic-abuse-guide", title: "Domestic Abuse", icon: "\uD83C\uDFE0", category: "Safeguarding" },
+  { id: "peer-conflict-guide", title: "Peer-on-Peer Conflict", icon: "\u26A0\uFE0F", category: "Safeguarding" },
+  { id: "information-sharing", title: "Information Sharing", icon: "\uD83D\uDD17", category: "Safeguarding" },
+  { id: "escalation-pathway", title: "Escalation Pathway (Children)", icon: "\uD83D\uDCC8", category: "Safeguarding" },
+  { id: "online-safety-children", title: "Online Safety and Children", icon: "\uD83C\uDF10", category: "Safeguarding" },
+  { id: "honour-based-abuse", title: "HBA, FGM and Forced Marriage", icon: "\uD83D\uDEE1\uFE0F", category: "Safeguarding" },
+  { id: "modern-slavery-radicalisation", title: "Modern Slavery and Radicalisation", icon: "\u26D3\uFE0F", category: "Safeguarding" },
+  { id: "faith-belief-abuse", title: "Abuse Linked to Faith or Belief", icon: "\uD83D\uDE4F", category: "Safeguarding" },
+  { id: "send-safeguarding", title: "SEND and Safeguarding", icon: "\uD83D\uDCDA", category: "Safeguarding" },
+  { id: "non-recent-abuse", title: "Non-Recent Abuse Disclosures", icon: "\uD83D\uDD70\uFE0F", category: "Safeguarding" },
+  { id: "special-guardianship", title: "Special Guardianship Orders", icon: "\uD83D\uDC68\u200D\uD83D\uDC67", category: "Safeguarding" },
+  { id: "child-in-need", title: "Child in Need", icon: "\uD83E\uDD32", category: "Safeguarding" },
+  { id: "fridge-temps", title: "Fridge Temperature Recording", icon: "\uD83C\uDF21\uFE0F", category: "Ward Procedures" },
+  { id: "seizure-management", title: "Managing a Seizure", icon: "\uD83D\uDEA8", category: "Emergency" },
+  { id: "medical-emergency", title: "Medical Emergency", icon: "\uD83C\uDFE5", category: "Emergency" },
+  { id: "rapid-tranq", title: "Rapid Tranquillisation", icon: "\uD83D\uDC89", category: "Emergency" },
+  { id: "named-nurse", title: "Named Nurse Checklist", icon: "\uD83D\uDCCB", category: "Ward Procedures" },
+  { id: "admission-checklist", title: "Admission Checklist", icon: "\u2705", category: "Ward Procedures" },
+  { id: "discharge-checklist", title: "Discharge Checklist", icon: "\uD83C\uDFE0", category: "Ward Procedures" },
+];

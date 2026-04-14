@@ -40,7 +40,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
   "imha-advocacy": {
     id: "imha-advocacy",
     title: "IMHA / Advocacy Referral",
-    description: "Independent Mental Health Advocate for detained patients",
+    description: "Independent Mental Health Advocate for all patients (informal and detained)",
     icon: "🗣️",
     gradient: "from-indigo-500 to-indigo-700",
     steps: [
@@ -48,7 +48,7 @@ const WORKFLOWS: Record<string, WorkflowData> = {
         id: "criteria",
         type: "criteria",
         title: "Confirm Criteria",
-        content: "The patient is detained under the Mental Health Act and would benefit from independent advocacy support. This includes Section 2, Section 3, or CTO patients.",
+        content: "All patients have the right to access an Independent Mental Health Advocate (IMHA), whether informal (voluntary) or detained under the Mental Health Act. Detained patients include those under Section 2, Section 3, Section 4, Section 5(2)/5(4), CTO (Section 17A), Section 37, Section 37/41, or Section 47/49. Informal patients are not detained but still have access to advocacy services.",
         checkboxLabel: "I confirm the patient meets criteria for IMHA referral",
       },
       {
@@ -1326,11 +1326,18 @@ const STEP_GRADIENTS: Record<string, string> = {
 };
 
 // Section options for MHA status
+// Informal is voluntary (not detained). All others are forms of detention.
 const SECTION_OPTIONS = [
-  { value: "section_2", label: "Section 2" },
-  { value: "section_3", label: "Section 3" },
-  { value: "cto", label: "CTO (Community Treatment Order)" },
-  { value: "informal", label: "Informal" },
+  { value: "informal", label: "Informal (Voluntary)", detained: false },
+  { value: "section_2", label: "Section 2 (Assessment)", detained: true },
+  { value: "section_3", label: "Section 3 (Treatment)", detained: true },
+  { value: "section_4", label: "Section 4 (Emergency)", detained: true },
+  { value: "section_5_2", label: "Section 5(2) (Doctor's Holding Power)", detained: true },
+  { value: "section_5_4", label: "Section 5(4) (Nurse's Holding Power)", detained: true },
+  { value: "cto", label: "CTO / Section 17A (Community Treatment Order)", detained: true },
+  { value: "section_37", label: "Section 37 (Hospital Order)", detained: true },
+  { value: "section_37_41", label: "Section 37/41 (Restricted Order)", detained: true },
+  { value: "section_47_49", label: "Section 47/49 (Transfer Direction)", detained: true },
 ];
 
 // Area options
@@ -1430,11 +1437,19 @@ export default function WorkflowPage() {
     if (workflowId === "imha-advocacy") {
       const areaName = selectedArea === "city" ? "Derby City Advocacy (POhWER)" : "Derbyshire County (Cloverleaf)";
       const areaEmail = selectedArea === "city" ? "derbyadvocacy@pohwer.net" : "referrals@cloverleaf-advocacy.co.uk";
-      const sectionText = patientSection === "informal" ? "Informal" : patientSection?.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase()) || "[SECTION]";
       const patientText = linkedPatient ? `Patient: ${linkedPatient.name}. ` : "";
       const staffText = user?.name ? ` Referral completed by ${user.name}.` : "";
 
-      return `${patientText}Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. Patient is detained under ${sectionText} and would benefit from independent advocacy support.${staffText}`;
+      // Informal = voluntary, not detained. All others = detained under a section.
+      let statusText: string;
+      if (patientSection === "informal") {
+        statusText = "Patient is informal (voluntary)";
+      } else {
+        const sectionLabel = SECTION_OPTIONS.find(o => o.value === patientSection)?.label || patientSection?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || "[SECTION]";
+        statusText = `Patient is detained under ${sectionLabel}`;
+      }
+
+      return `${patientText}Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. ${statusText} and would benefit from independent advocacy support.${staffText}`;
     }
 
     // All other workflows – smart-replace placeholders in clipboardText
@@ -1451,8 +1466,8 @@ export default function WorkflowPage() {
 
     // Replace section/legal status if available
     if (patientSection) {
-      const sectionText = patientSection === "informal" ? "Informal" : patientSection.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase());
-      text = text.replace(/\[SECTION\]/g, sectionText);
+      const sectionLabel = SECTION_OPTIONS.find(o => o.value === patientSection)?.label || patientSection.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+      text = text.replace(/\[SECTION\]/g, sectionLabel);
     }
 
     // Add patient name if linked

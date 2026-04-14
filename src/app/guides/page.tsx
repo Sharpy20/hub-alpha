@@ -24,7 +24,7 @@ interface GuideItem {
 
 // Referral guides (from referrals page)
 const REFERRAL_GUIDES: GuideItem[] = [
-  { id: "imha-advocacy", title: "IMHA / Advocacy", description: "Independent Mental Health Advocate for detained patients", icon: "\uD83D\uDDE3\uFE0F", gradient: "from-indigo-500 to-indigo-700", category: "Legal & Advocacy", guideType: "referrals", viewerPath: "/referrals/imha-advocacy" },
+  { id: "imha-advocacy", title: "IMHA / Advocacy", description: "Independent Mental Health Advocate for all patients (informal and detained)", icon: "\uD83D\uDDE3\uFE0F", gradient: "from-indigo-500 to-indigo-700", category: "Legal & Advocacy", guideType: "referrals", viewerPath: "/referrals/imha-advocacy" },
   { id: "picu", title: "PICU Referral", description: "Psychiatric Intensive Care Unit transfers", icon: "\uD83C\uDFE5", gradient: "from-rose-500 to-rose-700", category: "Urgent Care", guideType: "referrals", viewerPath: "/referrals/picu" },
   { id: "safeguarding", title: "Safeguarding Adults", description: "Report safeguarding concerns - Derby City or County", icon: "\uD83D\uDEE1\uFE0F", gradient: "from-red-600 to-red-800", category: "Safeguarding", guideType: "referrals", viewerPath: "/referrals/safeguarding" },
   { id: "safeguarding-children", title: "Safeguarding Children", description: "Starting Point referrals for child concerns", icon: "\uD83D\uDC76", gradient: "from-pink-500 to-pink-700", category: "Safeguarding", guideType: "referrals", viewerPath: "/referrals/safeguarding-children" },

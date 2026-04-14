@@ -12,11 +12,11 @@ interface VersionCompareModalProps {
 // Feature matrix data - Light & Medium: viewable resources only, Max+: full features
 const FEATURE_CATEGORIES = [
   {
-    name: "Bookmarks & Resources",
+    name: "Links & Resources",
     features: [
-      { name: "Public bookmarks", light: true, medium: true, max: true, maxPlus: true },
-      { name: "Internal bookmarks (FOCUS required)", light: false, medium: true, max: true, maxPlus: true },
-      { name: "Suggest new bookmark", light: true, medium: true, max: true, maxPlus: true },
+      { name: "Public links", light: true, medium: true, max: true, maxPlus: true },
+      { name: "Internal links (FOCUS required)", light: false, medium: true, max: true, maxPlus: true },
+      { name: "Suggest new link", light: true, medium: true, max: true, maxPlus: true },
       { name: "Report broken link", light: true, medium: true, max: true, maxPlus: true },
     ],
   },

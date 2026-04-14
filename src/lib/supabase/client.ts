@@ -59,7 +59,7 @@ export const FEEDBACK_SUB_CATEGORIES: Record<string, { id: string; label: string
     { id: 'related-guides', label: 'Related to: How-To Guides' },
     { id: 'related-diary', label: 'Related to: Team Diary' },
     { id: 'related-patients', label: 'Related to: Patient Features' },
-    { id: 'related-bookmarks', label: 'Related to: Bookmarks' },
+    { id: 'related-bookmarks', label: 'Related to: Links' },
     { id: 'related-admin', label: 'Related to: Admin / Settings' },
     { id: 'related-login', label: 'Related to: Login / User Profiles' },
     { id: 'related-mobile', label: 'Related to: Mobile Experience' },

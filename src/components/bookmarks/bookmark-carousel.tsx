@@ -243,10 +243,10 @@ export function BookmarkCarousel() {
       {/* View all link */}
       <div className="text-center mt-4">
         <Link
-          href="/bookmarks"
+          href="/links"
           className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-nhs-blue text-white font-semibold rounded-xl hover:bg-nhs-dark-blue transition-colors no-underline"
         >
-          View all bookmarks
+          View all links
           <span className="text-white/70">&rarr;</span>
         </Link>
       </div>

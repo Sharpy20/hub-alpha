@@ -117,7 +117,7 @@ export default function MyTasksPage() {
             This feature requires <span className="font-semibold text-purple-600">Max</span> version or higher.
           </p>
           <p className="text-sm text-gray-400 mb-6">
-            Light and Medium versions provide viewable resources only (Bookmarks, Referrals, How-To Guides).
+            Light and Medium versions provide viewable resources only (Links, Referrals, How-To Guides).
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link

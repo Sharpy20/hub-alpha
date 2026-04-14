@@ -36,12 +36,16 @@ import { getWardProfessionalCandidates } from "@/lib/data/staff";
 import { Patient, DiaryTask, PatientStatus, LegalStatus, PatientEntryMode, FieldVisibility } from "@/lib/types";
 
 const LEGAL_STATUS_CONFIG: Record<LegalStatus, { label: string; color: string; bgColor: string }> = {
-  informal: { label: "Informal", color: "text-green-700", bgColor: "bg-green-100" },
+  informal: { label: "Informal (Voluntary)", color: "text-green-700", bgColor: "bg-green-100" },
   section_2: { label: "Section 2", color: "text-amber-700", bgColor: "bg-amber-100" },
   section_3: { label: "Section 3", color: "text-orange-700", bgColor: "bg-orange-100" },
+  section_4: { label: "Section 4", color: "text-rose-700", bgColor: "bg-rose-100" },
+  section_5_2: { label: "Section 5(2)", color: "text-red-600", bgColor: "bg-red-50" },
+  section_5_4: { label: "Section 5(4)", color: "text-red-500", bgColor: "bg-red-50" },
+  cto: { label: "CTO (S17A)", color: "text-purple-700", bgColor: "bg-purple-100" },
   section_37: { label: "Section 37", color: "text-red-700", bgColor: "bg-red-100" },
-  section_17_leave: { label: "S17 Leave", color: "text-blue-700", bgColor: "bg-blue-100" },
-  cto: { label: "CTO", color: "text-purple-700", bgColor: "bg-purple-100" },
+  section_37_41: { label: "Section 37/41", color: "text-red-800", bgColor: "bg-red-200" },
+  section_47_49: { label: "Section 47/49", color: "text-red-900", bgColor: "bg-red-200" },
 };
 
 const PATIENT_STATUS_CONFIG: Record<PatientStatus, { label: string; color: string; bgColor: string; icon: React.ReactNode }> = {
@@ -363,7 +367,7 @@ export default function PatientsPage() {
             This feature requires <span className="font-semibold text-purple-600">Max</span> version or higher.
           </p>
           <p className="text-sm text-gray-400 mb-6">
-            Light and Medium versions provide viewable resources only (Bookmarks, Referrals, How-To Guides).
+            Light and Medium versions provide viewable resources only (Links, Referrals, How-To Guides).
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link

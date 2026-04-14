@@ -275,7 +275,7 @@ export default function GdprPage() {
         <div className="text-center pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-400">
             For transparency on information sources used in this application, view the{" "}
-            <Link href="/data-sources" className="text-gray-500 hover:text-indigo-600 underline">
+            <Link href="/dev-panel?section=data-sources" className="text-gray-500 hover:text-indigo-600 underline">
               Data Sources Audit Log
             </Link>
           </p>

@@ -22,8 +22,8 @@ export function Footer() {
             <h3 className="font-bold text-lg mb-3">Quick Links</h3>
             <ul className="space-y-2 text-sm text-white/70">
               <li>
-                <Link href="/bookmarks" className="hover:text-white transition-colors">
-                  Bookmarks
+                <Link href="/links" className="hover:text-white transition-colors">
+                  Links
                 </Link>
               </li>
               <li>
@@ -71,7 +71,7 @@ export function Footer() {
           <div className="flex items-center justify-center gap-4 text-xs text-white/50">
             <Link href="/gdpr" className="hover:text-white transition-colors">Privacy</Link>
             <span>|</span>
-            <Link href="/data-sources" className="hover:text-white transition-colors">Data Sources</Link>
+            <Link href="/dev-panel?section=data-sources" className="hover:text-white transition-colors">Data Sources</Link>
             <span>|</span>
             <Link href="/feedback" className="hover:text-white transition-colors">Feedback</Link>
           </div>

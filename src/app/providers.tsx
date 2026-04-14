@@ -29,8 +29,8 @@ interface User {
 }
 
 export type FeatureFlag =
-  | "bookmarks"
-  | "bookmarks_focus"
+  | "links"
+  | "links_focus"
   | "workflows"
   | "workflows_internal"
   | "guides"

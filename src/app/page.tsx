@@ -22,7 +22,7 @@ const QUICK_ACTIONS = [
     icon: "\uD83C\uDD98",
     label: "Crisis Numbers",
     description: "Emergency contacts",
-    href: "/bookmarks?category=Crisis%20Support",
+    href: "/links?category=Crisis%20Support",
     gradient: "from-red-500 to-red-700",
   },
 ];
@@ -139,7 +139,7 @@ function SafeguardingSection() {
               <p className="text-gray-500 text-xs">Recognise. Respond. Refer.</p>
             </div>
           </div>
-          <Link href="/bookmarks?category=Safeguarding" className="text-xs text-indigo-600 hover:text-indigo-800 no-underline flex items-center gap-1">
+          <Link href="/links?category=Safeguarding" className="text-xs text-indigo-600 hover:text-indigo-800 no-underline flex items-center gap-1">
             All links <ChevronRight className="w-3 h-3" />
           </Link>
         </div>

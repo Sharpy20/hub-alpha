@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "Quick links to clinical systems, resources, and external services",
 };
 
-export default function BookmarksLayout({
+export default function LinksLayout({
   children,
 }: {
   children: React.ReactNode;

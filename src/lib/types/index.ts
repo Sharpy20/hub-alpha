@@ -25,7 +25,7 @@ export const WARDS: Ward[] = [
   { id: "dickinson", name: "Dickinson Ward", poet: "Emily Dickinson" },
 ];
 
-// Bookmark types
+// Link types
 export interface Bookmark {
   id: string;
   title: string;
@@ -271,7 +271,17 @@ export const STATUS_CONFIG: Record<TaskStatus, { label: string; icon: string; bg
 // ============================================
 
 export type PatientStatus = "active" | "pending_discharge" | "discharged" | "on_leave";
-export type LegalStatus = "informal" | "section_2" | "section_3" | "section_37" | "section_17_leave" | "cto";
+export type LegalStatus =
+  | "informal"        // Voluntary - not formally detained
+  | "section_2"       // Admission for Assessment (up to 28 days)
+  | "section_3"       // Admission for Treatment (up to 6 months, renewable)
+  | "section_4"       // Emergency Admission (72 hours, one doctor)
+  | "section_5_2"     // Doctor's Holding Power (up to 72 hours)
+  | "section_5_4"     // Nurse's Holding Power (up to 6 hours)
+  | "cto"             // Section 17A - Community Treatment Order
+  | "section_37"      // Hospital Order (court-ordered)
+  | "section_37_41"   // Restricted Hospital Order (public safety)
+  | "section_47_49";  // Transfer Direction (prison to hospital)
 
 export interface Patient {
   id: string;

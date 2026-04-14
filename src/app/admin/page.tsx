@@ -68,7 +68,7 @@ export default function AdminPage() {
               <div className="flex-1">
                 <h3 className="font-bold text-gray-900 mb-1">Want to create content?</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Contributor privileges let you create and edit workflows, guides, and bookmarks. This is a separate privilege that can be added to any role.
+                  Contributor privileges let you create and edit workflows, guides, and links. This is a separate privilege that can be added to any role.
                 </p>
                 {showCreatorRequest ? (
                   <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
@@ -95,7 +95,7 @@ export default function AdminPage() {
         {isContentAdmin && (
         <div className="grid md:grid-cols-2 gap-6">
           {/* Bookmarks card */}
-          <Link href="/admin/bookmarks" className="block no-underline">
+          <Link href="/admin/links" className="block no-underline">
             <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-amber-300 hover:shadow-lg transition-all cursor-pointer group">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-700 rounded-xl flex items-center justify-center">
@@ -103,13 +103,13 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
-                    Bookmarks
+                    Links
                   </h2>
-                  <p className="text-gray-500">{BOOKMARK_COUNT} bookmarks</p>
+                  <p className="text-gray-500">{BOOKMARK_COUNT} links</p>
                 </div>
               </div>
               <p className="text-gray-600 mb-4 text-sm">
-                Edit bookmarks, links, and descriptions.{user.role === "senior_admin" ? " Manage categories." : ""}
+                Edit links and descriptions.{user.role === "senior_admin" ? " Manage categories." : ""}
               </p>
               <div className="flex items-center gap-2 text-amber-600 font-semibold group-hover:gap-3 transition-all text-sm">
                 Manage

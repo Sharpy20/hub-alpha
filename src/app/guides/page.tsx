@@ -51,6 +51,7 @@ const ASSESSMENT_GUIDES: GuideItem[] = [
   { id: "risk-assessment", title: "Risk Assessment", description: "Dynamic risk assessment and documentation", icon: "\u26A0\uFE0F", gradient: "from-amber-500 to-amber-700", category: "Clinical Assessment", guideType: "assessments", viewerPath: "/how-to/risk-assessment" },
   { id: "capacity-assessment", title: "Capacity Assessment", description: "Two-stage test and documentation requirements", icon: "\u2696\uFE0F", gradient: "from-indigo-500 to-indigo-700", category: "Legal", guideType: "assessments", viewerPath: "/how-to/capacity-assessment" },
   { id: "dols", title: "DoLS Ward Guidance", description: "Deprivation of Liberty Safeguards - when to apply", icon: "\uD83D\uDD12", gradient: "from-violet-500 to-violet-700", category: "Legal", guideType: "assessments", viewerPath: "/how-to/dols" },
+  { id: "mha-statuses", title: "MHA Statuses", description: "All Mental Health Act sections and patient rights", icon: "\u2696\uFE0F", gradient: "from-indigo-600 to-purple-800", category: "Legal", guideType: "assessments", viewerPath: "/how-to/mha-statuses" },
   { id: "section-17", title: "Section 17 Leave", description: "Leave arrangements for detained patients", icon: "\uD83D\uDEAA", gradient: "from-blue-500 to-blue-700", category: "Legal", guideType: "assessments", viewerPath: "/how-to/section-17" },
 ];
 

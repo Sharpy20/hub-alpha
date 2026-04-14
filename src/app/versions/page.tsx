@@ -31,7 +31,7 @@ const VERSIONS = [
     description:
       "Open access version with publicly available information only. No Trust-sensitive data or patient information.",
     features: [
-      { name: "Bookmarks", included: true },
+      { name: "Links", included: true },
       { name: "Referral Workflows", included: true },
       { name: "How-To Guides", included: true },
       { name: "Internal Phone Numbers", included: false },
@@ -61,7 +61,7 @@ const VERSIONS = [
     description:
       "Behind Trust firewall with internal contact numbers and forms. No patient identifiable information.",
     features: [
-      { name: "Bookmarks", included: true },
+      { name: "Links", included: true },
       { name: "Referral Workflows", included: true },
       { name: "How-To Guides", included: true },
       { name: "Internal Phone Numbers", included: true },
@@ -95,7 +95,7 @@ const VERSIONS = [
     description:
       "Full clinical version with patient information, ward diary, and task management. Requires strict access controls.",
     features: [
-      { name: "Bookmarks", included: true },
+      { name: "Links", included: true },
       { name: "Referral Workflows", included: true },
       { name: "How-To Guides", included: true },
       { name: "Internal Phone Numbers", included: true },
@@ -131,7 +131,7 @@ const VERSIONS = [
     description:
       "Full integration with Nexus Assurance for automated audit compliance tracking. Trust tech team builds the webhook.",
     features: [
-      { name: "Bookmarks", included: true },
+      { name: "Links", included: true },
       { name: "Referral Workflows", included: true },
       { name: "How-To Guides", included: true },
       { name: "Internal Phone Numbers", included: true },
@@ -326,7 +326,7 @@ export default function VersionsPage() {
               </thead>
               <tbody>
                 {[
-                  { name: "Public Bookmarks", light: true, medium: true, max: true, maxPlus: true },
+                  { name: "Public Links", light: true, medium: true, max: true, maxPlus: true },
                   { name: "Referral Workflows", light: true, medium: true, max: true, maxPlus: true },
                   { name: "How-To Guides", light: true, medium: true, max: true, maxPlus: true },
                   { name: "Internal Contacts", light: false, medium: true, max: true, maxPlus: true },

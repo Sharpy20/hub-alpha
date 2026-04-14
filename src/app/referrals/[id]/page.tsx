@@ -25,6 +25,7 @@ import {
   Mail,
   Pencil,
   UserPlus,
+  AlertCircle,
 } from "lucide-react";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { PatientPickerModal } from "@/components/modals";
@@ -2065,7 +2066,16 @@ export default function WorkflowPage() {
 
         {/* Step guide at bottom */}
         <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-6">
-          <h3 className="font-bold text-gray-800 mb-3">📋 Workflow Steps</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-bold text-gray-800">📋 Workflow Steps</h3>
+            <Link
+              href={`/feedback?category=referrals&sub=${workflowId}&title=${encodeURIComponent("Problem with: " + workflow.title)}`}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+            >
+              <AlertCircle className="w-3.5 h-3.5" />
+              Report a problem
+            </Link>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {workflow.steps.map((s, index) => {
               const Icon = STEP_ICONS[s.type] || CheckCircle;

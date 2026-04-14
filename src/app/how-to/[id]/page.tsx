@@ -3,7 +3,7 @@
 import { MainLayout } from "@/components/layout";
 import { Button, Card, CardContent, Badge, Breadcrumb } from "@/components/ui";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Check, Lightbulb, BookOpen, Pencil, UserPlus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Lightbulb, BookOpen, Pencil, UserPlus, AlertCircle } from "lucide-react";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
@@ -23,6 +23,7 @@ const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: s
   choking: { icon: "🚨", gradient: "from-red-600 to-red-800", category: "Emergency Response" },
   "cardiac-arrest": { icon: "❤️‍🔥", gradient: "from-rose-600 to-rose-800", category: "Emergency Response" },
   "rapid-tranq": { icon: "💉", gradient: "from-amber-500 to-amber-700", category: "Emergency Response" },
+  "mha-statuses": { icon: "⚖️", gradient: "from-indigo-600 to-purple-800", category: "MHA & Legal" },
   "section-17": { icon: "📋", gradient: "from-indigo-500 to-indigo-700", category: "MHA & Legal" },
   "capacity-assessment": { icon: "⚖️", gradient: "from-violet-500 to-violet-700", category: "MHA & Legal" },
   restraint: { icon: "🤝", gradient: "from-slate-500 to-slate-700", category: "MHA & Legal" },
@@ -68,6 +69,64 @@ const GUIDES: Record<string, GuideData> = {
         id: "5",
         title: "Documentation",
         content: "Record all observations on the NEWS2 chart. Document:\n• Time of observations\n• All six parameters\n• Total NEWS2 score\n• Actions taken if escalating\n• Name and signature",
+      },
+    ],
+  },
+  "mha-statuses": {
+    id: "mha-statuses",
+    title: "Mental Health Act Statuses",
+    description: "Understanding the legal framework for patient care under the MHA",
+    steps: [
+      {
+        id: "1",
+        title: "Overview",
+        content: "The Mental Health Act (MHA) defines the legal framework for a patient's care, classifying them as either informal (voluntary) or formally detained for compulsory assessment or treatment.\n\nKey points:\n\n- A person cannot be detained simply for drug or alcohol addiction, but can be for drug-induced psychosis\n- All patients (informal and detained) have rights to access an Independent Mental Health Advocate (IMHA)\n- Detained patients have additional rights to appeal their detention and have it reviewed by a tribunal\n- 'Mental disorder' under the Act covers conditions including schizophrenia, depression, bipolar disorder, and severe personality disorders",
+        tip: "Informal patients are not detained under the MHA. They have voluntarily consented to hospital treatment and can leave at any time (unless a holding power is applied).",
+      },
+      {
+        id: "2",
+        title: "Informal (Voluntary)",
+        content: "Not formally detained under the MHA. The patient has voluntarily consented to hospital treatment.\n\nKey rights:\n- Free to leave the hospital at any time\n- Can refuse treatment (subject to capacity)\n- Entitled to IMHA support\n- Should be informed of their rights on admission\n\nImportant: informal does not mean 'no rights' or 'no concerns'. Informal patients still have access to advocacy and complaints processes. If an informal patient tries to leave and there are concerns, a Section 5 holding power may be considered.",
+        tip: "Informal/voluntary is not a type of detention. These patients have their own set of rights and access to advocacy services.",
+      },
+      {
+        id: "3",
+        title: "Section 2 - Assessment",
+        content: "Allows detention for up to 28 days for assessment (and treatment during assessment). Usually for a first-time assessment where the diagnosis or treatment plan is not yet clear.\n\nRequirements:\n- Two medical recommendations (one from a Section 12 approved doctor)\n- Application by an Approved Mental Health Professional (AMHP) or nearest relative\n- Patient must have a mental disorder warranting assessment\n- Detention must be in the interests of the patient's health/safety or the protection of others\n\nDuration: Up to 28 days. Cannot be renewed - if further detention is needed, a Section 3 application must be made.\n\nAppeals: Patient can appeal to the Mental Health Tribunal within the first 14 days.",
+      },
+      {
+        id: "4",
+        title: "Section 3 - Treatment",
+        content: "Allows detention for treatment. Typically used when assessment has already occurred and a treatment plan is in place.\n\nRequirements:\n- Two medical recommendations (one from a Section 12 approved doctor)\n- Application by an AMHP or nearest relative\n- Appropriate treatment must be available\n- Treatment must be necessary for the patient's health/safety or protection of others\n\nDuration: Up to 6 months initially. Can be renewed for a further 6 months, then annually.\n\nAppeals: Patient can appeal to the Mental Health Tribunal once in each detention period. The hospital must also refer to the tribunal if no appeal is made within 6 months.",
+      },
+      {
+        id: "5",
+        title: "Section 4 - Emergency Admission",
+        content: "An emergency, one-doctor assessment section. Used when there is urgent necessity and waiting for a second medical recommendation would cause undesirable delay.\n\nRequirements:\n- One medical recommendation (ideally from a doctor who knows the patient)\n- Application by an AMHP or nearest relative\n- Urgent necessity for admission\n\nDuration: Up to 72 hours. During this time, a second medical recommendation should be obtained to convert to a Section 2.\n\nNote: Section 4 should only be used in genuine emergencies. If possible, a Section 2 with two doctors is always preferred.",
+        tip: "Section 4 is relatively rare. If used, the second medical recommendation should be arranged as soon as possible to convert to Section 2.",
+      },
+      {
+        id: "6",
+        title: "Section 5(2) and 5(4) - Holding Powers",
+        content: "Allow staff to detain a voluntary patient already in hospital for a short period.\n\nSection 5(2) - Doctor's Holding Power:\n- Applied by the doctor in charge of the patient's treatment (or their nominated deputy)\n- Lasts up to 72 hours\n- Used when a voluntary inpatient needs to be prevented from leaving\n- During this time, an AMHP assessment should be arranged\n\nSection 5(4) - Nurse's Holding Power:\n- Applied by a registered mental health nurse or learning disability nurse\n- Lasts up to 6 hours\n- Used when a doctor is not immediately available\n- The doctor must be contacted immediately to attend\n\nThese holding powers can only be used for patients already receiving inpatient treatment - not for patients in A&E or outpatient settings.",
+        tip: "Section 5 cannot be renewed. If further detention is needed, a full MHA assessment under Section 2 or 3 must be arranged during the holding period.",
+      },
+      {
+        id: "7",
+        title: "Section 17A - Community Treatment Order (CTO)",
+        content: "A patient is discharged from hospital but remains subject to conditions and can be recalled if they stop treatment or their health deteriorates.\n\nRequirements:\n- Patient must be detained under Section 3 (or equivalent)\n- Responsible Clinician and AMHP must agree the CTO is appropriate\n- Treatment must be available in the community\n\nConditions may include:\n- Attending appointments\n- Taking medication\n- Living at a specified address\n- Allowing access to clinical staff\n\nRecall: The Responsible Clinician can recall the patient to hospital if conditions are breached or there is a deterioration.\n\nDuration: Initially 6 months, renewable for 6 months then annually.\n\nAppeals: Patient can appeal to the tribunal once per CTO period.",
+      },
+      {
+        id: "8",
+        title: "Forensic Sections (37, 37/41, 47/49)",
+        content: "Section 37 - Hospital Order:\nA court orders detention for treatment instead of a prison sentence. Requirements are similar to Section 3 but the order comes from the court.\n\nSection 37/41 - Restricted Hospital Order:\nA Section 37 with restrictions imposed by the Crown Court for public safety. The patient cannot be given leave, transferred, or discharged without the consent of the Secretary of State (via the Ministry of Justice). These patients require enhanced security oversight.\n\nSection 47/49 - Transfer Direction:\nTransfer from prison to hospital with restrictions. The Secretary of State directs that a prisoner be transferred to hospital for treatment. Section 49 adds restrictions similar to Section 41.\n\nNote: Patients under restricted orders have additional governance requirements. Always check with the MHA Office before making any changes to their care plan, leave arrangements, or ward moves.",
+        tip: "Forensic sections involve the Ministry of Justice. Never arrange leave or transfer for patients under Section 41 or 49 restrictions without MHA Office approval.",
+      },
+      {
+        id: "9",
+        title: "Patient Rights Summary",
+        content: "All patients (informal and detained) are entitled to:\n- Access to an Independent Mental Health Advocate (IMHA)\n- Information about their rights (in a language they understand)\n- Access to complaints procedures\n- Respect for dignity and privacy\n\nDetained patients additionally have:\n- Right to appeal to the Mental Health Tribunal\n- Right to have their detention reviewed\n- Right to a second opinion on treatment (SOAD)\n- Right to have their nearest relative informed\n- Right to receive written information about their section\n\nNursing responsibilities:\n- Ensure patients are informed of their rights on admission and at regular intervals\n- Document that rights have been explained\n- Refer to IMHA if the patient requests or would benefit from advocacy\n- Ensure Section papers are correctly completed and filed",
+        tip: "Rights must be re-explained at each renewal or change of section. Use the trust's rights leaflets and document that the discussion took place.",
       },
     ],
   },
@@ -525,30 +584,39 @@ export default function GuidePage() {
           </div>
         </div>
 
-        {/* Step navigation pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
-          {guide.steps.map((s, index) => (
-            <button
-              key={s.id}
-              onClick={() => setCurrentStep(index)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
-                index === currentStep
-                  ? `bg-gradient-to-r ${config.gradient} text-white shadow-md`
-                  : completedSteps.includes(s.id)
-                  ? "bg-green-100 text-green-800 hover:bg-green-200"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-              }`}
-            >
-              {completedSteps.includes(s.id) ? (
-                <Check className="w-4 h-4" />
-              ) : (
-                <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">
-                  {index + 1}
-                </span>
-              )}
-              {s.title}
-            </button>
-          ))}
+        {/* Step navigation pills + report link */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 flex-1">
+            {guide.steps.map((s, index) => (
+              <button
+                key={s.id}
+                onClick={() => setCurrentStep(index)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all whitespace-nowrap ${
+                  index === currentStep
+                    ? `bg-gradient-to-r ${config.gradient} text-white shadow-md`
+                    : completedSteps.includes(s.id)
+                    ? "bg-green-100 text-green-800 hover:bg-green-200"
+                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                }`}
+              >
+                {completedSteps.includes(s.id) ? (
+                  <Check className="w-4 h-4" />
+                ) : (
+                  <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">
+                    {index + 1}
+                  </span>
+                )}
+                {s.title}
+              </button>
+            ))}
+          </div>
+          <Link
+            href={`/feedback?category=guides&sub=${guideId}&title=${encodeURIComponent("Problem with: " + guide.title)}`}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors whitespace-nowrap flex-shrink-0"
+          >
+            <AlertCircle className="w-3.5 h-3.5" />
+            Report a problem
+          </Link>
         </div>
 
         {/* Step content */}

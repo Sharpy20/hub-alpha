@@ -56,7 +56,7 @@ describe('hasFeature', () => {
   })
 
   const features: FeatureFlag[] = [
-    'bookmarks',
+    'links',
     'workflows',
     'guides',
     'ward_tasks',

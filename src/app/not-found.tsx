@@ -15,9 +15,9 @@ const QUICK_LINKS = [
   },
   {
     icon: Bookmark,
-    label: "Bookmarks",
+    label: "Links",
     description: "Quick links and resources",
-    href: "/bookmarks",
+    href: "/links",
   },
   {
     icon: FileText,

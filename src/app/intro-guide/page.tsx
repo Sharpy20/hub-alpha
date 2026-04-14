@@ -54,7 +54,7 @@ function HomeVisual() {
         <div className="grid grid-cols-2 gap-1 sm:gap-2">
           <div className="bg-indigo-50 rounded p-1.5 sm:p-2 text-xs font-medium text-indigo-700">Team Diary</div>
           <div className="bg-purple-50 rounded p-1.5 sm:p-2 text-xs font-medium text-purple-700">My Jobs</div>
-          <div className="bg-amber-50 rounded p-1.5 sm:p-2 text-xs font-medium text-amber-700">Bookmarks</div>
+          <div className="bg-amber-50 rounded p-1.5 sm:p-2 text-xs font-medium text-amber-700">Links</div>
           <div className="bg-rose-50 rounded p-1.5 sm:p-2 text-xs font-medium text-rose-700">Guides</div>
         </div>
       </div>
@@ -80,7 +80,7 @@ function NavVisual() {
           <div className="flex-1" />
           <div className="flex gap-1">
             <div className="px-2 py-1 bg-indigo-50 rounded text-xs text-indigo-700 font-medium">Diary</div>
-            <div className="px-2 py-1 bg-amber-50 rounded text-xs text-amber-700 font-medium">Bookmarks</div>
+            <div className="px-2 py-1 bg-amber-50 rounded text-xs text-amber-700 font-medium">Links</div>
             <div className="px-2 py-1 bg-emerald-50 rounded text-xs text-emerald-700 font-medium">Guides</div>
             <div className="px-2 py-1 bg-teal-50 rounded text-xs text-teal-700 font-medium">Patients</div>
           </div>
@@ -284,7 +284,7 @@ const guideSections: GuideSection[] = [
         description: "The top navigation bar gives you quick access to all main areas. Click any button to jump to that section.",
         tips: [
           "Diary - Team Diary, My Diary, and My Jobs views",
-          "Bookmarks - Quick links to useful resources",
+          "Links - Quick links to useful resources",
           "Guides - Referral workflows and clinical how-to guides",
           "Patients - Patient list, transfers, and discharge",
           "More/Help/Demo Mode - Extra tools and settings"
@@ -648,7 +648,7 @@ export default function IntroGuidePage() {
                 <Bookmark className="w-4 h-4 text-amber-600" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">Bookmarks</p>
+                <p className="font-semibold text-gray-900 text-sm">Links</p>
                 <p className="text-xs text-gray-500">Quick links to resources</p>
               </div>
             </div>

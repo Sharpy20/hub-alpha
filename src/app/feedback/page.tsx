@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import {
@@ -156,16 +157,22 @@ function NewPostModal({
   onClose,
   onSubmit,
   username,
+  initialCategory,
+  initialSubCategory,
+  initialTitle,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (title: string, content: string, category: FeedbackCategory, subCategory: string | null) => void;
   username: string;
+  initialCategory?: FeedbackCategory;
+  initialSubCategory?: string | null;
+  initialTitle?: string;
 }) {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(initialTitle || "");
   const [content, setContent] = useState("");
-  const [category, setCategory] = useState<FeedbackCategory>("general");
-  const [subCategory, setSubCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<FeedbackCategory>(initialCategory || "general");
+  const [subCategory, setSubCategory] = useState<string | null>(initialSubCategory || null);
 
   // Get sub-categories for the selected category
   const subCategories = FEEDBACK_SUB_CATEGORIES[category] || [];
@@ -445,7 +452,16 @@ function PostCard({
 
 // Main feedback page
 export default function FeedbackPage() {
+  return (
+    <Suspense fallback={<MainLayout><div className="text-center py-12"><p className="text-gray-500">Loading...</p></div></MainLayout>}>
+      <FeedbackContent />
+    </Suspense>
+  );
+}
+
+function FeedbackContent() {
   const { user } = useApp();
+  const searchParams = useSearchParams();
   const [posts, setPosts] = useState<FeedbackPost[]>([]);
   const [comments, setComments] = useState<FeedbackComment[]>([]);
   const [userVotes, setUserVotes] = useState<Set<string>>(new Set());
@@ -459,6 +475,18 @@ export default function FeedbackPage() {
 
   const [sortBy, setSortBy] = useState<"popular" | "newest">("popular");
   const [filterCategory, setFilterCategory] = useState<string>("all");
+
+  // URL params for pre-filling from guide "Report a problem" link
+  const urlCategory = searchParams.get("category") as FeedbackCategory | null;
+  const urlSub = searchParams.get("sub");
+  const urlTitle = searchParams.get("title");
+
+  // Auto-open new post modal if arriving from a guide report link
+  useEffect(() => {
+    if (urlCategory) {
+      setShowNewPostModal(true);
+    }
+  }, [urlCategory]);
 
   // Initialize user
   useEffect(() => {
@@ -759,6 +787,9 @@ export default function FeedbackPage() {
         onClose={() => setShowNewPostModal(false)}
         onSubmit={handleCreatePost}
         username={username}
+        initialCategory={urlCategory || undefined}
+        initialSubCategory={urlSub}
+        initialTitle={urlTitle || undefined}
       />
     </MainLayout>
   );

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useApp, STYLE_THEMES, type StyleTheme, type ColorMode } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Bookmark, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import { getStaffByWard } from "@/lib/data/staff";
@@ -183,9 +183,9 @@ export function Header() {
                       <CalendarDays className="w-4 h-4" />
                       Diary
                     </Link>
-                    <Link href="/bookmarks" className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                      <Bookmark className="w-4 h-4" />
-                      Bookmarks
+                    <Link href="/links" className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                      <Link2 className="w-4 h-4" />
+                      Links
                     </Link>
                     <Link href="/guides" className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
                       <FileText className="w-4 h-4" />
@@ -215,7 +215,7 @@ export function Header() {
                           <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
                           <div><p className="font-semibold text-gray-900">Staff</p><p className="text-xs text-gray-500 mt-0.5">Staff directory and ward assignments</p></div>
                         </Link>
-                        <Link href="/data-sources" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                        <Link href="/dev-panel?section=data-sources" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                           <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-5 h-5 text-white" /></div>
                           <div><p className="font-semibold text-gray-900">Data Sources</p><p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p></div>
                         </Link>
@@ -455,8 +455,8 @@ export function Header() {
               <Link href="/tasks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <CalendarDays className="w-5 h-5 text-indigo-600" /> Diary
               </Link>
-              <Link href="/bookmarks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <Bookmark className="w-5 h-5 text-amber-600" /> Bookmarks
+              <Link href="/links" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                <Link2 className="w-5 h-5 text-amber-600" /> Links
               </Link>
               <Link href="/guides" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <FileText className="w-5 h-5 text-rose-600" /> Guides
@@ -472,7 +472,7 @@ export function Header() {
                     <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Staff</p><p className="text-xs text-gray-500">Staff directory and ward assignments</p></div>
                   </Link>
-                  <Link href="/data-sources" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href="/dev-panel?section=data-sources" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Data Sources</p><p className="text-xs text-gray-500">Audit log of all information</p></div>
                   </Link>

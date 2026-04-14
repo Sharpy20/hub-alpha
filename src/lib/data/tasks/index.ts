@@ -48,12 +48,14 @@ const getPatientName = (ward: string, index: number): string => {
   return `Patient_${wardPrefixes[ward]}_${index + 1}`;
 };
 
-// Legal statuses distribution
+// Legal statuses distribution (weighted for realistic ward mix)
 const LEGAL_STATUSES: LegalStatus[] = [
-  "section_2", "section_3", "section_3", "section_3", // 20% S2, 40% S3
-  "informal", "informal", "informal", // 30% informal
-  "section_17_leave", // 5%
-  "cto", // 5%
+  "informal", "informal", "informal",     // 30% informal/voluntary
+  "section_2", "section_2",               // 20% S2 (assessment)
+  "section_3", "section_3", "section_3",  // 30% S3 (treatment)
+  "cto",                                  // 10% CTO (S17A)
+  "section_37",                           // 5% Hospital Order
+  "section_5_2",                          // 5% Doctor's Holding Power
 ];
 
 // Patient statuses distribution

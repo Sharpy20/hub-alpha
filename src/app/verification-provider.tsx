@@ -4,9 +4,9 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { VerificationInfo, VerificationStatus } from "@/lib/types";
 
 // Content types that can be verified
-export type VerifiableContentType = "bookmark" | "workflow" | "guide";
+export type VerifiableContentType = "link" | "workflow" | "guide";
 
-// Key format: "bookmark:samaritans", "workflow:imha", "guide:news2"
+// Key format: "link:samaritans", "workflow:imha", "guide:news2"
 type ContentKey = `${VerifiableContentType}:${string}`;
 
 interface VerificationStore {

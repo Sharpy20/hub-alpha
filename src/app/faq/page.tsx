@@ -23,7 +23,7 @@ const FAQ_ITEMS: FAQItem[] = [
           wardHub is a ward resource tool designed for inpatient mental health staff at Derbyshire Healthcare NHS Foundation Trust. It brings together:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>Quick access bookmarks to frequently used services and helplines</li>
+          <li>Quick access links to frequently used services and helplines</li>
           <li>Step-by-step referral workflows with copy-to-clipboard case note prompts</li>
           <li>How-to guides for clinical procedures and ward tasks</li>
           <li>Team diary and task management</li>
@@ -67,7 +67,7 @@ const FAQ_ITEMS: FAQItem[] = [
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Visit the <Link href="/feedback" className="text-indigo-600 hover:underline">Feedback page</Link> to submit suggestions or report issues</li>
-          <li>Use the "Suggest new bookmark" or "Report broken link" buttons on the Bookmarks page</li>
+          <li>Use the "Suggest new link" or "Report broken link" buttons on the Links page</li>
           <li>Contact the project owner directly (see the Feedback page for details)</li>
         </ul>
         <p>
@@ -101,13 +101,13 @@ const FAQ_ITEMS: FAQItem[] = [
           wardHub has five roles, and content editing depends on whether you have creator privileges:
         </p>
         <ul className="list-disc list-inside space-y-2 ml-2">
-          <li><strong>Staff</strong> can view all content and suggest new bookmarks</li>
+          <li><strong>Staff</strong> can view all content and suggest new links</li>
           <li><strong>Lead</strong> and <strong>Manager</strong> have additional ward oversight capabilities</li>
           <li><strong>Ward Admin</strong> can manage ward-specific settings and approve certain actions</li>
           <li><strong>Senior Admin</strong> can approve content changes and manage user roles</li>
         </ul>
         <p>
-          Any role can request <strong>creator privileges</strong> – this is a separate flag, not a role. Users with creator privileges can create and edit workflows, guides, and bookmarks.
+          Any role can request <strong>creator privileges</strong> – this is a separate flag, not a role. Users with creator privileges can create and edit workflows, guides, and links.
         </p>
         <p>
           In the demo, you can switch roles using the My Profile menu to see how different roles work.
@@ -122,7 +122,7 @@ const FAQ_ITEMS: FAQItem[] = [
     answer: (
       <div className="space-y-3">
         <p>
-          FOCUS is the Trust intranet system. When you see a "FOCUS login needed" badge on a bookmark or link, it means:
+          FOCUS is the Trust intranet system. When you see a "FOCUS login needed" badge on a link, it means:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>You need to be connected to the Trust network (on-site or via VPN)</li>

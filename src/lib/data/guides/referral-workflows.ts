@@ -385,13 +385,13 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "area",
         type: "area",
         title: "Select Area",
-        content: "Which area is the child from? This determines which referral form and phone number to use.",
+        content: "Which area is the child from? This determines which team to contact.\n\nDerby City: Initial Response Team (Mon-Fri 9am-5pm)\nDerbyshire County: Starting Point (Mon-Fri 9am-5pm)",
       },
       {
         id: "forms",
         type: "forms",
         title: "Referral Forms & Advice",
-        content: "Not sure if the threshold is met? Use the consultation lines before making a formal referral:\n\n- DHCFT Safeguarding Unit: Hidden in demo mode (Option 1)\n- Derbyshire Starting Point Consultation: Hidden in demo mode (Mon-Fri 10am-4pm)\n- Derby City Professional Consultation Line: Hidden in demo mode (Mon-Fri 10am-4pm)\n\nRefer to the Threshold Document for guidance on levels of need. Assessment tools (EHA, GCP, DVRIM) are available on the DDSCP Documents Library.",
+        content: "Not sure if the threshold is met? Use the consultation lines before making a formal referral:\n\n- DHCFT Safeguarding Unit: Hidden in demo mode (Option 1)\n- Derbyshire Starting Point Consultation: Hidden in demo mode (Mon-Fri 10am-4pm)\n- Derby City Professional Consultation Line: Hidden in demo mode (Mon-Fri 10am-4pm)\n\nRefer to the Threshold Document for guidance on levels of need. Assessment tools (EHA, GCP, DVRIM) are available on the DDSCP Documents Library.\n\nRemember to follow up all telephone referrals within 48 hours using the online referral form. Ensure it is recorded on the clinical system (in Comms & Letters).",
         forms: {
           blank: [
             { label: "Derby City Children's Referral Form (online)", url: "https://myaccount.derby.gov.uk/en/service/report_concerns_about_a_child", icon: "📄", area: "city" },
@@ -413,11 +413,15 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "For urgent referrals, telephone first then follow up in writing within 48 hours. Save a copy of the referral in the child's health record.\n\nInclude: child's name, DOB, address, school. Parent/carer details. Nature of concern - be specific. How long concerns have been present. Any assessment tools used. Whether the family were informed. Other agencies involved. Your details and contact number.",
         methods: [
-          { type: "phone", label: "Derby City (office hours)", value: "Hidden in demo mode", area: "city" },
-          { type: "phone", label: "Derby City (out of hours)", value: "Hidden in demo mode", area: "city" },
-          { type: "phone", label: "Derbyshire Starting Point (office hours)", value: "Hidden in demo mode", area: "county" },
-          { type: "phone", label: "Derbyshire (out of hours)", value: "Hidden in demo mode", area: "county" },
-          { type: "email", label: "Non-urgent (Derbyshire)", value: "starting.point@derbyshire.gov.uk" },
+          { type: "phone", label: "Derby City - Initial Response Team (Mon-Fri 9am-5pm)", value: "Hidden in demo mode", area: "city" },
+          // Real: 01332 641172
+          { type: "phone", label: "Derby City - Out of Hours (Careline)", value: "Hidden in demo mode", area: "city" },
+          // Real: 01332 956607
+          { type: "phone", label: "Derbyshire - Starting Point (Mon-Fri 9am-5pm)", value: "Hidden in demo mode", area: "county" },
+          // Real: 01629 533190
+          { type: "phone", label: "Derbyshire - Out of Hours", value: "Hidden in demo mode", area: "county" },
+          // Real: 01629 532600
+          { type: "email", label: "Non-urgent written referral (Derbyshire)", value: "starting.point@derbyshire.gov.uk" },
         ],
       },
       {

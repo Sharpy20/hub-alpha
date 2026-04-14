@@ -16,7 +16,7 @@ export function TourWelcome({ onStart, onSkip }: TourWelcomeProps) {
         </h2>
         <p className="text-gray-500 mt-3 max-w-sm mx-auto leading-relaxed">
           Referrals, clinical guides, useful links
-          &mdash; all in one place.
+          &ndash; all in one place.
         </p>
       </div>
 

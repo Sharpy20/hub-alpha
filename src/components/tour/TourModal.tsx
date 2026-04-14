@@ -245,7 +245,7 @@ export function TourModal() {
                         </div>
                         <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
                           <p className="text-xs font-semibold text-blue-500 uppercase">Patient</p>
-                          <p className="text-sm font-bold text-blue-800">Alex Morgan &mdash; Room 4</p>
+                          <p className="text-sm font-bold text-blue-800">Alex Morgan &ndash; Room 4</p>
                         </div>
                         <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
                           <p className="text-xs font-semibold text-purple-500 uppercase">Assigned to</p>

@@ -1964,7 +1964,7 @@ export default function WorkflowPage() {
                     <p className="text-green-600 text-sm font-medium mt-2">Follow-up task added to diary!</p>
                   )}
                 </div>
-                <p className="text-xs text-gray-400 text-center">This is optional &mdash; skip ahead if not needed.</p>
+                <p className="text-xs text-gray-400 text-center">This is optional &ndash; skip ahead if not needed.</p>
               </div>
             )}
 

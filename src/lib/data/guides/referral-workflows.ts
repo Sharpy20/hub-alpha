@@ -59,8 +59,8 @@ export const SECTION_OPTIONS = [
 
 // Area options
 export const AREA_OPTIONS = [
-  { value: "city", label: "Derby City", description: "POhWER Advocacy Service" },
-  { value: "county", label: "Derbyshire County", description: "Cloverleaf Advocacy Service" },
+  { value: "city", label: "Derby City", description: "Derby City Council" },
+  { value: "county", label: "Derbyshire County", description: "Derbyshire County Council" },
 ];
 
 export const WORKFLOWS: Record<string, WorkflowData> = {

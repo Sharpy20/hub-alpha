@@ -70,7 +70,7 @@ const NAMED_NURSE_GUIDES: GuideItem[] = [
   { id: "mh-talking-points", title: "Named Nurse Talking Points", description: "23 patient-facing mental health guides - print as leaflets for patients and families", icon: "\uD83E\uDDE0", gradient: "from-gray-800 to-gray-900", category: "Named Nurse Tools", guideType: "tasks", viewerPath: "/patient-guides" },
 ];
 
-const ALL_GUIDES = [...REFERRAL_GUIDES, ...ASSESSMENT_GUIDES, ...TASK_GUIDES, ...NAMED_NURSE_GUIDES];
+const ALL_GUIDES = [...NAMED_NURSE_GUIDES, ...REFERRAL_GUIDES, ...ASSESSMENT_GUIDES, ...TASK_GUIDES];
 
 const TAB_CONFIG: { key: GuideType; label: string; icon: string; count: number }[] = [
   { key: "all", label: "All", icon: "\uD83D\uDCDA", count: ALL_GUIDES.length },

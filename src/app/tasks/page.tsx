@@ -125,10 +125,10 @@ function TaskLinkedResources({ task, accent }: { task: DiaryTask; accent?: strin
   return (
     <div className="flex items-center gap-2 flex-shrink-0">
       {hasReferral && (
-        <Link href={`/referrals/${task.linkedReferralId}`} className="text-[10px] no-underline" style={accent ? { color: accent } : { color: "rgba(255,255,255,0.8)" }} onClick={(e) => e.stopPropagation()} title="View linked referral">📋</Link>
+        <Link href={`/guides/${task.linkedReferralId}`} className="text-[10px] no-underline" style={accent ? { color: accent } : { color: "rgba(255,255,255,0.8)" }} onClick={(e) => e.stopPropagation()} title="View linked referral">📋</Link>
       )}
       {hasGuide && (
-        <Link href={`/how-to/${task.linkedGuideId}`} className="text-[10px] no-underline" style={accent ? { color: accent } : { color: "rgba(255,255,255,0.8)" }} onClick={(e) => e.stopPropagation()} title="View linked guide">📖</Link>
+        <Link href={`/guides/${task.linkedGuideId}`} className="text-[10px] no-underline" style={accent ? { color: accent } : { color: "rgba(255,255,255,0.8)" }} onClick={(e) => e.stopPropagation()} title="View linked guide">📖</Link>
       )}
     </div>
   );

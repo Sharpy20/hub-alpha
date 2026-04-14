@@ -368,7 +368,7 @@ export function TaskDetailModal({
               <div className="flex flex-wrap gap-2 mt-1">
                 {task.linkedReferralId && (
                   <Link
-                    href={`/referrals/${task.linkedReferralId}`}
+                    href={`/guides/${task.linkedReferralId}`}
                     className="flex items-center gap-1 bg-indigo-100 text-indigo-700 px-3 py-1 rounded-lg text-sm font-medium hover:bg-indigo-200 transition-colors no-underline"
                   >
                     <LinkIcon className="w-3 h-3" />
@@ -377,7 +377,7 @@ export function TaskDetailModal({
                 )}
                 {task.linkedGuideId && (
                   <Link
-                    href={`/how-to/${task.linkedGuideId}`}
+                    href={`/guides/${task.linkedGuideId}`}
                     className="flex items-center gap-1 bg-purple-100 text-purple-700 px-3 py-1 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors no-underline"
                   >
                     <FileText className="w-3 h-3" />

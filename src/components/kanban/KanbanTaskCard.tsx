@@ -80,8 +80,8 @@ export function KanbanTaskCard({ task, onDragStart, onUnclaim, onComplete, onReo
             ) : (
               <button onClick={(e) => { e.stopPropagation(); onReopen?.(task.id); }} className="flex items-center gap-1 text-white/90 text-xs bg-white/20 hover:bg-white/30 rounded px-3 py-1.5 transition-colors min-h-[32px]"><RotateCcw className="w-3.5 h-3.5" /> Reopen</button>
             )}
-            {task.type === "patient" && task.linkedReferralId && <Link href={`/referrals/${task.linkedReferralId}`} className="text-white/80 text-xs no-underline ml-auto" onClick={(e) => e.stopPropagation()}>📋</Link>}
-            {task.linkedGuideId && <Link href={`/how-to/${task.linkedGuideId}`} className="text-white/80 text-xs no-underline ml-auto" onClick={(e) => e.stopPropagation()}>📖</Link>}
+            {task.type === "patient" && task.linkedReferralId && <Link href={`/guides/${task.linkedReferralId}`} className="text-white/80 text-xs no-underline ml-auto" onClick={(e) => e.stopPropagation()}>📋</Link>}
+            {task.linkedGuideId && <Link href={`/guides/${task.linkedGuideId}`} className="text-white/80 text-xs no-underline ml-auto" onClick={(e) => e.stopPropagation()}>📖</Link>}
           </div>
         </div>
       </div>
@@ -150,8 +150,8 @@ export function KanbanTaskCard({ task, onDragStart, onUnclaim, onComplete, onReo
             ) : (
               <button onClick={(e) => { e.stopPropagation(); onReopen?.(task.id); }} style={{ ...btnStyle, borderColor: textMuted, color: textMuted }}><RotateCcw className="w-3 h-3" /> Reopen</button>
             )}
-            {task.type === "patient" && task.linkedReferralId && <Link href={`/referrals/${task.linkedReferralId}`} className="text-xs no-underline ml-auto" style={{ color: accent }} onClick={(e) => e.stopPropagation()}>📋</Link>}
-            {task.linkedGuideId && <Link href={`/how-to/${task.linkedGuideId}`} className="text-xs no-underline" style={{ color: accent }} onClick={(e) => e.stopPropagation()}>📖</Link>}
+            {task.type === "patient" && task.linkedReferralId && <Link href={`/guides/${task.linkedReferralId}`} className="text-xs no-underline ml-auto" style={{ color: accent }} onClick={(e) => e.stopPropagation()}>📋</Link>}
+            {task.linkedGuideId && <Link href={`/guides/${task.linkedGuideId}`} className="text-xs no-underline" style={{ color: accent }} onClick={(e) => e.stopPropagation()}>📖</Link>}
           </div>
         </div>
       )}

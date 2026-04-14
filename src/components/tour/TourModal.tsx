@@ -180,7 +180,7 @@ export function TourModal() {
                 <button
                   onClick={() => {
                     setIsInLiveWalkthrough(true);
-                    router.push("/referrals/imha-advocacy?tour=true");
+                    router.push("/guides/imha-advocacy?tour=true");
                   }}
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
                 >

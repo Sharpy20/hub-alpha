@@ -604,6 +604,64 @@ export default function UnifiedGuidePage() {
           </div>
         )}
 
+        {/* How-to: Completion actions (last step) */}
+        {!isReferral && isComplete && (
+          <div className="space-y-4">
+            {/* Case note copy */}
+            <div className="bg-white rounded-xl border-2 border-amber-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 px-6 py-3 border-b border-amber-200">
+                <h3 className="font-bold text-gray-800 flex items-center gap-2"><Clipboard className="w-5 h-5 text-amber-600" /> Case Note Entry</h3>
+                <p className="text-sm text-gray-500 mt-0.5">Copy to the patient's notes</p>
+              </div>
+              <div className="p-6">
+                <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl font-mono text-sm leading-relaxed border border-amber-200">
+                  {linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}{title} reviewed on {todayDate}.{user?.name ? ` Completed by ${user.name}.` : ""}
+                </div>
+                <Button onClick={() => {
+                  const text = `${linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}${title} reviewed on ${todayDate}.${user?.name ? ` Completed by ${user.name}.` : ""}`;
+                  handleCopy(text);
+                }} className={`w-full mt-3 py-3 ${copied ? "bg-green-600 hover:bg-green-700" : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"}`}>
+                  {copied ? <><Check className="w-5 h-5 mr-2" /> Copied!</> : <><Copy className="w-5 h-5 mr-2" /> Copy to Clipboard</>}
+                </Button>
+              </div>
+            </div>
+
+            {/* Follow-up task */}
+            <div className="bg-white rounded-xl border-2 border-indigo-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 border-b border-indigo-200">
+                <h3 className="font-bold text-gray-800 flex items-center gap-2"><Calendar className="w-5 h-5 text-indigo-600" /> Follow-up Task</h3>
+                <p className="text-sm text-gray-500 mt-0.5">Add a reminder to your job diary</p>
+              </div>
+              <div className="p-6">
+                <p className="text-gray-600 text-sm mb-4">e.g. &ldquo;Chase outcome in 7 days&rdquo; or &ldquo;Revisit assessment in 14 days&rdquo;</p>
+                <button onClick={() => {
+                  if (linkedPatient) {
+                    const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
+                    addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "other", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: futureDate.toISOString().split("T")[0], createdAt: new Date().toISOString().split("T")[0], createdBy: user?.name || "Unknown", carryOver: true, linkedGuideId: guideId });
+                    setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
+                  } else {
+                    setPendingFollowUp(true); setShowPatientPicker(true);
+                  }
+                }} className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
+                  <Calendar className="w-4 h-4" /> + Add Follow-up Task (7 days)
+                </button>
+                {showFireworks && !isReferral && <p className="text-green-600 text-sm font-medium mt-3">Follow-up task added to diary!</p>}
+                <p className="text-xs text-gray-400 mt-2">Optional - skip if not needed.</p>
+              </div>
+            </div>
+
+            {/* GDPR reminder */}
+            <div className="bg-white rounded-xl border-2 border-slate-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-slate-50 to-gray-100 px-6 py-3 border-b border-slate-200">
+                <h3 className="font-bold text-gray-800 flex items-center gap-2"><Shield className="w-5 h-5 text-slate-600" /> Data Protection Reminder</h3>
+              </div>
+              <div className="p-6">
+                <p className="text-slate-600 text-sm">Delete any downloaded forms or documents containing patient data from your computer once submitted. Do not store patient-identifiable information locally.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* How-to: WAGOLL section */}
         {!isReferral && GUIDE_WAGOLLS[guideId] && (
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">

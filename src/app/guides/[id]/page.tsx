@@ -604,6 +604,35 @@ export default function UnifiedGuidePage() {
           </div>
         )}
 
+        {/* How-to: Safeguarding referral prompt (last step of safeguarding guides) */}
+        {!isReferral && isComplete && config.category === "Safeguarding" && (
+          <div className="bg-white rounded-2xl border-2 border-red-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-red-50 to-pink-50 px-6 py-4 border-b border-red-200">
+              <h3 className="text-lg font-bold text-gray-900">Do you need to make a referral?</h3>
+              <p className="text-sm text-gray-600 mt-1">If you have concerns, start a safeguarding referral now</p>
+            </div>
+            <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button onClick={() => router.push("/guides/safeguarding")} className="flex items-center gap-3 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-2 border-red-200 hover:border-red-400 hover:shadow-md transition-all text-left">
+                <span className="text-3xl">{"\uD83D\uDEE1\uFE0F"}</span>
+                <div>
+                  <p className="font-bold text-gray-900">Safeguarding Adults</p>
+                  <p className="text-sm text-gray-500">S.42 referral - Derby City or County</p>
+                </div>
+              </button>
+              <button onClick={() => router.push("/guides/safeguarding-children")} className="flex items-center gap-3 p-4 bg-gradient-to-r from-pink-50 to-pink-100 rounded-xl border-2 border-pink-200 hover:border-pink-400 hover:shadow-md transition-all text-left">
+                <span className="text-3xl">{"\uD83D\uDC76"}</span>
+                <div>
+                  <p className="font-bold text-gray-900">Safeguarding Children</p>
+                  <p className="text-sm text-gray-500">Starting Point referral</p>
+                </div>
+              </button>
+            </div>
+            <div className="px-6 pb-4">
+              <p className="text-xs text-gray-400 text-center">Or scroll down to add a case note and schedule a follow-up task</p>
+            </div>
+          </div>
+        )}
+
         {/* How-to: Completion actions (last step) */}
         {!isReferral && isComplete && (
           <div className="space-y-4">

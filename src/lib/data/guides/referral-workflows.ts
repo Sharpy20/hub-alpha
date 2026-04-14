@@ -218,7 +218,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
   },
   "safeguarding": {
     id: "safeguarding",
-    title: "Safeguarding Adults",
+    title: "Safeguarding Adults - Making a Referral",
     description: "Report safeguarding concerns - Derby City or County",
     icon: "🛡️",
     gradient: "from-red-600 to-red-800",
@@ -355,7 +355,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
   },
   "safeguarding-children": {
     id: "safeguarding-children",
-    title: "Safeguarding Children",
+    title: "Safeguarding Children - Making a Referral",
     description: "Starting Point referrals for child concerns",
     icon: "👶",
     gradient: "from-pink-500 to-pink-700",

@@ -8,9 +8,6 @@ import { ArrowRight, Clock, Filter, FileText, Pencil, Search } from "lucide-reac
 import { useReferralLog } from "@/app/referral-log-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 
-// Guide types for tab filtering
-type GuideType = "all" | "referrals" | "assessments" | "tasks";
-
 interface GuideItem {
   id: string;
   title: string;
@@ -18,103 +15,78 @@ interface GuideItem {
   icon: string;
   gradient: string;
   category: string;
-  guideType: GuideType;
-  viewerPath: string; // /referrals/[id] or /how-to/[id]
+  viewerPath: string;
 }
 
-// Referral guides (from referrals page)
-const REFERRAL_GUIDES: GuideItem[] = [
-  { id: "imha-advocacy", title: "IMHA / Advocacy", description: "Independent Mental Health Advocate for all patients (informal and detained)", icon: "\uD83D\uDDE3\uFE0F", gradient: "from-indigo-500 to-indigo-700", category: "Legal & Advocacy", guideType: "referrals", viewerPath: "/guides/imha-advocacy" },
-  { id: "picu", title: "PICU Referral", description: "Psychiatric Intensive Care Unit transfers", icon: "\uD83C\uDFE5", gradient: "from-rose-500 to-rose-700", category: "Urgent Care", guideType: "referrals", viewerPath: "/guides/picu" },
-  { id: "safeguarding", title: "Safeguarding Adults", description: "Report safeguarding concerns - Derby City or County", icon: "\uD83D\uDEE1\uFE0F", gradient: "from-red-600 to-red-800", category: "Safeguarding", guideType: "referrals", viewerPath: "/guides/safeguarding" },
-  { id: "safeguarding-children", title: "Safeguarding Children", description: "Starting Point referrals for child concerns", icon: "\uD83D\uDC76", gradient: "from-pink-500 to-pink-700", category: "Safeguarding", guideType: "referrals", viewerPath: "/guides/safeguarding-children" },
-  { id: "homeless-discharge", title: "Housing / Duty to Refer", description: "Homeless discharge and accommodation support", icon: "\uD83C\uDFE0", gradient: "from-orange-500 to-orange-700", category: "Social & Housing", guideType: "referrals", viewerPath: "/guides/homeless-discharge" },
-  { id: "social-care", title: "Social Care (Derby City)", description: "Care Act assessment, S117 referrals & Enablement", icon: "\uD83D\uDC65", gradient: "from-amber-500 to-amber-700", category: "Social & Housing", guideType: "referrals", viewerPath: "/guides/social-care" },
-  { id: "s117-meeting", title: "S117 Meeting Request", description: "Request Social Care attendance at S117 discharge meeting", icon: "\u2696\uFE0F", gradient: "from-purple-600 to-purple-800", category: "Legal & Advocacy", guideType: "referrals", viewerPath: "/guides/s117-meeting" },
-  { id: "dietitian", title: "Dietitian Referral", description: "Nutritional assessment and support", icon: "\uD83E\uDD57", gradient: "from-green-500 to-green-700", category: "Allied Health", guideType: "referrals", viewerPath: "/guides/dietitian" },
-  { id: "tissue-viability", title: "Tissue Viability", description: "Wound care and pressure ulcer concerns", icon: "\uD83E\uDE79", gradient: "from-teal-500 to-teal-700", category: "Physical Health", guideType: "referrals", viewerPath: "/guides/tissue-viability" },
-  { id: "dental", title: "Dental Referral", description: "Dental care access for inpatients", icon: "\uD83E\uDDB7", gradient: "from-cyan-500 to-cyan-700", category: "Physical Health", guideType: "referrals", viewerPath: "/guides/dental" },
-  { id: "physio", title: "Physiotherapy", description: "Physical therapy and mobility assessment", icon: "\uD83C\uDFC3", gradient: "from-emerald-500 to-emerald-700", category: "Allied Health", guideType: "referrals", viewerPath: "/guides/physio" },
-  { id: "ot", title: "Occupational Therapy", description: "OT assessment and functional review", icon: "\uD83E\uDDE9", gradient: "from-violet-500 to-violet-700", category: "Allied Health", guideType: "referrals", viewerPath: "/guides/ot" },
-  { id: "speech-therapy", title: "Speech & Language", description: "SALT assessment and swallowing review", icon: "\uD83D\uDCAC", gradient: "from-purple-500 to-purple-700", category: "Allied Health", guideType: "referrals", viewerPath: "/guides/speech-therapy" },
-  { id: "edt", title: "Early Discharge Team", description: "EDT referral for discharge planning support", icon: "\uD83D\uDEAA", gradient: "from-sky-500 to-sky-700", category: "Discharge Planning", guideType: "referrals", viewerPath: "/guides/edt" },
-  { id: "erp", title: "Emotional Regulation (ERP/DBT)", description: "DBT skills and emotional regulation pathway", icon: "\uD83E\uDDE0", gradient: "from-fuchsia-500 to-fuchsia-700", category: "Psychology", guideType: "referrals", viewerPath: "/guides/erp" },
-  { id: "ctr-dsp", title: "CTR / DSP Review", description: "Care Treatment Review for ASD/LD patients (mandatory)", icon: "\uD83D\uDCCB", gradient: "from-lime-600 to-lime-800", category: "Specialist Pathways", guideType: "referrals", viewerPath: "/guides/ctr-dsp" },
-  { id: "benefits-review", title: "Benefits Review", description: "DWP benefits review and welfare rights support", icon: "\uD83D\uDCB7", gradient: "from-yellow-600 to-yellow-800", category: "Social & Housing", guideType: "referrals", viewerPath: "/guides/benefits-review" },
-];
-
-// Assessment & clinical guides (from how-to page)
-const ASSESSMENT_GUIDES: GuideItem[] = [
-  { id: "news2", title: "NEWS2 Observations", description: "National Early Warning Score - recognising deterioration", icon: "\uD83D\uDCCA", gradient: "from-rose-500 to-rose-700", category: "Physical Health", guideType: "assessments", viewerPath: "/guides/news2" },
-  { id: "blood-glucose", title: "Blood Glucose Monitoring", description: "BM testing and hypoglycaemia management", icon: "\uD83E\uDE78", gradient: "from-red-500 to-red-700", category: "Physical Health", guideType: "assessments", viewerPath: "/guides/blood-glucose" },
-  { id: "mental-state-exam", title: "Mental State Examination", description: "10-point guide to MSE assessment", icon: "\uD83E\uDDE0", gradient: "from-purple-500 to-purple-700", category: "Clinical Assessment", guideType: "assessments", viewerPath: "/guides/mental-state-exam" },
-  { id: "risk-assessment", title: "Risk Assessment", description: "Dynamic risk assessment and documentation", icon: "\u26A0\uFE0F", gradient: "from-amber-500 to-amber-700", category: "Clinical Assessment", guideType: "assessments", viewerPath: "/guides/risk-assessment" },
-  { id: "capacity-assessment", title: "Capacity Assessment", description: "Two-stage test and documentation requirements", icon: "\u2696\uFE0F", gradient: "from-indigo-500 to-indigo-700", category: "Legal", guideType: "assessments", viewerPath: "/guides/capacity-assessment" },
-  { id: "dols", title: "DoLS Ward Guidance", description: "Deprivation of Liberty Safeguards - when to apply", icon: "\uD83D\uDD12", gradient: "from-violet-500 to-violet-700", category: "Legal", guideType: "assessments", viewerPath: "/guides/dols" },
-  { id: "mha-statuses", title: "MHA Statuses", description: "All Mental Health Act sections and patient rights", icon: "\u2696\uFE0F", gradient: "from-indigo-600 to-purple-800", category: "Legal", guideType: "assessments", viewerPath: "/guides/mha-statuses" },
-  { id: "section-17", title: "Section 17 Leave", description: "Leave arrangements for detained patients", icon: "\uD83D\uDEAA", gradient: "from-blue-500 to-blue-700", category: "Legal", guideType: "assessments", viewerPath: "/guides/section-17" },
-  { id: "safeguarding-adults-referral", title: "Safeguarding Adults Referral", description: "Section 42 Care Act 2014 - when and how to refer", icon: "\uD83D\uDEE1\uFE0F", gradient: "from-red-600 to-red-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/safeguarding-adults-referral" },
-  { id: "safeguarding-children-referral", title: "Safeguarding Children Referral", description: "Starting Point referral process for child concerns", icon: "\uD83D\uDC76", gradient: "from-pink-600 to-pink-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/safeguarding-children-referral" },
-  { id: "domestic-abuse-guide", title: "Domestic Abuse", description: "Recognising and responding to domestic abuse", icon: "\uD83C\uDFE0", gradient: "from-purple-600 to-purple-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/domestic-abuse-guide" },
-  { id: "peer-conflict-guide", title: "Peer-on-Peer Conflict", description: "When to escalate patient conflict to safeguarding", icon: "\u26A0\uFE0F", gradient: "from-amber-600 to-amber-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/peer-conflict-guide" },
-  { id: "information-sharing", title: "Information Sharing", description: "Seven golden rules and GDPR guidance for safeguarding", icon: "\uD83D\uDD17", gradient: "from-blue-600 to-blue-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/information-sharing" },
-  { id: "escalation-pathway", title: "Escalation Pathway (Children)", description: "Bronze, Silver and Gold levels for complex YP cases", icon: "\uD83D\uDCC8", gradient: "from-orange-600 to-orange-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/escalation-pathway" },
-  { id: "online-safety-children", title: "Online Safety and Children", description: "Nudes, cyberbullying, sextortion and screen time", icon: "\uD83C\uDF10", gradient: "from-cyan-600 to-cyan-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/online-safety-children" },
-  { id: "honour-based-abuse", title: "HBA, FGM and Forced Marriage", description: "Honour-based abuse, female genital mutilation and forced marriage", icon: "\uD83D\uDEE1\uFE0F", gradient: "from-rose-700 to-rose-900", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/honour-based-abuse" },
-  { id: "modern-slavery-radicalisation", title: "Modern Slavery and Radicalisation", description: "Spotting the signs and making Prevent referrals", icon: "\u26D3\uFE0F", gradient: "from-gray-600 to-gray-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/modern-slavery-radicalisation" },
-  { id: "faith-belief-abuse", title: "Abuse Linked to Faith or Belief", description: "Recognising abuse linked to spirit possession, witchcraft or cultural practices", icon: "\uD83D\uDE4F", gradient: "from-violet-600 to-violet-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/faith-belief-abuse" },
-  { id: "send-safeguarding", title: "SEND and Safeguarding", description: "Safeguarding children with special educational needs and disabilities", icon: "\uD83D\uDCDA", gradient: "from-teal-600 to-teal-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/send-safeguarding" },
-  { id: "non-recent-abuse", title: "Non-Recent Abuse Disclosures", description: "Responding when adults disclose childhood abuse", icon: "\uD83D\uDD70\uFE0F", gradient: "from-slate-600 to-slate-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/non-recent-abuse" },
-  { id: "special-guardianship", title: "Special Guardianship Orders", description: "Permanence through SGOs - best practice guidance", icon: "\uD83D\uDC68\u200D\uD83D\uDC67", gradient: "from-emerald-600 to-emerald-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/special-guardianship" },
-  { id: "child-in-need", title: "Child in Need", description: "Multi-agency CIN arrangements and best practice", icon: "\uD83E\uDD32", gradient: "from-sky-600 to-sky-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/guides/child-in-need" },
-  { id: "abc-chart", title: "ABC Charts", description: "Recording and analysing challenging behaviour - antecedent, behaviour, consequence", icon: "\uD83D\uDCCB", gradient: "from-amber-500 to-orange-700", category: "Clinical Assessment", guideType: "assessments", viewerPath: "/guides/abc-chart" },
-];
-
-// Task/procedure guides (from how-to page)
-const TASK_GUIDES: GuideItem[] = [
-  { id: "fridge-temps", title: "Fridge Temperature Recording", description: "Medication fridge monitoring and Assurance Dashboard recording", icon: "\uD83C\uDF21\uFE0F", gradient: "from-cyan-500 to-cyan-700", category: "Ward Procedures", guideType: "tasks", viewerPath: "/guides/fridge-temps" },
-  { id: "seizure-management", title: "Managing a Seizure", description: "Emergency response and Buccal Midazolam administration", icon: "\uD83D\uDEA8", gradient: "from-red-600 to-red-800", category: "Emergency", guideType: "tasks", viewerPath: "/guides/seizure-management" },
-  { id: "medical-emergency", title: "Medical Emergency", description: "2222 calls and emergency response", icon: "\uD83C\uDFE5", gradient: "from-rose-600 to-rose-800", category: "Emergency", guideType: "tasks", viewerPath: "/guides/medical-emergency" },
-  { id: "rapid-tranq", title: "Rapid Tranquillisation", description: "RT protocol and post-RT monitoring", icon: "\uD83D\uDC89", gradient: "from-orange-600 to-orange-800", category: "Emergency", guideType: "tasks", viewerPath: "/guides/rapid-tranq" },
-  { id: "named-nurse", title: "Named Nurse Checklist", description: "Weekly and monthly tasks for named nurses", icon: "\uD83D\uDCCB", gradient: "from-emerald-500 to-emerald-700", category: "Ward Procedures", guideType: "tasks", viewerPath: "/guides/named-nurse" },
-  { id: "admission-checklist", title: "Admission Checklist", description: "Complete admission process step-by-step", icon: "\u2705", gradient: "from-green-500 to-green-700", category: "Ward Procedures", guideType: "tasks", viewerPath: "/guides/admission-checklist" },
-  { id: "discharge-checklist", title: "Discharge Checklist", description: "Safe discharge planning and documentation", icon: "\uD83C\uDFE0", gradient: "from-teal-500 to-teal-700", category: "Ward Procedures", guideType: "tasks", viewerPath: "/guides/discharge-checklist" },
-];
-
-// Named Nurse Tools
-const NAMED_NURSE_GUIDES: GuideItem[] = [
-  { id: "mh-talking-points", title: "Named Nurse Talking Points", description: "23 patient-facing mental health guides - print as leaflets for patients and families", icon: "\uD83E\uDDE0", gradient: "from-gray-800 to-gray-900", category: "Named Nurse Tools", guideType: "tasks", viewerPath: "/patient-guides" },
-];
-
-const ALL_GUIDES = [...NAMED_NURSE_GUIDES, ...REFERRAL_GUIDES, ...ASSESSMENT_GUIDES, ...TASK_GUIDES];
-
-const TAB_CONFIG: { key: GuideType; label: string; icon: string; count: number }[] = [
-  { key: "all", label: "All", icon: "\uD83D\uDCDA", count: ALL_GUIDES.length },
-  { key: "referrals", label: "Referrals", icon: "\uD83D\uDCCB", count: REFERRAL_GUIDES.length },
-  { key: "assessments", label: "Assessments", icon: "\uD83D\uDD0D", count: ASSESSMENT_GUIDES.length },
-  { key: "tasks", label: "Tasks", icon: "\u2705", count: TASK_GUIDES.length },
+// All guides in one flat list - no categories/tabs
+const ALL_GUIDES: GuideItem[] = [
+  // Named Nurse Tools
+  { id: "mh-talking-points", title: "Named Nurse Talking Points", description: "23 patient-facing mental health guides - print as leaflets for patients and families", icon: "\uD83E\uDDE0", gradient: "from-gray-800 to-gray-900", category: "Named Nurse Tools", viewerPath: "/patient-guides" },
+  // Referrals
+  { id: "imha-advocacy", title: "IMHA / Advocacy", description: "Independent Mental Health Advocate for all patients (informal and detained)", icon: "\uD83D\uDDE3\uFE0F", gradient: "from-indigo-500 to-indigo-700", category: "Legal & Advocacy", viewerPath: "/guides/imha-advocacy" },
+  { id: "picu", title: "PICU Referral", description: "Psychiatric Intensive Care Unit transfers", icon: "\uD83C\uDFE5", gradient: "from-rose-500 to-rose-700", category: "Urgent Care", viewerPath: "/guides/picu" },
+  { id: "safeguarding", title: "Safeguarding Adults", description: "S.42 referral - report concerns, Derby City or County", icon: "\uD83D\uDEE1\uFE0F", gradient: "from-red-600 to-red-800", category: "Safeguarding", viewerPath: "/guides/safeguarding" },
+  { id: "safeguarding-children", title: "Safeguarding Children", description: "Starting Point referral for child concerns", icon: "\uD83D\uDC76", gradient: "from-pink-500 to-pink-700", category: "Safeguarding", viewerPath: "/guides/safeguarding-children" },
+  { id: "homeless-discharge", title: "Housing / Duty to Refer", description: "Homeless discharge and accommodation support", icon: "\uD83C\uDFE0", gradient: "from-orange-500 to-orange-700", category: "Social & Housing", viewerPath: "/guides/homeless-discharge" },
+  { id: "social-care", title: "Social Care (Derby City)", description: "Care Act assessment, S117 referrals & Enablement", icon: "\uD83D\uDC65", gradient: "from-amber-500 to-amber-700", category: "Social & Housing", viewerPath: "/guides/social-care" },
+  { id: "s117-meeting", title: "S117 Meeting Request", description: "Request Social Care attendance at S117 discharge meeting", icon: "\u2696\uFE0F", gradient: "from-purple-600 to-purple-800", category: "Legal & Advocacy", viewerPath: "/guides/s117-meeting" },
+  { id: "dietitian", title: "Dietitian Referral", description: "Nutritional assessment and support", icon: "\uD83E\uDD57", gradient: "from-green-500 to-green-700", category: "Allied Health", viewerPath: "/guides/dietitian" },
+  { id: "tissue-viability", title: "Tissue Viability", description: "Wound care and pressure ulcer concerns", icon: "\uD83E\uDE79", gradient: "from-teal-500 to-teal-700", category: "Physical Health", viewerPath: "/guides/tissue-viability" },
+  { id: "dental", title: "Dental Referral", description: "Dental care access for inpatients", icon: "\uD83E\uDDB7", gradient: "from-cyan-500 to-cyan-700", category: "Physical Health", viewerPath: "/guides/dental" },
+  { id: "physio", title: "Physiotherapy", description: "Physical therapy and mobility assessment", icon: "\uD83C\uDFC3", gradient: "from-emerald-500 to-emerald-700", category: "Allied Health", viewerPath: "/guides/physio" },
+  { id: "ot", title: "Occupational Therapy", description: "OT assessment and functional review", icon: "\uD83E\uDDE9", gradient: "from-violet-500 to-violet-700", category: "Allied Health", viewerPath: "/guides/ot" },
+  { id: "speech-therapy", title: "Speech & Language", description: "SALT assessment and swallowing review", icon: "\uD83D\uDCAC", gradient: "from-purple-500 to-purple-700", category: "Allied Health", viewerPath: "/guides/speech-therapy" },
+  { id: "edt", title: "Early Discharge Team", description: "EDT referral for discharge planning support", icon: "\uD83D\uDEAA", gradient: "from-sky-500 to-sky-700", category: "Discharge Planning", viewerPath: "/guides/edt" },
+  { id: "erp", title: "Emotional Regulation (ERP/DBT)", description: "DBT skills and emotional regulation pathway", icon: "\uD83E\uDDE0", gradient: "from-fuchsia-500 to-fuchsia-700", category: "Psychology", viewerPath: "/guides/erp" },
+  { id: "ctr-dsp", title: "CTR / DSP Review", description: "Care Treatment Review for ASD/LD patients (mandatory)", icon: "\uD83D\uDCCB", gradient: "from-lime-600 to-lime-800", category: "Specialist Pathways", viewerPath: "/guides/ctr-dsp" },
+  { id: "benefits-review", title: "Benefits Review", description: "DWP benefits review and welfare rights support", icon: "\uD83D\uDCB7", gradient: "from-yellow-600 to-yellow-800", category: "Social & Housing", viewerPath: "/guides/benefits-review" },
+  // Clinical assessments
+  { id: "news2", title: "NEWS2 Observations", description: "National Early Warning Score - recognising deterioration", icon: "\uD83D\uDCCA", gradient: "from-rose-500 to-rose-700", category: "Physical Health", viewerPath: "/guides/news2" },
+  { id: "blood-glucose", title: "Blood Glucose Monitoring", description: "BM testing and hypoglycaemia management", icon: "\uD83E\uDE78", gradient: "from-red-500 to-red-700", category: "Physical Health", viewerPath: "/guides/blood-glucose" },
+  { id: "mental-state-exam", title: "Mental State Examination", description: "10-point guide to MSE assessment", icon: "\uD83E\uDDE0", gradient: "from-purple-500 to-purple-700", category: "Clinical Assessment", viewerPath: "/guides/mental-state-exam" },
+  { id: "risk-assessment", title: "Risk Assessment", description: "Dynamic risk assessment and documentation", icon: "\u26A0\uFE0F", gradient: "from-amber-500 to-amber-700", category: "Clinical Assessment", viewerPath: "/guides/risk-assessment" },
+  { id: "abc-chart", title: "ABC Charts", description: "Recording and analysing challenging behaviour - antecedent, behaviour, consequence", icon: "\uD83D\uDCCB", gradient: "from-amber-500 to-orange-700", category: "Clinical Assessment", viewerPath: "/guides/abc-chart" },
+  { id: "capacity-assessment", title: "Capacity Assessment", description: "Two-stage test and documentation requirements", icon: "\u2696\uFE0F", gradient: "from-indigo-500 to-indigo-700", category: "Legal", viewerPath: "/guides/capacity-assessment" },
+  { id: "dols", title: "DoLS Ward Guidance", description: "Deprivation of Liberty Safeguards - when to apply", icon: "\uD83D\uDD12", gradient: "from-violet-500 to-violet-700", category: "Legal", viewerPath: "/guides/dols" },
+  { id: "mha-statuses", title: "MHA Statuses", description: "All Mental Health Act sections and patient rights", icon: "\u2696\uFE0F", gradient: "from-indigo-600 to-purple-800", category: "Legal", viewerPath: "/guides/mha-statuses" },
+  { id: "section-17", title: "Section 17 Leave", description: "Leave arrangements for detained patients", icon: "\uD83D\uDEAA", gradient: "from-blue-500 to-blue-700", category: "Legal", viewerPath: "/guides/section-17" },
+  // Safeguarding (educational)
+  { id: "domestic-abuse-guide", title: "Domestic Abuse", description: "Recognising and responding to domestic abuse", icon: "\uD83C\uDFE0", gradient: "from-purple-600 to-purple-800", category: "Safeguarding", viewerPath: "/guides/domestic-abuse-guide" },
+  { id: "peer-conflict-guide", title: "Peer-on-Peer Conflict", description: "When to escalate patient conflict to safeguarding", icon: "\u26A0\uFE0F", gradient: "from-amber-600 to-amber-800", category: "Safeguarding", viewerPath: "/guides/peer-conflict-guide" },
+  { id: "information-sharing", title: "Information Sharing", description: "Seven golden rules and GDPR guidance for safeguarding", icon: "\uD83D\uDD17", gradient: "from-blue-600 to-blue-800", category: "Safeguarding", viewerPath: "/guides/information-sharing" },
+  { id: "escalation-pathway", title: "Escalation Pathway (Children)", description: "Bronze, Silver and Gold levels for complex YP cases", icon: "\uD83D\uDCC8", gradient: "from-orange-600 to-orange-800", category: "Safeguarding", viewerPath: "/guides/escalation-pathway" },
+  { id: "online-safety-children", title: "Online Safety and Children", description: "Nudes, cyberbullying, sextortion and screen time", icon: "\uD83C\uDF10", gradient: "from-cyan-600 to-cyan-800", category: "Safeguarding", viewerPath: "/guides/online-safety-children" },
+  { id: "honour-based-abuse", title: "HBA, FGM and Forced Marriage", description: "Honour-based abuse, female genital mutilation and forced marriage", icon: "\uD83D\uDEE1\uFE0F", gradient: "from-rose-700 to-rose-900", category: "Safeguarding", viewerPath: "/guides/honour-based-abuse" },
+  { id: "modern-slavery-radicalisation", title: "Modern Slavery and Radicalisation", description: "Spotting the signs and making Prevent referrals", icon: "\u26D3\uFE0F", gradient: "from-gray-600 to-gray-800", category: "Safeguarding", viewerPath: "/guides/modern-slavery-radicalisation" },
+  { id: "faith-belief-abuse", title: "Abuse Linked to Faith or Belief", description: "Recognising abuse linked to spirit possession, witchcraft or cultural practices", icon: "\uD83D\uDE4F", gradient: "from-violet-600 to-violet-800", category: "Safeguarding", viewerPath: "/guides/faith-belief-abuse" },
+  { id: "send-safeguarding", title: "SEND and Safeguarding", description: "Safeguarding children with special educational needs and disabilities", icon: "\uD83D\uDCDA", gradient: "from-teal-600 to-teal-800", category: "Safeguarding", viewerPath: "/guides/send-safeguarding" },
+  { id: "non-recent-abuse", title: "Non-Recent Abuse Disclosures", description: "Responding when adults disclose childhood abuse", icon: "\uD83D\uDD70\uFE0F", gradient: "from-slate-600 to-slate-800", category: "Safeguarding", viewerPath: "/guides/non-recent-abuse" },
+  { id: "special-guardianship", title: "Special Guardianship Orders", description: "Permanence through SGOs - best practice guidance", icon: "\uD83D\uDC68\u200D\uD83D\uDC67", gradient: "from-emerald-600 to-emerald-800", category: "Safeguarding", viewerPath: "/guides/special-guardianship" },
+  { id: "child-in-need", title: "Child in Need", description: "Multi-agency CIN arrangements and best practice", icon: "\uD83E\uDD32", gradient: "from-sky-600 to-sky-800", category: "Safeguarding", viewerPath: "/guides/child-in-need" },
+  // Tasks & procedures
+  { id: "fridge-temps", title: "Fridge Temperature Recording", description: "Medication fridge monitoring and Assurance Dashboard recording", icon: "\uD83C\uDF21\uFE0F", gradient: "from-cyan-500 to-cyan-700", category: "Ward Procedures", viewerPath: "/guides/fridge-temps" },
+  { id: "seizure-management", title: "Managing a Seizure", description: "Emergency response and Buccal Midazolam administration", icon: "\uD83D\uDEA8", gradient: "from-red-600 to-red-800", category: "Emergency", viewerPath: "/guides/seizure-management" },
+  { id: "medical-emergency", title: "Medical Emergency", description: "2222 calls and emergency response", icon: "\uD83C\uDFE5", gradient: "from-rose-600 to-rose-800", category: "Emergency", viewerPath: "/guides/medical-emergency" },
+  { id: "rapid-tranq", title: "Rapid Tranquillisation", description: "RT protocol and post-RT monitoring", icon: "\uD83D\uDC89", gradient: "from-orange-600 to-orange-800", category: "Emergency", viewerPath: "/guides/rapid-tranq" },
+  { id: "named-nurse", title: "Named Nurse Checklist", description: "Weekly and monthly tasks for named nurses", icon: "\uD83D\uDCCB", gradient: "from-emerald-500 to-emerald-700", category: "Ward Procedures", viewerPath: "/guides/named-nurse" },
+  { id: "admission-checklist", title: "Admission Checklist", description: "Complete admission process step-by-step", icon: "\u2705", gradient: "from-green-500 to-green-700", category: "Ward Procedures", viewerPath: "/guides/admission-checklist" },
+  { id: "discharge-checklist", title: "Discharge Checklist", description: "Safe discharge planning and documentation", icon: "\uD83C\uDFE0", gradient: "from-teal-500 to-teal-700", category: "Ward Procedures", viewerPath: "/guides/discharge-checklist" },
 ];
 
 export default function GuidesPage() {
   const { canEdit } = useCanEdit();
   const { getPendingCount } = useReferralLog();
-  const [activeTab, setActiveTab] = useState<GuideType>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const pendingCount = getPendingCount();
 
-  // Filter by tab
-  const tabFiltered = activeTab === "all"
-    ? ALL_GUIDES
-    : ALL_GUIDES.filter((g) => g.guideType === activeTab);
-
-  // Get categories for current tab
-  const tabCategories = [...new Set(tabFiltered.map((g) => g.category))];
+  // Get all categories
+  const allCategories = [...new Set(ALL_GUIDES.map((g) => g.category))];
 
   // Filter by category
   const categoryFiltered = selectedCategory === "all"
-    ? tabFiltered
-    : tabFiltered.filter((g) => g.category === selectedCategory);
+    ? ALL_GUIDES
+    : ALL_GUIDES.filter((g) => g.category === selectedCategory);
 
   // Filter by search
   const filteredGuides = searchQuery.trim()
@@ -123,12 +95,6 @@ export default function GuidesPage() {
         return g.title.toLowerCase().includes(q) || g.description.toLowerCase().includes(q);
       })
     : categoryFiltered;
-
-  // Reset category when tab changes
-  const handleTabChange = (tab: GuideType) => {
-    setActiveTab(tab);
-    setSelectedCategory("all");
-  };
 
   return (
     <MainLayout>
@@ -173,29 +139,6 @@ export default function GuidesPage() {
           </div>
         </div>
 
-        {/* Tab filters */}
-        <div className="flex items-center gap-2 bg-white rounded-xl p-2 border border-gray-200">
-          {TAB_CONFIG.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => handleTabChange(tab.key)}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-                activeTab === tab.key
-                  ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md"
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
-            >
-              <span>{tab.icon}</span>
-              {tab.label}
-              <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                activeTab === tab.key ? "bg-white/20" : "bg-gray-200"
-              }`}>
-                {tab.count}
-              </span>
-            </button>
-          ))}
-        </div>
-
         {/* Search bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -209,7 +152,7 @@ export default function GuidesPage() {
         </div>
 
         {/* Category filter */}
-        {tabCategories.length > 1 && (
+        {allCategories.length > 1 && (
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-2 mb-3">
               <Filter className="w-5 h-5 text-gray-500" />
@@ -226,7 +169,7 @@ export default function GuidesPage() {
               >
                 All
               </button>
-              {tabCategories.map((category) => (
+              {allCategories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
@@ -247,7 +190,7 @@ export default function GuidesPage() {
         <div className="space-y-3">
           {filteredGuides.map((guide) => (
             <Link
-              key={`${guide.guideType}-${guide.id}`}
+              key={guide.id}
               href={guide.viewerPath}
               className="block no-underline"
             >
@@ -266,15 +209,8 @@ export default function GuidesPage() {
                     <Badge className="bg-gray-100 text-gray-600 border-0 text-xs">
                       {guide.category}
                     </Badge>
-                    <Badge className={`text-xs border-0 ${
-                      guide.guideType === "referrals" ? "bg-rose-100 text-rose-700" :
-                      guide.guideType === "assessments" ? "bg-purple-100 text-purple-700" :
-                      "bg-emerald-100 text-emerald-700"
-                    }`}>
-                      {guide.guideType === "referrals" ? "Referral" : guide.guideType === "assessments" ? "Assessment" : "Task"}
-                    </Badge>
                     <VerificationBadge
-                      contentType={guide.guideType === "referrals" ? "workflow" : "guide"}
+                      contentType="guide"
                       contentId={guide.id}
                       contentTitle={guide.title}
                     />

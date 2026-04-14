@@ -28,8 +28,8 @@ const QUICK_ACTIONS = [
 ];
 
 const SG_QUICK_LINKS = [
-  { icon: "🛡️", label: "Safeguarding Adults", description: "S.42 referral - step by step", href: "/guides/safeguarding-adults-referral" },
-  { icon: "👶", label: "Worried About a Child", description: "Starting Point referral", href: "/guides/safeguarding-children-referral" },
+  { icon: "🛡️", label: "Safeguarding Adults", description: "S.42 referral - step by step", href: "/guides/safeguarding" },
+  { icon: "👶", label: "Worried About a Child", description: "Starting Point referral", href: "/guides/safeguarding-children" },
   { icon: "🏠", label: "Domestic Abuse", description: "Recognise, respond, refer", href: "/guides/domestic-abuse-guide" },
   { icon: "🌐", label: "Online Safety", description: "Nudes, bullying, sextortion", href: "/guides/online-safety-children" },
   { icon: "⚠️", label: "Patient Conflict", description: "When to escalate", href: "/guides/peer-conflict-guide" },
@@ -83,7 +83,7 @@ function SafeguardingDecisionHelper() {
         </div>
         <p className="text-xs text-gray-600">Use the Safeguarding Adults guide to make a referral</p>
         <div className="flex gap-3 justify-center">
-          <Link href="/guides/safeguarding-adults-referral" className="px-5 py-2 bg-red-700 text-white font-semibold rounded-xl hover:bg-red-800 text-sm no-underline">
+          <Link href="/guides/safeguarding" className="px-5 py-2 bg-red-700 text-white font-semibold rounded-xl hover:bg-red-800 text-sm no-underline">
             Open the guide
           </Link>
           <button onClick={reset} className="px-5 py-2 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 text-sm">Start over</button>
@@ -99,7 +99,7 @@ function SafeguardingDecisionHelper() {
         </div>
         <p className="text-xs text-gray-600">DHCFT Safeguarding Advice Line – they'll help you decide</p>
         <div className="flex gap-3 justify-center">
-          <Link href="/guides/safeguarding-adults-referral" className="px-5 py-2 bg-amber-600 text-white font-semibold rounded-xl hover:bg-amber-700 text-sm no-underline">
+          <Link href="/guides/safeguarding" className="px-5 py-2 bg-amber-600 text-white font-semibold rounded-xl hover:bg-amber-700 text-sm no-underline">
             Open the guide anyway
           </Link>
           <button onClick={reset} className="px-5 py-2 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 text-sm">Start over</button>
@@ -115,7 +115,7 @@ function SafeguardingDecisionHelper() {
       </div>
       <p className="text-xs text-gray-600">24-hour children's safeguarding referral service</p>
       <div className="flex gap-3 justify-center">
-        <Link href="/guides/safeguarding-children-referral" className="px-5 py-2 bg-pink-700 text-white font-semibold rounded-xl hover:bg-pink-800 text-sm no-underline">
+        <Link href="/guides/safeguarding-children" className="px-5 py-2 bg-pink-700 text-white font-semibold rounded-xl hover:bg-pink-800 text-sm no-underline">
           Open the guide
         </Link>
         <button onClick={reset} className="px-5 py-2 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 text-sm">Start over</button>

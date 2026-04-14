@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { Badge, VerificationBadge } from "@/components/ui";
 import Link from "next/link";
-import { ArrowRight, Brain, Clock, Filter, FileText, Pencil, Search } from "lucide-react";
+import { ArrowRight, Clock, Filter, FileText, Pencil, Search } from "lucide-react";
 import { useReferralLog } from "@/app/referral-log-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 
@@ -65,7 +65,12 @@ const TASK_GUIDES: GuideItem[] = [
   { id: "discharge-checklist", title: "Discharge Checklist", description: "Safe discharge planning and documentation", icon: "\uD83C\uDFE0", gradient: "from-teal-500 to-teal-700", category: "Ward Procedures", guideType: "tasks", viewerPath: "/how-to/discharge-checklist" },
 ];
 
-const ALL_GUIDES = [...REFERRAL_GUIDES, ...ASSESSMENT_GUIDES, ...TASK_GUIDES];
+// Named Nurse Tools
+const NAMED_NURSE_GUIDES: GuideItem[] = [
+  { id: "mh-talking-points", title: "Named Nurse Talking Points", description: "23 patient-facing mental health guides - print as leaflets for patients and families", icon: "\uD83E\uDDE0", gradient: "from-gray-800 to-gray-900", category: "Named Nurse Tools", guideType: "tasks", viewerPath: "/patient-guides" },
+];
+
+const ALL_GUIDES = [...REFERRAL_GUIDES, ...ASSESSMENT_GUIDES, ...TASK_GUIDES, ...NAMED_NURSE_GUIDES];
 
 const TAB_CONFIG: { key: GuideType; label: string; icon: string; count: number }[] = [
   { key: "all", label: "All", icon: "\uD83D\uDCDA", count: ALL_GUIDES.length },
@@ -221,27 +226,6 @@ export default function GuidesPage() {
             </div>
           </div>
         )}
-
-        {/* Named Nurse Tools */}
-        <Link href="/patient-guides" className="block no-underline">
-          <div className="rounded-xl border-2 border-gray-200 p-5 flex items-center gap-4 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer group" style={{ background: "linear-gradient(135deg, #1A1A2E 0%, #2D3748 100%)" }}>
-            <div className="w-14 h-14 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
-              <Brain className="w-7 h-7 text-white" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <Badge className="bg-amber-400/20 text-amber-300 border-0 text-xs">Named Nurse Tools</Badge>
-              </div>
-              <h3 className="text-lg font-bold text-white group-hover:text-amber-200 transition-colors">
-                Mental Health Understanding Guides
-              </h3>
-              <p className="text-white/60 text-sm mt-0.5">
-                23 patient-facing guides - print as leaflets for patients and families
-              </p>
-            </div>
-            <ArrowRight className="w-5 h-5 text-white/40 group-hover:text-amber-300 flex-shrink-0 transition-colors" />
-          </div>
-        </Link>
 
         {/* Guides list */}
         <div className="space-y-3">

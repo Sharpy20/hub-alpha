@@ -28,7 +28,7 @@ export default function PatientGuidesIndex() {
               <span className="text-3xl">🧠</span>
             </div>
             <div>
-              <h1 className="text-3xl font-bold">Mental Health Understanding Guides</h1>
+              <h1 className="text-3xl font-bold">Named Nurse Talking Points</h1>
               <p className="text-white/80 mt-1">
                 23 patient-facing guides - print as leaflets for patients and families
               </p>

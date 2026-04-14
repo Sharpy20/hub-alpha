@@ -67,6 +67,7 @@ const ASSESSMENT_GUIDES: GuideItem[] = [
   { id: "non-recent-abuse", title: "Non-Recent Abuse Disclosures", description: "Responding when adults disclose childhood abuse", icon: "\uD83D\uDD70\uFE0F", gradient: "from-slate-600 to-slate-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/how-to/non-recent-abuse" },
   { id: "special-guardianship", title: "Special Guardianship Orders", description: "Permanence through SGOs - best practice guidance", icon: "\uD83D\uDC68\u200D\uD83D\uDC67", gradient: "from-emerald-600 to-emerald-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/how-to/special-guardianship" },
   { id: "child-in-need", title: "Child in Need", description: "Multi-agency CIN arrangements and best practice", icon: "\uD83E\uDD32", gradient: "from-sky-600 to-sky-800", category: "Safeguarding", guideType: "assessments", viewerPath: "/how-to/child-in-need" },
+  { id: "abc-chart", title: "ABC Charts", description: "Recording and analysing challenging behaviour - antecedent, behaviour, consequence", icon: "\uD83D\uDCCB", gradient: "from-amber-500 to-orange-700", category: "Clinical Assessment", guideType: "assessments", viewerPath: "/how-to/abc-chart" },
 ];
 
 // Task/procedure guides (from how-to page)

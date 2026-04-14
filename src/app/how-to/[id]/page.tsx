@@ -43,6 +43,7 @@ const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: s
   "non-recent-abuse": { icon: "🕰️", gradient: "from-slate-600 to-slate-800", category: "Safeguarding" },
   "special-guardianship": { icon: "👨‍👧", gradient: "from-emerald-600 to-emerald-800", category: "Safeguarding" },
   "child-in-need": { icon: "🤲", gradient: "from-sky-600 to-sky-800", category: "Safeguarding" },
+  "abc-chart": { icon: "📋", gradient: "from-amber-500 to-orange-700", category: "Clinical Assessment" },
 };
 
 // Demo guide content - multiple guides
@@ -712,6 +713,54 @@ const GUIDES: Record<string, GuideData> = {
         title: "Resources",
         content: "Key resources:\n\n- DDSCP Threshold Document - guidance on levels of need\n- DDSCP Assessment Tools Library (Early Help Assessment, GCP, DVRIM, CRE)\n- DDSCP Best Practice Guide: Child in Need (October 2024)\n- DHCFT Safeguarding Team for advice: Hidden in demo mode\n\nConsultation lines:\n- Derbyshire Starting Point: Hidden in demo mode (Mon-Fri 10am-4pm)\n- Derby City Professional Consultation Line: Hidden in demo mode (Mon-Fri 10am-4pm)\n\nEscalation:\n- Multi-agency dispute resolution protocol available on DDSCP website",
         tip: "If you feel a CIN plan is drifting or not reducing risk, you have a professional duty to escalate. The child's wellbeing is everyone's responsibility.",
+      },
+    ],
+  },
+  "abc-chart": {
+    id: "abc-chart",
+    title: "ABC Charts - Antecedent, Behaviour, Consequence",
+    description: "Recording and analysing challenging behaviour to identify triggers, patterns and functions",
+    steps: [
+      {
+        id: "1",
+        title: "What is an ABC Chart?",
+        content: "An ABC chart is a structured observation tool for recording incidents of behaviour that challenges. It captures three elements:\n\nA - Antecedent: what was happening before the behaviour - determines triggers and setting conditions\nB - Behaviour: an exact description of the behaviour itself\nC - Consequence: what happened after - gives an indicator of possible reinforcers\n\nABC charts should be completed for:\n- Verbal aggression\n- Violence or physical aggression\n- Self-harm\n- Agitation or behaviour that challenges\n\nComplete them alongside the session note and Datix. They are frequently requested at panel as supportive evidence to accompany the NPA, so it is crucial they are completed as required.",
+        tip: "ABC charts support care planning, risk assessment, future placement decisions and funding applications. Good quality charts make a real difference at panel.",
+      },
+      {
+        id: "2",
+        title: "Why Do We Use Them?",
+        content: "ABC charts help the team to:\n\n- Monitor patterns of behaviour to understand triggers\n- Identify times when behaviour is absent vs present\n- Distinguish fast triggers (immediate provocation) from slow triggers (building over time - sleep, pain, medication, family events)\n- Identify factors that increase and decrease behaviour\n- Understand the possible function of the behaviour\n- Review how staff respond and what works\n\nExample: Barry is noticeably more irritable when supported by male staff compared to female staff when getting up in the morning.\n\nExample: Mary often seeks 1:1 time from staff and when she doesn't feel this need is being met, she begins to express that she wants to harm herself.\n\nExample: Bill de-escalates better with one familiar staff member. He is very sensitive to noise and crowding.",
+        tip: "Look for what is different on good days vs bad days. The absence of behaviour is just as important as the behaviour itself.",
+      },
+      {
+        id: "3",
+        title: "A - Antecedent (Before)",
+        content: "Record what was happening before the incident. On Datix this maps to the Description field.\n\nEnter facts only, not opinions. Include:\n- Where the person was and what they were doing\n- Who else was present\n- What had just happened or been asked of them\n- Any environmental factors (noise, crowding, time of day)\n- The person's apparent mood or state beforehand\n\nExample:\n\"Dale was sitting in the lounge with peer Greg. They appeared to be chatting. Greg's family arrived to visit him, and Dale turned away from him.\"\n\nAlso consider slow triggers:\n- Changes in medication or routine\n- Poor sleep the night before\n- Family visit (or cancelled visit)\n- Staffing changes\n- Pain or physical discomfort",
+        tip: "Stick to facts. 'Dale turned away' is observable. 'Dale was jealous' is an interpretation. Record what you saw and heard, not what you think it meant.",
+      },
+      {
+        id: "4",
+        title: "B - Behaviour (During)",
+        content: "Record exactly what the person did. On Datix this maps to the Immediate Action field.\n\nBe specific and observable - avoid labels or judgements:\n\nGood: \"Dale turned away from Greg and crossed his arms. After a few minutes he got up and started banging on the lounge doors shouting 'it's not fair'\"\n\nNot helpful: \"Dale kicked off\" or \"Dale was aggressive\"\n\nInclude:\n- What the person said (use their actual words)\n- What they physically did, step by step\n- How long the behaviour lasted\n- The intensity (volume, force)\n- Whether it escalated or de-escalated\n- Whether anyone else was affected",
+        tip: "Write it so someone who wasn't there can picture exactly what happened. If this ends up as evidence at panel or in court, precision matters.",
+      },
+      {
+        id: "5",
+        title: "C - Consequence (After)",
+        content: "Record what happened after the behaviour. On Datix this maps to the Contributing Factors field.\n\nInclude:\n- How staff responded and what approach was used\n- De-escalation techniques tried\n- Whether PRN medication was offered or given\n- How the person reacted to the response\n- What the outcome was\n\nExample:\n\"Staff member RN Bean calmly approached Dale and asked if he could help. RN Bean spoke softly and asked if something had upset him. He then made him a cup of tea and sat calmly talking about the Wimbledon final. Dale appeared to relax and spoke about the tennis. He appeared to appreciate the company.\"\n\nAsk yourself: did the behaviour result in the person gaining attention, escaping a task, accessing something they wanted, or sensory stimulation? This helps identify the function.",
+        tip: "It's OK to add a reflective thought at the end - e.g. 'I wonder if Dale was feeling left out?' - but clearly separate observation from interpretation.",
+      },
+      {
+        id: "6",
+        title: "Functions of Behaviour (SEAT)",
+        content: "When analysing ABC data, consider the four common functions of behaviour:\n\nS - Sensory: the behaviour feels good or provides sensory input (rocking, head-banging, skin-picking)\n\nE - Escape: the behaviour helps avoid or escape something unpleasant (a task, a person, a noisy environment)\n\nA - Attention: the behaviour gets a response from others (staff attention, peer reaction, 1:1 time)\n\nT - Tangible: the behaviour results in access to something desired (food, items, activities, a preferred location)\n\nA single behaviour can serve more than one function, and the function may differ depending on the context. Look across multiple ABC records for patterns - the same consequence following the same behaviour often points to the function.",
+      },
+      {
+        id: "7",
+        title: "The Datix to S1 Workflow",
+        content: "How ABC charts get from Datix into the patient record:\n\n1. Complete the Datix as normal after an incident\n2. Ensure the Description, Immediate Action and Contributing Factors fields are completed with ABC-quality detail\n3. Ward leadership brings the Datix to handover and discusses with staff to ensure all contributing factors are documented\n4. Ward leadership converts the Datix into an ABC chart via the Datix system\n5. The ABC chart is attached to the patient record on the clinical system under Attached Documents\n\nWhat happens with this information:\n- Analysed by the team, looking for patterns\n- Formulating the underlying need that drives the behaviour\n- Meeting that need in other ways to reduce frequency and intensity\n- Trialling more helpful ways of responding\n- Used as evidence at panel for placement and funding decisions",
+        tip: "If you're unsure about completing the ABC detail on Datix, raise it in group or individual supervision. Ward leadership can support you.",
       },
     ],
   },

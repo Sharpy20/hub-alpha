@@ -227,7 +227,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "criteria",
         type: "criteria",
         title: "Check the Criteria (S.42)",
-        content: "Section 42 of the Care Act 2014 sets out three conditions - all must apply:\n\n1. The adult has care and support needs (whether or not met by the Local Authority)\n2. The adult is experiencing, or at risk of, abuse or neglect\n3. As a result of those needs, is unable to protect themselves\n\nThere is no 'significant harm' threshold. Action should be proportionate to the risk and wherever possible in line with the person's wishes.\n\nThe Care Act recognises 10 categories: Physical abuse, Emotional/psychological abuse, Sexual abuse, Neglect and acts of omission, Financial or material abuse, Discriminatory abuse, Organisational abuse, Self-neglect, Domestic abuse, Modern slavery.\n\nIf unsure, ring the DHCFT Safeguarding Advice Line to talk it through. You won't be judged for asking.",
+        content: "Section 42 of the Care Act 2014 - all three must apply:\n\n1. The adult has care and support needs\n2. They are experiencing, or at risk of, abuse or neglect\n3. Because of those needs, they cannot protect themselves\n\nNo 'significant harm' threshold. If in doubt, refer.",
         checkboxLabel: "I confirm this meets adult safeguarding criteria (S.42)",
       },
       {

@@ -28,6 +28,7 @@ const CATEGORY_CONFIG: Record<string, { gradient: string; icon: string }> = {
   "Communication": { gradient: "from-pink-500 to-pink-700", icon: "💬" },
   "External Services": { gradient: "from-teal-500 to-teal-700", icon: "🔗" },
   "Safeguarding": { gradient: "from-red-600 to-rose-700", icon: "🛡️" },
+  "Safeguarding Children": { gradient: "from-pink-600 to-rose-700", icon: "👶" },
   "Mental Health Act": { gradient: "from-indigo-600 to-violet-700", icon: "⚖️" },
   "Patient Safety": { gradient: "from-rose-500 to-red-600", icon: "🛟" },
   "Infection Control": { gradient: "from-emerald-500 to-green-700", icon: "🦠" },

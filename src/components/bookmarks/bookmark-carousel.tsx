@@ -148,6 +148,7 @@ export function BookmarkCarousel() {
       "Clinical Systems": "Monitor",
       "Crisis Support": "Phone",
       "Safeguarding": "Shield",
+      "Safeguarding Children": "Baby",
       "Trust Resources": "Building2",
       "External Services": "ExternalLink",
       "Training": "GraduationCap",

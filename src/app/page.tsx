@@ -28,10 +28,12 @@ const QUICK_ACTIONS = [
 ];
 
 const SG_QUICK_LINKS = [
-  { icon: "🛡️", label: "Safeguarding Adults", description: "S.42 referral – step by step", href: "/how-to/safeguarding-adults-referral" },
+  { icon: "🛡️", label: "Safeguarding Adults", description: "S.42 referral - step by step", href: "/how-to/safeguarding-adults-referral" },
   { icon: "👶", label: "Worried About a Child", description: "Starting Point referral", href: "/how-to/safeguarding-children-referral" },
   { icon: "🏠", label: "Domestic Abuse", description: "Recognise, respond, refer", href: "/how-to/domestic-abuse-guide" },
+  { icon: "🌐", label: "Online Safety", description: "Nudes, bullying, sextortion", href: "/how-to/online-safety-children" },
   { icon: "⚠️", label: "Patient Conflict", description: "When to escalate", href: "/how-to/peer-conflict-guide" },
+  { icon: "🔗", label: "Information Sharing", description: "Seven golden rules", href: "/how-to/information-sharing" },
 ];
 
 function SafeguardingDecisionHelper() {

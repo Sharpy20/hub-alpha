@@ -33,6 +33,16 @@ const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: s
   "safeguarding-children-referral": { icon: "👶", gradient: "from-pink-600 to-pink-800", category: "Safeguarding" },
   "domestic-abuse-guide": { icon: "🏠", gradient: "from-purple-600 to-purple-800", category: "Safeguarding" },
   "peer-conflict-guide": { icon: "⚠️", gradient: "from-amber-600 to-amber-800", category: "Safeguarding" },
+  "information-sharing": { icon: "🔗", gradient: "from-blue-600 to-blue-800", category: "Safeguarding" },
+  "escalation-pathway": { icon: "📈", gradient: "from-orange-600 to-orange-800", category: "Safeguarding" },
+  "online-safety-children": { icon: "🌐", gradient: "from-cyan-600 to-cyan-800", category: "Safeguarding" },
+  "honour-based-abuse": { icon: "🛡️", gradient: "from-rose-700 to-rose-900", category: "Safeguarding" },
+  "modern-slavery-radicalisation": { icon: "⛓️", gradient: "from-gray-600 to-gray-800", category: "Safeguarding" },
+  "faith-belief-abuse": { icon: "🙏", gradient: "from-violet-600 to-violet-800", category: "Safeguarding" },
+  "send-safeguarding": { icon: "📚", gradient: "from-teal-600 to-teal-800", category: "Safeguarding" },
+  "non-recent-abuse": { icon: "🕰️", gradient: "from-slate-600 to-slate-800", category: "Safeguarding" },
+  "special-guardianship": { icon: "👨‍👧", gradient: "from-emerald-600 to-emerald-800", category: "Safeguarding" },
+  "child-in-need": { icon: "🤲", gradient: "from-sky-600 to-sky-800", category: "Safeguarding" },
 };
 
 // Demo guide content - multiple guides
@@ -261,7 +271,7 @@ const GUIDES: Record<string, GuideData> = {
       {
         id: "5",
         title: "Consent",
-        content: "Best practice is to get consent before referring. However:\n\n• Don't let consent stop you if you're genuinely worried\n• You can override consent if there's immediate risk of harm or risk to your own safety\n• If you can't get consent, explain why in the referral\n• Always try to inform the person you're making a referral, even if consent wasn't obtained\n• Consider whether the person has capacity to consent – if not, refer for advocacy",
+        content: "Best practice is to get consent before referring. However:\n\n• Don't let consent stop you if you're genuinely worried\n• You can override consent if there's immediate risk of harm or risk to your own safety\n• If you can't get consent, explain why in the referral\n• Always try to inform the person you're making a referral, even if consent wasn't obtained\n• Consider whether the person has capacity to consent",
         tip: "Having consent is ideal but not essential. A referral without consent is better than no referral at all.",
       },
       {
@@ -279,35 +289,47 @@ const GUIDES: Record<string, GuideData> = {
   },
   "safeguarding-children-referral": {
     id: "safeguarding-children-referral",
-    title: "Safeguarding Children – Starting Point Referral",
+    title: "Safeguarding Children - Starting Point Referral",
     description: "When you're worried about a child (under 18)",
     steps: [
       {
         id: "1",
         title: "When to Refer",
-        content: "You should refer when you have concerns about a child (under 18) who may be at risk of:\n\n• Physical abuse or harm\n• Emotional abuse or neglect\n• Sexual abuse or exploitation\n• Neglect (basic needs not met)\n\nThis includes children of your patients where parenting capacity may be affected by mental illness, substance use, or domestic abuse.",
-        tip: "Think Family – always consider whether your adult patient has dependent children. Their mental health can directly affect those children's safety.",
+        content: "You should refer when you have concerns about a child (under 18) who may be at risk of:\n\n- Physical abuse or harm\n- Emotional abuse or neglect\n- Sexual abuse or exploitation\n- Neglect (basic needs not met)\n- Domestic abuse in the household\n- Online harm, exploitation or grooming\n- Honour-based abuse, FGM or forced marriage\n- Radicalisation or extremism\n- Modern slavery or trafficking\n\nThis includes children of your patients where parenting capacity may be affected by mental illness, substance use, or domestic abuse.\n\nIf there is immediate risk of harm, call 999 first. If the child is already open to Children's Social Care, contact the allocated worker directly.",
+        tip: "Think Family - always consider whether your adult patient has dependent children. Their mental health can directly affect those children's safety.",
       },
       {
         id: "2",
         title: "Think Family",
-        content: "On a mental health ward, children's safeguarding often starts with the adult patient:\n\n• Does your patient have children or regular contact with children?\n• Is their mental health affecting their ability to parent safely?\n• Is there domestic abuse in the home?\n• Are there substance misuse concerns?\n• Is there a partner or family member who can keep the children safe?\n\nYou don't need to be certain harm is happening. Professional concern is enough to refer.",
+        content: "On a mental health ward, children's safeguarding often starts with the adult patient:\n\n- Does your patient have children or regular contact with children?\n- Is their mental health affecting their ability to parent safely?\n- Is there domestic abuse in the home?\n- Are there substance misuse concerns?\n- Is there a partner or family member who can keep the children safe?\n- Could the child be a young carer?\n\nYou don't need to be certain harm is happening. Professional concern is enough to refer.\n\nFor children with complexity of need (including mental health, neurodiversity, physical disability and intellectual disability), consider the escalation pathway for additional multi-agency support.",
       },
       {
         id: "3",
-        title: "Contact Starting Point",
-        content: "Starting Point is Derby and Derbyshire's contact and referral service for children's safeguarding.\n\n• 24 hours: Hidden in demo mode\n• Non-urgent email: starting.point@derbyshire.gov.uk\n• Online: ddscp.org.uk/worried-about-child/\n\nIn an emergency, always call 999 first.",
+        title: "Get Advice First",
+        content: "Not sure if the threshold is met? Use the consultation lines before making a formal referral:\n\nDHCFT Safeguarding Unit: Hidden in demo mode\n- Option 1 - Safeguarding Team / Advice Line\n- Option 2 - Child Protection Medicals\n- Option 3 - Child Death Overview Panel\n\nChildren's Social Care consultation:\n- Derbyshire - Starting Point Consultation: Hidden in demo mode (Mon-Fri 10am-4pm)\n- Derby City - Professional Consultation Line: Hidden in demo mode (Mon-Fri 10am-4pm)\n\nRefer to the Threshold Document for guidance on levels of need and when social care involvement is appropriate. Assessment tools (EHA, GCP, DVRIM) are available on the DDSCP Documents Library.",
+        tip: "The Threshold Document helps you understand levels of need: universal services, early help, child in need, or child protection. Available on the DDSCP website.",
       },
       {
         id: "4",
-        title: "What to Include",
-        content: "When making your referral:\n\n• Child's name, date of birth, address, school\n• Parent/carer details\n• Nature of your concern – be specific\n• How long have concerns been present?\n• What have you observed directly?\n• What has the parent/child told you?\n• Was the parent informed of the referral?\n• Are there other agencies involved?\n• Your details and how to contact you",
+        title: "Discuss with Family",
+        content: "Best practice is to discuss concerns with the family and gain consent before referring.\n\nHowever, do NOT seek consent if:\n- Doing so would put the child at greater risk\n- Doing so would put you or others at risk\n- It would compromise a police investigation\n- The alleged perpetrator is a family member and may destroy evidence\n\nIf you refer without consent, record your reasons clearly in the referral.\n\nSee 'Making a Referral to Social Care' guidance on the DDSCP website for detailed advice on when consent is and isn't appropriate.",
       },
       {
         id: "5",
+        title: "Make the Referral - Urgent",
+        content: "For urgent referrals, telephone first then follow up in writing within 48 hours.\n\nDerby City:\n- Office hours: Hidden in demo mode\n- Out of hours: Hidden in demo mode\n\nDerbyshire:\n- Office hours: Hidden in demo mode\n- Out of hours: Hidden in demo mode\n\nSave a copy of the referral in the child's health record.\n\nIn your referral include:\n- Child's name, DOB, address, school\n- Parent/carer details\n- Nature of concern - be specific about what you have seen, heard and observed\n- How long concerns have been present\n- Any assessment tools used (EHA, GCP, DVRIM)\n- Whether the family were informed\n- Other agencies involved\n- Your details and contact number",
+        tip: "Tick 'Referral to Social Services department duty team' on the clinical system when making the referral.",
+      },
+      {
+        id: "6",
+        title: "Make the Referral - Written",
+        content: "For non-urgent referrals (or as follow-up to a phone call), submit written referrals:\n\nDerby City:\nmyaccount.derby.gov.uk/en/service/report_concerns_about_a_child\n\nDerbyshire:\nDerbyshire Starting Point Referral Form (online)\n\nCases closed within the last three months should also be referred through these links.\n\nDocument in the patient's records and inform relevant agencies. Include all essential information and any assessments that may support the quality of the referral.",
+      },
+      {
+        id: "7",
         title: "After the Referral",
-        content: "• Document the referral in the patient's notes (the parent is your patient)\n• Note the child's details separately if needed\n• Add a follow-up to your diary\n• Be prepared for Starting Point to contact you for more information\n• If concerns escalate before you hear back, call Starting Point again",
-        tip: "Safeguarding children overrides normal patient confidentiality. You do not need the parent's consent to refer if a child may be at risk.",
+        content: "Children's Social Care should respond within 24 hours of receiving your referral.\n\n- Chase up any outstanding referrals after three working days\n- Document the outcome and update relevant agencies\n- Add a follow-up task to your diary\n- Be prepared for Social Care to contact you for more information\n- If concerns escalate before you hear back, call again\n\nIf you disagree with the decision made by Social Care, use the multi-agency dispute resolution escalation protocol to challenge it. Don't let it go - escalation is your professional responsibility.\n\nRemember: safeguarding children overrides normal patient confidentiality. You do not need the parent's consent to refer if a child may be at risk.",
+        tip: "The escalation protocol is available on the DDSCP website. If the same concerns keep being raised without resolution, escalate formally.",
       },
     ],
   },
@@ -388,6 +410,308 @@ const GUIDES: Record<string, GuideData> = {
         id: "5",
         title: "Making the Referral",
         content: "When making a peer-on-peer safeguarding referral:\n\n• Use patients' full names - not initials\n• Include Police incident number if Police have been informed\n• If consent was not obtained, justify why it was overridden\n• If stating the patient lacks capacity, ensure a referral to advocacy is also made\n• Include what immediate measures have been put in place to prevent further harm\n\nContact:\n• DHCFT Safeguarding Team: Hidden in demo mode\n• MASH Health Advisors: Hidden in demo mode",
+      },
+    ],
+  },
+  "information-sharing": {
+    id: "information-sharing",
+    title: "Information Sharing in Safeguarding",
+    description: "Seven golden rules and GDPR guidance for sharing information to protect children and adults",
+    steps: [
+      {
+        id: "1",
+        title: "Why Information Sharing Matters",
+        content: "Information sharing is essential for effective safeguarding. Poor or absent information sharing is a factor repeatedly identified in Serious Case Reviews where children or adults have been harmed.\n\nFears about sharing information must not stand in the way of safeguarding. Every practitioner must take responsibility for sharing the information they hold - you cannot assume someone else will pass it on.\n\nSharing information can be the difference between life and death.",
+        tip: "The GDPR and Data Protection Act 2018 are not barriers to sharing information for safeguarding purposes. They provide a framework to ensure personal information is shared appropriately.",
+      },
+      {
+        id: "2",
+        title: "The Seven Golden Rules",
+        content: "1. GDPR is not a barrier - it provides a framework for appropriate sharing, not a reason to withhold\n\n2. Be open and honest - tell the individual from the outset why, what, how and with whom information will be shared (unless unsafe to do so)\n\n3. Seek advice - if in doubt, ask your information governance lead or another practitioner without identifying the individual\n\n4. Share with consent where possible - but you may share without consent if there is a lawful basis, such as where safety is at risk\n\n5. Consider safety and wellbeing - base your decisions on the safety of the individual and others affected\n\n6. Necessary, proportionate, relevant, adequate, accurate, timely and secure - only share what is needed, with people who need it\n\n7. Record your decision - whether you share or not, record what you decided and why",
+      },
+      {
+        id: "3",
+        title: "When You Can Share Without Consent",
+        content: "Under the Data Protection Act 2018, you may share information without consent when:\n\n- There is a lawful basis (e.g. safety may be at risk)\n- You cannot reasonably be expected to gain consent\n- Gaining consent could place a child or adult at risk\n- Safeguarding of children and individuals at risk is a specific condition that allows sharing without consent\n\nRelevant personal information can be shared lawfully if it is to keep a child or individual at risk safe from neglect or physical, emotional or mental harm, or to protect their wellbeing.",
+        tip: "If you are sharing without consent, be mindful that the individual may not expect their information to be shared. Record your reasoning clearly.",
+      },
+      {
+        id: "4",
+        title: "The Principles in Practice",
+        content: "When deciding what to share, apply these principles:\n\nNecessary - only share what is needed, no more\nProportionate - match the level of sharing to the level of risk\nRelevant - only share with people who need the information to act\nAdequate - share enough for the recipient to do their job\nAccurate - clearly distinguish fact from opinion; flag historical information\nTimely - don't delay, especially in emergencies where seeking consent could increase risk\nSecure - follow your organisation's policy on handling personal information",
+      },
+      {
+        id: "5",
+        title: "Recording Your Decisions",
+        content: "Always record:\n\n- Whether you decided to share or not\n- Your reasons for the decision\n- What information was shared (if sharing)\n- Who it was shared with\n- The purpose of sharing\n\nIf you decided not to share, record why and discuss with the requester.\n\nKeep records in line with your organisation's retention policy. In some rare circumstances information may need to be kept indefinitely, but schedule regular reviews.",
+        tip: "A clear record protects you professionally and helps others understand the reasoning if concerns resurface later.",
+      },
+    ],
+  },
+  "escalation-pathway": {
+    id: "escalation-pathway",
+    title: "Escalation Pathway - Complex Children's Cases",
+    description: "Bronze, Silver and Gold escalation levels for young people with complex needs",
+    steps: [
+      {
+        id: "1",
+        title: "What is the Escalation Pathway?",
+        content: "The Derby and Derbyshire Escalation Pathway enables community teams from Social Care, Health and Education to access additional support when formulating care packages for young people with complex histories or presentations.\n\nUse this pathway when:\n- A young person is at risk of admission to Tier 4 services\n- There is severe deterioration of mental health\n- There are frequent attendances at the Children's Emergency Department\n- There are complexities within the care package requiring a joined-up, creative approach\n\nThis pathway works alongside existing CETR (Care, Education and Treatment Review) and LAEP processes - it does not replace them.",
+        tip: "Open assessments from community teams should be completed before requesting escalation, where possible.",
+      },
+      {
+        id: "2",
+        title: "How to Refer",
+        content: "Submit a referral to the Escalation Pathway team via email.\n\nEmail: Hidden in demo mode\nWorking hours: Monday to Friday, 09:00-17:00\n\nThe team will check referrals daily and respond:\n- If appropriate: the team will contact you and allocate an escalation level\n- If not appropriate or incomplete: you will be contacted with a decision or request for further information\n\nConsultation will be booked within 2 weeks of referral received.",
+      },
+      {
+        id: "3",
+        title: "Bronze Level",
+        content: "Bronze is the initial escalation level for community-referred cases.\n\nWhat happens:\n- Daily discussion with CAMHS Leads and Discharge Coordinators for Acute Hospitals\n- Weekly attendance at CAP for Tier 4 Collaborative\n- Management of referrals by community teams\n- Monitoring of frequent attendance at CED\n- Joint working clarified with agreed action log\n- Enhanced MDMs chaired by Escalation Manager\n\nTimeline: MDM established within 5 working days\nEscalation: To Silver as needed\nAcute referrals: Via discharge coordinator (UHDB/CRH/Tier 4 Collaborative)",
+      },
+      {
+        id: "4",
+        title: "Silver Level",
+        content: "Silver is for cases requiring strategic facilitation and cross-system coordination.\n\nWhat happens:\n- Cases supported by Complex Case Strategic Facilitator (EMDM)\n- Actions escalated to Head of Service, Area Service Manager CAMHS, General Manager, Commissioner, NHS case manager as required\n- Weekly Silver system meeting\n- Clinical Escalations Group representation for Tier 4 Collaborative\n- Head of Service meetings within local authority as needed\n\nTimeline: EMDM convened within 2 working days\nStep down: To Bronze when stabilised\nEscalation: To Gold as needed",
+      },
+      {
+        id: "5",
+        title: "Gold Level",
+        content: "Gold is the highest escalation - executive-level oversight.\n\nWhat happens:\n- Weekly (or as-required) Executive Escalation meeting\n- Actions escalated to Directors, General Manager, Collaborative Directors, COO, CEO, Chief Nurse across the system\n- Shadow invitations to partnership agencies from neighbouring localities as needed\n- Email updates given to Executive team across the system for any complex young person\n- Clarification of current system gaps and pressures reported to ICB\n\nDischarge: Informed by Escalation Manager / Complex Case Strategic Facilitator",
+        tip: "The escalation pathway team are there to help you navigate the system. Don't hesitate to contact them early - consultation is available before formal escalation.",
+      },
+    ],
+  },
+  "online-safety-children": {
+    id: "online-safety-children",
+    title: "Online Safety and Children",
+    description: "Recognising online harms including nudes/semi-nudes, cyberbullying, sextortion and screen time",
+    steps: [
+      {
+        id: "1",
+        title: "Online Harms Overview",
+        content: "Online harms are a priority area for the Derby and Derbyshire Safeguarding Children Partnership (DDSCP). Key concerns include:\n\n- Sharing of nudes and semi-nude images\n- Online bullying and harassment\n- Sexual exploitation and sextortion\n- Grooming by adults\n- Exposure to harmful or extremist content\n- Excessive screen time affecting development\n- Gaming-related risks\n\nAs a mental health professional, you may be the first person a young person or parent discloses to. Be alert to signs of online harm during every contact with families.",
+        tip: "The online landscape changes rapidly. The types of platforms, apps and risks evolve constantly - stay curious about what young people are telling you.",
+      },
+      {
+        id: "2",
+        title: "Nudes and Semi-Nudes",
+        content: "Sharing nudes or semi-nudes (previously called 'sexting') is when someone shares sexual or naked images of themselves or others electronically.\n\nKey points for practitioners:\n- It is illegal for anyone to possess, share or create indecent images of under-18s, even if the young person consented or created the image themselves\n- Young people may not understand the legal implications\n- Coercion, pressure or manipulation may be involved\n- Images shared once can be re-shared without control\n- The impact on mental health can be severe and long-lasting\n\nIf a young person discloses:\n- Do not view, copy or share the image\n- Do not ask to see it\n- Record what the young person tells you\n- Follow your safeguarding reporting process\n- Consider whether police involvement is needed",
+      },
+      {
+        id: "3",
+        title: "Online Bullying",
+        content: "Online bullying can include:\n- Sending threatening or abusive messages\n- Deliberately excluding someone from online groups\n- Sharing embarrassing photos or information\n- Creating fake profiles to humiliate someone\n- Persistent negative comments\n- 'Doxxing' (publishing private information)\n\nImpact on young people:\n- Anxiety, depression and self-harm\n- Social withdrawal and school avoidance\n- Sleep disturbance\n- Loss of confidence and self-esteem\n- In severe cases, suicidal thoughts\n\nUnlike face-to-face bullying, online bullying can happen 24/7, can reach a wide audience instantly, and content can be permanent. Always take it seriously.",
+        tip: "Ask young people about their online experiences as part of routine mental health assessments. Many won't volunteer this information unless directly asked.",
+      },
+      {
+        id: "4",
+        title: "Sextortion",
+        content: "Sextortion is when someone threatens to share sexual images or information unless the victim complies with demands - often for money, more images, or sexual acts.\n\nWarning signs:\n- Sudden anxiety or distress, especially when using devices\n- Withdrawal from family and friends\n- Unexplained requests for money\n- Secretive behaviour around devices\n- Signs of distress after using social media\n\nIf a young person is being sextorted:\n- Reassure them it is not their fault\n- Advise them not to pay or send further images\n- Report to the police (101 or 999 if immediate risk)\n- Report to CEOP (ceop.police.uk)\n- Support their mental health - this is traumatic\n- Contact the platform to request removal of content",
+      },
+      {
+        id: "5",
+        title: "Screen Time and Development",
+        content: "There are clear links between excessive screen time and development problems:\n\n- Delayed speech and language development\n- Communication difficulties\n- Reduced concentration spans\n- Poor sleep\n- Poor mental health\n\nAge-appropriate guidance:\n- Ages 0-5: Limit screen time significantly; prioritise face-to-face interaction\n- Ages 6-10: Set clear boundaries; no screens in bedrooms; screen-free mealtimes\n- Ages 11-17: Agree boundaries together; encourage balance with offline activities\n\nFor parents and carers, the key message is quality over quantity - what children are doing on screens matters as much as how long they spend on them.",
+        tip: "Use the 'Top Tips for a Healthier Screen Time' infographic from NHS Leicester Children's Hospital - it is split by age group with practical tips for families.",
+      },
+      {
+        id: "6",
+        title: "Resources and Support",
+        content: "Key resources for online safety:\n\n- UK Safer Internet Centre (saferinternet.org.uk) - advice for professionals and families\n- CEOP (ceop.police.uk) - report online child sexual exploitation\n- NSPCC (nspcc.org.uk) - guidance on all forms of online abuse\n- Childnet International - resources for young people\n- Internet Watch Foundation - reporting illegal content\n- DDSCP Online Safety resources (ddscp.org.uk)\n\nFor professional advice:\n- DHCFT Safeguarding Unit: Hidden in demo mode\n\nIf a child is in immediate danger, call 999.",
+      },
+    ],
+  },
+  "honour-based-abuse": {
+    id: "honour-based-abuse",
+    title: "Honour-Based Abuse, FGM and Forced Marriage",
+    description: "Recognising and responding to honour-based abuse, female genital mutilation and forced marriage",
+    steps: [
+      {
+        id: "1",
+        title: "Honour-Based Abuse (HBA)",
+        content: "Honour-based abuse is a collection of practices used to control behaviour within families or communities to protect perceived cultural or religious honour.\n\nIt can include:\n- Physical violence (assault, kidnapping, murder)\n- Emotional abuse (threats, isolation, disownment)\n- Forced marriage\n- Female genital mutilation (FGM)\n- Forced abortion or forced pregnancy\n- Restrictions on movement, education or employment\n- Being taken abroad against their will\n\nHBA can affect people of any gender, though women and girls are disproportionately affected. It may involve multiple family members or community figures acting together.\n\nKarma Nirvana (karmanirvana.org.uk) provides specialist support for victims of HBA.",
+        tip: "HBA is not a 'cultural issue' to be handled sensitively - it is abuse. Do not attempt family mediation or inform the family of disclosures, as this can increase risk significantly.",
+      },
+      {
+        id: "2",
+        title: "Female Genital Mutilation (FGM)",
+        content: "FGM involves the partial or total removal of external female genitalia for non-medical reasons. It is illegal in the UK.\n\nKey points:\n- FGM is a criminal offence under the Female Genital Mutilation Act 2003\n- There is a mandatory duty to report FGM in under-18s to the police (since 2015)\n- It is often carried out on girls aged 0-15, frequently before puberty\n- It may be performed abroad during school holidays\n- There is no medical justification for FGM\n\nSigns to look for:\n- Prolonged absence from school or services\n- Behavioural changes - withdrawal, anxiety\n- Difficulty walking, sitting or standing\n- Reluctance to undergo medical examinations\n- Talk of a 'special procedure' or holiday\n\nIf you suspect FGM has occurred or is planned, this is a safeguarding referral and must be reported to the police.",
+        tip: "The mandatory reporting duty means you MUST report to the police if you discover FGM has been carried out on a girl under 18. This is a legal requirement, not optional.",
+      },
+      {
+        id: "3",
+        title: "Forced Marriage",
+        content: "A forced marriage is one where one or both parties do not (or cannot) consent. It is different from an arranged marriage, where both parties freely agree.\n\nForced marriage is illegal in the UK under the Anti-social Behaviour, Crime and Policing Act 2014.\n\nSigns to look for:\n- Absence from services or education\n- Family-related depression, anxiety or self-harm\n- Feeling they are under surveillance by family\n- Talk of an upcoming 'celebration' or 'holiday' abroad\n- Fear of an upcoming school holiday\n- Sudden engagement to a stranger\n- Decline in behaviour or achievement\n\nForced marriage can happen to anyone regardless of gender, age, disability, ethnicity or sexuality. People with learning disabilities are particularly vulnerable.",
+      },
+      {
+        id: "4",
+        title: "How to Respond",
+        content: "If someone discloses HBA, FGM or forced marriage:\n\nDO:\n- See them alone in a safe, private space\n- Take the disclosure seriously\n- Record their exact words\n- Explain you will need to share this information\n- Make a safeguarding referral\n- Contact the police if there is immediate risk\n\nDO NOT:\n- Contact or inform the family\n- Attempt mediation or family counselling\n- Share information with community members\n- Send the person away to 'think about it'\n- Assume it is a cultural practice to be respected\n- Wait - delays can be dangerous\n\nKey contacts:\n- Karma Nirvana helpline: 0800 5999 247\n- Forced Marriage Unit: 020 7008 0151\n- National FGM Centre: nationalfgmcentre.org.uk\n- Police: 999 (emergency) or 101 (non-emergency)",
+        tip: "In HBA cases, the risk often increases after disclosure. Act quickly and do not inform family members under any circumstances.",
+      },
+    ],
+  },
+  "modern-slavery-radicalisation": {
+    id: "modern-slavery-radicalisation",
+    title: "Modern Slavery and Radicalisation",
+    description: "Spotting the signs and making referrals for modern slavery and extremism concerns",
+    steps: [
+      {
+        id: "1",
+        title: "Modern Slavery",
+        content: "Modern slavery includes human trafficking, forced labour, domestic servitude and sexual exploitation. It affects both adults and children in the UK.\n\nSigns to look for:\n- Appears malnourished, unkempt or withdrawn\n- Has injuries that appear to be from assault or restraint\n- Shows signs of being controlled by another person\n- Is not in possession of their own passport, ID or documents\n- Has few or no personal possessions\n- Is not free to come and go\n- Appears frightened or unable to speak for themselves\n- Is collected and dropped off at work by the same person\n- Lives and works at the same address\n- Is reluctant to seek help or disclose information\n\nModern slavery affects people of all ages, nationalities and backgrounds. Mental health patients may be particularly vulnerable.",
+        tip: "People who have been trafficked or enslaved may not identify themselves as victims. Approach with professional curiosity and compassion.",
+      },
+      {
+        id: "2",
+        title: "Referring Modern Slavery Concerns",
+        content: "If you suspect modern slavery:\n\n1. Ensure the person's immediate safety\n2. Make a safeguarding referral (adults or children as appropriate)\n3. Contact the police if there is immediate risk (999) or non-emergency (101)\n4. Consider referring to the National Referral Mechanism (NRM) - the UK framework for identifying and supporting victims\n\nThe NRM referral is made by a 'First Responder' organisation. The Safeguarding Team can support you with this.\n\nLocal guidance: Derby and Derbyshire Modern Slavery Guidance (available on the Safer Derbyshire website)\n\nModern Slavery Helpline: 08000 121 700 (24hr)",
+      },
+      {
+        id: "3",
+        title: "Radicalisation and Prevent",
+        content: "Radicalisation is the process by which a person comes to support extremism and potentially terrorism. It can happen to anyone regardless of age, gender, ethnicity or background.\n\nSigns to look for:\n- Expressing sympathy for extremist causes or ideologies\n- Glorifying violence\n- Becoming increasingly isolated from friends, family or community\n- Accessing extremist material online\n- Using language or symbols associated with extremist groups\n- Sudden changes in behaviour, friendship groups or appearance\n- Secretive behaviour, especially online\n\nPrevent is the government's strategy to stop people becoming terrorists or supporting terrorism. It is a safeguarding duty, not a surveillance or intelligence function.",
+        tip: "Prevent is a pre-criminal space - you are trying to protect someone from being drawn into harm, not report them as a criminal. Approach it like any other safeguarding concern.",
+      },
+      {
+        id: "4",
+        title: "Making a Prevent Referral",
+        content: "If you have concerns about radicalisation:\n\n1. Discuss with your line manager or safeguarding lead\n2. Contact the DHCFT Safeguarding Team for advice: Hidden in demo mode\n3. If appropriate, make a Prevent referral to the local authority\n4. In an emergency, call 999\n\nA Prevent referral will be reviewed by a multi-agency Channel panel who will assess the level of risk and decide what support is needed.\n\nRemember: you do not need to be certain that someone is being radicalised. If you have concerns, share them. Early intervention is key.\n\nFor more information, see the DDSCP guidance on safeguarding children and young people against radicalisation and violent extremism.",
+      },
+    ],
+  },
+  "faith-belief-abuse": {
+    id: "faith-belief-abuse",
+    title: "Child Abuse Linked to Faith or Belief",
+    description: "Recognising abuse linked to faith, belief, spirit possession or witchcraft",
+    steps: [
+      {
+        id: "1",
+        title: "What is CALFB?",
+        content: "Child Abuse Linked to Faith or Belief (CALFB) is when a belief in concepts like spirit possession, witchcraft, black magic, the evil eye or juju is used to harm a child.\n\nIt can include:\n- Physical abuse (beating, burning, cutting, starvation)\n- Emotional abuse (isolation, blaming the child for misfortune)\n- Neglect (withholding food, medical treatment or education)\n- Sexual abuse\n- Attempts to 'exorcise' the child\n\nThis is not about any one religion, faith or culture. It occurs across many different backgrounds and communities.\n\nChildren may be singled out because of a disability, behavioural difference, illness, bed-wetting, nightmares, or disobedience. A child who is 'different' in any way may be labelled as possessed.",
+        tip: "A child will not necessarily recognise that what is happening to them is abuse. They may believe the label given to them and feel responsible for family problems.",
+      },
+      {
+        id: "2",
+        title: "Signs to Look For",
+        content: "Warning signs that a child may be experiencing CALFB:\n\n- A child described as being 'possessed' or 'evil'\n- The family blaming a child for problems like illness, financial difficulty or relationship breakdown\n- A child being isolated from the rest of the family or community\n- Changes in behaviour following involvement with faith groups or healers\n- Unexplained injuries, particularly burns or marks\n- A child appearing frightened of a parent, carer or religious/community leader\n- Reports of deliverance or exorcism rituals\n- Sudden changes in the child's demeanour or wellbeing\n\nBe professionally curious: if a family talks about a child being cursed or possessed, explore what this means in practice for the child's daily life.",
+      },
+      {
+        id: "3",
+        title: "How to Respond",
+        content: "If you suspect CALFB:\n\n1. Follow your normal safeguarding procedures - this is child abuse\n2. Record your concerns clearly, including the language used by the family\n3. Contact the DHCFT Safeguarding Team for advice: Hidden in demo mode\n4. Make a referral to Children's Social Care\n5. Do not attempt to challenge or debate the belief directly\n6. Do not dismiss concerns as 'cultural' or 'religious'\n\nChildren's Social Care will work with specialist agencies if needed.\n\nFor more information:\n- National FGM Centre (nationalfgmcentre.org.uk) covers CALFB\n- DDSCP chapter on CALFB (available on the DDSCP website)\n\nIf a child is in immediate danger, call 999.",
+        tip: "You do not need to understand or agree with a family's belief system to recognise that a child is being harmed. Focus on the impact on the child.",
+      },
+    ],
+  },
+  "send-safeguarding": {
+    id: "send-safeguarding",
+    title: "SEND and Safeguarding",
+    description: "Special Educational Needs and Disability - safeguarding considerations and local resources",
+    steps: [
+      {
+        id: "1",
+        title: "Why SEND Matters for Safeguarding",
+        content: "Children and young people with special educational needs and disabilities (SEND) are disproportionately vulnerable to abuse and neglect.\n\nThey may:\n- Have difficulty communicating what is happening to them\n- Not recognise abuse or understand it is wrong\n- Be more dependent on caregivers, increasing vulnerability to abuse within the care relationship\n- Have behaviours that mask or are attributed to their disability rather than abuse\n- Be isolated from peers who might otherwise notice and report concerns\n- Be subject to bullying, discrimination or hate crime\n\nSEND covers conditions affecting a child's ability to learn, including learning difficulties, physical disabilities, sensory impairments, communication needs, autism, ADHD, and mental health conditions.",
+        tip: "Never attribute signs of abuse to a child's disability without considering whether there could be another explanation. Professional curiosity applies here too.",
+      },
+      {
+        id: "2",
+        title: "Trust SEND Policy",
+        content: "DHCFT has a SEND policy available on FOCUS that outlines the Trust's responsibilities.\n\nKey principles:\n- All staff should be aware that children with SEND may face additional safeguarding risks\n- Reasonable adjustments should be made when communicating with children and families\n- Consider the child's communication needs when assessing risk or taking disclosures\n- Work collaboratively with education, social care and health services\n- Ensure the child's voice is heard - use appropriate communication methods\n\nThe policy covers the Trust's duties under the Children and Families Act 2014, which reformed the SEND system to give families greater choice and control.",
+      },
+      {
+        id: "3",
+        title: "Local SEND Offers",
+        content: "Derby and Derbyshire both publish a 'Local Offer' setting out the support available for children and young people with SEND:\n\nDerby City:\n- Derby's SEND Local Offer (derby.gov.uk)\n- Information on education, health and social care services\n\nDerbyshire County:\n- SEND Service Contact Details (localoffer.derbyshire.gov.uk)\n- Derbyshire Information, Advice and Support Service for SEND (derbyshireiass.co.uk)\n\nNational guidance:\n- GOV.UK overview of SEND (gov.uk/children-with-special-educational-needs)\n- NHS England SEND pages (england.nhs.uk)",
+      },
+      {
+        id: "4",
+        title: "Making Safeguarding Referrals for Children with SEND",
+        content: "When making a safeguarding referral for a child with SEND:\n\n- Clearly describe the child's needs and how they communicate\n- Explain what adaptations may be needed for any assessment or interview\n- Include information about the child's EHCP (Education, Health and Care Plan) if known\n- Note any professionals already involved (SENCO, Educational Psychologist, specialist health services)\n- Describe the child's daily experience - what does life look like for them?\n- Consider whether the child's behaviour changes are related to abuse, not just their condition\n\nUse the standard safeguarding referral pathways. The Safeguarding Team can advise on any additional considerations.",
+        tip: "Children with SEND often have multiple professionals involved. Information sharing between agencies is especially important - see the Information Sharing guide.",
+      },
+    ],
+  },
+  "non-recent-abuse": {
+    id: "non-recent-abuse",
+    title: "Non-Recent Abuse Disclosures",
+    description: "Responding when adults disclose abuse that happened in childhood",
+    steps: [
+      {
+        id: "1",
+        title: "What is Non-Recent Abuse?",
+        content: "Non-recent abuse (previously called 'historical abuse') refers to abuse that was experienced in the past, often during childhood. Adults may disclose for the first time during mental health treatment.\n\nImportant principles:\n- There is no time limit for reporting abuse to the police\n- A disclosure of non-recent abuse should be treated with the same seriousness as current abuse\n- The perpetrator may still pose a risk to children or adults now\n- The disclosure may be the first time the person has ever spoken about their experience\n\nA young person under 18 who discloses non-recent abuse should be treated under children's safeguarding procedures.",
+        tip: "Many survivors of non-recent abuse have carried their experience for decades. Receiving a disclosure with sensitivity and belief is crucial.",
+      },
+      {
+        id: "2",
+        title: "Responding to a Disclosure",
+        content: "When an adult discloses non-recent abuse:\n\n- Listen without judgement\n- Believe them - false disclosures are extremely rare\n- Thank them for telling you\n- Do not press for details beyond what they choose to share\n- Explain what will happen next (you may need to share the information)\n- Record their words accurately\n- Consider their current mental health and safety\n\nAsk yourself:\n- Is the alleged perpetrator still alive and potentially in contact with children or vulnerable adults?\n- Are there current safeguarding concerns?\n- Does the person need mental health support for the impact of the abuse?",
+      },
+      {
+        id: "3",
+        title: "When to Refer",
+        content: "You must consider a safeguarding referral if:\n\n- The alleged perpetrator may still pose a risk to children or vulnerable adults\n- The abuse occurred in an institutional setting (care home, school, hospital)\n- The person wishes to report to the police\n- There are current children in contact with the alleged perpetrator\n\nRefer to the DDSCP guidance: 'Adults who Disclose Non-Recent Abuse' (available on the DDSCP website).\n\nThe Derby and Derbyshire Strategy for Survivors of Non-Recent Abuse in Childhood provides a multi-agency framework for supporting survivors.\n\nFor advice: DHCFT Safeguarding Team - Hidden in demo mode",
+        tip: "Even if the perpetrator is deceased, consider whether there may be other victims who could benefit from support, or institutional failures that need addressing.",
+      },
+      {
+        id: "4",
+        title: "Supporting the Survivor",
+        content: "After a disclosure:\n\n- Offer follow-up support and ensure continuity of care\n- Consider referral to specialist trauma services\n- Share the 'Talking About Non-Recent Abuse' leaflet (available on DDSCP website)\n- Provide information about reporting options - the person should feel in control\n- Document the disclosure and any actions taken\n- Consider your own wellbeing - hearing disclosures can be distressing\n\nPractitioner wellbeing support:\n- Staff Wellbeing and Recognition Team\n- Health Assured (EAP): 0800 028 0199 (24/7)\n- Resolve counselling: Hidden in demo mode\n- Samaritans: 116 123 (24/7)",
+      },
+    ],
+  },
+  "special-guardianship": {
+    id: "special-guardianship",
+    title: "Special Guardianship Orders",
+    description: "Best practice guide for achieving permanence through Special Guardianship Orders",
+    steps: [
+      {
+        id: "1",
+        title: "What is a Special Guardianship Order?",
+        content: "A Special Guardianship Order (SGO) is a legal order that gives a person (the 'special guardian') parental responsibility for a child until they turn 18. It provides permanence without fully severing the legal relationship with the birth parents.\n\nSGOs are typically used when:\n- A child cannot safely live with their birth parents\n- Adoption is not appropriate or desired\n- The child has a strong connection with a relative or family friend\n- Stability and permanence are needed outside the care system\n\nFollowing serious case reviews in Derby and Derbyshire (2023), the DDSCP produced best practice guidance to strengthen SGO assessment and support.",
+        tip: "SGOs give the special guardian day-to-day decision-making power, but birth parents retain some parental responsibility. This shared responsibility can create complexity.",
+      },
+      {
+        id: "2",
+        title: "Why This Matters on the Ward",
+        content: "You may encounter SGOs when:\n- A patient's child is subject to an SGO (the child lives with a special guardian)\n- A patient IS a special guardian and their mental health is affecting their ability to care\n- Family dynamics around an SGO are contributing to a patient's distress\n- A young person under an SGO is admitted or known to services\n\nAs a mental health practitioner, consider:\n- Does the child's placement remain safe and stable?\n- Is the special guardian receiving adequate support?\n- Are there emerging concerns about the child's wellbeing?\n- Should Children's Social Care be informed of changes?",
+      },
+      {
+        id: "3",
+        title: "Best Practice Principles",
+        content: "The DDSCP best practice guide (October 2024) emphasises:\n\n- Thorough assessment of the prospective special guardian's suitability, capacity and support network\n- Financial support plans should be clear and agreed before the order is made\n- Support should not end when the order is granted - ongoing access to advice and services is essential\n- Regular reviews of the child's welfare\n- Clear contingency planning if the SGO breaks down\n- Multi-agency collaboration between health, education and social care\n\nIf you have concerns about a child under an SGO, follow the standard safeguarding referral process.",
+      },
+    ],
+  },
+  "child-in-need": {
+    id: "child-in-need",
+    title: "Child in Need",
+    description: "Multi-agency best practice for meeting the needs of children through CIN arrangements",
+    steps: [
+      {
+        id: "1",
+        title: "What is Child in Need?",
+        content: "Under Section 17 of the Children Act 1989, a child is 'in need' if:\n- They are unlikely to achieve or maintain a reasonable standard of health or development without provision of services\n- Their health or development is likely to be significantly impaired without services\n- They are disabled\n\nA Child in Need (CIN) plan is a voluntary arrangement - it requires family engagement. It sits below child protection on the continuum of need but still requires active multi-agency involvement.\n\nFollowing serious case reviews in Derby and Derbyshire (2023), the DDSCP produced best practice guidance to strengthen CIN planning and review.",
+        tip: "CIN is not 'lower risk' child protection - it is a different framework. Children on CIN plans can still be at significant risk if the plan is not implemented effectively.",
+      },
+      {
+        id: "2",
+        title: "Your Role in CIN",
+        content: "As a mental health practitioner, you play a key role in CIN arrangements when your patient is a parent or carer.\n\nYour responsibilities:\n- Attend CIN meetings when invited - your input on the parent's mental health is essential\n- Share relevant information about parenting capacity, risk and protective factors\n- Contribute to the CIN plan with clear, measurable actions\n- Provide updates to the allocated social worker on progress or deterioration\n- Alert social care immediately if concerns escalate\n\nConsider:\n- How does the parent's mental health affect their day-to-day parenting?\n- What does life look like for the child when the parent is unwell?\n- What support would help the parent maintain safe parenting?",
+      },
+      {
+        id: "3",
+        title: "Best Practice",
+        content: "The DDSCP best practice guide (October 2024) highlights:\n\n- CIN plans must be SMART (Specific, Measurable, Achievable, Relevant, Time-bound)\n- Reviews should happen at least every 6 weeks\n- The child's voice must be captured - use age-appropriate methods\n- All agencies must be clear about their specific contributions\n- Step-up to child protection or step-down to early help should be timely and evidence-based\n- Drift and delay are the biggest risks in CIN work\n\nIf a CIN plan is not reducing risk effectively, escalate your concerns. Use the DDSCP multi-agency dispute resolution protocol if you disagree with decisions.",
+      },
+      {
+        id: "4",
+        title: "Resources",
+        content: "Key resources:\n\n- DDSCP Threshold Document - guidance on levels of need\n- DDSCP Assessment Tools Library (Early Help Assessment, GCP, DVRIM, CRE)\n- DDSCP Best Practice Guide: Child in Need (October 2024)\n- DHCFT Safeguarding Team for advice: Hidden in demo mode\n\nConsultation lines:\n- Derbyshire Starting Point: Hidden in demo mode (Mon-Fri 10am-4pm)\n- Derby City Professional Consultation Line: Hidden in demo mode (Mon-Fri 10am-4pm)\n\nEscalation:\n- Multi-agency dispute resolution protocol available on DDSCP website",
+        tip: "If you feel a CIN plan is drifting or not reducing risk, you have a professional duty to escalate. The child's wellbeing is everyone's responsibility.",
       },
     ],
   },

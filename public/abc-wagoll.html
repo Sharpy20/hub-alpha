@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABC Chart - Completed Example (WAGOLL)</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, "Source Sans 3", sans-serif;
+      background: #f3f4f6;
+      color: #212B32;
+      padding: 16px;
+    }
+    .banner {
+      background: #FFB81C;
+      color: #212B32;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+    }
+    .banner small { font-weight: 400; display: block; margin-top: 4px; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #005EB8;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .form-container {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 13px;
+    }
+    .form-header {
+      background: #f9fafb;
+      padding: 12px 16px;
+      border-bottom: 2px solid #005EB8;
+    }
+    .form-header h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #212B32;
+      margin-bottom: 2px;
+    }
+    .form-header .confidential {
+      font-size: 11px;
+      color: #DA291C;
+      font-weight: 600;
+    }
+    .section-heading {
+      background: #e5e7eb;
+      padding: 8px 16px;
+      font-weight: 700;
+      font-size: 13px;
+      border-top: 1px solid #d1d5db;
+      border-bottom: 1px solid #d1d5db;
+      color: #374151;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table td {
+      padding: 8px 16px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+    table td:first-child {
+      width: 240px;
+      font-weight: 600;
+      color: #374151;
+      background: #f9fafb;
+    }
+    table td:last-child {
+      color: #212B32;
+    }
+    .redacted {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-style: italic;
+    }
+    .mood-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+    }
+    .mood-item {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .mood-item.checked {
+      color: #212B32;
+      font-weight: 600;
+    }
+    .mood-item .tick {
+      color: #007F3B;
+      font-weight: 700;
+    }
+    .mood-item .cross {
+      color: #9ca3af;
+    }
+    .narrative-cell {
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+    .comments-box {
+      background: #eff6ff;
+      border-left: 3px solid #005EB8;
+      padding: 10px 14px;
+      margin: 8px 16px 12px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .form-footer {
+      padding: 10px 16px;
+      font-size: 11px;
+      color: #6b7280;
+      border-top: 1px solid #d1d5db;
+      text-align: right;
+    }
+    .print-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #005EB8;
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 auto 16px;
+      display: block;
+    }
+    .print-btn:hover { background: #003087; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .banner, .back-link, .print-btn { display: none; }
+      .form-container { border: none; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="/how-to/abc-chart" class="back-link">&larr; Back to ABC Chart Guide</a>
+
+<div class="banner">
+  EXAMPLE ONLY - Do not submit this form
+  <small>This is a fictional completed ABC chart showing the expected level of detail. Not real patient data.</small>
+</div>
+
+<button class="print-btn" onclick="window.print()">Print this example</button>
+
+<div class="form-container">
+  <div class="form-header">
+    <h1>ABC Chart (Behavioural)</h1>
+    <span class="confidential">Confidential: Personal Data</span>
+  </div>
+
+  <div class="section-heading">Patient Information</div>
+  <table>
+    <tr>
+      <td>Name</td>
+      <td><span class="redacted">Redacted - demo</span></td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td><span class="redacted">Redacted - demo</span></td>
+    </tr>
+    <tr>
+      <td>Date of Birth</td>
+      <td><span class="redacted">Redacted - demo</span></td>
+    </tr>
+    <tr>
+      <td>Hospital Number</td>
+      <td><span class="redacted">Redacted - demo</span></td>
+    </tr>
+    <tr>
+      <td>Mobile Tel.</td>
+      <td><span class="redacted">Redacted - demo</span></td>
+    </tr>
+    <tr>
+      <td>Completed by</td>
+      <td><strong>Bloggs, Joe</strong> &mdash; 13 Feb 2026, 17:37</td>
+    </tr>
+  </table>
+
+  <div class="section-heading">1. Behaviour Being Considered</div>
+  <table>
+    <tr>
+      <td colspan="2" style="font-weight: normal; background: #fff;">
+        Please record episodes of this behaviour on separate charts.
+      </td>
+    </tr>
+  </table>
+
+  <div class="section-heading">Incident Details</div>
+  <table>
+    <tr>
+      <td>Date and Time of Incident</td>
+      <td>13/02/2026 17:38</td>
+    </tr>
+    <tr>
+      <td>Where Incident Occurred</td>
+      <td>Byron Ward</td>
+    </tr>
+    <tr>
+      <td>Person(s) / Carer(s) Involved</td>
+      <td>(Not specified)</td>
+    </tr>
+  </table>
+
+  <div class="section-heading">4. ANTECEDENT - What was the person doing just before the incident?</div>
+  <table>
+    <tr>
+      <td colspan="2" class="narrative-cell" style="font-weight: normal; background: #fff;">Presented as restless but settled and engageable. Staff attempting to encourage in accepting diet and fluids.</td>
+    </tr>
+  </table>
+
+  <div class="section-heading">5. BEHAVIOUR - What did you see? (actual facts, do NOT interpret behaviour)</div>
+  <table>
+    <tr>
+      <td colspan="2" class="narrative-cell" style="font-weight: normal; background: #fff;">Increased levels of agitation and activity
+Running in the corridors
+Opening and closing doors
+Removing posters
+Lifting furniture</td>
+    </tr>
+  </table>
+
+  <div class="section-heading">6. CONSEQUENCE - How did the situation end?</div>
+  <table>
+    <tr>
+      <td colspan="2" class="narrative-cell" style="font-weight: normal; background: #fff;">Placed self on the floor
+Shortness of breath on exertion and activity levels
+HIGH falls risk with potential injury
+Is on anticoagulants</td>
+    </tr>
+  </table>
+
+  <div class="section-heading">7. How did this person appear before the incident?</div>
+  <table>
+    <tr>
+      <td colspan="2" style="font-weight: normal; background: #fff;">
+        <div class="mood-grid">
+          <span class="mood-item"><span class="cross">[ ]</span> Angry</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Anxious</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Bored</span>
+          <span class="mood-item checked"><span class="tick">[x]</span> Content</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Depressed</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Despairing</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Frightened</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Frustrated</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Happy</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Irritable</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Physically unwell</span>
+          <span class="mood-item checked"><span class="tick">[x]</span> Restless</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Sad</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Worried</span>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="section-heading">9. How did the person appear during the incident?</div>
+  <table>
+    <tr>
+      <td colspan="2" style="font-weight: normal; background: #fff;">
+        <div class="mood-grid">
+          <span class="mood-item"><span class="cross">[ ]</span> Angry</span>
+          <span class="mood-item checked"><span class="tick">[x]</span> Anxious</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Bored</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Content</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Depressed</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Despairing</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Frightened</span>
+          <span class="mood-item checked"><span class="tick">[x]</span> Frustrated</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Happy</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Irritable</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Physically unwell</span>
+          <span class="mood-item checked"><span class="tick">[x]</span> Restless</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Sad</span>
+          <span class="mood-item"><span class="cross">[ ]</span> Worried</span>
+          <span class="mood-item checked"><span class="tick">[x]</span> Other: <em>Frenetic</em></span>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="section-heading">General Comments</div>
+  <div class="comments-box">
+    Has accepted his 1800 medications, possible paradoxical effect?
+    Discuss at MDM, monitor for falls risk increases, escalate as required.
+  </div>
+
+  <div class="form-footer">
+    Document created on: 09 Apr 2026
+  </div>
+</div>
+
+</body>
+</html>

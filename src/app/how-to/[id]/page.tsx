@@ -46,6 +46,13 @@ const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: s
   "abc-chart": { icon: "📋", gradient: "from-amber-500 to-orange-700", category: "Clinical Assessment" },
 };
 
+// WAGOLL links for guides that have completed examples
+const GUIDE_WAGOLLS: Record<string, { label: string; url: string }[]> = {
+  "abc-chart": [
+    { label: "Completed ABC Chart Example", url: "/abc-wagoll.html" },
+  ],
+};
+
 // Demo guide content - multiple guides
 const GUIDES: Record<string, GuideData> = {
   news2: {
@@ -725,7 +732,7 @@ const GUIDES: Record<string, GuideData> = {
         id: "1",
         title: "What is an ABC Chart?",
         content: "An ABC chart is a structured observation tool for recording incidents of behaviour that challenges. It captures three elements:\n\nA - Antecedent: what was happening before the behaviour - determines triggers and setting conditions\nB - Behaviour: an exact description of the behaviour itself\nC - Consequence: what happened after - gives an indicator of possible reinforcers\n\nABC charts should be completed for:\n- Verbal aggression\n- Violence or physical aggression\n- Self-harm\n- Agitation or behaviour that challenges\n\nComplete them alongside the session note and Datix. They are frequently requested at panel as supportive evidence to accompany the NPA, so it is crucial they are completed as required.",
-        tip: "ABC charts support care planning, risk assessment, future placement decisions and funding applications. Good quality charts make a real difference at panel.",
+        tip: "ABC charts support care planning, risk assessment, future placement decisions and funding applications. Good quality charts make a real difference at panel.\n\nSee a completed example: open the WAGOLL from the link below the guide steps.",
       },
       {
         id: "2",
@@ -1058,6 +1065,31 @@ export default function GuidePage() {
               <Check className="w-5 h-5 mr-2" />
               Complete Guide
             </Button>
+          </div>
+        )}
+
+        {/* WAGOLL section */}
+        {GUIDE_WAGOLLS[guideId] && (
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
+            <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-amber-600" />
+              What a Good One Looks Like (WAGOLL)
+            </h3>
+            <p className="text-sm text-gray-600 mb-3">See a completed example to understand the expected level of detail.</p>
+            <div className="flex flex-wrap gap-2">
+              {GUIDE_WAGOLLS[guideId].map((w, i) => (
+                <a
+                  key={i}
+                  href={w.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-lg text-sm font-semibold text-amber-800 hover:bg-amber-100 border border-amber-300 transition-colors no-underline"
+                >
+                  📄 {w.label}
+                </a>
+              ))}
+            </div>
+            <p className="text-xs text-amber-700 mt-2 italic">Example only - do not submit. Fictional data.</p>
           </div>
         )}
 

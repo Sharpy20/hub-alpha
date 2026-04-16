@@ -1,4 +1,4 @@
-// Mental Health Understanding Guides - metadata for the 23 patient-facing guides
+// Mental Health Understanding Guides - metadata for the 28 patient-facing guides
 // Source: MH_Guides_Poster.html (Named Nurse Tools)
 
 export interface PatientGuide {
@@ -33,4 +33,9 @@ export const PATIENT_GUIDES: PatientGuide[] = [
   { id: "grief", number: 21, title: "Grief and Bereavement", subtitle: "Loss, adjustment and what helps", color: "#4A235A" },
   { id: "dual-diagnosis", number: 22, title: "Substance Use and Mental Health", subtitle: "When both are present at the same time", color: "#7B341E" },
   { id: "anger", number: 23, title: "Understanding Anger", subtitle: "Why anger happens and what can help", color: "#9B2335" },
+  { id: "mindfulness", number: 24, title: "Mindfulness and Being Present", subtitle: "Practical ways to slow down and notice what is happening", color: "#2D6A4F" },
+  { id: "mania", number: 25, title: "Understanding Mania and Hypomania", subtitle: "What is happening when everything speeds up", color: "#B5651D" },
+  { id: "delirium", number: 26, title: "Understanding Delirium", subtitle: "When confusion comes on suddenly from a physical cause", color: "#5B4A3F" },
+  { id: "infection-psychosis", number: 27, title: "When Infection Affects the Mind", subtitle: "Confusion or psychosis caused by physical illness", color: "#6B3A2A" },
+  { id: "catatonia", number: 28, title: "Understanding Catatonia", subtitle: "When the body freezes, slows, or moves in unusual ways", color: "#3D3D5C" },
 ];

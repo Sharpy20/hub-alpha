@@ -447,6 +447,53 @@ body {
 
 .care-plan-box li::marker { color: var(--care-border); }
 
+/* ── FEEDBACK ── */
+.feedback-box {
+  margin-top: 32px;
+  padding: 20px 24px;
+  border-top: 2px solid var(--border);
+  text-align: center;
+}
+.feedback-prompt {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.feedback-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.feedback-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.feedback-btn:hover { border-color: var(--guide-color, #555); transform: scale(1.1); }
+.feedback-btn.selected { background: var(--guide-color, #1A1A2E); border-color: var(--guide-color, #1A1A2E); }
+.feedback-btn.selected.feedback-up { background: #007F3B; border-color: #007F3B; }
+.feedback-btn.selected.feedback-down { background: #DA291C; border-color: #DA291C; }
+.feedback-link {
+  display: inline-block;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+}
+.feedback-link:hover { color: var(--text); }
+
 /* ── PRINT ── */
 @media print {
   .guide-nav, .nav-toggle { display: none !important; }
@@ -460,16 +507,21 @@ body {
     border-radius: 0;
     page-break-after: always;
     break-after: page;
+    page-break-inside: auto;
   }
 
-  .guide-header { padding: 32px 40px 28px; }
+  .guide-header { padding: 32px 40px 28px; page-break-after: avoid; break-after: avoid; }
   .guide-body { padding: 28px 40px 40px; }
+
+  h2, h3 { page-break-after: avoid; break-after: avoid; }
 
   .bubble {
     opacity: 1 !important;
     transform: none !important;
     border: 2px solid #999;
     background: #F5F5F5 !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
   .bubble::before { display: none; }
   .bubble-badge { display: none; }
@@ -477,11 +529,14 @@ body {
   .breath-text-svg { animation: none !important; }
   .sense-icon { animation: none !important; }
 
-  .callout-analogy, .callout-note { break-inside: avoid; }
-  .care-plan-box { break-inside: avoid; }
+  .callout-analogy, .callout-note { break-inside: avoid; page-break-inside: avoid; }
+  .care-plan-box { break-inside: avoid; page-break-inside: avoid; }
+  ul, ol { break-inside: avoid; page-break-inside: avoid; }
+  p { orphans: 3; widows: 3; }
 
   @page { margin: 18mm; }
   #single-guide-toolbar { display: none !important; }
+  .feedback-box { display: none !important; }
 }
 
 /* ── RESPONSIVE ── */
@@ -523,6 +578,11 @@ body {
 <a href="#grief" class="nav-item" style="--c:#4A235A">21. Grief and Bereavement</a>
 <a href="#dual-diagnosis" class="nav-item" style="--c:#7B341E">22. Substance Use and Mental Health</a>
 <a href="#anger" class="nav-item" style="--c:#9B2335">23. Understanding Anger</a>
+<a href="#mindfulness" class="nav-item" style="--c:#2D6A4F">24. Mindfulness and Being Present</a>
+<a href="#mania" class="nav-item" style="--c:#B5651D">25. Understanding Mania and Hypomania</a>
+<a href="#delirium" class="nav-item" style="--c:#5B4A3F">26. Understanding Delirium</a>
+<a href="#infection-psychosis" class="nav-item" style="--c:#6B3A2A">27. When Infection Affects the Mind</a>
+<a href="#catatonia" class="nav-item" style="--c:#3D3D5C">28. Understanding Catatonia</a>
 </div>
 </nav>
 <main>
@@ -535,7 +595,8 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. It is about what has happened, what may be happening for you now, and what might help. Many people worry that mental health medicines are unnatural or harmful, or that they are being given chemicals their body does not need. That concern is understandable. This guide explains, in clear and honest terms, how these medicines actually work.</p>
+    <p>You can read this if you are curious about how mental health medicines work and why they are sometimes prescribed. If you have been offered medication, or are already taking it, it is important to know: accepting support is not weakness, and you have every right to ask questions. Having a mental health difficulty does not mean there is something wrong with you.</p>
+<p>Many people worry that mental health medicines are unnatural or harmful, or that they contain chemicals their body does not need. That concern is understandable. This guide attempts to explain, in clear and honest terms, how these medicines actually work and why they are prescribed.</p>
 <h2>Your brain already uses chemical messengers</h2>
 <p>Your brain cells communicate with each other using natural chemical messengers. These chemicals help control mood and emotions, thoughts and concentration, anxiety and stress, sleep and alertness, energy, motivation, and focus. Everyone has these chemicals. Your brain produces them and manages them all the time. Most mental health medicines work with these same systems.</p>
 <h2>When someone is unwell, regulation becomes harder</h2>
@@ -566,6 +627,15 @@ body {
   <p class="care-plan-intro">If medication is part of your plan, it can help to share what you need from these conversations.</p>
   <ul><li>I want clear explanations in straightforward language</li><li>I need time to think before changes are made</li><li>I want regular reviews so I know what to expect</li><li>If I feel side effects, I want to talk about them early</li><li>I would like to understand why this medicine and not another</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=medicines" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -577,7 +647,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about blaming you for not sleeping. Sleep problems are very common when the brain is under strain. Understanding why can make it easier to find support.</p>
+    <p>You can read this if you are curious about why sleep changes during mental health difficulties and what might help. If sleep is hard for you right now, that is very common when the brain is under strain, and it is not your fault.</p>
 <h2>Why sleep is often affected</h2>
 <p>Sleep can be disrupted by anxiety, distress, trauma responses, changes in routine, ward environments, or medication changes. Poor sleep can then worsen mood, anxiety, concentration, and coping. This can become a cycle.</p>
 <h2>How sleep normally happens</h2>
@@ -632,41 +702,6 @@ body {
 </div>
 
 
-<div class="bubble bubble-grounding js-bubble">
-  <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
-  <div class="bubble-inner">
-    <div class="ground-icons">
-      <div class="sense-icon" style="animation-delay:0s">
-        <div class="sense-circle">5</div><span>See</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.15s">
-        <div class="sense-circle">4</div><span>Feel</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.3s">
-        <div class="sense-circle">3</div><span>Hear</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.45s">
-        <div class="sense-circle">2</div><span>Smell</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.6s">
-        <div class="sense-circle">1</div><span>Taste</span>
-      </div>
-    </div>
-    <div class="bubble-content">
-      <h3>5&#8209;4&#8209;3&#8209;2&#8209;1 Grounding</h3>
-      <p>When thoughts race, grounding brings attention back to the present moment. Work through each sense in turn.</p>
-      <ul class="ground-list">
-        <li><strong>5</strong> things you can <strong>see</strong></li>
-        <li><strong>4</strong> things you can <strong>feel</strong></li>
-        <li><strong>3</strong> things you can <strong>hear</strong></li>
-        <li><strong>2</strong> things you can <strong>smell</strong></li>
-        <li><strong>1</strong> thing you can <strong>taste</strong></li>
-      </ul>
-      <p class="bubble-note">This gently brings the mind back from worry to the present.</p>
-    </div>
-  </div>
-</div>
-
 <h3>Mindfulness and relaxation</h3>
 <ul><li>noticing your breathing as it moves in and out</li><li>listening to sounds around you</li><li>slowly scanning the body from head to toe</li><li>guided relaxation or sleep meditation</li></ul>
 <p>Mindfulness is not about stopping thoughts. It is about letting thoughts pass without reacting to them.</p>
@@ -682,6 +717,15 @@ body {
   <p class="care-plan-intro">If sleep is difficult, it can help to share:</p>
   <ul><li>what time of night is hardest for me</li><li>what helps me feel safer and calmer at night</li><li>what makes sleep worse for me on the ward</li><li>whether I feel groggy or unwell after sleep medication</li><li>what I would like staff to do if I am awake and distressed in the night</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=sleep" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -696,6 +740,20 @@ body {
     <p>Many people describe feeling constantly on edge, unable to relax, or always on alert even when nothing bad is happening. This is not weakness. It is often a sign that the body’s stress system has been working too hard for too long.</p>
 <h2>Your body’s alarm system</h2>
 <p>The human body has a built-in alarm system designed to keep us safe – often called the fight-or-flight response. When the brain senses danger, it releases stress chemicals such as adrenaline and cortisol. These are normal chemicals that everyone’s body produces. This system is very useful in short bursts. It is not designed to stay switched on all the time.</p>
+<h2>What happens in the brain during fight or flight</h2>
+<p>When the alarm fires, the brain redirects its resources. Blood and energy shift away from the parts of the brain responsible for rational thinking, language, and planning, and toward the parts that handle survival. This is why, in moments of acute stress, you may:</p>
+<ul><li>repeat the same words or phrases without meaning to &ndash; the speech centres in the brain are partially offline</li><li>struggle to find words or explain what is wrong</li><li>say things you do not mean, or say nothing at all</li><li>find it impossible to think clearly, make decisions, or process what someone is telling you</li><li>experience tunnel vision or tunnel hearing, where only part of the world gets through</li><li>feel time slow down or speed up</li></ul>
+<p>None of this is a choice. The brain is prioritising survival over communication.</p>
+<h2>Four threat responses</h2>
+<p>The survival system does not just produce fight or flight. There are four common responses, and most people shift between them depending on the situation:</p>
+<ul><li><strong>Fight</strong> &ndash; moving toward the threat. This can look like anger, shouting, pushing back, or verbal aggression</li><li><strong>Flight</strong> &ndash; moving away from the threat. This can look like pacing, trying to leave, avoidance, or hiding</li><li><strong>Freeze</strong> &ndash; going still while still highly alert inside. This can look like going blank, being unable to speak or move, or seeming to zone out</li><li><strong>Fawn</strong> &ndash; trying to appease the threat. This can look like agreeing to everything, people-pleasing, telling staff what you think they want to hear, or being excessively compliant</li></ul>
+<p>Fawn is particularly important to understand. On a ward, it can look like genuine engagement or agreement when in reality the person is terrified and doing whatever feels safest. Apparent compliance is not always real agreement.</p>
+<h2>The window of tolerance</h2>
+<p>There is a zone where the brain can think, feel, and communicate at the same time. Psychologists call this the window of tolerance. Above the window is hyperarousal &ndash; anxiety, panic, rage, restlessness. Below it is hypoarousal &ndash; numbness, shutdown, collapse, disconnection. When someone is outside their window, they cannot process complex information, make good decisions, or have productive conversations.</p>
+<p>Stress, trauma, poor sleep, and feeling unsafe all narrow the window. This means the brain tips into survival mode more easily and stays there longer.</p>
+<h2>How long the chemicals take to clear</h2>
+<p>Adrenaline takes roughly 20 to 30 minutes to start settling after the threat has passed. Cortisol can linger for hours. This means that even after the situation is over, the body may still be running as if the danger is present. Attempting a meaningful conversation, making important decisions, or processing complex information during this window is usually futile and may re-escalate things.</p>
+<p>The most helpful thing during this time is calm, predictable presence. Not questions. Not explanations. Not problem-solving. Just safety, and time.</p>
 <h2>When the alarm does not switch off – hyperarousal</h2>
 <p>Hyperarousal is the medical term for when the body’s alarm system stays active even when there is no immediate danger. Senses remain heightened, thoughts race, emotions feel overwhelming, and the body struggles to relax. This is commonly seen in anxiety and trauma-related conditions but can happen to anyone under ongoing stress.</p>
 <h2>Chronic stress</h2>
@@ -742,41 +800,6 @@ body {
 </div>
 
 
-<div class="bubble bubble-grounding js-bubble">
-  <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
-  <div class="bubble-inner">
-    <div class="ground-icons">
-      <div class="sense-icon" style="animation-delay:0s">
-        <div class="sense-circle">5</div><span>See</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.15s">
-        <div class="sense-circle">4</div><span>Feel</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.3s">
-        <div class="sense-circle">3</div><span>Hear</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.45s">
-        <div class="sense-circle">2</div><span>Smell</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.6s">
-        <div class="sense-circle">1</div><span>Taste</span>
-      </div>
-    </div>
-    <div class="bubble-content">
-      <h3>5&#8209;4&#8209;3&#8209;2&#8209;1 Grounding</h3>
-      <p>When thoughts race, grounding brings attention back to the present moment. Work through each sense in turn.</p>
-      <ul class="ground-list">
-        <li><strong>5</strong> things you can <strong>see</strong></li>
-        <li><strong>4</strong> things you can <strong>feel</strong></li>
-        <li><strong>3</strong> things you can <strong>hear</strong></li>
-        <li><strong>2</strong> things you can <strong>smell</strong></li>
-        <li><strong>1</strong> thing you can <strong>taste</strong></li>
-      </ul>
-      <p class="bubble-note">This gently brings the mind back from worry to the present.</p>
-    </div>
-  </div>
-</div>
-
 <h3>Reducing stimulation</h3>
 <ul><li>find a quieter space if possible</li><li>reduce bright light</li><li>ask for fewer people or voices around you</li><li>take short breaks from busy environments</li></ul>
 <h3>Gentle movement and muscle release</h3>
@@ -795,6 +818,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what situations trigger my stress response</li><li>what early warning signs I show when I am becoming overwhelmed</li><li>what helps me settle in the moment</li><li>what makes things worse – for example feeling rushed, crowded, or given lots of information at once</li><li>whether I prefer quiet presence or talking when I am distressed</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=survival" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -806,7 +838,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. Anxiety is not a character flaw. It is often the brain’s threat system working overtime.</p>
+    <p>You can read this if you are curious about why anxiety and panic happen and what is going on in the body when they do. If these experiences are happening to you, it is important to know: you matter, and help is available. Anxiety is not a character flaw. It is often the brain’s threat system working overtime.</p>
 <h2>What anxiety is</h2>
 <p>Anxiety is the feeling of threat or danger even when there is no immediate danger in front of you. The body may react as if it needs to protect you. The brain is doing its job – it is just doing it too much, too often, or in response to things that are not truly dangerous.</p>
 <h2>What panic is</h2>
@@ -901,6 +933,15 @@ body {
   <p class="care-plan-intro">If anxiety or panic is part of your experience, it may help to share:</p>
   <ul><li>what anxiety feels like for me – physical symptoms and thoughts</li><li>what helps me settle quickly</li><li>what staff actions make anxiety worse – for example lots of questions at once, being crowded, or being rushed</li><li>whether I prefer quiet presence or talking</li><li>what I want staff to know when I am in the middle of a panic episode</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=anxiety" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -917,43 +958,14 @@ body {
 <p>Overwhelm happens when the nervous system is overloaded. The brain focuses on safety and survival, and the thinking part of the brain can go offline temporarily. In those moments, reasoning and problem-solving are genuinely harder – not because something is wrong with you, but because of how the brain prioritises under threat.</p>
 <h2>Common signs</h2>
 <ul><li>feeling flooded or completely out of control</li><li>sudden anger, tears, panic, or complete emotional shutdown</li><li>difficulty speaking or finding words</li><li>urge to escape, hide, lash out, or push people away</li><li>feeling very young, or disconnected from yourself</li></ul>
+<h2>What happens in the brain during overwhelm</h2>
+<p>When the brain is flooded, the parts responsible for speech, reasoning, and decision-making become less active. This is a physical process, not a choice. You may find yourself repeating the same words, unable to explain what is wrong, or going completely silent. The brain is redirecting its resources toward survival. It takes roughly 20 to 30 minutes for the stress chemicals to begin clearing, and during that time, complex conversation or decision-making is genuinely harder.</p>
 <h2>Why talking through it does not always help in the moment</h2>
 <p>When the brain is in overwhelm, the thinking, reasoning part has less influence over the reacting part. This is why talking through problems in the moment of flooding is often not helpful – the brain is not in a state where it can process that kind of support until the system settles.</p>
 <h2>What helps before overwhelm escalates</h2>
 <ul><li>notice early signs and tell staff before escalation</li><li>reduce stimulation – noise, light, people, demands</li><li>slow breathing to signal safety to the nervous system</li><li>grounding with the senses</li><li>movement such as walking or stretching if safe</li></ul>
 <h2>What helps in the moment of overwhelm</h2>
 <ul><li>one person, speaking calmly and slowly</li><li>simple, short sentences, no demands</li><li>quiet space and time to settle</li><li>physical safety without crowding</li><li>writing things down rather than speaking if easier</li></ul>
-
-<div class="bubble bubble-breathing js-bubble">
-  <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
-  <div class="bubble-inner">
-    <div class="breath-engine">
-      <div class="breath-ring">
-        <div class="breath-circle"></div>
-        <svg class="breath-text-svg" viewBox="0 0 120 120">
-          <defs>
-            <path id="circle-path" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"/>
-          </defs>
-          <text class="breath-curved-text"><textPath href="#circle-path">BREATHE IN &bull; HOLD &bull; BREATHE OUT &bull; HOLD &bull;</textPath></text>
-        </svg>
-      </div>
-      <div class="breath-phase-label" id="breath-label">Breathe in...</div>
-    </div>
-    <div class="bubble-content">
-      <h3>Box Breathing</h3>
-      <p>When anxious or distressed, breathing becomes fast and shallow. Slow breathing tells the brain the body is safe to settle.</p>
-      <ol class="breath-steps">
-        <li><span class="step-num">1</span> Breathe in slowly through your nose &ndash; count of 4</li>
-        <li><span class="step-num">2</span> Hold the breath &ndash; count of 4</li>
-        <li><span class="step-num">3</span> Breathe out slowly &ndash; count of 4</li>
-        <li><span class="step-num">4</span> Hold again &ndash; count of 4</li>
-        <li><span class="step-num">5</span> Repeat for 2 to 5 minutes</li>
-      </ol>
-      <p class="bubble-note">You can do this in bed, in a chair, or during the night if you wake.</p>
-    </div>
-  </div>
-</div>
-
 
 <div class="bubble bubble-grounding js-bubble">
   <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
@@ -1001,6 +1013,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what my early warning signs are before I become overwhelmed</li><li>what helps me in the first few minutes of overwhelm</li><li>what makes things worse – for example being crowded, questioned, or touched</li><li>whether I need space or close support to stay safe</li><li>what I would like staff to say or do when I seem flooded</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=overwhelm" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1012,7 +1033,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. Depression is not laziness, weakness, or self-indulgence. It often affects energy, motivation, sleep, appetite, and the ability to feel pleasure or interest in things.</p>
+    <p>You can read this if you are curious about why low mood and depression affect energy, motivation, and daily life. If these experiences are happening to you, it is important to know: you matter, and help is available. Depression is not laziness, weakness, or self-indulgence.</p>
 <h2>What depression can feel like</h2>
 <ul><li>low mood or a persistent feeling of emptiness</li><li>loss of interest or enjoyment in things that used to matter</li><li>feeling slowed down physically or mentally</li><li>exhaustion that does not improve with sleep</li><li>sleep changes – too much or too little</li><li>appetite changes</li><li>difficulty concentrating or making decisions</li><li>self-critical thoughts or a sense of hopelessness</li></ul>
 <h2>What is happening in the brain</h2>
@@ -1037,6 +1058,15 @@ body {
   <p class="care-plan-intro">It may help to tell staff:</p>
   <ul><li>what times of day are hardest for me</li><li>what small goals feel even slightly possible</li><li>what helps me feel less alone</li><li>what makes low mood worse – for example feeling criticised, rushed, or overwhelmed</li><li>what I need to hear – or not hear – from staff</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=depression" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1048,7 +1078,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about blaming you. Many trauma responses are the brain and body doing exactly what they learned to do in order to survive. Understanding this can help make sense of experiences that might otherwise feel frightening or confusing.</p>
+    <p>You can read this if you are curious about how trauma affects the brain and body. If you have experienced trauma, it is important to know: many trauma responses are the brain and body doing exactly what they learned to do in order to survive. Understanding this can help make sense of experiences that might otherwise feel frightening or confusing.</p>
 <h2>What trauma is</h2>
 <p>Trauma refers to experiences that overwhelmed the brain’s ability to cope. This can include single events or ongoing situations. What makes something traumatic is not only what happened, but how the brain processed it at the time.</p>
 <h2>Trauma responses are protective</h2>
@@ -1061,37 +1091,6 @@ body {
 <p>Trauma causes changes in how stress chemicals such as adrenaline and cortisol are released – chemicals your brain already produces. After trauma, the threshold for releasing them can become lower, meaning the alarm fires more easily. The brain also holds body memories – physical sensations and responses that can be triggered by reminders, even without conscious awareness.</p>
 <h2>What helps</h2>
 <ul><li>predictable routines and consistent, reliable staff</li><li>clear information and no sudden changes where possible</li><li>grounding and breathing techniques to manage the present</li><li>safe relationships without pressure to disclose</li><li>psychological therapy when the person is ready and stable</li><li>medication to support sleep, reduce threat sensitivity, or stabilise mood</li></ul>
-
-<div class="bubble bubble-breathing js-bubble">
-  <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
-  <div class="bubble-inner">
-    <div class="breath-engine">
-      <div class="breath-ring">
-        <div class="breath-circle"></div>
-        <svg class="breath-text-svg" viewBox="0 0 120 120">
-          <defs>
-            <path id="circle-path" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"/>
-          </defs>
-          <text class="breath-curved-text"><textPath href="#circle-path">BREATHE IN &bull; HOLD &bull; BREATHE OUT &bull; HOLD &bull;</textPath></text>
-        </svg>
-      </div>
-      <div class="breath-phase-label" id="breath-label">Breathe in...</div>
-    </div>
-    <div class="bubble-content">
-      <h3>Box Breathing</h3>
-      <p>When anxious or distressed, breathing becomes fast and shallow. Slow breathing tells the brain the body is safe to settle.</p>
-      <ol class="breath-steps">
-        <li><span class="step-num">1</span> Breathe in slowly through your nose &ndash; count of 4</li>
-        <li><span class="step-num">2</span> Hold the breath &ndash; count of 4</li>
-        <li><span class="step-num">3</span> Breathe out slowly &ndash; count of 4</li>
-        <li><span class="step-num">4</span> Hold again &ndash; count of 4</li>
-        <li><span class="step-num">5</span> Repeat for 2 to 5 minutes</li>
-      </ol>
-      <p class="bubble-note">You can do this in bed, in a chair, or during the night if you wake.</p>
-    </div>
-  </div>
-</div>
-
 
 <div class="bubble bubble-grounding js-bubble">
   <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
@@ -1136,6 +1135,15 @@ body {
   </div>
   <p class="care-plan-intro">If trauma is part of your story, it can help to tell staff:</p>
   <ul><li>what helps me feel safe</li><li>what triggers my stress response – if I know</li><li>how I prefer staff to approach me when I am distressed</li><li>what I do not want discussed unless I choose to raise it</li><li>whether I prefer male or female staff, or other preferences that affect my safety</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=trauma" target="_blank">Give detailed feedback on wardHub</a>
 </div>
   </div>
 </section>
@@ -1208,6 +1216,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what dissociation looks like for me – what staff might notice</li><li>what helps me reconnect safely</li><li>what makes it worse – for example being rushed, touched unexpectedly, or lots of noise</li><li>whether I prefer staff to stay close or give me space</li><li>what I want staff to say – or avoid saying – when I seem disconnected</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=dissociation" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1219,7 +1236,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. It is about what has happened, what may be happening for you now, and what can help. Psychosis is a word used to describe experiences that can be frightening, confusing, or overwhelming. These experiences are real to the person having them, even if others do not see or hear the same things.</p>
+    <p>You can read this if you are curious about what psychosis is and what may be happening in the brain during these experiences. If these experiences are happening to you, it is important to know: you matter, and help is available. Having these experiences does not mean there is something wrong with you. Psychosis is a word used to describe experiences that can be frightening, confusing, or overwhelming. These experiences are real to the person having them, even if others do not see or hear the same things.</p>
 <p>This guide is probably most useful at a time of relative stability, or to help make sense of experiences after an acute episode. If you are currently in the middle of an acute psychotic episode, the ideas here may not land easily – and that is expected, not a problem with you.</p>
 <h2>Psychosis looks different for everyone</h2>
 <p>There is no single correct way for psychosis to look or feel. These experiences can be very hard to describe, especially when they are new or distressing.</p>
@@ -1244,6 +1261,15 @@ body {
   <p class="care-plan-intro">Explaining psychotic experiences can be hard. You do not have to explain everything. If it helps, some people find it easier to share:</p>
   <ul><li>something feels different to how it normally does for me</li><li>my thoughts or perceptions do not feel right or usual</li><li>things feel more intense or frightening than usual</li><li>I am finding it hard to know what is real</li><li>noise and busy spaces make things worse</li><li>when I do not sleep, everything gets more intense</li><li>calm, clear information and routine help me</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=psychosis" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1255,7 +1281,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about judging you. Self-harm is not a character flaw and it is not attention-seeking. For many people, it is a coping strategy that developed when distress felt unmanageable.</p>
+    <p>You can read this if you are curious about why self-harm happens and what is going on underneath. If this is part of your experience, it is important to know: you matter, and help is available. Self-harm is not a character flaw and it is not attention-seeking. For many people, it is a coping strategy that developed when distress felt unmanageable.</p>
 <h2>Why self-harm can happen</h2>
 <p>People self-harm for different reasons. Common experiences include:</p>
 <ul><li>overwhelming emotions that feel impossible to manage</li><li>feeling numb and wanting to feel something</li><li>a need for control when life feels completely out of control</li><li>intense self-critical thoughts or feelings of self-punishment</li><li>a way to communicate pain that words cannot express</li><li>relief from dissociation – a way to feel present again</li></ul>
@@ -1265,37 +1291,6 @@ body {
 <p>The aim is not to take self-harm away without offering something in its place. Recovery involves understanding the function it serves and building other ways to manage the same intensity of distress. This takes time and support. It is not about willpower.</p>
 <h2>What helps</h2>
 <ul><li>telling someone early when urges rise – before they become overwhelming</li><li>grounding and breathing to reduce intensity in the moment</li><li>safe distraction and connection with someone trusted</li><li>writing or drawing to externalise the internal experience</li><li>psychological support to understand patterns and triggers</li></ul>
-
-<div class="bubble bubble-breathing js-bubble">
-  <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
-  <div class="bubble-inner">
-    <div class="breath-engine">
-      <div class="breath-ring">
-        <div class="breath-circle"></div>
-        <svg class="breath-text-svg" viewBox="0 0 120 120">
-          <defs>
-            <path id="circle-path" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"/>
-          </defs>
-          <text class="breath-curved-text"><textPath href="#circle-path">BREATHE IN &bull; HOLD &bull; BREATHE OUT &bull; HOLD &bull;</textPath></text>
-        </svg>
-      </div>
-      <div class="breath-phase-label" id="breath-label">Breathe in...</div>
-    </div>
-    <div class="bubble-content">
-      <h3>Box Breathing</h3>
-      <p>When anxious or distressed, breathing becomes fast and shallow. Slow breathing tells the brain the body is safe to settle.</p>
-      <ol class="breath-steps">
-        <li><span class="step-num">1</span> Breathe in slowly through your nose &ndash; count of 4</li>
-        <li><span class="step-num">2</span> Hold the breath &ndash; count of 4</li>
-        <li><span class="step-num">3</span> Breathe out slowly &ndash; count of 4</li>
-        <li><span class="step-num">4</span> Hold again &ndash; count of 4</li>
-        <li><span class="step-num">5</span> Repeat for 2 to 5 minutes</li>
-      </ol>
-      <p class="bubble-note">You can do this in bed, in a chair, or during the night if you wake.</p>
-    </div>
-  </div>
-</div>
-
 
 <div class="bubble bubble-grounding js-bubble">
   <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
@@ -1346,6 +1341,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what my urges feel like and what tends to trigger them</li><li>what helps me stay safe in the moment</li><li>what makes things worse – for example feeling judged, dismissed, or watched</li><li>how I prefer staff to respond when I have self-harmed or when I am struggling</li><li>what I need to hear – or not hear – from staff</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=selfharm" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1357,7 +1361,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about judging you. Many people experience thoughts about not wanting to be here, especially during extreme distress, severe depression, trauma, or complete exhaustion. These thoughts can be frightening. They are often a sign of unbearable pain, not a sign that you truly want to die.</p>
+    <p>You can read this if you are having thoughts about not wanting to be here, or if you want to understand what can happen during extreme distress. If these thoughts are happening to you, it is important to know: you matter. These thoughts are often a sign of unbearable pain, not a sign that you truly want to die.</p>
 <h2>Thoughts, urges, and plans are different</h2>
 <p>Suicidal thoughts exist on a spectrum. Some people have passing thoughts without any intent to act. Some people feel urges. Some people feel at serious risk. Staff will take all of these seriously and will support you without judgement. Having these thoughts does not make you dangerous or bad. It makes you someone in significant pain.</p>
 <h2>Why these thoughts can happen</h2>
@@ -1369,35 +1373,17 @@ body {
 <h2>What helps</h2>
 <ul><li>telling staff or someone you trust as early as possible when thoughts increase</li><li>reducing isolation – being with people even if not talking</li><li>focusing on getting through the next hour rather than thinking further ahead</li><li>grounding and calming skills when distress spikes</li><li>treating sleep problems and physical health alongside emotional support</li></ul>
 
-<div class="bubble bubble-breathing js-bubble">
-  <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
-  <div class="bubble-inner">
-    <div class="breath-engine">
-      <div class="breath-ring">
-        <div class="breath-circle"></div>
-        <svg class="breath-text-svg" viewBox="0 0 120 120">
-          <defs>
-            <path id="circle-path" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"/>
-          </defs>
-          <text class="breath-curved-text"><textPath href="#circle-path">BREATHE IN &bull; HOLD &bull; BREATHE OUT &bull; HOLD &bull;</textPath></text>
-        </svg>
-      </div>
-      <div class="breath-phase-label" id="breath-label">Breathe in...</div>
-    </div>
-    <div class="bubble-content">
-      <h3>Box Breathing</h3>
-      <p>When anxious or distressed, breathing becomes fast and shallow. Slow breathing tells the brain the body is safe to settle.</p>
-      <ol class="breath-steps">
-        <li><span class="step-num">1</span> Breathe in slowly through your nose &ndash; count of 4</li>
-        <li><span class="step-num">2</span> Hold the breath &ndash; count of 4</li>
-        <li><span class="step-num">3</span> Breathe out slowly &ndash; count of 4</li>
-        <li><span class="step-num">4</span> Hold again &ndash; count of 4</li>
-        <li><span class="step-num">5</span> Repeat for 2 to 5 minutes</li>
-      </ol>
-      <p class="bubble-note">You can do this in bed, in a chair, or during the night if you wake.</p>
-    </div>
-  </div>
-</div>
+<h2>Riding it out</h2>
+<p>When suicidal thoughts are at their most intense, the aim is not to solve everything. It is to get through the next hour. These are not techniques that fix the problem. They are ways to stay here long enough for the intensity to pass.</p>
+<ul>
+<li>tell someone &ndash; a nurse, a friend, anyone. Saying it out loud changes its power</li>
+<li>stay around people, even if you do not talk</li>
+<li>focus only on the next hour, not tomorrow or next week</li>
+<li>cold water on your face or hands &ndash; this activates a physical calming reflex</li>
+<li>hold something with weight or texture &ndash; a cold drink, a blanket, your own hands</li>
+<li>write down what you are feeling, even if it does not make sense</li>
+<li>remind yourself: this feeling is temporary, even when it does not feel that way</li>
+</ul>
 
 <h2>In a crisis</h2>
 <div class="callout-note"><p>If you feel unable to keep yourself safe, tell a member of staff immediately. In the community, contact NHS 111, your local crisis team, or Samaritans on 116 123 (free, 24 hours). In an emergency, call 999 or go to A and E.</p></div>
@@ -1410,6 +1396,15 @@ body {
   <p class="care-plan-intro">If you are having suicidal thoughts, it may help to tell staff:</p>
   <ul><li>what times of day are hardest for me</li><li>what situations make the thoughts more intense</li><li>what helps me feel safer and more connected</li><li>how I prefer staff to support me when I feel at risk</li><li>whether there is anything staff are doing that is making things harder</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=suicidal" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1421,7 +1416,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about judging you or your relationship with food. Eating difficulties are not about vanity or willpower. They are often about safety, control, emotion, and coping with experiences that feel overwhelming.</p>
+    <p>You can read this if you are curious about eating difficulties and why food, control, and safety can become linked. If this is part of your experience, it is important to know: you matter, and help is available. Eating difficulties are not about vanity or willpower. They are often about safety, control, emotion, and coping.</p>
 <h2>How eating difficulties can develop</h2>
 <p>Eating difficulties take many different forms. Restriction, bingeing, purging, rituals around food, avoidance of certain textures or types of food, and a complex relationship between eating and emotion can all be part of the picture. This guide applies across the range – including anorexia, bulimia, binge eating disorder, ARFID (avoidant or restrictive food intake disorder), or those who have never received a formal diagnosis but know that eating is a significant source of difficulty.</p>
 <p>These behaviours often temporarily reduce distress. Over time they can become a cycle that is very hard to step out of alone. This is not a lifestyle choice and it is not a phase. It is often a deeply entrenched coping mechanism that developed for understandable reasons.</p>
@@ -1443,6 +1438,15 @@ body {
   </div>
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what eating feels like for me emotionally – not just physically</li><li>what times are hardest – for example mealtimes, evenings, or after visits</li><li>what helps me manage distress around food</li><li>what language feels supportive and what feels shaming or pressuring</li><li>what I need from staff when things are very difficult</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=eating" target="_blank">Give detailed feedback on wardHub</a>
 </div>
   </div>
 </section>
@@ -1478,6 +1482,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what makes me feel rejected or unsafe – even things that might seem small</li><li>how I prefer staff to communicate when I am distressed</li><li>what helps me calm down without escalating shame or feeling abandoned</li><li>what my early warning signs are that things are building</li><li>what has helped in the past and what has made things worse</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=emotional-intensity" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1489,7 +1502,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. When the nervous system is under strain, the senses can become more sensitive. This can happen with anxiety, trauma, psychosis, autism, ADHD, sleep loss, burnout, or simply as a response to a highly stimulating environment.</p>
+    <p>You can read this if you are curious about why noise, light, or touch can sometimes become too much. If these experiences are happening to you, it is important to know: you matter, and this is real. When the nervous system is under strain, the senses can become more sensitive. This can happen with anxiety, trauma, psychosis, autism, ADHD, sleep loss, burnout, or simply as a response to a highly stimulating environment.</p>
 <h2>What sensory overload can feel like</h2>
 <ul><li>noise feeling painful or completely overwhelming</li><li>lights feeling too bright or harsh</li><li>touch feeling irritating, unbearable, or unsafe</li><li>crowds or busy spaces feeling threatening</li><li>smells becoming overwhelming</li><li>anger, panic, or complete shutdown when sensory input becomes too much</li></ul>
 <h2>Why it happens</h2>
@@ -1543,6 +1556,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>which senses are hardest for me – sound, light, touch, or others</li><li>what helps me recover when I am overloaded</li><li>what staff can do to reduce overload during conversations or observations</li><li>what the ward environment is like for me and what adjustments might help</li><li>whether there are times of day when I find everything harder</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=sensory" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1554,7 +1576,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. Recovery is rarely a straight line. Many people improve and then struggle again, especially under stress, poor sleep, or change. This does not mean you have failed. It means recovery is a process.</p>
+    <p>You can read this if you are going through a setback or wondering why progress does not feel like a straight line. If that is where you are, it is important to know: you matter, and setbacks are a normal part of recovery, not a sign of failure.</p>
 <h2>Why setbacks happen</h2>
 <ul><li>stress reactivates the threat system and stress chemicals rise again</li><li>poor sleep reduces the brain’s ability to regulate emotion</li><li>big changes or transitions can overwhelm coping</li><li>trauma reminders or anniversaries can trigger old patterns</li><li>illness, medication changes, or life events can affect stability</li></ul>
 <h2>Setbacks are not starting over</h2>
@@ -1566,73 +1588,7 @@ body {
 <h2>A note about stopping treatment</h2>
 <p>One of the most common reasons for setback is stopping medication or reducing support too quickly. This often happens during a period of feeling well – which is a natural time to question whether treatment is still needed. It is always worth discussing changes to treatment with staff before making them. The brain may need more time to stabilise than the absence of symptoms suggests.</p>
 
-<div class="bubble bubble-breathing js-bubble">
-  <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
-  <div class="bubble-inner">
-    <div class="breath-engine">
-      <div class="breath-ring">
-        <div class="breath-circle"></div>
-        <svg class="breath-text-svg" viewBox="0 0 120 120">
-          <defs>
-            <path id="circle-path" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"/>
-          </defs>
-          <text class="breath-curved-text"><textPath href="#circle-path">BREATHE IN &bull; HOLD &bull; BREATHE OUT &bull; HOLD &bull;</textPath></text>
-        </svg>
-      </div>
-      <div class="breath-phase-label" id="breath-label">Breathe in...</div>
-    </div>
-    <div class="bubble-content">
-      <h3>Box Breathing</h3>
-      <p>When anxious or distressed, breathing becomes fast and shallow. Slow breathing tells the brain the body is safe to settle.</p>
-      <ol class="breath-steps">
-        <li><span class="step-num">1</span> Breathe in slowly through your nose &ndash; count of 4</li>
-        <li><span class="step-num">2</span> Hold the breath &ndash; count of 4</li>
-        <li><span class="step-num">3</span> Breathe out slowly &ndash; count of 4</li>
-        <li><span class="step-num">4</span> Hold again &ndash; count of 4</li>
-        <li><span class="step-num">5</span> Repeat for 2 to 5 minutes</li>
-      </ol>
-      <p class="bubble-note">You can do this in bed, in a chair, or during the night if you wake.</p>
-    </div>
-  </div>
-</div>
 
-
-<div class="bubble bubble-grounding js-bubble">
-  <div class="bubble-badge">&#9654; Appears in multiple guides &ndash; skip if familiar</div>
-  <div class="bubble-inner">
-    <div class="ground-icons">
-      <div class="sense-icon" style="animation-delay:0s">
-        <div class="sense-circle">5</div><span>See</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.15s">
-        <div class="sense-circle">4</div><span>Feel</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.3s">
-        <div class="sense-circle">3</div><span>Hear</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.45s">
-        <div class="sense-circle">2</div><span>Smell</span>
-      </div>
-      <div class="sense-icon" style="animation-delay:0.6s">
-        <div class="sense-circle">1</div><span>Taste</span>
-      </div>
-    </div>
-    <div class="bubble-content">
-      <h3>5&#8209;4&#8209;3&#8209;2&#8209;1 Grounding</h3>
-      <p>When thoughts race, grounding brings attention back to the present moment. Work through each sense in turn.</p>
-      <ul class="ground-list">
-        <li><strong>5</strong> things you can <strong>see</strong></li>
-        <li><strong>4</strong> things you can <strong>feel</strong></li>
-        <li><strong>3</strong> things you can <strong>hear</strong></li>
-        <li><strong>2</strong> things you can <strong>smell</strong></li>
-        <li><strong>1</strong> thing you can <strong>taste</strong></li>
-      </ul>
-      <p class="bubble-note">This gently brings the mind back from worry to the present.</p>
-    </div>
-  </div>
-</div>
-
-    
 <div class="care-plan-box">
   <div class="care-plan-header">
     <span class="care-plan-icon">&#9998;</span>
@@ -1640,6 +1596,15 @@ body {
   </div>
   <p class="care-plan-intro">It may help to plan ahead for difficult times:</p>
   <ul><li>what my early warning signs are</li><li>my top three coping strategies that have actually worked</li><li>who I will speak to when things get harder</li><li>what usually helps me regain balance</li><li>what I want staff to do differently from last time</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=recovery" target="_blank">Give detailed feedback on wardHub</a>
 </div>
   </div>
 </section>
@@ -1652,7 +1617,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>Care planning is not about what is wrong with you. It is about what has happened, what is happening now, and what helps. You can use this guide alongside whichever other guides feel most relevant, or on its own as a conversation starter with your nurse or key worker. You do not need to fill in everything. Whatever feels useful is enough.</p>
+    <p>This guide is for anyone who wants to communicate more clearly with staff about what helps and what does not. You can use it alongside whichever other guides feel most relevant, or on its own as a conversation starter with your nurse or key worker. You do not need to fill in everything. Whatever feels useful is enough.</p>
 <h2>If you are here against your will</h2>
 <p>Some people on the ward are here voluntarily. Others are detained under the Mental Health Act and did not choose to be admitted. If that is your situation, this guide is still written for you.</p>
 <p>Being detained does not mean your preferences, your voice, or your right to be involved in your care disappear. You still have the right to know why decisions are being made, to have a named nurse, to access an Independent Mental Health Advocate (IMHA), and to understand your rights under the section you are on.</p>
@@ -1741,6 +1706,15 @@ body {
 <h2>A note for staff using these guides</h2>
 <p>These guides are designed to be read with patients, not handed over and left. The language throughout models the approach that tends to work best – starting with what has happened rather than what is wrong, treating distress as understandable rather than problematic, and involving the person in their own care plan. If a patient picks up one of these guides, it is an opportunity for a conversation.</p>
     
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=care-planning" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1752,7 +1726,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. Autism is not a disease, a disorder of thought, or a problem to be fixed. It is a different neurological profile – a different way the brain is wired to process information, communicate, and experience the world. Many autistic people find inpatient mental health environments particularly difficult. This guide aims to explain why, and what can help.</p>
+    <p>You can read this if you are curious about how autism affects someone's experience, especially on an inpatient ward. If you are autistic, it is important to know: autism is not a disease, a disorder of thought, or a problem to be fixed. It is a different neurological profile &ndash; a different way the brain is wired to process information, communicate, and experience the world. Many autistic people find inpatient mental health environments particularly difficult. This guide attempts to explain why, and what can help.</p>
 <h2>What autism is</h2>
 <p>Autism is a lifelong neurological difference. It affects how a person processes sensory information, communicates, relates to others, and manages change and routine. It exists on a wide spectrum – no two autistic people are the same. Autism is not caused by upbringing, vaccines, or trauma. It is largely genetic. The brain of an autistic person is structured and wired differently, not defectively.</p>
 <h2>Sensory processing</h2>
@@ -1782,6 +1756,15 @@ body {
   <p class="care-plan-intro">Communicating needs can be hard in an unfamiliar environment. Here are some things that may help staff support you better:</p>
   <ul><li>the senses that are most difficult for me are...</li><li>things on the ward that I find hardest are...</li><li>I communicate best when...</li><li>I need extra time to process before responding – please do not fill the silence</li><li>I prefer written information to verbal wherever possible</li><li>routine is very important to me – please tell me in advance if things are changing</li><li>when I am in meltdown, what helps is...</li><li>when I am in shutdown, what helps is...</li><li>please do not try to reason with me in the middle of either – give me time first</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=autism" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1793,7 +1776,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. ADHD is not laziness, bad parenting, or lack of effort. It is a recognised neurological difference that affects how the brain manages attention, impulse control, and activity levels. Many people with ADHD have spent years being told they are not trying hard enough. In reality, they are often trying harder than most, with a brain that is not wired for the environments they are expected to function in.</p>
+    <p>You can read this if you are curious about ADHD and what is actually happening in the brain. If you have ADHD, it is important to know: this is not laziness, bad parenting, or lack of effort. It is a recognised neurological difference. You have probably been trying harder than most people around you for a long time, with a brain that is not wired for the environments you are expected to function in.</p>
 <h2>What ADHD is</h2>
 <p>ADHD does not mean a person cannot pay attention – it means attention is regulated differently. Many people with ADHD can focus intensely on things that interest or engage them. The difficulty is with tasks that are low-stimulation, repetitive, or do not generate immediate reward. ADHD presents in different ways:</p>
 <ul><li>inattentive presentation – difficulty sustaining attention, easily distracted, forgetful, loses things</li><li>hyperactive or impulsive presentation – physical restlessness, difficulty waiting, speaks before thinking</li><li>combined presentation – features of both</li></ul>
@@ -1819,6 +1802,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>I may need tasks broken into smaller steps</li><li>I find it easier to engage when there is some structure and I know what to expect</li><li>waiting with nothing to do is genuinely hard for me – I am not being disruptive</li><li>I may need reminders without this being taken as a sign I do not care</li><li>emotional reactions that seem strong are real – please do not dismiss them</li><li>I do better with movement – sitting still for long periods is physically difficult</li><li>written information helps me more than verbal in many situations</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=adhd" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1830,7 +1822,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. Bipolar disorder is a condition affecting mood regulation in the brain. It is not a character weakness, an excuse, or something you brought on yourself. It is also not simply being very happy sometimes and very sad other times. The mood states involved are much more intense, much longer lasting, and much more disruptive than everyday emotional variation.</p>
+    <p>You can read this if you are curious about bipolar disorder and what happens during mood episodes. If this is part of your experience, it is important to know: you matter, and help is available. Bipolar disorder is not a character weakness, an excuse, or something you brought on yourself. It is also not simply being very happy sometimes and very sad other times. The mood states involved are much more intense, much longer lasting, and much more disruptive than everyday emotional variation.</p>
 <h2>What bipolar disorder is</h2>
 <p>Bipolar disorder involves episodes of significantly elevated or irritable mood, sometimes with psychotic features, alternating with episodes of depression. Between episodes, many people function well. There are different presentations:</p>
 <ul><li>Bipolar I – involves full manic episodes which may require hospital admission, and depressive episodes</li><li>Bipolar II – involves hypomanic episodes (less severe than full mania) and significant depressive episodes</li><li>Cyclothymia – a milder pattern of mood instability over a prolonged period</li></ul>
@@ -1858,6 +1850,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what my early warning signs of mania look like – what I notice, what others notice</li><li>what my early warning signs of depression look like</li><li>what my typical sleep pattern is and what changes mean</li><li>what has helped me in previous episodes and what has not</li><li>what I want staff to do if I seem to be becoming unwell</li><li>who in my life knows my baseline and can offer useful information</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=bipolar" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1869,7 +1870,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. OCD is not about being tidy, fussy, or a perfectionist. It is a recognised condition in which the brain becomes caught in a cycle of distressing, unwanted thoughts and repetitive behaviours aimed at reducing the anxiety those thoughts create. The thoughts that occur in OCD feel completely at odds with the person’s values and identity. Having these thoughts does not make you a bad person.</p>
+    <p>You can read this if you are curious about OCD and why the cycle keeps repeating. If these experiences are happening to you, it is important to know: you matter, and help is available. OCD is not about being tidy or fussy. The thoughts that occur in OCD feel completely at odds with who you are. Having these thoughts does not make you a bad person.</p>
 <h2>What OCD actually is</h2>
 <p>OCD involves two connected elements that form a cycle:</p>
 <ul><li>Obsessions – intrusive, unwanted, distressing thoughts, images, or urges that are hard to dismiss</li><li>Compulsions – actions, rituals, or mental processes performed to reduce the anxiety caused by the obsession</li></ul>
@@ -1894,6 +1895,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what my OCD focuses on and what my compulsions are – staff need to understand these to avoid accidentally reinforcing them</li><li>what triggers my OCD on the ward</li><li>what helps me manage the anxiety without giving in to compulsions</li><li>whether I am working on ERP and what stage I am at</li><li>what I need from staff – I may need compassionate non-reassurance rather than comfort</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=ocd" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1905,7 +1915,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. Grief is one of the most universal human experiences. It is the natural response to loss, and it can be one of the most physically, emotionally, and cognitively demanding experiences a person goes through. Grief is not a mental illness. But it can be so intense that it looks like one, and it can trigger or worsen mental health difficulties in people who are already vulnerable.</p>
+    <p>You can read this if you have experienced a significant loss and want to understand what is happening. If grief is overwhelming you right now, it is important to know: you matter, and grief is not a mental illness. But it can be so intense that it feels like one, and it can trigger or worsen mental health difficulties in people who are already vulnerable.</p>
 <h2>What grief is</h2>
 <p>Grief is the response to loss. It is most often associated with bereavement – the death of someone important – but grief can follow any significant loss:</p>
 <ul><li>the death of a person or a close animal companion</li><li>the end of a relationship</li><li>loss of health, ability, or a part of your identity</li><li>loss of a role – such as being a parent, a worker, or a carer</li><li>loss of a home, a community, or a way of life</li><li>pregnancy loss or fertility loss</li><li>loss of the future you expected</li></ul>
@@ -1932,6 +1942,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what I have lost and what that person or thing meant to me</li><li>how long ago the loss happened and how it has changed over time</li><li>what I find hardest – particular times of day, anniversaries, or reminders</li><li>whether I want to talk about the person or thing I have lost, or prefer not to</li><li>what has helped and what has not helped from others so far</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=grief" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1943,7 +1962,7 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about judging you. Using substances when you are struggling mentally is often an understandable response to pain, not a moral failure. Many people who are admitted to mental health services have also used substances – often for reasons that make complete sense when you understand what was happening for them.</p>
+    <p>You can read this if you are curious about the link between substance use and mental health. If this is part of your experience, it is important to know: you matter, and help is available. Using substances when you are struggling mentally is often an understandable response to pain, not a moral failure.</p>
 <h2>What dual diagnosis means</h2>
 <p>Dual diagnosis refers to when a person experiences both a mental health difficulty and a substance use problem at the same time. The two are closely connected and often make each other worse. Both are treatable, and both deserve proper attention.</p>
 <h2>Self-medication – not weakness</h2>
@@ -1971,6 +1990,15 @@ body {
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what substances I have been using and how often</li><li>what the substances were doing for me – what they helped with</li><li>how long this has been happening</li><li>whether I have tried to stop before and what happened</li><li>what mental health symptoms feel most connected to my substance use</li><li>what I am most worried about in relation to stopping or cutting down</li></ul>
 </div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=dual-diagnosis" target="_blank">Give detailed feedback on wardHub</a>
+</div>
   </div>
 </section>
 
@@ -1982,11 +2010,13 @@ body {
     </div>
   </div>
   <div class="guide-body">
-    <p>This guide is not about what is wrong with you. Anger is a natural human emotion. It is not a disorder, a failure of character, or something that needs to be eliminated. It is a signal – one that often carries important information about pain, injustice, boundaries, or fear.</p>
+    <p>You can read this if you want to understand anger better and where yours comes from. If anger is something you struggle with, it is important to know: anger is a natural human emotion. It is not a disorder, a failure of character, or something that needs to be eliminated. It is a signal, and it often carries important information about pain, injustice, boundaries, or fear.</p>
 <h2>What anger is</h2>
 <p>Anger is an emotion associated with perceived threat, injustice, frustration, or violation of something important. It is part of the body’s protective system. The aim of this guide is not to take anger away. It is to help you understand where yours comes from, what it is doing, and how to work with it rather than against yourself.</p>
 <h2>What is happening in the brain</h2>
 <p>Anger involves the release of adrenaline and cortisol – chemicals your brain already produces – along with activation of the parts of the brain responsible for threat detection. When the anger response fires, blood pressure rises, muscles tense, and the thinking part of the brain has less influence over the reacting part. This is why it can feel so difficult to think clearly when very angry. The brain is in its protective mode, not its problem-solving mode.</p>
+<h2>Why clear thinking shuts down</h2>
+<p>During intense anger, the brain's language and reasoning centres become less active. This is why people may repeat themselves, say things they do not mean, or struggle to articulate what is actually wrong. The brain is in its protective mode, not its communication mode. This typically takes 20 to 30 minutes to settle. Attempting to reason with someone &ndash; or with yourself &ndash; during this window is usually counterproductive.</p>
 <h2>Underneath anger</h2>
 <p>Anger is often described as a secondary emotion, meaning it frequently sits on top of something else:</p>
 <ul><li>fear – anger can be a response to feeling unsafe, threatened, or out of control</li><li>shame – anger can emerge as a defence when shame feels unbearable</li><li>grief and loss – anger is one of the most common responses to loss</li><li>powerlessness – anger often arises when someone feels they have no voice</li><li>hurt – anger can manage the pain of feeling rejected or let down</li><li>injustice – anger in response to unfairness is often valid and important information</li></ul>
@@ -2041,6 +2071,252 @@ body {
   </div>
   <p class="care-plan-intro">It can help to tell staff:</p>
   <ul><li>what tends to trigger my anger on the ward</li><li>what my early warning signs look like – what I notice and what staff might notice</li><li>what helps me de-escalate before I reach the point of no return</li><li>what makes things worse – for example staff responses that feel dismissive or confrontational</li><li>what I need from staff after a difficult episode</li><li>what I know about what is underneath my anger</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=anger" target="_blank">Give detailed feedback on wardHub</a>
+</div>
+  </div>
+</section>
+
+<section class="guide" id="mindfulness" data-color="#2D6A4F">
+  <div class="guide-header" style="background:#2D6A4F">
+    <div class="guide-header-inner">
+      <h1>Mindfulness and Being Present</h1>
+      <p class="guide-subtitle">Practical ways to slow down and notice what is happening right now</p>
+    </div>
+  </div>
+  <div class="guide-body">
+    <p>You can read this if you are curious about mindfulness and whether it might help you. Mindfulness is not about emptying your mind, sitting cross-legged, or achieving inner peace. It is simply the practice of noticing what is happening right now, without judging it. That is it.</p>
+<h2>What mindfulness actually is</h2>
+<p>Mindfulness means paying attention to the present moment on purpose. Not the past, not the future, not the running commentary in your head about what you should be doing. Just what is happening right now. When thoughts come &ndash; and they will &ndash; you notice them and let them pass without grabbing hold. Like watching clouds drift across a sky. You are not trying to stop them. You are just not chasing them.</p>
+<h2>Why it can help</h2>
+<p>When the brain is stuck in threat mode, it spends most of its time scanning for danger, replaying past events, or rehearsing worst-case futures. Mindfulness interrupts that loop. It gently activates the parasympathetic nervous system &ndash; the part of the brain responsible for calming down. Over time, this can widen the window of tolerance and make it easier to stay grounded during stress.</p>
+<h2>Body scan</h2>
+<p>This can be done lying down, sitting, or even standing. Start at your feet and slowly move your attention upward through each part of your body. Notice what is there without trying to change it. Tension in the jaw? Notice it. Heaviness in the chest? Notice it. The point is awareness, not fixing.</p>
+<ul><li>feet &ndash; notice the contact with the floor or bed</li><li>legs &ndash; notice any tension or heaviness</li><li>stomach &ndash; notice your breathing moving here</li><li>chest &ndash; notice the rise and fall</li><li>shoulders &ndash; notice if they are lifted or dropped</li><li>face &ndash; notice the jaw, the forehead, the eyes</li></ul>
+<p>If your mind wanders, that is not failure. That is the exercise working. You noticed it wandered. Bring it back gently.</p>
+<h2>Mindful breathing</h2>
+<p>This is different from box breathing or controlled breathing. You are not trying to change your breath. You are just noticing it. Breathe however your body wants to breathe, and pay attention to the sensation of air moving in and out. Notice where you feel it most &ndash; nostrils, chest, stomach. When thoughts pull you away, come back to the breath. No judgement. Just return.</p>
+<h2>Mindful walking</h2>
+<p>Walk slowly, indoors or outside. Notice each foot as it lifts, moves, and lands. Feel the floor or ground. Notice the air on your skin. Count steps if it helps. This works well on a ward because it uses movement, which is often easier than sitting still when the mind is busy.</p>
+<h2>Leaves on a stream</h2>
+<p>Close your eyes or soften your gaze. Imagine a gentle stream. When a thought arrives, place it on a leaf and watch it float past. Do not push it away. Do not follow it downstream. Just let it go. If a thought sticks, notice that too. It is all part of it.</p>
+<h2>The RAIN technique</h2>
+<p>When a difficult feeling arrives, try this sequence:</p>
+<ul><li><strong>Recognise</strong> &ndash; name what is happening. "I am feeling anxious."</li><li><strong>Allow</strong> &ndash; let it be there without fighting it. "This is here right now."</li><li><strong>Investigate</strong> &ndash; notice where you feel it in your body. What does it actually feel like?</li><li><strong>Nurture</strong> &ndash; offer yourself the kindness you would offer a friend in the same situation.</li></ul>
+<h2>When mindfulness is not helpful</h2>
+<p>This needs saying clearly: mindfulness is not for everyone, and it is not appropriate in every situation. If you are in the middle of a flashback, severe dissociation, or a manic episode, turning your attention inward can increase distress rather than reduce it. People with a history of severe trauma sometimes find that body-focused practices bring up difficult material. If mindfulness makes things worse, that does not mean you are doing it wrong. It means it is not the right tool for you right now. There are other ways to manage distress.</p>
+
+<div class="care-plan-box">
+  <div class="care-plan-header">
+    <span class="care-plan-icon">&#9998;</span>
+    <h2>Care Planning Tips</h2>
+  </div>
+  <p class="care-plan-intro">It can help to tell staff:</p>
+  <ul><li>whether I have tried mindfulness before and what worked or did not work</li><li>whether body-focused exercises feel safe or triggering for me</li><li>what time of day I find it easiest to be still</li><li>whether I prefer guided practice or doing it alone</li><li>what other approaches to calming down work better for me</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=mindfulness" target="_blank">Give detailed feedback on wardHub</a>
+</div>
+  </div>
+</section>
+
+<section class="guide" id="mania" data-color="#B5651D">
+  <div class="guide-header" style="background:#B5651D">
+    <div class="guide-header-inner">
+      <h1>Understanding Mania and Hypomania</h1>
+      <p class="guide-subtitle">What is happening when everything speeds up</p>
+    </div>
+  </div>
+  <div class="guide-body">
+    <p>You can read this if you or someone you care about is experiencing a period where everything feels faster, bigger, or more intense than usual. If this is happening to you, it is important to know: you matter, and this experience is treatable. What feels like your best self may be the early stages of something that can escalate. That is not a judgement. It is worth understanding.</p>
+<h2>What mania feels like from the inside</h2>
+<p>Early stages often feel genuinely good. Energy increases, sleep seems unnecessary, ideas come fast, confidence rises, and the world feels vivid and full of possibility. This is part of what makes mania difficult to recognise and difficult to accept help for. Why would you want to stop feeling this way?</p>
+<p>As mania escalates, the experience can shift:</p>
+<ul><li>sleep drops to very little or none, without feeling tired</li><li>speech becomes rapid, pressured, hard to interrupt</li><li>thoughts race faster than you can follow them</li><li>decisions become impulsive &ndash; spending, plans, risks that would normally seem unwise</li><li>irritability or paranoia can replace the initial euphoria</li><li>beliefs about your abilities or significance can become very strong</li><li>in severe mania, psychotic experiences can develop</li></ul>
+<h2>Why insight reduces</h2>
+<p>One of the hardest aspects of mania is that the part of the brain responsible for accurately assessing your own state is genuinely impaired. This is not stubbornness or denial. It is the condition itself. The brain is telling you that you are fine &ndash; better than fine &ndash; while the people around you can see that something has changed. This disconnect is one of the most common and most difficult features of mania.</p>
+<h2>What is happening in the brain</h2>
+<p>During mania, the brain's reward and arousal systems become overactive. Dopamine &ndash; a chemical your brain already produces &ndash; surges beyond its normal range. This drives the elevated mood, the increased energy, the reduced need for sleep, and the sensation that everything is significant and everything is possible. The regulatory systems that would normally bring this back into balance struggle to keep up.</p>
+<h2>What staff are watching for</h2>
+<p>You may feel that staff are being cautious or restrictive when you feel fine. It can help to understand what they are monitoring:</p>
+<ul><li>sleep patterns &ndash; reduced sleep is both a symptom and a trigger for escalation</li><li>speech rate and volume &ndash; pressure of speech is a clinical indicator</li><li>grandiosity &ndash; beliefs about abilities, plans, or significance that seem out of proportion</li><li>risk-taking &ndash; financial, sexual, or physical risks</li><li>irritability or agitation, especially if challenged</li></ul>
+<h2>The comedown</h2>
+<p>What is rarely talked about openly is what happens after a manic episode. The crash can be severe &ndash; exhaustion, depression, shame about things said or done during the episode, embarrassment, and grief for the lost high. Some people describe it as the worst part of the whole cycle. If you are in this phase, it is worth knowing that this is a recognised part of the pattern, not a separate problem. It passes, though it does not feel that way while it is happening.</p>
+<h2>Why people stop medication</h2>
+<p>Many people with bipolar disorder stop their medication during a well period, or because they want to experience the highs again. This is one of the most common and most understandable patterns in bipolar management. Hypomania in particular can feel like the best version of yourself. Being told to medicate that away can feel like a loss, not a gain. If you feel conflicted about this, that is worth discussing honestly with your care team rather than stopping quietly.</p>
+<h2>What helps during a manic episode</h2>
+<ul><li>protect sleep above everything else &ndash; sleep disruption is the single biggest escalation factor</li><li>reduce stimulation &ndash; noise, activity, and social contact can fuel the episode</li><li>a trusted person who can gently reality-check without being confrontational</li><li>routine and structure, even minimal</li><li>medication review &ndash; early intervention with medication can shorten an episode significantly</li><li>avoid major decisions &ndash; financial, relational, or professional decisions made during mania often look very different afterwards</li></ul>
+
+<div class="care-plan-box">
+  <div class="care-plan-header">
+    <span class="care-plan-icon">&#9998;</span>
+    <h2>Care Planning Tips</h2>
+  </div>
+  <p class="care-plan-intro">It can help to tell staff:</p>
+  <ul><li>what my early warning signs of mania look like &ndash; what I notice, what others notice</li><li>what my sleep was like before this started</li><li>whether I recognise that things have changed, or whether I feel completely fine</li><li>what has helped in previous episodes and what has not</li><li>who in my life knows my baseline and can offer useful information</li><li>what I find hardest about accepting help during a high period</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=mania" target="_blank">Give detailed feedback on wardHub</a>
+</div>
+  </div>
+</section>
+
+<section class="guide" id="delirium" data-color="#5B4A3F">
+  <div class="guide-header" style="background:#5B4A3F">
+    <div class="guide-header-inner">
+      <h1>Understanding Delirium</h1>
+      <p class="guide-subtitle">When confusion comes on suddenly and is caused by a physical problem</p>
+    </div>
+  </div>
+  <div class="guide-body">
+    <p>You can read this if you or someone you care about has become suddenly confused, disorientated, or not themselves. If this has happened quickly &ndash; over hours or days rather than weeks &ndash; it may be delirium. Delirium is a medical condition, not a mental illness. It is caused by a physical problem affecting the brain, and it is usually reversible once the cause is treated.</p>
+<h2>What delirium is</h2>
+<p>Delirium is a sudden change in how the brain processes information. It affects attention, awareness, and thinking. The person may not know where they are, what day it is, or who the people around them are. It can come and go &ndash; someone may seem lucid one hour and very confused the next. This fluctuation is one of the hallmarks of delirium.</p>
+<h2>How it differs from dementia</h2>
+<p>Delirium comes on quickly &ndash; hours to days. Dementia develops gradually over months or years. Delirium fluctuates throughout the day. Dementia is more consistent. Delirium is usually reversible. Dementia is not. However, people with existing dementia are at higher risk of developing delirium, which can make diagnosis harder.</p>
+<h2>How it differs from psychosis</h2>
+<p>Both delirium and psychosis can involve seeing or hearing things that are not there. The difference is that in delirium, consciousness itself is affected &ndash; attention wanders, awareness dips, and the person may drift in and out of responsiveness. Delirium is caused by a physical problem, and treating that problem is the priority.</p>
+<h2>Common physical causes</h2>
+<ul><li>infection &ndash; urinary tract infections (UTIs) are one of the most common causes, especially in older adults</li><li>dehydration or poor nutrition</li><li>constipation, especially when severe</li><li>medication changes &ndash; starting, stopping, or changing doses</li><li>pain, especially unmanaged pain</li><li>surgery or anaesthesia</li><li>alcohol withdrawal</li><li>organ failure &ndash; kidney, liver, or respiratory</li></ul>
+<h2>What it can look like</h2>
+<ul><li>confusion that comes and goes</li><li>not knowing where you are or what day it is</li><li>seeing or hearing things that are not there</li><li>agitation, especially at night (sometimes called sundowning)</li><li>drowsiness or reduced awareness</li><li>being unable to follow a conversation or stay focused</li><li>pulling at lines, trying to get out of bed, or becoming very distressed without clear reason</li></ul>
+<h2>Why it can be frightening</h2>
+<p>For the person experiencing delirium, the confusion can be terrifying. The world may not make sense. Familiar people may not be recognised. Strange things may be seen or heard. For family and friends, watching someone become suddenly confused and unlike themselves is deeply distressing. It is worth knowing that the person often has little or no memory of the episode afterwards.</p>
+<h2>What helps</h2>
+<ul><li>treating the underlying physical cause &ndash; this is the most important step</li><li>calm, quiet environment with good lighting</li><li>familiar faces and consistent staff where possible</li><li>reorientation &ndash; a clock, a calendar, photographs, gentle reminders of where they are</li><li>hydration and nutrition</li><li>keeping communication simple, clear, and calm</li><li>reducing unnecessary medication where safe to do so</li></ul>
+<h2>What does not help</h2>
+<ul><li>arguing with the confused person or trying to correct their beliefs forcefully</li><li>quizzing them repeatedly on the date, their name, or where they are</li><li>lots of unfamiliar people or frequent changes of environment</li><li>restraining someone who is agitated unless absolutely necessary for safety</li></ul>
+<h2>Recovery</h2>
+<p>Most delirium resolves once the physical cause is treated. Recovery can take days to weeks. Some people, particularly older adults, may take longer to return fully to baseline. The person may have little or no memory of being delirious, which can itself be confusing and distressing when they are told about it afterwards.</p>
+
+<div class="care-plan-box">
+  <div class="care-plan-header">
+    <span class="care-plan-icon">&#9998;</span>
+    <h2>Care Planning Tips</h2>
+  </div>
+  <p class="care-plan-intro">If someone is recovering from delirium, or if you are supporting them, it can help to share:</p>
+  <ul><li>what the person is normally like &ndash; their baseline</li><li>when the confusion started and what changed around that time</li><li>what medications they are taking</li><li>what helps them feel calm and oriented</li><li>whether they have had delirium before and what helped then</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=delirium" target="_blank">Give detailed feedback on wardHub</a>
+</div>
+  </div>
+</section>
+
+<section class="guide" id="infection-psychosis" data-color="#6B3A2A">
+  <div class="guide-header" style="background:#6B3A2A">
+    <div class="guide-header-inner">
+      <h1>When Infection Affects the Mind</h1>
+      <p class="guide-subtitle">Understanding confusion, psychosis, or personality changes caused by physical illness</p>
+    </div>
+  </div>
+  <div class="guide-body">
+    <p>You can read this if you or someone you care about has experienced sudden mental health changes that may be linked to a physical illness or infection. If this is happening, it is important to know: these changes are usually treatable, and they are not a sign of a new or worsening mental illness.</p>
+<h2>UTIs and the mind</h2>
+<p>Urinary tract infections are one of the most common causes of sudden confusion, agitation, and personality changes &ndash; especially in older adults. A UTI can cause hallucinations, paranoia, aggression, disorientation, and behaviour that looks nothing like the person's usual self. In older adults, a UTI may produce no typical urinary symptoms at all. The first sign may be purely mental &ndash; sudden confusion, agitation, or withdrawal. This is widely documented but still frequently missed.</p>
+<h2>Other infections that can affect the brain</h2>
+<ul><li>chest infections and pneumonia &ndash; especially in older adults or those with existing conditions</li><li>sepsis &ndash; a severe whole-body response to infection that can cause confusion, agitation, and altered consciousness</li><li>COVID-19 and post-viral syndromes &ndash; can cause cognitive changes, confusion, and psychiatric symptoms</li><li>encephalitis &ndash; inflammation of the brain itself, which can produce psychotic symptoms, confusion, seizures, and personality changes</li></ul>
+<h2>Why this happens</h2>
+<p>When the body fights infection, the immune system releases inflammatory chemicals called cytokines. These can cross the blood-brain barrier and disrupt normal brain function. High temperature alone can cause confusion. The combination of inflammation, dehydration, pain, and immune response can temporarily alter how the brain processes information, leading to symptoms that look psychiatric but are actually medical.</p>
+<h2>How to tell the difference from a mental health crisis</h2>
+<p>The key differences are usually:</p>
+<ul><li>sudden onset &ndash; days or hours, not weeks</li><li>no previous psychiatric history, or symptoms that look very different from the person's usual pattern</li><li>physical symptoms present &ndash; fever, pain, reduced fluid intake, changes in urine</li><li>fluctuating consciousness &ndash; the person may drift in and out of awareness</li><li>confusion and disorientation alongside any hallucinations or paranoia</li></ul>
+<div class="callout-note"><p>If someone with a known mental health condition suddenly becomes much more confused or disorientated than usual, infection should always be considered. Mental illness does not protect against physical illness, and physical illness can destabilise a previously stable mental health presentation.</p></div>
+<h2>Why this matters</h2>
+<p>The most important thing is that the infection is identified and treated. If the underlying cause is physical, treating only the behavioural symptoms with psychiatric medication will not solve the problem and may mask what is actually going on. Appropriate medical investigation &ndash; blood tests, urine samples, physical examination &ndash; should be the first step.</p>
+<h2>What helps</h2>
+<ul><li>medical treatment of the infection &ndash; antibiotics, fluids, temperature management</li><li>reassurance and simple communication</li><li>familiar objects and people</li><li>hydration and nutrition</li><li>monitoring for deterioration</li><li>patience &ndash; recovery from the mental symptoms can lag behind recovery from the infection by days or even weeks</li></ul>
+<h2>Recovery</h2>
+<p>Mental symptoms usually improve as the infection clears, though this can take longer than people expect. Some confusion or fatigue may persist for days to weeks after the infection itself has resolved. The person may have little memory of the episode. If full cognitive function does not return within a reasonable timeframe, further investigation may be needed.</p>
+
+<div class="care-plan-box">
+  <div class="care-plan-header">
+    <span class="care-plan-icon">&#9998;</span>
+    <h2>Care Planning Tips</h2>
+  </div>
+  <p class="care-plan-intro">If infection-related mental health changes are suspected, it can help to share:</p>
+  <ul><li>when the changes started and how quickly they developed</li><li>what the person is normally like &ndash; their baseline personality and functioning</li><li>any physical symptoms &ndash; fever, pain, reduced fluid intake, changes in urine</li><li>any recent medication changes</li><li>whether they have had similar episodes before linked to physical illness</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=infection-psychosis" target="_blank">Give detailed feedback on wardHub</a>
+</div>
+  </div>
+</section>
+
+<section class="guide" id="catatonia" data-color="#3D3D5C">
+  <div class="guide-header" style="background:#3D3D5C">
+    <div class="guide-header-inner">
+      <h1>Understanding Catatonia</h1>
+      <p class="guide-subtitle">When the body freezes, slows, or moves in unusual ways</p>
+    </div>
+  </div>
+  <div class="guide-body">
+    <p>You can read this if you or someone you care about has experienced a state where the body seems to freeze, slow down dramatically, or move in unusual ways that do not seem voluntary. If this is happening, it is important to know: catatonia is a recognised neurological state. It is not a choice, and it is treatable.</p>
+<h2>What catatonia is</h2>
+<p>Catatonia is a condition where the brain's motor control systems become disrupted. It can happen alongside mental illness, physical illness, or both. The person is not being difficult, lazy, or uncooperative. Their brain's ability to initiate, control, or stop movement is genuinely impaired.</p>
+<h2>What it can look like</h2>
+<p>Catatonia exists on a spectrum. It can be subtle or severe.</p>
+<ul><li>not moving or speaking for prolonged periods</li><li>holding unusual postures without seeming to notice</li><li>waxy flexibility &ndash; limbs stay in whatever position staff place them in</li><li>repetitive movements or repeated words and phrases</li><li>refusal or inability to eat or drink</li><li>staring, unresponsiveness, or appearing completely withdrawn</li><li>in some forms, the opposite &ndash; extreme agitation, purposeless movement, or excitement</li></ul>
+<div class="callout-note"><p>Awareness may be preserved even when movement is not. A person in a catatonic state may be able to hear and understand everything happening around them, even if they cannot respond. Staff should always speak respectfully and explain what is happening, regardless of whether the person appears to be aware.</p></div>
+<h2>Why it happens</h2>
+<p>Catatonia involves disruption to brain circuits that use GABA and dopamine &ndash; chemicals your brain already produces. It can be triggered by:</p>
+<ul><li>severe mental illness &ndash; particularly psychosis, severe depression, or bipolar disorder</li><li>medication reactions &ndash; especially starting or stopping certain medications</li><li>physical illness &ndash; infections, autoimmune conditions, metabolic problems</li><li>extreme stress or psychological overwhelm</li><li>stopping benzodiazepines suddenly</li></ul>
+<h2>Why early recognition matters</h2>
+<p>Untreated catatonia can become a medical emergency. Prolonged immobility increases the risk of dehydration, blood clots, pressure sores, and muscle breakdown. The longer it continues, the harder it can be to treat. Early recognition and treatment make a significant difference to outcomes.</p>
+<h2>Treatment</h2>
+<p>Catatonia usually responds well to treatment once it is correctly identified.</p>
+<ul><li>benzodiazepines (such as lorazepam) &ndash; often the first-line treatment and frequently very effective</li><li>ECT (electroconvulsive therapy) &ndash; in severe or treatment-resistant cases, ECT is highly effective for catatonia</li><li>importantly, some antipsychotic medications can make catatonia worse &ndash; this is a critical clinical consideration</li></ul>
+<div class="callout-note"><p>If someone who is acutely psychotic suddenly becomes immobile, mute, or rigid, this should be assessed as possible catatonia rather than assumed to be part of the psychosis. The treatment may need to change.</p></div>
+<h2>Recovery</h2>
+<p>Many people recover fully with appropriate treatment. Some people experience recurrent episodes. If you have had catatonia before, it is important that this is clearly documented in your notes so that staff can recognise it quickly if it happens again.</p>
+
+<div class="care-plan-box">
+  <div class="care-plan-header">
+    <span class="care-plan-icon">&#9998;</span>
+    <h2>Care Planning Tips</h2>
+  </div>
+  <p class="care-plan-intro">If catatonia is part of your history, or if you are supporting someone with catatonia:</p>
+  <ul><li>document previous episodes clearly &ndash; what it looked like, what helped, what made it worse</li><li>note which medications were being taken when it started</li><li>specify whether benzodiazepines helped in the past</li><li>record any known triggers</li><li>remind staff: the person may be aware even when they cannot respond &ndash; always explain what you are doing</li></ul>
+</div>
+
+<div class="feedback-box">
+  <p class="feedback-prompt">Did you find this guide helpful?</p>
+  <div class="feedback-actions">
+    <button class="feedback-btn feedback-up" onclick="this.classList.add('selected');this.nextElementSibling.classList.remove('selected')" aria-label="Helpful">&#128077;</button>
+    <button class="feedback-btn feedback-down" onclick="this.classList.add('selected');this.previousElementSibling.classList.remove('selected')" aria-label="Not helpful">&#128078;</button>
+  </div>
+  <a class="feedback-link" href="https://inpatient-hub-alpha.vercel.app/feedback?guide=catatonia" target="_blank">Give detailed feedback on wardHub</a>
 </div>
   </div>
 </section>

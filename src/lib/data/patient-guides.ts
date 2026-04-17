@@ -38,4 +38,5 @@ export const PATIENT_GUIDES: PatientGuide[] = [
   { id: "delirium", number: 26, title: "Understanding Delirium", subtitle: "When confusion comes on suddenly from a physical cause", color: "#5B4A3F" },
   { id: "infection-psychosis", number: 27, title: "When Infection Affects the Mind", subtitle: "Confusion or psychosis caused by physical illness", color: "#6B3A2A" },
   { id: "catatonia", number: 28, title: "Understanding Catatonia", subtitle: "When the body freezes, slows, or moves in unusual ways", color: "#3D3D5C" },
+  { id: "stopping-substances", number: 29, title: "Stopping Substances and Mental Health", subtitle: "Brain changes after regular substance use - without blame", color: "#5C3A1E" },
 ];

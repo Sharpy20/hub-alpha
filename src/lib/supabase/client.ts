@@ -45,6 +45,7 @@ export const FEEDBACK_CATEGORIES = [
   { id: 'guides', label: 'How-To Guides', icon: '📖', color: 'emerald' },
   { id: 'ward-diary', label: 'Team Diary', icon: '📅', color: 'purple' },
   { id: 'patients', label: 'Patient Features', icon: '👤', color: 'blue' },
+  { id: 'patient-guides', label: 'Patient Guides', icon: '📖', color: 'teal' },
   { id: 'bugs', label: 'Bug Reports', icon: '🐛', color: 'red' },
   { id: 'general', label: 'General', icon: '💬', color: 'gray' },
 ] as const;
@@ -105,5 +106,20 @@ export const FEEDBACK_SUB_CATEGORIES: Record<string, { id: string; label: string
     { id: 'discharge', label: 'Discharge Process' },
     { id: 'transfer', label: 'Patient Transfer' },
     { id: 'patient-tasks', label: 'Patient Tasks' },
+  ],
+  'patient-guides': [
+    { id: 'general-patient-guides', label: 'General / All Patient Guides' },
+    { id: 'guide-medicines', label: 'How Mental Health Medicines Work' },
+    { id: 'guide-sleep', label: 'Sleep and Mental Health' },
+    { id: 'guide-survival', label: 'Living in Survival Mode' },
+    { id: 'guide-anxiety', label: 'Understanding Anxiety and Panic' },
+    { id: 'guide-depression', label: 'Understanding Low Mood and Depression' },
+    { id: 'guide-trauma', label: 'How Trauma Can Affect the Brain and Body' },
+    { id: 'guide-psychosis', label: 'Understanding Psychosis' },
+    { id: 'guide-selfharm', label: 'Understanding Self-Harm' },
+    { id: 'guide-suicidal', label: 'Understanding Suicidal Thoughts' },
+    { id: 'guide-bipolar', label: 'Understanding Bipolar Disorder' },
+    { id: 'guide-mania', label: 'Understanding Mania and Hypomania' },
+    { id: 'guide-stopping-substances', label: 'Stopping Substances and Mental Health' },
   ],
 };

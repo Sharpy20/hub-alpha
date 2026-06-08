@@ -6,6 +6,7 @@ import { useApp } from "@/app/providers";
 import Link from "next/link";
 import { FileText, BookOpen, ArrowRight, Pencil, Shield, Bookmark, Settings, Sparkles, AlertTriangle } from "lucide-react";
 import { bookmarks } from "@/lib/data/bookmarks";
+import { useV2Href } from "@/lib/hooks/useV2";
 
 // Dynamic counts from data
 const WORKFLOW_COUNT = 12; // Defined inline in referrals/[id] page
@@ -14,6 +15,7 @@ const BOOKMARK_COUNT = bookmarks.length;
 
 export default function AdminPage() {
   const { user } = useApp();
+  const link = useV2Href();
   const [showCreatorRequest, setShowCreatorRequest] = useState(false);
 
   if (!user) {
@@ -95,7 +97,7 @@ export default function AdminPage() {
         {isContentAdmin && (
         <div className="grid md:grid-cols-2 gap-6">
           {/* Bookmarks card */}
-          <Link href="/admin/links" className="block no-underline">
+          <Link href={link("/admin/links")} className="block no-underline">
             <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-amber-300 hover:shadow-lg transition-all cursor-pointer group">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-amber-700 rounded-xl flex items-center justify-center">
@@ -119,7 +121,7 @@ export default function AdminPage() {
           </Link>
 
           {/* Guides card (merged referral guides + how-to guides) */}
-          <Link href="/admin/workflows" className="block no-underline">
+          <Link href={link("/admin/workflows")} className="block no-underline">
             <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-rose-300 hover:shadow-lg transition-all cursor-pointer group">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-700 rounded-xl flex items-center justify-center">

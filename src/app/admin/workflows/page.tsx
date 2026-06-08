@@ -21,118 +21,40 @@ import {
   GripVertical,
 } from "lucide-react";
 import { FlowchartEditor, WorkflowStep, WorkflowVersion } from "@/components/admin/FlowchartEditor";
+import { WORKFLOWS as REAL_WORKFLOWS } from "@/lib/data/guides/referral-workflows";
 
-// Workflow data - same structure as referrals page
-const WORKFLOWS = [
-  {
-    id: "imha-advocacy",
-    title: "IMHA / Advocacy",
-    description: "Independent Mental Health Advocate for detained patients",
-    icon: "🗣️",
-    gradient: "from-indigo-500 to-indigo-700",
-    category: "Legal & Advocacy",
-    stepCount: 9,
-  },
-  {
-    id: "picu",
-    title: "PICU Referral",
-    description: "Psychiatric Intensive Care Unit transfers",
-    icon: "🏥",
-    gradient: "from-rose-500 to-rose-700",
-    category: "Urgent Care",
-    stepCount: 6,
-  },
-  {
-    id: "safeguarding",
-    title: "Safeguarding Adults - Making a Referral",
-    description: "Report safeguarding concerns - Derby City or County",
-    icon: "🛡️",
-    gradient: "from-red-600 to-red-800",
-    category: "Safeguarding",
-    stepCount: 6,
-  },
-  {
-    id: "safeguarding-children",
-    title: "Safeguarding Children - Making a Referral",
-    description: "Starting Point referrals for child concerns",
-    icon: "👶",
-    gradient: "from-pink-500 to-pink-700",
-    category: "Safeguarding",
-    stepCount: 6,
-  },
-  {
-    id: "homeless-discharge",
-    title: "Housing / Duty to Refer",
-    description: "Homeless discharge and accommodation support",
-    icon: "🏠",
-    gradient: "from-orange-500 to-orange-700",
-    category: "Social & Housing",
-    stepCount: 6,
-  },
-  {
-    id: "social-care",
-    title: "Social Care",
-    description: "Adult social care assessments and support",
-    icon: "👥",
-    gradient: "from-amber-500 to-amber-700",
-    category: "Social & Housing",
-    stepCount: 6,
-  },
-  {
-    id: "dietitian",
-    title: "Dietitian Referral",
-    description: "Nutritional assessment and support",
-    icon: "🥗",
-    gradient: "from-green-500 to-green-700",
-    category: "Allied Health",
-    stepCount: 6,
-  },
-  {
-    id: "tissue-viability",
-    title: "Tissue Viability",
-    description: "Wound care and pressure ulcer concerns",
-    icon: "🩹",
-    gradient: "from-teal-500 to-teal-700",
-    category: "Physical Health",
-    stepCount: 6,
-  },
-  {
-    id: "dental",
-    title: "Dental Referral",
-    description: "Dental care access for inpatients",
-    icon: "🦷",
-    gradient: "from-cyan-500 to-cyan-700",
-    category: "Physical Health",
-    stepCount: 6,
-  },
-  {
-    id: "physio",
-    title: "Physiotherapy",
-    description: "Physical therapy and mobility assessment",
-    icon: "🏃",
-    gradient: "from-emerald-500 to-emerald-700",
-    category: "Allied Health",
-    stepCount: 6,
-  },
-  {
-    id: "ot",
-    title: "Occupational Therapy",
-    description: "OT assessment and functional review",
-    icon: "🧩",
-    gradient: "from-violet-500 to-violet-700",
-    category: "Allied Health",
-    stepCount: 6,
-  },
-  {
-    id: "speech-therapy",
-    title: "Speech & Language",
-    description: "SALT assessment and swallowing review",
-    icon: "💬",
-    gradient: "from-purple-500 to-purple-700",
-    category: "Allied Health",
-    stepCount: 6,
-  },
-];
+// Catalogue metadata for the workflow cards. Step counts and titles come
+// from the real data file at render time so this is just gradient + category.
+const WORKFLOW_META: Record<string, { gradient: string; category: string }> = {
+  "imha-advocacy": { gradient: "from-indigo-500 to-indigo-700", category: "Legal & Advocacy" },
+  "picu": { gradient: "from-rose-500 to-rose-700", category: "Urgent Care" },
+  "safeguarding": { gradient: "from-red-600 to-red-800", category: "Safeguarding" },
+  "safeguarding-children": { gradient: "from-pink-500 to-pink-700", category: "Safeguarding" },
+  "homeless-discharge": { gradient: "from-orange-500 to-orange-700", category: "Social & Housing" },
+  "social-care": { gradient: "from-amber-500 to-amber-700", category: "Social & Housing" },
+  "dietitian": { gradient: "from-green-500 to-green-700", category: "Allied Health" },
+  "tissue-viability": { gradient: "from-teal-500 to-teal-700", category: "Physical Health" },
+  "dental": { gradient: "from-cyan-500 to-cyan-700", category: "Physical Health" },
+  "physio": { gradient: "from-emerald-500 to-emerald-700", category: "Allied Health" },
+  "ot": { gradient: "from-violet-500 to-violet-700", category: "Allied Health" },
+  "speech-therapy": { gradient: "from-purple-500 to-purple-700", category: "Allied Health" },
+  "edt": { gradient: "from-sky-500 to-sky-700", category: "Discharge Planning" },
+  "erp": { gradient: "from-fuchsia-500 to-fuchsia-700", category: "Psychology" },
+  "ctr-dsp": { gradient: "from-lime-600 to-lime-800", category: "Specialist Pathways" },
+  "benefits-review": { gradient: "from-yellow-600 to-yellow-800", category: "Social & Housing" },
+};
+
+const DEFAULT_META = { gradient: "from-slate-500 to-slate-700", category: "Uncategorised" };
+
+interface WorkflowCard {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  gradient: string;
+  category: string;
+  stepCount: number;
+}
 
 // Icon options
 const ICON_OPTIONS = ["🗣️", "🏥", "🛡️", "👶", "🏠", "👥", "🥗", "🩹", "🦷", "🏃", "🧩", "💬", "📋", "⚖️", "💊", "🩺", "💉", "🧠", "❤️", "🔬"];
@@ -213,6 +135,21 @@ export default function WorkflowsAdminPage() {
   const [validationError, setValidationError] = useState<string[] | null>(null);
   const [showNewModal, setShowNewModal] = useState(false);
 
+  // Build the workflow list directly from the real data so the editor
+  // always reflects what users actually see on /guides/[id].
+  const WORKFLOWS: WorkflowCard[] = Object.values(REAL_WORKFLOWS).map((wf) => {
+    const meta = WORKFLOW_META[wf.id] || DEFAULT_META;
+    return {
+      id: wf.id,
+      title: wf.title,
+      description: wf.description,
+      icon: wf.icon,
+      gradient: meta.gradient,
+      category: meta.category,
+      stepCount: wf.steps.length,
+    };
+  });
+
   const TEMPLATE_STEPS: WorkflowStep[] = [
     { id: "t1", type: "criteria", title: "Confirm Criteria", content: "Verify the patient meets the referral criteria.", checkboxLabel: "I confirm the criteria are met" },
     { id: "t2", type: "consent", title: "Patient Consent", content: "Confirm you have discussed the referral with the patient." },
@@ -265,31 +202,27 @@ export default function WorkflowsAdminPage() {
   }
 
   const handleEditWorkflow = (workflowId: string) => {
-    // Load workflow data (in real app, would fetch from storage)
-    const workflow = WORKFLOWS.find((w) => w.id === workflowId);
-    if (workflow) {
-      // Create a sample set of steps for editing
-      const sampleSteps: WorkflowStep[] = [
-        { id: "1", type: "criteria", title: "Confirm Criteria", content: "Verify the patient meets the referral criteria.", checkboxLabel: "I confirm the criteria are met" },
-        { id: "2", type: "consent", title: "Patient Consent", content: "Confirm you have discussed the referral with the patient." },
-        { id: "3", type: "forms", title: "Download Forms", content: "Download the required referral form.", forms: { blank: [], wagoll: [], otherGuides: [] } },
-        { id: "4", type: "submission", title: "Submit Referral", content: "Send the completed referral.", methods: [{ type: "email", label: "Referral Team", value: "referrals@example.nhs.net" }] },
-        { id: "5", type: "casenote", title: "Case Note", content: "Add to patient notes.", clipboardText: "Referral submitted on [DATE]." },
-        { id: "6", type: "reminder", title: "Job Diary", content: "Update your job diary.", checkboxLabel: "I have updated my diary" },
-        { id: "7", type: "gdpr", title: "GDPR Reminder", content: "Delete local copies of patient data." },
-      ];
+    const workflowMeta = WORKFLOWS.find((w) => w.id === workflowId);
+    if (!workflowMeta) return;
 
-      setEditingWorkflow({
-        id: workflow.id,
-        title: workflow.title,
-        description: workflow.description,
-        icon: workflow.icon,
-        category: workflow.category,
-        steps: sampleSteps,
-        versions: [],
-      });
-      setValidationError(null);
-    }
+    // Pull the REAL step list from the workflow data file, then deep clone
+    // so edits don't mutate the source data. Falls back to a one-step stub
+    // for any workflow that has no data yet.
+    const realData = REAL_WORKFLOWS[workflowId];
+    const steps: WorkflowStep[] = realData
+      ? JSON.parse(JSON.stringify(realData.steps))
+      : [{ id: "1", type: "criteria", title: "Confirm Criteria", content: "Verify the patient meets the referral criteria.", checkboxLabel: "I confirm the criteria are met" }];
+
+    setEditingWorkflow({
+      id: workflowMeta.id,
+      title: realData?.title || workflowMeta.title,
+      description: realData?.description || workflowMeta.description,
+      icon: realData?.icon || workflowMeta.icon,
+      category: workflowMeta.category,
+      steps,
+      versions: [],
+    });
+    setValidationError(null);
   };
 
   const handleSaveWorkflow = () => {

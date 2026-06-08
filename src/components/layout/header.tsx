@@ -7,10 +7,16 @@ import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Lin
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import { getStaffByWard } from "@/lib/data/staff";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
 export function Header() {
   const router = useRouter();
   const { user, setUser, activeWard, setActiveWard, allWards, styleTheme, setStyleTheme, colorMode, setColorMode } = useApp();
+  const isV2 = useIsV2();
+  const link = useV2Href();
+  const availableRoles = (isV2
+    ? (["staff", "senior_admin"] as const)
+    : (["staff", "lead", "manager", "ward_admin", "senior_admin"] as const));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [settingsDropdownOpen, setSettingsDropdownOpen] = useState(false);
@@ -72,7 +78,7 @@ export function Header() {
     } catch {
       // Continue with redirect even if API call fails
     }
-    router.push("/login");
+    router.push(link("/login"));
   };
 
   useEffect(() => {
@@ -112,7 +118,7 @@ export function Header() {
           <div className="flex items-center justify-between h-16">
 
             {/* Logo - wardHub branding */}
-            <Link href="/" className="flex items-center gap-2 group">
+            <Link href={link("/")} className="flex items-center gap-2 group">
               <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
                 <span className="text-xl">&#x1F3E5;</span>
               </div>
@@ -157,15 +163,15 @@ export function Header() {
                       <Play className="w-4 h-4" />
                       Interactive Demo
                     </button>
-                    <Link href="/intro-guide" onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
+                    <Link href={link("/intro-guide")} onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
                       <HelpCircle className="w-4 h-4" />
                       Intro Guide
                     </Link>
-                    <Link href="/faq" onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
+                    <Link href={link("/faq")} onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
                       <CircleHelp className="w-4 h-4" />
                       FAQ
                     </Link>
-                    <Link href="/feedback" onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
+                    <Link href={link("/feedback")} onClick={() => setHelpMode(false)} className="px-3 py-1.5 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 font-semibold flex items-center gap-1.5 transition-colors text-sm no-underline">
                       <MessageSquare className="w-4 h-4" />
                       Feedback
                     </Link>
@@ -179,22 +185,26 @@ export function Header() {
                 <>
                   {/* Normal nav items */}
                   <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
-                    <Link href="/tasks" className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                      <CalendarDays className="w-4 h-4" />
-                      Diary
-                    </Link>
-                    <Link href="/links" className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                    {!isV2 && (
+                      <Link href="/tasks" className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                        <CalendarDays className="w-4 h-4" />
+                        Diary
+                      </Link>
+                    )}
+                    <Link href={link("/links")} className="px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
                       <Link2 className="w-4 h-4" />
                       Links
                     </Link>
-                    <Link href="/guides" className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                    <Link href={link("/guides")} className="px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
                       <FileText className="w-4 h-4" />
                       Guides
                     </Link>
-                    <Link href="/patients" className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                      <Users className="w-4 h-4" />
-                      Patients
-                    </Link>
+                    {!isV2 && (
+                      <Link href="/patients" className="px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
+                        <Users className="w-4 h-4" />
+                        Patients
+                      </Link>
+                    )}
                   </div>
 
                   {/* More dropdown */}
@@ -211,20 +221,24 @@ export function Header() {
 
                     {settingsDropdownOpen && (
                       <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
-                        <Link href="/staff" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                        <Link href={link("/staff")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                           <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
                           <div><p className="font-semibold text-gray-900">Staff</p><p className="text-xs text-gray-500 mt-0.5">Staff directory and ward assignments</p></div>
                         </Link>
-                        <Link href="/dev-panel?section=data-sources" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                          <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-5 h-5 text-white" /></div>
-                          <div><p className="font-semibold text-gray-900">Data Sources</p><p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p></div>
-                        </Link>
-                        <Link href="/reports" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                          <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-5 h-5 text-white" /></div>
-                          <div><p className="font-semibold text-gray-900">Progress Reports</p><p className="text-xs text-gray-500 mt-0.5">Generate patient progress audits</p></div>
-                        </Link>
+                        {!isV2 && (
+                          <Link href="/dev-panel?section=data-sources" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-5 h-5 text-white" /></div>
+                            <div><p className="font-semibold text-gray-900">Data Sources</p><p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p></div>
+                          </Link>
+                        )}
+                        {!isV2 && (
+                          <Link href="/reports" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                            <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-5 h-5 text-white" /></div>
+                            <div><p className="font-semibold text-gray-900">Progress Reports</p><p className="text-xs text-gray-500 mt-0.5">Generate patient progress audits</p></div>
+                          </Link>
+                        )}
                         {canAccessAdmin && (
-                          <Link href="/admin" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors">
+                          <Link href={link("/admin")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors">
                             <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-5 h-5 text-white" /></div>
                             <div><p className="font-semibold text-gray-900">Editor</p><p className="text-xs text-gray-500 mt-0.5">{user?.isContributor ? "Create and edit content" : "Request creator privileges"}</p></div>
                           </Link>
@@ -306,8 +320,8 @@ export function Header() {
                           <User className="w-3 h-3 inline mr-1" />
                           Demo Role
                         </p>
-                        <div className="grid grid-cols-3 gap-1">
-                          {(["staff", "lead", "manager", "ward_admin", "senior_admin"] as const).map((role) => (
+                        <div className={`grid gap-1 ${isV2 ? "grid-cols-2" : "grid-cols-3"}`}>
+                          {availableRoles.map((role) => (
                             <button
                               key={role}
                               onClick={() => handleRoleChange(role)}
@@ -337,7 +351,9 @@ export function Header() {
                         </button>
                         {showUserPicker && (
                           <div className="mt-2 max-h-48 overflow-y-auto space-y-0.5">
-                            {getStaffByWard(activeWard.charAt(0).toUpperCase() + activeWard.slice(1)).map((staff) => (
+                            {getStaffByWard(activeWard.charAt(0).toUpperCase() + activeWard.slice(1))
+                              .filter((staff) => (isV2 ? staff.role === "staff" || staff.role === "senior_admin" : true))
+                              .map((staff) => (
                               <button
                                 key={staff.id}
                                 onClick={() => {
@@ -428,7 +444,7 @@ export function Header() {
                 </div>
               ) : (
                 <Link
-                  href="/login"
+                  href={link("/login")}
                   className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
                 >
                   <User className="w-4 h-4" />
@@ -452,36 +468,44 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200">
             <nav className="flex flex-col px-4 py-2">
-              <Link href="/tasks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <CalendarDays className="w-5 h-5 text-indigo-600" /> Diary
-              </Link>
-              <Link href="/links" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+              {!isV2 && (
+                <Link href="/tasks" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                  <CalendarDays className="w-5 h-5 text-indigo-600" /> Diary
+                </Link>
+              )}
+              <Link href={link("/links")} className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <Link2 className="w-5 h-5 text-amber-600" /> Links
               </Link>
-              <Link href="/guides" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+              <Link href={link("/guides")} className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <FileText className="w-5 h-5 text-rose-600" /> Guides
               </Link>
-              <Link href="/patients" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <Users className="w-5 h-5 text-teal-600" /> Patients
-              </Link>
+              {!isV2 && (
+                <Link href="/patients" className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                  <Users className="w-5 h-5 text-teal-600" /> Patients
+                </Link>
+              )}
 
               <div className="py-3 border-b border-gray-100">
                 <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">More</p>
                 <div className="space-y-2">
-                  <Link href="/staff" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href={link("/staff")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Staff</p><p className="text-xs text-gray-500">Staff directory and ward assignments</p></div>
                   </Link>
-                  <Link href="/dev-panel?section=data-sources" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-4 h-4 text-white" /></div>
-                    <div><p className="font-semibold text-gray-900 text-sm">Data Sources</p><p className="text-xs text-gray-500">Audit log of all information</p></div>
-                  </Link>
-                  <Link href="/reports" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-4 h-4 text-white" /></div>
-                    <div><p className="font-semibold text-gray-900 text-sm">Progress Reports</p><p className="text-xs text-gray-500">Generate patient audits</p></div>
-                  </Link>
+                  {!isV2 && (
+                    <Link href="/dev-panel?section=data-sources" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-4 h-4 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900 text-sm">Data Sources</p><p className="text-xs text-gray-500">Audit log of all information</p></div>
+                    </Link>
+                  )}
+                  {!isV2 && (
+                    <Link href="/reports" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                      <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-4 h-4 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900 text-sm">Progress Reports</p><p className="text-xs text-gray-500">Generate patient audits</p></div>
+                    </Link>
+                  )}
                   {canAccessAdmin && (
-                    <Link href="/admin" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <Link href={link("/admin")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                       <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-4 h-4 text-white" /></div>
                       <div><p className="font-semibold text-gray-900 text-sm">Editor</p><p className="text-xs text-gray-500">{user?.isContributor ? "Edit guides and content" : "Request creator privileges"}</p></div>
                     </Link>
@@ -496,15 +520,15 @@ export function Header() {
                     <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center flex-shrink-0"><Play className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Interactive Demo</p><p className="text-xs text-gray-500">Guided tour of wardHub</p></div>
                   </button>
-                  <Link href="/intro-guide" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href={link("/intro-guide")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0"><HelpCircle className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Intro Guide</p><p className="text-xs text-gray-500">Visual walkthrough</p></div>
                   </Link>
-                  <Link href="/faq" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href={link("/faq")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><CircleHelp className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">FAQ</p><p className="text-xs text-gray-500">Common questions</p></div>
                   </Link>
-                  <Link href="/feedback" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                  <Link href={link("/feedback")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Feedback</p><p className="text-xs text-gray-500">Share ideas and report issues</p></div>
                   </Link>
@@ -544,7 +568,7 @@ export function Header() {
                 <div className="py-3 border-b border-gray-100">
                   <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">Demo Role</p>
                   <div className="flex flex-wrap gap-2">
-                    {(["staff", "lead", "manager", "ward_admin", "senior_admin"] as const).map((role) => (
+                    {availableRoles.map((role) => (
                       <button
                         key={role}
                         onClick={() => handleMobileRoleChange(role)}
@@ -578,7 +602,7 @@ export function Header() {
                 </div>
               ) : (
                 <Link
-                  href="/login"
+                  href={link("/login")}
                   className="py-3 font-semibold text-indigo-600 flex items-center gap-2"
                   onClick={() => setMobileMenuOpen(false)}
                 >

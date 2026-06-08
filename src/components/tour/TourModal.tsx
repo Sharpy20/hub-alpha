@@ -11,8 +11,9 @@ import {
 import { X, ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
-const SECTION_ORDER: TourSection[] = [
+const FULL_SECTION_ORDER: TourSection[] = [
   "welcome",
   "referrals",
   "task-diary",
@@ -20,6 +21,13 @@ const SECTION_ORDER: TourSection[] = [
   "nexus-nudge",
   "nexus-detail",
   "kanban",
+  "complete",
+];
+
+// v2 strips out diary, nexus and kanban (those features don't exist in /v2).
+const V2_SECTION_ORDER: TourSection[] = [
+  "welcome",
+  "referrals",
   "complete",
 ];
 
@@ -45,11 +53,9 @@ const SECTION_SLIDE_COUNTS: Record<TourSection, number> = {
   complete: 1,
 };
 
-const TOTAL_PAGES = Object.values(SECTION_SLIDE_COUNTS).reduce((a, b) => a + b, 0);
-
-function getPageNumber(section: TourSection, slide: number): number {
+function getPageNumber(section: TourSection, slide: number, sectionOrder: TourSection[]): number {
   let page = 0;
-  for (const s of SECTION_ORDER) {
+  for (const s of sectionOrder) {
     if (s === section) {
       page += slide + 1;
       break;
@@ -68,8 +74,13 @@ export function TourModal() {
     currentSlide,
     setCurrentSlide,
     setIsInLiveWalkthrough,
+    isInLiveWalkthrough,
   } = useTour();
   const router = useRouter();
+  const isV2 = useIsV2();
+  const link = useV2Href();
+  const SECTION_ORDER = isV2 ? V2_SECTION_ORDER : FULL_SECTION_ORDER;
+  const TOTAL_PAGES = SECTION_ORDER.reduce((sum, s) => sum + SECTION_SLIDE_COUNTS[s], 0);
   const [dontShowAgain, setDontShowAgain] = useState(false);
 
   const handleEndTour = () => {
@@ -80,8 +91,6 @@ export function TourModal() {
   };
 
   if (!isTourActive) return null;
-
-  const { isInLiveWalkthrough } = useTour();
   if (isInLiveWalkthrough) return null;
 
   const advanceToSection = (section: TourSection) => {
@@ -104,7 +113,7 @@ export function TourModal() {
   };
 
   const sectionIndex = SECTION_ORDER.indexOf(currentSection);
-  const currentPage = getPageNumber(currentSection, currentSlide);
+  const currentPage = getPageNumber(currentSection, currentSlide, SECTION_ORDER);
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
@@ -180,7 +189,7 @@ export function TourModal() {
                 <button
                   onClick={() => {
                     setIsInLiveWalkthrough(true);
-                    router.push("/guides/imha-advocacy?tour=true");
+                    router.push(link("/guides/imha-advocacy?tour=true"));
                   }}
                   className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
                 >
@@ -337,15 +346,17 @@ export function TourModal() {
                 >
                   Start exploring
                 </button>
-                <button
-                  onClick={() => {
-                    handleEndTour();
-                    router.push("/dev-panel");
-                  }}
-                  className="px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-colors"
-                >
-                  View Dev Panel
-                </button>
+                {!isV2 && (
+                  <button
+                    onClick={() => {
+                      handleEndTour();
+                      router.push("/dev-panel");
+                    }}
+                    className="px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-colors"
+                  >
+                    View Dev Panel
+                  </button>
+                )}
               </div>
               <label className="flex items-center gap-2 justify-center text-sm text-gray-500 cursor-pointer select-none">
                 <input

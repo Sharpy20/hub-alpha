@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
+import { useIsV2 } from "@/lib/hooks/useV2";
 import {
   HelpCircle,
   ChevronRight,
@@ -401,17 +402,76 @@ const guideSections: GuideSection[] = [
 
 export default function IntroGuidePage() {
   const { user } = useApp();
+  const isV2 = useIsV2();
+  // In v2 we drop the diary/jobs/profile-ward sections and rewrite the
+  // navigation tips so nothing mentions features that aren't there.
+  const sections = isV2
+    ? guideSections
+        .filter((s) => s.id !== "ward-diary" && s.id !== "my-tasks")
+        .map((s) => {
+          if (s.id === "welcome") {
+            return {
+              ...s,
+              slides: s.slides.map((sl) => {
+                if (sl.title === "Navigation") {
+                  return {
+                    ...sl,
+                    description: "The top navigation bar gives you quick access to all main areas. Click any button to jump to that section.",
+                    tips: [
+                      "Links - Quick links to useful resources",
+                      "Guides - Referral workflows and clinical how-to guides",
+                      "More - Staff list and Editor",
+                      "Help - Interactive Demo, this Intro Guide, FAQ, and Feedback",
+                    ],
+                  };
+                }
+                if (sl.title === "Welcome to wardHub") {
+                  return {
+                    ...sl,
+                    description: "Your reference for ward referrals, links and clinical guides. This quick guide will show you around.",
+                  };
+                }
+                return sl;
+              }),
+            };
+          }
+          if (s.id === "referrals") {
+            return {
+              ...s,
+              slides: s.slides.map((sl) => ({
+                ...sl,
+                tips: (sl.tips || []).filter((t: string) =>
+                  !/job diary|patient task/i.test(t)
+                ),
+              })),
+            };
+          }
+          if (s.id === "settings") {
+            return {
+              ...s,
+              slides: s.slides.map((sl) => ({
+                ...sl,
+                tips: (sl.tips || []).map((t: string) =>
+                  t.replace(/, Reports, Data Sources/i, "").replace(/Reports, /i, "")
+                ),
+              })),
+            };
+          }
+          return s;
+        })
+    : guideSections;
+
   const [activeSection, setActiveSection] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
   const [completedSections, setCompletedSections] = useState<Set<string>>(new Set());
 
-  const currentSection = guideSections[activeSection];
+  const currentSection = sections[activeSection];
   const currentSlide = currentSection.slides[activeSlide];
 
   const handleNext = () => {
     if (activeSlide < currentSection.slides.length - 1) {
       setActiveSlide(activeSlide + 1);
-    } else if (activeSection < guideSections.length - 1) {
+    } else if (activeSection < sections.length - 1) {
       // Mark current section as complete
       setCompletedSections(prev => new Set(prev).add(currentSection.id));
       setActiveSection(activeSection + 1);
@@ -424,7 +484,7 @@ export default function IntroGuidePage() {
       setActiveSlide(activeSlide - 1);
     } else if (activeSection > 0) {
       setActiveSection(activeSection - 1);
-      setActiveSlide(guideSections[activeSection - 1].slides.length - 1);
+      setActiveSlide(sections[activeSection - 1].slides.length - 1);
     }
   };
 
@@ -434,7 +494,7 @@ export default function IntroGuidePage() {
   };
 
   const isFirstSlide = activeSection === 0 && activeSlide === 0;
-  const isLastSlide = activeSection === guideSections.length - 1 && activeSlide === currentSection.slides.length - 1;
+  const isLastSlide = activeSection === sections.length - 1 && activeSlide === currentSection.slides.length - 1;
 
   return (
     <MainLayout>
@@ -457,11 +517,11 @@ export default function IntroGuidePage() {
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-gray-700">Your Progress</span>
             <span className="text-sm text-gray-500">
-              {completedSections.size} of {guideSections.length} sections complete
+              {completedSections.size} of {sections.length} sections complete
             </span>
           </div>
           <div className="flex gap-2">
-            {guideSections.map((section, index) => (
+            {sections.map((section, index) => (
               <button
                 key={section.id}
                 onClick={() => handleSectionClick(index)}
@@ -487,7 +547,7 @@ export default function IntroGuidePage() {
                 <h3 className="font-semibold text-gray-700 text-sm">Sections</h3>
               </div>
               <div className="p-2">
-                {guideSections.map((section, index) => (
+                {sections.map((section, index) => (
                   <button
                     key={section.id}
                     onClick={() => handleSectionClick(index)}

@@ -25,6 +25,7 @@ import {
   GUIDES, DEFAULT_GUIDE, GUIDE_CONFIG, GUIDE_WAGOLLS,
   type GuideData,
 } from "@/lib/data/guides/howto-guides";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
 // Step icons for referral workflows
 const STEP_ICONS: Record<string, typeof CheckCircle> = {
@@ -42,6 +43,8 @@ export default function UnifiedGuidePage() {
   const { canEdit } = useCanEdit();
   const { isTourActive, setIsInLiveWalkthrough, setCurrentSection, setCurrentSlide } = useTour();
   const isTourMode = searchParams.get("tour") === "true";
+  const isV2 = useIsV2();
+  const link = useV2Href();
 
   const guideId = params.id as string;
 
@@ -240,19 +243,19 @@ export default function UnifiedGuidePage() {
 
       <div className="space-y-6">
         <Breadcrumb items={[
-          { label: "Guides", href: "/guides" },
+          { label: "Guides", href: link("/guides") },
           { label: title },
         ]} />
 
         {/* Header with gradient */}
         <div className={`bg-gradient-to-r ${config.gradient} rounded-2xl p-6 text-white`}>
           <div className="flex items-center justify-between mb-4">
-            <button onClick={() => router.push("/guides")} className="p-2 rounded-lg hover:bg-white/20 transition-colors inline-flex items-center gap-2">
+            <button onClick={() => router.push(link("/guides"))} className="p-2 rounded-lg hover:bg-white/20 transition-colors inline-flex items-center gap-2">
               <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Guides</span>
             </button>
             {canEdit && (
-              <Link href="/admin/workflows" className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline">
+              <Link href={link("/admin/workflows")} className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline">
                 <Pencil className="w-4 h-4" /> Edit
               </Link>
             )}
@@ -268,29 +271,31 @@ export default function UnifiedGuidePage() {
             </div>
           </div>
 
-          {/* Patient link */}
-          <div className="mt-4 pt-4 border-t border-white/20">
-            {linkedPatient ? (
-              <div className="flex items-center justify-between bg-white/20 rounded-xl p-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/30 rounded-lg flex items-center justify-center"><UserPlus className="w-5 h-5" /></div>
-                  <div>
-                    <p className="font-semibold">{linkedPatient.name}</p>
-                    <p className="text-white/70 text-sm">{linkedPatient.ward} Ward - Room {linkedPatient.room}</p>
+          {/* Patient link - hidden in v2 (PII-free) */}
+          {!isV2 && (
+            <div className="mt-4 pt-4 border-t border-white/20">
+              {linkedPatient ? (
+                <div className="flex items-center justify-between bg-white/20 rounded-xl p-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-white/30 rounded-lg flex items-center justify-center"><UserPlus className="w-5 h-5" /></div>
+                    <div>
+                      <p className="font-semibold">{linkedPatient.name}</p>
+                      <p className="text-white/70 text-sm">{linkedPatient.ward} Ward - Room {linkedPatient.room}</p>
+                    </div>
                   </div>
+                  <button onClick={() => setShowPatientPicker(true)} className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors">Change</button>
                 </div>
-                <button onClick={() => setShowPatientPicker(true)} className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors">Change</button>
-              </div>
-            ) : (
-              <button onClick={() => setShowPatientPicker(true)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/20 hover:bg-white/30 rounded-xl font-semibold transition-colors">
-                <UserPlus className="w-5 h-5" /> Link to Patient
-              </button>
-            )}
-            <p className="text-white/80 text-sm text-center mt-2 flex items-center justify-center gap-1.5">
-              <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-              Linking creates a job diary task and audit log entry
-            </p>
-          </div>
+              ) : (
+                <button onClick={() => setShowPatientPicker(true)} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/20 hover:bg-white/30 rounded-xl font-semibold transition-colors">
+                  <UserPlus className="w-5 h-5" /> Link to Patient
+                </button>
+              )}
+              <p className="text-white/80 text-sm text-center mt-2 flex items-center justify-center gap-1.5">
+                <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
+                Linking creates a job diary task and audit log entry
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Progress bar */}
@@ -348,7 +353,7 @@ export default function UnifiedGuidePage() {
             )}
           </div>
           <div className="flex justify-end mt-2">
-            <Link href={`/feedback?category=${isReferral ? "referrals" : "guides"}&sub=${guideId}&title=${encodeURIComponent("Problem with: " + title)}`}
+            <Link href={link(`/feedback?category=${isReferral ? "referrals" : "guides"}&sub=${guideId}&title=${encodeURIComponent("Problem with: " + title)}`)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
               <AlertCircle className="w-3.5 h-3.5" /> Report a problem
             </Link>
@@ -497,16 +502,22 @@ export default function UnifiedGuidePage() {
                   <div className="p-5 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border-2 border-indigo-200">
                     <div className="flex items-center gap-3 mb-3"><Calendar className="w-6 h-6 text-indigo-600" /><span className="text-gray-800 font-semibold text-lg">Schedule a follow-up task?</span></div>
                     <p className="text-gray-600 text-sm mb-4">e.g. &ldquo;Chase by telephone if no response in 7 days&rdquo;<br />e.g. &ldquo;Revisit assessment in 14 days&rdquo;</p>
-                    <button onClick={() => {
-                      if (linkedPatient) {
-                        const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
-                        addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "referral", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: futureDate.toISOString().split("T")[0], createdAt: new Date().toISOString().split("T")[0], createdBy: user?.name || "Unknown", carryOver: true, linkedReferralId: guideId });
-                        setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
-                      } else { setPendingFollowUp(true); setShowPatientPicker(true); }
-                    }} className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
-                      <Calendar className="w-4 h-4" /> + Add Follow-up Task
-                    </button>
-                    {showFireworks && !isComplete && <p className="text-green-600 text-sm font-medium mt-2">Follow-up task added to diary!</p>}
+                    {isV2 ? (
+                      <p className="text-sm text-gray-500 italic">Set a reminder in your team's job diary or task tracker.</p>
+                    ) : (
+                      <>
+                        <button onClick={() => {
+                          if (linkedPatient) {
+                            const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
+                            addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "referral", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: futureDate.toISOString().split("T")[0], createdAt: new Date().toISOString().split("T")[0], createdBy: user?.name || "Unknown", carryOver: true, linkedReferralId: guideId });
+                            setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
+                          } else { setPendingFollowUp(true); setShowPatientPicker(true); }
+                        }} className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
+                          <Calendar className="w-4 h-4" /> + Add Follow-up Task
+                        </button>
+                        {showFireworks && !isComplete && <p className="text-green-600 text-sm font-medium mt-2">Follow-up task added to diary!</p>}
+                      </>
+                    )}
                   </div>
                   <p className="text-xs text-gray-400 text-center">This is optional &ndash; skip ahead if not needed.</p>
                 </div>
@@ -571,16 +582,17 @@ export default function UnifiedGuidePage() {
         {/* Referral completion actions */}
         {isReferral && isComplete && (
           <div className="flex gap-3">
-            {!referralLogged ? (
+            {!isV2 && !referralLogged && (
               <Button onClick={handleLogReferral} className="flex-1 py-4 text-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700">
                 <ClipboardList className="w-5 h-5 mr-2" /> Log to Chase Log
               </Button>
-            ) : (
+            )}
+            {!isV2 && referralLogged && (
               <Button disabled className="flex-1 py-4 text-lg bg-amber-100 text-amber-700 cursor-not-allowed">
                 <Check className="w-5 h-5 mr-2" /> Logged
               </Button>
             )}
-            <Button onClick={() => { setShowFireworks(true); setTimeout(() => router.push("/guides"), 2500); }} className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 relative overflow-hidden">
+            <Button onClick={() => { setShowFireworks(true); setTimeout(() => router.push(link("/guides")), 2500); }} className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 relative overflow-hidden">
               <Check className="w-5 h-5 mr-2" /> Complete
             </Button>
           </div>
@@ -612,14 +624,14 @@ export default function UnifiedGuidePage() {
               <p className="text-sm text-gray-600 mt-1">If you have concerns, start a safeguarding referral now</p>
             </div>
             <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <button onClick={() => router.push("/guides/safeguarding")} className="flex items-center gap-3 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-2 border-red-200 hover:border-red-400 hover:shadow-md transition-all text-left">
+              <button onClick={() => router.push(link("/guides/safeguarding"))} className="flex items-center gap-3 p-4 bg-gradient-to-r from-red-50 to-red-100 rounded-xl border-2 border-red-200 hover:border-red-400 hover:shadow-md transition-all text-left">
                 <span className="text-3xl">{"\uD83D\uDEE1\uFE0F"}</span>
                 <div>
                   <p className="font-bold text-gray-900">Safeguarding Adults</p>
                   <p className="text-sm text-gray-500">S.42 referral - Derby City or County</p>
                 </div>
               </button>
-              <button onClick={() => router.push("/guides/safeguarding-children")} className="flex items-center gap-3 p-4 bg-gradient-to-r from-pink-50 to-pink-100 rounded-xl border-2 border-pink-200 hover:border-pink-400 hover:shadow-md transition-all text-left">
+              <button onClick={() => router.push(link("/guides/safeguarding-children"))} className="flex items-center gap-3 p-4 bg-gradient-to-r from-pink-50 to-pink-100 rounded-xl border-2 border-pink-200 hover:border-pink-400 hover:shadow-md transition-all text-left">
                 <span className="text-3xl">{"\uD83D\uDC76"}</span>
                 <div>
                   <p className="font-bold text-gray-900">Safeguarding Children</p>
@@ -655,29 +667,31 @@ export default function UnifiedGuidePage() {
               </div>
             </div>
 
-            {/* Follow-up task */}
-            <div className="bg-white rounded-xl border-2 border-indigo-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 border-b border-indigo-200">
-                <h3 className="font-bold text-gray-800 flex items-center gap-2"><Calendar className="w-5 h-5 text-indigo-600" /> Follow-up Task</h3>
-                <p className="text-sm text-gray-500 mt-0.5">Add a reminder to your job diary</p>
+            {/* Follow-up task - hidden in v2 (no job diary) */}
+            {!isV2 && (
+              <div className="bg-white rounded-xl border-2 border-indigo-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 border-b border-indigo-200">
+                  <h3 className="font-bold text-gray-800 flex items-center gap-2"><Calendar className="w-5 h-5 text-indigo-600" /> Follow-up Task</h3>
+                  <p className="text-sm text-gray-500 mt-0.5">Add a reminder to your job diary</p>
+                </div>
+                <div className="p-6">
+                  <p className="text-gray-600 text-sm mb-4">e.g. &ldquo;Chase outcome in 7 days&rdquo; or &ldquo;Revisit assessment in 14 days&rdquo;</p>
+                  <button onClick={() => {
+                    if (linkedPatient) {
+                      const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
+                      addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "other", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: futureDate.toISOString().split("T")[0], createdAt: new Date().toISOString().split("T")[0], createdBy: user?.name || "Unknown", carryOver: true, linkedGuideId: guideId });
+                      setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
+                    } else {
+                      setPendingFollowUp(true); setShowPatientPicker(true);
+                    }
+                  }} className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
+                    <Calendar className="w-4 h-4" /> + Add Follow-up Task (7 days)
+                  </button>
+                  {showFireworks && !isReferral && <p className="text-green-600 text-sm font-medium mt-3">Follow-up task added to diary!</p>}
+                  <p className="text-xs text-gray-400 mt-2">Optional - skip if not needed.</p>
+                </div>
               </div>
-              <div className="p-6">
-                <p className="text-gray-600 text-sm mb-4">e.g. &ldquo;Chase outcome in 7 days&rdquo; or &ldquo;Revisit assessment in 14 days&rdquo;</p>
-                <button onClick={() => {
-                  if (linkedPatient) {
-                    const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
-                    addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "other", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: futureDate.toISOString().split("T")[0], createdAt: new Date().toISOString().split("T")[0], createdBy: user?.name || "Unknown", carryOver: true, linkedGuideId: guideId });
-                    setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
-                  } else {
-                    setPendingFollowUp(true); setShowPatientPicker(true);
-                  }
-                }} className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
-                  <Calendar className="w-4 h-4" /> + Add Follow-up Task (7 days)
-                </button>
-                {showFireworks && !isReferral && <p className="text-green-600 text-sm font-medium mt-3">Follow-up task added to diary!</p>}
-                <p className="text-xs text-gray-400 mt-2">Optional - skip if not needed.</p>
-              </div>
-            </div>
+            )}
 
             {/* GDPR reminder */}
             <div className="bg-white rounded-xl border-2 border-slate-200 overflow-hidden">
@@ -716,7 +730,7 @@ export default function UnifiedGuidePage() {
                 .filter(([id]) => id !== guideId && GUIDE_CONFIG[id]?.category === config.category)
                 .slice(0, 3)
                 .map(([id, cfg]) => (
-                  <button key={id} onClick={() => { setCurrentStep(0); setCompletedSteps([]); router.push(`/guides/${id}`); }}
+                  <button key={id} onClick={() => { setCurrentStep(0); setCompletedSteps([]); router.push(link(`/guides/${id}`)); }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-700 hover:bg-gradient-to-r hover:${cfg.gradient} hover:text-white transition-all border border-gray-200`}>
                     {cfg.icon} {id.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
                   </button>
@@ -726,7 +740,9 @@ export default function UnifiedGuidePage() {
         )}
       </div>
 
-      <PatientPickerModal isOpen={showPatientPicker} onClose={() => setShowPatientPicker(false)} onSelect={handlePatientSelect} title={title} type={isReferral ? "referral" : "guide"} />
+      {!isV2 && (
+        <PatientPickerModal isOpen={showPatientPicker} onClose={() => setShowPatientPicker(false)} onSelect={handlePatientSelect} title={title} type={isReferral ? "referral" : "guide"} />
+      )}
     </MainLayout>
   );
 }

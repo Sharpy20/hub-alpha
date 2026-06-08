@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { ChevronDown, HelpCircle, Shield, Smartphone, Users, Lock, AlertCircle, Stethoscope } from "lucide-react";
 import Link from "next/link";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
 interface FAQItem {
   id: string;
@@ -12,7 +13,8 @@ interface FAQItem {
   icon: React.ReactNode;
 }
 
-const FAQ_ITEMS: FAQItem[] = [
+function buildFAQItems(isV2: boolean, link: (h: string) => string): FAQItem[] {
+  return [
   {
     id: "what-is",
     question: "What is wardHub?",
@@ -26,11 +28,13 @@ const FAQ_ITEMS: FAQItem[] = [
           <li>Quick access links to frequently used services and helplines</li>
           <li>Step-by-step referral workflows with copy-to-clipboard case note prompts</li>
           <li>How-to guides for clinical procedures and ward tasks</li>
-          <li>Team diary and task management</li>
-          <li>Patient list and discharge tracking</li>
+          {!isV2 && <li>Team diary and task management</li>}
+          {!isV2 && <li>Patient list and discharge tracking</li>}
         </ul>
         <p>
-          The goal is to reduce time spent searching for information and streamline common ward processes.
+          {isV2
+            ? "This is the PII-free version: links and guides only, no patient data and no diary. The full product also includes a team diary and patient list."
+            : "The goal is to reduce time spent searching for information and streamline common ward processes."}
         </p>
       </div>
     ),
@@ -51,7 +55,7 @@ const FAQ_ITEMS: FAQItem[] = [
           The demo is designed with privacy by default - it contains no real patient data, only fictional demonstration data and publicly available contact information.
         </p>
         <p className="text-sm text-gray-500">
-          See our <Link href="/gdpr" className="text-indigo-600 hover:underline">GDPR & Privacy page</Link> for more details.
+          See our <Link href={link("/gdpr")} className="text-indigo-600 hover:underline">GDPR & Privacy page</Link> for more details.
         </p>
       </div>
     ),
@@ -66,7 +70,7 @@ const FAQ_ITEMS: FAQItem[] = [
           We welcome all feedback during this alpha phase. You can:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
-          <li>Visit the <Link href="/feedback" className="text-indigo-600 hover:underline">Feedback page</Link> to submit suggestions or report issues</li>
+          <li>Visit the <Link href={link("/feedback")} className="text-indigo-600 hover:underline">Feedback page</Link> to submit suggestions or report issues</li>
           <li>Use the "Suggest new link" or "Report broken link" buttons on the Links page</li>
           <li>Contact the project owner directly (see the Feedback page for details)</li>
         </ul>
@@ -97,21 +101,36 @@ const FAQ_ITEMS: FAQItem[] = [
     icon: <Users className="w-5 h-5" />,
     answer: (
       <div className="space-y-3">
-        <p>
-          wardHub has five roles, and content editing depends on whether you have creator privileges:
-        </p>
-        <ul className="list-disc list-inside space-y-2 ml-2">
-          <li><strong>Staff</strong> can view all content and suggest new links</li>
-          <li><strong>Lead</strong> and <strong>Manager</strong> have additional ward oversight capabilities</li>
-          <li><strong>Ward Admin</strong> can manage ward-specific settings and approve certain actions</li>
-          <li><strong>Senior Admin</strong> can approve content changes and manage user roles</li>
-        </ul>
-        <p>
-          Any role can request <strong>creator privileges</strong> – this is a separate flag, not a role. Users with creator privileges can create and edit workflows, guides, and links.
-        </p>
-        <p>
-          In the demo, you can switch roles using the My Profile menu to see how different roles work.
-        </p>
+        {isV2 ? (
+          <>
+            <p>This PII-free demo has two roles:</p>
+            <ul className="list-disc list-inside space-y-2 ml-2">
+              <li><strong>Staff</strong> can view all content and suggest new links</li>
+              <li><strong>Senior Admin</strong> can approve content changes and manage user roles</li>
+            </ul>
+            <p>
+              Any role can request <strong>creator privileges</strong> – a separate flag, not a role. Creators can edit workflows, guides and links.
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              wardHub has five roles, and content editing depends on whether you have creator privileges:
+            </p>
+            <ul className="list-disc list-inside space-y-2 ml-2">
+              <li><strong>Staff</strong> can view all content and suggest new links</li>
+              <li><strong>Lead</strong> and <strong>Manager</strong> have additional ward oversight capabilities</li>
+              <li><strong>Ward Admin</strong> can manage ward-specific settings and approve certain actions</li>
+              <li><strong>Senior Admin</strong> can approve content changes and manage user roles</li>
+            </ul>
+            <p>
+              Any role can request <strong>creator privileges</strong> – this is a separate flag, not a role. Users with creator privileges can create and edit workflows, guides, and links.
+            </p>
+            <p>
+              In the demo, you can switch roles using the My Profile menu to see how different roles work.
+            </p>
+          </>
+        )}
       </div>
     ),
   },
@@ -142,15 +161,17 @@ const FAQ_ITEMS: FAQItem[] = [
     answer: (
       <div className="space-y-3">
         <p>
-          <strong>The demo version is NOT for clinical use.</strong> It contains fictional patient data and is intended for demonstration and feedback purposes only.
+          <strong>The demo version is NOT for clinical use.</strong> {isV2
+            ? "This PII-free version contains only links and educational guides for demonstration."
+            : "It contains fictional patient data and is intended for demonstration and feedback purposes only."}
         </p>
         <p>
           When deployed on Trust infrastructure, wardHub is designed to support clinical workflows including:
         </p>
         <ul className="list-disc list-inside space-y-1 ml-2">
           <li>Referral tracking and documentation</li>
-          <li>Team task management</li>
-          <li>Patient discharge planning</li>
+          {!isV2 && <li>Team task management</li>}
+          {!isV2 && <li>Patient discharge planning</li>}
           <li>Quick access to clinical resources</li>
         </ul>
         <p className="p-3 bg-amber-50 rounded-lg border border-amber-200 text-amber-800">
@@ -159,7 +180,8 @@ const FAQ_ITEMS: FAQItem[] = [
       </div>
     ),
   },
-];
+  ];
+}
 
 function AccordionItem({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boolean; onToggle: () => void }) {
   return (
@@ -197,6 +219,9 @@ function AccordionItem({ item, isOpen, onToggle }: { item: FAQItem; isOpen: bool
 }
 
 export default function FAQPage() {
+  const isV2 = useIsV2();
+  const link = useV2Href();
+  const FAQ_ITEMS = buildFAQItems(isV2, link);
   const [openItems, setOpenItems] = useState<Set<string>>(new Set(["what-is"]));
 
   const toggleItem = (id: string) => {

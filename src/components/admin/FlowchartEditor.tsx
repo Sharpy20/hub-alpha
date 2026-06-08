@@ -157,6 +157,21 @@ const STEP_TYPE_CONFIG = {
 
 export type StepType = keyof typeof STEP_TYPE_CONFIG;
 
+export interface WorkflowFormEntry {
+  label: string;
+  url: string;
+  icon?: string;
+  note?: string;
+  area?: "city" | "county";
+}
+
+export interface WorkflowMethodEntry {
+  type: "email" | "phone" | "portal";
+  label: string;
+  value: string;
+  area?: "city" | "county";
+}
+
 export interface WorkflowStep {
   id: string;
   type: StepType;
@@ -164,12 +179,13 @@ export interface WorkflowStep {
   content: string;
   checkboxLabel?: string;
   clipboardText?: string;
+  isDynamic?: boolean;
   forms?: {
-    blank?: { label: string; url: string }[];
-    wagoll?: { label: string; url: string; note?: string }[];
-    otherGuides?: { label: string; url: string }[];
+    blank?: WorkflowFormEntry[];
+    wagoll?: WorkflowFormEntry[];
+    otherGuides?: WorkflowFormEntry[];
   };
-  methods?: { type: "email" | "phone" | "portal"; label: string; value: string }[];
+  methods?: WorkflowMethodEntry[];
   // Decision tree fields
   decisionQuestion?: string;
   branches?: {
@@ -1291,22 +1307,51 @@ function StepEditorPanel({
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Submission Methods
               </label>
-              <div className="space-y-2">
+              <p className="text-xs text-gray-500 mb-2">
+                Each method can be filtered by area (City / County) so only the relevant one shows after the user picks.
+              </p>
+              <div className="space-y-3">
                 {(editedStep.methods || []).map((method, idx) => (
-                  <div key={idx} className="flex gap-2">
-                    <select
-                      value={method.type}
-                      onChange={(e) => {
-                        const newMethods = [...(editedStep.methods || [])];
-                        newMethods[idx] = { ...method, type: e.target.value as "email" | "phone" | "portal" };
-                        setEditedStep({ ...editedStep, methods: newMethods });
-                      }}
-                      className="px-3 py-2 border-2 border-gray-200 rounded-lg"
-                    >
-                      <option value="email">Email</option>
-                      <option value="phone">Phone</option>
-                      <option value="portal">Portal</option>
-                    </select>
+                  <div key={idx} className="bg-gray-50 rounded-lg p-3 space-y-2">
+                    <div className="flex gap-2">
+                      <select
+                        value={method.type}
+                        onChange={(e) => {
+                          const newMethods = [...(editedStep.methods || [])];
+                          newMethods[idx] = { ...method, type: e.target.value as "email" | "phone" | "portal" };
+                          setEditedStep({ ...editedStep, methods: newMethods });
+                        }}
+                        className="px-3 py-2 border-2 border-gray-200 rounded-lg bg-white"
+                      >
+                        <option value="email">Email</option>
+                        <option value="phone">Phone</option>
+                        <option value="portal">Portal</option>
+                      </select>
+                      <select
+                        value={method.area || ""}
+                        onChange={(e) => {
+                          const newMethods = [...(editedStep.methods || [])];
+                          const val = e.target.value;
+                          newMethods[idx] = { ...method, area: val === "" ? undefined : (val as "city" | "county") };
+                          setEditedStep({ ...editedStep, methods: newMethods });
+                        }}
+                        className="px-3 py-2 border-2 border-gray-200 rounded-lg bg-white"
+                        title="Show only when this area is selected"
+                      >
+                        <option value="">All areas</option>
+                        <option value="city">Derby City</option>
+                        <option value="county">Derbyshire County</option>
+                      </select>
+                      <button
+                        onClick={() => {
+                          const newMethods = editedStep.methods?.filter((_, i) => i !== idx);
+                          setEditedStep({ ...editedStep, methods: newMethods });
+                        }}
+                        className="ml-auto p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                     <input
                       type="text"
                       value={method.label}
@@ -1315,8 +1360,8 @@ function StepEditorPanel({
                         newMethods[idx] = { ...method, label: e.target.value };
                         setEditedStep({ ...editedStep, methods: newMethods });
                       }}
-                      placeholder="Label"
-                      className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg"
+                      placeholder="Label (e.g. Referral Team)"
+                      className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg bg-white"
                     />
                     <input
                       type="text"
@@ -1326,18 +1371,9 @@ function StepEditorPanel({
                         newMethods[idx] = { ...method, value: e.target.value };
                         setEditedStep({ ...editedStep, methods: newMethods });
                       }}
-                      placeholder="Value"
-                      className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg"
+                      placeholder="Value (email / phone / URL)"
+                      className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg bg-white"
                     />
-                    <button
-                      onClick={() => {
-                        const newMethods = editedStep.methods?.filter((_, i) => i !== idx);
-                        setEditedStep({ ...editedStep, methods: newMethods });
-                      }}
-                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </div>
                 ))}
                 <button
@@ -1351,6 +1387,36 @@ function StepEditorPanel({
                   Add Method
                 </button>
               </div>
+            </div>
+          )}
+
+          {/* Forms editor (blank / WAGOLL / other guides) */}
+          {editedStep.type === "forms" && (
+            <FormsEditor
+              forms={editedStep.forms || { blank: [], wagoll: [], otherGuides: [] }}
+              onChange={(forms) => setEditedStep({ ...editedStep, forms })}
+            />
+          )}
+
+          {/* Read-only info for fixed-picker step types */}
+          {editedStep.type === "section" && (
+            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-sm text-indigo-800">
+              This step shows a fixed picker of MHA legal statuses (Informal, S2, S3, S4, S5(2), S5(4), CTO, S37, S37/41, S47/49). The user&apos;s choice is available in case-note templates as <code className="px-1 bg-white rounded">[SECTION]</code>.
+            </div>
+          )}
+          {editedStep.type === "area" && (
+            <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 text-sm text-teal-800">
+              This step shows a Derby City / Derbyshire County picker. Forms and submission methods with a matching <strong>area filter</strong> will be the only ones shown after this step. Case-note tokens <code className="px-1 bg-white rounded">[DERBY CITY/DERBYSHIRE COUNTY]</code> are also filled.
+            </div>
+          )}
+          {editedStep.type === "consent" && (
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-sm text-purple-800">
+              This step records the patient&apos;s consent (Yes / No). The next step runs either way — consent is captured for the audit trail.
+            </div>
+          )}
+          {editedStep.type === "gdpr" && (
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-sm text-slate-700">
+              Standard GDPR reminder shown at the end of the workflow. No extra fields needed.
             </div>
           )}
         </div>
@@ -1371,6 +1437,176 @@ function StepEditorPanel({
             Save Step
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ----- Forms editor -----
+// Edits the three buckets on a `forms` step: blank, wagoll, otherGuides.
+// Each row has label + url + optional icon, note and area filter.
+
+function FormsEditor({
+  forms,
+  onChange,
+}: {
+  forms: { blank?: WorkflowFormEntry[]; wagoll?: WorkflowFormEntry[]; otherGuides?: WorkflowFormEntry[] };
+  onChange: (forms: { blank: WorkflowFormEntry[]; wagoll: WorkflowFormEntry[]; otherGuides: WorkflowFormEntry[] }) => void;
+}) {
+  const blank = forms.blank || [];
+  const wagoll = forms.wagoll || [];
+  const otherGuides = forms.otherGuides || [];
+
+  const update = (key: "blank" | "wagoll" | "otherGuides", next: WorkflowFormEntry[]) => {
+    onChange({ blank, wagoll, otherGuides, [key]: next });
+  };
+
+  return (
+    <div className="space-y-5">
+      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
+        Add the blank referral form, an example completed copy (WAGOLL) and any supporting guides for this step.
+        Set <strong>Area</strong> to City or County to make a form only appear after the user picks that area.
+      </div>
+
+      <FormsBucket
+        title="Blank Forms"
+        subtitle="Forms users download to complete"
+        accent="blue"
+        rows={blank}
+        onChange={(next) => update("blank", next)}
+        showNote={false}
+      />
+
+      <FormsBucket
+        title="Example (WAGOLL)"
+        subtitle="Completed example — &ldquo;What A Good One Looks Like&rdquo;"
+        accent="amber"
+        rows={wagoll}
+        onChange={(next) => update("wagoll", next)}
+        showNote={true}
+        showArea={false}
+      />
+
+      <FormsBucket
+        title="Other Guides"
+        subtitle="Reference documents, leaflets and service info"
+        accent="teal"
+        rows={otherGuides}
+        onChange={(next) => update("otherGuides", next)}
+        showNote={false}
+      />
+    </div>
+  );
+}
+
+function FormsBucket({
+  title,
+  subtitle,
+  accent,
+  rows,
+  onChange,
+  showNote,
+  showArea = true,
+}: {
+  title: string;
+  subtitle: string;
+  accent: "blue" | "amber" | "teal";
+  rows: WorkflowFormEntry[];
+  onChange: (rows: WorkflowFormEntry[]) => void;
+  showNote: boolean;
+  showArea?: boolean;
+}) {
+  const tint =
+    accent === "blue"
+      ? "bg-blue-50 border-blue-200"
+      : accent === "amber"
+      ? "bg-amber-50 border-amber-200"
+      : "bg-teal-50 border-teal-200";
+
+  const setRow = (idx: number, patch: Partial<WorkflowFormEntry>) => {
+    const next = rows.map((r, i) => (i === idx ? { ...r, ...patch } : r));
+    onChange(next);
+  };
+
+  const remove = (idx: number) => onChange(rows.filter((_, i) => i !== idx));
+  const add = () => onChange([...rows, { label: "", url: "" }]);
+
+  return (
+    <div>
+      <div className="flex items-baseline justify-between mb-1">
+        <h4 className="font-semibold text-gray-800 text-sm">{title}</h4>
+        <span className="text-xs text-gray-500">{rows.length} {rows.length === 1 ? "entry" : "entries"}</span>
+      </div>
+      <p className="text-xs text-gray-500 mb-2" dangerouslySetInnerHTML={{ __html: subtitle }} />
+      <div className="space-y-2">
+        {rows.map((row, idx) => (
+          <div key={idx} className={`rounded-lg border p-3 space-y-2 ${tint}`}>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={row.label}
+                onChange={(e) => setRow(idx, { label: e.target.value })}
+                placeholder="Label shown to the user"
+                className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg bg-white text-sm"
+              />
+              <button
+                onClick={() => remove(idx)}
+                className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                title="Remove"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+            <input
+              type="text"
+              value={row.url}
+              onChange={(e) => setRow(idx, { url: e.target.value })}
+              placeholder="https://... or /forms/foo.pdf"
+              className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg bg-white text-sm font-mono"
+            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={row.icon || ""}
+                onChange={(e) => setRow(idx, { icon: e.target.value || undefined })}
+                placeholder="Icon (emoji, optional)"
+                className="w-28 px-3 py-2 border-2 border-gray-200 rounded-lg bg-white text-sm"
+                maxLength={4}
+              />
+              {showArea && (
+                <select
+                  value={row.area || ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setRow(idx, { area: val === "" ? undefined : (val as "city" | "county") });
+                  }}
+                  className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg bg-white text-sm"
+                  title="Only show this entry after the user picks this area"
+                >
+                  <option value="">All areas</option>
+                  <option value="city">Derby City only</option>
+                  <option value="county">Derbyshire County only</option>
+                </select>
+              )}
+            </div>
+            {showNote && (
+              <input
+                type="text"
+                value={row.note || ""}
+                onChange={(e) => setRow(idx, { note: e.target.value || undefined })}
+                placeholder="Note (e.g. &ldquo;Example only — do not submit&rdquo;)"
+                className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg bg-white text-sm italic"
+              />
+            )}
+          </div>
+        ))}
+        <button
+          onClick={add}
+          className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 text-sm"
+        >
+          <Plus className="w-4 h-4 inline mr-1" />
+          Add {title.toLowerCase().replace(/s$/, "")}
+        </button>
       </div>
     </div>
   );

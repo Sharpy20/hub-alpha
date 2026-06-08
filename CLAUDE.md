@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 22 March 2026
+> **Last Updated:** 8 June 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -828,6 +828,22 @@ Working through in order. Marking complete as fixed.
 | 106 | [x] | Interactive decision helper on home page ("Not sure? Help me decide" — yes/no flow to correct pathway) |
 | 107 | [x] | Safeguarding bookmark strip on home page (horizontal scroll, public links only) |
 
+## SNAG LIST (8 Jun 2026 - Session 19)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 130 | [x] | **/v2 PII-free clone** - route prefix that shares the codebase. Middleware rewrites /v2/* to /* and redirects blocked paths to /v2. `useIsV2()` + `v2Href()` helpers in `src/lib/hooks/useV2.ts`. |
+| 131 | [x] | v2: Diary, Patients, Reports, Data Sources, Chase Log all hidden from header, mobile menu, More dropdown and footer; Today widget hidden from home. |
+| 132 | [x] | v2: `+Link to Patient` button hidden in guide viewer. Follow-up Task block hidden. Patient picker modal not rendered. Log to Chase Log button hidden. |
+| 133 | [x] | v2: Login + Demo Mode role picker restricted to Staff + Senior Admin only. Specific User picker filters to those two roles. |
+| 134 | [x] | v2: Tour reduced to 3 sections (welcome, referrals, complete). Diary/Nexus/Kanban slides skipped. Dev Panel button hidden on complete screen. |
+| 135 | [x] | v2: Intro Guide filters out Diary + My Jobs sections, rewrites Navigation tips, strips patient/job-diary mentions from Referrals. FAQ rewords "What is wardHub?" and "Who can edit" for v2. |
+| 136 | [x] | Editor (Task C): root cause was `handleEditWorkflow` rendering a hardcoded 7-step stub instead of loading the real workflow. Now imports `WORKFLOWS` from `referral-workflows.ts` and deep-clones the real steps. |
+| 137 | [x] | Editor: Forms step type now has a full editor - blank forms, WAGOLLs, other guides, each with label, URL, optional icon, optional note, optional area filter (City/County). `FormsEditor` + `FormsBucket` components in FlowchartEditor.tsx. |
+| 138 | [x] | Editor: Submission methods now have an area filter dropdown so each method can be City-only / County-only / All areas. Read-only info panels added for section, area, consent, GDPR step types. |
+| 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
+| 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
+
 ## SNAG LIST (30 Mar 2026 - Session 14)
 
 | # | Status | Description |
@@ -871,6 +887,28 @@ On first session on the new machine:
 5. Remove this migration note from CLAUDE.md
 
 ---
+
+## /v2 PII-FREE CLONE (8 Jun 2026)
+
+**Purpose:** Mike is awaiting PII storage approval, so /v2 is a stripped demo with no patient data anywhere. Lives in the same codebase to avoid drift.
+
+**How it works:**
+- `src/middleware.ts` detects `/v2` and `/v2/*`, rewrites them to `/` and `/*` so the existing pages render. Blocked routes (diary/patients/reports/data-sources/chase log) redirect to `/v2`.
+- `src/lib/hooks/useV2.ts` exposes `useIsV2()` (reads `usePathname()`) and `useV2Href()` (returns a function that prefixes `/v2` to internal hrefs when in v2).
+- Components that touch v1-only features check `isV2` and either hide the UI or rewrite copy.
+
+**v2 hides:** Diary tab, Patients tab, Today widget on home, Data Sources menu item, Progress Reports menu item, Chase Log link on Guides, Link to Patient button on guide viewer, Follow-up Task block on completion, Add Follow-up button on Reminder step, Log to Chase Log button on referral completion, Patient picker modal.
+
+**v2 restricts:** Roles to Staff + Senior Admin (login picker + Demo Mode role buttons + Specific User dropdown).
+
+**v2 rewrites:** Hero subtitle, footer tagline, Tour (3 sections only), Intro Guide sections + tips, FAQ answers.
+
+**v2 keeps everything else as-is:** GDPR page untouched. /patient-guides (educational leaflets, no PII) accessible.
+
+**Audit notes:**
+- `/dev-panel?section=data-sources` is reachable inside the dev panel even in v2 — only the route `/data-sources` is blocked, and the dev panel content is metadata about data classification, not actual patient data.
+- The chase log (`/referrals/log`) is route-blocked in v2.
+- If you add a new PII-touching feature later, add the route to `V2_BLOCKED_PREFIXES` in middleware AND wrap any links to it in `link(...)`.
 
 ## CURRENT FOCUS
 

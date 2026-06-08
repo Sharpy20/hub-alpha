@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const isV2 = useIsV2();
+  const link = useV2Href();
 
   return (
     <footer className="bg-nhs-dark-blue text-white mt-auto">
@@ -12,8 +17,9 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-3">wardHub</h3>
             <p className="text-sm text-white/70">
-              A reference and task management tool built around the needs of an
-              inpatient ward. Interactive guides and a simple electronic jobs diary.
+              {isV2
+                ? "A reference tool built around the needs of an inpatient ward. Interactive guides, links and resources at your fingertips."
+                : "A reference and task management tool built around the needs of an inpatient ward. Interactive guides and a simple electronic jobs diary."}
             </p>
           </div>
 
@@ -22,22 +28,17 @@ export function Footer() {
             <h3 className="font-bold text-lg mb-3">Quick Links</h3>
             <ul className="space-y-2 text-sm text-white/70">
               <li>
-                <Link href="/links" className="hover:text-white transition-colors">
+                <Link href={link("/links")} className="hover:text-white transition-colors">
                   Links
                 </Link>
               </li>
               <li>
-                <Link href="/referrals" className="hover:text-white transition-colors">
+                <Link href={link("/guides")} className="hover:text-white transition-colors">
                   Interactive Guides
                 </Link>
               </li>
               <li>
-                <Link href="/how-to" className="hover:text-white transition-colors">
-                  How-To Articles
-                </Link>
-              </li>
-              <li>
-                <Link href="/gdpr" className="hover:text-white transition-colors">
+                <Link href={link("/gdpr")} className="hover:text-white transition-colors">
                   GDPR &amp; Privacy
                 </Link>
               </li>
@@ -54,7 +55,7 @@ export function Footer() {
               For the live version, contact your ward administrator.
             </p>
             <Link
-              href="/feedback"
+              href={link("/feedback")}
               className="inline-flex items-center gap-2 text-sm text-nhs-light-blue hover:text-white transition-colors"
             >
               <ShieldAlert className="w-4 h-4" />
@@ -69,11 +70,15 @@ export function Footer() {
           </p>
           <p>&copy; {currentYear} wardHub &ndash; Alpha Demo. Not for clinical use.</p>
           <div className="flex items-center justify-center gap-4 text-xs text-white/50">
-            <Link href="/gdpr" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href={link("/gdpr")} className="hover:text-white transition-colors">Privacy</Link>
+            {!isV2 && (
+              <>
+                <span>|</span>
+                <Link href="/dev-panel?section=data-sources" className="hover:text-white transition-colors">Data Sources</Link>
+              </>
+            )}
             <span>|</span>
-            <Link href="/dev-panel?section=data-sources" className="hover:text-white transition-colors">Data Sources</Link>
-            <span>|</span>
-            <Link href="/feedback" className="hover:text-white transition-colors">Feedback</Link>
+            <Link href={link("/feedback")} className="hover:text-white transition-colors">Feedback</Link>
           </div>
         </div>
       </div>

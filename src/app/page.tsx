@@ -9,6 +9,7 @@ import { useTour } from "@/app/tour-provider";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, X, Sparkles, Shield, Phone, ChevronRight } from "lucide-react";
 import { bookmarks } from "@/lib/data/bookmarks";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
 const QUICK_ACTIONS = [
   {
@@ -39,6 +40,7 @@ const SG_QUICK_LINKS = [
 function SafeguardingDecisionHelper() {
   const [step, setStep] = useState(0);
   const reset = () => setStep(0);
+  const link = useV2Href();
 
   if (step === 0) {
     return (
@@ -83,7 +85,7 @@ function SafeguardingDecisionHelper() {
         </div>
         <p className="text-xs text-gray-600">Use the Safeguarding Adults guide to make a referral</p>
         <div className="flex gap-3 justify-center">
-          <Link href="/guides/safeguarding" className="px-5 py-2 bg-red-700 text-white font-semibold rounded-xl hover:bg-red-800 text-sm no-underline">
+          <Link href={link("/guides/safeguarding")} className="px-5 py-2 bg-red-700 text-white font-semibold rounded-xl hover:bg-red-800 text-sm no-underline">
             Open the guide
           </Link>
           <button onClick={reset} className="px-5 py-2 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 text-sm">Start over</button>
@@ -99,7 +101,7 @@ function SafeguardingDecisionHelper() {
         </div>
         <p className="text-xs text-gray-600">DHCFT Safeguarding Advice Line – they'll help you decide</p>
         <div className="flex gap-3 justify-center">
-          <Link href="/guides/safeguarding" className="px-5 py-2 bg-amber-600 text-white font-semibold rounded-xl hover:bg-amber-700 text-sm no-underline">
+          <Link href={link("/guides/safeguarding")} className="px-5 py-2 bg-amber-600 text-white font-semibold rounded-xl hover:bg-amber-700 text-sm no-underline">
             Open the guide anyway
           </Link>
           <button onClick={reset} className="px-5 py-2 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 text-sm">Start over</button>
@@ -115,7 +117,7 @@ function SafeguardingDecisionHelper() {
       </div>
       <p className="text-xs text-gray-600">24-hour children's safeguarding referral service</p>
       <div className="flex gap-3 justify-center">
-        <Link href="/guides/safeguarding-children" className="px-5 py-2 bg-pink-700 text-white font-semibold rounded-xl hover:bg-pink-800 text-sm no-underline">
+        <Link href={link("/guides/safeguarding-children")} className="px-5 py-2 bg-pink-700 text-white font-semibold rounded-xl hover:bg-pink-800 text-sm no-underline">
           Open the guide
         </Link>
         <button onClick={reset} className="px-5 py-2 bg-white text-gray-700 font-semibold rounded-xl border border-gray-200 text-sm">Start over</button>
@@ -126,6 +128,7 @@ function SafeguardingDecisionHelper() {
 
 function SafeguardingSection() {
   const sgBookmarks = bookmarks.filter(b => b.category === "Safeguarding" && !b.requiresFocus);
+  const link = useV2Href();
 
   return (
     <section>
@@ -141,7 +144,7 @@ function SafeguardingSection() {
               <p className="text-gray-500 text-xs">Recognise. Respond. Refer.</p>
             </div>
           </div>
-          <Link href="/links?category=Safeguarding" className="text-xs text-indigo-600 hover:text-indigo-800 no-underline flex items-center gap-1">
+          <Link href={link("/links?category=Safeguarding")} className="text-xs text-indigo-600 hover:text-indigo-800 no-underline flex items-center gap-1">
             All links <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
@@ -154,12 +157,12 @@ function SafeguardingSection() {
 
         {/* Quick link cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-          {SG_QUICK_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="no-underline">
+          {SG_QUICK_LINKS.map((sgl) => (
+            <Link key={sgl.href} href={link(sgl.href)} className="no-underline">
               <div className="bg-gray-50 hover:bg-indigo-50 border border-gray-200 hover:border-indigo-200 rounded-xl p-3 text-center transition-all hover:scale-105 h-full">
-                <span className="text-2xl block mb-1">{link.icon}</span>
-                <p className="text-sm font-bold text-gray-900 leading-tight">{link.label}</p>
-                <p className="text-[11px] text-gray-500 mt-0.5">{link.description}</p>
+                <span className="text-2xl block mb-1">{sgl.icon}</span>
+                <p className="text-sm font-bold text-gray-900 leading-tight">{sgl.label}</p>
+                <p className="text-[11px] text-gray-500 mt-0.5">{sgl.description}</p>
               </div>
             </Link>
           ))}
@@ -196,6 +199,8 @@ function SafeguardingSection() {
 export default function HomePage() {
   const { user } = useApp();
   const { startTour, hasBeenStarted } = useTour();
+  const isV2 = useIsV2();
+  const link = useV2Href();
   const [bannerDismissed, setBannerDismissed] = useState(true);
 
   useEffect(() => {
@@ -234,7 +239,7 @@ export default function HomePage() {
                 Start Tour
               </button>
               <Link
-                href="/intro-guide"
+                href={link("/intro-guide")}
                 onClick={dismissBanner}
                 className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-50 transition-all no-underline"
               >
@@ -261,7 +266,9 @@ export default function HomePage() {
             {user ? `Welcome, ${user.name}` : "wardHub"}
           </h1>
           <p className="text-white/80 text-base max-w-xl mx-auto">
-            Interactive guides, team diary and quick access to the resources you need.
+            {isV2
+              ? "Interactive guides, links and quick access to the resources you need."
+              : "Interactive guides, team diary and quick access to the resources you need."}
           </p>
           {user && (
             <div className="flex items-center justify-center gap-6 mt-2 text-sm text-white/70">
@@ -304,7 +311,7 @@ export default function HomePage() {
           </h2>
           <div className="space-y-4">
             {QUICK_ACTIONS.map((action) => (
-              <Link key={action.href} href={action.href} className="block no-underline">
+              <Link key={action.href} href={link(action.href)} className="block no-underline">
                 <div className={`rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-5 bg-gradient-to-r ${action.gradient} text-white hover:shadow-xl hover:scale-[1.02] transition-all`}>
                   <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
                     <span className="text-2xl sm:text-4xl">{action.icon}</span>
@@ -323,14 +330,16 @@ export default function HomePage() {
         {/* Safeguarding Hub */}
         <SafeguardingSection />
 
-        {/* Today's Tasks Widget */}
-        <section>
-          <TodayWidget />
-        </section>
+        {/* Today's Tasks Widget - hidden in v2 (no diary) */}
+        {!isV2 && (
+          <section>
+            <TodayWidget />
+          </section>
+        )}
 
         {/* GDPR link */}
         <section className="text-center">
-          <Link href="/gdpr" className="text-sm text-indigo-600 hover:text-indigo-800">
+          <Link href={link("/gdpr")} className="text-sm text-indigo-600 hover:text-indigo-800">
             GDPR &amp; Privacy
           </Link>
         </section>

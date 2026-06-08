@@ -8,6 +8,7 @@ import { Button, Card, CardContent } from "@/components/ui";
 import { WARDS } from "@/lib/types";
 import { getStaffByWard, DEMO_STAFF } from "@/lib/data/staff";
 import { User, Building2, Shield, Info, Sparkles, ChevronDown } from "lucide-react";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
 const ROLES: { value: UserRole; label: string; description: string; icon: string; gradient: string }[] = [
   {
@@ -74,6 +75,8 @@ const WARD_ICONS: Record<string, string> = {
 export default function LoginPage() {
   const router = useRouter();
   const { setUser } = useApp();
+  const isV2 = useIsV2();
+  const link = useV2Href();
   const [selectedStaffId, setSelectedStaffId] = useState("");
   const [ward, setWard] = useState("byron");
 
@@ -82,7 +85,13 @@ export default function LoginPage() {
   const capitalizedWard = ward.charAt(0).toUpperCase() + ward.slice(1);
 
   // Get staff directly - no useMemo needed for this small dataset
-  const wardStaff = getStaffByWard(capitalizedWard);
+  // In v2, restrict to staff + senior_admin roles only.
+  const wardStaff = getStaffByWard(capitalizedWard).filter((s) =>
+    isV2 ? s.role === "staff" || s.role === "senior_admin" : true
+  );
+  const visibleRoles = isV2
+    ? ROLES.filter((r) => r.value === "staff" || r.value === "senior_admin")
+    : ROLES;
 
   // Get selected staff member
   const selectedStaff = selectedStaffId
@@ -104,7 +113,7 @@ export default function LoginPage() {
         ward: ward,
         isContributor: selectedStaff.isContributor || false,
       });
-      router.push("/");
+      router.push(link("/"));
     }
   };
 
@@ -225,8 +234,8 @@ export default function LoginPage() {
                   <Shield className="w-4 h-4 inline mr-1" />
                   3. Your Role (based on staff selection)
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {ROLES.map((r) => {
+                <div className={`grid ${isV2 ? "grid-cols-2" : "grid-cols-3"} gap-2`}>
+                  {visibleRoles.map((r) => {
                     const isSelected = selectedStaff?.role === r.value;
                     return (
                       <div

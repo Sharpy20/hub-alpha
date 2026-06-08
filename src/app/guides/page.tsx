@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Filter, FileText, Pencil, Search } from "lucide-react";
 import { useReferralLog } from "@/app/referral-log-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
 interface GuideItem {
   id: string;
@@ -76,6 +77,8 @@ const ALL_GUIDES: GuideItem[] = [
 export default function GuidesPage() {
   const { canEdit } = useCanEdit();
   const { getPendingCount } = useReferralLog();
+  const isV2 = useIsV2();
+  const link = useV2Href();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [customOrder, setCustomOrder] = useState<{ id: string; category: string }[] | null>(null);
@@ -135,21 +138,23 @@ export default function GuidesPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Link
-                href="/referrals/log"
-                className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline"
-              >
-                <Clock className="w-4 h-4" />
-                Chase Log
-                {pendingCount > 0 && (
-                  <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full">
-                    {pendingCount}
-                  </span>
-                )}
-              </Link>
+              {!isV2 && (
+                <Link
+                  href="/referrals/log"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline"
+                >
+                  <Clock className="w-4 h-4" />
+                  Chase Log
+                  {pendingCount > 0 && (
+                    <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full">
+                      {pendingCount}
+                    </span>
+                  )}
+                </Link>
+              )}
               {canEdit && (
                 <Link
-                  href="/admin/workflows"
+                  href={link("/admin/workflows")}
                   className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline"
                 >
                   <Pencil className="w-4 h-4" />
@@ -212,7 +217,7 @@ export default function GuidesPage() {
           {filteredGuides.map((guide) => (
             <Link
               key={guide.id}
-              href={guide.viewerPath}
+              href={link(guide.viewerPath)}
               className="block no-underline"
             >
               <div className="bg-white rounded-xl border-2 border-gray-100 p-5 flex items-center gap-4 hover:border-gray-300 hover:shadow-lg transition-all cursor-pointer group">

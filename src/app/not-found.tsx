@@ -4,7 +4,8 @@ import { MainLayout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
-import { Home, Bookmark, FileText, BookOpen, Search, ArrowLeft } from "lucide-react";
+import { Home, Bookmark, BookOpen, Search, ArrowLeft } from "lucide-react";
+import { useV2Href } from "@/lib/hooks/useV2";
 
 const QUICK_LINKS = [
   {
@@ -20,20 +21,15 @@ const QUICK_LINKS = [
     href: "/links",
   },
   {
-    icon: FileText,
-    label: "Referrals",
-    description: "Step-by-step referral guides",
-    href: "/referrals",
-  },
-  {
     icon: BookOpen,
-    label: "How-To Guides",
-    description: "Clinical procedures and SOPs",
-    href: "/how-to",
+    label: "Guides",
+    description: "Referrals, clinical procedures and SOPs",
+    href: "/guides",
   },
 ];
 
 export default function NotFoundPage() {
+  const link = useV2Href();
   return (
     <MainLayout>
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
@@ -61,7 +57,7 @@ export default function NotFoundPage() {
         </p>
 
         {/* Go Back Home Button */}
-        <Link href="/" className="mb-10">
+        <Link href={link("/")} className="mb-10">
           <Button size="lg" className="gap-2">
             <ArrowLeft className="w-5 h-5" />
             Go back home
@@ -74,10 +70,10 @@ export default function NotFoundPage() {
             Or try one of these pages:
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {QUICK_LINKS.map((link) => {
-              const Icon = link.icon;
+            {QUICK_LINKS.map((item) => {
+              const Icon = item.icon;
               return (
-                <Link key={link.href} href={link.href} className="block">
+                <Link key={item.href} href={link(item.href)} className="block">
                   <Card hover className="h-full">
                     <CardContent className="flex items-center gap-4 py-4">
                       <div className="w-12 h-12 bg-nhs-pale-grey rounded-lg flex items-center justify-center flex-shrink-0">
@@ -85,10 +81,10 @@ export default function NotFoundPage() {
                       </div>
                       <div className="text-left">
                         <h3 className="font-semibold text-nhs-black">
-                          {link.label}
+                          {item.label}
                         </h3>
                         <p className="text-sm text-nhs-dark-grey">
-                          {link.description}
+                          {item.description}
                         </p>
                       </div>
                     </CardContent>

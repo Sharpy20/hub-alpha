@@ -9,13 +9,14 @@ import {
   AuditType,
 } from "@/lib/types";
 import { WARDS, STAFF_NAMES, getLeadsAndManagers, getWardProfessionalCandidates } from "../staff";
+import { toLocalDateStr } from "@/lib/utils/date";
 
 // Re-export WARDS for convenience
 export { WARDS };
 
 // Helper to get date strings
 const today = new Date();
-const formatDate = (date: Date) => date.toISOString().split("T")[0];
+const formatDate = toLocalDateStr;
 
 const addDays = (date: Date, days: number) => {
   const result = new Date(date);

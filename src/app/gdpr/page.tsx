@@ -5,8 +5,10 @@ import { MainLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, Button } from "@/components/ui";
 import { Shield, Lock, FileText, Mail, Database, Trash2, Check, ShieldAlert } from "lucide-react";
 import Link from "next/link";
+import { useV2Href } from "@/lib/hooks/useV2";
 
 export default function GdprPage() {
+  const link = useV2Href();
   const [dataCleared, setDataCleared] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
 
@@ -240,7 +242,7 @@ export default function GdprPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
-                href="/feedback"
+                href={link("/feedback")}
                 className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-nhs-blue text-white rounded-md hover:bg-nhs-dark-blue transition-colors font-medium"
               >
                 <ShieldAlert className="w-4 h-4" />
@@ -275,7 +277,7 @@ export default function GdprPage() {
         <div className="text-center pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-400">
             For transparency on information sources used in this application, view the{" "}
-            <Link href="/dev-panel?section=data-sources" className="text-gray-500 hover:text-indigo-600 underline">
+            <Link href={link("/dev-panel?section=data-sources")} className="text-gray-500 hover:text-indigo-600 underline">
               Data Sources Audit Log
             </Link>
           </p>
@@ -284,7 +286,7 @@ export default function GdprPage() {
         {/* Dev Panel - prominent button for IT/IG stakeholders */}
         <div className="pt-4">
           <Link
-            href="/dev-panel"
+            href={link("/dev-panel")}
             className="flex items-center justify-center gap-2 p-4 bg-white border-2 border-slate-200 rounded-xl text-slate-700 font-medium hover:bg-slate-50 hover:border-slate-400 hover:shadow-md transition-all"
           >
             <Shield className="w-5 h-5" />

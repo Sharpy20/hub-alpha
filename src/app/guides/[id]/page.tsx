@@ -26,6 +26,7 @@ import {
   type GuideData,
 } from "@/lib/data/guides/howto-guides";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
+import { toLocalDateStr } from "@/lib/utils/date";
 
 // Step icons for referral workflows
 const STEP_ICONS: Record<string, typeof CheckCircle> = {
@@ -85,7 +86,7 @@ export default function UnifiedGuidePage() {
   // Handle patient selection (shared)
   const handlePatientSelect = (patient: Patient) => {
     setLinkedPatient(patient);
-    const today = new Date().toISOString().split("T")[0];
+    const today = toLocalDateStr();
     addTask({
       id: `task-${isReferral ? "referral" : "guide"}-${Date.now()}`,
       type: "patient",
@@ -113,7 +114,7 @@ export default function UnifiedGuidePage() {
         ward: patient.ward,
         priority: "routine",
         status: "pending",
-        dueDate: futureDate.toISOString().split("T")[0],
+        dueDate: toLocalDateStr(futureDate),
         createdAt: today,
         createdBy: user?.name || "Unknown",
         carryOver: true,
@@ -211,7 +212,7 @@ export default function UnifiedGuidePage() {
     setIsInLiveWalkthrough(false);
     setCurrentSection("task-diary");
     setCurrentSlide(0);
-    router.push("/");
+    router.push(link("/"));
   };
   const isLastStep = currentStep === totalSteps - 1;
   const [tourCompleteShown, setTourCompleteShown] = useState(false);
@@ -509,7 +510,7 @@ export default function UnifiedGuidePage() {
                         <button onClick={() => {
                           if (linkedPatient) {
                             const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
-                            addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "referral", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: futureDate.toISOString().split("T")[0], createdAt: new Date().toISOString().split("T")[0], createdBy: user?.name || "Unknown", carryOver: true, linkedReferralId: guideId });
+                            addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "referral", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: toLocalDateStr(futureDate), createdAt: toLocalDateStr(), createdBy: user?.name || "Unknown", carryOver: true, linkedReferralId: guideId });
                             setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
                           } else { setPendingFollowUp(true); setShowPatientPicker(true); }
                         }} className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
@@ -679,7 +680,7 @@ export default function UnifiedGuidePage() {
                   <button onClick={() => {
                     if (linkedPatient) {
                       const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
-                      addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "other", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: futureDate.toISOString().split("T")[0], createdAt: new Date().toISOString().split("T")[0], createdBy: user?.name || "Unknown", carryOver: true, linkedGuideId: guideId });
+                      addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "other", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: toLocalDateStr(futureDate), createdAt: toLocalDateStr(), createdBy: user?.name || "Unknown", carryOver: true, linkedGuideId: guideId });
                       setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
                     } else {
                       setPendingFollowUp(true); setShowPatientPicker(true);

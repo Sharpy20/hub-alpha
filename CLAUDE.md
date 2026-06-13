@@ -856,6 +856,10 @@ Working through in order. Marking complete as fixed.
 | 146 | [x] | /my-tasks meta title corrected: "My Tasks" → "My Jobs". |
 | 147 | [ ] | Next 16.2 deprecation: `middleware.ts` file convention is deprecated in favour of `proxy.ts`. /v2 blocking depends on it - migrate before upgrading to Next 17. |
 | 148 | [ ] | If repo ever goes public: gitignore/purge docs/ (raw FOCUS data with real internal contacts) and note real numbers also live in src code comments. Old dev panel password also sits in CLAUDE.md history. |
+| 149 | [x] | UTC date drift fixed: new shared `toLocalDateStr()` (src/lib/utils/date.ts) replaces 15 `toISOString().split("T")[0]` call sites (demo data generation, tasks-provider claim stamps, follow-up task creation in guide viewer, patients page, kanban completion). Those returned yesterday's date between midnight and 1am during BST. |
+| 150 | [x] | Crash guard: corrupt `wardhub_user` in localStorage crashed every page (unguarded JSON.parse in root provider). Now wrapped in try/catch; bad value cleared, app continues logged out. |
+| 151 | [x] | v2 navigation leaks fixed: (a) middleware now resolves legacy routes inside v2 (/v2/bookmarks→/v2/links, /v2/referrals[/id] and /v2/how-to[/id]→/v2/guides[/id]) - previously the v1 redirect stubs silently dropped the /v2 prefix; (b) v2Href wrapping added to GDPR page (feedback + dev panel links), 404 page, patient-guides index + viewer prev/next/back nav, and tour-return router.push("/") in guide viewer. Header /tasks links were already correctly !isV2-gated (audit false positive). |
+| 152 | [x] | 404 page: stale Referrals + How-To quick-link cards (pointed at redirect stubs) merged into one Guides card. |
 
 ## SNAG LIST (30 Mar 2026 - Session 14)
 

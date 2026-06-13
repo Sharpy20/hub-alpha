@@ -4,6 +4,7 @@ import { createContext, useContext, useState, ReactNode, useCallback } from "rea
 import { toast } from "sonner";
 import { DiaryTask } from "@/lib/types";
 import { ALL_DEMO_TASKS } from "@/lib/data/tasks";
+import { toLocalDateStr } from "@/lib/utils/date";
 
 interface TasksContextType {
   tasks: DiaryTask[];
@@ -68,7 +69,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         } else if (!t.claimedBy || steal) {
           // Claim if unclaimed, or steal if already claimed
           // Set status to pending (Todo) not in_progress
-          const today = new Date().toISOString().split("T")[0];
+          const today = toLocalDateStr();
           return {
             ...t,
             claimedBy: userName,
@@ -82,7 +83,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toggleComplete = useCallback((taskId: string, userName: string) => {
-    const today = new Date().toISOString().split("T")[0];
+    const today = toLocalDateStr();
     setTasks((prev) => {
       const task = prev.find((t) => t.id === taskId);
       if (!task) return prev;

@@ -74,11 +74,17 @@ export function Providers({ children }: { children: ReactNode }) {
   useEffect(() => {
     const savedUser = localStorage.getItem("wardhub_user") || localStorage.getItem("inpatient_hub_user");
     if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-      setActiveWardState(capitalizeWard(parsedUser.ward));
-      if (!localStorage.getItem("wardhub_user")) {
-        localStorage.setItem("wardhub_user", savedUser);
+      try {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+        setActiveWardState(capitalizeWard(parsedUser.ward));
+        if (!localStorage.getItem("wardhub_user")) {
+          localStorage.setItem("wardhub_user", savedUser);
+        }
+      } catch {
+        // Corrupt saved user would otherwise crash every page - drop it and continue logged out
+        localStorage.removeItem("wardhub_user");
+        localStorage.removeItem("inpatient_hub_user");
       }
     }
     const savedGdpr = localStorage.getItem("wardhub_gdpr") || localStorage.getItem("inpatient_hub_gdpr");

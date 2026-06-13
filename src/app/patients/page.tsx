@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useApp } from "@/app/providers";
 import { useWardSettings } from "@/app/ward-settings-provider";
+import { toLocalDateStr } from "@/lib/utils/date";
 import { MainLayout } from "@/components/layout";
 import { Card } from "@/components/ui";
 import { PatientTransferModal, DischargeAuditModal, PatientTasksModal, TaskDetailModal } from "@/components/modals";
@@ -194,7 +195,7 @@ export default function PatientsPage() {
   };
 
   const handleConfirmDischarge = (patientId: string) => {
-    const now = new Date().toISOString().split("T")[0];
+    const now = toLocalDateStr();
     setPatients((prev) =>
       prev.map((p) =>
         p.id === patientId
@@ -211,7 +212,7 @@ export default function PatientsPage() {
 
   // Initiate discharge (normal user) - marks as pending or discharged
   const handleInitiateDischarge = (patientId: string) => {
-    const now = new Date().toISOString().split("T")[0];
+    const now = toLocalDateStr();
     const isAdmin = user?.role === "ward_admin" || user?.role === "senior_admin";
 
     setPatients((prev) =>
@@ -243,7 +244,7 @@ export default function PatientsPage() {
     if (!newPatientName.trim()) return;
 
     const wardPrefix = activeWard.substring(0, 2).toUpperCase();
-    const nowDate = new Date().toISOString().split("T")[0];
+    const nowDate = toLocalDateStr();
     const patientId = `p-${wardPrefix}-${Date.now()}`;
 
     const newPatient: Patient = {
@@ -265,7 +266,7 @@ export default function PatientsPage() {
     // Auto-generate 72-hour admission audit task
     const deadline = new Date();
     deadline.setDate(deadline.getDate() + 3);
-    const deadlineStr = deadline.toISOString().split("T")[0];
+    const deadlineStr = toLocalDateStr(deadline);
 
     const auditTask: DiaryTask = {
       id: `audit72-new-${Date.now()}`,
@@ -738,7 +739,7 @@ export default function PatientsPage() {
             setTasks((prev) =>
               prev.map((t) =>
                 t.id === taskId
-                  ? { ...t, claimedBy: user?.name || "Unknown User", claimedAt: new Date().toISOString().split("T")[0] }
+                  ? { ...t, claimedBy: user?.name || "Unknown User", claimedAt: toLocalDateStr() }
                   : t
               ) as DiaryTask[]
             );
@@ -747,7 +748,7 @@ export default function PatientsPage() {
             setTasks((prev) =>
               prev.map((t) =>
                 t.id === taskId
-                  ? { ...t, claimedBy: user?.name || "Unknown User", claimedAt: new Date().toISOString().split("T")[0] }
+                  ? { ...t, claimedBy: user?.name || "Unknown User", claimedAt: toLocalDateStr() }
                   : t
               ) as DiaryTask[]
             );

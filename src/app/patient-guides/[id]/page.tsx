@@ -5,9 +5,11 @@ import { MainLayout } from "@/components/layout";
 import Link from "next/link";
 import { ArrowLeft, ChevronLeft, ChevronRight, Printer } from "lucide-react";
 import { PATIENT_GUIDES } from "@/lib/data/patient-guides";
+import { useV2Href } from "@/lib/hooks/useV2";
 
 export default function PatientGuidePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const link = useV2Href();
   const containerRef = useRef<HTMLDivElement>(null);
   const [guideHtml, setGuideHtml] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -94,7 +96,7 @@ export default function PatientGuidePage({ params }: { params: Promise<{ id: str
         <div className="text-center py-16">
           <span className="text-6xl mb-4 block">🔍</span>
           <p className="text-lg text-gray-500">Guide not found.</p>
-          <Link href="/patient-guides" className="text-indigo-600 mt-4 inline-block">
+          <Link href={link("/patient-guides")} className="text-indigo-600 mt-4 inline-block">
             Back to all guides
           </Link>
         </div>
@@ -108,7 +110,7 @@ export default function PatientGuidePage({ params }: { params: Promise<{ id: str
         {/* Top bar */}
         <div className="flex items-center justify-between flex-wrap gap-3">
           <Link
-            href="/patient-guides"
+            href={link("/patient-guides")}
             className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors no-underline"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -157,7 +159,7 @@ export default function PatientGuidePage({ params }: { params: Promise<{ id: str
         <div className="flex items-center justify-between gap-4">
           {prevGuide ? (
             <Link
-              href={`/patient-guides/${prevGuide.id}`}
+              href={link(`/patient-guides/${prevGuide.id}`)}
               className="flex items-center gap-2 px-4 py-3 bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all no-underline group flex-1 min-w-0"
             >
               <ChevronLeft className="w-5 h-5 text-gray-400 group-hover:text-purple-500 flex-shrink-0" />
@@ -174,7 +176,7 @@ export default function PatientGuidePage({ params }: { params: Promise<{ id: str
 
           {nextGuide ? (
             <Link
-              href={`/patient-guides/${nextGuide.id}`}
+              href={link(`/patient-guides/${nextGuide.id}`)}
               className="flex items-center justify-end gap-2 px-4 py-3 bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all no-underline group flex-1 min-w-0 text-right"
             >
               <div className="min-w-0">

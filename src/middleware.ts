@@ -22,6 +22,16 @@ function isBlockedInV2(subpath: string): boolean {
   );
 }
 
+// Old route names that the v1 pages redirect to new homes. Resolved here for
+// v2 so the /v2 prefix survives the redirect. Returns null if not a legacy path.
+function legacyV2Target(subpath: string): string | null {
+  if (subpath === "/bookmarks") return "/links";
+  if (subpath === "/referrals" || subpath === "/how-to") return "/guides";
+  if (subpath.startsWith("/referrals/")) return "/guides/" + subpath.slice("/referrals/".length);
+  if (subpath.startsWith("/how-to/")) return "/guides/" + subpath.slice("/how-to/".length);
+  return null;
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -39,6 +49,16 @@ export function middleware(request: NextRequest) {
     if (isBlockedInV2(subpath)) {
       const url = request.nextUrl.clone();
       url.pathname = "/v2";
+      return NextResponse.redirect(url);
+    }
+
+    // Legacy routes redirect via their v1 pages (/bookmarks -> /links,
+    // /referrals/[id] -> /guides/[id]), which would silently drop the /v2
+    // prefix. Map them here instead so the user stays inside v2.
+    const legacy = legacyV2Target(subpath);
+    if (legacy) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/v2" + legacy;
       return NextResponse.redirect(url);
     }
 

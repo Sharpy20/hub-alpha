@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { DiaryTask } from "@/lib/types";
 import { KanbanColumn } from "./KanbanColumn";
+import { toLocalDateStr } from "@/lib/utils/date";
 
 interface KanbanBoardProps {
   tasks: DiaryTask[];
@@ -50,10 +51,9 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
 
   const handleDropCompleted = (taskId: string) => {
     // Move to "Completed"
-    const formatDate = (date: Date) => date.toISOString().split("T")[0];
     onUpdateTask(taskId, {
       status: "completed",
-      completedAt: formatDate(new Date()),
+      completedAt: toLocalDateStr(),
       completedBy: currentUserName,
     });
     setDraggingTask(null);
@@ -67,10 +67,9 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   };
 
   const handleComplete = (taskId: string) => {
-    const formatDate = (date: Date) => date.toISOString().split("T")[0];
     onUpdateTask(taskId, {
       status: "completed",
-      completedAt: formatDate(new Date()),
+      completedAt: toLocalDateStr(),
       completedBy: currentUserName,
     });
   };

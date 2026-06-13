@@ -5,8 +5,10 @@ import { MainLayout } from "@/components/layout";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Printer, ClipboardList, Check, X } from "lucide-react";
 import { PATIENT_GUIDES } from "@/lib/data/patient-guides";
+import { useV2Href } from "@/lib/hooks/useV2";
 
 export default function PatientGuidesIndex() {
+  const link = useV2Href();
   const [showTickSheet, setShowTickSheet] = useState(false);
   const [selectedGuides, setSelectedGuides] = useState<Set<string>>(new Set());
 
@@ -42,7 +44,7 @@ export default function PatientGuidesIndex() {
       <div className="space-y-6">
         {/* Back to Guides */}
         <Link
-          href="/guides"
+          href={link("/guides")}
           className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors no-underline"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -183,7 +185,7 @@ export default function PatientGuidesIndex() {
           {PATIENT_GUIDES.map((guide) => (
             <Link
               key={guide.id}
-              href={`/patient-guides/${guide.id}`}
+              href={link(`/patient-guides/${guide.id}`)}
               className="block no-underline"
             >
               <div className="bg-white rounded-xl border-2 border-gray-100 p-5 flex items-center gap-4 hover:border-gray-300 hover:shadow-lg transition-all cursor-pointer group">

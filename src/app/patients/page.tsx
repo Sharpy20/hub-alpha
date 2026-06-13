@@ -58,7 +58,7 @@ const PATIENT_STATUS_CONFIG: Record<PatientStatus, { label: string; color: strin
 type StatusFilter = "all" | PatientStatus;
 
 export default function PatientsPage() {
-  const { user, hasFeature, activeWard } = useApp();
+  const { user, activeWard } = useApp();
   const { getWardSettings } = useWardSettings();
   const wardSettings = getWardSettings(activeWard);
 
@@ -355,38 +355,6 @@ export default function PatientsPage() {
         t.status !== "cancelled"
     ).length;
   };
-
-  // Feature gating
-  if (!hasFeature("patient_list")) {
-    return (
-      <MainLayout>
-        <div className="text-center py-16">
-          <p className="text-6xl mb-4">🔒</p>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Patient List</h1>
-          <p className="text-gray-500 mb-4">
-            This feature requires <span className="font-semibold text-purple-600">Max</span> version or higher.
-          </p>
-          <p className="text-sm text-gray-400 mb-6">
-            Light and Medium versions provide viewable resources only (Links, Referrals, How-To Guides).
-          </p>
-          <div className="flex items-center justify-center gap-3">
-            <Link
-              href="/"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium no-underline hover:shadow-lg"
-            >
-              Go Home
-            </Link>
-            <Link
-              href="/versions"
-              className="inline-block px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium no-underline hover:bg-gray-200"
-            >
-              Compare Versions
-            </Link>
-          </div>
-        </div>
-      </MainLayout>
-    );
-  }
 
   // Auth gating
   if (!user) {

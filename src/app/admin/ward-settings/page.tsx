@@ -65,7 +65,7 @@ const ROLES: { value: UserRole; label: string }[] = [
 ];
 
 export default function WardSettingsPage() {
-  const { user, hasFeature, activeWard } = useApp();
+  const { user, activeWard } = useApp();
   const { getWardSettings, updateWardSettings } = useWardSettings();
   const [activeTab, setActiveTab] = useState<TabId>("patients");
   const [localSettings, setLocalSettings] = useState<WardSettings | null>(null);
@@ -80,22 +80,6 @@ export default function WardSettingsPage() {
 
   // Check if user has admin access (managers can also access settings)
   const isAdmin = user?.role === "ward_admin" || user?.role === "senior_admin" || user?.role === "manager";
-
-  if (!hasFeature("ward_tasks")) {
-    return (
-      <MainLayout>
-        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-          <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-            <Settings className="w-10 h-10 text-gray-400" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Ward Settings</h1>
-          <p className="text-gray-600 max-w-md">
-            Ward settings are available in Max and Max+ versions only.
-          </p>
-        </div>
-      </MainLayout>
-    );
-  }
 
   // Creator request state
   const [showCreatorRequest, setShowCreatorRequest] = useState(false);

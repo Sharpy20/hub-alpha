@@ -2309,7 +2309,7 @@ export default function TasksPage() {
 function TasksPageInner() {
   const searchParams = useSearchParams();
   const isMyDiaryMode = searchParams.get("view") === "my-diary";
-  const { user, hasFeature, activeWard } = useApp();
+  const { user, activeWard } = useApp();
   const { tasks, setTasks, claimTask, toggleComplete, updateTask, addTask } = useTasks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const columnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -2428,8 +2428,6 @@ function TasksPageInner() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [expandedDay]);
-
-  const hasTaskFeature = hasFeature("ward_tasks");
 
   // Scroll to a specific date
   const scrollToDate = useCallback((date: string) => {
@@ -2594,37 +2592,6 @@ function TasksPageInner() {
       return false;
     });
   };
-
-  if (!hasTaskFeature) {
-    return (
-      <MainLayout>
-        <div className="text-center py-16">
-          <p className="text-6xl mb-4">🔒</p>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Team Diary</h1>
-          <p className="text-gray-500 mb-4">
-            This feature requires <span className="font-semibold text-purple-600">Max</span> version or higher.
-          </p>
-          <p className="text-sm text-gray-400 mb-6">
-            Light and Medium versions provide viewable resources only (Links, Referrals, How-To Guides).
-          </p>
-          <div className="flex items-center justify-center gap-3">
-            <Link
-              href="/"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium no-underline hover:shadow-lg"
-            >
-              Go Home
-            </Link>
-            <Link
-              href="/versions"
-              className="inline-block px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium no-underline hover:bg-gray-200"
-            >
-              Compare Versions
-            </Link>
-          </div>
-        </div>
-      </MainLayout>
-    );
-  }
 
   // Count stats for focused day
   const focusedTasks = getTasksForDate(focusedDate || todayStr);

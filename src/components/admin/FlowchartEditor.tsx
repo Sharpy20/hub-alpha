@@ -1411,7 +1411,7 @@ function StepEditorPanel({
           )}
           {editedStep.type === "consent" && (
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-sm text-purple-800">
-              This step records the patient&apos;s consent (Yes / No). The next step runs either way — consent is captured for the audit trail.
+              This step records the patient&apos;s consent (Yes / No). The next step runs either way – consent is captured for the audit trail.
             </div>
           )}
           {editedStep.type === "gdpr" && (
@@ -1479,7 +1479,7 @@ function FormsEditor({
 
       <FormsBucket
         title="Example (WAGOLL)"
-        subtitle="Completed example — &ldquo;What A Good One Looks Like&rdquo;"
+        subtitle="Completed example – &ldquo;What A Good One Looks Like&rdquo;"
         accent="amber"
         rows={wagoll}
         onChange={(next) => update("wagoll", next)}
@@ -1594,7 +1594,7 @@ function FormsBucket({
                 type="text"
                 value={row.note || ""}
                 onChange={(e) => setRow(idx, { note: e.target.value || undefined })}
-                placeholder="Note (e.g. &ldquo;Example only — do not submit&rdquo;)"
+                placeholder="Note (e.g. &ldquo;Example only – do not submit&rdquo;)"
                 className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg bg-white text-sm italic"
               />
             )}

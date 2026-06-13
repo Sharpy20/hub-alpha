@@ -17,7 +17,7 @@ import { DEMO_PATIENTS } from "@/lib/data/tasks";
 import { getStaffByWard } from "@/lib/data/staff";
 
 export default function MyTasksPage() {
-  const { user, hasFeature, activeWard } = useApp();
+  const { user, activeWard } = useApp();
   const { tasks, updateTask, claimTask, toggleComplete } = useTasks();
 
   // Management modal states
@@ -44,8 +44,6 @@ export default function MyTasksPage() {
 
   // Get staff for filter
   const wardStaffList = isLeadOrManager ? getStaffByWard(activeWard) : [];
-
-  const hasTaskFeature = hasFeature("ward_tasks");
 
   // Handle task updates from Kanban - use shared context
   const handleUpdateTask = (taskId: string, updates: Partial<DiaryTask>) => {
@@ -106,37 +104,6 @@ export default function MyTasksPage() {
   ).length;
   const inProgressCount = myClaimedTasks.filter((t) => t.status === "in_progress").length;
   const completedCount = myClaimedTasks.filter((t) => t.status === "completed").length;
-
-  if (!hasTaskFeature) {
-    return (
-      <MainLayout>
-        <div className="text-center py-16">
-          <p className="text-6xl mb-4">🔒</p>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">My Tasks</h1>
-          <p className="text-gray-500 mb-4">
-            This feature requires <span className="font-semibold text-purple-600">Max</span> version or higher.
-          </p>
-          <p className="text-sm text-gray-400 mb-6">
-            Light and Medium versions provide viewable resources only (Links, Referrals, How-To Guides).
-          </p>
-          <div className="flex items-center justify-center gap-3">
-            <Link
-              href="/"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium no-underline hover:shadow-lg"
-            >
-              Go Home
-            </Link>
-            <Link
-              href="/versions"
-              className="inline-block px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium no-underline hover:bg-gray-200"
-            >
-              Compare Versions
-            </Link>
-          </div>
-        </div>
-      </MainLayout>
-    );
-  }
 
   if (!user) {
     return (

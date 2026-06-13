@@ -215,16 +215,7 @@ export const bookmarks: Bookmark[] = [
   },
 
   // External Services
-  {
-    id: "pohwer",
-    title: "POhWER Advocacy",
-    icon: "🗣️",
-    url: "https://www.pohwer.net",
-    category: "External Services",
-    requiresFocus: false,
-    description: "Independent advocacy service",
-    phone: "0300 456 2370",
-  },
+  // POhWER advocacy bookmark removed - advocacy lives in the IMHA workflow only (Mike's rule)
   {
     id: "rethink",
     title: "Rethink Derby",
@@ -717,7 +708,8 @@ export const bookmarks: Bookmark[] = [
     category: "Mental Health Act",
     requiresFocus: false,
     description: "Guardianship forms G1-G10 and advice",
-    phone: "01629 537904",
+    phone: "Hidden in demo mode",
+    // Real: 01629 537904
   },
   {
     id: "mha-guardianship-city",
@@ -826,7 +818,8 @@ export const bookmarks: Bookmark[] = [
     category: "Infection Control",
     requiresFocus: true,
     description: "Report immediately. Royal Derby Hospital occupational health.",
-    phone: "01332 788331",
+    phone: "Hidden in demo mode",
+    // Real: 01332 788331
   },
 
   // ===== PHARMACY =====
@@ -879,7 +872,8 @@ export const bookmarks: Bookmark[] = [
     category: "Wellbeing",
     requiresFocus: false,
     description: "Free 1:1 counselling. Self-referral. Assessment within 2-4 weeks. Mon-Fri 9-5.",
-    phone: "01246 515951",
+    phone: "Hidden in demo mode",
+    // Real: 01246 515951
   },
   {
     id: "wb-team",

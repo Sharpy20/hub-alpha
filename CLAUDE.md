@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 8 June 2026
+> **Last Updated:** 13 June 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -843,6 +843,19 @@ Working through in order. Marking complete as fixed.
 | 138 | [x] | Editor: Submission methods now have an area filter dropdown so each method can be City-only / County-only / All areas. Read-only info panels added for section, area, consent, GDPR step types. |
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
+
+## SNAG LIST (13 Jun 2026 - Session 20: Architecture & Security Review)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 141 | [x] | **SECURITY** - 3 trust-internal phone numbers were rendering live on /links (Guardianship County 01629..., Needlestick OH 01332..., Resolve 01246...). None are Google-able, so per Rule 4 they now show "Hidden in demo mode" with real numbers preserved in code comments. Verified on rendered page. |
+| 142 | [x] | npm audit: 13 Next.js advisories (1 high - middleware bypass, cache poisoning, DoS) + ws fixed via `npm audit fix` (Next now 16.2.9, latest stable). Remaining moderate postcss advisory is vendored inside Next itself - waiting on upstream, do NOT run `npm audit fix --force` (it downgrades Next to 9.x). |
+| 143 | [x] | Dead version-system code removed: /versions page (orphaned, only linked from unreachable lock screens), VersionCompareModal (never imported), and the always-false `hasFeature()` lock-screen gates in tasks, my-tasks, patients, admin/ward-settings. `hasFeature()` itself kept in providers (tested, always true). Removing the ward-settings gate also fixed a latent Rules-of-Hooks bug (useState after early return - same class as #140). |
+| 144 | [x] | Em dash sweep: 3 in FlowchartEditor.tsx, 1 `&mdash;` in public/abc-wagoll.html - all now en dashes. |
+| 145 | [x] | POhWER Advocacy bookmark removed from Links data (rule: advocacy = IMHA workflow only). Restorable from git if wanted. |
+| 146 | [x] | /my-tasks meta title corrected: "My Tasks" → "My Jobs". |
+| 147 | [ ] | Next 16.2 deprecation: `middleware.ts` file convention is deprecated in favour of `proxy.ts`. /v2 blocking depends on it - migrate before upgrading to Next 17. |
+| 148 | [ ] | If repo ever goes public: gitignore/purge docs/ (raw FOCUS data with real internal contacts) and note real numbers also live in src code comments. Old dev panel password also sits in CLAUDE.md history. |
 
 ## SNAG LIST (30 Mar 2026 - Session 14)
 

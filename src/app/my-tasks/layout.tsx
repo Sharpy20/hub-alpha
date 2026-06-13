@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "My Tasks | wardHub",
+  title: "My Jobs | wardHub",
   description: "Personal task board for tracking your assigned tasks",
 };
 

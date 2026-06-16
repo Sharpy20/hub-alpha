@@ -1,15 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { MainLayout } from "@/components/layout";
 import { BookmarkCarousel } from "@/components/bookmarks";
-import { TodayWidget } from "@/components/diary";
 import { useApp } from "@/app/providers";
 import { useTour } from "@/app/tour-provider";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, X, Sparkles, Shield, Phone, ChevronRight } from "lucide-react";
 import { bookmarks } from "@/lib/data/bookmarks";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
+
+// Code-split: the diary widget pulls in task/patient demo data. Loading it
+// dynamically keeps that code out of the shared home-page bundle, so it never
+// ships to /v2 (where it is gated out of render anyway). Keeps the PII-free
+// build demonstrably clean even when the page source is downloaded.
+const TodayWidget = dynamic(
+  () => import("@/components/diary/TodayWidget").then((m) => m.TodayWidget),
+);
 
 const QUICK_ACTIONS = [
   {

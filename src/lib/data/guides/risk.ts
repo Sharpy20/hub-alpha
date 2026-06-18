@@ -32,19 +32,42 @@ export interface RiskSection {
 export const MANDATORY_MDT_LINE =
   "If this risk management plan is unsuccessful and the risk continues to increase, this must be reviewed by the MDT.";
 
-// ---- Risk types (core three are straight from the trust guide) ----
+// ---- Trust rule: ONE plan per risk ----
+export const SEPARATE_PLANS_NOTE =
+  "Write a SEPARATE risk management plan for every current and historical risk - do not combine them into one big plan. Add each risk below.";
+
+// ---- Risk types ----
+// Core three are from the RMP guide; the rest are from Mike's "RMP Mega Pack"
+// (the full list of risks staff are expected to plan for).
 export const RISK_TYPES: string[] = [
   "self-harm",
   "suicide",
   "violence and aggression",
   "risk to others",
-  "absconding (AWOL)",
-  "self-neglect",
-  "vulnerability / exploitation",
-  "falls",
-  "fire-setting",
-  "sexual safety",
+  "AWOL / absconsion",
+  "medication non-concordance",
   "substance misuse",
+  "paranoia / persecutory beliefs",
+  "mania / impulsivity",
+  "self-neglect / ADLs",
+  "diet and nutrition",
+  "falls",
+  "vulnerability / exploitation",
+  "sexual disinhibition",
+  "refusal to engage",
+  "physical health deterioration",
+  "fire risk",
+  "hoarding",
+  "financial exploitation",
+  "homelessness / housing instability",
+  "cognitive impairment / confusion",
+  "discharge risk",
+  "sleep disturbance",
+  "infection / delirium",
+  "risk to family",
+  "weapon access",
+  "boundary violations",
+  "observations / refusal of obs",
 ];
 
 // ---- Where it goes in System One (from the RMP guide) ----
@@ -159,11 +182,10 @@ export const RMP_SECTIONS: RiskSection[] = [
   {
     id: "what",
     heading: "WHAT IS THE RISK",
-    hint: "Name the risk and add context - not just 'risk of self-harm'. Link it to your formulation.",
-    trustExamples: "e.g. self-harm, risk to others, violence and aggression",
-    gap: "What exactly is the risk, and to whom?",
-    groups: [{ label: "Risk type", words: RISK_TYPES }],
-    placeholder: "Name and contextualise the risk for this patient...",
+    hint: "The risk name is added for you. Add context here and link it to your formulation.",
+    gap: "What exactly is this risk, and to whom?",
+    groups: [],
+    placeholder: "Add context for this risk (optional)...",
   },
   {
     id: "present",
@@ -206,7 +228,9 @@ export const RMP_SECTIONS: RiskSection[] = [
           "de-escalation techniques", "structured activity", "reduce stimulation",
           "named-nurse 1:1s", "distraction techniques", "grounding techniques",
           "collaborative safety planning", "regular check-ins", "a predictable routine",
-          "address known triggers",
+          "address known triggers", "consistent, calm, non-confrontational engagement",
+          "reduce environmental triggers (noise, crowding)", "share and manage risk with the MDT",
+          "escalate early when presentation changes",
         ],
       },
     ],
@@ -225,7 +249,8 @@ export const RMP_SECTIONS: RiskSection[] = [
           "patient voicing they feel safer", "improved engagement with staff",
           "improved emotional regulation", "accepting support / PRN",
           "settled on the ward", "no incidents over the agreed period",
-          "using coping strategies independently",
+          "using coping strategies independently", "increased stability in mental state",
+          "able to communicate needs and accept support",
         ],
       },
     ],
@@ -240,8 +265,9 @@ export const RMP_SECTIONS: RiskSection[] = [
       {
         words: [
           "increase the observation level", "request an urgent medical review",
-          "arrange a risk strategy meeting", "review medication", "consider 1:1 nursing",
-          "consider transfer to PICU", "make a safeguarding referral if indicated",
+          "request an urgent MDT review", "arrange a risk strategy meeting", "review medication",
+          "consider 1:1 nursing", "consider transfer to PICU", "make a safeguarding referral if indicated",
+          "consider alternative management strategies in line with trust policy",
         ],
       },
     ],
@@ -301,9 +327,9 @@ export const RISK_EXAMPLES = [
     id: "ligature",
     risk: "Self-harm by ligature",
     weak: {
-      label: "Weak (generic, descriptive)",
+      label: "Weak (generic - same wording for every patient)",
       formulation: "Patient is a risk of self-harm. Has done it before. Needs monitoring.",
-      rmp: "WHAT IS THE RISK - self-harm.\nHOW DOES THIS PRESENT - self-harms.\nHOW TO PREVENT / REDUCE - observe and support.\nEVALUATE SIGNS OF RISK REDUCTION - no self-harm.\nNEXT STEPS IF UNSUCCESSFUL - review.",
+      rmp: "WHAT IS THE RISK - Risk associated with self-harm, which may lead to harm to self or others if not managed.\nHOW DOES THIS PRESENT - Behavioural indicators such as agitation, withdrawal, poor insight or changes in engagement.\nHOW TO PREVENT / REDUCE - Consistent, calm engagement. Reduce environmental triggers. Offer 1:1 support. PRN where indicated.\nEVALUATE SIGNS OF RISK REDUCTION - Reduction in behaviours. Improved engagement.\nNEXT STEPS IF UNSUCCESSFUL - Increase observations. MDT review.",
     },
     strong: {
       label: "Strong (specific, individualised, actionable)",

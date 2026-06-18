@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import {
   FORMULATION_SECTIONS, RMP_SECTIONS, MANDATORY_MDT_LINE,
-  RISK_TEACHING, RISK_EXAMPLES, S1_STEPS,
+  RISK_TEACHING, RISK_EXAMPLES, S1_STEPS, RISK_TYPES, SEPARATE_PLANS_NOTE,
   type RiskSection,
 } from "@/lib/data/guides";
 import { useV2Href } from "@/lib/hooks/useV2";
@@ -192,37 +192,61 @@ function OutputBox({ text, label }: { text: string; label: string }) {
   );
 }
 
+const EMPTY: SecState = { chips: [], text: "", na: false };
+
+// Build one RMP block (trust template) for a single named risk.
+function buildOneRmp(risk: string, secs: Record<string, SecState>): string {
+  const ctx = buildContent(secs["what"]);
+  const whatLine = ctx ? `${cap(risk)}. ${ctx}` : ensureStop(cap(risk));
+  const line = (id: string) => buildContent(secs[id]);
+  let next = line("next");
+  next = next ? `${ensureStop(next)} ${MANDATORY_MDT_LINE}` : MANDATORY_MDT_LINE;
+  return [
+    "RISK MANAGEMENT PLAN",
+    "",
+    `WHAT IS THE RISK - ${whatLine}`,
+    `HOW DOES THIS PRESENT - ${line("present")}`,
+    `HOW TO PREVENT / REDUCE - ${line("prevent")}`,
+    `EVALUATE SIGNS OF RISK REDUCTION - ${line("evaluate")}`,
+    `NEXT STEPS IF RISK MANAGEMENT PLAN UNSUCCESSFUL - ${next}`,
+  ].join("\n");
+}
+
 export default function RiskAssessmentPage() {
   const v2Href = useV2Href();
-  const [state, setState] = useState<AllState>({});
+  // Formulation (one integrated formulation per patient).
+  const [fState, setFState] = useState<AllState>({});
+  // RMP: one separate plan per selected risk -> risk name -> section -> state.
+  const [risks, setRisks] = useState<string[]>([]);
+  const [rmp, setRmp] = useState<Record<string, Record<string, SecState>>>({});
 
-  const get = (id: string): SecState => state[id] || { chips: [], text: "", na: false };
-  const set = (id: string, next: SecState) => setState((s) => ({ ...s, [id]: next }));
-  const reset = () => setState({});
+  const fGet = (id: string): SecState => fState[id] || EMPTY;
+  const fSet = (id: string, next: SecState) => setFState((s) => ({ ...s, [id]: next }));
+
+  const rGet = (risk: string, id: string): SecState => rmp[risk]?.[id] || EMPTY;
+  const rSet = (risk: string, id: string, next: SecState) =>
+    setRmp((s) => ({ ...s, [risk]: { ...s[risk], [id]: next } }));
+
+  const toggleRisk = (risk: string) =>
+    setRisks((rs) => (rs.includes(risk) ? rs.filter((r) => r !== risk) : [...rs, risk]));
+
+  const reset = () => { setFState({}); setRisks([]); setRmp({}); };
 
   // Formulation output (best-practice framework).
   const formulationText = useMemo(() => {
     const lines: string[] = [];
     for (const sec of FORMULATION_SECTIONS) {
-      const content = buildContent(state[sec.id]);
+      const content = buildContent(fState[sec.id]);
       if (content) lines.push(`${sec.heading}: ${content}`);
     }
     return lines.length ? `RISK FORMULATION\n\n${lines.join("\n")}` : "";
-  }, [state]);
+  }, [fState]);
 
-  // RMP output - the exact trust template, all 5 headings, mandatory line locked on.
-  const rmpText = useMemo(() => {
-    const anyContent = RMP_SECTIONS.some((s) => buildContent(state[s.id]));
-    if (!anyContent) return "";
-    const lines = RMP_SECTIONS.map((sec) => {
-      let content = buildContent(state[sec.id]);
-      if (sec.id === "next") {
-        content = content ? `${ensureStop(content)} ${MANDATORY_MDT_LINE}` : MANDATORY_MDT_LINE;
-      }
-      return `${sec.heading} - ${content}`;
-    });
-    return `RISK MANAGEMENT PLAN\n\n${lines.join("\n")}`;
-  }, [state]);
+  // One RMP per selected risk, plus a combined "copy all".
+  const allRmpsText = useMemo(
+    () => risks.map((r) => buildOneRmp(r, rmp[r] || {})).join("\n\n\n"),
+    [risks, rmp]
+  );
 
   return (
     <MainLayout>
@@ -307,24 +331,78 @@ export default function RiskAssessmentPage() {
           <OutputBox text={formulationText} label="Your risk formulation" />
           <div className="space-y-2">
             {FORMULATION_SECTIONS.map((sec) => (
-              <SectionEditor key={sec.id} section={sec} state={get(sec.id)} onChange={(n) => set(sec.id, n)} />
+              <SectionEditor key={sec.id} section={sec} state={fGet(sec.id)} onChange={(n) => fSet(sec.id, n)} />
             ))}
           </div>
         </div>
 
-        {/* Stage 2: RMP */}
-        <div className="bg-gradient-to-br from-rose-50 to-white rounded-2xl border border-rose-100 p-4 space-y-3">
+        {/* Stage 2: RMP - one separate plan per risk */}
+        <div className="bg-gradient-to-br from-rose-50 to-white rounded-2xl border border-rose-100 p-4 space-y-4">
           <div className="flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center">2</span>
-            <h2 className="font-bold text-gray-800">Risk Management Plan - the WHAT</h2>
+            <h2 className="font-bold text-gray-800">Risk Management Plans - the WHAT</h2>
           </div>
-          <p className="text-xs text-gray-500">
-            The exact trust template. The mandatory MDT line is added to the last section automatically.
-          </p>
-          <OutputBox text={rmpText} label="Your risk management plan" />
-          <div className="space-y-2">
-            {RMP_SECTIONS.map((sec) => (
-              <SectionEditor key={sec.id} section={sec} state={get(sec.id)} onChange={(n) => set(sec.id, n)} />
+
+          <div className="flex items-start gap-2 bg-rose-100/70 border border-rose-200 rounded-xl p-3 text-sm text-rose-800">
+            <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <p>{SEPARATE_PLANS_NOTE}</p>
+          </div>
+
+          {/* Risk picker */}
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-2">Add a risk</p>
+            <div className="flex flex-wrap gap-1.5">
+              {RISK_TYPES.map((rt) => {
+                const on = risks.includes(rt);
+                return (
+                  <button
+                    key={rt}
+                    onClick={() => toggleRisk(rt)}
+                    aria-pressed={on}
+                    className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ${
+                      on
+                        ? "bg-rose-600 border-rose-600 text-white font-medium"
+                        : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"
+                    }`}
+                  >
+                    {rt}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {risks.length === 0 && (
+            <p className="text-sm text-gray-400 text-center py-4">Pick one or more risks above to build a plan for each.</p>
+          )}
+
+          {risks.length > 1 && <OutputBox text={allRmpsText} label={`All ${risks.length} plans`} />}
+
+          {/* One plan per selected risk */}
+          <div className="space-y-4">
+            {risks.map((risk) => (
+              <div key={risk} className="rounded-2xl border border-rose-200 bg-white overflow-hidden">
+                <div className="flex items-center gap-2 px-4 py-2.5 bg-rose-50 border-b border-rose-100">
+                  <h3 className="font-bold text-rose-900 flex-1 capitalize">{risk}</h3>
+                  <button
+                    onClick={() => toggleRisk(risk)}
+                    className="text-xs font-semibold text-gray-400 hover:text-red-600 transition-colors"
+                  >
+                    Remove
+                  </button>
+                </div>
+                <div className="p-3 space-y-2">
+                  <OutputBox text={buildOneRmp(risk, rmp[risk] || {})} label={`RMP - ${risk}`} />
+                  {RMP_SECTIONS.map((sec) => (
+                    <SectionEditor
+                      key={sec.id}
+                      section={sec}
+                      state={rGet(risk, sec.id)}
+                      onChange={(n) => rSet(risk, sec.id, n)}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>

@@ -1,19 +1,30 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import {
   FORMULATION_SECTIONS, RMP_SECTIONS, MANDATORY_MDT_LINE,
   RISK_TEACHING, RISK_EXAMPLES, S1_STEPS, RISK_TYPES, SEPARATE_PLANS_NOTE,
-  type RiskSection,
+  RMP_RISK_CHIPS,
+  type RiskSection, type RiskChipGroup, type RmpSectionId,
 } from "@/lib/data/guides";
+import { useApp } from "@/app/providers";
 import { useV2Href } from "@/lib/hooks/useV2";
 import {
   ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info,
-  Lightbulb, AlertTriangle, GraduationCap, ListChecks, Sparkles, Plus, X,
+  Lightbulb, AlertTriangle, GraduationCap, ListChecks, Sparkles, Plus, X, Pencil,
 } from "lucide-react";
+
+// localStorage key holding editor overrides for the RMP suggestion chips.
+// Shape: { [risk]: { [sectionId]: RiskChipGroup[] } }. Only edited risk/sections
+// are stored; everything else falls back to the RMP_RISK_CHIPS defaults.
+const CHIP_OVERRIDE_KEY = "wardhub_rmp_chips";
+type ChipOverrides = Record<string, Partial<Record<string, RiskChipGroup[]>>>;
+
+// The RMP sections that actually carry suggestion chips (everything except WHAT).
+const RMP_CHIP_SECTIONS = RMP_SECTIONS.filter((s) => s.id !== "what");
 
 interface DatedExample { date: string; text: string }
 interface SecState { chips: string[]; text: string; na: boolean; examples?: DatedExample[] }
@@ -267,13 +278,154 @@ function buildOneRmp(risk: string, secs: Record<string, SecState>): string {
   ].join("\n");
 }
 
+// Small inline "add a chip" input used in the chip editor.
+function AddChip({ onAdd }: { onAdd: (word: string) => void }) {
+  const [val, setVal] = useState("");
+  const submit = () => { const w = val.trim(); if (w) { onAdd(w); setVal(""); } };
+  return (
+    <span className="inline-flex items-center gap-1">
+      <input
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submit(); } }}
+        placeholder="add chip"
+        className="w-28 text-sm border border-dashed border-gray-300 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+      />
+      <button
+        onClick={submit}
+        disabled={!val.trim()}
+        aria-label="Add chip"
+        className="text-rose-600 hover:text-rose-800 disabled:opacity-30 transition-colors"
+      >
+        <Plus className="w-4 h-4" />
+      </button>
+    </span>
+  );
+}
+
+// Editor-only: edit the suggestion chips for ONE risk across its RMP sections.
+function ChipBankEditor({
+  risk, groupsFor, onAdd, onRemove, onReset,
+}: {
+  risk: string;
+  groupsFor: (sectionId: string) => RiskChipGroup[];
+  onAdd: (sectionId: string, groupIndex: number, word: string) => void;
+  onRemove: (sectionId: string, groupIndex: number, word: string) => void;
+  onReset: () => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs text-rose-700/80 flex items-center gap-1.5">
+          <Pencil className="w-3.5 h-3.5 flex-shrink-0" />
+          Editing the suggestion chips for <span className="font-semibold capitalize">{risk}</span>. Saved on this device.
+        </p>
+        <button
+          onClick={onReset}
+          className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 hover:text-gray-800 transition-colors flex-shrink-0"
+        >
+          <RotateCcw className="w-3.5 h-3.5" /> Reset to default
+        </button>
+      </div>
+
+      {RMP_CHIP_SECTIONS.map((sec) => {
+        const groups = groupsFor(sec.id);
+        return (
+          <div key={sec.id} className="rounded-xl border border-gray-100 bg-white p-3 space-y-2">
+            <p className="font-semibold text-gray-800 text-sm">{sec.heading}</p>
+            {groups.map((g, gi) => (
+              <div key={gi}>
+                {g.label && (
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">{g.label}</p>
+                )}
+                <div className="flex flex-wrap gap-1.5 items-center">
+                  {g.words.map((w) => (
+                    <span
+                      key={w}
+                      className="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1.5 rounded-lg text-sm bg-rose-50 border border-rose-200 text-rose-800"
+                    >
+                      {w}
+                      <button
+                        onClick={() => onRemove(sec.id, gi, w)}
+                        aria-label={`Remove ${w}`}
+                        className="text-rose-400 hover:text-red-600 transition-colors"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </span>
+                  ))}
+                  <AddChip onAdd={(word) => onAdd(sec.id, gi, word)} />
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function RiskAssessmentPage() {
   const v2Href = useV2Href();
+  const { user } = useApp();
+  // Only editors (contributor flag) can change the suggestion chips.
+  const canEditChips = !!user?.isContributor;
+  const [editChips, setEditChips] = useState(false);
+
   // Formulation (one integrated formulation per patient).
   const [fState, setFState] = useState<AllState>({});
   // RMP: one separate plan per selected risk -> risk name -> section -> state.
   const [risks, setRisks] = useState<string[]>([]);
   const [rmp, setRmp] = useState<Record<string, Record<string, SecState>>>({});
+
+  // Editor overrides for the suggestion chips, loaded from localStorage.
+  const [chipOverrides, setChipOverrides] = useState<ChipOverrides>({});
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(CHIP_OVERRIDE_KEY);
+      if (raw) setChipOverrides(JSON.parse(raw));
+    } catch { /* ignore corrupt value */ }
+  }, []);
+  const persistOverrides = (next: ChipOverrides) => {
+    setChipOverrides(next);
+    try { localStorage.setItem(CHIP_OVERRIDE_KEY, JSON.stringify(next)); } catch { /* ignore */ }
+  };
+
+  // Effective suggestion chips for a risk+section: editor override, else the
+  // risk-specific default, else null (caller falls back to the generic groups).
+  const riskGroups = (risk: string, sectionId: string): RiskChipGroup[] | null =>
+    chipOverrides[risk]?.[sectionId] ?? RMP_RISK_CHIPS[risk]?.[sectionId as RmpSectionId] ?? null;
+
+  // A copy of a section with its chips swapped for the risk-specific set.
+  const sectionForRisk = (sec: RiskSection, risk: string): RiskSection => {
+    const specific = riskGroups(risk, sec.id);
+    return specific ? { ...sec, groups: specific, trustExamples: undefined } : sec;
+  };
+
+  // ---- Chip editing (editors only) ----
+  // Start from the current override, or a deep copy of the default to edit.
+  const baseGroups = (risk: string, sectionId: string): RiskChipGroup[] => {
+    const cur = chipOverrides[risk]?.[sectionId];
+    if (cur) return cur;
+    const def = RMP_RISK_CHIPS[risk]?.[sectionId as RmpSectionId];
+    return def ? def.map((g) => ({ ...g, words: [...g.words] })) : [];
+  };
+  const writeGroups = (risk: string, sectionId: string, groups: RiskChipGroup[]) =>
+    persistOverrides({ ...chipOverrides, [risk]: { ...chipOverrides[risk], [sectionId]: groups } });
+  const addChip = (risk: string, sectionId: string, gi: number, word: string) => {
+    const w = word.trim();
+    if (!w) return;
+    writeGroups(risk, sectionId, baseGroups(risk, sectionId).map((g, i) =>
+      i === gi && !g.words.includes(w) ? { ...g, words: [...g.words, w] } : g));
+  };
+  const removeChip = (risk: string, sectionId: string, gi: number, word: string) =>
+    writeGroups(risk, sectionId, baseGroups(risk, sectionId).map((g, i) =>
+      i === gi ? { ...g, words: g.words.filter((x) => x !== word) } : g));
+  const resetRiskChips = (risk: string) => {
+    const next = { ...chipOverrides };
+    delete next[risk];
+    persistOverrides(next);
+  };
 
   const fGet = (id: string): SecState => fState[id] || EMPTY;
   const fSet = (id: string, next: SecState) => setFState((s) => ({ ...s, [id]: next }));
@@ -395,13 +547,35 @@ export default function RiskAssessmentPage() {
         <div className="bg-gradient-to-br from-rose-50 to-white rounded-2xl border border-rose-100 p-4 space-y-4">
           <div className="flex items-center gap-2">
             <span className="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center">2</span>
-            <h2 className="font-bold text-gray-800">Risk Management Plans - the WHAT</h2>
+            <h2 className="font-bold text-gray-800 flex-1">Risk Management Plans - the WHAT</h2>
+            {canEditChips && (
+              <button
+                onClick={() => setEditChips((e) => !e)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  editChips
+                    ? "bg-rose-600 text-white hover:bg-rose-700"
+                    : "bg-white border border-rose-200 text-rose-700 hover:bg-rose-50"
+                }`}
+              >
+                {editChips ? <><Check className="w-3.5 h-3.5" /> Done</> : <><Pencil className="w-3.5 h-3.5" /> Edit chips</>}
+              </button>
+            )}
           </div>
 
-          <div className="flex items-start gap-2 bg-rose-100/70 border border-rose-200 rounded-xl p-3 text-sm text-rose-800">
-            <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <p>{SEPARATE_PLANS_NOTE}</p>
-          </div>
+          {editChips ? (
+            <div className="flex items-start gap-2 bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-sm text-indigo-800">
+              <Pencil className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <p>
+                Editor mode: change the suggestion chips staff see for each risk. Pick a risk below to edit it.
+                Changes are saved on this device. Click <strong>Done</strong> to go back to building a plan.
+              </p>
+            </div>
+          ) : (
+            <div className="flex items-start gap-2 bg-rose-100/70 border border-rose-200 rounded-xl p-3 text-sm text-rose-800">
+              <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <p>{SEPARATE_PLANS_NOTE}</p>
+            </div>
+          )}
 
           {/* Risk picker */}
           <div>
@@ -428,12 +602,16 @@ export default function RiskAssessmentPage() {
           </div>
 
           {risks.length === 0 && (
-            <p className="text-sm text-gray-400 text-center py-4">Pick one or more risks above to build a plan for each.</p>
+            <p className="text-sm text-gray-400 text-center py-4">
+              {editChips
+                ? "Pick one or more risks above to edit their suggestion chips."
+                : "Pick one or more risks above to build a plan for each."}
+            </p>
           )}
 
-          {risks.length > 1 && <OutputBox text={allRmpsText} label={`All ${risks.length} plans`} />}
+          {!editChips && risks.length > 1 && <OutputBox text={allRmpsText} label={`All ${risks.length} plans`} />}
 
-          {/* One plan per selected risk */}
+          {/* One plan (or chip editor) per selected risk */}
           <div className="space-y-4">
             {risks.map((risk) => (
               <div key={risk} className="rounded-2xl border border-rose-200 bg-white overflow-hidden">
@@ -447,15 +625,29 @@ export default function RiskAssessmentPage() {
                   </button>
                 </div>
                 <div className="p-3 space-y-2">
-                  <OutputBox text={buildOneRmp(risk, rmp[risk] || {})} label={`RMP - ${risk}`} />
-                  {RMP_SECTIONS.map((sec) => (
-                    <SectionEditor
-                      key={sec.id}
-                      section={sec}
-                      state={rGet(risk, sec.id)}
-                      onChange={(n) => rSet(risk, sec.id, n)}
+                  {editChips ? (
+                    <ChipBankEditor
+                      risk={risk}
+                      groupsFor={(sectionId) =>
+                        chipOverrides[risk]?.[sectionId] ?? RMP_RISK_CHIPS[risk]?.[sectionId as RmpSectionId]
+                          ?? RMP_SECTIONS.find((s) => s.id === sectionId)?.groups ?? []}
+                      onAdd={(sectionId, gi, word) => addChip(risk, sectionId, gi, word)}
+                      onRemove={(sectionId, gi, word) => removeChip(risk, sectionId, gi, word)}
+                      onReset={() => resetRiskChips(risk)}
                     />
-                  ))}
+                  ) : (
+                    <>
+                      <OutputBox text={buildOneRmp(risk, rmp[risk] || {})} label={`RMP - ${risk}`} />
+                      {RMP_SECTIONS.map((sec) => (
+                        <SectionEditor
+                          key={sec.id}
+                          section={sectionForRisk(sec, risk)}
+                          state={rGet(risk, sec.id)}
+                          onChange={(n) => rSet(risk, sec.id, n)}
+                        />
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
             ))}

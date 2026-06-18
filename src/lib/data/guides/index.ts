@@ -15,8 +15,9 @@ export type { CareChipGroup, CareSection } from "./careplan";
 export {
   RISK_TYPES, S1_STEPS, FORMULATION_SECTIONS, RMP_SECTIONS,
   MANDATORY_MDT_LINE, RISK_TEACHING, RISK_EXAMPLES, SEPARATE_PLANS_NOTE,
+  RMP_RISK_CHIPS,
 } from "./risk";
-export type { RiskChipGroup, RiskSection } from "./risk";
+export type { RiskChipGroup, RiskSection, RmpSectionId } from "./risk";
 
 export { ADMISSION_CHECKLIST, MHA_PATHWAYS, MHA_SCRUTINY, MHA_RECTIFY_NOTE } from "./admission";
 export type {

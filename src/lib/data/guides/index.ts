@@ -9,7 +9,7 @@ export type { MseGroup, MseDomain } from "./mse";
 
 export {
   RISK_TYPES, S1_STEPS, FORMULATION_SECTIONS, RMP_SECTIONS,
-  MANDATORY_MDT_LINE, RISK_TEACHING, RISK_EXAMPLES,
+  MANDATORY_MDT_LINE, RISK_TEACHING, RISK_EXAMPLES, SEPARATE_PLANS_NOTE,
 } from "./risk";
 export type { RiskChipGroup, RiskSection } from "./risk";
 

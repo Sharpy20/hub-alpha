@@ -12,11 +12,18 @@ import {
 import { useV2Href } from "@/lib/hooks/useV2";
 import {
   ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info,
-  Lightbulb, AlertTriangle, GraduationCap, ListChecks, Sparkles,
+  Lightbulb, AlertTriangle, GraduationCap, ListChecks, Sparkles, Plus, X,
 } from "lucide-react";
 
-interface SecState { chips: string[]; text: string; na: boolean }
+interface DatedExample { date: string; text: string }
+interface SecState { chips: string[]; text: string; na: boolean; examples?: DatedExample[] }
 type AllState = Record<string, SecState>;
+
+// YYYY-MM-DD -> DD/MM/YYYY (no timezone maths).
+function ukDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
 
 function naturalList(items: string[]): string {
   const a = items.filter(Boolean);
@@ -34,6 +41,11 @@ function buildContent(st: SecState | undefined): string {
   const parts: string[] = [];
   if (st.chips.length) parts.push(cap(naturalList(st.chips)));
   if (st.text.trim()) parts.push(cap(st.text.trim()));
+  const exs = (st.examples || []).filter((e) => e.text.trim());
+  if (exs.length) {
+    const fmt = exs.map((e) => `${e.date ? ukDate(e.date) + " - " : ""}${e.text.trim()}`).join("; ");
+    parts.push(`Specific examples: ${fmt}`);
+  }
   if (!parts.length) return "";
   return ensureStop(parts.map(ensureStop).join(" "));
 }
@@ -51,8 +63,13 @@ function SectionEditor({
     const has = state.chips.includes(w);
     onChange({ ...state, na: false, chips: has ? state.chips.filter((c) => c !== w) : [...state.chips, w] });
   };
-  const count = state.chips.length + (state.text.trim() ? 1 : 0) + (state.na ? 1 : 0);
-  const chipsOnlyNoDetail = state.chips.length > 0 && !state.text.trim() && !state.na;
+  const examples = state.examples || [];
+  const setExamples = (next: DatedExample[]) => onChange({ ...state, na: false, examples: next });
+  const exampleCount = examples.filter((e) => e.text.trim()).length;
+  const count =
+    state.chips.length + (state.text.trim() ? 1 : 0) + exampleCount + (state.na ? 1 : 0);
+  const chipsOnlyNoDetail =
+    state.chips.length > 0 && !state.text.trim() && !state.na && exampleCount === 0;
 
   return (
     <div className="rounded-xl border border-gray-100 bg-white overflow-hidden">
@@ -120,6 +137,44 @@ function SectionEditor({
             rows={2}
             className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-rose-400 focus:border-rose-400 resize-y"
           />
+
+          {section.examples && (
+            <div className="rounded-lg border border-rose-100 bg-rose-50/40 p-2.5 space-y-2">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-rose-500">
+                Specific examples (with dates)
+              </p>
+              {examples.map((ex, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input
+                    type="date"
+                    value={ex.date}
+                    onChange={(e) => setExamples(examples.map((x, idx) => (idx === i ? { ...x, date: e.target.value } : x)))}
+                    className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+                  />
+                  <input
+                    type="text"
+                    value={ex.text}
+                    placeholder="what happened"
+                    onChange={(e) => setExamples(examples.map((x, idx) => (idx === i ? { ...x, text: e.target.value } : x)))}
+                    className="flex-1 min-w-0 text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+                  />
+                  <button
+                    onClick={() => setExamples(examples.filter((_, idx) => idx !== i))}
+                    aria-label="Remove example"
+                    className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={() => setExamples([...examples, { date: "", text: "" }])}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 hover:text-rose-900 transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" /> Add example
+              </button>
+            </div>
+          )}
 
           <div className="flex items-center justify-between">
             {chipsOnlyNoDetail ? (

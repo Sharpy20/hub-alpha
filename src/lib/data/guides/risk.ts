@@ -26,6 +26,8 @@ export interface RiskSection {
   trustExamples?: string;
   groups: RiskChipGroup[];
   placeholder?: string;
+  // Adds a "specific examples (with dates)" sub-section to this editor.
+  examples?: boolean;
 }
 
 // ---- Exact mandatory final line (generic version of the RMP guide wording) ----
@@ -193,6 +195,7 @@ export const RMP_SECTIONS: RiskSection[] = [
     hint: "The specific, observable signs it is happening or building - the early warning signs.",
     trustExamples: "specifics on ligature / cutting / pacing",
     gap: "What are the early warning signs for THIS patient?",
+    examples: true,
     groups: [
       {
         words: [

@@ -1105,7 +1105,6 @@ function AddTaskModal({
     { id: "capacity-assessment", label: "Capacity Assessment" },
     { id: "news2", label: "NEWS2 Observations" },
     { id: "section-17", label: "Section 17 Leave" },
-    { id: "rapid-tranq", label: "Rapid Tranquillisation" },
     { id: "discharge-planning", label: "Discharge Planning" },
   ];
 

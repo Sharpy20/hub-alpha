@@ -539,8 +539,8 @@ export default function WorkflowsAdminPage() {
 const GUIDE_CATEGORIES = [
   "Named Nurse Tools", "Legal & Advocacy", "Urgent Care", "Safeguarding",
   "Social & Housing", "Allied Health", "Physical Health", "Discharge Planning",
-  "Psychology", "Specialist Pathways", "Clinical Assessment", "Legal",
-  "Ward Procedures", "Emergency",
+  "Psychology", "Specialist Pathways", "Clinical Assessment",
+  "Ward Procedures",
 ];
 
 function GuideOrderEditor() {
@@ -674,9 +674,6 @@ const DEFAULT_GUIDE_ORDER = [
   { id: "special-guardianship", title: "Special Guardianship Orders", icon: "\uD83D\uDC68\u200D\uD83D\uDC67", category: "Safeguarding" },
   { id: "child-in-need", title: "Child in Need", icon: "\uD83E\uDD32", category: "Safeguarding" },
   { id: "fridge-temps", title: "Fridge Temperature Recording", icon: "\uD83C\uDF21\uFE0F", category: "Ward Procedures" },
-  { id: "seizure-management", title: "Managing a Seizure", icon: "\uD83D\uDEA8", category: "Emergency" },
-  { id: "medical-emergency", title: "Medical Emergency", icon: "\uD83C\uDFE5", category: "Emergency" },
-  { id: "rapid-tranq", title: "Rapid Tranquillisation", icon: "\uD83D\uDC89", category: "Emergency" },
   { id: "named-nurse", title: "Named Nurse Checklist", icon: "\uD83D\uDCCB", category: "Ward Procedures" },
   { id: "admission-checklist", title: "Admission Checklist", icon: "\u2705", category: "Ward Procedures" },
   { id: "discharge-checklist", title: "Discharge Checklist", icon: "\uD83C\uDFE0", category: "Ward Procedures" },

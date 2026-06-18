@@ -23,7 +23,6 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "pain-assessment": { icon: "📊", gradient: "from-orange-500 to-orange-700", category: "Observations" },
   choking: { icon: "🚨", gradient: "from-red-600 to-red-800", category: "Emergency Response" },
   "cardiac-arrest": { icon: "❤️‍🔥", gradient: "from-rose-600 to-rose-800", category: "Emergency Response" },
-  "rapid-tranq": { icon: "💉", gradient: "from-amber-500 to-amber-700", category: "Emergency Response" },
   "mha-statuses": { icon: "⚖️", gradient: "from-indigo-600 to-purple-800", category: "MHA & Legal" },
   "section-17": { icon: "📋", gradient: "from-indigo-500 to-indigo-700", category: "MHA & Legal" },
   "capacity-assessment": { icon: "⚖️", gradient: "from-violet-500 to-violet-700", category: "MHA & Legal" },

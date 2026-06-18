@@ -101,7 +101,7 @@ export const ADMISSION_CHECKLIST: ChecklistGroup[] = [
         text: "Accept MHA paperwork (if applicable)",
         links: [
           { label: "How to accept MHA paperwork", url: FOCUS.nursesChecklist, requiresFocus: true },
-          { label: "Detention papers checker", url: "/guides/mha-checker" },
+          { label: "Section papers checker", url: "/guides/mha-checker" },
           { label: "Blank H3", url: PERSONAL.blankH3, isForm: true },
         ],
       },
@@ -230,7 +230,7 @@ export const ADMISSION_CHECKLIST: ChecklistGroup[] = [
         text: "Online MHA forms",
         links: [
           { label: "MHA 1983 statutory forms", url: "https://www.mentalhealthlaw.co.uk/Mental_Health_Act_1983_Statutory_Forms" },
-          { label: "Detention papers checker", url: "/guides/mha-checker" },
+          { label: "Section papers checker", url: "/guides/mha-checker" },
         ],
       },
     ],

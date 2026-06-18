@@ -54,7 +54,7 @@ export default function MhaCheckerPage() {
           <Breadcrumb
             items={[
               { label: "Guides", href: v2Href("/guides") },
-              { label: "Detention Papers Checker" },
+              { label: "Section Papers - Receipt & Scrutiny" },
             ]}
           />
         </div>
@@ -67,7 +67,7 @@ export default function MhaCheckerPage() {
                 ⚖️
               </div>
               <div>
-                <h1 className="text-3xl font-bold">Detention Papers</h1>
+                <h1 className="text-3xl font-bold">Section Papers</h1>
                 <p className="text-white/80 mt-1">
                   Receiving a detained patient? Check which MHA forms you should have, then scrutinise them.
                 </p>

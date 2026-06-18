@@ -92,7 +92,7 @@ export const GUIDES: Record<string, GuideData> = {
   },
   "mha-statuses": {
     id: "mha-statuses",
-    title: "Mental Health Act Statuses",
+    title: "Mental Health Act Statuses Explained",
     description: "Understanding the legal framework for patient care under the MHA",
     steps: [
       {

@@ -177,14 +177,14 @@ export default function AdmissionChecklistPage() {
         <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 print:hidden">
           <h3 className="font-bold text-indigo-900">Detained patient?</h3>
           <p className="text-sm text-indigo-700 mt-1 mb-3">
-            Use the detention papers checker to confirm exactly which MHA forms you should have, and scrutinise them.
+            Use the section papers checker to confirm exactly which MHA forms you should have, and scrutinise them.
           </p>
           <Link
             href={v2Href("/guides/mha-checker")}
             className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors no-underline"
           >
             <ClipboardList className="w-4 h-4" />
-            Open the detention papers checker
+            Open the section papers checker
           </Link>
         </div>
       </div>

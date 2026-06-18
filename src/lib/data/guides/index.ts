@@ -3,3 +3,8 @@ export type { WorkflowForm, WorkflowForms, SubmissionMethod, WorkflowStep, Workf
 
 export { GUIDES, DEFAULT_GUIDE, GUIDE_CONFIG, GUIDE_WAGOLLS } from "./howto-guides";
 export type { GuideStep, GuideData } from "./howto-guides";
+
+export { ADMISSION_CHECKLIST, MHA_PATHWAYS, MHA_SCRUTINY, MHA_RECTIFY_NOTE } from "./admission";
+export type {
+  GuideLink, ChecklistItem, ChecklistGroup, MhaForm, MhaRequirement, MhaPathway,
+} from "./admission";

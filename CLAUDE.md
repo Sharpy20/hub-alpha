@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 13 June 2026
+> **Last Updated:** 17 June 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -843,6 +843,15 @@ Working through in order. Marking complete as fixed.
 | 138 | [x] | Editor: Submission methods now have an area filter dropdown so each method can be City-only / County-only / All areas. Read-only info panels added for section, area, consent, GDPR step types. |
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
+
+## SNAG LIST (17 Jun 2026 - Session 21: Two new guides)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 153 | [x] | **MHA Detention Papers checker** - new interactive guide at `/guides/mha-checker`. Nurse picks the pathway (S2, S3, S4, Transfer in/out, CTO recall, 5(2), 5(4)); shows required statutory forms as tiles with OR logic (S2 = A2 + [A3 *or* 2xA4] + AMHP report -> complete H3) plus an optional, printable scrutiny tick-sheet. Content from Mike's admission docx + RDaSH receipt-and-scrutiny policy + 2008 Regs statutory forms (national framework, trust-agnostic). S4 flagged `verify:true` (not in trust doc). |
+| 154 | [x] | **Admission Checklist** - rebuilt `/guides/admission-checklist` (was an empty stub) from Mike's "Admission checklist with help links.docx". Two grouped tick-lists (arrival/admin + assessments), any order, progress counter, print. Each item carries its embedded help links via new `ResourceLinks` chip component (FOCUS = login modal, public = open, blank form = "Form" badge). |
+| 155 | [x] | New data file `src/lib/data/guides/admission.ts` (ADMISSION_CHECKLIST + MHA_PATHWAYS + MHA_SCRUTINY) exported from guides index. New `src/components/guides/ResourceLinks.tsx` (reuses FOCUS-login modal pattern). Both pages are static routes that override `/guides/[id]`, render identically on `/` and `/v2`, build clean, no PII. |
+| 156 | [x] | 3 links in the source doc point to Mike's *personal* NHS OneDrive (Blank H3, Risk Management Plan, care-plan Help guides). Mike asked to wire them as-is, so they now open his OneDrive directly (see `PERSONAL` constant in admission.ts). They rely on OneDrive share permissions - swap for Trust URLs if those change. Advocacy step still points at the in-app IMHA guide ("advocacy = IMHA only"). FOCUS form links may be out of date - check as we go. |
 
 ## SNAG LIST (13 Jun 2026 - Session 20: Architecture & Security Review)
 

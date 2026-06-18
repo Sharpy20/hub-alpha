@@ -51,6 +51,7 @@ const ALL_GUIDES: GuideItem[] = [
   { id: "dols", title: "DoLS Ward Guidance", description: "Deprivation of Liberty Safeguards - when to apply", icon: "\uD83D\uDD12", gradient: "from-violet-500 to-violet-700", category: "Legal", viewerPath: "/guides/dols" },
   { id: "mha-statuses", title: "MHA Statuses", description: "All Mental Health Act sections and patient rights", icon: "\u2696\uFE0F", gradient: "from-indigo-600 to-purple-800", category: "Legal", viewerPath: "/guides/mha-statuses" },
   { id: "section-17", title: "Section 17 Leave", description: "Leave arrangements for detained patients", icon: "\uD83D\uDEAA", gradient: "from-blue-500 to-blue-700", category: "Legal", viewerPath: "/guides/section-17" },
+  { id: "mha-checker", title: "Detention Papers - Receipt & Scrutiny", description: "Interactive checker - which MHA forms you need and how to scrutinise them", icon: "\u2696\uFE0F", gradient: "from-indigo-600 to-purple-700", category: "Legal", viewerPath: "/guides/mha-checker" },
   // Safeguarding (educational)
   { id: "domestic-abuse-guide", title: "Domestic Abuse", description: "Recognising and responding to domestic abuse", icon: "\uD83C\uDFE0", gradient: "from-purple-600 to-purple-800", category: "Safeguarding", viewerPath: "/guides/domestic-abuse-guide" },
   { id: "peer-conflict-guide", title: "Peer-on-Peer Conflict", description: "When to escalate patient conflict to safeguarding", icon: "\u26A0\uFE0F", gradient: "from-amber-600 to-amber-800", category: "Safeguarding", viewerPath: "/guides/peer-conflict-guide" },
@@ -70,7 +71,7 @@ const ALL_GUIDES: GuideItem[] = [
   { id: "medical-emergency", title: "Medical Emergency", description: "2222 calls and emergency response", icon: "\uD83C\uDFE5", gradient: "from-rose-600 to-rose-800", category: "Emergency", viewerPath: "/guides/medical-emergency" },
   { id: "rapid-tranq", title: "Rapid Tranquillisation", description: "RT protocol and post-RT monitoring", icon: "\uD83D\uDC89", gradient: "from-orange-600 to-orange-800", category: "Emergency", viewerPath: "/guides/rapid-tranq" },
   { id: "named-nurse", title: "Named Nurse Checklist", description: "Weekly and monthly tasks for named nurses", icon: "\uD83D\uDCCB", gradient: "from-emerald-500 to-emerald-700", category: "Ward Procedures", viewerPath: "/guides/named-nurse" },
-  { id: "admission-checklist", title: "Admission Checklist", description: "Complete admission process step-by-step", icon: "\u2705", gradient: "from-green-500 to-green-700", category: "Ward Procedures", viewerPath: "/guides/admission-checklist" },
+  { id: "admission-checklist", title: "Admission Checklist", description: "Interactive tick-list of every admission task, with help links", icon: "\u2705", gradient: "from-green-500 to-green-700", category: "Ward Procedures", viewerPath: "/guides/admission-checklist" },
   { id: "discharge-checklist", title: "Discharge Checklist", description: "Safe discharge planning and documentation", icon: "\uD83C\uDFE0", gradient: "from-teal-500 to-teal-700", category: "Ward Procedures", viewerPath: "/guides/discharge-checklist" },
 ];
 

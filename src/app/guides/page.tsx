@@ -68,6 +68,7 @@ const ALL_GUIDES: GuideItem[] = [
   { id: "fridge-temps", title: "Fridge Temperature Recording", description: "Medication fridge monitoring and Assurance Dashboard recording", icon: "\uD83C\uDF21\uFE0F", gradient: "from-cyan-500 to-cyan-700", category: "Ward Procedures", viewerPath: "/guides/fridge-temps" },
   { id: "named-nurse", title: "Named Nurse Checklist", description: "Weekly and monthly tasks for named nurses", icon: "\uD83D\uDCCB", gradient: "from-emerald-500 to-emerald-700", category: "Ward Procedures", viewerPath: "/guides/named-nurse" },
   { id: "admission-checklist", title: "Admission Checklist", description: "Interactive tick-list of every admission task, with help links", icon: "\u2705", gradient: "from-green-500 to-green-700", category: "Ward Procedures", viewerPath: "/guides/admission-checklist" },
+  { id: "care-plan", title: "My Care Plan", description: "Interactive builder - write a personalised, patient-voice care plan for SystemOne", icon: "\ud83d\udcdd", gradient: "from-sky-500 to-blue-700", category: "Clinical Assessment", viewerPath: "/guides/care-plan" },
   { id: "discharge-checklist", title: "Discharge Checklist", description: "Safe discharge planning and documentation", icon: "\uD83C\uDFE0", gradient: "from-teal-500 to-teal-700", category: "Ward Procedures", viewerPath: "/guides/discharge-checklist" },
 ];
 

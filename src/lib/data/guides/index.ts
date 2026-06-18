@@ -8,6 +8,11 @@ export { MSE_DOMAINS } from "./mse";
 export type { MseGroup, MseDomain } from "./mse";
 
 export {
+  CAREPLAN_SECTIONS, CAREPLAN_PRINCIPLES, CAREPLAN_TEACHING, CAREPLAN_EXAMPLE,
+} from "./careplan";
+export type { CareChipGroup, CareSection } from "./careplan";
+
+export {
   RISK_TYPES, S1_STEPS, FORMULATION_SECTIONS, RMP_SECTIONS,
   MANDATORY_MDT_LINE, RISK_TEACHING, RISK_EXAMPLES, SEPARATE_PLANS_NOTE,
 } from "./risk";

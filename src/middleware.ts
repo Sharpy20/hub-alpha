@@ -12,6 +12,7 @@ const V2_BLOCKED_PREFIXES = [
   "/reports",
   "/data-sources",
   "/referrals/log",
+  "/staff",
 ];
 // Note: /patient-guides is PII-free (MH educational leaflets for patients),
 // so we keep it accessible in v2.

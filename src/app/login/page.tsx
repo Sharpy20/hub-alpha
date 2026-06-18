@@ -85,12 +85,13 @@ export default function LoginPage() {
   const capitalizedWard = ward.charAt(0).toUpperCase() + ward.slice(1);
 
   // Get staff directly - no useMemo needed for this small dataset
-  // In v2, restrict to staff + senior_admin roles only.
+  // In v2, restrict to plain staff only. "Editor" is just a staff member with
+  // the contributor flag (shown with a pen badge), set via the Demo Mode menu.
   const wardStaff = getStaffByWard(capitalizedWard).filter((s) =>
-    isV2 ? s.role === "staff" || s.role === "senior_admin" : true
+    isV2 ? s.role === "staff" : true
   );
   const visibleRoles = isV2
-    ? ROLES.filter((r) => r.value === "staff" || r.value === "senior_admin")
+    ? ROLES.filter((r) => r.value === "staff")
     : ROLES;
 
   // Get selected staff member
@@ -234,7 +235,7 @@ export default function LoginPage() {
                   <Shield className="w-4 h-4 inline mr-1" />
                   3. Your Role (based on staff selection)
                 </label>
-                <div className={`grid ${isV2 ? "grid-cols-2" : "grid-cols-3"} gap-2`}>
+                <div className={`grid ${isV2 ? "grid-cols-1" : "grid-cols-3"} gap-2`}>
                   {visibleRoles.map((r) => {
                     const isSelected = selectedStaff?.role === r.value;
                     return (

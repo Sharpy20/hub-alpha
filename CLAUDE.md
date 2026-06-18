@@ -844,6 +844,17 @@ Working through in order. Marking complete as fixed.
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
 
+## SNAG LIST (18 Jun 2026 - Session 22: v2 simplification)
+
+Mike: v2 is for compliance/no-PII demos. Strip it back further.
+
+| # | Status | Description |
+|---|--------|-------------|
+| 165 | [x] | **v2: Staff section removed** - Staff link hidden from More dropdown (desktop + mobile); `/staff` added to `V2_BLOCKED_PREFIXES` so `/v2/staff` redirects to `/v2`. |
+| 166 | [x] | **v2: Demo roles are now Staff + Editor** (was Staff + Senior Admin). "Editor" = `staff` role + `isContributor` flag, set by new `handleEditorChange()` in header.tsx. Profile header shows "Editor"/"Staff". Login picker dropped senior_admin (staff-only; contributors keep pen badge); role grid is single-column in v2. |
+| 167 | [x] | **v2: "Request Creator Privileges" repurposed** - admin page button + Editor nav stay, but in v2 the button pops "This is demo mode - change your role to Editor in the Demo Mode menu (top right)" instead of the v1 "request submitted" message. |
+| 168 | [x] | **v2: ward views ditched** - "Viewing Ward" switcher hidden in Demo Mode menu (desktop + mobile). activeWard stays on the user's home ward. Specific User picker now filters to staff role only. |
+
 ## SNAG LIST (18 Jun 2026 - Session 21: Guide builders + restructure)
 
 Five new interactive guide tools built this session (all in the same "builder"
@@ -940,9 +951,9 @@ On first session on the new machine:
 - `src/lib/hooks/useV2.ts` exposes `useIsV2()` (reads `usePathname()`) and `useV2Href()` (returns a function that prefixes `/v2` to internal hrefs when in v2).
 - Components that touch v1-only features check `isV2` and either hide the UI or rewrite copy.
 
-**v2 hides:** Diary tab, Patients tab, Today widget on home, Data Sources menu item, Progress Reports menu item, Chase Log link on Guides, Link to Patient button on guide viewer, Follow-up Task block on completion, Add Follow-up button on Reminder step, Log to Chase Log button on referral completion, Patient picker modal.
+**v2 hides:** Diary tab, Patients tab, Staff section (More menu + /staff route blocked), Today widget on home, Data Sources menu item, Progress Reports menu item, Chase Log link on Guides, Link to Patient button on guide viewer, Follow-up Task block on completion, Add Follow-up button on Reminder step, Log to Chase Log button on referral completion, Patient picker modal, the "Viewing Ward" switcher in Demo Mode (no cross-ward views).
 
-**v2 restricts:** Roles to Staff + Senior Admin (login picker + Demo Mode role buttons + Specific User dropdown).
+**v2 restricts:** Demo roles to **Staff + Editor** (Session 22). "Editor" is not a real role - it is the `staff` role with the `isContributor` flag set, toggled by the Staff/Editor buttons in the Demo Mode menu (`handleEditorChange` in header.tsx). Login picker shows plain staff only (contributors carry a pen badge). The "Request Creator Privileges" button (admin page) and the Editor nav item stay visible, but in v2 the request button just pops "This is demo mode - change your role to Editor in the Demo Mode menu" instead of the v1 "request submitted" copy.
 
 **v2 rewrites:** Hero subtitle, footer tagline, Tour (3 sections only), Intro Guide sections + tips, FAQ answers.
 

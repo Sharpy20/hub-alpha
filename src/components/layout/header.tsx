@@ -46,6 +46,20 @@ export function Header() {
     }
   };
 
+  // v2 demo roles are just Staff / Editor. "Editor" = staff with content
+  // editing (the isContributor flag); there are no admin roles in v2.
+  const handleEditorChange = (isEditor: boolean) => {
+    if (user) {
+      setUser({ ...user, role: "staff", isContributor: isEditor });
+      setSavedFeedback("Role");
+      setTimeout(() => {
+        setSavedFeedback(null);
+        setProfileDropdownOpen(false);
+        setMobileMenuOpen(false);
+      }, 800);
+    }
+  };
+
   const handleMobileWardChange = (ward: string) => {
     setActiveWard(ward);
     setSavedFeedback("Ward");
@@ -221,10 +235,12 @@ export function Header() {
 
                     {settingsDropdownOpen && (
                       <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
-                        <Link href={link("/staff")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
-                          <div><p className="font-semibold text-gray-900">Staff</p><p className="text-xs text-gray-500 mt-0.5">Staff directory and ward assignments</p></div>
-                        </Link>
+                        {!isV2 && (
+                          <Link href={link("/staff")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
+                            <div><p className="font-semibold text-gray-900">Staff</p><p className="text-xs text-gray-500 mt-0.5">Staff directory and ward assignments</p></div>
+                          </Link>
+                        )}
                         {!isV2 && (
                           <Link href="/dev-panel?section=data-sources" onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                             <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-5 h-5 text-white" /></div>
@@ -282,7 +298,7 @@ export function Header() {
                     <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
                       <div className="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
                         <p className="font-bold text-lg">{user.name}</p>
-                        <p className="text-sm text-white/80">{roleLabels[user.role] || user.role}</p>
+                        <p className="text-sm text-white/80">{isV2 ? (user.isContributor ? "Editor" : "Staff") : (roleLabels[user.role] || user.role)}</p>
                       </div>
 
                       {savedFeedback && (
@@ -292,49 +308,76 @@ export function Header() {
                         </div>
                       )}
 
-                      <div className="p-3 border-b border-gray-100">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                          <Building2 className="w-3 h-3 inline mr-1" />
-                          Viewing Ward
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {allWards.map((ward) => (
-                            <button
-                              key={ward}
-                              onClick={() => handleWardChange(ward)}
-                              className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
-                                activeWard === ward
-                                  ? "bg-indigo-100 text-indigo-700"
-                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                              }`}
-                            >
-                              {ward}
-                              {ward === user.ward && " \u2605"}
-                            </button>
-                          ))}
+                      {!isV2 && (
+                        <div className="p-3 border-b border-gray-100">
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                            <Building2 className="w-3 h-3 inline mr-1" />
+                            Viewing Ward
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {allWards.map((ward) => (
+                              <button
+                                key={ward}
+                                onClick={() => handleWardChange(ward)}
+                                className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                                  activeWard === ward
+                                    ? "bg-indigo-100 text-indigo-700"
+                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                }`}
+                              >
+                                {ward}
+                                {ward === user.ward && " \u2605"}
+                              </button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      )}
 
                       <div className="p-3 border-b border-gray-100">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                           <User className="w-3 h-3 inline mr-1" />
                           Demo Role
                         </p>
-                        <div className={`grid gap-1 ${isV2 ? "grid-cols-2" : "grid-cols-3"}`}>
-                          {availableRoles.map((role) => (
+                        {isV2 ? (
+                          <div className="grid gap-1 grid-cols-2">
                             <button
-                              key={role}
-                              onClick={() => handleRoleChange(role)}
+                              onClick={() => handleEditorChange(false)}
                               className={`px-2 py-1.5 rounded text-xs font-medium transition-colors ${
-                                user.role === role
+                                !user.isContributor
                                   ? "bg-emerald-100 text-emerald-700"
                                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                               }`}
                             >
-                              {roleLabels[role]}
+                              Staff
                             </button>
-                          ))}
-                        </div>
+                            <button
+                              onClick={() => handleEditorChange(true)}
+                              className={`px-2 py-1.5 rounded text-xs font-medium transition-colors ${
+                                user.isContributor
+                                  ? "bg-emerald-100 text-emerald-700"
+                                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                              }`}
+                            >
+                              Editor
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="grid gap-1 grid-cols-3">
+                            {availableRoles.map((role) => (
+                              <button
+                                key={role}
+                                onClick={() => handleRoleChange(role)}
+                                className={`px-2 py-1.5 rounded text-xs font-medium transition-colors ${
+                                  user.role === role
+                                    ? "bg-emerald-100 text-emerald-700"
+                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                }`}
+                              >
+                                {roleLabels[role]}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       {/* Specific User picker */}
@@ -352,7 +395,7 @@ export function Header() {
                         {showUserPicker && (
                           <div className="mt-2 max-h-48 overflow-y-auto space-y-0.5">
                             {getStaffByWard(activeWard.charAt(0).toUpperCase() + activeWard.slice(1))
-                              .filter((staff) => (isV2 ? staff.role === "staff" || staff.role === "senior_admin" : true))
+                              .filter((staff) => (isV2 ? staff.role === "staff" : true))
                               .map((staff) => (
                               <button
                                 key={staff.id}
@@ -488,10 +531,12 @@ export function Header() {
               <div className="py-3 border-b border-gray-100">
                 <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">More</p>
                 <div className="space-y-2">
-                  <Link href={link("/staff")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>
-                    <div><p className="font-semibold text-gray-900 text-sm">Staff</p><p className="text-xs text-gray-500">Staff directory and ward assignments</p></div>
-                  </Link>
+                  {!isV2 && (
+                    <Link href={link("/staff")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900 text-sm">Staff</p><p className="text-xs text-gray-500">Staff directory and ward assignments</p></div>
+                    </Link>
+                  )}
                   {!isV2 && (
                     <Link href="/dev-panel?section=data-sources" className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                       <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-4 h-4 text-white" /></div>
@@ -542,7 +587,7 @@ export function Header() {
                 </div>
               )}
 
-              {user && (
+              {user && !isV2 && (
                 <div className="py-3 border-b border-gray-100">
                   <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">View Ward</p>
                   <div className="flex flex-wrap gap-2">
@@ -568,19 +613,44 @@ export function Header() {
                 <div className="py-3 border-b border-gray-100">
                   <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">Demo Role</p>
                   <div className="flex flex-wrap gap-2">
-                    {availableRoles.map((role) => (
-                      <button
-                        key={role}
-                        onClick={() => handleMobileRoleChange(role)}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                          user.role === role
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                        }`}
-                      >
-                        {roleLabels[role]}
-                      </button>
-                    ))}
+                    {isV2 ? (
+                      <>
+                        <button
+                          onClick={() => handleEditorChange(false)}
+                          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                            !user.isContributor
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          Staff
+                        </button>
+                        <button
+                          onClick={() => handleEditorChange(true)}
+                          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                            user.isContributor
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          Editor
+                        </button>
+                      </>
+                    ) : (
+                      availableRoles.map((role) => (
+                        <button
+                          key={role}
+                          onClick={() => handleMobileRoleChange(role)}
+                          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                            user.role === role
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                        >
+                          {roleLabels[role]}
+                        </button>
+                      ))
+                    )}
                   </div>
                 </div>
               )}

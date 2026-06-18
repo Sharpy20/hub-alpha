@@ -42,15 +42,6 @@ const GUIDES = [
     stepCount: 5,
   },
   {
-    id: "blood-glucose",
-    title: "Blood Glucose Monitoring",
-    description: "BM testing and hypoglycaemia management",
-    icon: "🩸",
-    category: "Physical Health",
-    gradient: "from-red-500 to-red-700",
-    stepCount: 4,
-  },
-  {
     id: "mental-state-exam",
     title: "Mental State Examination",
     description: "10-point guide to MSE assessment",

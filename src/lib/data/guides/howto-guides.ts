@@ -16,7 +16,6 @@ export interface GuideData {
 
 export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: string }> = {
   news2: { icon: "💪", gradient: "from-red-500 to-red-700", category: "Physical Health" },
-  "blood-glucose": { icon: "🩸", gradient: "from-rose-500 to-rose-700", category: "Physical Health" },
   ecg: { icon: "💓", gradient: "from-pink-500 to-pink-700", category: "Physical Health" },
   "neuro-obs": { icon: "🧠", gradient: "from-purple-500 to-purple-700", category: "Observations" },
   "fluid-balance": { icon: "💧", gradient: "from-blue-500 to-blue-700", category: "Observations" },

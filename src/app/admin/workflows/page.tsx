@@ -653,7 +653,6 @@ const DEFAULT_GUIDE_ORDER = [
   { id: "ctr-dsp", title: "CTR / DSP Review", icon: "\uD83D\uDCCB", category: "Specialist Pathways" },
   { id: "benefits-review", title: "Benefits Review", icon: "\uD83D\uDCB7", category: "Social & Housing" },
   { id: "news2", title: "NEWS2 Observations", icon: "\uD83D\uDCCA", category: "Physical Health" },
-  { id: "blood-glucose", title: "Blood Glucose Monitoring", icon: "\uD83E\uDE78", category: "Physical Health" },
   { id: "mental-state-exam", title: "Mental State Examination", icon: "\uD83E\uDDE0", category: "Clinical Assessment" },
   { id: "risk-assessment", title: "Risk Assessment", icon: "\u26A0\uFE0F", category: "Clinical Assessment" },
   { id: "abc-chart", title: "ABC Charts", icon: "\uD83D\uDCCB", category: "Clinical Assessment" },

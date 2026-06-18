@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 17 June 2026
+> **Last Updated:** 18 June 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -844,7 +844,24 @@ Working through in order. Marking complete as fixed.
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
 
-## SNAG LIST (17 Jun 2026 - Session 21: Two new guides)
+## SNAG LIST (18 Jun 2026 - Session 21: Guide builders + restructure)
+
+Five new interactive guide tools built this session (all in the same "builder"
+family: chip word-banks + free-text + assembled copyable output, render on / and
+/v2, no PII, static routes overriding /guides/[id]). All grounded in trust docs.
+
+| # | Status | Description |
+|---|--------|-------------|
+| 157 | [x] | **MSE builder** (`/guides/mental-state-exam`) - UK Mental State Exam. Pick descriptors per domain (Appearance...Insight), headed MSE assembles in a sticky panel, copy. Data: `src/lib/data/guides/mse.ts`. Modelled on Mike's `nocte_notes_prototype_v2_1.html` (the "notes writer"). |
+| 158 | [x] | **Risk Formulation + RMP builder** (`/guides/risk-assessment`). Stage 1 formulation (best-practice framework). Stage 2: SEPARATE RMP per risk (trust rule - 28-risk picker from Mike's "RMP Mega Pack"), exact 5-heading DHCFT template, mandatory MDT line auto-locked. "HOW DOES THIS PRESENT" has a dated specific-examples sub-section. Data: `src/lib/data/guides/risk.ts`. |
+| 159 | [x] | **My Care Plan builder** (`/guides/care-plan`). 9 sections from the real "My Care Plan" S1 template, patient-voice quote field per section, GAP prompts from patient prompt sheet, "unable to establish" button. Links to (does not duplicate) the RMP. Data: `src/lib/data/guides/careplan.ts`. |
+| 160 | [x] | Removed placeholders: Blood Glucose + 3 Emergency guides (Seizure, Medical Emergency, Rapid Tranq) + the whole "Emergency" category (avoids needing medical-guidance approval - re-add later). |
+| 161 | [x] | Category tidy: merged "Legal" into "Legal & Advocacy"; "MHA Statuses" -> "MHA Statuses Explained"; "Detention Papers" -> "Section Papers - Receipt & Scrutiny". |
+| 162 | [x] | **Guide restructure** (Mike's spec): 12 categories -> 8. "Named Nurse Tools" -> "Nurse Tools" (now holds MSE/Risk/ABC/Care Plan/Named Nurse/Admission/Discharge checklists + Fridge Temps). Clinical Assessment, Ward Procedures, Discharge Planning, Psychology categories removed (contents merged; EDT+ERP -> Specialist Pathways). Safeguarding reordered (referrals, adult, children, general). "PICU Referral" -> "PICU Kingfisher Referral". Editor category dropdown updated. |
+| 163 | [ ] | **Mike to verify/supply:** (a) draft weak-vs-strong examples in BOTH the Risk and Care Plan builders need sign-off. (b) Fridge Temps parked in Nurse Tools (was orphaned) - confirm home. (c) Safeguarding adult/child split borderline on Non-Recent Abuse + Information Sharing. (d) "External providers" to be added under Urgent Care. (e) Mike sourcing up-to-date info for the 3 remaining placeholders. |
+| 164 | [ ] | **3 EMPTY PLACEHOLDERS REMAIN** (render generic default shell): DoLS Ward Guidance, Named Nurse Checklist, Discharge Checklist. Named Nurse + Discharge are natural Word-doc builds (crib sheet already in repo docs; Discharge could be interactive like Admission). |
+
+## SNAG LIST (17 Jun 2026 - Session 21a: MHA + admission)
 
 | # | Status | Description |
 |---|--------|-------------|

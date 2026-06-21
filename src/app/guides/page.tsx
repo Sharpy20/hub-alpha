@@ -142,7 +142,7 @@ export default function GuidesPage() {
             <div className="flex items-center gap-2">
               {!isV2 && (
                 <Link
-                  href="/referrals/log"
+                  href={link("/referrals/log")}
                   className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline"
                 >
                   <Clock className="w-4 h-4" />

@@ -16,6 +16,7 @@ import {
   ALL_DEMO_TASKS,
 } from "@/lib/data/tasks";
 import { useApp } from "@/app/providers";
+import { useV2Href } from "@/lib/hooks/useV2";
 
 // Helper – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {
@@ -164,6 +165,7 @@ function TaskColumn({
 }
 
 export function TodayWidget() {
+  const link = useV2Href();
   const { activeWard } = useApp();
   const [tasks, setTasks] = useState<DiaryTask[]>(ALL_DEMO_TASKS);
   const todayStr = formatDate(new Date());
@@ -250,13 +252,13 @@ export function TodayWidget() {
 
       {/* Quick nav */}
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <Link href="/tasks" className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
+        <Link href={link("/tasks")} className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
           Team Diary
         </Link>
-        <Link href="/tasks?view=my-diary" className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
+        <Link href={link("/tasks?view=my-diary")} className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
           My Diary
         </Link>
-        <Link href="/my-tasks" className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
+        <Link href={link("/my-tasks")} className="flex items-center justify-center gap-1.5 p-2 bg-white border-2 border-indigo-200 rounded-xl text-indigo-700 font-semibold text-sm hover:bg-indigo-50 hover:border-indigo-300 transition-all no-underline">
           My Jobs
         </Link>
       </div>

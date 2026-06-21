@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Routes that should NOT exist under /v2 (PII-free demo).
-// Any /v2 hit on these paths redirects to /v2 home.
-const V2_BLOCKED_PREFIXES = [
+// THE SWAP (21 Jun 2026): the stripped / PII-free demo is now the DEFAULT site
+// at the root domain, and the FULL build (Team Diary, Patients, Reports, etc.)
+// lives under the /v2 prefix.
+//
+// These are the full-build / PII routes. In the LIMITED experience (root) they
+// are blocked and redirect home. Under the FULL build (/v2) they are fully
+// accessible. Keep this list in sync with the features hidden via `useIsV2()`.
+const FULL_ONLY_PREFIXES = [
   "/diary",
   "/tasks",
   "/my-diary",
@@ -15,17 +20,17 @@ const V2_BLOCKED_PREFIXES = [
   "/staff",
 ];
 // Note: /patient-guides is PII-free (MH educational leaflets for patients),
-// so we keep it accessible in v2.
+// so it stays accessible in the limited experience.
 
-function isBlockedInV2(subpath: string): boolean {
-  return V2_BLOCKED_PREFIXES.some(
+function isFullOnly(subpath: string): boolean {
+  return FULL_ONLY_PREFIXES.some(
     (p) => subpath === p || subpath.startsWith(p + "/")
   );
 }
 
-// Old route names that the v1 pages redirect to new homes. Resolved here for
-// v2 so the /v2 prefix survives the redirect. Returns null if not a legacy path.
-function legacyV2Target(subpath: string): string | null {
+// Old route names that the v1 pages redirect to new homes. Resolved here so the
+// /v2 prefix survives the redirect. Returns null if not a legacy path.
+function legacyTarget(subpath: string): string | null {
   if (subpath === "/bookmarks") return "/links";
   if (subpath === "/referrals" || subpath === "/how-to") return "/guides";
   if (subpath.startsWith("/referrals/")) return "/guides/" + subpath.slice("/referrals/".length);
@@ -43,20 +48,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // /v2 prefix handling
+  // FULL build under /v2 - rewrite to the real route, full access (no blocking).
   if (pathname === "/v2" || pathname.startsWith("/v2/")) {
     const subpath = pathname === "/v2" ? "/" : pathname.slice("/v2".length);
 
-    if (isBlockedInV2(subpath)) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/v2";
-      return NextResponse.redirect(url);
-    }
-
-    // Legacy routes redirect via their v1 pages (/bookmarks -> /links,
-    // /referrals/[id] -> /guides/[id]), which would silently drop the /v2
-    // prefix. Map them here instead so the user stays inside v2.
-    const legacy = legacyV2Target(subpath);
+    // Keep legacy aliases inside the /v2 prefix (/v2/bookmarks -> /v2/links,
+    // /v2/referrals/[id] -> /v2/guides/[id]). Their v1 pages would otherwise
+    // redirect and silently drop the /v2 prefix.
+    const legacy = legacyTarget(subpath);
     if (legacy) {
       const url = request.nextUrl.clone();
       url.pathname = "/v2" + legacy;
@@ -68,6 +67,13 @@ export function middleware(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = subpath === "" ? "/" : subpath;
     return NextResponse.rewrite(url);
+  }
+
+  // LIMITED experience at the root - block the full-build / PII routes.
+  if (isFullOnly(pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();

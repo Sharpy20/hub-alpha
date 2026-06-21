@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
+import { useV2Href } from "@/lib/hooks/useV2";
 import Link from "next/link";
 import {
   ChevronLeft,
@@ -2308,6 +2309,7 @@ export default function TasksPage() {
 function TasksPageInner() {
   const searchParams = useSearchParams();
   const isMyDiaryMode = searchParams.get("view") === "my-diary";
+  const link = useV2Href();
   const { user, activeWard } = useApp();
   const { tasks, setTasks, claimTask, toggleComplete, updateTask, addTask } = useTasks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -2612,7 +2614,7 @@ function TasksPageInner() {
             {/* View toggle */}
             <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1">
               {isMyDiaryMode ? (
-                <Link href="/tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
+                <Link href={link("/tasks")} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
                   Team Diary
                 </Link>
               ) : (
@@ -2625,11 +2627,11 @@ function TasksPageInner() {
                   My Diary
                 </div>
               ) : (
-                <Link href="/my-diary" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
+                <Link href={link("/tasks?view=my-diary")} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
                   My Diary
                 </Link>
               )}
-              <Link href="/my-tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
+              <Link href={link("/my-tasks")} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
                 My Jobs
               </Link>
             </div>

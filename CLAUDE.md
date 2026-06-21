@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 18 June 2026
+> **Last Updated:** 21 June 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -844,6 +844,16 @@ Working through in order. Marking complete as fixed.
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
 
+## SNAG LIST (21 Jun 2026 - Session 23: URL swap + risk tool)
+
+| # | Status | Description |
+|---|--------|-------------|
+| 171 | [x] | **`/v2` <-> full build SWAP** - root is now the stripped PII-free build; the full build (Diary/Patients/Reports/My Jobs/Staff) is now under `/v2`. Inverted `useV2.ts` (`useIsV2()` true at root) + `middleware.ts` (block PII routes at root, full access under `/v2`). Wrapped bare PII-route links in the `link()` helper across header/tasks/my-tasks/TodayWidget/patients/guides. Verified: root redirects `/tasks` & `/patients`, `/v2/*` renders. See the "/v2 <-> FULL BUILD SWAP" section. |
+| 172 | [x] | **Formulation builder personalised** (Risk Assessment guide). Risk picker moved to a shared top section that drives BOTH stages. New `FORMULATION_RISK_CHIPS` in `risk.ts` gives all 28 risks their own predisposing/precipitating/perpetuating/dynamic chips; "presenting" reuses each risk's RMP "present" chips; pattern/protective/engagement/judgement stay generic. |
+| 173 | [x] | **"Other (unlisted risk)" free-text risk** added to the picker (`BLANK_RISK` in `risk.ts`). When picked it surfaces EVERY prompt from EVERY risk (full union, ~196 chips per section) in both the formulation and the RMP, and a "name this risk" field titles its plan. |
+| 174 | [x] | **RMP copy format rebuilt for SystemOne** (Mike's feedback - S1 risk screen is a plain notepad that strips blank rows). `buildOneRmp` now heads each plan `=== RISK MANAGEMENT PLAN: <RISK> ===` and separates the 5 sections with `---` divider lines (no blank rows). Empty sections render "Not yet established."; the mandatory MDT line is still auto-appended. Same header/divider format applied to the formulation output. |
+| 175 | [x] | Project evaluation run -> `docs/evaluations/2026-06-21_project-evaluation.md` (10-hat, reflects this session). |
+
 ## SNAG LIST (18 Jun 2026 - Session 22: v2 simplification)
 
 Mike: v2 is for compliance/no-PII demos. Strip it back further.
@@ -944,12 +954,20 @@ On first session on the new machine:
 
 ---
 
-## /v2 PII-FREE CLONE (8 Jun 2026)
+## /v2 <-> FULL BUILD SWAP (21 Jun 2026, Session 23)
 
-**Purpose:** Mike is awaiting PII storage approval, so /v2 is a stripped demo with no patient data anywhere. Lives in the same codebase to avoid drift.
+**THE SWAP:** the two experiences traded URLs. The **root domain (wardhub.live) is now the stripped, PII-free build**; the **full build (Team Diary, Patients, Reports, My Jobs, Staff) now lives under `/v2`**. Mike wanted the public link to be the limited version and the full feature set one click away at `/v2`.
 
-**How it works:**
-- `src/middleware.ts` detects `/v2` and `/v2/*`, rewrites them to `/` and `/*` so the existing pages render. Blocked routes (diary/patients/reports/data-sources/chase log) redirect to `/v2`.
+**Implemented by inverting just two files (the 124 `isV2` call sites were left untouched):**
+- `src/lib/hooks/useV2.ts`: `useIsV2()` still means "is this the stripped/limited experience" but now returns **true at root** and **false under `/v2`**. The link helper (`useV2Href`/`v2Href`) prefixes `/v2` only when under the `/v2` prefix (the full build), so navigation stays inside whichever build you are in.
+- `src/middleware.ts`: under `/v2`, rewrite to the real route with **no blocking** (full access); at root, **block** the full-build/PII routes (redirect home).
+- Bare `<Link href="/tasks|/patients|/reports|...">` in full-only features (header, tasks, my-tasks, TodayWidget, patients, guides chase-log) were wrapped in the `link()` helper so they keep the `/v2` prefix. My-Diary links now point at `/tasks?view=my-diary` directly (the `/my-diary` server-redirect stub would otherwise drop the prefix).
+- **Naming debt:** `isV2 === true` now means "limited" and is true when NOT under `/v2`. Documented heavily in `useV2.ts`. Consider renaming to `isLimited` later.
+
+**Purpose (unchanged):** Mike is awaiting PII storage approval, so the limited build is a stripped demo with no patient data anywhere. Lives in the same codebase to avoid drift.
+
+**How it works (post-swap):**
+- `src/middleware.ts` detects `/v2` and `/v2/*`, rewrites them to `/` and `/*` so the existing pages render with FULL access. At the root, the full-build/PII routes (diary/patients/reports/data-sources/chase log/staff) redirect to `/`.
 - `src/lib/hooks/useV2.ts` exposes `useIsV2()` (reads `usePathname()`) and `useV2Href()` (returns a function that prefixes `/v2` to internal hrefs when in v2).
 - Components that touch v1-only features check `isV2` and either hide the UI or rewrite copy.
 

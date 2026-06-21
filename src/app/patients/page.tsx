@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useV2Href } from "@/lib/hooks/useV2";
 import { useApp } from "@/app/providers";
 import { useWardSettings } from "@/app/ward-settings-provider";
 import { toLocalDateStr } from "@/lib/utils/date";
@@ -59,6 +60,7 @@ const PATIENT_STATUS_CONFIG: Record<PatientStatus, { label: string; color: strin
 type StatusFilter = "all" | PatientStatus;
 
 export default function PatientsPage() {
+  const link = useV2Href();
   const { user, activeWard } = useApp();
   const { getWardSettings } = useWardSettings();
   const wardSettings = getWardSettings(activeWard);
@@ -406,7 +408,7 @@ export default function PatientsPage() {
                 Add Patient
               </button>
               <Link
-                href="/reports"
+                href={link("/reports")}
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:from-violet-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
               >
                 <BarChart3 className="w-5 h-5" />

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
+import { useV2Href } from "@/lib/hooks/useV2";
 import Link from "next/link";
 import { Users, ClipboardList, CalendarDays, Info, UserSquare2, Filter } from "lucide-react";
 import { DiaryTask } from "@/lib/types";
@@ -17,6 +18,7 @@ import { DEMO_PATIENTS } from "@/lib/data/tasks";
 import { getStaffByWard } from "@/lib/data/staff";
 
 export default function MyTasksPage() {
+  const link = useV2Href();
   const { user, activeWard } = useApp();
   const { tasks, updateTask, claimTask, toggleComplete } = useTasks();
 
@@ -139,10 +141,10 @@ export default function MyTasksPage() {
             </div>
             {/* View toggle */}
             <div className="flex items-center bg-white rounded-xl border border-gray-200 p-1">
-              <Link href="/tasks" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
+              <Link href={link("/tasks")} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
                 Team Diary
               </Link>
-              <Link href="/my-diary" className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
+              <Link href={link("/tasks?view=my-diary")} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-semibold text-sm transition-colors no-underline">
                 My Diary
               </Link>
               <div className="px-4 py-2 rounded-lg bg-nhs-blue text-white font-semibold text-sm">
@@ -170,7 +172,7 @@ export default function MyTasksPage() {
         {/* Controls */}
         <div className="flex flex-wrap items-center gap-3">
           <Link
-            href="/tasks"
+            href={link("/tasks")}
             className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition-all no-underline"
           >
             <CalendarDays className="w-5 h-5" />
@@ -201,7 +203,7 @@ export default function MyTasksPage() {
             <div>
               <p className="font-medium text-blue-800">No tasks claimed yet</p>
               <p className="text-sm text-blue-600 mt-1">
-                Go to the <Link href="/tasks" className="underline font-medium">Team Diary</Link> and
+                Go to the <Link href={link("/tasks")} className="underline font-medium">Team Diary</Link> and
                 click &quot;Claim&quot; on tasks to add them to your personal board. Claimed tasks will
                 appear here where you can track your progress.
               </p>

@@ -844,6 +844,27 @@ Working through in order. Marking complete as fixed.
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
 
+## SNAG LIST (22 Jun 2026 - Session 25: Clinical documentation builders)
+
+Salvaged from Copilot chats (Copilot can read the Trust tenant; Claude cannot).
+Kept the clinical content + the new tools; dropped Copilot's "rebuild the site as
+a Clinical Prompt Engine" framing, the AI rewrite buttons (no backend) and the
+MUST/Waterlow calculators (clinical-safety - Mike chose guidance-only). All new
+tools follow the Session 21 "builder" family and slot into the existing /guides
+index, not a new nav. Pushed live (commit c823407), build clean, flagship verified.
+
+| # | Status | Description |
+|---|--------|-------------|
+| 176 | [x] | **Shared `PromptBuilder` component** (`src/components/guides/PromptBuilder.tsx`) + `BuilderConfig`/`BuilderSection` types (`src/lib/data/guides/builder.ts`). Mirrors the care-plan builder exactly (chips + free text + patient-voice quote + "not yet established" toggle + plain-text copyable output, dateLine option, notice banner). One component drives all 10 new tools so they stay consistent. No PII, no backend, renders on / and /v2. |
+| 177 | [x] | **Seclusion Support Plan** (`/guides/seclusion-support-plan`, `seclusion.ts`) - FLAGSHIP. 21 exact Trust fields from the Seclusion & LTS Policy (Nov 2024 v9) + Mike's per-field "prompt yourself" questions + PEEP section. Exit-criteria section emphasised (observable, not "settled"). |
+| 178 | [x] | **Post-Incident Debrief** (`/guides/debrief`, `debrief.ts`) - patient/staff/witness accounts + learning + update-loop nudges (update care plan/RMP/safety plan/PBS). Source-aligned (exact SystmOne debrief wording not available). |
+| 179 | [x] | **Safety Plan** (`/guides/safety-plan`, `safety-plan.ts`) - Stanley-Brown 6 steps + Trust risk-screen alignment; cross-links to the Risk formulation builder (does not duplicate it). Nurse Tools category. |
+| 180 | [x] | **Restraint & Rapid Tranq Monitoring** (`/guides/restraint-monitoring`, `restraint.ts`) - clinical monitoring / intervention monitoring / monitoring-ceased prompts, additional-risk-factors must-not-be-blank. Source-aligned with the MoVA / Positive & Safe workflow. |
+| 181 | [x] | **Observation & Engagement Plan** (`/guides/observation-engagement`, `observation.ts`) - level rationale, what it means in practice per setting, what to watch for, engagement (not just surveillance), step-up/step-down triggers. |
+| 182 | [x] | **Physical Health tools** (all guidance-only, NO scoring per Mike): Physical Health Assessment Helper (`physical-health.ts`), Falls Assessment Helper (`falls.ts`, NICE NG249 - no prediction score), Personal Handling Helper (`personal-handling.ts`), Nutrition (MUST) Helper (`nutrition.ts`), Pressure Area (Waterlow) Helper (`pressure.ts`). Each carries an amber "guidance only - run the validated tool on SystmOne" notice. |
+| 183 | [x] | New **"Restrictive Practice"** guides category (Seclusion, Restraint/RT, Observation, Debrief) added to ALL_GUIDES + the editor's GUIDE_CATEGORIES dropdown. Safety Plan in Nurse Tools; 5 physical-health tools in Physical Health. 10 new cards total. |
+| 184 | [ ] | **Mike to proofread (tonight):** clinical accuracy of every tool's prompts/chips; sign off the weak-vs-strong draft examples in each; confirm Trust field wording for the Seclusion Support Plan matches the live SystmOne form; check the Restraint/RT monitoring detail against current policy; confirm observation level names match the ward. See the numbered proofreading list handed over. |
+
 ## SNAG LIST (21 Jun 2026 - Session 23: URL swap + risk tool)
 
 | # | Status | Description |

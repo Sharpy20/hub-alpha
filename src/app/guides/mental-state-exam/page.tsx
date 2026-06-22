@@ -123,6 +123,9 @@ export default function MseBuilderPage() {
           </div>
           <div className="px-4 pb-4">
             <div
+              tabIndex={0}
+              role="region"
+              aria-label="Assembled output preview"
               className={`rounded-lg bg-slate-800 px-3.5 py-3 text-sm leading-relaxed whitespace-pre-wrap min-h-[64px] max-h-60 overflow-y-auto ${
                 output ? "text-slate-100" : "text-slate-500 italic"
               }`}

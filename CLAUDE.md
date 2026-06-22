@@ -865,7 +865,25 @@ index, not a new nav. Pushed live (commit c823407), build clean, flagship verifi
 | 183 | [x] | New **"Restrictive Practice"** guides category (Seclusion, Restraint/RT, Observation, Debrief) added to ALL_GUIDES + the editor's GUIDE_CATEGORIES dropdown. Safety Plan in Nurse Tools; 5 physical-health tools in Physical Health. 10 new cards total. |
 | 184 | [ ] | **Mike to proofread (tonight):** clinical accuracy of every tool's prompts/chips; sign off the weak-vs-strong draft examples in each; confirm Trust field wording for the Seclusion Support Plan matches the live SystmOne form; check the Restraint/RT monitoring detail against current policy; confirm observation level names match the ward. See the numbered proofreading list handed over. |
 
-## SNAG LIST (21 Jun 2026 - Session 23: URL swap + risk tool)
+## SNAG LIST (22 Jun 2026 - Session 26: WCAG 2.1 AA audit)
+
+Review 3 from the Fable 5 project review (snag #78). Audited with axe-core 4.11
+at runtime across home, guides, links, Team Diary, Patients, Kanban, guide viewer
+and the interactive builders. App was already strong (skip link, landmarks,
+global :focus-visible, prefers-reduced-motion, lang, accessible base Modal). Fixed
+the concrete failures; all audited pages now return ZERO axe violations. Build
+clean, 32/32 tests pass.
+
+| # | Status | Description |
+|---|--------|-------------|
+| 185 | [x] | **button-name (critical):** added aria-labels to icon-only buttons - header demo-tour buttons (desktop+mobile, header.tsx), the two diary settings cogs and the ~120 task-card complete toggles (tasks/page.tsx, state-aware label + aria-pressed). Cleared 62 axe violations on Team Diary. |
+| 186 | [x] | **link-name (serious):** shared Breadcrumb home link was icon-only - added aria-label="Home" (Breadcrumb.tsx). Fixes every guide/referral page. |
+| 187 | [x] | **keyboard access (2.1.1):** the 4 draggable task-card roots (tasks/page.tsx) are now focusable (tabIndex + Enter/Space -> open detail, aria-label). Deliberately NOT role="button" - that wrapped the nested toggle/resource buttons and tripped axe nested-interactive. |
+| 188 | [x] | **scrollable-region-focusable (serious):** day-column scroll body, Kanban board (KanbanBoard.tsx) and all 4 builder output panels (PromptBuilder.tsx + mse/risk/care-plan own panels) given tabIndex={0} + role + aria-label so keyboard users can scroll them when content is collapsed/empty. |
+| 189 | [x] | **color-contrast (serious, AA 1.4.3):** NHS-theme past-day header text #9ca3af -> #6b7280 + removed compounding opacity on the weekday subtitle (globals.css + tasks/page.tsx); green "Add Task"/"Add Patient" buttons #00c950 white (2.21) -> bg-green-700/800; patients amber-600 status text -> amber-700; Kanban empty-state #9CA3AF -> #6b7280 + dropped opacity-60 hint. |
+| 190 | [x] | **input labels (1.3.1):** placeholder-only search inputs (guides, links) + category select (links suggest modal) given aria-labels. |
+| 191 | [x] | **dialog semantics (4.1.2):** 6 custom modals bypassed the accessible base Modal - added role="dialog" aria-modal="true" aria-label to TaskDetail, PatientPicker (both roots), PatientTransfer, StaffManagement, StaffTasks, DischargeAudit. (Base Modal + ConfirmDialog were already compliant.) |
+| 192 | [ ] | **Remaining (reported, design-touching - needs Mike's eye):** (a) the broad `text-amber-600`/`text-gray-400`-on-light contrast sweep across ~24 files not on the audited pages; (b) the 4 non-NHS themes (iOS/Google/Fantastical/Notion) + dark mode have their own muted past-day greys that likely fail AA - same fix pattern; (c) custom modals still lack focus-trap + Escape-to-close (base Modal has both) - usability, not a strict AA fail. (d) keyboard drag-drop alternative for task reordering. |
 
 | # | Status | Description |
 |---|--------|-------------|
@@ -1031,7 +1049,7 @@ On first session on the new machine:
 | 75 | [ ] | Loading skeletons on data-heavy pages (patients, tasks, diary) |
 | 76 | [ ] | Keyboard navigation for ward diary |
 | 77 | [ ] | End-to-end walkthrough testing |
-| 78 | [ ] | WCAG 2.1 AA accessibility audit |
+| 78 | [x] | WCAG 2.1 AA accessibility audit (Session 26) - axe-core runtime audit, all audited pages now clean. Residual design-touching contrast + theme work tracked in snags 185-192. |
 | 79 | [ ] | Expand print stylesheet for reports |
 
 ### Phase 8: Nexus Integration & Business Case — COMPLETE

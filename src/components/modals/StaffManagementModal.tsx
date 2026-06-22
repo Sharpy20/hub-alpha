@@ -53,6 +53,9 @@ export function StaffManagementModal({ isOpen, onClose, ward }: StaffManagementM
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Manage staff member"
         className="bg-white rounded-2xl w-full max-w-md max-h-[80vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >

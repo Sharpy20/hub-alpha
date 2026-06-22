@@ -194,8 +194,11 @@ function TaskCard({
     return (
       <div
         draggable
+        tabIndex={0}
+        aria-label={`Open task: ${task.title}`}
         onDragStart={(e) => onDragStart?.(e, task.id, task.type)}
         onClick={() => onClick?.(task)}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(task); } }}
         className={`overflow-hidden transition-all cursor-grab active:cursor-grabbing theme-card ${
           isCompleted ? "opacity-60" : "hover:shadow-lg hover:scale-[1.02]"
         } ${compact ? "text-sm" : ""}`}
@@ -205,6 +208,8 @@ function TaskCard({
           <div className="flex items-start gap-2">
             <button
               onClick={(e) => { e.stopPropagation(); onToggleComplete(task.id); }}
+              aria-label={isCompleted ? "Mark task as not complete" : "Mark task as complete"}
+              aria-pressed={isCompleted}
               className={`flex-shrink-0 w-5 h-5 rounded-full border-2 border-white/50 flex items-center justify-center transition-all ${
                 isCompleted ? "bg-white/30" : "hover:bg-white/20"
               }`}
@@ -286,8 +291,11 @@ function TaskCard({
   return (
     <div
       draggable
+      tabIndex={0}
+      aria-label={`Open task: ${task.title}`}
       onDragStart={(e) => onDragStart?.(e, task.id, task.type)}
       onClick={() => onClick?.(task)}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(task); } }}
       className={`overflow-hidden transition-all cursor-grab active:cursor-grabbing ${isCompleted ? "opacity-60" : ""}`}
       style={wrapperStyle}
     >
@@ -337,6 +345,8 @@ function TaskCard({
           <div className="flex items-start gap-2">
             <button
               onClick={(e) => { e.stopPropagation(); onToggleComplete(task.id); }}
+              aria-label={isCompleted ? "Mark task as not complete" : "Mark task as complete"}
+              aria-pressed={isCompleted}
               className="flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all"
               style={{ borderColor: isCompleted ? accent : `${accent}80`, background: isCompleted ? `${accent}30` : "transparent" }}
             >
@@ -437,7 +447,7 @@ function SimpleTaskCard({
   // NHS: gradient card
   if (styleTheme === "nhs") {
     return (
-      <div draggable onDragStart={(e) => onDragStart?.(e, task.id, task.type)} onClick={() => onClick?.(task)} className="rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:shadow-md hover:scale-[1.01] transition-all">
+      <div draggable tabIndex={0} aria-label={`Open task: ${task.title}`} onDragStart={(e) => onDragStart?.(e, task.id, task.type)} onClick={() => onClick?.(task)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(task); } }} className="rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:shadow-md hover:scale-[1.01] transition-all">
         <div className={`bg-gradient-to-r ${gradient} px-2.5 py-1.5 flex items-center gap-2`}>
           <span className="text-sm flex-shrink-0">{icon}</span>
           <h4 className="font-semibold text-white text-xs truncate flex-1 min-w-0">{task.title}</h4>
@@ -470,7 +480,7 @@ function SimpleTaskCard({
     : { background: tint, borderLeft: `${styleTheme === "material" ? 3 : 4}px solid ${accent}`, padding: "5px 8px", display: "flex", alignItems: "center", gap: "6px", borderRadius: "var(--theme-card-radius)" };
 
   return (
-    <div draggable onDragStart={(e) => onDragStart?.(e, task.id, task.type)} onClick={() => onClick?.(task)} className="cursor-grab active:cursor-grabbing transition-all overflow-hidden">
+    <div draggable tabIndex={0} aria-label={`Open task: ${task.title}`} onDragStart={(e) => onDragStart?.(e, task.id, task.type)} onClick={() => onClick?.(task)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(task); } }} className="cursor-grab active:cursor-grabbing transition-all overflow-hidden">
       <div style={rowStyle}>
         {isNotion && <div style={{ width: 7, height: 7, borderRadius: "50%", background: accent, flexShrink: 0 }} />}
         {!isNotion && <span className="text-sm flex-shrink-0">{icon}</span>}
@@ -819,7 +829,7 @@ function DayColumn({
             <p className={`font-bold ${isFocused ? "text-base" : "text-sm"}`}>
               {formatDisplayDate(date)}
             </p>
-            <p className="text-[11px] opacity-70">
+            <p className="text-[11px]">
               {new Date(date).toLocaleDateString("en-GB", { weekday: "short" })}
               {!isFocused && totalVisible > 0 && ` · ${totalVisible}`}
             </p>
@@ -841,7 +851,7 @@ function DayColumn({
       </div>
 
       {/* Tasks content - always show, with compact mode for non-focused */}
-      <div className={`${isFocused ? "p-3" : "p-2"} max-h-[65vh] overflow-y-auto`}>
+      <div tabIndex={0} role="group" aria-label="Tasks for this day" className={`${isFocused ? "p-3" : "p-2"} max-h-[65vh] overflow-y-auto`}>
         {/* Team Tasks */}
         <CollapsibleSection
           title="Team Tasks"
@@ -2131,6 +2141,8 @@ function ExpandedDayView({
                   onClick={() => setShowSettings(!showSettings)}
                   className={`p-1.5 rounded-lg transition-colors ${showSettings ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 hover:bg-gray-200 text-gray-600"}`}
                   title="Diary settings"
+                  aria-label="Diary settings"
+                  aria-expanded={showSettings}
                 >
                   <Settings2 className="w-4 h-4" />
                 </button>
@@ -2786,6 +2798,8 @@ function TasksPageInner() {
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
                 title="Diary settings"
+                aria-label="Diary settings"
+                aria-expanded={showDiarySettings}
               >
                 <Settings2 className="w-5 h-5" />
               </button>
@@ -2853,7 +2867,7 @@ function TasksPageInner() {
 
             <button
               onClick={() => setShowAddModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-all"
+              className="flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-xl font-medium hover:bg-green-800 transition-all"
             >
               <Plus className="w-5 h-5" />
               Add Task

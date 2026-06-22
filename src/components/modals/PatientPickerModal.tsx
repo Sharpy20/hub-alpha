@@ -75,6 +75,9 @@ export function PatientPickerModal({
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={handleCancel}>
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Confirm selection"
           className="bg-white rounded-2xl w-full max-w-md overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
@@ -154,6 +157,9 @@ export function PatientPickerModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Select patient"
         className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >

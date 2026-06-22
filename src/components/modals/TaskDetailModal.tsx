@@ -150,6 +150,9 @@ export function TaskDetailModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Task details: ${task.title}`}
         className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >

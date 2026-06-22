@@ -84,7 +84,7 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   };
 
   return (
-    <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 px-1 snap-x snap-mandatory sm:snap-none">
+    <div tabIndex={0} role="group" aria-label="Task board columns" className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 px-1 snap-x snap-mandatory sm:snap-none">
       <KanbanColumn
         title="Not Started"
         icon="📋"

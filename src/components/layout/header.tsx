@@ -145,6 +145,7 @@ export function Header() {
             {/* Interactive Demo Tour button */}
             <button
               onClick={startTour}
+              aria-label="Start interactive demo tour"
               className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all ${shouldPulse ? "animate-pulse hover:animate-none" : ""}`}
             >
               <Sparkles className="w-4 h-4" />
@@ -152,6 +153,7 @@ export function Header() {
             </button>
             <button
               onClick={startTour}
+              aria-label="Start interactive demo tour"
               className="sm:hidden w-9 h-9 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg flex items-center justify-center shadow-md"
             >
               <Sparkles className="w-4 h-4" />

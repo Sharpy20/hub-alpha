@@ -402,7 +402,7 @@ export default function PatientsPage() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setIsAddPatientModalOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-all shadow-md hover:shadow-lg"
+                className="flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-xl font-semibold hover:bg-green-800 transition-all shadow-md hover:shadow-lg"
               >
                 <Plus className="w-5 h-5" />
                 Add Patient
@@ -476,7 +476,7 @@ export default function PatientsPage() {
                   Ward admins can review the audit log and confirm each discharge.
                 </p>
                 {user?.role !== "ward_admin" && (
-                  <p className="text-sm text-amber-600 mt-2 font-medium">
+                  <p className="text-sm text-amber-700 mt-2 font-medium">
                     Only ward admins can confirm discharges.
                   </p>
                 )}
@@ -589,7 +589,7 @@ export default function PatientsPage() {
                       {patient.admissionTime && ` at ${patient.admissionTime}`}
                     </p>
                     {patient.status !== "discharged" && patient.expectedDischargeDate && (
-                      <p className="flex items-center gap-2 text-amber-600 font-medium">
+                      <p className="flex items-center gap-2 text-amber-700 font-medium">
                         <Home className="w-4 h-4" />
                         EDD: {new Date(patient.expectedDischargeDate).toLocaleDateString("en-GB")}
                       </p>
@@ -632,7 +632,7 @@ export default function PatientsPage() {
                   {outstandingTasks > 0 && (
                     <button
                       onClick={() => openTasksModal(patient)}
-                      className="flex items-center gap-2 mb-4 text-sm text-amber-600 hover:text-amber-800 transition-colors"
+                      className="flex items-center gap-2 mb-4 text-sm text-amber-700 hover:text-amber-800 transition-colors"
                       title="View all tasks for this patient"
                     >
                       <Clipboard className="w-4 h-4" />

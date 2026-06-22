@@ -85,10 +85,10 @@ export function KanbanColumn({
       <div className="flex-1 p-3 space-y-3 overflow-y-auto min-h-[200px] max-h-[60vh]" style={isNotion ? { padding: "8px 4px" } : undefined}>
         {tasks.length === 0 ? (
           <div className="h-full flex items-center justify-center">
-            <div className="text-center px-4" style={{ color: isFantastical ? "#818CF8" : "#9CA3AF" }}>
+            <div className="text-center px-4" style={{ color: isFantastical ? "#818CF8" : "#6b7280" }}>
               <p className="text-4xl mb-2">{title === "Not Started" ? "📋" : title === "In Progress" ? "🔄" : "🎉"}</p>
               <p className="text-sm font-medium">{title === "Not Started" ? "No tasks claimed" : title === "In Progress" ? "Nothing in progress" : "Nothing completed yet"}</p>
-              <p className="text-xs mt-1 opacity-60">{title === "Not Started" ? "Claim tasks from the Team Diary" : title === "In Progress" ? "Drag tasks here when working" : "Complete tasks to see them here"}</p>
+              <p className="text-xs mt-1">{title === "Not Started" ? "Claim tasks from the Team Diary" : title === "In Progress" ? "Drag tasks here when working" : "Complete tasks to see them here"}</p>
             </div>
           </div>
         ) : (

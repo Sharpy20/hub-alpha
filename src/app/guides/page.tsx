@@ -184,6 +184,7 @@ export default function GuidesPage() {
           <input
             type="text"
             placeholder="Search guides..."
+            aria-label="Search guides"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"

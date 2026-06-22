@@ -250,7 +250,7 @@ function OutputBox({ text, label }: { text: string; label: string }) {
         </button>
       </div>
       <div className="px-4 pb-4">
-        <div className={`rounded-lg bg-slate-800 px-3.5 py-3 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px] max-h-72 overflow-y-auto ${text ? "text-slate-100" : "text-slate-500 italic"}`}>
+        <div tabIndex={0} role="region" aria-label="Assembled output preview" className={`rounded-lg bg-slate-800 px-3.5 py-3 text-sm leading-relaxed whitespace-pre-wrap min-h-[60px] max-h-72 overflow-y-auto ${text ? "text-slate-100" : "text-slate-500 italic"}`}>
           {text || "Fill the sections below to build this."}
         </div>
       </div>

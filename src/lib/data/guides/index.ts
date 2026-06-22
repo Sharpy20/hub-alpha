@@ -23,3 +23,18 @@ export { ADMISSION_CHECKLIST, MHA_PATHWAYS, MHA_SCRUTINY, MHA_RECTIFY_NOTE } fro
 export type {
   GuideLink, ChecklistItem, ChecklistGroup, MhaForm, MhaRequirement, MhaPathway,
 } from "./admission";
+
+// Shared "prompt builder" tools (seclusion, debrief, safety plan, restraint, etc.)
+export type {
+  BuilderConfig, BuilderSection, BuilderChipGroup, BuilderTeachingBlock, BuilderExample,
+} from "./builder";
+export { SECLUSION_BUILDER } from "./seclusion";
+export { DEBRIEF_BUILDER } from "./debrief";
+export { SAFETY_PLAN_BUILDER } from "./safety-plan";
+export { RESTRAINT_BUILDER } from "./restraint";
+export { OBSERVATION_BUILDER } from "./observation";
+export { FALLS_BUILDER } from "./falls";
+export { PHYSICAL_HEALTH_BUILDER } from "./physical-health";
+export { HANDLING_BUILDER } from "./personal-handling";
+export { NUTRITION_BUILDER } from "./nutrition";
+export { PRESSURE_BUILDER } from "./pressure";

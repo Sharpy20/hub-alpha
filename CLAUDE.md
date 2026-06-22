@@ -903,7 +903,7 @@ family: chip word-banks + free-text + assembled copyable output, render on / and
 | 144 | [x] | Em dash sweep: 3 in FlowchartEditor.tsx, 1 `&mdash;` in public/abc-wagoll.html - all now en dashes. |
 | 145 | [x] | POhWER Advocacy bookmark removed from Links data (rule: advocacy = IMHA workflow only). Restorable from git if wanted. |
 | 146 | [x] | /my-tasks meta title corrected: "My Tasks" → "My Jobs". |
-| 147 | [ ] | Next 16.2 deprecation: `middleware.ts` file convention is deprecated in favour of `proxy.ts`. /v2 blocking depends on it - migrate before upgrading to Next 17. |
+| 147 | [x] | Next 16.2 deprecation resolved (Session 24): `middleware.ts` -> `proxy.ts`, exported function `middleware` -> `proxy`. `config.matcher` unchanged. Deprecation warning gone, build clean, 32/32 tests pass, routing re-probed live (root blocks /tasks & /patients, /v2/* renders, /v2/bookmarks -> /v2/links). |
 | 148 | [ ] | If repo ever goes public: gitignore/purge docs/ (raw FOCUS data with real internal contacts) and note real numbers also live in src code comments. Old dev panel password also sits in CLAUDE.md history. |
 | 149 | [x] | UTC date drift fixed: new shared `toLocalDateStr()` (src/lib/utils/date.ts) replaces 15 `toISOString().split("T")[0]` call sites (demo data generation, tasks-provider claim stamps, follow-up task creation in guide viewer, patients page, kanban completion). Those returned yesterday's date between midnight and 1am during BST. |
 | 150 | [x] | Crash guard: corrupt `wardhub_user` in localStorage crashed every page (unguarded JSON.parse in root provider). Now wrapped in try/catch; bad value cleared, app continues logged out. |
@@ -960,14 +960,14 @@ On first session on the new machine:
 
 **Implemented by inverting just two files (the 124 `isV2` call sites were left untouched):**
 - `src/lib/hooks/useV2.ts`: `useIsV2()` still means "is this the stripped/limited experience" but now returns **true at root** and **false under `/v2`**. The link helper (`useV2Href`/`v2Href`) prefixes `/v2` only when under the `/v2` prefix (the full build), so navigation stays inside whichever build you are in.
-- `src/middleware.ts`: under `/v2`, rewrite to the real route with **no blocking** (full access); at root, **block** the full-build/PII routes (redirect home).
+- `src/proxy.ts` (was `middleware.ts` until Session 24): under `/v2`, rewrite to the real route with **no blocking** (full access); at root, **block** the full-build/PII routes (redirect home).
 - Bare `<Link href="/tasks|/patients|/reports|...">` in full-only features (header, tasks, my-tasks, TodayWidget, patients, guides chase-log) were wrapped in the `link()` helper so they keep the `/v2` prefix. My-Diary links now point at `/tasks?view=my-diary` directly (the `/my-diary` server-redirect stub would otherwise drop the prefix).
 - **Naming debt:** `isV2 === true` now means "limited" and is true when NOT under `/v2`. Documented heavily in `useV2.ts`. Consider renaming to `isLimited` later.
 
 **Purpose (unchanged):** Mike is awaiting PII storage approval, so the limited build is a stripped demo with no patient data anywhere. Lives in the same codebase to avoid drift.
 
 **How it works (post-swap):**
-- `src/middleware.ts` detects `/v2` and `/v2/*`, rewrites them to `/` and `/*` so the existing pages render with FULL access. At the root, the full-build/PII routes (diary/patients/reports/data-sources/chase log/staff) redirect to `/`.
+- `src/proxy.ts` (the Next 16.2 rename of `middleware.ts`) detects `/v2` and `/v2/*`, rewrites them to `/` and `/*` so the existing pages render with FULL access. At the root, the full-build/PII routes (diary/patients/reports/data-sources/chase log/staff) redirect to `/`.
 - `src/lib/hooks/useV2.ts` exposes `useIsV2()` (reads `usePathname()`) and `useV2Href()` (returns a function that prefixes `/v2` to internal hrefs when in v2).
 - Components that touch v1-only features check `isV2` and either hide the UI or rewrite copy.
 

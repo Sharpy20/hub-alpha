@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// Next 16.2 renamed the "middleware" file convention to "proxy" (same behaviour,
+// runs on the Node.js runtime). Function renamed middleware -> proxy, file
+// renamed middleware.ts -> proxy.ts. The config.matcher export is unchanged.
+//
 // THE SWAP (21 Jun 2026): the stripped / PII-free demo is now the DEFAULT site
 // at the root domain, and the FULL build (Team Diary, Patients, Reports, etc.)
 // lives under the /v2 prefix.
@@ -38,7 +42,7 @@ function legacyTarget(subpath: string): string | null {
   return null;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Legacy redirect

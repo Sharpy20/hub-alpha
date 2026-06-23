@@ -1,6 +1,6 @@
 # INPATIENT HUB - Claude Code Project File
 
-> **Last Updated:** 21 June 2026
+> **Last Updated:** 23 June 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
 
@@ -1063,6 +1063,22 @@ On first session on the new machine:
 - If you add a new PII-touching feature later, add the route to `V2_BLOCKED_PREFIXES` in middleware AND wrap any links to it in `link(...)`.
 
 ## CURRENT FOCUS
+
+**PROJECT REVIEW COMPLETE (23 Jun 2026 - Sessions 24/26/26b).** All 5 parts of the
+Fable 5 project review are done and pushed (Sharpy20): (1) correctness, (2)
+architecture/dead-code, (4) security/PII - all from Session 20; (3) WCAG 2.1 AA
+audit - snags 185-192; (5) end-to-end walkthrough - snags 193-195. Also done:
+middleware.ts -> proxy.ts migration (snag 147). Build clean, 32/32 tests pass.
+
+**Open follow-ups for next session:**
+- Snag 192 (a11y, design-touching, needs Mike's eye): broad contrast sweep beyond
+  audited pages; non-NHS themes + dark mode contrast; modal focus-trap + Escape.
+- Snag 194: demo placeholder names (Staff_BY_D / Patient_BY_1) - polish call.
+- Snags 184 / 163-164: Mike to proofread the clinical builder tools + 3 empty
+  placeholder guides.
+- #75 loading skeletons, #76 diary keyboard nav, #79 print stylesheet.
+- npm audit: ~20 moderate/low, all vendored in Next/postcss. Do NOT run
+  `npm audit fix --force` (downgrades Next to 9.x).
 
 **TO-DO LIST:**
 

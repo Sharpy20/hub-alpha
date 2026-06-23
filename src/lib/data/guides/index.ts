@@ -24,10 +24,8 @@ export type {
   GuideLink, ChecklistItem, ChecklistGroup, MhaForm, MhaRequirement, MhaPathway,
 } from "./admission";
 
-// Shared "prompt builder" tools (seclusion, debrief, safety plan, restraint, etc.)
-export type {
-  BuilderConfig, BuilderSection, BuilderChipGroup, BuilderTeachingBlock, BuilderExample,
-} from "./builder";
+// Pure-guidance clinical documentation tools (seclusion, debrief, safety plan, etc.)
+export type { GuidePromptConfig, GuidePromptSection } from "./guideprompt";
 export { SECLUSION_BUILDER } from "./seclusion";
 export { DEBRIEF_BUILDER } from "./debrief";
 export { SAFETY_PLAN_BUILDER } from "./safety-plan";

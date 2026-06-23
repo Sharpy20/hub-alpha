@@ -1,36 +1,30 @@
-// Seclusion Support Plan builder.
+// Seclusion Support Plan - pure-guidance thinking tool.
 //
 // Field list is taken from the DHCFT "Seclusion Support Plan" (SystmOne) as set
-// out in the Seclusion and Long-Term Segregation - Psychiatric Emergency Policy
-// (Nov 2024, v9). The per-field "prompt yourself" questions are Mike's, written
-// to push past clone-y wording and keep the plan focused on getting the person
-// OUT of seclusion safely. Chips are starting points, not the answer.
+// out in the Seclusion & Long-Term Segregation Policy (Nov 2024, v9). The
+// per-field framing, "prompt yourself" questions, worked examples and tips are
+// Mike's, written to push nurses past clone-y wording and keep the plan focused
+// on getting the person OUT of seclusion safely, sooner.
 //
-// Policy requirements baked in: start the plan as soon as seclusion commences;
-// it must cover physical health, items allowed in the room, events leading to
-// seclusion, steps towards ending it, nutrition/hydration, communication,
-// personal hygiene, advance statement / PBS, family information and the
-// patient's views; a PEEP must be recorded; the patient must never be deprived
-// of clothing; give the patient a copy unless not clinically safe (record why).
+// This is a guide to THINK with - it does not collect or store anything. The
+// nurse reads it, thinks it through, then writes the entry in SystmOne in the
+// patient's own specifics.
 
-import type { BuilderConfig } from "./builder";
+import type { GuidePromptConfig } from "./guideprompt";
 
-export const SECLUSION_BUILDER: BuilderConfig = {
+export const SECLUSION_BUILDER: GuidePromptConfig = {
   id: "seclusion-support-plan",
   title: "Seclusion Support Plan",
-  icon: "🚪", // door
+  icon: "🚪",
   gradient: "from-rose-600 to-red-800",
-  subtitle: "Build the plan for keeping the person safe - and getting them out of seclusion sooner.",
+  subtitle: "A guide to thinking through each part of the plan - not more paperwork.",
   breadcrumb: "Seclusion Support Plan",
-  docHeading: "SECLUSION SUPPORT PLAN",
-  outputLabel: "Your seclusion support plan",
-  emptyHint: "Work through the prompts below to build the support plan, then copy it into SystmOne.",
-  dateLine: true,
+  intro:
+    "Work through each question below before you write the Seclusion Support Plan in SystmOne. The aim is not to write more - it is to keep the person safe and get them out of seclusion sooner. If you cannot answer a prompt clearly, the plan probably needs more thought - that is the point.",
   notice:
-    "Drafting aid for the SystmOne Seclusion Support Plan - it does not replace the Seclusion Care Pathway, reviews or Datix. If you cannot answer a prompt clearly, the plan probably needs more thought - that is the point.",
+    "Guide only - it does not replace the SystmOne Seclusion Support Plan, the Seclusion Care Pathway, the reviews or the Datix.",
   principles: [
-    "This is not extra paperwork - it is the plan for getting the person out of seclusion safely, sooner.",
-    "Start it as soon as seclusion commences and update it at every review.",
+    "Start the plan as soon as seclusion commences and update it at every review.",
     "Involve the patient at the earliest opportunity; if they cannot engage, explain the plan and record why.",
     "Give the patient a copy unless it is not clinically safe - and record the reason if not.",
     "A patient in seclusion must never be deprived of their clothing.",
@@ -40,454 +34,369 @@ export const SECLUSION_BUILDER: BuilderConfig = {
     {
       id: "risk",
       heading: "What is the risk?",
-      hint: "Why this person cannot safely be on the ward with others right now. Keep it to the current risk that requires containment - not the whole incident.",
-      gap: "What is happening right now that means this patient cannot safely be on the ward with others?",
-      groups: [
-        {
-          label: "Immediate risk to others",
-          words: [
-            "sustained physical aggression towards others",
-            "unpredictable, unprovoked assault",
-            "targeted threats towards a named person",
-            "use of an improvised weapon",
-            "severe, intrusive behaviour others cannot be protected from",
-            "sexually disinhibited behaviour towards others",
-          ],
-        },
+      why: "Keep it tight and specific to why seclusion is needed right now - not a rewrite of the whole incident. Focus on immediacy, harm to others, and why containment is needed.",
+      think: [
+        "What is happening right now that means this patient cannot safely be on the ward with others?",
+        "What behaviour is presenting immediate risk to others?",
+        "Who is at risk - staff, patients, or both?",
+        "Is the behaviour predictable or escalating? Can the patient understand or control their actions right now?",
       ],
-      placeholder: "What is presenting immediate risk to others, who is at risk, and whether it is escalating...",
-      naLabel: "Not applicable",
+      examples: [
+        "Risk of physical violence towards staff and other patients",
+        "Risk of sexually disinhibited behaviour towards others",
+        "High levels of agitation with unpredictable aggression",
+        "Attempting to enter others' space, creating risk of harm",
+        "Unable to maintain safe boundaries with others",
+      ],
+      tip: "State the current risk that requires containment - do not re-tell the whole incident.",
     },
     {
       id: "attempted",
       heading: "What was attempted to prevent seclusion?",
-      hint: "Your least-restrictive evidence. What was genuinely tried first, in what order, and how it failed - this is what justifies seclusion at CQC or tribunal.",
-      gap: "If I had to justify this to CQC or tribunal, what would I say we genuinely tried first?",
-      groups: [
-        {
-          label: "Tried first",
-          words: [
-            "verbal de-escalation and reassurance",
-            "increased / 1:1 observation",
-            "moved to a quieter, lower-stimulus area",
-            "redirection to own space",
-            "PRN medication offered",
-            "PRN medication accepted",
-            "oral medication offered before any other route",
-            "sensory / distraction strategies",
-            "followed the PBS plan",
-            "change in staff / gender of staff approaching",
-          ],
-        },
+      why: "This is your least-restrictive evidence. Show effort, progression, and the failure of less restrictive options - what you genuinely tried, not what could have been tried.",
+      think: [
+        "If I had to justify this to CQC or a tribunal, what would I say we genuinely tried first?",
+        "What support level or staffing changes were made?",
+        "Was medication offered or given?",
+        "Did we adapt the environment? What almost worked, even briefly?",
       ],
-      placeholder: "What was tried, in what order, what almost worked even briefly, and why each step was not enough...",
-      naLabel: "Nothing recorded yet",
+      examples: [
+        "Increased observations (e.g. Level 2 / 1:1)",
+        "Verbal de-escalation and reassurance",
+        "Redirection to own space; reduced stimuli / moved away from others",
+        "Gender-based staffing adjustments where indicated",
+        "Engagement in distraction activities",
+        "PRN medication offered / administered (oral offered first)",
+        "Sensory strategies (quiet space, weighted blanket if appropriate)",
+      ],
+      tip: "Think in sequence: what we tried, in what order, and why each was not enough.",
     },
     {
       id: "ceasing",
-      heading: "Steps when considering ceasing seclusion",
-      hint: "The most important section. What you would need to SEE to feel safe opening the door. Make it observable and specific - avoid 'settled'.",
-      gap: "What would I physically observe, and what would the patient be doing differently, before I felt safe ending seclusion?",
-      groups: [
-        {
-          label: "Observable exit signs",
-          words: [
-            "accepting oral medication",
-            "engaging with staff without hostility",
-            "able to follow simple instructions",
-            "no longer attempting to approach / target others",
-            "reduction in pacing, banging or shouting",
-            "able to talk about what led to seclusion",
-            "showing some insight into the incident",
-            "settled to rest without escalation",
-          ],
-        },
+      heading: "What steps should be in place when considering ceasing seclusion?",
+      why: "This is the most important bit - it should link to exit criteria. Make it observable and measurable, not vague like 'settled'.",
+      think: [
+        "What would I need to SEE to feel safe opening that door?",
+        "What behaviours need to reduce or stop?",
+        "What would safe interaction look like?",
+        "What can the patient realistically achieve in their current state?",
       ],
-      placeholder: "Describe what 'safe enough to reintegrate' actually looks like for this person, and the plan for a graded return to the ward...",
-      naLabel: "Not yet established",
+      examples: [
+        "Patient engaging with staff without hostility",
+        "Reduction in verbal / physical aggression",
+        "Accepting oral medication if prescribed",
+        "Remaining in own space without attempting to approach others",
+        "Demonstrating ability to follow basic instructions",
+        "Reduced agitation / restlessness",
+        "Able to discuss the incident or current presentation (where appropriate)",
+      ],
+      tip: "Make it observable and measurable - what you would physically see, not 'settled'.",
     },
     {
       id: "peep",
       heading: "Patient Emergency Evacuation Plan (PEEP)",
-      hint: "How staff would safely evacuate this patient from seclusion in an emergency (e.g. fire). Practical, not theoretical - every patient in seclusion must have one.",
-      gap: "If the fire alarm went off right now, how do we get them out safely?",
-      groups: [
-        {
-          label: "Evacuation plan",
-          words: [
-            "likely to follow staff instruction if calm",
-            "likely to resist - escorted removal under Positive & Safe",
-            "minimum 3 Positive & Safe trained staff required",
-            "consider absconding risk during evacuation",
-            "mobility aid / wheelchair required",
-            "use the nearest external exit and muster point",
-            "summon help via SAS alarm",
-          ],
-        },
+      why: "Every patient in seclusion must have one. Keep it practical, not theoretical - how staff would actually get this person out safely in an emergency.",
+      think: [
+        "If the fire alarm went off right now, how do we get them out safely?",
+        "Would the patient follow instruction or resist?",
+        "How many staff would realistically be needed?",
+        "Any mobility or physical health considerations, or risks that remain during evacuation?",
       ],
-      placeholder: "Who does what, how many staff, the route, equipment, and the risks that remain during evacuation...",
-      naLabel: "Not yet recorded",
+      examples: [
+        "Patient to be escorted by a minimum of 3 trained staff if compliant",
+        "If non-compliant, use Positive & Safe interventions as per training",
+        "Consider known risks (violence / absconding / mobility)",
+        "Ensure a clear route and use of the alarm",
+        "Equipment required (e.g. wheelchair if mobility impaired)",
+      ],
+      tip: "Picture it really happening - who does what, the route, and how many staff.",
     },
     {
       id: "communication",
       heading: "Communication needs",
-      hint: "What helps this person understand and not escalate - tone, pace, clarity, consistency.",
-      gap: "What helps this patient understand and not escalate?",
-      groups: [
-        {
-          words: [
-            "clear, short, simple language",
-            "allow extra time to process",
-            "one staff member speaks at a time",
-            "calm, low tone and non-confrontational stance",
-            "easily overwhelmed - minimise stimulation",
-            "interpreter required",
-            "hearing / visual impairment - adjust accordingly",
-          ],
-        },
+      why: "Think about what helps this patient understand and not escalate - tone, pace, clarity, consistency.",
+      think: [
+        "Do they process information slowly?",
+        "Do they respond better to one staff member or several?",
+        "Are they easily overwhelmed? Is there sensory overload happening?",
       ],
-      placeholder: "How best to communicate with this patient, and what to avoid...",
-      naLabel: "No specific needs identified",
+      examples: [
+        "Clear, simple language required",
+        "Allow time for processing information",
+        "Avoid multiple staff giving instructions at once",
+        "Use a calm tone and non-confrontational approach",
+        "Interpreter required (if applicable)",
+        "Hearing / visual impairment adjustments",
+      ],
+      tip: "Say what works for THIS person, and what to avoid.",
     },
     {
       id: "clothing",
       heading: "Clothing / bedding needs",
-      hint: "What the patient can safely have while maintaining dignity. Balance dignity against risk - and remember clothing must never be removed entirely.",
-      gap: "What can they safely have that maintains dignity?",
-      groups: [
-        {
-          words: [
-            "own clothing - no current need to restrict",
-            "anti-ligature / tear-proof clothing (individual MDT risk assessment)",
-            "anti-ligature blanket provided",
-            "ensure warmth and comfort for room temperature",
-            "review need to restrict at each review",
-          ],
-        },
+      why: "Balance dignity against risk. A patient in seclusion must never be deprived of their clothing.",
+      think: [
+        "What can they safely have that maintains dignity?",
+        "Is there a self-harm or ligature risk?",
+        "Is temperature or comfort a factor? Are we restricting unnecessarily?",
       ],
-      placeholder: "What is provided and why, plus any ligature / tearing risk and the MDT rationale for restriction...",
-      naLabel: "Standard - own clothing and bedding",
+      examples: [
+        "Standard clothing unless ligature / self-harm risk identified",
+        "Consider anti-ligature clothing if high risk (individual MDT risk assessment)",
+        "Ensure appropriate for dignity and temperature",
+        "Blanket provided unless risk indicates otherwise",
+      ],
+      tip: "Any restriction must be justified by the current risk and reviewed each time.",
     },
     {
       id: "medication",
       heading: "Medication reviews needed",
-      hint: "Is medication helping, not helping, or making things worse? Flag what the medic needs to review.",
-      gap: "Is medication helping, not helping, or making things worse?",
-      groups: [
-        {
-          words: [
-            "review effectiveness of PRN",
-            "regular psychotropic medication review needed",
-            "monitor for over-sedation",
-            "monitor for under-treatment",
-            "rapid tranquillisation given - follow monitoring policy",
-            "urgent medical / physical review required",
-          ],
-        },
+      why: "Flag what the medic needs to look at - is medication helping, not helping, or making things worse?",
+      think: [
+        "Is the PRN effective?",
+        "Is sedation too much or too little?",
+        "Is there a gap in regular medication? Is urgent medical review needed?",
       ],
-      placeholder: "What medication question the team needs to answer, and when...",
-      naLabel: "No review outstanding",
+      examples: [
+        "Review need for regular psychotropic medication",
+        "Monitor effectiveness of PRN medication",
+        "Consider side effects / over-sedation",
+        "Medical review required if repeated PRN use",
+        "Consider need for a rapid tranquillisation plan",
+      ],
+      tip: "Name the question the team needs to answer, and by when.",
     },
     {
       id: "hygiene",
-      heading: "Personal hygiene / toilet needs",
-      hint: "Can they meet their own needs safely? Prompting, supervision, dignity and same-gender support.",
-      gap: "Can they meet their own needs safely?",
-      groups: [
-        {
-          words: [
-            "able to use facilities independently",
-            "needs prompting",
-            "needs supervision (same gender)",
-            "continence needs to support",
-            "preserve privacy and dignity at all times",
-          ],
-        },
+      heading: "Personal hygiene / toilet facilities and needs",
+      why: "Can they meet their own needs safely? Balance independence, supervision and dignity.",
+      think: [
+        "Do they need prompting?",
+        "Do they need supervision (same gender)?",
+        "Are there risks around privacy or vulnerability?",
       ],
-      placeholder: "What support is needed for hygiene and toileting, and how dignity is preserved...",
-      naLabel: "Independent - no support needed",
+      examples: [
+        "Access to toilet facilities within the seclusion suite",
+        "Staff support required or not, based on risk",
+        "Same-gender staff where appropriate",
+        "Regular prompts if disorganised mental state",
+      ],
+      tip: "Preserve privacy and dignity at all times, even where supervision is needed.",
     },
     {
       id: "utensils",
       heading: "Access to appropriate eating utensils",
-      hint: "What they can safely eat and with what. Restrict only what the risk requires.",
-      gap: "What can they safely eat and with what?",
-      groups: [
-        {
-          words: [
-            "standard utensils - low risk",
-            "safer / adapted utensils only",
-            "finger foods provided",
-            "supervision required during eating",
-            "remove utensils after each meal",
-          ],
-        },
+      why: "What can they safely eat and with what? Restrict only what the risk requires.",
+      think: [
+        "Any risk of using utensils as weapons?",
+        "Are simpler options needed?",
+        "Is supervision required during eating?",
       ],
-      placeholder: "What utensils are appropriate and why, and any supervision needed...",
-      naLabel: "Standard utensils",
+      examples: [
+        "Standard utensils if low risk",
+        "Adapted / safer utensils if risk identified",
+        "Finger foods if necessary",
+        "Supervision required during eating if risk present",
+      ],
+      tip: "Remove only what the risk demands - record why.",
     },
     {
       id: "reading",
-      heading: "Restrictions to reading / sensory material",
-      hint: "What could help regulate them without increasing risk. Are we restricting more than necessary?",
-      gap: "What could help regulate them without increasing risk?",
-      groups: [
-        {
-          words: [
-            "access to reading material where safe",
-            "religious / spiritual text requested",
-            "no hardback items (ligature / weapon risk)",
-            "access to radio / sensory items where safe",
-            "review restriction at each review",
-          ],
-        },
+      heading: "Restrictions to reading material",
+      why: "What could help regulate them without increasing risk? Avoid restricting more than necessary.",
+      think: [
+        "Would access to reading calm them?",
+        "Could the item be misused?",
+        "Are we restricting more than necessary?",
       ],
-      placeholder: "What is allowed, what is restricted and why...",
-      naLabel: "No specific restriction",
+      examples: [
+        "Access to books / magazines where safe",
+        "No hardback items if risk identified",
+        "Remove materials that could be used to self-harm",
+        "Access to a religious / spiritual text where requested and safe",
+      ],
+      tip: "Review the restriction at each review - it may no longer be needed.",
     },
     {
       id: "diet",
       heading: "Dietary & fluid requirements",
-      hint: "How we keep them physically safe during seclusion. Intake, prompting and any cultural / religious needs.",
-      gap: "How do we keep them physically safe with food and fluid during seclusion?",
-      groups: [
-        {
-          words: [
-            "offer fluids regularly (record on F&F chart)",
-            "encourage / prompt intake",
-            "monitor food and fluid intake closely",
-            "halal / kosher / vegetarian / vegan",
-            "high-calorie options if poor intake",
-          ],
-        },
+      why: "Keeping them physically safe during seclusion. Monitor intake and meet cultural / religious needs.",
+      think: [
+        "Are they eating and drinking enough?",
+        "Do they need encouragement or prompting?",
+        "Are there religious / cultural requirements?",
       ],
-      placeholder: "Intake plan, prompting needed, and any cultural / religious requirements...",
-      naLabel: "No specific requirement",
+      examples: [
+        "Encourage regular fluids (offer hourly)",
+        "Monitor intake on the food & fluid chart",
+        "Specific dietary requirements adhered to (e.g. halal, vegetarian)",
+        "High-calorie options if not eating well",
+      ],
+      tip: "Record what is offered and taken, not just what is available.",
     },
     {
       id: "dysphagia",
       heading: "Dysphagia assessment",
-      hint: "Any risk they could choke or struggle swallowing - increased if sedated.",
-      gap: "Is there any risk they could choke or struggle to swallow, especially if sedated?",
-      groups: [
-        {
-          words: [
-            "no known swallowing concerns",
-            "known SALT input - follow guidance",
-            "modified diet / thickened fluids",
-            "increased risk due to sedation - monitor",
-          ],
-        },
+      why: "Is there any risk they could choke or struggle to swallow? Risk increases if sedated.",
+      think: [
+        "Known SALT input?",
+        "Need for a modified diet?",
+        "Is the risk increased due to sedation?",
       ],
-      placeholder: "Swallowing risk, any SALT plan, and how it is managed during seclusion...",
-      naLabel: "No known concerns",
+      examples: [
+        "No known swallowing concerns",
+        "Soft diet / thickened fluids if identified",
+        "Follow SALT guidance if in place",
+        "Increased monitoring if sedated",
+      ],
+      tip: "If sedation is on board, swallowing risk goes up - say how it is managed.",
     },
     {
       id: "trauma",
       heading: "Consideration of past history of trauma",
-      hint: "Could anything we are doing make this worse? This is about not re-traumatising while keeping people safe.",
-      gap: "Could anything we are doing re-traumatise this person?",
-      groups: [
-        {
-          words: [
-            "known trauma history - approach with care",
-            "restraint may be a trigger - minimise where safe",
-            "confinement / locked-door trigger",
-            "gender of staff sensitivity",
-            "avoid sudden entry / loud approaches",
-          ],
-        },
+      why: "This is about not re-traumatising while keeping people safe.",
+      think: [
+        "Could anything we are doing make this worse for them?",
+        "Gender sensitivities? Restraint triggers?",
+        "Authority or confinement triggers?",
       ],
-      placeholder: "Known triggers and what staff should avoid where it is safe to do so...",
-      naLabel: "None known",
+      examples: [
+        "Avoid male / female staff where history indicates",
+        "Minimise use of restraint where safe to do so",
+        "Maintain clear communication about what is happening",
+        "Avoid sudden entry / loud approaches",
+      ],
+      tip: "Name the known triggers and what staff should avoid where it is safe.",
     },
     {
       id: "pbs",
-      heading: "PBS plan / advance statement considered",
-      hint: "Do we already know what works for this person? Reduces confusion with the separate care plan.",
-      gap: "Do we already know what works for this person - and have we followed it?",
-      groups: [
-        {
-          words: [
-            "existing PBS plan reviewed and followed",
-            "advance statement reviewed",
-            "no current plan - to be developed",
-            "plan not followed - reason recorded",
-          ],
-        },
+      heading: "Has a PBS plan or Advance Statement been considered?",
+      why: "Reduces confusion - the care plan is a separate document. Do we already know what works for this person?",
+      think: [
+        "Is there an existing PBS plan or advance statement?",
+        "Have we followed it?",
+        "If not, why not?",
       ],
-      placeholder: "Which plan exists, whether it was followed, and if not, why...",
-      naLabel: "N/A - none in place",
+      examples: [
+        "Existing PBS plan reviewed and followed",
+        "Advance statement reviewed",
+        "No current plan - to be developed post-incident",
+        "Plan not followed - reason recorded",
+      ],
+      tip: "If a plan exists, say whether it was followed - and if not, why.",
     },
     {
       id: "gender",
       heading: "Gender-based considerations",
-      hint: "Does the gender of staff affect safety, dignity or distress - for personal care, trauma or risk behaviours?",
-      gap: "Does the gender of staff impact safety or distress for this person?",
-      groups: [
-        {
-          words: [
-            "same-gender staff for personal care",
-            "gender preference linked to trauma",
-            "balance preference against risk management",
-          ],
-        },
+      why: "Does the gender of staff affect safety, dignity or distress - for personal care, trauma, or risk behaviours?",
+      think: [
+        "For dignity?",
+        "For trauma reasons?",
+        "For risk behaviours?",
       ],
-      placeholder: "Any gender-based considerations and how they are balanced with risk...",
-      naLabel: "None identified",
+      examples: [
+        "Same-gender staff for personal care",
+        "Consider past trauma relating to gender",
+        "Balance preference with risk management needs",
+      ],
+      tip: "Where there is a preference, say how it is balanced against the risk.",
     },
     {
       id: "views",
-      heading: "Patient involvement & views",
-      hint: "What have we told the patient, and what have they said back? Even 'unable to engage' is meaningful if justified.",
-      gap: "Have we explained why they are here, and what did they say?",
-      gapLabel: "Ask the patient:",
-      patientVoice: true,
-      groups: [
-        {
-          words: [
-            "explained reason for seclusion",
-            "explained how seclusion will end",
-            "patient disagrees with need for seclusion",
-            "too distressed / disorganised to engage now - revisit",
-            "patient able to say what would help them settle",
-          ],
-        },
+      heading: "Patient involved / patient's views",
+      why: "What have we told the patient, and what have they said back? Even 'unable to engage' is meaningful if justified.",
+      think: [
+        "Have we explained why they are here?",
+        "Do they agree or disagree?",
+        "Are they able to engage at all?",
       ],
-      placeholder: "What was explained, the patient's response, and whether they could engage...",
-      naLabel: "Unable to engage at present",
+      examples: [
+        "Patient informed of the reasons for seclusion",
+        "Patient expressed disagreement with the need for seclusion",
+        "Patient able to discuss what would help them settle",
+        "Patient currently unable / unwilling to engage - to revisit",
+      ],
+      tip: "Record the patient's own words where you can.",
     },
     {
       id: "copy",
       heading: "Copy given to patient",
-      hint: "Would giving them a copy help, or confuse / escalate them right now? Give it unless not clinically safe - record the reason if withheld.",
-      gap: "Would giving them this help, or confuse / escalate them right now?",
-      groups: [
-        {
-          words: [
-            "copy given to patient",
-            "to be offered when settled enough",
-            "not given - would escalate at present (reason recorded)",
-          ],
-        },
+      why: "Give a copy unless it is not clinically safe - and record the reason if withheld.",
+      think: [
+        "Would giving them this help, or confuse / escalate them right now?",
       ],
-      placeholder: "Whether a copy was given, and if not, the clinical reason...",
-      naLabel: "Not yet offered",
+      examples: [
+        "Copy given to patient",
+        "To be offered when clinically appropriate",
+        "Not given at this time due to mental state (reason recorded)",
+      ],
+      tip: "If you withhold it, the clinical reason must be recorded.",
     },
     {
       id: "family",
-      heading: "Family / carer informed",
-      hint: "What is helpful and appropriate at this stage? Check consent and whether it supports care.",
-      gap: "What would be helpful and appropriate to share with family or carers at this stage?",
-      groups: [
-        {
-          words: [
-            "consent to share confirmed",
-            "family / carer informed",
-            "no consent to share - not informed",
-            "not appropriate at this time",
-          ],
-        },
+      heading: "Information about family / carer informed",
+      why: "What would be helpful and appropriate at this stage? Check consent.",
+      think: [
+        "Do they consent to sharing?",
+        "Is this the right time?",
+        "Would it support care or increase distress?",
       ],
-      placeholder: "Who was informed, consent position, and timing...",
-      naLabel: "Not applicable",
+      examples: [
+        "To be informed with patient consent",
+        "Family / carer informed",
+        "Not informed at this time (no consent / not appropriate currently)",
+      ],
+      tip: "Record the consent position and the timing.",
     },
     {
       id: "presentation",
-      heading: "Appearance, mood & level of awareness",
-      hint: "A snapshot of how the patient is right now - not a full MSE. What you would see through the window.",
-      gap: "If I glanced through the window, what would I see?",
-      groups: [
-        {
-          label: "Appearance / behaviour",
-          words: ["agitated", "pacing", "withdrawn", "lying still", "responding to unseen stimuli"],
-        },
-        {
-          label: "Mood",
-          words: ["distressed", "irritable", "labile", "calm", "tearful"],
-        },
-        {
-          label: "Level of awareness",
-          words: ["alert", "drowsy / sedated", "disorientated", "reduced awareness of surroundings"],
-        },
+      heading: "Patient appearance, mood & level of awareness",
+      why: "Keep it a snapshot, not a full MSE - what you would see if you glanced through the window.",
+      think: [
+        "Agitated / withdrawn / pacing / lying still?",
+        "Distressed versus calm?",
+        "Alert versus drowsy?",
       ],
-      placeholder: "A brief snapshot of presentation right now...",
-      naLabel: "Not yet recorded",
+      examples: [
+        "Appears agitated / restless",
+        "Mood labile / irritable",
+        "Alert but internally preoccupied",
+        "Reduced awareness of surroundings",
+      ],
+      tip: "A snapshot of right now - not a full mental state examination.",
     },
     {
       id: "physical",
-      heading: "Physical health, frailty & mobility",
-      hint: "Anything physical that makes this riskier - sedation, falls, mobility, chronic conditions, deterioration to watch for.",
-      gap: "Is there anything physically that makes this more risky?",
-      groups: [
-        {
-          words: [
-            "baseline NEWS2 recorded",
-            "monitor closely post rapid tranquillisation",
-            "falls risk",
-            "mobility / frailty concern",
-            "chronic condition (e.g. diabetes, cardiac, respiratory)",
-            "intoxication / substances - monitor",
-          ],
-        },
+      heading: "Physical health / frailty concerns including mobility",
+      why: "Is there anything physically that makes this more risky?",
+      think: [
+        "Sedation?",
+        "Falls risk or mobility issues?",
+        "Chronic conditions to watch?",
       ],
-      placeholder: "Physical health considerations and what needs monitoring...",
-      naLabel: "No concerns identified",
+      examples: [
+        "No known physical health concerns",
+        "Increased monitoring due to sedation (baseline NEWS2 recorded)",
+        "Mobility independent / falls risk considered",
+        "Chronic condition to monitor (e.g. diabetes, cardiac, respiratory)",
+      ],
+      tip: "Say what needs monitoring and how often.",
     },
     {
       id: "cultural",
-      heading: "Cultural & spiritual needs",
-      hint: "What matters to this person beyond the immediate crisis - food, prayer, modesty, practices.",
-      gap: "What matters to this person beyond the immediate crisis?",
-      groups: [
-        {
-          words: [
-            "prayer times / space respected where safe",
-            "access to religious text where safe",
-            "modesty / dress requirements",
-            "dietary requirements linked to faith",
-            "interpreter / cultural liaison",
-          ],
-        },
+      heading: "Cultural and spiritual needs",
+      why: "What matters to this person beyond the immediate crisis?",
+      think: [
+        "Food, prayer, modesty, practices?",
       ],
-      placeholder: "Cultural or spiritual needs and how they are met where safe...",
-      naLabel: "None identified",
+      examples: [
+        "Access to religious texts where safe",
+        "Prayer times respected where possible",
+        "Dietary needs linked to culture / religion",
+        "Interpreter / cultural liaison where needed",
+      ],
+      tip: "Meet what you can safely, and say how.",
     },
   ],
-  teaching: [
-    {
-      title: "What good looks like",
-      points: [
-        "Reads as an operational plan, not a copy of the incident report or the care plan.",
-        "The exit criteria are observable - another nurse could read them and know when the door can open.",
-        "Least-restrictive options are shown as a sequence: what was tried, in what order, and why each was not enough.",
-        "Restrictions (clothing, utensils, reading) are justified by the current risk and reviewed each time.",
-      ],
-    },
-    {
-      title: "Common mistakes",
-      points: [
-        "Using 'settled' or 'improved' with no description of what changed.",
-        "Restricting more than the risk requires (the patient must never be deprived of clothing).",
-        "Leaving the patient's views blank instead of recording 'unable to engage - revisit'.",
-        "Treating it as a tick-box rather than the plan to end seclusion.",
-      ],
-    },
-    {
-      title: "The prompt method",
-      points: [
-        "Each section has a 'prompt yourself' question - answer that, in this person's specifics, before reaching for a chip.",
-        "If you cannot answer the prompt clearly, the plan needs more thought - that is the signal, not a failure.",
-        "Chips are a starting point to save typing, not the finished entry.",
-      ],
-    },
-  ],
-  example: {
-    topic: "Steps when considering ceasing seclusion",
-    weak: "Patient to be reviewed when settled. Cease seclusion when no longer a risk to others.",
-    strong:
-      "Consider ending seclusion when he is accepting oral lorazepam when offered, talking to staff through the hatch without threats, no longer trying to reach the door when staff approach, and able to say what happened earlier. Plan a graded return: door opened with two staff present first, then escorted to his room, observing for 30 minutes before stepping observation down.",
-  },
   footer:
-    "Drafting aid for the SystmOne Seclusion Support Plan. Grounded in the DHCFT Seclusion & Long-Term Segregation Policy (Nov 2024). Always review wording against the live policy and the patient before it goes in the record.",
+    "Guide only, grounded in the DHCFT Seclusion & Long-Term Segregation Policy (Nov 2024). Think it through, then write the plan in SystmOne in the patient's own specifics. Draft - to be verified against the live policy.",
 };

@@ -1,8 +1,8 @@
 "use client";
 
-import { PromptBuilder } from "@/components/guides/PromptBuilder";
+import { GuidePrompts } from "@/components/guides/GuidePrompts";
 import { PHYSICAL_HEALTH_BUILDER } from "@/lib/data/guides";
 
 export default function PhysicalHealthAssessmentPage() {
-  return <PromptBuilder config={PHYSICAL_HEALTH_BUILDER} />;
+  return <GuidePrompts config={PHYSICAL_HEALTH_BUILDER} />;
 }

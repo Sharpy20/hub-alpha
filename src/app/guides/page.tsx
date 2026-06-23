@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout";
-import { Badge, VerificationBadge } from "@/components/ui";
+import { Badge, StatusBadge } from "@/components/ui";
 import Link from "next/link";
 import { ArrowRight, Clock, Filter, FileText, Pencil, Search } from "lucide-react";
+import { guideApproval } from "@/lib/data/approval-status";
 import { useReferralLog } from "@/app/referral-log-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
@@ -36,13 +37,13 @@ const ALL_GUIDES: GuideItem[] = [
   { id: "risk-assessment", title: "Risk Formulation & Management Plan", description: "Interactive builder - write a personalised formulation and RMP for SystemOne", icon: "\u26A0\uFE0F", gradient: "from-rose-500 to-red-700", category: "Nurse Tools", viewerPath: "/guides/risk-assessment" },
   { id: "abc-chart", title: "ABC Charts", description: "Recording and analysing challenging behaviour - antecedent, behaviour, consequence", icon: "\ud83d\uDCCB", gradient: "from-amber-500 to-orange-700", category: "Nurse Tools", viewerPath: "/guides/abc-chart" },
   { id: "care-plan", title: "My Care Plan", description: "Interactive builder - write a personalised, patient-voice care plan for SystemOne", icon: "\ud83d\udcdd", gradient: "from-sky-500 to-blue-700", category: "Nurse Tools", viewerPath: "/guides/care-plan" },
-  { id: "safety-plan", title: "Safety Plan", description: "Interactive builder - a collaborative, patient-voice safety plan", icon: "\ud83d\udedf", gradient: "from-emerald-500 to-green-700", category: "Nurse Tools", viewerPath: "/guides/safety-plan" },
+  { id: "safety-plan", title: "Safety Plan", description: "Think-it-through guide for a collaborative, patient-voice safety plan", icon: "\ud83d\udedf", gradient: "from-emerald-500 to-green-700", category: "Nurse Tools", viewerPath: "/guides/safety-plan" },
   { id: "named-nurse", title: "Named Nurse Checklist", description: "Weekly and monthly tasks for named nurses", icon: "\ud83d\uDCCB", gradient: "from-emerald-500 to-emerald-700", category: "Nurse Tools", viewerPath: "/guides/named-nurse" },
   { id: "admission-checklist", title: "Admission Checklist", description: "Interactive tick-list of every admission task, with help links", icon: "\u2705", gradient: "from-green-500 to-green-700", category: "Nurse Tools", viewerPath: "/guides/admission-checklist" },
   { id: "discharge-checklist", title: "Discharge Checklist", description: "Safe discharge planning and documentation", icon: "\uD83C\uDFE0", gradient: "from-teal-500 to-teal-700", category: "Nurse Tools", viewerPath: "/guides/discharge-checklist" },
   { id: "fridge-temps", title: "Fridge Temperature Recording", description: "Medication fridge monitoring and Assurance Dashboard recording", icon: "\uD83C\uDF21\uFE0F", gradient: "from-cyan-500 to-cyan-700", category: "Nurse Tools", viewerPath: "/guides/fridge-temps" },
   // Restrictive Practice
-  { id: "seclusion-support-plan", title: "Seclusion Support Plan", description: "Interactive builder - the plan for keeping a person safe and ending seclusion sooner", icon: "\uD83D\uDEAA", gradient: "from-rose-600 to-red-800", category: "Restrictive Practice", viewerPath: "/guides/seclusion-support-plan" },
+  { id: "seclusion-support-plan", title: "Seclusion Support Plan", description: "Think-it-through guide for the seclusion support plan - safer, sooner out of seclusion", icon: "\uD83D\uDEAA", gradient: "from-rose-600 to-red-800", category: "Restrictive Practice", viewerPath: "/guides/seclusion-support-plan" },
   { id: "restraint-monitoring", title: "Restraint & Rapid Tranq Monitoring", description: "Draft a defensible monitoring narrative for restraint or rapid tranquillisation", icon: "\uD83E\uDE7A", gradient: "from-orange-600 to-red-700", category: "Restrictive Practice", viewerPath: "/guides/restraint-monitoring" },
   { id: "observation-engagement", title: "Observation & Engagement Plan", description: "Write a clear rationale for the observation level and how staff engage", icon: "\uD83D\uDC41\uFE0F", gradient: "from-blue-600 to-indigo-800", category: "Restrictive Practice", viewerPath: "/guides/observation-engagement" },
   { id: "debrief", title: "Post-Incident Debrief", description: "Capture the patient's account and the learning after restraint, RT or seclusion", icon: "\uD83D\uDCAC", gradient: "from-teal-600 to-cyan-800", category: "Restrictive Practice", viewerPath: "/guides/debrief" },
@@ -105,17 +106,22 @@ export default function GuidesPage() {
     } catch { /* use default */ }
   }, []);
 
-  // Apply custom order if available
-  const orderedGuides = customOrder
-    ? customOrder
-        .map(co => {
-          const guide = ALL_GUIDES.find(g => g.id === co.id);
-          return guide ? { ...guide, category: co.category } : null;
-        })
-        .filter((g): g is GuideItem => g !== null)
-        // Append any new guides not in the saved order
-        .concat(ALL_GUIDES.filter(g => !customOrder.some(co => co.id === g.id)))
-    : ALL_GUIDES;
+  // Apply custom order if available - but IGNORE a stale saved order (one that is
+  // missing a lot of current guides), and always take each guide (including its
+  // category) from ALL_GUIDES so old category names cannot resurface. This
+  // self-heals browsers that saved a guide order before later restructures, which
+  // could otherwise scatter or bury guides.
+  const orderedGuides = (() => {
+    if (!customOrder) return ALL_GUIDES;
+    const byId = new Map(ALL_GUIDES.map((g) => [g.id, g] as const));
+    const savedKnown = customOrder.filter((co) => byId.has(co.id));
+    // If the saved order covers fewer than 70% of current guides it is stale - drop it.
+    if (savedKnown.length < ALL_GUIDES.length * 0.7) return ALL_GUIDES;
+    const seen = new Set(savedKnown.map((co) => co.id));
+    return savedKnown
+      .map((co) => byId.get(co.id)!)
+      .concat(ALL_GUIDES.filter((g) => !seen.has(g.id)));
+  })();
 
   // Get all categories
   const allCategories = [...new Set(orderedGuides.map((g) => g.category))];
@@ -249,13 +255,9 @@ export default function GuidesPage() {
                     <Badge className="bg-gray-100 text-gray-600 border-0 text-xs">
                       {guide.category}
                     </Badge>
-                    <VerificationBadge
-                      contentType="guide"
-                      contentId={guide.id}
-                      contentTitle={guide.title}
-                    />
                   </div>
                 </div>
+                <StatusBadge status={guideApproval(guide.id)} />
                 <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-500 flex-shrink-0 transition-colors" />
               </div>
             </Link>

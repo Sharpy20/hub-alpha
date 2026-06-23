@@ -1,8 +1,8 @@
 "use client";
 
-import { PromptBuilder } from "@/components/guides/PromptBuilder";
+import { GuidePrompts } from "@/components/guides/GuidePrompts";
 import { NUTRITION_BUILDER } from "@/lib/data/guides";
 
 export default function NutritionScreeningPage() {
-  return <PromptBuilder config={NUTRITION_BUILDER} />;
+  return <GuidePrompts config={NUTRITION_BUILDER} />;
 }

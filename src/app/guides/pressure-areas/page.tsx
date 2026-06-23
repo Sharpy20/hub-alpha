@@ -1,8 +1,8 @@
 "use client";
 
-import { PromptBuilder } from "@/components/guides/PromptBuilder";
+import { GuidePrompts } from "@/components/guides/GuidePrompts";
 import { PRESSURE_BUILDER } from "@/lib/data/guides";
 
 export default function PressureAreasPage() {
-  return <PromptBuilder config={PRESSURE_BUILDER} />;
+  return <GuidePrompts config={PRESSURE_BUILDER} />;
 }

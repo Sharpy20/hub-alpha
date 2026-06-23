@@ -1,8 +1,8 @@
 "use client";
 
-import { PromptBuilder } from "@/components/guides/PromptBuilder";
+import { GuidePrompts } from "@/components/guides/GuidePrompts";
 import { FALLS_BUILDER } from "@/lib/data/guides";
 
 export default function FallsPage() {
-  return <PromptBuilder config={FALLS_BUILDER} />;
+  return <GuidePrompts config={FALLS_BUILDER} />;
 }

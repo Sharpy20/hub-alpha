@@ -3,8 +3,9 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout";
-import { Badge, VerificationBadge } from "@/components/ui";
+import { Badge, StatusBadge } from "@/components/ui";
 import { DynamicIcon } from "@/components/common";
+import { linkApproval } from "@/lib/data/approval-status";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings, PersonalBookmark } from "@/app/ward-settings-provider";
 import { useApp } from "@/app/providers";
@@ -349,13 +350,9 @@ function BookmarksContent() {
                           FOCUS
                         </Badge>
                       )}
-                      <VerificationBadge
-                        contentType="link"
-                        contentId={bookmark.id}
-                        contentTitle={bookmark.title}
-                      />
                     </div>
                   </div>
+                  <StatusBadge status={linkApproval(bookmark.id)} />
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <button
                       onClick={(e) => {

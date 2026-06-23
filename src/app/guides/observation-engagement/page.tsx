@@ -1,8 +1,8 @@
 "use client";
 
-import { PromptBuilder } from "@/components/guides/PromptBuilder";
+import { GuidePrompts } from "@/components/guides/GuidePrompts";
 import { OBSERVATION_BUILDER } from "@/lib/data/guides";
 
 export default function ObservationEngagementPage() {
-  return <PromptBuilder config={OBSERVATION_BUILDER} />;
+  return <GuidePrompts config={OBSERVATION_BUILDER} />;
 }

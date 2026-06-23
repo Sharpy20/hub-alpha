@@ -1,8 +1,8 @@
 "use client";
 
-import { PromptBuilder } from "@/components/guides/PromptBuilder";
+import { GuidePrompts } from "@/components/guides/GuidePrompts";
 import { HANDLING_BUILDER } from "@/lib/data/guides";
 
 export default function PersonalHandlingPage() {
-  return <PromptBuilder config={HANDLING_BUILDER} />;
+  return <GuidePrompts config={HANDLING_BUILDER} />;
 }

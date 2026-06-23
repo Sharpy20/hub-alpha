@@ -1,228 +1,128 @@
-// Physical restraint & rapid tranquillisation monitoring builder.
+// Restraint & rapid tranquillisation monitoring - pure-guidance thinking tool.
 //
-// SOURCE-ALIGNED with the Trust workflow (Management of Violence & Aggression /
-// Positive & Safe). The clinical monitoring record needs: the reason for and
-// proportionality of the intervention, what was tried first, the detail of the
-// restraint (holds, position, duration) or medication (drug, dose, route, time,
-// site), the Datix number, additional risk factors and supporting detail, the
-// intervention monitoring (physical obs every 15 minutes for at least an hour +
-// NEWS2), and a monitoring-ceased rationale (RN can cease if no additional risk
-// factors and ambulatory after >= 1 hour; otherwise a doctor reviews).
-//
-// This is a drafting / scrutiny aid. It does NOT replace the monitoring chart,
-// the Datix, or the Drug Management of Violence & Aggression policy.
+// Source-aligned with the Trust Management of Violence & Aggression / Positive &
+// Safe workflow. A guide to writing a defensible monitoring narrative - it does
+// not replace the monitoring chart, the Datix, or the Drug Management of Violence
+// & Aggression policy.
 
-import type { BuilderConfig } from "./builder";
+import type { GuidePromptConfig } from "./guideprompt";
 
-export const RESTRAINT_BUILDER: BuilderConfig = {
+export const RESTRAINT_BUILDER: GuidePromptConfig = {
   id: "restraint-monitoring",
   title: "Restraint & Rapid Tranq Monitoring",
   icon: "🩺",
   gradient: "from-orange-600 to-red-700",
-  subtitle: "Draft a defensible monitoring narrative for physical restraint or rapid tranquillisation.",
+  subtitle: "A guide to writing a defensible monitoring narrative for restraint or rapid tranquillisation.",
   breadcrumb: "Restraint & RT Monitoring",
-  docHeading: "RESTRAINT / RAPID TRANQUILLISATION MONITORING",
-  outputLabel: "Your monitoring narrative",
-  emptyHint: "Work through the prompts to draft the monitoring narrative, then copy it into the record.",
-  dateLine: true,
+  intro:
+    "Think through each of these before you write the monitoring record. The reviewer's questions are always the same: why was it necessary, what was tried first, exactly what was done, and how was the person kept physically safe?",
   notice:
-    "Drafting / scrutiny aid only. It does not replace the monitoring chart, the Datix, or the Drug Management of Violence & Aggression policy. Physical observations are required at least every 15 minutes for the first hour, with NEWS2.",
+    "Guide only - it does not replace the monitoring chart, the Datix, or the Drug Management of Violence & Aggression policy. Physical obs are required at least every 15 minutes for the first hour, with NEWS2.",
   principles: [
     "Force must be the least restrictive option, proportionate, and for no longer than necessary.",
     "Oral medication should be offered before any other route.",
-    "Record what was tried first - 'least restrictive option' means nothing without it.",
-    "The 'additional risk factors' and supporting detail must never be left blank.",
+    "The 'additional risk factors' detail must never be left blank.",
   ],
   sections: [
     {
-      id: "type",
-      heading: "Reason for monitoring",
-      hint: "Which intervention is being monitored, and the immediate risk that made it necessary.",
-      gap: "What was the immediate risk that made this necessary at that moment?",
-      groups: [
-        {
-          label: "Intervention",
-          words: ["physical restraint", "rapid tranquillisation", "both"],
-        },
-        {
-          label: "Immediate risk",
-          words: [
-            "imminent serious harm to others",
-            "imminent serious harm to self",
-            "ongoing assault in progress",
-            "no safe less-restrictive option remained",
-          ],
-        },
+      id: "necessary",
+      heading: "Why was it necessary & proportionate?",
+      why: "The justification a reviewer looks for - why this, why then, why nothing less would do.",
+      think: [
+        "What was the immediate risk at that moment?",
+        "Why was this proportionate, and why would nothing less have worked?",
+        "Did it end as soon as it was safe?",
       ],
-      placeholder: "Intervention type and the specific immediate risk at the time...",
-      naLabel: "Not recorded",
-    },
-    {
-      id: "proportionate",
-      heading: "Why it was necessary & proportionate",
-      hint: "The justification a reviewer will look for - why this, why then, why nothing less would do.",
-      gap: "Why was this proportionate at that point, and why would nothing less have worked?",
-      groups: [
-        {
-          words: [
-            "lower-level options had failed",
-            "risk was immediate and serious",
-            "intervention matched the level of risk",
-            "ended as soon as it was safe",
-          ],
-        },
+      examples: [
+        "Imminent serious harm to others - an assault in progress",
+        "Lower-level options had already failed",
+        "Intervention matched the level of risk and stopped when safe",
       ],
-      placeholder: "The proportionality rationale in this patient's specific circumstances...",
-      naLabel: "Not recorded",
+      tip: "Proportionality must be shown, not asserted - tie it to the specific risk.",
     },
     {
       id: "deescalation",
-      heading: "What was attempted to de-escalate first",
-      hint: "What was genuinely tried before the intervention, including offering oral medication first.",
-      gap: "What did we actually try first, and was oral medication offered before any other route?",
-      groups: [
-        {
-          words: [
-            "verbal de-escalation",
-            "oral medication offered first",
-            "space / reduced stimulation",
-            "staff changed / stepped back",
-            "distraction / sensory strategies",
-            "followed the PBS plan",
-          ],
-        },
+      heading: "What was attempted to de-escalate first?",
+      why: "What was genuinely tried before the intervention, including offering oral medication first.",
+      think: [
+        "What did we actually try first?",
+        "Was oral medication offered before any other route?",
+        "What worked, even briefly?",
       ],
-      placeholder: "The de-escalation attempted, in order, before restraint / RT...",
-      naLabel: "Not recorded",
+      examples: [
+        "Verbal de-escalation",
+        "Oral medication offered first",
+        "Space / reduced stimulation; staff stepped back",
+        "Followed the PBS plan",
+      ],
+      tip: "'Least restrictive' means nothing without the list of what was tried first.",
     },
     {
       id: "detail",
-      heading: "Detail of restraint / medication",
-      hint: "For restraint: holds used, position, duration, lead communicator. For RT: drug, dose, route, time, site, and any second medication.",
-      gap: "What exactly was done - holds, position and duration, or drug, dose, route, time and site?",
-      groups: [
-        {
-          label: "Restraint",
-          words: [
-            "standing / seated guide",
-            "supine / prone restraint avoided where possible",
-            "duration kept to minimum",
-            "named lead communicator",
-            "no pressure to neck / chest",
-          ],
-        },
-        {
-          label: "Rapid tranquillisation",
-          words: [
-            "drug, dose, route and time recorded",
-            "injection site recorded",
-            "second medication required",
-            "emergency equipment / pulse oximeter to hand",
-          ],
-        },
+      heading: "Exactly what was done",
+      why: "For restraint: holds, position, duration, lead communicator. For RT: drug, dose, route, time, site, and any second medication.",
+      think: [
+        "What holds and position were used, and for how long?",
+        "Who was the lead communicator?",
+        "For RT: what drug, dose, route, time and site - and was a second medication needed?",
       ],
-      placeholder: "The specific detail of what was used (holds/position/duration or drug/dose/route/time/site)...",
-      naLabel: "Not recorded",
-    },
-    {
-      id: "datix",
-      heading: "Datix number",
-      hint: "Record the Datix reference for this incident so the records cross-reference.",
-      gap: "What is the Datix reference for this incident?",
-      placeholder: "Datix number...",
-      naLabel: "To follow",
+      examples: [
+        "Seated guide for under two minutes; no pressure to neck or chest",
+        "Prone position avoided where possible",
+        "RT: drug, dose, route, time and injection site recorded",
+        "Emergency equipment and pulse oximeter to hand",
+      ],
+      tip: "Specific enough to scrutinise: holds, position, duration, or drug/dose/route/time/site.",
     },
     {
       id: "risk-factors",
       heading: "Additional risk factors",
-      hint: "The risk factors that raise the danger of restraint / RT. This box must not be left blank - tick what applies and add detail.",
-      gap: "What about this person makes restraint or sedation more dangerous?",
-      groups: [
-        {
-          words: [
-            "intoxication / substance use",
-            "recent rapid tranquillisation / sedation",
-            "respiratory condition",
-            "cardiac condition",
-            "epilepsy",
-            "autism / learning disability",
-            "obesity",
-            "frailty / older adult",
-            "pregnancy",
-            "recent injury",
-            "prone-position avoidance needed",
-          ],
-        },
+      why: "The factors that raise the danger of restraint or sedation. This must never be left blank - if none, say so and why you checked.",
+      think: [
+        "What about this person makes restraint or sedation more dangerous?",
+        "Have they recently had sedation or rapid tranquillisation?",
       ],
-      placeholder: "Which risk factors apply, and the supporting detail for each...",
-      naLabel: "None identified (state explicitly)",
+      examples: [
+        "Intoxication / substance use; recent sedation",
+        "Respiratory or cardiac condition; epilepsy",
+        "Autism / learning disability; obesity; frailty; pregnancy",
+        "Recent injury; prone-position avoidance needed",
+      ],
+      tip: "If none apply, write that explicitly - never leave the box empty.",
     },
     {
       id: "monitoring",
       heading: "Intervention monitoring",
-      hint: "What was actually observed. Physical obs every 15 minutes for at least an hour, with NEWS2. If obs were refused, record it and what you could still observe.",
-      gap: "What was recorded objectively - and if full obs were not possible, what did you still observe?",
-      groups: [
-        {
-          words: [
-            "physical obs every 15 minutes",
-            "NEWS2 recorded",
-            "pulse oximetry monitored",
-            "level of consciousness monitored",
-            "obs refused - respirations / breathing still observed",
-            "patient remained within sight and sound",
-          ],
-        },
+      why: "What was actually observed. Physical obs every 15 minutes for at least an hour, with NEWS2. If obs were refused, record it and what you could still observe.",
+      think: [
+        "What was recorded objectively, and how often?",
+        "If full obs were not possible, what could you still observe?",
+        "Did the patient remain within sight and sound?",
       ],
-      placeholder: "What was monitored and how, including any refusal and what was still observed...",
-      naLabel: "Not yet recorded",
+      examples: [
+        "Physical obs every 15 minutes; NEWS2 recorded",
+        "Pulse oximetry and level of consciousness monitored",
+        "Obs refused - respirations / breathing still observed and recorded",
+      ],
+      tip: "Record refusal honestly, with whatever you could still observe.",
     },
     {
       id: "ceased",
       heading: "Monitoring ceased",
-      hint: "Why it is clinically safe to stop. An RN can cease if there are no additional risk factors and the patient is ambulatory after an hour; otherwise a doctor reviews.",
-      gap: "Why is it clinically safe to stop monitoring now - and who confirmed it?",
-      groups: [
-        {
-          words: [
-            "no additional risk factors and ambulatory after 1 hour",
-            "RN ceased monitoring",
-            "additional risk factors present - doctor review completed",
-            "physically reviewed and stable",
-            "follow-up / outstanding actions noted",
-          ],
-        },
+      why: "Why it is clinically safe to stop. An RN can cease if there are no additional risk factors and the patient is ambulatory after an hour; otherwise a doctor reviews.",
+      think: [
+        "Why is it clinically safe to stop now?",
+        "Who confirmed it - RN or doctor?",
+        "Any outstanding actions?",
       ],
-      placeholder: "The rationale for ceasing, who confirmed it, and any outstanding actions...",
-      naLabel: "Ongoing",
+      examples: [
+        "No additional risk factors and ambulatory after one hour - RN ceased monitoring",
+        "Additional risk factors present - doctor review completed",
+        "Physically reviewed and stable; follow-up actions noted",
+      ],
+      tip: "Name who confirmed it was safe to stop, and any actions still open.",
     },
   ],
-  teaching: [
-    {
-      title: "What good looks like",
-      points: [
-        "It says what was tried first - the proportionality is shown, not just asserted.",
-        "The detail is specific enough to scrutinise: holds, position, duration, or drug/dose/route/time/site.",
-        "Additional risk factors are addressed, even if only to say none apply and why that was checked.",
-        "Refused observations are recorded honestly, with whatever could still be observed.",
-      ],
-    },
-    {
-      title: "Common mistakes",
-      points: [
-        "'Restraint used as a least restrictive intervention' with no context.",
-        "Leaving the additional-risk-factors box blank.",
-        "No record of oral medication being offered before another route.",
-        "Vague monitoring ('obs done') instead of the actual frequency and NEWS2.",
-      ],
-    },
-  ],
-  example: {
-    topic: "Why it was necessary & proportionate",
-    weak: "Patient restrained as a last resort using least restrictive techniques. All de-escalation attempted.",
-    strong:
-      "Two staff guided him to a seated hold for under two minutes after he picked up a chair and advanced on another patient, having already declined oral lorazepam and continued to advance when staff stepped back and offered space. The hold was released as soon as he sat down and accepted the medication orally. No pressure was applied to his neck or chest.",
-  },
   footer:
-    "Drafting / scrutiny aid only. Source-aligned with the Trust Management of Violence & Aggression workflow. Always complete the monitoring chart, Datix and policy steps, and review wording before saving.",
+    "Guide only, source-aligned with the Trust Management of Violence & Aggression workflow. Complete the monitoring chart, Datix and policy steps. Draft - to be verified.",
 };

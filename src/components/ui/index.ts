@@ -7,4 +7,5 @@ export { Skeleton, SkeletonCard, SkeletonText, SkeletonButton } from "./Skeleton
 export { BackToTop } from "./back-to-top";
 export { ConfirmDialog } from "./confirm-dialog";
 export { VerificationBadge } from "./VerificationBadge";
+export { StatusBadge } from "./StatusBadge";
 export { Breadcrumb } from "./Breadcrumb";

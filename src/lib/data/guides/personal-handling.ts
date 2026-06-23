@@ -1,199 +1,104 @@
-// Personal (moving & handling) risk assessment helper.
+// Personal (moving & handling) risk assessment - pure-guidance thinking tool.
 //
-// SOURCE-ALIGNED with the Trust Moving and Handling Policy, which requires the
-// personal handling risk assessment to cover: the person being assisted, the
-// environment, the person carrying out the task, the assistance required, the
-// number of staff, the equipment to be used, and how to support the individual
-// in an emergency.
-//
-// Prompt aid only. Complete the SystmOne personal handling risk assessment for
-// the record.
+// Source-aligned with the Trust Moving and Handling Policy: cover the person, the
+// environment, the staff, the assistance required, the numbers, the equipment,
+// and how to support the individual in an emergency.
 
-import type { BuilderConfig } from "./builder";
+import type { GuidePromptConfig } from "./guideprompt";
 
-export const HANDLING_BUILDER: BuilderConfig = {
+export const HANDLING_BUILDER: GuidePromptConfig = {
   id: "personal-handling",
   title: "Personal Handling Helper",
   icon: "🤝",
   gradient: "from-cyan-600 to-blue-700",
-  subtitle: "Plan the safest way to assist this person to move - and what to do if it goes wrong.",
+  subtitle: "A guide to planning the safest way to assist this person to move - and what to do if it goes wrong.",
   breadcrumb: "Personal Handling Helper",
-  docHeading: "PERSONAL HANDLING PLAN",
-  outputLabel: "Your handling plan",
-  emptyHint: "Work through the prompts to build the handling plan, then copy it into the record.",
-  dateLine: true,
+  intro:
+    "Think these through, then complete the SystmOne personal handling risk assessment. Be specific enough that a colleague who has never met the patient could assist safely first time - and always plan for the emergency, not just the routine transfer.",
   notice:
-    "Prompt aid only - it does not replace the SystmOne personal handling risk assessment or moving & handling training.",
+    "Guidance only - it does not replace the SystmOne personal handling risk assessment or moving & handling training.",
   principles: [
     "Cover the person, the environment, the staff, the assistance, the numbers, the equipment - and the emergency.",
-    "Be specific enough that staff who do not know the patient could assist safely.",
     "Say what changes if the patient is distressed, in pain, weak or impulsive.",
   ],
   sections: [
     {
-      id: "task",
-      heading: "Movement / task needed",
-      hint: "What movement or transfer this plan is for - and how often.",
-      gap: "What movement or transfer does this person need help with?",
-      groups: [
-        {
-          words: [
-            "bed mobility / repositioning",
-            "sit-to-stand",
-            "bed-to-chair transfer",
-            "walking / mobilising",
-            "toileting transfer",
-            "falls recovery from the floor",
-          ],
-        },
+      id: "task-ability",
+      heading: "The task & what they can do themselves",
+      why: "What movement this plan is for, and their current ability.",
+      think: [
+        "What movement or transfer does this person need help with?",
+        "What can they do for themselves, and where does it break down?",
       ],
-      placeholder: "The specific task(s) this plan covers...",
-      naLabel: "Not specified",
-    },
-    {
-      id: "independence",
-      heading: "What they can do independently",
-      hint: "Their current ability - what they can manage themselves and what they cannot.",
-      gap: "What can this person do for themselves, and where does it break down?",
-      groups: [
-        {
-          words: [
-            "weight-bears reliably",
-            "weight-bears unpredictably",
-            "can follow instructions",
-            "cannot reliably follow instructions",
-            "fatigues quickly",
-            "independent with supervision only",
-          ],
-        },
+      examples: [
+        "Bed-to-chair transfer; sit-to-stand; mobilising short distances",
+        "Weight-bears reliably / unpredictably",
+        "Can / cannot reliably follow instructions",
       ],
-      placeholder: "Current ability and where assistance is needed...",
-      naLabel: "Not established",
+      tip: "Note where independence breaks down - that is where the risk is.",
     },
     {
       id: "assistance",
-      heading: "Assistance required",
-      hint: "The type and level of help - supervision, prompting, hands-on assistance, or full assistance.",
-      gap: "What kind of help is needed - supervision, prompting, or hands-on?",
-      groups: [
-        {
-          words: [
-            "supervision only",
-            "verbal prompting",
-            "stand-by assistance",
-            "assistance of one",
-            "assistance of two",
-            "full assistance",
-          ],
-        },
+      heading: "Assistance, staff numbers & equipment",
+      why: "Type and level of help, how many staff, and exactly what equipment (and anything contraindicated).",
+      think: [
+        "Supervision, prompting, or hands-on?",
+        "How many staff, and what equipment (e.g. hoist + correct sling size)?",
+        "Is anything contraindicated?",
       ],
-      placeholder: "The type and level of assistance required...",
-      naLabel: "Not established",
-    },
-    {
-      id: "staff-equipment",
-      heading: "Staff numbers & equipment",
-      hint: "How many staff, and what equipment is to be used (and any that must NOT be used).",
-      gap: "How many staff and what equipment - and is anything contraindicated?",
-      groups: [
-        {
-          words: [
-            "one staff member",
-            "two staff members",
-            "hoist + correct sling size",
-            "slide sheet",
-            "transfer board",
-            "walking aid (frame / stick)",
-            "no equipment required",
-          ],
-        },
+      examples: [
+        "Assistance of two with a frame",
+        "Hoist with correct sling size; slide sheet",
+        "Supervision and verbal prompting only",
       ],
-      placeholder: "Staff numbers, equipment to use, and anything contraindicated...",
-      naLabel: "Not established",
+      tip: "State the sling size and exact numbers - 'assist as required' is not a plan.",
     },
     {
       id: "environment",
       heading: "Environment",
-      hint: "Space, floor surface, bed / chair height and any hazards that affect safe handling.",
-      gap: "What about the environment affects safe handling here?",
-      groups: [
-        {
-          words: [
-            "adequate space to manoeuvre",
-            "restricted space",
-            "bed / chair at correct height",
-            "wet or cluttered floor",
-            "good lighting",
-          ],
-        },
+      why: "Space, floor surface, bed / chair height and hazards that affect safe handling.",
+      think: [
+        "Is there adequate space to manoeuvre?",
+        "Bed / chair at the right height? Wet or cluttered floor? Lighting?",
       ],
-      placeholder: "Environmental factors and how they are managed...",
-      naLabel: "No concerns",
+      examples: [
+        "Adequate space; bed at correct working height",
+        "Restricted space - move chair before transfer",
+        "Ensure floor is dry and well lit",
+      ],
+      tip: "A safe technique in the wrong space is no longer safe - check it.",
     },
     {
       id: "behaviour",
       heading: "If distressed, in pain or resistant",
-      hint: "How the plan changes if the patient becomes distressed, is in pain, is weak, or resists mid-task.",
-      gap: "What changes if the patient is distressed, in pain, weak or impulsive during the task?",
-      groups: [
-        {
-          words: [
-            "stop and reassure if distressed",
-            "pain relief before the task",
-            "approach calmly, one person leading",
-            "abandon and reattempt later if unsafe",
-            "best time of day for the patient",
-          ],
-        },
+      why: "How the plan changes if the patient becomes distressed, is in pain, weak, or resists mid-task.",
+      think: [
+        "What changes if they are distressed or in pain?",
+        "When is the best time of day for this person?",
       ],
-      placeholder: "How to adapt if the patient is distressed, in pain or resistant...",
-      naLabel: "No specific adaptation",
+      examples: [
+        "Stop and reassure if distressed",
+        "Offer pain relief before the task",
+        "Best mid-morning, before the afternoon slump / after night sedation wears off",
+      ],
+      tip: "Timing matters - say when this person handles transfers best.",
     },
     {
       id: "emergency",
       heading: "Emergency plan",
-      hint: "What to do if the patient deteriorates, collapses or becomes unsafe mid-task. Required by policy.",
-      gap: "If they collapse or deteriorate mid-task, what do staff do?",
-      groups: [
-        {
-          words: [
-            "lower safely to the floor, do not catch",
-            "summon help / emergency buzzer",
-            "place in recovery position if appropriate",
-            "call for medical assistance / 2222",
-            "do not move alone if injury suspected",
-          ],
-        },
+      why: "What to do if the patient deteriorates, collapses or becomes unsafe mid-task. Required by policy.",
+      think: [
+        "If they collapse or deteriorate mid-task, what do staff do?",
+        "Who do they call, and what must they not do?",
       ],
-      placeholder: "The emergency plan if the patient deteriorates or collapses during handling...",
-      naLabel: "Standard emergency response",
+      examples: [
+        "Lower safely to the floor - do not try to hold them up",
+        "Summon help / emergency buzzer; call 2222 if needed",
+        "Do not move alone if injury is suspected",
+      ],
+      tip: "The emergency plan is the bit people forget - never catch a falling patient.",
     },
   ],
-  teaching: [
-    {
-      title: "What good looks like",
-      points: [
-        "Specific enough that a bank or agency colleague could assist safely first time.",
-        "States staff numbers and the exact equipment (including sling size).",
-        "Includes the emergency plan - not just the routine transfer.",
-        "Adapts for distress, pain and the best time of day.",
-      ],
-    },
-    {
-      title: "Common mistakes",
-      points: [
-        "'Assist as required' with no detail of numbers or equipment.",
-        "No emergency plan for a collapse mid-task.",
-        "Ignoring how distress or pain changes the safest approach.",
-      ],
-    },
-  ],
-  example: {
-    topic: "Assistance required & emergency plan",
-    weak: "Patient needs help to mobilise. Staff to assist.",
-    strong:
-      "Needs the assistance of two with a frame for short distances; weight-bears unpredictably when drowsy after his night sedation, so transfers are best mid-morning. If he starts to go down, lower him gently to the floor rather than trying to hold him up, put out an emergency call, and do not move him until he has been checked for injury.",
-  },
   footer:
-    "Prompt aid only. Source-aligned with the Trust Moving and Handling Policy. Complete the SystmOne personal handling risk assessment and review wording before saving.",
+    "Guidance only, source-aligned with the Trust Moving and Handling Policy. Complete the SystmOne personal handling risk assessment. Draft - to be verified.",
 };

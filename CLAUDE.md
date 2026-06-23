@@ -844,6 +844,22 @@ Working through in order. Marking complete as fixed.
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
 
+## SNAG LIST (23 Jun 2026 - Session 27: Guidance rework + status badges)
+
+Mike's feedback on Session 25: the 10 tools shipped as chip-builders with thin
+prompts, which was NOT what he wanted. He wanted the rich Copilot "prompt-as-guide"
+style (why it matters + prompt-yourself questions + worked examples + tip per
+question). Reworked all 10, plus added an editorial traffic-light badge system.
+Pushed live (commit 4a05e03), build clean, both verified in browser.
+
+| # | Status | Description |
+|---|--------|-------------|
+| 185 | [x] | **Pure-guidance rework** - all 10 clinical tools converted from chip-builders to THINKING GUIDES. New `GuidePrompts` component (`src/components/guides/GuidePrompts.tsx`) + `GuidePromptConfig` type (`src/lib/data/guides/guideprompt.ts`). Each question shows: why it matters, "prompt yourself" sub-questions, a fuller worked-examples list ("to spark thinking, not to copy"), and a tip. Collapsible, first question open, expand-all toggle. NO chips, NO assembled output, NO copy button. All 10 data files rewritten (seclusion uses Mike's full per-field prompt set incl. the exit-criteria example). |
+| 186 | [x] | **Old note-builder retired** - `PromptBuilder.tsx` + `builder.ts` now unused (kept in repo, not imported). The 10 `*_BUILDER` consts kept their names but are now `GuidePromptConfig`. |
+| 187 | [x] | **Traffic-light StatusBadge** (`src/components/ui/StatusBadge.tsx`) - certificate-style badge on every guide + link tile (right, mid-height): green Passed / amber Awaiting approval / red In development. Driven by central editable map `src/lib/data/approval-status.ts` (`GUIDE_APPROVAL` / `LINK_APPROVAL`, default amber). **This is Mike's editorial sign-off - to change a status, edit that file ("set X to green").** The 10 new tools are set red. Replaced the inline community `VerificationBadge` on those tiles (provider kept). |
+| 188 | [x] | **Guides index self-heal** - a stale `wardhub_guide_order` in localStorage (from old editor reordering) was scattering/burying guides and resurfacing old category names. The index now drops a saved order covering <70% of current guides and always reads each guide's category from `ALL_GUIDES`. |
+| 189 | [ ] | **Mike to proofread** the reworked guidance (all 10) and flip statuses to green as he signs each off. Tell Claude "set <id> to green/amber". |
+
 ## SNAG LIST (22 Jun 2026 - Session 25: Clinical documentation builders)
 
 Salvaged from Copilot chats (Copilot can read the Trust tenant; Claude cannot).

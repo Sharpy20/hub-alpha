@@ -27,6 +27,7 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "personal-handling": "red",
   "nutrition-screening": "red",
   "pressure-areas": "red",
+  "leave-discharge-transfer": "red",
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

@@ -36,3 +36,6 @@ export { PHYSICAL_HEALTH_BUILDER } from "./physical-health";
 export { HANDLING_BUILDER } from "./personal-handling";
 export { NUTRITION_BUILDER } from "./nutrition";
 export { PRESSURE_BUILDER } from "./pressure";
+
+export { LDT_SECTIONS, LDT_PATHWAYS } from "./leave-discharge";
+export type { LdtPathway, LdtItem, LdtSection } from "./leave-discharge";

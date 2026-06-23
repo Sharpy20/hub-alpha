@@ -93,6 +93,9 @@ export function ResourceLinks({ links }: { links: GuideLink[] }) {
           onClick={() => setFocusUrl(null)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="FOCUS login required"
             className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >

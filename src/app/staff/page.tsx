@@ -250,7 +250,7 @@ export default function StaffPage() {
         {/* Add Staff Modal */}
         {showAddModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowAddModal(false)}>
-            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div role="dialog" aria-modal="true" aria-label="Add staff member" className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
               <h3 className="text-xl font-bold text-gray-900">Add Staff Member</h3>
 
               <div>

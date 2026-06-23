@@ -849,7 +849,7 @@ export default function GuidesAdminPage() {
         {/* Version History Panel */}
         {showVersionHistory && (
           <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
-            <div className="w-full max-w-md bg-white h-full overflow-y-auto shadow-2xl">
+            <div role="dialog" aria-modal="true" aria-label="Guide display order" className="w-full max-w-md bg-white h-full overflow-y-auto shadow-2xl">
               <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-4 sticky top-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -959,7 +959,7 @@ export default function GuidesAdminPage() {
         {/* New guide modal */}
         {showNewModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowNewModal(false)}>
-            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div role="dialog" aria-modal="true" aria-label="Create new guide" className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
               <h3 className="text-xl font-bold text-gray-900">Create New Guide</h3>
               <div className="space-y-3">
                 <button
@@ -1294,7 +1294,7 @@ function StepEditorPanel({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
-      <div className="w-full max-w-lg bg-white h-full overflow-y-auto shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-label="Guide editor" className="w-full max-w-lg bg-white h-full overflow-y-auto shadow-2xl">
         {/* Header */}
         <div className={`bg-gradient-to-r ${config.color} text-white p-4 sticky top-0`}>
           <div className="flex items-center justify-between">

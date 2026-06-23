@@ -303,6 +303,9 @@ export default function ReferralLogPage() {
           onClick={() => setChaseModalLogId(null)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Log chase up"
             className="bg-white rounded-2xl w-full max-w-md overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >

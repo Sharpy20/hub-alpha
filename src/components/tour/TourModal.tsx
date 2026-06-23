@@ -117,7 +117,7 @@ export function TourModal() {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
-      <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
+      <div role="dialog" aria-modal="true" aria-label="Interactive demo tour" className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl relative">
         {/* Page number badge */}
         <div className="absolute top-3 left-3 z-10">
           <div className="flex items-center gap-1.5 bg-indigo-600 text-white px-3 py-1.5 rounded-full shadow-lg">

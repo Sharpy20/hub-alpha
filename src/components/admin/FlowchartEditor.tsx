@@ -1033,7 +1033,7 @@ function VersionHistoryPanel({
 }) {
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
-      <div className="w-full max-w-md bg-white h-full overflow-y-auto shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-label="Step editor" className="w-full max-w-md bg-white h-full overflow-y-auto shadow-2xl">
         <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-4 sticky top-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -1119,7 +1119,7 @@ function StepEditorPanel({
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
-      <div className="w-full max-w-lg bg-white h-full overflow-y-auto shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-label="Workflow editor" className="w-full max-w-lg bg-white h-full overflow-y-auto shadow-2xl">
         {/* Header */}
         <div className={`bg-gradient-to-r ${config.color} text-white p-4 sticky top-0`}>
           <div className="flex items-center justify-between">

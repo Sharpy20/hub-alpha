@@ -1134,6 +1134,9 @@ function AddTaskModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Add new task"
         className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
@@ -1811,6 +1814,9 @@ function RepeatWardTasksModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Repeating team tasks"
         className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >

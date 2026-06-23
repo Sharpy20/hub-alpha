@@ -447,7 +447,7 @@ export default function WorkflowsAdminPage() {
         {/* New workflow modal */}
         {showNewModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowNewModal(false)}>
-            <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
+            <div role="dialog" aria-modal="true" aria-label="Create new workflow" className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 space-y-4" onClick={(e) => e.stopPropagation()}>
               <h3 className="text-xl font-bold text-gray-900">Create New Workflow</h3>
               <div className="space-y-3">
                 <button

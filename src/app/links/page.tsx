@@ -405,7 +405,7 @@ function BookmarksContent() {
       {/* FOCUS Login Required Modal */}
       {focusModalUrl && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setFocusModalUrl(null)}>
-          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
+          <div role="dialog" aria-modal="true" aria-label="FOCUS login required" className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
@@ -516,7 +516,7 @@ function PersonalBookmarkModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" aria-label="Personal link" className="bg-white rounded-2xl w-full max-w-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-violet-500 to-purple-600 p-4 flex items-center justify-between">
           <h3 className="text-white font-bold text-lg">
             {bookmark ? "Edit Personal Link" : "Add Personal Link"}
@@ -618,7 +618,7 @@ function RecommendModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" aria-label="Recommend link for everyone" className="bg-white rounded-2xl w-full max-w-sm overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Send className="w-5 h-5 text-white" />

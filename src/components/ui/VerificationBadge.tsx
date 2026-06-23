@@ -83,6 +83,9 @@ export function VerificationBadge({
           onClick={() => setShowModal(false)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Content verification"
             className="bg-white rounded-xl shadow-xl max-w-md w-full"
             onClick={(e) => e.stopPropagation()}
           >

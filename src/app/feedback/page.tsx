@@ -116,7 +116,7 @@ function UsernameModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
-      <div className="bg-white rounded-2xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" aria-label="Set your display name" className="bg-white rounded-2xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Set Your Display Name</h2>
         <p className="text-gray-500 text-sm mb-4">This is how others will see you in discussions.</p>
         <input
@@ -204,7 +204,7 @@ function NewPostModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
-      <div className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <div role="dialog" aria-modal="true" aria-label="Start a discussion" className="bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900">Start a Discussion</h2>
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">

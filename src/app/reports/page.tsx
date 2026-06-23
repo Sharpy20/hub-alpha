@@ -205,7 +205,7 @@ const DeliveryConfigModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-label="Schedule delivery" className="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
         <div className="bg-gradient-to-r from-amber-500 to-orange-600 p-4 text-white">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">

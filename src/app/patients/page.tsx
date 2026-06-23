@@ -778,6 +778,9 @@ export default function PatientsPage() {
           }}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Discharge patient"
             className="bg-white rounded-2xl w-full max-w-md overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
@@ -872,6 +875,9 @@ export default function PatientsPage() {
           onClick={() => setIsAddPatientModalOpen(false)}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Add patient"
             className="bg-white rounded-2xl w-full max-w-lg overflow-hidden max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
@@ -1119,6 +1125,9 @@ export default function PatientsPage() {
           }}
         >
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Edit patient alerts"
             className="bg-white rounded-2xl w-full max-w-lg overflow-hidden max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >

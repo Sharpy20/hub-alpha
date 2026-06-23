@@ -908,6 +908,22 @@ clean, 32/32 tests pass.
 | 191 | [x] | **dialog semantics (4.1.2):** 6 custom modals bypassed the accessible base Modal - added role="dialog" aria-modal="true" aria-label to TaskDetail, PatientPicker (both roots), PatientTransfer, StaffManagement, StaffTasks, DischargeAudit. (Base Modal + ConfirmDialog were already compliant.) |
 | 192 | [ ] | **Remaining (reported, design-touching - needs Mike's eye):** (a) the broad `text-amber-600`/`text-gray-400`-on-light contrast sweep across ~24 files not on the audited pages; (b) the 4 non-NHS themes (iOS/Google/Fantastical/Notion) + dark mode have their own muted past-day greys that likely fail AA - same fix pattern; (c) custom modals still lack focus-trap + Escape-to-close (base Modal has both) - usability, not a strict AA fail. (d) keyboard drag-drop alternative for task reordering. |
 
+## SNAG LIST (22 Jun 2026 - Session 26b: end-to-end walkthrough)
+
+Review 5 / final item of the Fable 5 project review (snag #77). Drove the main
+journeys in a real browser: login (ward/name/role + GDPR), limited build at root
+(PII features correctly hidden, no console errors), full build at /v2, claim a
+task (name shows, Drop/Take Over appear), My Jobs Kanban (claimed task flows
+through), Patients (filters, patient tasks modal, discharge flow with correct
+RBAC messaging), and the MSE builder (chips assemble live, date correct, Copy
+works). Build clean, 32/32 tests pass.
+
+| # | Status | Description |
+|---|--------|-------------|
+| 193 | [x] | **Walkthrough found a SYSTEMIC a11y gap the static + axe passes missed:** ~20 inline overlay modals across 13 files render with no role="dialog"/aria-modal/aria-label (they only mount on interaction, so the static DOM scan never saw them). Fixed ALL of them: patients (discharge/add-patient/edit-alerts), tasks (add-task/repeating), links (FOCUS/personal-link/recommend), feedback (display-name/discussion), reports (schedule-delivery), referrals/log (chase), staff (add), ResourceLinks (FOCUS), TourModal, VerificationBadge, admin guides (×3) + workflows + links editor + FlowchartEditor (×2). Each got role="dialog" aria-modal="true" + a descriptive aria-label. Verified discharge modal live. (Same focus-trap/Escape caveat as snag 192c still applies.) |
+| 194 | [ ] | **Observation (not a bug):** demo staff/patient names are placeholders (Staff_BY_D, Dr. BY_F, Patient_BY_1). Functional, but not presentation-polished - consider realistic fictional names for the wow-factor demo. Mike's call. |
+| 195 | [x] | **Checked, false alarm:** header mobile menu briefly read "Log In" in a pre-hydration DOM scan; once hydrated it correctly shows the profile / "Demo Mode" with Log out inside. No fix needed. |
+
 | # | Status | Description |
 |---|--------|-------------|
 | 171 | [x] | **`/v2` <-> full build SWAP** - root is now the stripped PII-free build; the full build (Diary/Patients/Reports/My Jobs/Staff) is now under `/v2`. Inverted `useV2.ts` (`useIsV2()` true at root) + `middleware.ts` (block PII routes at root, full access under `/v2`). Wrapped bare PII-route links in the `link()` helper across header/tasks/my-tasks/TodayWidget/patients/guides. Verified: root redirects `/tasks` & `/patients`, `/v2/*` renders. See the "/v2 <-> FULL BUILD SWAP" section. |
@@ -1071,7 +1087,7 @@ On first session on the new machine:
 | 74 | [x] | Mobile responsiveness pass (quick actions, bookmarks, diary, safeguarding grid, intro guide) |
 | 75 | [ ] | Loading skeletons on data-heavy pages (patients, tasks, diary) |
 | 76 | [ ] | Keyboard navigation for ward diary |
-| 77 | [ ] | End-to-end walkthrough testing |
+| 77 | [x] | End-to-end walkthrough testing (Session 26b) - drove main journeys in-browser; found + fixed a systemic modal a11y gap (snag 193). |
 | 78 | [x] | WCAG 2.1 AA accessibility audit (Session 26) - axe-core runtime audit, all audited pages now clean. Residual design-touching contrast + theme work tracked in snags 185-192. |
 | 79 | [ ] | Expand print stylesheet for reports |
 

@@ -224,7 +224,7 @@ export default function MhaCheckerPage() {
                 className="w-full flex items-center gap-3 px-5 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left print:hidden"
               >
                 <ScrollText className="w-5 h-5 text-indigo-500" />
-                <span className="font-bold text-gray-800 flex-1">Scrutiny checklist (optional)</span>
+                <span className="font-bold text-gray-800 flex-1">Scrutiny checklist</span>
                 <span className="text-xs font-semibold text-indigo-600">
                   {showScrutiny ? "Hide" : "Show"}
                 </span>

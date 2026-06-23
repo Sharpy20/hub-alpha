@@ -47,6 +47,10 @@ export default function UnifiedGuidePage() {
   const isV2 = useIsV2();
   const link = useV2Href();
 
+  // In the limited (PII-free) build, case notes must not show a staff name -
+  // show the role instead (Staff / Editor). The full build keeps the name.
+  const caseNoteBy = isV2 ? (user?.isContributor ? "Editor" : "Staff") : user?.name;
+
   const guideId = params.id as string;
 
   // Determine guide type
@@ -135,7 +139,7 @@ export default function UnifiedGuidePage() {
       const areaName = selectedArea === "city" ? "Derby City Advocacy (POhWER)" : "Derbyshire County (Cloverleaf)";
       const areaEmail = selectedArea === "city" ? "derbyadvocacy@pohwer.net" : "referrals@cloverleaf-advocacy.co.uk";
       const patientText = linkedPatient ? `Patient: ${linkedPatient.name}. ` : "";
-      const staffText = user?.name ? ` Referral completed by ${user.name}.` : "";
+      const staffText = caseNoteBy ? ` Referral completed by ${caseNoteBy}.` : "";
       let statusText: string;
       if (patientSection === "informal") {
         statusText = "Patient is informal (voluntary)";
@@ -156,7 +160,7 @@ export default function UnifiedGuidePage() {
       text = text.replace(/\[SECTION\]/g, sectionLabel);
     }
     if (linkedPatient) text = `Patient: ${linkedPatient.name}. ${text}`;
-    if (user?.name) text = `${text} Completed by ${user.name}.`;
+    if (caseNoteBy) text = `${text} Completed by ${caseNoteBy}.`;
     return text;
   };
 
@@ -657,10 +661,10 @@ export default function UnifiedGuidePage() {
               </div>
               <div className="p-6">
                 <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl font-mono text-sm leading-relaxed border border-amber-200">
-                  {linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}{title} reviewed on {todayDate}.{user?.name ? ` Completed by ${user.name}.` : ""}
+                  {linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}{title} reviewed on {todayDate}.{caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}
                 </div>
                 <Button onClick={() => {
-                  const text = `${linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}${title} reviewed on ${todayDate}.${user?.name ? ` Completed by ${user.name}.` : ""}`;
+                  const text = `${linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`;
                   handleCopy(text);
                 }} className={`w-full mt-3 py-3 ${copied ? "bg-green-600 hover:bg-green-700" : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"}`}>
                   {copied ? <><Check className="w-5 h-5 mr-2" /> Copied!</> : <><Copy className="w-5 h-5 mr-2" /> Copy to Clipboard</>}

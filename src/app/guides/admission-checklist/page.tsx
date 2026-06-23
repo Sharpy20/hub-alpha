@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import { ResourceLinks } from "@/components/guides/ResourceLinks";
+import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
 import { ADMISSION_CHECKLIST } from "@/lib/data/guides";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { ArrowLeft, Check, Printer, RotateCcw, ClipboardList, Info } from "lucide-react";
@@ -149,13 +150,30 @@ export default function AdmissionChecklistPage() {
                             <p className="text-sm text-gray-500 mt-1">{item.note}</p>
                           )}
                           {item.subItems && (
-                            <ul className="mt-2 space-y-1">
-                              {item.subItems.map((sub, si) => (
-                                <li key={si} className="flex items-start gap-2 text-sm text-gray-600">
-                                  <span className="text-gray-300 mt-1.5 w-1 h-1 rounded-full bg-gray-300 flex-shrink-0" />
-                                  <span>{sub}</span>
-                                </li>
-                              ))}
+                            <ul className="mt-2 space-y-1.5">
+                              {item.subItems.map((sub, si) => {
+                                const subId = `${item.id}-s${si}`;
+                                const subDone = !!checked[subId];
+                                return (
+                                  <li key={si} className="flex items-start gap-2">
+                                    <button
+                                      onClick={() => toggle(subId)}
+                                      aria-pressed={subDone}
+                                      aria-label={`Mark "${sub}" ${subDone ? "not done" : "done"}`}
+                                      className={`mt-0.5 w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                                        subDone
+                                          ? "bg-green-500 border-green-500 text-white"
+                                          : "border-gray-300 hover:border-green-400 bg-white"
+                                      }`}
+                                    >
+                                      {subDone && <Check className="w-3 h-3" />}
+                                    </button>
+                                    <span className={`text-sm ${subDone ? "text-gray-400 line-through" : "text-gray-600"}`}>
+                                      {sub}
+                                    </span>
+                                  </li>
+                                );
+                              })}
                             </ul>
                           )}
                           {item.links && (
@@ -172,6 +190,13 @@ export default function AdmissionChecklistPage() {
             </div>
           );
         })}
+
+        {/* Case note entry (optional, low priority) */}
+        <ChecklistSummary
+          title="Admission checklist"
+          completed={ADMISSION_CHECKLIST.flatMap((g) => g.items).filter((i) => checked[i.id]).map((i) => i.text)}
+          outstanding={ADMISSION_CHECKLIST.flatMap((g) => g.items).filter((i) => !checked[i.id]).map((i) => i.text)}
+        />
 
         {/* Footer cross-link */}
         <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 print:hidden">

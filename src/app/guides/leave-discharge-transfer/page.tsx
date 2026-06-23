@@ -10,6 +10,7 @@ import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import { useV2Href } from "@/lib/hooks/useV2";
+import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
 import { LDT_SECTIONS, LDT_PATHWAYS, type LdtPathway } from "@/lib/data/guides";
 import {
   ArrowLeft, Printer, RotateCcw, ChevronDown, ChevronRight, Flag, Info, AlertTriangle,
@@ -186,6 +187,13 @@ export default function LeaveDischargeTransferPage() {
             </div>
           ))}
         </div>
+
+        {/* Case note entry (optional, low priority) */}
+        <ChecklistSummary
+          title={`${activePathway.label} checklist`}
+          completed={visibleSections.flatMap((s) => s.items).filter((i) => checked[i.id]).map((i) => i.label)}
+          outstanding={visibleSections.flatMap((s) => s.items).filter((i) => !checked[i.id]).map((i) => i.label)}
+        />
 
         <p className="text-xs text-gray-400 text-center">
           Checklist aid only, source-aligned with NHS leave / discharge standards and the Trust workflow. Draft - to be verified.

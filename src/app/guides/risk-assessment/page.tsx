@@ -26,14 +26,23 @@ type ChipOverrides = Record<string, Partial<Record<string, RiskChipGroup[]>>>;
 // The RMP sections that actually carry suggestion chips (everything except WHAT).
 const RMP_CHIP_SECTIONS = RMP_SECTIONS.filter((s) => s.id !== "what");
 
-interface DatedExample { date: string; text: string }
+interface DatedExample { day: string; month: string; year: string; text: string }
 interface SecState { chips: string[]; text: string; na: boolean; examples?: DatedExample[] }
 type AllState = Record<string, SecState>;
 
-// YYYY-MM-DD -> DD/MM/YYYY (no timezone maths).
-function ukDate(iso: string): string {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
-  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+// Build a natural date from any combination of day / month / year. Often we only
+// know the month or the year of an incident, so every part is optional.
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+function formatPartialDate(d: { day: string; month: string; year: string }): string {
+  const monthName = d.month ? MONTHS[Number(d.month) - 1] : "";
+  const parts: string[] = [];
+  if (d.day && monthName) parts.push(d.day); // a day only makes sense with a month
+  if (monthName) parts.push(monthName);
+  if (d.year) parts.push(d.year);
+  return parts.join(" ");
 }
 
 function naturalList(items: string[]): string {
@@ -54,7 +63,7 @@ function buildContent(st: SecState | undefined): string {
   if (st.text.trim()) parts.push(cap(st.text.trim()));
   const exs = (st.examples || []).filter((e) => e.text.trim());
   if (exs.length) {
-    const fmt = exs.map((e) => `${e.date ? ukDate(e.date) + " - " : ""}${e.text.trim()}`).join("; ");
+    const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("; ");
     parts.push(`Specific examples: ${fmt}`);
   }
   if (!parts.length) return "";
@@ -152,34 +161,64 @@ function SectionEditor({
           {section.examples && (
             <div className="rounded-lg border border-rose-100 bg-rose-50/40 p-2.5 space-y-2">
               <p className="text-[10px] font-mono uppercase tracking-wider text-rose-500">
-                Specific examples (with dates)
+                Specific examples (date optional - just the year, the month and year, or the full date)
               </p>
-              {examples.map((ex, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <input
-                    type="date"
-                    value={ex.date}
-                    onChange={(e) => setExamples(examples.map((x, idx) => (idx === i ? { ...x, date: e.target.value } : x)))}
-                    className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
-                  />
-                  <input
-                    type="text"
-                    value={ex.text}
-                    placeholder="what happened"
-                    onChange={(e) => setExamples(examples.map((x, idx) => (idx === i ? { ...x, text: e.target.value } : x)))}
-                    className="flex-1 min-w-0 text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
-                  />
-                  <button
-                    onClick={() => setExamples(examples.filter((_, idx) => idx !== i))}
-                    aria-label="Remove example"
-                    className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
+              {examples.map((ex, i) => {
+                const upd = (patch: Partial<DatedExample>) =>
+                  setExamples(examples.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
+                return (
+                  <div key={i} className="space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <select
+                        value={ex.day}
+                        onChange={(e) => upd({ day: e.target.value })}
+                        aria-label="Day"
+                        className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+                      >
+                        <option value="">Day</option>
+                        {Array.from({ length: 31 }, (_, d) => (
+                          <option key={d + 1} value={String(d + 1)}>{d + 1}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={ex.month}
+                        onChange={(e) => upd({ month: e.target.value })}
+                        aria-label="Month"
+                        className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+                      >
+                        <option value="">Month</option>
+                        {MONTHS.map((m, mi) => (
+                          <option key={m} value={String(mi + 1)}>{m}</option>
+                        ))}
+                      </select>
+                      <input
+                        type="number"
+                        value={ex.year}
+                        placeholder="Year"
+                        onChange={(e) => upd({ year: e.target.value })}
+                        aria-label="Year"
+                        className="w-20 text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+                      />
+                      <button
+                        onClick={() => setExamples(examples.filter((_, idx) => idx !== i))}
+                        aria-label="Remove example"
+                        className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      value={ex.text}
+                      placeholder="what happened"
+                      onChange={(e) => upd({ text: e.target.value })}
+                      className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+                    />
+                  </div>
+                );
+              })}
               <button
-                onClick={() => setExamples([...examples, { date: "", text: "" }])}
+                onClick={() => setExamples([...examples, { day: "", month: "", year: "", text: "" }])}
                 className="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 hover:text-rose-900 transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" /> Add example

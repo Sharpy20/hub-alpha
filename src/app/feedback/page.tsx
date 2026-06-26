@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
+import { useIsV2 } from "@/lib/hooks/useV2";
 import {
   FeedbackPost,
   FeedbackComment,
@@ -450,6 +451,17 @@ function PostCard({
   );
 }
 
+// v1 (limited build) stores no staff identity, so the community board (which
+// records who said what) is v2-only. In v1, feedback is a simple mailto.
+const FEEDBACK_MAILTO =
+  "mailto:michael.sharpe4@nhs.net" +
+  "?subject=" +
+  encodeURIComponent("wardHub feedback") +
+  "&body=" +
+  encodeURIComponent(
+    "What's useful, what's missing, what's wrong:\n\n\nWhich guide or page does this relate to?\n",
+  );
+
 // Main feedback page
 export default function FeedbackPage() {
   return (
@@ -461,6 +473,7 @@ export default function FeedbackPage() {
 
 function FeedbackContent() {
   const { user } = useApp();
+  const isV2 = useIsV2();
   const searchParams = useSearchParams();
   const [posts, setPosts] = useState<FeedbackPost[]>([]);
   const [comments, setComments] = useState<FeedbackComment[]>([]);
@@ -600,6 +613,45 @@ function FeedbackContent() {
 
   // Check if user needs to set username
   const needsUsername = !username;
+
+  // v1 (limited build): no central storage for staff identity, so the
+  // community board is v2-only. Offer a simple email instead.
+  if (isV2) {
+    return (
+      <MainLayout>
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 rounded-2xl p-6 text-white">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center">
+                <MessageSquare className="w-7 h-7" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">Feedback</h1>
+                <p className="text-white/80">Tell us what is working and what is not</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+            <p className="text-gray-700">
+              This is v1 (guides only). The interactive feedback board is coming in v2. For now,
+              the quickest way to share an idea, report a problem or suggest a new guide is a quick email.
+            </p>
+            <a
+              href={FEEDBACK_MAILTO}
+              className="inline-flex items-center gap-2 px-5 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 no-underline"
+            >
+              <Send className="w-5 h-5" />
+              Email your feedback
+            </a>
+            <p className="text-xs text-gray-500">
+              Opens your email app, addressed to michael.sharpe4@nhs.net.
+            </p>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>

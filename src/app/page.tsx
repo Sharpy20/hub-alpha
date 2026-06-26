@@ -301,6 +301,11 @@ export default function HomePage() {
           <div>
             <p className="text-sm font-medium text-amber-900">This site is under active development.</p>
             <p className="text-xs text-amber-700 mt-0.5">Things may change between visits. All data is fictional. Not for clinical use.</p>
+            {isV2 && (
+              <p className="text-xs text-amber-700 mt-1">
+                This is <strong>v1 (guides only)</strong>. v2 will add the team task diary, staff editor rights and an interactive feedback system.
+              </p>
+            )}
           </div>
         </div>
 

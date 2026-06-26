@@ -8,6 +8,18 @@ import { FileText, BookOpen, ArrowRight, Pencil, Shield, Bookmark, Settings, Spa
 import { bookmarks } from "@/lib/data/bookmarks";
 import { useV2Href, useIsV2 } from "@/lib/hooks/useV2";
 
+// v1 (limited build) has no backend to store who has editor rights, so the
+// request is a mailto to the project owner. v2 will replace this with a real
+// approval flow.
+const EDITOR_MAILTO =
+  "mailto:michael.sharpe4@nhs.net" +
+  "?subject=" +
+  encodeURIComponent("wardHub - editor rights request") +
+  "&body=" +
+  encodeURIComponent(
+    "I'd like editor rights on wardHub.\n\nName:\nRole:\nWard:\nWhich guides or areas you'd like to edit:\n",
+  );
+
 // Dynamic counts from data
 const WORKFLOW_COUNT = 12; // Defined inline in referrals/[id] page
 const GUIDE_COUNT = 13;    // Defined inline in how-to/[id] page
@@ -73,24 +85,20 @@ export default function AdminPage() {
                 <p className="text-sm text-gray-600 mb-4">
                   Contributor privileges let you create and edit workflows, guides, and links. This is a separate privilege that can be added to any role.
                 </p>
-                {showCreatorRequest ? (
+                {isV2 ? (
+                  <a
+                    href={EDITOR_MAILTO}
+                    className="block w-full text-center py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-medium hover:shadow-lg transition-all no-underline"
+                  >
+                    Request editor rights
+                  </a>
+                ) : showCreatorRequest ? (
                   <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                    {isV2 ? (
-                      <>
-                        <p className="text-sm text-amber-800 font-medium mb-1">This is demo mode</p>
-                        <p className="text-xs text-amber-700">
-                          To try editing, change your role to Editor in the Demo Mode menu (top right).
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-sm text-amber-800 font-medium mb-1">Request submitted</p>
-                        <p className="text-xs text-amber-700">
-                          Needs approval from a Ward Admin or Manager, plus completion of Creator Training.
-                          Your request has been noted - please speak to your Ward Admin or Manager.
-                        </p>
-                      </>
-                    )}
+                    <p className="text-sm text-amber-800 font-medium mb-1">Request submitted</p>
+                    <p className="text-xs text-amber-700">
+                      Needs approval from a Ward Admin or Manager, plus completion of Creator Training.
+                      Your request has been noted - please speak to your Ward Admin or Manager.
+                    </p>
                   </div>
                 ) : (
                   <button

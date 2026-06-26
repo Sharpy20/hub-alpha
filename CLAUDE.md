@@ -844,6 +844,20 @@ Working through in order. Marking complete as fixed.
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
 
+## SNAG LIST (25 Jun 2026 - Session 28: MHA forms + v1 governance split)
+
+Mike supplied 9 trust MHA policies (digested - see memory `session-28-mha-policies`).
+Built the form-blank links + cross-ref now; split staff-identity features to v2.
+Pushed live (commits 1f6e296 + 0f4c379). Build clean.
+
+| # | Status | Description |
+|---|--------|-------------|
+| 197 | [x] | **mha-checker blank forms** - `MhaForm.url` added; every statutory form tile now offers a blank-form download from Mental Health Law Online fillable PDFs (the trust uses these). A2/H1/H3/H4/CTO3/CTO4 are confirmed-exact URLs; the other A/H forms follow MHL's verified short `Form_<code>_fillable.pdf` pattern (Mike to spot-check). Links render outside the OR-selector buttons to avoid nested-interactive a11y fails. H3 switched from Mike's OneDrive to MHL (admission checklist H3 left on OneDrive). |
+| 198 | [x] | **mha-checker cross-ref** - companion card + empty-state link to `/guides/mha-statuses` (MHA Statuses Explained). |
+| 199 | [x] | **v1 governance split** - v1 (limited build, `isV2===true`) stores no staff identity, so `/feedback` and the admin "request editor rights" button are now **mailto michael.sharpe4@nhs.net** (was localStorage board / demo toggle). Home disclaimer adds "This is v1 (guides only); v2 will add the team task diary, staff editor rights and an interactive feedback system." Real feedback board + editor approval flow stay v2 (full build). |
+| 200 | [ ] | **Granular editor permissions (v2, designed not built)** - per-category editing (e.g. safeguarding lead edits Safeguarding only). Plan: add `editScope: "all" | CategoryKey[]` to the user record + a `canEditGuide(user, guide)` helper keyed on the existing guide `category`; senior-admin assigns scope + approves requests; needs the v2 backend user table. |
+| 201 | [ ] | **Mike's MHA worklist (sent, pending his shift)** - source S136 policy; forensic/court receiving process; resolve IMHA City provider (One Advocacy Derby vs POhWER); show/hide AMHP + MHA numbers; confirm S62 policy currency (review date passed); spot-check MHL form links; S17 FOCUS record/amend links; pick build order for new guides (S132, S17, S62, S135(2)); Hartington->Derwent sweep; decide "arrange an MHA assessment" mini-guide. Buildable next from the policies: S4 de-flag, S5(2) enrich, CTO recall corrections, + new S132/S17/S62/S135(2) guides. See memory `session-28-mha-policies`. |
+
 ## SNAG LIST (23 Jun 2026 - Session 27: Guidance rework + status badges)
 
 Mike's feedback on Session 25: the 10 tools shipped as chip-builders with thin

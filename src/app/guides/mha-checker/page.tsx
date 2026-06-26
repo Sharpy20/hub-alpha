@@ -10,7 +10,7 @@ import {
 } from "@/lib/data/guides";
 import { useV2Href } from "@/lib/hooks/useV2";
 import {
-  ArrowLeft, Check, Printer, ScrollText, AlertTriangle, Info, Plus, ClipboardList,
+  ArrowLeft, Check, Printer, ScrollText, AlertTriangle, Info, Plus, ClipboardList, Download,
 } from "lucide-react";
 
 // A single statutory-form tile.
@@ -181,6 +181,27 @@ export default function MhaCheckerPage() {
                             );
                           })}
                         </div>
+                        {(() => {
+                          const sel = req.options[selected] ?? req.options[0];
+                          const withUrls = sel.filter((f) => f.url);
+                          if (withUrls.length === 0) return null;
+                          return (
+                            <div className="mt-2 flex flex-wrap gap-3">
+                              {withUrls.map((f, i) => (
+                                <a
+                                  key={i}
+                                  href={f.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-900 no-underline"
+                                >
+                                  <Download className="w-3.5 h-3.5" />
+                                  Blank {f.code}
+                                </a>
+                              ))}
+                            </div>
+                          );
+                        })()}
                         {req.note && (
                           <p className="text-xs text-gray-500 mt-2 flex items-start gap-1.5">
                             <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
@@ -200,6 +221,17 @@ export default function MhaCheckerPage() {
                       You complete
                     </div>
                     <FormTile form={pathway.nurseCompletes} tone="green" />
+                    {pathway.nurseCompletes.url && (
+                      <a
+                        href={pathway.nurseCompletes.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-green-800 hover:text-green-900 no-underline"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Blank {pathway.nurseCompletes.code}
+                      </a>
+                    )}
                   </div>
                 )}
 
@@ -273,6 +305,21 @@ export default function MhaCheckerPage() {
               </div>
             </div>
 
+            {/* Cross-link: what the section means */}
+            <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 print:hidden">
+              <h3 className="font-bold text-indigo-900">Not sure about the section itself?</h3>
+              <p className="text-sm text-indigo-700 mt-1 mb-3">
+                Mental Health Act Statuses Explained covers what each section means, the timescales, and the patient&apos;s rights.
+              </p>
+              <Link
+                href={v2Href("/guides/mha-statuses")}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors no-underline"
+              >
+                <ScrollText className="w-4 h-4" />
+                Open MHA Statuses Explained
+              </Link>
+            </div>
+
             {/* Cross-link */}
             <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-5 print:hidden">
               <h3 className="font-bold text-emerald-900">New admission?</h3>
@@ -293,7 +340,13 @@ export default function MhaCheckerPage() {
         {!pathway && (
           <div className="text-center py-12 bg-gray-50 rounded-xl text-gray-500 print:hidden">
             <ScrollText className="w-10 h-10 mx-auto mb-3 text-gray-300" />
-            Pick a scenario above to see the paperwork.
+            <p>Pick a scenario above to see the paperwork.</p>
+            <Link
+              href={v2Href("/guides/mha-statuses")}
+              className="inline-block mt-3 text-sm font-semibold text-indigo-600 hover:text-indigo-800 no-underline"
+            >
+              Or read what each MHA section means
+            </Link>
           </div>
         )}
 

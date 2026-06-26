@@ -246,6 +246,7 @@ export interface MhaForm {
   code: string;       // e.g. "A2", "H3"
   name: string;       // what it is
   who: string;        // who completes it
+  url?: string;       // link to the blank statutory form (optional)
 }
 
 // One requirement block. `options` is OR-of-AND: each inner array is a set of
@@ -275,22 +276,45 @@ export interface MhaPathway {
   verify?: boolean;
 }
 
+// Blank statutory forms - public fillable PDFs from Mental Health Law Online
+// (the MHA Free Form Project versions the trust uses). A2/H1/H3/H4/CTO3/CTO4
+// URLs are confirmed exact; the other A and H forms follow MHLO's verified
+// short "Form_<code>_fillable.pdf" naming (same series, same pattern - worth a
+// spot-check). The AMHP report is a free narrative document, so has no blank form.
+const MHLO = "https://www.mentalhealthlaw.co.uk/media";
+const FORM_BLANK: Record<string, string> = {
+  A2: `${MHLO}/Form_A2_fillable.pdf`,
+  A3: `${MHLO}/Form_A3_fillable.pdf`,
+  A4: `${MHLO}/Form_A4_fillable.pdf`,
+  A6: `${MHLO}/Form_A6_fillable.pdf`,
+  A7: `${MHLO}/Form_A7_fillable.pdf`,
+  A8: `${MHLO}/Form_A8_fillable.pdf`,
+  A10: `${MHLO}/Form_A10_fillable.pdf`,
+  A11: `${MHLO}/Form_A11_fillable.pdf`,
+  H1: `${MHLO}/Form_H1_fillable.pdf`,
+  H2: `${MHLO}/Form_H2_fillable.pdf`,
+  H3: `${MHLO}/Form_H3_fillable.pdf`,
+  H4: `${MHLO}/Form_H4_fillable.pdf`,
+  CTO3: `${MHLO}/Form_CTO3_section_17E_-_community_treatment_order_-_notice_of_recall_to_hospital.pdf`,
+  CTO4: `${MHLO}/Form_CTO4_section_17E_-_community_treatment_order_-_record_of_patient's_detention_in_hospital_after_recall.pdf`,
+};
+
 const FORMS = {
-  A2: { code: "A2", name: "AMHP application for admission for assessment", who: "AMHP" },
-  A3: { code: "A3", name: "Joint medical recommendation (assessment)", who: "Two doctors, one form" },
-  A4: { code: "A4", name: "Single medical recommendation (assessment)", who: "One doctor" },
-  A6: { code: "A6", name: "AMHP application for admission for treatment", who: "AMHP" },
-  A7: { code: "A7", name: "Joint medical recommendation (treatment)", who: "Two doctors, one form" },
-  A8: { code: "A8", name: "Single medical recommendation (treatment)", who: "One doctor" },
-  A10: { code: "A10", name: "AMHP emergency application for assessment", who: "AMHP" },
-  A11: { code: "A11", name: "Medical recommendation for emergency admission", who: "One doctor" },
-  H1: { code: "H1", name: "Doctor's holding power report - Section 5(2)", who: "Doctor (Part 2 by nurse)" },
-  H2: { code: "H2", name: "Nurse's holding power record - Section 5(4)", who: "Nurse on shift" },
-  H3: { code: "H3", name: "Record of detention - receipt of admission papers", who: "Nurse on shift" },
-  H4: { code: "H4", name: "Record of detention on transfer", who: "Nurse on shift" },
+  A2: { code: "A2", name: "AMHP application for admission for assessment", who: "AMHP", url: FORM_BLANK.A2 },
+  A3: { code: "A3", name: "Joint medical recommendation (assessment)", who: "Two doctors, one form", url: FORM_BLANK.A3 },
+  A4: { code: "A4", name: "Single medical recommendation (assessment)", who: "One doctor", url: FORM_BLANK.A4 },
+  A6: { code: "A6", name: "AMHP application for admission for treatment", who: "AMHP", url: FORM_BLANK.A6 },
+  A7: { code: "A7", name: "Joint medical recommendation (treatment)", who: "Two doctors, one form", url: FORM_BLANK.A7 },
+  A8: { code: "A8", name: "Single medical recommendation (treatment)", who: "One doctor", url: FORM_BLANK.A8 },
+  A10: { code: "A10", name: "AMHP emergency application for assessment", who: "AMHP", url: FORM_BLANK.A10 },
+  A11: { code: "A11", name: "Medical recommendation for emergency admission", who: "One doctor", url: FORM_BLANK.A11 },
+  H1: { code: "H1", name: "Doctor's holding power report - Section 5(2)", who: "Doctor (Part 2 by nurse)", url: FORM_BLANK.H1 },
+  H2: { code: "H2", name: "Nurse's holding power record - Section 5(4)", who: "Nurse on shift", url: FORM_BLANK.H2 },
+  H3: { code: "H3", name: "Record of detention - receipt of admission papers", who: "Nurse on shift", url: FORM_BLANK.H3 },
+  H4: { code: "H4", name: "Record of detention on transfer", who: "Nurse on shift", url: FORM_BLANK.H4 },
   AMHP: { code: "AMHP", name: "AMHP report", who: "AMHP (supporting document)" },
-  CTO3: { code: "CTO3", name: "Notice of recall to hospital", who: "Served in the community" },
-  CTO4: { code: "CTO4", name: "Record of detention after recall", who: "Nurse on shift" },
+  CTO3: { code: "CTO3", name: "Notice of recall to hospital", who: "Served in the community", url: FORM_BLANK.CTO3 },
+  CTO4: { code: "CTO4", name: "Record of detention after recall", who: "Nurse on shift", url: FORM_BLANK.CTO4 },
 } satisfies Record<string, MhaForm>;
 
 // Scrutiny criteria, reused across pathways.

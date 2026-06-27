@@ -447,6 +447,18 @@ export const GUIDES: Record<string, GuideData> = {
         title: "Documentation",
         content: "Document in the patient's notes:\n\n• S17 leave form completed and signed by RC\n• Dates/times of leave\n• Any conditions\n• Risk assessment reviewed\n• Patient informed of conditions\n• Copy given to patient",
       },
+      {
+        id: "5",
+        title: "What it applies to (and what it doesn't)",
+        content: "Section 17 leave applies to patients detained under Sections 2, 3, 37 and 47.\n\nIt does NOT apply to Section 4, 5(2), 5(4), 135, 136 or CTO patients. Sections 35, 36 and 38 need the court's permission, and restricted patients need the permission of the Secretary of State for Justice.",
+        tip: "Section 17 is the only lawful way a detained patient can leave the hospital site.",
+      },
+      {
+        id: "6",
+        title: "The nurse's role each time",
+        content: "Only the RC grants the leave, but before each period of leave the nurse in charge must check the S17 form is completed and assess the patient's current mental state. You may withhold leave only if the patient has deteriorated - not for other reasons.\n\nRecord every departure, return and the outcome of each leave on SystmOne. If the RC authorises leave by phone, document the conversation and have the RC complete the form at the earliest opportunity. If a patient fails to return, follow the Missing & Absent Patients policy.",
+        tip: "Leave of more than 7 consecutive days should prompt the RC to consider whether a CTO is more appropriate - record that discussion.",
+      },
     ],
   },
   "fridge-temps": {

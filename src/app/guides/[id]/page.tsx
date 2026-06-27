@@ -567,6 +567,21 @@ export default function UnifiedGuidePage() {
           </div>
         ) : null}
 
+        {/* SystmOne FOCUS how-to links for this guide */}
+        {!isReferral && guide?.focus && guide.focus.length > 0 && (
+          <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5">
+            <h3 className="font-bold text-indigo-900 text-sm mb-1">Record it on SystmOne</h3>
+            <p className="text-xs text-indigo-700 mb-3">SystmOne how-to guides on FOCUS - you need to be logged into FOCUS on the trust network.</p>
+            <div className="flex flex-wrap gap-2">
+              {guide.focus.map((f, i) => (
+                <a key={i} href={f.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-indigo-200 rounded-lg text-sm font-medium text-indigo-700 hover:bg-indigo-100 no-underline">
+                  <ClipboardList className="w-4 h-4" /> {f.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Side navigation arrows */}
         {currentStep > 0 && (
           <button onClick={handlePrev} className="fixed left-0 top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-r-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Previous step">

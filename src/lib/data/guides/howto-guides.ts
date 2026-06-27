@@ -12,6 +12,8 @@ export interface GuideData {
   title: string;
   description: string;
   steps: GuideStep[];
+  // SystmOne how-to guides on FOCUS (trust login needed) shown under the guide.
+  focus?: { label: string; url: string }[];
 }
 
 export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: string }> = {
@@ -105,6 +107,7 @@ export const GUIDES: Record<string, GuideData> = {
     id: "section-132",
     title: "Section 132 - Reading Patient Rights",
     description: "When and how to read detained and informal patients their rights",
+    focus: [{ label: "Recording S132 Rights Conversation (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/10491/2454" }],
     steps: [
       {
         id: "1",
@@ -341,6 +344,10 @@ export const GUIDES: Record<string, GuideData> = {
     id: "news2",
     title: "NEWS2 Observations",
     description: "National Early Warning Score - recognising patient deterioration",
+    focus: [
+      { label: "Schedule NEWS2 (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4336/2454" },
+      { label: "Recording NEWS2 Obs", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4335/2454" },
+    ],
     steps: [
       {
         id: "1",
@@ -434,6 +441,7 @@ export const GUIDES: Record<string, GuideData> = {
     id: "capacity-assessment",
     title: "Capacity Assessment",
     description: "Mental Capacity Act 2005 - Assessing decision-making capacity",
+    focus: [{ label: "Combined Capacity to Consent (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/11045/2454" }],
     steps: [
       {
         id: "1",
@@ -464,6 +472,10 @@ export const GUIDES: Record<string, GuideData> = {
     id: "section-17",
     title: "Section 17 Leave",
     description: "Mental Health Act - Leave of absence from hospital",
+    focus: [
+      { label: "Section 17 Leave (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3431/2454" },
+      { label: "Amending Section 17 Leave", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/8172/2454" },
+    ],
     steps: [
       {
         id: "1",

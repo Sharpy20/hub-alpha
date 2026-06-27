@@ -69,6 +69,7 @@ const ALL_GUIDES: GuideItem[] = [
   { id: "information-sharing", title: "Information Sharing", description: "Seven golden rules and GDPR guidance for safeguarding", icon: "\ud83d\uDD17", gradient: "from-blue-600 to-blue-800", category: "Safeguarding", viewerPath: "/guides/information-sharing" },
   // Urgent Care
   { id: "picu", title: "PICU Kingfisher Referral", description: "Psychiatric Intensive Care Unit transfers", icon: "\uD83C\uDFE5", gradient: "from-rose-500 to-rose-700", category: "Urgent Care", viewerPath: "/guides/picu" },
+  { id: "awol", title: "Absent & Missing Patients (AWOL)", description: "When a patient is absent or missing - Right Care Right Person process", icon: "🏃", gradient: "from-red-600 to-orange-700", category: "Urgent Care", viewerPath: "/guides/awol" },
   // Social & Housing
   { id: "homeless-discharge", title: "Housing / Duty to Refer", description: "Homeless discharge and accommodation support", icon: "\uD83C\uDFE0", gradient: "from-orange-500 to-orange-700", category: "Social & Housing", viewerPath: "/guides/homeless-discharge" },
   { id: "social-care", title: "Social Care (Derby City)", description: "Care Act assessment, S117 referrals & Enablement", icon: "\ud83d\uDC65", gradient: "from-amber-500 to-amber-700", category: "Social & Housing", viewerPath: "/guides/social-care" },

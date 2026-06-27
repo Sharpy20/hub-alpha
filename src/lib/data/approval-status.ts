@@ -30,6 +30,7 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "tribunal-report": "red",
   "dama": "red",
   "transfer-in": "red",
+  "awol": "red",
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

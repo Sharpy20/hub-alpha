@@ -30,6 +30,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "tribunal-report": { icon: "⚖️", gradient: "from-indigo-600 to-purple-800", category: "MHA & Legal" },
   "dama": { icon: "🚪", gradient: "from-orange-500 to-red-700", category: "Admin" },
   "transfer-in": { icon: "🔄", gradient: "from-cyan-500 to-blue-700", category: "Physical Health" },
+  "awol": { icon: "🏃", gradient: "from-red-600 to-orange-700", category: "MHA & Legal" },
   "capacity-assessment": { icon: "⚖️", gradient: "from-violet-500 to-violet-700", category: "MHA & Legal" },
   restraint: { icon: "🤝", gradient: "from-slate-500 to-slate-700", category: "MHA & Legal" },
   "admission-checklist": { icon: "✅", gradient: "from-emerald-500 to-emerald-700", category: "Admin" },
@@ -294,6 +295,45 @@ export const GUIDES: Record<string, GuideData> = {
         title: "Outcomes",
         content: "After assessment the person may be detained under Section 2 or 3, admitted informally, or released. If they are then detained, read their rights (Section 132).",
         tip: "Section 136 itself gives no power to treat without consent - treat an incapacitous person under the MCA if needed.",
+      },
+    ],
+  },
+  "awol": {
+    id: "awol",
+    title: "Absent & Missing Patients (AWOL)",
+    description: "What to do when a patient is absent or missing, under Right Care Right Person",
+    steps: [
+      {
+        id: "1",
+        title: "Absent or Missing? (the RCRP split)",
+        content: "Right Care Right Person sets two categories:\n\n- Absent / AWOL: the patient is not where they should be (absconded, escaped, AWOL, or failed to return from leave). Healthcare does the checks and searches. Police are only called if there is an immediate risk to harm or life.\n- Missing: their whereabouts cannot be established AND they may be a victim of crime, or at risk of harm to self / others, or it is out of character. If a patient is Missing, contact the police immediately.\n\nClinical capacity is NOT used to decide the response - it changes too quickly.",
+        tip: "Police only respond to a 'Critical Concern' (their term for High Risk): a real, immediate risk to life or serious harm, or suspected serious crime.",
+      },
+      {
+        id: "2",
+        title: "First minutes on the ward",
+        content: "Whoever notices tells the Nurse in Charge, who follows the escalation process and starts a comprehensive search, widening in sequence:\n\nWard → toilets → offices → corridors → departments → storerooms → locked rooms → wider hospital and grounds.\n\nInform security (where available) to help search the grounds and check CCTV. If a patient is seen leaving and it is safe to do so, staff may follow to the site boundary and note their direction of travel.",
+      },
+      {
+        id: "3",
+        title: "Risk assess, contact, record",
+        content: "The named nurse carries out an immediate risk assessment. Then:\n\n- Check the care plan and risk management plan\n- Try to contact the patient on any number you have\n- Contact next of kin, family / friends and known professionals (Social Worker, CPN)\n- Inform the doctor / consultant in charge\n- Complete a Datix incident form\n\nThe RC / duty RC coordinates an MDT (inpatients + crisis, and CMHT in hours) to agree the level of risk and who responds.",
+      },
+      {
+        id: "4",
+        title: "Detained vs informal",
+        content: "A detained patient can only be off-site with Section 17 leave - off-site without it is AWOL. An informal patient may leave at will, but where there are concerns about safety or capacity a nurse can use Section 5(4) (up to 6 hours) or a doctor Section 5(2) (up to 72 hours) to hold them - but only while they are still on hospital grounds.\n\nA patient on DoLS who goes missing should be treated as Missing, and the risk reported to police as high.",
+      },
+      {
+        id: "5",
+        title: "Off-site search and outcomes",
+        content: "If High Risk, the police must be contacted immediately. If not high risk, healthcare carries out checks at the last known address or likely places, coordinated with Crisis and (in hours) CMHT, balancing safe staffing.\n\nOutcomes:\n- Located and willing to return → facilitate a safe return\n- Located and refusing to return → consider requesting a Section 135 warrant\n- Not located → report to the police under the Missing Persons process",
+      },
+      {
+        id: "6",
+        title: "On return",
+        content: "A detained patient who is AWOL can be retaken under Section 18 of the MHA. On return: check the patient over, complete / close the Datix, debrief, and update the care plan, risk management plan and observation level to reflect what happened.",
+        tip: "Feed what you learn back into the risk and care plans - an AWOL is a prompt to review the plan, not just an incident to close.",
       },
     ],
   },

@@ -31,11 +31,6 @@ export { DEBRIEF_BUILDER } from "./debrief";
 export { SAFETY_PLAN_BUILDER } from "./safety-plan";
 export { RESTRAINT_BUILDER } from "./restraint";
 export { OBSERVATION_BUILDER } from "./observation";
-export { FALLS_BUILDER } from "./falls";
-export { PHYSICAL_HEALTH_BUILDER } from "./physical-health";
-export { HANDLING_BUILDER } from "./personal-handling";
-export { NUTRITION_BUILDER } from "./nutrition";
-export { PRESSURE_BUILDER } from "./pressure";
 
 export { LDT_SECTIONS, LDT_PATHWAYS } from "./leave-discharge";
 export type { LdtPathway, LdtItem, LdtSection } from "./leave-discharge";

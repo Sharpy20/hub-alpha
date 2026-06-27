@@ -22,11 +22,6 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "safety-plan": "red",
   "restraint-monitoring": "red",
   "observation-engagement": "red",
-  "physical-health-assessment": "red",
-  "falls": "red",
-  "personal-handling": "red",
-  "nutrition-screening": "red",
-  "pressure-areas": "red",
   "leave-discharge-transfer": "red",
   // Session 28b: new draft guide, awaiting Mike's clinical sign-off.
   "arrange-mha-assessment": "red",

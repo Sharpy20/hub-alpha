@@ -136,8 +136,8 @@ export default function UnifiedGuidePage() {
   const generateCaseNote = () => {
     if (!rStep) return "";
     if (guideId === "imha-advocacy") {
-      const areaName = selectedArea === "city" ? "Derby City Advocacy (POhWER)" : "Derbyshire County (Cloverleaf)";
-      const areaEmail = selectedArea === "city" ? "derbyadvocacy@pohwer.net" : "referrals@cloverleaf-advocacy.co.uk";
+      const areaName = selectedArea === "city" ? "Derby City IMHA (Disability Direct)" : "Derbyshire County IMHA (Cloverleaf)";
+      const areaEmail = selectedArea === "city" ? "info@disabilitydirect.com" : "referrals@cloverleaf-advocacy.co.uk";
       const patientText = linkedPatient ? `Patient: ${linkedPatient.name}. ` : "";
       const staffText = caseNoteBy ? ` Referral completed by ${caseNoteBy}.` : "";
       let statusText: string;
@@ -193,7 +193,7 @@ export default function UnifiedGuidePage() {
   const handleLogReferral = () => {
     let sentTo = "External Service";
     if (guideId === "imha-advocacy") {
-      sentTo = selectedArea === "city" ? "Derby City Advocacy (POhWER)" : "Derbyshire County (Cloverleaf)";
+      sentTo = selectedArea === "city" ? "Derby City IMHA (Disability Direct)" : "Derbyshire County IMHA (Cloverleaf)";
     } else {
       const sub = workflow.steps.find(s => s.type === "submission");
       if (sub?.methods && sub.methods.length > 0) sentTo = sub.methods[0].label;

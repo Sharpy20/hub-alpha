@@ -103,16 +103,16 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Download the appropriate form for your selected area.",
         forms: {
           blank: [
-            { label: "Derby City IMHA Form 2025 (POhWER)", url: "#", icon: "📄", area: "city" },
-            { label: "Derbyshire County IMHA Form (Cloverleaf)", url: "#", icon: "📄", area: "county" },
+            { label: "Derby City IMHA Referral Form (Disability Direct)", url: "https://disabilitydirect.com/wp-content/uploads/2026/01/DDA-IMHA-Referral-Form-2026.docx", icon: "📄", area: "city" },
+            { label: "Derbyshire County IMHA Referral (Cloverleaf - online form)", url: "https://cloverleaf-advocacy.co.uk/referrals/", icon: "📄", area: "county" },
           ],
           wagoll: [
             { label: "IMHA Referral Example (WAGOLL)", url: "#", note: "Example only - do not submit" },
           ],
           otherGuides: [
             { label: "IMHA Service Information", url: "#" },
-            { label: "POhWER Advocacy Leaflet", url: "#", area: "city" },
-            { label: "Cloverleaf Advocacy Leaflet", url: "#", area: "county" },
+            { label: "Disability Direct Advocacy (Derby City)", url: "https://disabilitydirect.com/dd-advocacy/", area: "city" },
+            { label: "Cloverleaf Advocacy (Derbyshire County)", url: "https://cloverleaf-advocacy.co.uk/", area: "county" },
           ],
         },
       },
@@ -122,10 +122,10 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Send the completed referral to the advocacy service:",
         methods: [
-          { type: "email", label: "Derby City Advocacy (POhWER)", value: "derbyadvocacy@pohwer.net", area: "city" },
-          { type: "phone", label: "POhWER Helpline", value: "0300 456 2370", area: "city" },
-          { type: "email", label: "Derbyshire County (Cloverleaf)", value: "referrals@cloverleaf-advocacy.co.uk", area: "county" },
-          { type: "phone", label: "Cloverleaf Helpline", value: "0300 012 4563", area: "county" },
+          { type: "email", label: "Derby City IMHA (Disability Direct)", value: "info@disabilitydirect.com", area: "city" },
+          { type: "phone", label: "Disability Direct", value: "01332 299449", area: "city" },
+          { type: "email", label: "Derbyshire County IMHA (Cloverleaf)", value: "referrals@cloverleaf-advocacy.co.uk", area: "county" },
+          { type: "phone", label: "Cloverleaf Advocacy", value: "01924 454875", area: "county" },
         ],
       },
       {

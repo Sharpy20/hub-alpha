@@ -859,7 +859,11 @@ Mike dropped a big folder (E:\Hub\temp\wardhub docs) + prompts.md backlog and as
 | 208 | [x] | **Seclusion guide** - split "appearance, mood & level of awareness" into 3 separate sections (matches live S1 form). |
 | 209 | [x] | **Guidance tools** - header now shows a "pointers to think through, not a form to fill in" badge (reframes debrief etc. per Mike). |
 | 210 | [ ] | **Forensic sections: PARKED + DO NOT MENTION** in paperwork-access guides (Mike's decision). |
-| 211 | [ ] | **Still queued (need docx read or Mike's input):** S136 suite guide (sources now in folder), AWOL/Missing Patients, DAMA, Tribunal report, RDH/general-ward transfer-in SOP; S17 enrich; wire IMHA forms to DDA + Cloverleaf (BLOCKED on city/county provider clarification); home bookmark-wheel resize for 15in laptops; observation-level wording (Mike to confirm defs); physical-health 5 helpers kill-or-develop; the 86 placeholder referral-form links (link-to-source); `links task.docx` -> SystmOne FOCUS guide URLs. See memory `session-28-*`. |
+| 211 | [ ] | **Still queued (need docx read):** S136 suite guide (sources now in folder), AWOL/Missing Patients, DAMA, Tribunal report, RDH/general-ward transfer-in SOP; S17 enrich; home bookmark-wheel resize for 15in laptops; the 86 placeholder referral-form links (link-to-source); `links task.docx` -> SystmOne FOCUS guide URLs. See memory `session-28-*`. |
+| 212 | [x] | **IMHA rewired** - Derby City provider is now Disability Direct (was POhWER), County = Cloverleaf; both wired to source (verified live), public contacts shown. |
+| 213 | [x] | **Observation guide** - real DHCFT levels baked in from the Inpatient Therapeutic Observations & Engagement Policy (Feb 2025 v10): L1 arm's length (most restrictive) to L4 general; review cadence. (Policy self-contradicts on L3 review interval - used 72h.) |
+| 214 | [x] | **Physical-health 5 helper tools REMOVED** (Mike: kill) - Physical Health Assessment, Falls, Personal Handling, Nutrition (MUST), Pressure (Waterlow): routes + data files + index exports + ALL_GUIDES + approval entries deleted. news2 / tissue-viability / dental remain in the category. |
+| 215 | [x] | **snag 148 (data dump)** - `docs/data dump from work to sort/` untracked from git + gitignored (a `git add -A` had started tracking it). Local copies kept. NOTE: `docs/focus-data-collection/*.md` still tracked - separate snag-148 cleanup if the repo ever goes public. |
 
 ## SNAG LIST (25 Jun 2026 - Session 28: MHA forms + v1 governance split)
 

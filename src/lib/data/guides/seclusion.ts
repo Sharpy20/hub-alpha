@@ -30,6 +30,7 @@ export const SECLUSION_BUILDER: GuidePromptConfig = {
     "A patient in seclusion must never be deprived of their clothing.",
     "Do not duplicate the incident report or the general care plan - keep this operational.",
   ],
+  focus: [{ label: "Seclusion (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/9793/2454" }],
   sections: [
     {
       id: "risk",

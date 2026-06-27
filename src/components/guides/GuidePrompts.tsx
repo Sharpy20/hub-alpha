@@ -140,6 +140,19 @@ export function GuidePrompts({ config }: { config: GuidePromptConfig }) {
           </div>
         )}
 
+        {/* SystmOne FOCUS how-to links */}
+        {config.focus && config.focus.length > 0 && (
+          <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
+            <p className="text-sm font-bold text-indigo-900 mb-1">Record it on SystmOne</p>
+            <p className="text-xs text-indigo-700 mb-2">SystmOne how-to guides on FOCUS - trust login needed.</p>
+            <div className="flex flex-wrap gap-2">
+              {config.focus.map((f, i) => (
+                <a key={i} href={f.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-3 py-1.5 bg-white border border-indigo-200 rounded-lg text-sm font-medium text-indigo-700 hover:bg-indigo-100 no-underline">{f.label}</a>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Expand all toggle */}
         <div className="flex justify-end">
           <button

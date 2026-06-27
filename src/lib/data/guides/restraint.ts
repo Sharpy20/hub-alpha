@@ -23,6 +23,10 @@ export const RESTRAINT_BUILDER: GuidePromptConfig = {
     "Oral medication should be offered before any other route.",
     "The 'additional risk factors' detail must never be left blank.",
   ],
+  focus: [
+    { label: "Physical Restraint (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/12795/2454" },
+    { label: "Rapid Tranquilisation", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/8105/2454" },
+  ],
   sections: [
     {
       id: "necessary",

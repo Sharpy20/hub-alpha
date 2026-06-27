@@ -28,6 +28,10 @@ export const OBSERVATION_BUILDER: GuidePromptConfig = {
     "Level 1 - Within arm's length: one or more staff within arm's length at all times - the highest level; reviewed at least every 24 hours. Students must not undertake Level 1.",
     "Every level still needs a rationale tied to the current risk, genuine engagement (not just watching), and a clear step-up / step-down trigger.",
   ],
+  focus: [
+    { label: "Viewing Observations - Obs Chart (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/8682/2454" },
+    { label: "Food Observation", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3417/2454" },
+  ],
   sections: [
     {
       id: "rationale",

@@ -30,4 +30,5 @@ export interface GuidePromptConfig {
   principles?: string[]; // key rules callout
   sections: GuidePromptSection[];
   footer?: string; // small-print grounding line
+  focus?: { label: string; url: string }[]; // SystmOne how-to guides on FOCUS (trust login)
 }

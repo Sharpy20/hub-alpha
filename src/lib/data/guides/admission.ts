@@ -276,27 +276,19 @@ export interface MhaPathway {
   verify?: boolean;
 }
 
-// Blank statutory forms - public fillable PDFs from Mental Health Law Online
-// (the MHA Free Form Project versions the trust uses). A2/H1/H3/H4/CTO3/CTO4
-// URLs are confirmed exact; the other A and H forms follow MHLO's verified
-// short "Form_<code>_fillable.pdf" naming (same series, same pattern - worth a
-// spot-check). The AMHP report is a free narrative document, so has no blank form.
-const MHLO = "https://www.mentalhealthlaw.co.uk/media";
+// Blank statutory forms.
+// NOTE (Session 28b): Mental Health Law Online restructured its site mid-2026 and
+// the per-form /media/Form_<code>_fillable.pdf deep links no longer resolve (the
+// pages render empty). Until we re-source stable blank-form URLs (trust FOCUS,
+// gov.uk, or a confirmed provider), every form points at the MHLO statutory-forms
+// INDEX, where the current blanks can be found. The AMHP report is a free
+// narrative document, so has no blank form.
+// TODO: replace with verified per-form links once a stable source is confirmed.
+const MHLO_FORMS = "https://www.mentalhealthlaw.co.uk/Mental_Health_Act_1983_Statutory_Forms";
 const FORM_BLANK: Record<string, string> = {
-  A2: `${MHLO}/Form_A2_fillable.pdf`,
-  A3: `${MHLO}/Form_A3_fillable.pdf`,
-  A4: `${MHLO}/Form_A4_fillable.pdf`,
-  A6: `${MHLO}/Form_A6_fillable.pdf`,
-  A7: `${MHLO}/Form_A7_fillable.pdf`,
-  A8: `${MHLO}/Form_A8_fillable.pdf`,
-  A10: `${MHLO}/Form_A10_fillable.pdf`,
-  A11: `${MHLO}/Form_A11_fillable.pdf`,
-  H1: `${MHLO}/Form_H1_fillable.pdf`,
-  H2: `${MHLO}/Form_H2_fillable.pdf`,
-  H3: `${MHLO}/Form_H3_fillable.pdf`,
-  H4: `${MHLO}/Form_H4_fillable.pdf`,
-  CTO3: `${MHLO}/Form_CTO3_section_17E_-_community_treatment_order_-_notice_of_recall_to_hospital.pdf`,
-  CTO4: `${MHLO}/Form_CTO4_section_17E_-_community_treatment_order_-_record_of_patient's_detention_in_hospital_after_recall.pdf`,
+  A2: MHLO_FORMS, A3: MHLO_FORMS, A4: MHLO_FORMS, A6: MHLO_FORMS, A7: MHLO_FORMS,
+  A8: MHLO_FORMS, A9: MHLO_FORMS, A10: MHLO_FORMS, A11: MHLO_FORMS, H1: MHLO_FORMS, H2: MHLO_FORMS,
+  H3: MHLO_FORMS, H4: MHLO_FORMS, CTO3: MHLO_FORMS, CTO4: MHLO_FORMS,
 };
 
 const FORMS = {
@@ -306,6 +298,7 @@ const FORMS = {
   A6: { code: "A6", name: "AMHP application for admission for treatment", who: "AMHP", url: FORM_BLANK.A6 },
   A7: { code: "A7", name: "Joint medical recommendation (treatment)", who: "Two doctors, one form", url: FORM_BLANK.A7 },
   A8: { code: "A8", name: "Single medical recommendation (treatment)", who: "One doctor", url: FORM_BLANK.A8 },
+  A9: { code: "A9", name: "Emergency application by nearest relative (assessment)", who: "Nearest relative (rarely used)", url: FORM_BLANK.A9 },
   A10: { code: "A10", name: "AMHP emergency application for assessment", who: "AMHP", url: FORM_BLANK.A10 },
   A11: { code: "A11", name: "Medical recommendation for emergency admission", who: "One doctor", url: FORM_BLANK.A11 },
   H1: { code: "H1", name: "Doctor's holding power report - Section 5(2)", who: "Doctor (Part 2 by nurse)", url: FORM_BLANK.H1 },
@@ -418,9 +411,12 @@ export const MHA_PATHWAYS: MhaPathway[] = [
     label: "Section 4",
     detail: "Emergency admission for assessment (up to 72 hours)",
     icon: "🚨",
-    verify: true,
     requirements: [
-      { label: "AMHP (or nearest relative) application", options: [[FORMS.A10]] },
+      {
+        label: "Application",
+        options: [[FORMS.A10], [FORMS.A9]],
+        note: "AMHP application (A10), or rarely the nearest relative (A9).",
+      },
       {
         label: "Medical recommendation",
         options: [[FORMS.A11]],
@@ -429,8 +425,10 @@ export const MHA_PATHWAYS: MhaPathway[] = [
     ],
     nurseCompletes: FORMS.H3,
     notes: [
-      "Section 4 is for urgent necessity only. A second medical recommendation within 72 hours converts it to Section 2.",
-      "Confirm the exact local process with your MHA office - this pathway is not in the trust admission checklist.",
+      "Section 4 is for urgent necessity only - used when waiting for a second doctor would cause undesirable delay. Maximum 72 hours.",
+      "Complete H3 Part 1 to accept the papers on admission. If a second medical recommendation is obtained within the 72 hours (one doctor Section 12 approved), it converts to Section 2 - complete H3 Part 2.",
+      "Applicant must have seen the patient within the previous 24 hours; admission must be within 24 hours of the medical examination or the application, whichever is earlier.",
+      "Read Section 132 rights within 24 hours of admission and send the papers to the MHA office without delay.",
     ],
     scrutiny: [SCRUTINY_GENERAL, SCRUTINY_S4],
   },
@@ -460,18 +458,19 @@ export const MHA_PATHWAYS: MhaPathway[] = [
       {
         label: "Recall notice",
         options: [[FORMS.CTO3]],
-        note: "Served in the community. Make sure it has been completed correctly when you receive the patient.",
+        note: "Served in the community. The patient must initially be conveyed to the hospital named on the recall notice - check it has been completed correctly. Transfer to another hospital within the 72 hours is allowed (CTO6 if a different organisation).",
       },
       {
         label: "Record of detention",
         options: [[FORMS.CTO4]],
-        note: "The accepting paperwork recording the patient's admission to hospital.",
+        note: "Completed by the nurse in charge on arrival. The 72-hour recall period runs from the time recorded on the CTO4 - record it accurately, it is the legal start point.",
       },
     ],
     notes: [
-      "Call for an MHA assessment within 72 hours of admission.",
-      "Only the medications agreed in the community can be given - these are set out on the CTO12 (has capacity) or CTO11 (lacks capacity / SOAD authorisation). Any other medication needs a Section 62 from a consultant until the patient is formally detained.",
-      "After the assessment the consultant either completes a CTO5 (revoking the CTO) or ends the recall - the CTO then continues, or the patient can stay informally or return to the community.",
+      "The 72 hours run from the CTO4 time, not the CTO3. The patient must be allowed to leave at 72 hours unless the CTO is revoked (CTO5, which must be done within the 72 hours).",
+      "During the 72-hour recall the patient can be treated without consent under the recall power itself - a Section 62 is NOT needed at this stage. Section 62 only becomes relevant after revocation, when the patient is back on their original section.",
+      "Medication during recall is governed by the existing CTO12 (has capacity and consents) or CTO11 (lacks capacity / SOAD authorisation).",
+      "Call for an MHA assessment within 72 hours. The RC then revokes the CTO (CTO5) or ends the recall - the CTO continues, or the patient stays informally / returns to the community. On revocation, explain Section 132A rights immediately.",
     ],
     scrutiny: [SCRUTINY_GENERAL],
   },
@@ -487,7 +486,13 @@ export const MHA_PATHWAYS: MhaPathway[] = [
         note: "All parts completed by the doctor on shift, with signature, date and time. Part 2 is completed by the nurse with signature, date and time. NOT VALID if Part 2 is not completed.",
       },
     ],
-    notes: ["Section 5(2) cannot be renewed. It must be converted to Section 2 or 3 if detention needs to continue."],
+    notes: [
+      "Detention legally begins the moment the completed H1 (Part 1) is handed to the nurse in charge. The nurse checks it and completes Part 2 to accept it - the section is not valid until Part 2 is signed.",
+      "The patient must be reviewed by the RC / approved clinician the same day if possible, and no later than the next day. On a weekend or bank holiday the Duty Consultant attends - never leave it until Monday.",
+      "If re-graded from Section 5(4), the 72 hours run from the start of the 5(4).",
+      "Section 5(2) gives no power to treat without consent (Part 4 does not apply) - treat an incapacitous patient under the MCA if needed.",
+      "Section 5(2) cannot be renewed. It must be converted to Section 2 or 3 if detention needs to continue.",
+    ],
     scrutiny: [SCRUTINY_GENERAL],
   },
   {

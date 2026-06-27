@@ -28,6 +28,8 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "nutrition-screening": "red",
   "pressure-areas": "red",
   "leave-discharge-transfer": "red",
+  // Session 28b: new draft guide, awaiting Mike's clinical sign-off.
+  "arrange-mha-assessment": "red",
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

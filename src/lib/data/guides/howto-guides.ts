@@ -24,6 +24,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "cardiac-arrest": { icon: "❤️‍🔥", gradient: "from-rose-600 to-rose-800", category: "Emergency Response" },
   "mha-statuses": { icon: "⚖️", gradient: "from-indigo-600 to-purple-800", category: "MHA & Legal" },
   "section-17": { icon: "📋", gradient: "from-indigo-500 to-indigo-700", category: "MHA & Legal" },
+  "arrange-mha-assessment": { icon: "⚖️", gradient: "from-indigo-500 to-indigo-700", category: "MHA & Legal" },
   "capacity-assessment": { icon: "⚖️", gradient: "from-violet-500 to-violet-700", category: "MHA & Legal" },
   restraint: { icon: "🤝", gradient: "from-slate-500 to-slate-700", category: "MHA & Legal" },
   "admission-checklist": { icon: "✅", gradient: "from-emerald-500 to-emerald-700", category: "Admin" },
@@ -53,6 +54,47 @@ export const GUIDE_WAGOLLS: Record<string, { label: string; url: string }[]> = {
 };
 
 export const GUIDES: Record<string, GuideData> = {
+  // Real AMHP numbers (hidden in demo per Rule 4): City 01332 255609, County 01629 537904.
+  "arrange-mha-assessment": {
+    id: "arrange-mha-assessment",
+    title: "Arranging an MHA Assessment",
+    description: "How to set up a Mental Health Act assessment when the medics ask for one",
+    steps: [
+      {
+        id: "1",
+        title: "When you will need this",
+        content: "You may be asked by the medical team to arrange a Mental Health Act assessment after a medical recommendation has been completed - for example for a Section 2 or Section 3.",
+        tip: "The doctors provide the medical recommendation; your job is to get the AMHP team involved and get the paperwork to them.",
+      },
+      {
+        id: "2",
+        title: "Get the medical recommendation",
+        content: "One of the doctors completes a medical recommendation and emails it to a member of staff on shift. Make sure you actually have it before you contact the AMHP team.",
+      },
+      {
+        id: "3",
+        title: "Work out the area, then call the AMHP team",
+        content: "Ring the City or County social care / AMHP team. Which one depends on where the patient lives - check the address on SystmOne and go by their usual home address, not where they are now.\n\n- City AMHP: Hidden in demo mode\n- County AMHP: Hidden in demo mode\n\nOut of hours (after 5pm), call the AMHP team via reception and ask for either the City or County AMHP.",
+        tip: "If you are not sure which team, the patient's usual home address decides it.",
+      },
+      {
+        id: "4",
+        title: "Send the supporting paperwork",
+        content: "The AMHP team will give you an email address. Send across:\n\n- The medical recommendation\n- The current risk assessment\n- The care plan\n- Any other supporting documentation\n\nSend it securely (nhs.net to nhs.net).",
+      },
+      {
+        id: "5",
+        title: "Document on SystmOne",
+        content: "Record clearly on SystmOne what was sent, to whom, and when. That is the audit trail if someone picks the task up later.",
+      },
+      {
+        id: "6",
+        title: "Hand over if it is not done on your shift",
+        content: "If the assessment is not completed on your shift, make sure the next shift can access the medical recommendation - email it to them or print a copy and hand it over as an ongoing task.",
+        tip: "Do not let the recommendation get lost at handover - it is the thing the whole assessment hangs on.",
+      },
+    ],
+  },
   news2: {
     id: "news2",
     title: "NEWS2 Observations",

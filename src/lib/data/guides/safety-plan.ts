@@ -100,7 +100,7 @@ export const SAFETY_PLAN_BUILDER: GuidePromptConfig = {
       ],
       examples: [
         "Tell staff on the ward immediately",
-        "Derbyshire Mental Health Helpline 0800 028 0077",
+        "Derbyshire Mental Health Helpline - dial 111 and select option 2 (mental health)",
         "Samaritans 116 123",
         "NHS 111 (option 2), or 999 if life is at risk",
         "Crisis team (after discharge)",

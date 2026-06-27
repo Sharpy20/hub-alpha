@@ -9,8 +9,8 @@ export const bookmarks: Bookmark[] = [
     url: "https://www.derbyshirehealthcareft.nhs.uk",
     category: "Crisis Support",
     requiresFocus: false,
-    description: "Local 24/7 mental health support",
-    phone: "0800 028 0077",
+    description: "Local 24/7 mental health support - dial 111 and select option 2",
+    phone: "111 (option 2)",
   },
   {
     id: "samaritans",

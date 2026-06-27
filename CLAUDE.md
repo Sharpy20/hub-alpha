@@ -844,6 +844,23 @@ Working through in order. Marking complete as fixed.
 | 139 | [x] | Editor: WORKFLOWS list now derived from real data file (17 workflows, was 12 hardcoded). Step counts auto-derived. |
 | 140 | [x] | TourModal Rules-of-Hooks bug fixed (hook called after early return). |
 
+## SNAG LIST (27 Jun 2026 - Session 28b: MHA build + live fixes, autonomous pass)
+
+Mike dropped a big folder (E:\Hub\temp\wardhub docs) + prompts.md backlog and asked Claude to work through it solo. Done + pushed (commits fcdef52, c6e85b4). Build clean.
+
+| # | Status | Description |
+|---|--------|-------------|
+| 202 | [x] | **Helpline number** - Derbyshire MH Helpline 0800 028 0077 switched off 1 Jul 2026; replaced with "111 (option 2)" in the crisis bookmark + Safety Plan guide. |
+| 203 | [x] | **mha-checker corrections** - S4 de-flagged (now confirmed trust policy) + A9 nearest-relative option + H3 Part 1/2 + scrutiny timings; S5(2) enriched (detention starts on receipt of H1, Part 2 validity, same/next-day review + weekend Duty Consultant, 5(4) clock, no Part 4 treatment); CTO recall corrected (72h from CTO4, S62 only post-revocation, initial hospital must match but transfer allowed, CTO11/CTO12). |
+| 204 | [x] | **MHL form links** - per-form fillable-PDF deep links are dead (MHLO restructured mid-2026); all now fall back to the MHLO statutory-forms index. TODO re-source stable per-form blanks. |
+| 205 | [x] | **New guide: Arranging an MHA Assessment** (`/guides/arrange-mha-assessment`, red) - City/County AMHP steps from Mike's email; AMHP numbers hidden per Rule 4 (real numbers in code comment). |
+| 206 | [x] | **New guide: Section 132 - Reading Patient Rights** (`/guides/section-132`, red) - from the S132 policy digest. |
+| 207 | [x] | **Add-task wording** - "Link to How-To Guide" -> "Optionally match to a guide". (Dynamic/grouped guide picker still TODO - Mike's "dealers choice".) |
+| 208 | [x] | **Seclusion guide** - split "appearance, mood & level of awareness" into 3 separate sections (matches live S1 form). |
+| 209 | [x] | **Guidance tools** - header now shows a "pointers to think through, not a form to fill in" badge (reframes debrief etc. per Mike). |
+| 210 | [ ] | **Forensic sections: PARKED + DO NOT MENTION** in paperwork-access guides (Mike's decision). |
+| 211 | [ ] | **Still queued (need docx read or Mike's input):** S136 suite guide (sources now in folder), AWOL/Missing Patients, DAMA, Tribunal report, RDH/general-ward transfer-in SOP; S17 enrich; wire IMHA forms to DDA + Cloverleaf (BLOCKED on city/county provider clarification); home bookmark-wheel resize for 15in laptops; observation-level wording (Mike to confirm defs); physical-health 5 helpers kill-or-develop; the 86 placeholder referral-form links (link-to-source); `links task.docx` -> SystmOne FOCUS guide URLs. See memory `session-28-*`. |
+
 ## SNAG LIST (25 Jun 2026 - Session 28: MHA forms + v1 governance split)
 
 Mike supplied 9 trust MHA policies (digested - see memory `session-28-mha-policies`).

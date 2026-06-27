@@ -11,6 +11,7 @@ import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
+import { FocusLinks } from "@/components/guides/FocusLinks";
 import { LDT_SECTIONS, LDT_PATHWAYS, type LdtPathway } from "@/lib/data/guides";
 import {
   ArrowLeft, Printer, RotateCcw, ChevronDown, ChevronRight, Flag, Info, AlertTriangle,
@@ -50,6 +51,9 @@ export default function LeaveDischargeTransferPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Leave / Discharge / Transfer" }]} />
         </div>
+        <FocusLinks links={[
+          { label: "Discharge Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4829/2454" },
+        ]} />
 
         {/* Header */}
         <div className="bg-gradient-to-r from-teal-600 to-emerald-700 rounded-2xl p-6 text-white">

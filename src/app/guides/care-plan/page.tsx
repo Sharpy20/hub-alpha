@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
+import { FocusLinks } from "@/components/guides/FocusLinks";
 import {
   CAREPLAN_SECTIONS, CAREPLAN_PRINCIPLES, CAREPLAN_TEACHING, CAREPLAN_EXAMPLE,
   type CareSection,
@@ -210,6 +211,11 @@ export default function CarePlanPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Care Plan" }]} />
         </div>
+        <FocusLinks links={[
+          { label: "Creating a Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/7498/2454" },
+          { label: "Review / Update a Care Plan", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/5322/2454" },
+          { label: "Viewing MH Care Plans", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/12869/2454" },
+        ]} />
 
         {/* Header */}
         <div className="bg-gradient-to-r from-sky-600 to-blue-700 rounded-2xl p-6 text-white">

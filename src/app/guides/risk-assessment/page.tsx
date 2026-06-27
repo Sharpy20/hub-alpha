@@ -12,6 +12,7 @@ import {
 } from "@/lib/data/guides";
 import { useApp } from "@/app/providers";
 import { useV2Href } from "@/lib/hooks/useV2";
+import { FocusLinks } from "@/components/guides/FocusLinks";
 import {
   ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info,
   Lightbulb, AlertTriangle, GraduationCap, ListChecks, Sparkles, Plus, X, Pencil,
@@ -572,6 +573,10 @@ export default function RiskAssessmentPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Risk Assessment" }]} />
         </div>
+        <FocusLinks links={[
+          { label: "Risk Screening Assessment (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/10368/2454" },
+          { label: "Risk Node", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/5321/2454" },
+        ]} />
 
         {/* Header */}
         <div className="bg-gradient-to-r from-rose-600 to-red-700 rounded-2xl p-6 text-white">

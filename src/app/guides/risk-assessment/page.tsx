@@ -357,14 +357,19 @@ function formulationGroupsForRisks(sectionId: string, selected: string[]): RiskC
   if (!selected.length) return null;
   const useAll = selected.includes(BLANK_RISK);
   const source = useAll ? RISK_TYPES : selected.filter((r) => r !== BLANK_RISK);
-  const words: string[] = [];
+  // One group per risk (labelled with the risk name) so staff can spot the chips
+  // that belong to each risk, rather than one merged blob.
+  const groups: RiskChipGroup[] = [];
   for (const r of source) {
-    const groups = sectionId === "presenting"
+    const src = sectionId === "presenting"
       ? RMP_RISK_CHIPS[r]?.present
       : FORMULATION_RISK_CHIPS[r]?.[sectionId as FormulationSectionId];
-    if (groups) for (const g of groups) for (const w of g.words) if (!words.includes(w)) words.push(w);
+    if (!src) continue;
+    const words: string[] = [];
+    for (const g of src) for (const w of g.words) if (!words.includes(w)) words.push(w);
+    if (words.length) groups.push({ label: r, words });
   }
-  return words.length ? [{ words }] : null;
+  return groups.length ? groups : null;
 }
 
 // Small inline "add a chip" input used in the chip editor.
@@ -460,6 +465,8 @@ export default function RiskAssessmentPage() {
   // Only editors (contributor flag) can change the suggestion chips.
   const canEditChips = !!user?.isContributor;
   const [editChips, setEditChips] = useState(false);
+  // Which part the nurse is working on - only one shows at a time (less on screen).
+  const [stage, setStage] = useState<"formulation" | "rmp">("formulation");
 
   // Formulation (one integrated formulation per patient).
   const [fState, setFState] = useState<AllState>({});
@@ -642,10 +649,10 @@ export default function RiskAssessmentPage() {
         </div>
 
         {/* Which risks - drives the prompts in BOTH stages below */}
-        <div className="bg-white rounded-2xl border border-rose-200 p-4 space-y-3">
+        <div className="bg-white rounded-2xl border-2 border-rose-300 p-4 space-y-3">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-500 flex-shrink-0" />
-            <h2 className="font-bold text-gray-800 flex-1">Which risks are you covering?</h2>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-white bg-rose-600 px-2 py-0.5 rounded-full flex-shrink-0">Start here</span>
+            <h2 className="font-bold text-gray-800 flex-1">Which risks have you identified?</h2>
             {canEditChips && (
               <button
                 onClick={() => setEditChips((e) => !e)}
@@ -721,105 +728,135 @@ export default function RiskAssessmentPage() {
           )}
         </div>
 
-        {/* Stage 1: Formulation */}
-        <div className="bg-gradient-to-br from-rose-50 to-white rounded-2xl border border-rose-100 p-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center">1</span>
-            <h2 className="font-bold text-gray-800">Risk Formulation - the WHY</h2>
+        {/* Big toggle: focus on one part at a time */}
+        {!editChips && (
+          <div className="grid grid-cols-2 gap-2 bg-rose-100/60 rounded-2xl p-1.5">
+            <button
+              onClick={() => setStage("formulation")}
+              aria-pressed={stage === "formulation"}
+              className={`rounded-xl px-4 py-3 text-center transition-all ${stage === "formulation" ? "bg-rose-600 text-white shadow-md" : "bg-white text-rose-700 hover:bg-rose-50"}`}
+            >
+              <span className="block text-[11px] font-mono uppercase tracking-wider opacity-80">Part 1</span>
+              <span className="block font-bold">Formulation</span>
+              <span className="block text-xs opacity-80">the WHY</span>
+            </button>
+            <button
+              onClick={() => setStage("rmp")}
+              aria-pressed={stage === "rmp"}
+              className={`rounded-xl px-4 py-3 text-center transition-all ${stage === "rmp" ? "bg-rose-600 text-white shadow-md" : "bg-white text-rose-700 hover:bg-rose-50"}`}
+            >
+              <span className="block text-[11px] font-mono uppercase tracking-wider opacity-80">Part 2</span>
+              <span className="block font-bold">Management Plan (RMP)</span>
+              <span className="block text-xs opacity-80">the WHAT</span>
+            </button>
           </div>
-          <p className="text-xs text-gray-500">
-            Explains why the risk exists, linking history, current presentation and future risk. (Best-practice
-            framework - not a specific trust form.)
-            {risks.length > 0 && (
-              <span className="text-rose-600"> Prompts below are tailored to the risk{risks.length > 1 ? "s" : ""} you picked.</span>
-            )}
-          </p>
-          <OutputBox text={formulationText} label="Your risk formulation" />
-          <div className="space-y-2">
-            {FORMULATION_SECTIONS.map((sec) => (
-              <SectionEditor key={sec.id} section={formulationSectionFor(sec)} state={fGet(sec.id)} onChange={(n) => fSet(sec.id, n)} />
-            ))}
-          </div>
-        </div>
+        )}
 
-        {/* Stage 2: RMP - one separate plan per risk */}
-        <div className="bg-gradient-to-br from-rose-50 to-white rounded-2xl border border-rose-100 p-4 space-y-4">
-          <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center">2</span>
-            <h2 className="font-bold text-gray-800 flex-1">Risk Management Plans - the WHAT</h2>
-          </div>
-
-          {!editChips && (
-            <div className="flex items-start gap-2 bg-rose-100/70 border border-rose-200 rounded-xl p-3 text-sm text-rose-800">
-              <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <p>{SEPARATE_PLANS_NOTE}</p>
+        {/* Part 1: Formulation */}
+        {!editChips && stage === "formulation" && (
+          <div className="bg-gradient-to-br from-rose-50 to-white rounded-2xl border border-rose-100 p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center">1</span>
+              <h2 className="font-bold text-gray-800">Risk Formulation - the WHY</h2>
             </div>
-          )}
-
-          {risks.length === 0 && (
-            <p className="text-sm text-gray-400 text-center py-4">
-              {editChips
-                ? "Pick one or more risks above to edit their suggestion chips."
-                : "Pick one or more risks above (top of the page) to build a plan for each."}
+            <p className="text-xs text-gray-500">
+              Explains why the risk exists, linking history, current presentation and future risk. (Best-practice
+              framework - not a specific trust form.)
+              {risks.length > 0 && (
+                <span className="text-rose-600"> Prompts below are grouped by the risk{risks.length > 1 ? "s" : ""} you picked.</span>
+              )}
             </p>
-          )}
-
-          {!editChips && risks.length > 1 && <OutputBox text={allRmpsText} label={`All ${risks.length} plans`} />}
-
-          {/* One plan (or chip editor) per selected risk */}
-          <div className="space-y-4">
-            {risks.map((risk) => (
-              <div key={risk} className="rounded-2xl border border-rose-200 bg-white overflow-hidden">
-                <div className="flex items-center gap-2 px-4 py-2.5 bg-rose-50 border-b border-rose-100">
-                  <h3 className="font-bold text-rose-900 flex-1 capitalize">
-                    {risk === BLANK_RISK ? (blankName.trim() || "Other (unlisted risk)") : risk}
-                  </h3>
-                  <button
-                    onClick={() => toggleRisk(risk)}
-                    className="text-xs font-semibold text-gray-400 hover:text-red-600 transition-colors"
-                  >
-                    Remove
-                  </button>
-                </div>
-                <div className="p-3 space-y-2">
-                  {editChips ? (
-                    risk === BLANK_RISK ? (
-                      <p className="text-sm text-gray-500 p-2">
-                        The &quot;other&quot; risk always shows every prompt from every risk, so there are no chips to
-                        edit here. Edit a specific risk instead.
-                      </p>
-                    ) : (
-                      <ChipBankEditor
-                        risk={risk}
-                        groupsFor={(sectionId) =>
-                          chipOverrides[risk]?.[sectionId] ?? RMP_RISK_CHIPS[risk]?.[sectionId as RmpSectionId]
-                            ?? RMP_SECTIONS.find((s) => s.id === sectionId)?.groups ?? []}
-                        onAdd={(sectionId, gi, word) => addChip(risk, sectionId, gi, word)}
-                        onRemove={(sectionId, gi, word) => removeChip(risk, sectionId, gi, word)}
-                        onReset={() => resetRiskChips(risk)}
-                      />
-                    )
-                  ) : (
-                    <>
-                      <OutputBox
-                        text={buildOneRmp(risk, rmp[risk] || {}, rmpTitleFor(risk))}
-                        label={`RMP - ${risk === BLANK_RISK ? (blankName.trim() || "other") : risk}`}
-                      />
-                      {RMP_SECTIONS.map((sec) => (
-                        <SectionEditor
-                          key={sec.id}
-                          section={sectionForRisk(sec, risk)}
-                          state={rGet(risk, sec.id)}
-                          onChange={(n) => rSet(risk, sec.id, n)}
-                        />
-                      ))}
-                    </>
-                  )}
-                </div>
-              </div>
-            ))}
+            <div className="space-y-2">
+              {FORMULATION_SECTIONS.map((sec) => (
+                <SectionEditor key={sec.id} section={formulationSectionFor(sec)} state={fGet(sec.id)} onChange={(n) => fSet(sec.id, n)} />
+              ))}
+            </div>
+            <OutputBox text={formulationText} label="Your risk formulation - copy into SystmOne" />
           </div>
-        </div>
+        )}
+
+        {/* Part 2: RMP - one separate plan per risk (chip editor shares this section) */}
+        {(editChips || stage === "rmp") && (
+          <div className="bg-gradient-to-br from-rose-50 to-white rounded-2xl border border-rose-100 p-4 space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center">2</span>
+              <h2 className="font-bold text-gray-800 flex-1">Risk Management Plans - the WHAT</h2>
+            </div>
+
+            {!editChips && (
+              <div className="flex items-start gap-2 bg-rose-100/70 border border-rose-200 rounded-xl p-3 text-sm text-rose-800">
+                <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <p>{SEPARATE_PLANS_NOTE}</p>
+              </div>
+            )}
+
+            {risks.length === 0 && (
+              <p className="text-sm text-gray-400 text-center py-4">
+                {editChips
+                  ? "Pick one or more risks above to edit their suggestion chips."
+                  : "Pick one or more risks in Start Here (top of the page) to build a plan for each."}
+              </p>
+            )}
+
+            {/* One plan (or chip editor) per selected risk */}
+            <div className="space-y-4">
+              {risks.map((risk) => (
+                <div key={risk} className="rounded-2xl border border-rose-200 bg-white overflow-hidden">
+                  <div className="flex items-center gap-2 px-4 py-2.5 bg-rose-50 border-b border-rose-100">
+                    <h3 className="font-bold text-rose-900 flex-1 capitalize">
+                      {risk === BLANK_RISK ? (blankName.trim() || "Other (unlisted risk)") : risk}
+                    </h3>
+                    <button
+                      onClick={() => toggleRisk(risk)}
+                      className="text-xs font-semibold text-gray-400 hover:text-red-600 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="p-3 space-y-2">
+                    {editChips ? (
+                      risk === BLANK_RISK ? (
+                        <p className="text-sm text-gray-500 p-2">
+                          The &quot;other&quot; risk always shows every prompt from every risk, so there are no chips to
+                          edit here. Edit a specific risk instead.
+                        </p>
+                      ) : (
+                        <ChipBankEditor
+                          risk={risk}
+                          groupsFor={(sectionId) =>
+                            chipOverrides[risk]?.[sectionId] ?? RMP_RISK_CHIPS[risk]?.[sectionId as RmpSectionId]
+                              ?? RMP_SECTIONS.find((s) => s.id === sectionId)?.groups ?? []}
+                          onAdd={(sectionId, gi, word) => addChip(risk, sectionId, gi, word)}
+                          onRemove={(sectionId, gi, word) => removeChip(risk, sectionId, gi, word)}
+                          onReset={() => resetRiskChips(risk)}
+                        />
+                      )
+                    ) : (
+                      <>
+                        {RMP_SECTIONS.map((sec) => (
+                          <SectionEditor
+                            key={sec.id}
+                            section={sectionForRisk(sec, risk)}
+                            state={rGet(risk, sec.id)}
+                            onChange={(n) => rSet(risk, sec.id, n)}
+                          />
+                        ))}
+                        <OutputBox
+                          text={buildOneRmp(risk, rmp[risk] || {}, rmpTitleFor(risk))}
+                          label={`RMP - ${risk === BLANK_RISK ? (blankName.trim() || "other") : risk} - copy into SystmOne`}
+                        />
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {!editChips && risks.length > 1 && (
+              <OutputBox text={allRmpsText} label={`All ${risks.length} plans - copy all`} />
+            )}
+          </div>
+        )}
 
         {/* Examples */}
         <Collapse icon={Lightbulb} title="Examples: weak vs strong" tone="rose">

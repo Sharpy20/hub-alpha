@@ -102,6 +102,9 @@ export function GuidePrompts({ config }: { config: GuidePromptConfig }) {
               <div>
                 <h1 className="text-3xl font-bold">{config.title}</h1>
                 <p className="text-white/80 mt-1">{config.subtitle}</p>
+                <span className="inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded-full bg-white/20 text-white text-xs font-semibold">
+                  <Lightbulb className="w-3.5 h-3.5" /> Pointers to think through, not a form to fill in
+                </span>
               </div>
             </div>
             <Link href={v2Href("/guides")} className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline">

@@ -348,21 +348,51 @@ export const SECLUSION_BUILDER: GuidePromptConfig = {
       tip: "Record the consent position and the timing.",
     },
     {
-      id: "presentation",
-      heading: "Patient appearance, mood & level of awareness",
+      id: "appearance",
+      heading: "Patient appearance",
       why: "Keep it a snapshot, not a full MSE - what you would see if you glanced through the window.",
       think: [
         "Agitated / withdrawn / pacing / lying still?",
-        "Distressed versus calm?",
-        "Alert versus drowsy?",
+        "Kempt or dishevelled?",
+        "Anything about posture or movement that stands out?",
       ],
       examples: [
         "Appears agitated / restless",
-        "Mood labile / irritable",
-        "Alert but internally preoccupied",
-        "Reduced awareness of surroundings",
+        "Pacing the room",
+        "Lying still, withdrawn",
       ],
       tip: "A snapshot of right now - not a full mental state examination.",
+    },
+    {
+      id: "mood",
+      heading: "Mood",
+      why: "How the patient comes across emotionally right now.",
+      think: [
+        "Distressed versus calm?",
+        "Labile, irritable, angry, fearful or flat?",
+      ],
+      examples: [
+        "Mood labile / irritable",
+        "Appears frightened / distressed",
+        "Calmer than at the point of seclusion",
+      ],
+      tip: "Describe what you observe, not a diagnosis.",
+    },
+    {
+      id: "awareness",
+      heading: "Level of awareness",
+      why: "How alert and oriented the patient is - relevant to both risk and physical monitoring.",
+      think: [
+        "Alert versus drowsy?",
+        "Aware of surroundings, or internally preoccupied?",
+        "Any sign that sedation is affecting responsiveness?",
+      ],
+      examples: [
+        "Alert but internally preoccupied",
+        "Reduced awareness of surroundings",
+        "Drowsy - baseline NEWS2 recorded",
+      ],
+      tip: "If awareness is reduced through sedation, make sure physical monitoring reflects it.",
     },
     {
       id: "physical",

@@ -1692,7 +1692,7 @@ function AddTaskModal({
         {((taskType === "patient" && category !== "referral") || taskType === "ward") && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Link to How-To Guide (optional)
+              Optionally match to a guide
             </label>
             <select
               value={linkedGuide}

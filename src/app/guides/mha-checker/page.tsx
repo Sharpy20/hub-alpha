@@ -9,6 +9,7 @@ import {
   type MhaForm, type MhaPathway,
 } from "@/lib/data/guides";
 import { useV2Href } from "@/lib/hooks/useV2";
+import { FocusLinks } from "@/components/guides/FocusLinks";
 import {
   ArrowLeft, Check, Printer, ScrollText, AlertTriangle, Info, Plus, ClipboardList, Download,
 } from "lucide-react";
@@ -82,6 +83,15 @@ export default function MhaCheckerPage() {
             </Link>
           </div>
         </div>
+
+        {/* Trust MHA policies on FOCUS */}
+        <FocusLinks links={[
+          { label: "Receipt & Scrutiny of Section Papers (policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1825/2454" },
+          { label: "Section 4 (policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1826/2454" },
+          { label: "Section 5(2) (policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1827/2454" },
+          { label: "Section 5(4) (policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1831/2454" },
+          { label: "CTO (policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1822/2454" },
+        ]} />
 
         {/* Step 1: pick the pathway */}
         <div className="print:hidden">

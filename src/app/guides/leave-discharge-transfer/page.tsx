@@ -53,6 +53,7 @@ export default function LeaveDischargeTransferPage() {
         </div>
         <FocusLinks links={[
           { label: "Discharge Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4829/2454" },
+          { label: "Discharge, Transfers & Leave (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1795/2454" },
         ]} />
 
         {/* Header */}

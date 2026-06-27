@@ -107,7 +107,10 @@ export const GUIDES: Record<string, GuideData> = {
     id: "section-132",
     title: "Section 132 - Reading Patient Rights",
     description: "When and how to read detained and informal patients their rights",
-    focus: [{ label: "Recording S132 Rights Conversation (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/10491/2454" }],
+    focus: [
+      { label: "Recording S132 Rights Conversation (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/10491/2454" },
+      { label: "S132 Patients' Rights (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1829/2454" },
+    ],
     steps: [
       {
         id: "1",
@@ -227,6 +230,7 @@ export const GUIDES: Record<string, GuideData> = {
     id: "tribunal-report",
     title: "Mental Health Tribunal - Nursing Report",
     description: "Writing the nursing report and attending the hearing",
+    focus: [{ label: "Mental Health Tribunal (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1832/2454" }],
     steps: [
       {
         id: "1",
@@ -266,6 +270,7 @@ export const GUIDES: Record<string, GuideData> = {
     id: "section-136",
     title: "Section 136 - Place of Safety",
     description: "Receiving a person brought in by police under Section 136",
+    focus: [{ label: "Operation of Section 135 (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1815/2454" }],
     steps: [
       {
         id: "1",
@@ -441,7 +446,10 @@ export const GUIDES: Record<string, GuideData> = {
     id: "capacity-assessment",
     title: "Capacity Assessment",
     description: "Mental Capacity Act 2005 - Assessing decision-making capacity",
-    focus: [{ label: "Combined Capacity to Consent (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/11045/2454" }],
+    focus: [
+      { label: "Combined Capacity to Consent (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/11045/2454" },
+      { label: "Mental Capacity (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1820/2454" },
+    ],
     steps: [
       {
         id: "1",
@@ -475,6 +483,7 @@ export const GUIDES: Record<string, GuideData> = {
     focus: [
       { label: "Section 17 Leave (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3431/2454" },
       { label: "Amending Section 17 Leave", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/8172/2454" },
+      { label: "Section 17 Leave (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1828/2454" },
     ],
     steps: [
       {

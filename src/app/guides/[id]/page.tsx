@@ -570,8 +570,8 @@ export default function UnifiedGuidePage() {
         {/* SystmOne FOCUS how-to links for this guide */}
         {!isReferral && guide?.focus && guide.focus.length > 0 && (
           <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5">
-            <h3 className="font-bold text-indigo-900 text-sm mb-1">Record it on SystmOne</h3>
-            <p className="text-xs text-indigo-700 mb-3">SystmOne how-to guides on FOCUS - you need to be logged into FOCUS on the trust network.</p>
+            <h3 className="font-bold text-indigo-900 text-sm mb-1">On FOCUS (trust login needed)</h3>
+            <p className="text-xs text-indigo-700 mb-3">SystmOne how-tos and the source trust policy - log into FOCUS on the trust network.</p>
             <div className="flex flex-wrap gap-2">
               {guide.focus.map((f, i) => (
                 <a key={i} href={f.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-indigo-200 rounded-lg text-sm font-medium text-indigo-700 hover:bg-indigo-100 no-underline">

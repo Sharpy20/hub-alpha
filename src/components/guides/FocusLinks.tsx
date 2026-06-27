@@ -8,9 +8,9 @@ export function FocusLinks({ links }: { links: { label: string; url: string }[] 
   if (!links || links.length === 0) return null;
   return (
     <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 print:hidden">
-      <p className="text-sm font-bold text-indigo-900 mb-1">Record it on SystmOne</p>
+      <p className="text-sm font-bold text-indigo-900 mb-1">On FOCUS (trust login needed)</p>
       <p className="text-xs text-indigo-700 mb-2">
-        SystmOne how-to guides on FOCUS - trust login needed.
+        SystmOne how-tos and the source trust policy - you need to be logged into FOCUS.
       </p>
       <div className="flex flex-wrap gap-2">
         {links.map((f, i) => (

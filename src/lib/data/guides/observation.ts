@@ -4,7 +4,9 @@
 // therapeutic engagement, not just surveillance; the level needs a clear
 // rationale tied to the current risk; staff need to know what it means in
 // practice and what to watch for; and the plan should say what would change it.
-// Level names vary by ward - use your local terminology.
+// Aligned to the DHCFT Inpatient Therapeutic Observations & Engagement Policy
+// (Feb 2025, v10): four levels, L1 within arm's length (most restrictive) to
+// L4 general (least restrictive).
 
 import type { GuidePromptConfig } from "./guideprompt";
 
@@ -16,13 +18,15 @@ export const OBSERVATION_BUILDER: GuidePromptConfig = {
   subtitle: "A guide to writing a clear rationale for the observation level - and how staff should engage.",
   breadcrumb: "Observation & Engagement",
   intro:
-    "Think these through before you write the observation plan. A bank or new staff member should be able to read it and know exactly what to do - and observation should be engagement, not just watching.",
+    "Think these through before you write the observation plan. A bank or new staff member should be able to read it and know exactly what to do - and observation is engagement, not just watching. The four Derbyshire levels are summarised below.",
   notice:
-    "Observation level names vary by ward - use your local terminology.",
+    "Derbyshire levels (Inpatient Therapeutic Observations & Engagement Policy, Feb 2025): Level 1 = within arm's length (most restrictive), Level 4 = general (least restrictive).",
   principles: [
-    "Every level needs a rationale tied to the current risk - not a habit or a default.",
-    "Engagement matters as much as observation - say how staff should interact.",
-    "Say what would step the level up or down, so it does not drift unreviewed.",
+    "Level 4 - General: know each patient's whereabouts and wellbeing; check at least hourly by day and half-hourly at night. The minimum for all inpatients; reviewed weekly at MDT.",
+    "Level 3 - Intermittent: visual checks at varying times within a 15-minute period (never exactly every 15 minutes). Not automatically reduced at night; reviewed at least every 72 hours.",
+    "Level 2 - Within eyesight: kept in clear sight at all times, day and night (including bathroom and while asleep); reviewed at least every 24 hours.",
+    "Level 1 - Within arm's length: one or more staff within arm's length at all times - the highest level; reviewed at least every 24 hours. Students must not undertake Level 1.",
+    "Every level still needs a rationale tied to the current risk, genuine engagement (not just watching), and a clear step-up / step-down trigger.",
   ],
   sections: [
     {
@@ -34,10 +38,10 @@ export const OBSERVATION_BUILDER: GuidePromptConfig = {
         "Why this level and not a lower one?",
       ],
       examples: [
-        "Within-eyesight to manage active suicidal intent (specific plan disclosed)",
-        "To manage risk of absconding from a detained patient",
-        "Vulnerability / exploitation risk on the ward",
-        "Post-seclusion step-down",
+        "Level 2 (within eyesight) for active suicidal intent with a disclosed plan",
+        "Level 1 (within arm's length) for immediate, serious risk to self",
+        "Level 3 (intermittent) as a step-down from Level 1/2 towards general obs",
+        "Level 4 (general) - the baseline for all inpatients",
       ],
       tip: "Name the specific risk - 'on Level 2 due to risk' is not a rationale.",
     },
@@ -101,9 +105,9 @@ export const OBSERVATION_BUILDER: GuidePromptConfig = {
         "Step down: sustained reduction in ideation, engaging openly, no attempts to access means",
         "Step up: renewed intent or attempts, increasing agitation, concealing items",
       ],
-      tip: "Without a step-down trigger, enhanced obs drifts on for weeks by inertia.",
+      tip: "Without a step-down trigger, enhanced obs drifts on for weeks by inertia. Reviews: Level 1/2 at least every 24 hours (and discussed every handover), Level 3 at least every 72 hours, Level 4 weekly - plus immediately after any incident or change in mental state.",
     },
   ],
   footer:
-    "Guide only, source-aligned with the Trust Observation of Patients policy. Use your ward's level terminology. Draft - to be verified.",
+    "Guide only, aligned to the DHCFT Inpatient Therapeutic Observations & Engagement Policy (Feb 2025, v10). Levels recorded on SystmOne / the Brigid app. Draft - to be verified.",
 };

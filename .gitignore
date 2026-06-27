@@ -42,3 +42,6 @@ next-env.d.ts
 
 # claude code
 .claude/
+
+# Raw trust-docs dump - source material only, never track/deploy (snag 148)
+docs/data dump from work to sort/

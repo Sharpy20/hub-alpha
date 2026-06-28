@@ -17,7 +17,14 @@ export interface RiskDomain {
   short: string;         // short label for outputs
   subtypes: string[];    // the approved S1 sub-domains (tickable)
   noEvidence: string;    // the exact "No evidence ..." option
-  hasSafetyConcern?: boolean; // domain 1 also asks "concerns about safety?" (1a)
+  // The exact S1 follow-up prompts (Xa/Xb/Xc, plus 1a/1d on domain 1). These are
+  // trust-approved wording - do not paraphrase. "the person" is personalised with
+  // the patient's name on screen.
+  indicatorsPrompt: string;        // Xa (Xb on domain 1) - "Display clinical indicators...?"
+  currentPrompt: string;           // Xb (1c on domain 1) - current-concerns narrative
+  historicalPrompt: string;        // Xc (1d on domain 1) - historical narrative
+  safetyPrompt?: string;           // domain 1 only - 1a
+  historicalSubPrompts?: string[]; // domain 1 only - the two 1d sub-questions
 }
 
 export const RISK_DOMAINS: RiskDomain[] = [
@@ -30,7 +37,14 @@ export const RISK_DOMAINS: RiskDomain[] = [
       "Currently experiencing high levels of distress and/or hopelessness",
     ],
     noEvidence: "No evidence of self harm or suicide reported during assessment",
-    hasSafetyConcern: true,
+    safetyPrompt: "Do you have concerns about the person's safety in relation to self-harm or suicide?",
+    indicatorsPrompt: "Display clinical indicators for risk of self harm or suicide?",
+    currentPrompt: "Narrative / notes - Please describe your current concerns surrounding self-harm and/or suicide.",
+    historicalPrompt: "Please provide information around historical risk of self harm or suicide.",
+    historicalSubPrompts: [
+      "Has the person previously self-harmed?",
+      "Has the person previously acted on suicidal thoughts?",
+    ],
   },
   {
     id: "self-neglect", number: 2,
@@ -40,6 +54,9 @@ export const RISK_DOMAINS: RiskDomain[] = [
       "Associated with Domestic ADL's and life skills",
     ],
     noEvidence: "No evidence of risk to self, including self-neglect reported during assessment",
+    indicatorsPrompt: "Display clinical indicators for risk to self, including self neglect?",
+    currentPrompt: "Narrative / notes of current concerns - based on your clinical judgement at this time and based on the information provided",
+    historicalPrompt: "Please provide information around historical risk of self neglect;",
   },
   {
     id: "harm-to-others", number: 3,
@@ -53,6 +70,9 @@ export const RISK_DOMAINS: RiskDomain[] = [
       "Associated with Mental Ill Health",
     ],
     noEvidence: "No evidence of risk of harm or neglect to others reported during assessment",
+    indicatorsPrompt: "Display clinical indicators for risk of harm or neglect to others?",
+    currentPrompt: "Narrative / notes of current concerns - based on your clinical judgement at this time and based on the information provided",
+    historicalPrompt: "Please provide information around historical risk of harm or neglect to others;",
   },
   {
     id: "harm-by-others", number: 4,
@@ -68,6 +88,9 @@ export const RISK_DOMAINS: RiskDomain[] = [
       "Neglect / acts of omission",
     ],
     noEvidence: "No evidence of risk of harm or neglect by others reported during assessment",
+    indicatorsPrompt: "Display clinical indicators for risk of harm or neglect by others?",
+    currentPrompt: "Narrative / notes of current concerns - based on your clinical judgement at this time and based on the information provided",
+    historicalPrompt: "Please provide information around historical risk of neglect by others;",
   },
   {
     id: "physical-health", number: 5,
@@ -80,6 +103,9 @@ export const RISK_DOMAINS: RiskDomain[] = [
       "Falls",
     ],
     noEvidence: "No evidence of risk to physical health including frailty reported during assessment",
+    indicatorsPrompt: "Display clinical indicators for risk physical health including frailty?",
+    currentPrompt: "Narrative / notes of current concerns - based on your clinical judgement at this time and based on the information provided",
+    historicalPrompt: "Please provide information around historical risk to physical health including frailty;",
   },
   {
     id: "children", number: 6,
@@ -96,6 +122,9 @@ export const RISK_DOMAINS: RiskDomain[] = [
       "Neglect / acts of omission",
     ],
     noEvidence: "No evidence of risk of harm or neglect to foetus, infants, children (u18) reported during assessment",
+    indicatorsPrompt: "Display clinical indicators for risk of harm or neglect to foetus infant or child?",
+    currentPrompt: "Narrative / notes of current concerns - based on your clinical judgement at this time and based on the information provided",
+    historicalPrompt: "Please provide information around historical risk of harm or neglect to fetus, infant or child;",
   },
   {
     id: "environmental", number: 7,
@@ -106,6 +135,9 @@ export const RISK_DOMAINS: RiskDomain[] = [
       "Lack of social stimulation/activities",
     ],
     noEvidence: "No evidence of environmental risk/external reported during assessment",
+    indicatorsPrompt: "Display clinical indicators for risk of environmental / external factors?",
+    currentPrompt: "Narrative / notes of current concerns - based on your clinical judgement at this time and based on the information provided",
+    historicalPrompt: "Please provide information around historical risk of environmental / external factors",
   },
 ];
 

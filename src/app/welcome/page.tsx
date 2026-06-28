@@ -149,6 +149,13 @@ export default function WelcomePage() {
   }, [domains]);
 
   const name = banner.name.trim() || "the patient";
+  // Personalise the trust-approved prompts on screen with the patient's name
+  // (display only - doesn't change what's copied into the form). Falls back to
+  // the approved "the person" wording when no name is entered.
+  const personalise = (s: string) => {
+    const nm = banner.name.trim();
+    return nm ? s.replace(/the person's/g, `${nm}'s`).replace(/the person/g, nm) : s;
+  };
   const contextLine = useMemo(() => {
     const bits: string[] = [];
     if (banner.ward.trim()) bits.push(`admitted to ${banner.ward.trim()}`);
@@ -183,7 +190,7 @@ export default function WelcomePage() {
       parts.push(`${dm.number}. ${dm.title}`);
       if (st.noEvidence) parts.push(dm.noEvidence);
       else if (st.risks.length) st.risks.forEach((r) => parts.push(r));
-      if (dm.hasSafetyConcern && st.safety) parts.push(`Concerns about safety: ${st.safety === "yes" ? "Yes" : "No"}`);
+      if (dm.safetyPrompt && st.safety) parts.push(`Concerns about safety: ${st.safety === "yes" ? "Yes" : "No"}`);
       if (st.indicators) parts.push(`Clinical indicators: ${st.indicators === "yes" ? "Yes" : "No"}`);
       if (st.current.trim()) parts.push(`Current concerns: ${ensureStop(cap(st.current.trim()))}`);
       if (st.historical.trim()) parts.push(`Historical: ${ensureStop(cap(st.historical.trim()))}`);
@@ -346,17 +353,22 @@ export default function WelcomePage() {
 
                       {engaged && (
                         <div className="space-y-3 rounded-lg bg-gray-50 p-3">
-                          {dm.hasSafetyConcern && (
-                            <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">Concerns about the person&apos;s safety?</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>
+                          {dm.safetyPrompt && (
+                            <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.safetyPrompt)}</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>
                           )}
-                          <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">Clinical indicators present?</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
+                          <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
                           <div>
-                            <label className="block text-xs font-semibold text-gray-500 mb-1">Current concerns (screen narrative)</label>
-                            <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} placeholder="What's happening now, based on this assessment..." className={inputCls} />
+                            <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
+                            <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
                           </div>
                           <div>
-                            <label className="block text-xs font-semibold text-gray-500 mb-1">Historical risk (screen narrative)</label>
-                            <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} placeholder="Relevant history - previous incidents, dates if known..." className={inputCls} />
+                            <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
+                            {dm.historicalSubPrompts && (
+                              <ul className="mb-1.5 ml-1 space-y-0.5">
+                                {dm.historicalSubPrompts.map((sp) => <li key={sp} className="text-xs text-gray-400">- {personalise(sp)}</li>)}
+                              </ul>
+                            )}
+                            <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} className={inputCls} />
                           </div>
                         </div>
                       )}

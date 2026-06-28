@@ -244,8 +244,8 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
   const tasks: WardTask[] = [];
   let id = startId;
 
-  // Generate 6 ward tasks (reduced for cleaner demo)
-  for (let i = 0; i < 6; i++) {
+  // Generate 1 recurring ward task (kept light for a cleaner demo)
+  for (let i = 0; i < 1; i++) {
     const template = WARD_TASK_TEMPLATES[i % WARD_TASK_TEMPLATES.length];
     const staffMember = staff[i % staff.length];
 
@@ -256,16 +256,11 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
     let completedBy: string | undefined;
     let completedAt: string | undefined;
 
-    if (i < 3) {
-      // Completed tasks
+    if (i === 0) {
+      // First is completed today; the rest stay pending/unclaimed
       status = "completed";
       completedBy = staffMember;
       completedAt = todayStr;
-    } else if (i < 6) {
-      // In progress / claimed tasks
-      status = "in_progress";
-      claimedBy = staffMember;
-      claimedAt = todayStr;
     }
     // Rest are pending (unclaimed)
 
@@ -334,57 +329,36 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
   const tasks: PatientTask[] = [];
   let id = startId;
 
-  // Generate tasks for half the patients (cleaner demo)
-  const taskPatients = wardPatients.filter((_, idx) => idx % 2 === 0);
-  for (let i = 0; i < taskPatients.length; i++) {
-    const patient = taskPatients[i];
+  // One patient task per day across a short window - keeps the diary to about
+  // one item a day for a cleaner demo.
+  const spread: { date: string; status: "pending" | "in_progress" | "completed" | "overdue"; claim?: boolean }[] = [
+    { date: twoDaysAgoStr, status: "overdue" },
+    { date: yesterdayStr, status: "overdue" },
+    { date: todayStr, status: "in_progress", claim: true },
+    { date: tomorrowStr, status: "pending" },
+    { date: dayAfterStr, status: "pending" },
+    { date: threeDaysStr, status: "pending" },
+    { date: fourDaysStr, status: "pending" },
+    { date: fiveDaysStr, status: "pending" },
+  ];
+
+  for (let i = 0; i < spread.length && i < wardPatients.length; i++) {
+    const patient = wardPatients[i];
     const template = PATIENT_TASK_TEMPLATES[i % PATIENT_TASK_TEMPLATES.length];
     const staffMember = staff[i % staff.length];
-
-    // Determine status and dates based on index
-    let status: "pending" | "in_progress" | "completed" | "overdue" = "pending";
-    let dueDate = todayStr;
-    let claimedBy: string | undefined;
-    let claimedAt: string | undefined;
-    let completedBy: string | undefined;
-    let completedAt: string | undefined;
-
-    if (i < 3) {
-      // Overdue tasks
-      status = "overdue";
-      dueDate = i === 0 ? twoDaysAgoStr : yesterdayStr;
-    } else if (i < 6) {
-      // Completed tasks
-      status = "completed";
-      completedBy = staffMember;
-      completedAt = todayStr;
-    } else if (i < 9) {
-      // In progress / claimed tasks
-      status = "in_progress";
-      claimedBy = staffMember;
-      claimedAt = todayStr;
-    } else if (i < 14) {
-      // Pending for today
-      status = "pending";
-      dueDate = todayStr;
-    } else {
-      // Future tasks
-      status = "pending";
-      const futureDays = [tomorrowStr, dayAfterStr, threeDaysStr, fourDaysStr, fiveDaysStr];
-      dueDate = futureDays[(i - 14) % futureDays.length];
-    }
+    const slot = spread[i];
 
     tasks.push({
       id: `pt${id++}`,
       type: "patient",
       title: template.title,
       description: `${template.description} for ${patient.name}`,
-      status,
+      status: slot.status,
       priority: template.priority,
       category: template.category,
       patientId: patient.id,
       patientName: patient.name,
-      dueDate,
+      dueDate: slot.date,
       carryOver: true,
       ward,
       createdAt: todayStr,
@@ -392,8 +366,7 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
       ...(template.linkedReferralId && { linkedReferralId: template.linkedReferralId }),
       ...(template.linkedGuideId && { linkedGuideId: template.linkedGuideId }),
       ...((template as any).repeatIntervalDays && { repeatIntervalDays: (template as any).repeatIntervalDays }),
-      ...(claimedBy && { claimedBy, claimedAt }),
-      ...(completedBy && { completedBy, completedAt }),
+      ...(slot.claim && { claimedBy: staffMember, claimedAt: todayStr }),
     });
   }
 
@@ -540,8 +513,8 @@ const generateAdmissionAuditTasks = (): PatientTask[] => {
     const leadsManagers = getLeadsAndManagers(ward);
     const creatorName = leadsManagers.length > 0 ? leadsManagers[0].name : "System";
 
-    // Generate for every other patient (cleaner demo)
-    const auditPatients = wardPatients.filter((_, idx) => idx % 2 === 0);
+    // Just the first couple of patients (kept light - overdue ones carry to today)
+    const auditPatients = wardPatients.slice(0, 2);
     for (const patient of auditPatients) {
       // Calculate 72hr deadline from admission
       const admissionDate = new Date(patient.admissionDate);

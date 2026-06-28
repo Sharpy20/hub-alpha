@@ -129,6 +129,33 @@ export const RISK_DOMAINS: RiskDomain[] = [
   },
 ];
 
+// The 28 RISK_TYPES (from risk.ts, where the per-risk formulation + RMP chip
+// banks live) grouped under the 7 SystmOne domains. Picking a risk here opens its
+// full WHY (formulation) + WHAT (RMP) capture, reusing those chip banks. Strings
+// MUST match RISK_TYPES exactly. Domain 6 (children) has no direct match in the
+// 28 - it stays available via "other". Some mappings are judgement calls (e.g.
+// paranoia / mania drive several risks) - Mike to refine.
+export const DOMAIN_RISKS: Record<string, string[]> = {
+  "self-harm": ["self-harm", "suicide"],
+  "self-neglect": [
+    "self-neglect / ADLs", "diet and nutrition", "medication non-concordance",
+    "substance misuse", "refusal to engage", "observations / refusal of obs",
+    "sleep disturbance", "AWOL / absconsion", "discharge risk",
+  ],
+  "harm-to-others": [
+    "violence and aggression", "risk to others", "risk to family",
+    "sexual disinhibition", "fire risk", "weapon access", "boundary violations",
+    "paranoia / persecutory beliefs", "mania / impulsivity",
+  ],
+  "harm-by-others": ["vulnerability / exploitation", "financial exploitation"],
+  "physical-health": [
+    "falls", "physical health deterioration", "infection / delirium",
+    "cognitive impairment / confusion",
+  ],
+  "children": [],
+  "environmental": ["homelessness / housing instability", "hoarding"],
+};
+
 // The five-heading risk-management-plan template (DHCFT, as it appears on the
 // risk screen). The MDT line is appended to "next steps" automatically.
 export const RMP_HEADINGS: { id: string; heading: string }[] = [

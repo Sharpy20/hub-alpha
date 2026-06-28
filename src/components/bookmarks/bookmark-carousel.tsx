@@ -225,9 +225,11 @@ export function BookmarkCarousel() {
         </div>
       </div>
 
-      {/* Controls tucked into the bottom-left corner so they stop adding height
-          below the wheel - bottom aligns with the lowest bookmark. */}
-      <div className="absolute left-6 bottom-6 flex flex-col items-start gap-3 z-20">
+      {/* Controls tucked into the bottom-left corner on laptops/desktop (where the
+          wheel is centred with clear side margins) so they stop adding height
+          below the wheel. On mobile the card is wheel-width, so they sit in normal
+          flow below it instead - avoids overlapping the lower-left spokes. */}
+      <div className="mt-4 flex flex-col items-start gap-3 md:mt-0 md:absolute md:left-6 md:bottom-6 md:z-20">
         {/* Category dots (page slider) */}
         <div className="flex flex-wrap gap-2 max-w-[180px]">
           {categories.map((cat, i) => (

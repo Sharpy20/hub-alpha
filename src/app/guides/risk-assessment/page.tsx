@@ -804,6 +804,15 @@ export default function RiskAssessmentPage() {
               ))}
             </div>
             <OutputBox text={formulationText} label="Your risk formulation - copy into SystmOne" />
+            <div className="rounded-2xl border-2 border-dashed border-rose-200 p-4 text-center space-y-2">
+              <p className="text-sm text-gray-600">Done the formulation? The management plan is the other half.</p>
+              <button
+                onClick={() => setStage("rmp")}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 text-white font-semibold hover:bg-rose-700 transition-colors"
+              >
+                Now tackle Part 2 - the Management Plan <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         )}
 
@@ -886,6 +895,17 @@ export default function RiskAssessmentPage() {
 
             {!editChips && risks.length > 1 && (
               <OutputBox text={allRmpsText} label={`All ${risks.length} plans - copy all`} />
+            )}
+            {!editChips && (
+              <div className="rounded-2xl border-2 border-dashed border-rose-200 p-4 text-center space-y-2">
+                <p className="text-sm text-gray-600">Want to revisit the why behind these plans?</p>
+                <button
+                  onClick={() => setStage("formulation")}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-rose-300 text-rose-700 font-semibold hover:bg-rose-50 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Back to Part 1 - the Formulation
+                </button>
+              </div>
             )}
           </div>
         )}

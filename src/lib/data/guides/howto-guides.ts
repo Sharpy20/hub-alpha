@@ -270,7 +270,7 @@ export const GUIDES: Record<string, GuideData> = {
     id: "section-136",
     title: "Section 136 - Place of Safety",
     description: "Receiving a person brought in by police under Section 136",
-    focus: [{ label: "Operation of Section 135 (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1815/2454" }],
+    focus: [{ label: "Operation of Section 136 (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1995/2454" }],
     steps: [
       {
         id: "1",
@@ -310,6 +310,7 @@ export const GUIDES: Record<string, GuideData> = {
     id: "awol",
     title: "Absent & Missing Patients (AWOL)",
     description: "What to do when a patient is absent or missing, under Right Care Right Person",
+    focus: [{ label: "Missing & Absent Patients (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1833/2454" }],
     steps: [
       {
         id: "1",

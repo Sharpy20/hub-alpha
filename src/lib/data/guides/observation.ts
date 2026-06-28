@@ -31,6 +31,7 @@ export const OBSERVATION_BUILDER: GuidePromptConfig = {
   focus: [
     { label: "Viewing Observations - Obs Chart (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/8682/2454" },
     { label: "Food Observation", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3417/2454" },
+    { label: "Therapeutic Observations & Engagement (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1840/2454" },
   ],
   sections: [
     {

@@ -1,35 +1,33 @@
 "use client";
 
-// Welcome - the admission co-production tool (Phase 1, rich rebuild).
+// Welcome - the admission co-production tool (Phase 1).
 //
 // A nurse works through this WITH the patient. ONE page captures everything the
 // downstream forms need:
 //   - a patient banner (pulls through every output),
-//   - the 7 SystmOne risk-screen domains, each holding the relevant risks from the
-//     28-risk bank (grouped),
-//   - for EACH risk picked: its full WHY (formulation, 9 sections) AND WHAT (risk
-//     management plan, 5 sections) using the SAME risk-specific chip banks as the
-//     Risk Assessment builder - the why and the what, in one place, risk by risk,
-//   - plus the per-domain risk-screen narrative (indicators / current / historical).
+//   - the 7 SystmOne risk-screen domains and their APPROVED sub-domains (the exact
+//     ones inputted into S1). The nurse ticks the sub-domains that apply,
+//   - each ticked sub-domain becomes a risk to mention: it opens its full WHY
+//     (formulation, 9 sections) AND WHAT (risk management plan, 5 sections), with
+//     chips tailored to that risk (each sub-domain maps to a chip bank). The
+//     labels shown/copied are always the approved S1 ones,
+//   - the per-domain screen narrative (indicators / current / historical),
+//   - an auto-generated overall risk formulation summary.
 //
-// Generate -> three copy-out tabs (Risk Screen, Formulation, Management Plan), each
-// block with a "pasted into SystmOne" tick.
+// Generate -> three copy-out tabs (Risk Screen, Formulation, Management Plan),
+// each block with a "pasted into SystmOne" tick.
 //
 // NOTHING IS STORED. All state is in memory, wiped on close. The banner is held in
 // memory only (no localStorage, no network); autoComplete off on those inputs.
-//
-// Later phases: care plan, safety plan, physical-health prompts, leave/discharge,
-// referrals + printables checklist, advocate/rights step, v2 auto-tasks.
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { useV2Href } from "@/lib/hooks/useV2";
 import {
-  RISK_DOMAINS, DOMAIN_RISKS, OBS_LEVELS, LEGAL_STATUSES, WELCOME_INTROS,
-  type RiskDomain,
+  RISK_DOMAINS, SUBTYPE_RISK, OBS_LEVELS, LEGAL_STATUSES, WELCOME_INTROS,
 } from "@/lib/data/welcome/risk-screen";
-import { FORMULATION_SECTIONS, RMP_SECTIONS, BLANK_RISK } from "@/lib/data/guides";
+import { FORMULATION_SECTIONS, RMP_SECTIONS } from "@/lib/data/guides";
 import {
   SectionEditor, buildFormulation, buildOneRmp, formulationSectionForRisk,
   rmpSectionForRisk, buildContent, naturalList, cap, ensureStop,
@@ -44,19 +42,20 @@ type YN = "" | "yes" | "no";
 
 interface DomainState {
   indicators: YN; safety: YN; current: string; historical: string;
-  noEvidence: boolean; risks: string[];
+  noEvidence: boolean; risks: string[]; // selected sub-domain labels
 }
 const emptyDomain = (): DomainState => ({ indicators: "", safety: "", current: "", historical: "", noEvidence: false, risks: [] });
 
 interface Banner { name: string; nok: string; address: string; ward: string; section: string; obs: string; description: string }
 const emptyBanner = (): Banner => ({ name: "", nok: "", address: "", ward: "", section: "", obs: "", description: "" });
 
+interface RiskRef { key: string; label: string; chipRisk: string }
+
 async function copyText(text: string) {
   try { await navigator.clipboard.writeText(text); }
   catch { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
 }
 
-// ---- Yes / No ----
 function YNToggle({ value, onChange }: { value: YN; onChange: (v: YN) => void }) {
   return (
     <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
@@ -70,7 +69,6 @@ function YNToggle({ value, onChange }: { value: YN; onChange: (v: YN) => void })
   );
 }
 
-// ---- copy-out block with a "pasted in" tick ----
 function CopyField({ id, label, text, done, onToggle }: { id: string; label: string; text: string; done: boolean; onToggle: (id: string, copied: boolean) => void }) {
   const [flash, setFlash] = useState(false);
   if (!text.trim()) return null;
@@ -103,7 +101,6 @@ export default function WelcomePage() {
   const [domains, setDomains] = useState<Record<string, DomainState>>({});
   const [formByRisk, setFormByRisk] = useState<Record<string, AllState>>({});
   const [rmpByRisk, setRmpByRisk] = useState<Record<string, AllState>>({});
-  const [blankName, setBlankName] = useState("");
   const [openDomain, setOpenDomain] = useState<string | null>(RISK_DOMAINS[0].id);
   const [openRisks, setOpenRisks] = useState<Set<string>>(new Set());
   const [riskTab, setRiskTab] = useState<Record<string, "why" | "what">>({});
@@ -117,34 +114,36 @@ export default function WelcomePage() {
 
   const getDomain = (id: string): DomainState => domains[id] || emptyDomain();
   const setDomain = (id: string, next: DomainState) => setDomains((s) => ({ ...s, [id]: next }));
-  const fGet = (risk: string, sec: string): SecState => formByRisk[risk]?.[sec] || EMPTY;
-  const fSet = (risk: string, sec: string, v: SecState) => setFormByRisk((s) => ({ ...s, [risk]: { ...s[risk], [sec]: v } }));
-  const rGet = (risk: string, sec: string): SecState => rmpByRisk[risk]?.[sec] || EMPTY;
-  const rSet = (risk: string, sec: string, v: SecState) => setRmpByRisk((s) => ({ ...s, [risk]: { ...s[risk], [sec]: v } }));
+  const fGet = (key: string, sec: string): SecState => formByRisk[key]?.[sec] || EMPTY;
+  const fSet = (key: string, sec: string, v: SecState) => setFormByRisk((s) => ({ ...s, [key]: { ...s[key], [sec]: v } }));
+  const rGet = (key: string, sec: string): SecState => rmpByRisk[key]?.[sec] || EMPTY;
+  const rSet = (key: string, sec: string, v: SecState) => setRmpByRisk((s) => ({ ...s, [key]: { ...s[key], [sec]: v } }));
 
   const toggleCopied = (id: string, on: boolean) => setCopied((s) => { const n = new Set(s); if (on) n.add(id); else n.delete(id); return n; });
 
-  const toggleRisk = (domainId: string, risk: string) => {
+  const toggleSub = (domainId: string, label: string) => {
     const d = getDomain(domainId);
-    const has = d.risks.includes(risk);
-    setDomain(domainId, { ...d, noEvidence: false, risks: has ? d.risks.filter((r) => r !== risk) : [...d.risks, risk] });
-    if (!has) setOpenRisks((s) => new Set(s).add(risk));
+    const has = d.risks.includes(label);
+    setDomain(domainId, { ...d, noEvidence: false, risks: has ? d.risks.filter((r) => r !== label) : [...d.risks, label] });
+    if (!has) setOpenRisks((s) => new Set(s).add(`${domainId}::${label}`));
   };
-  const toggleOpenRisk = (risk: string) => setOpenRisks((s) => { const n = new Set(s); if (n.has(risk)) n.delete(risk); else n.add(risk); return n; });
+  const toggleOpenRisk = (key: string) => setOpenRisks((s) => { const n = new Set(s); if (n.has(key)) n.delete(key); else n.add(key); return n; });
 
   const reset = () => {
-    setBanner(emptyBanner()); setDomains({}); setFormByRisk({}); setRmpByRisk({}); setBlankName("");
+    setBanner(emptyBanner()); setDomains({}); setFormByRisk({}); setRmpByRisk({});
     setQ8(""); setQ8note(""); setQ9(""); setGenerated(false); setCopied(new Set()); setOpenRisks(new Set());
     setTab("screen"); setOpenDomain(RISK_DOMAINS[0].id);
   };
 
   const isEngaged = (d: DomainState) => d.risks.length > 0 || d.noEvidence || d.current.trim() !== "" || d.historical.trim() !== "" || d.indicators !== "" || d.safety !== "";
 
-  // every selected risk across all domains (+ the named "other"), in domain order
-  const allRisks = useMemo(() => {
-    const out: string[] = [];
-    for (const dm of RISK_DOMAINS) for (const r of getDomain(dm.id).risks) if (!out.includes(r)) out.push(r);
-    if (getDomain("__other").risks.includes(BLANK_RISK)) out.push(BLANK_RISK);
+  // every ticked sub-domain across all domains, in S1 order
+  const allRisks = useMemo<RiskRef[]>(() => {
+    const out: RiskRef[] = [];
+    for (const dm of RISK_DOMAINS) for (const label of getDomain(dm.id).risks) {
+      const key = `${dm.id}::${label}`;
+      out.push({ key, label, chipRisk: SUBTYPE_RISK[key] || "" });
+    }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [domains]);
@@ -158,23 +157,19 @@ export default function WelcomePage() {
     return bits.length ? cap(bits.join(", ")) + "." : "";
   }, [banner.ward, banner.section, banner.obs]);
 
-  const riskTitle = (r: string) => (r === BLANK_RISK ? (blankName.trim() || "other (unlisted risk)") : r);
-
-  // ---- Overall formulation summary - AUTO-GENERATED from the per-risk
-  // formulations (each risk's presenting + overall judgement) woven into one
-  // narrative for the S1 "Risk Formulation" box. The nurse can append to it. ----
+  // ---- AUTO overall formulation summary (each risk's presenting + judgement) ----
   const overallSummary = useMemo(() => {
     if (!allRisks.length) return "";
-    const lines: string[] = [`Risks identified on screening: ${naturalList(allRisks.map(riskTitle))}.`];
+    const lines: string[] = [`Risks identified on screening: ${naturalList(allRisks.map((r) => r.label))}.`];
     for (const r of allRisks) {
-      const present = buildContent(formByRisk[r]?.["presenting"]);
-      const judge = buildContent(formByRisk[r]?.["judgement"]);
+      const present = buildContent(formByRisk[r.key]?.["presenting"]);
+      const judge = buildContent(formByRisk[r.key]?.["judgement"]);
       const bits = [present, judge].filter((x) => x && x !== "Not yet established.");
-      if (bits.length) lines.push(`${cap(riskTitle(r))}: ${ensureStop(bits.join(" "))}`);
+      if (bits.length) lines.push(`${cap(r.label)}: ${ensureStop(bits.join(" "))}`);
     }
     return lines.join(" ");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [domains, formByRisk, blankName]);
+  }, [domains, formByRisk]);
   const finalSummary = [overallSummary, q9.trim()].filter(Boolean).join(" ");
 
   // ---- Risk screen output ----
@@ -187,7 +182,7 @@ export default function WelcomePage() {
       const st = getDomain(dm.id);
       parts.push(`${dm.number}. ${dm.title}`);
       if (st.noEvidence) parts.push(dm.noEvidence);
-      else if (st.risks.length) parts.push(`Identified: ${st.risks.join("; ")}`);
+      else if (st.risks.length) st.risks.forEach((r) => parts.push(r));
       if (dm.hasSafetyConcern && st.safety) parts.push(`Concerns about safety: ${st.safety === "yes" ? "Yes" : "No"}`);
       if (st.indicators) parts.push(`Clinical indicators: ${st.indicators === "yes" ? "Yes" : "No"}`);
       if (st.current.trim()) parts.push(`Current concerns: ${ensureStop(cap(st.current.trim()))}`);
@@ -201,45 +196,40 @@ export default function WelcomePage() {
   }, [domains, contextLine, q8, q8note, finalSummary]);
 
   const screenDomains = RISK_DOMAINS.filter((dm) => isEngaged(getDomain(dm.id)));
+  const anyIntake = allRisks.length > 0 || screenDomains.length > 0 || q8 !== "" || q9.trim() !== "";
 
-  const anyIntake = allRisks.length > 0 || RISK_DOMAINS.some((dm) => isEngaged(getDomain(dm.id))) || q8 !== "" || q9.trim() !== "";
-
-  // ---- one risk's rich capture (WHY + WHAT) ----
-  // Plain render function (NOT a nested component) so editing a field doesn't
-  // remount the subtree and drop textarea focus.
-  const renderRiskCapture = (risk: string) => {
-    const open = openRisks.has(risk);
-    const view = riskTab[risk] || "why";
-    const fCount = FORMULATION_SECTIONS.reduce((n, s) => n + (formByRisk[risk]?.[s.id] && (formByRisk[risk][s.id].chips.length || formByRisk[risk][s.id].text.trim() || formByRisk[risk][s.id].na) ? 1 : 0), 0);
-    const wCount = RMP_SECTIONS.reduce((n, s) => n + (rmpByRisk[risk]?.[s.id] && (rmpByRisk[risk][s.id].chips.length || rmpByRisk[risk][s.id].text.trim() || rmpByRisk[risk][s.id].na) ? 1 : 0), 0);
+  // ---- one risk's rich capture (WHY + WHAT). Plain render function (NOT a nested
+  // component) so editing a field doesn't remount and drop textarea focus. ----
+  const renderRiskCapture = (r: RiskRef) => {
+    const open = openRisks.has(r.key);
+    const view = riskTab[r.key] || "why";
+    const fCount = FORMULATION_SECTIONS.reduce((n, s) => { const v = formByRisk[r.key]?.[s.id]; return n + (v && (v.chips.length || v.text.trim() || v.na) ? 1 : 0); }, 0);
+    const wCount = RMP_SECTIONS.reduce((n, s) => { const v = rmpByRisk[r.key]?.[s.id]; return n + (v && (v.chips.length || v.text.trim() || v.na) ? 1 : 0); }, 0);
     return (
-      <div key={risk} className="rounded-xl border border-violet-200 bg-white overflow-hidden">
-        <button onClick={() => toggleOpenRisk(risk)} className="w-full flex items-center gap-2 px-3.5 py-2.5 bg-violet-50/60 hover:bg-violet-50 transition-colors text-left">
-          <span className="font-bold text-violet-900 text-sm flex-1 capitalize">{riskTitle(risk)}</span>
+      <div key={r.key} className="rounded-xl border border-violet-200 bg-white overflow-hidden">
+        <button onClick={() => toggleOpenRisk(r.key)} className="w-full flex items-center gap-2 px-3.5 py-2.5 bg-violet-50/60 hover:bg-violet-50 transition-colors text-left">
+          <span className="font-bold text-violet-900 text-sm flex-1">{r.label}</span>
           <span className="text-[10px] text-violet-600">why {fCount}/9 · what {wCount}/5</span>
           {open ? <ChevronDown className="w-4 h-4 text-violet-400" /> : <ChevronRight className="w-4 h-4 text-violet-400" />}
         </button>
         {open && (
           <div className="p-3 space-y-3">
-            {risk === BLANK_RISK && (
-              <input autoComplete="off" value={blankName} onChange={(e) => setBlankName(e.target.value)} placeholder="Name this risk" className={inputCls} />
-            )}
             <div className="inline-flex bg-violet-100 rounded-full p-1">
-              <button onClick={() => setRiskTab((s) => ({ ...s, [risk]: "why" }))} className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all inline-flex items-center gap-1 ${view === "why" ? "bg-violet-600 text-white shadow" : "text-violet-700"}`}><Brain className="w-3.5 h-3.5" /> The WHY (formulation)</button>
-              <button onClick={() => setRiskTab((s) => ({ ...s, [risk]: "what" }))} className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all inline-flex items-center gap-1 ${view === "what" ? "bg-violet-600 text-white shadow" : "text-violet-700"}`}><ListChecks className="w-3.5 h-3.5" /> The WHAT (plan)</button>
+              <button onClick={() => setRiskTab((s) => ({ ...s, [r.key]: "why" }))} className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all inline-flex items-center gap-1 ${view === "why" ? "bg-violet-600 text-white shadow" : "text-violet-700"}`}><Brain className="w-3.5 h-3.5" /> The WHY (formulation)</button>
+              <button onClick={() => setRiskTab((s) => ({ ...s, [r.key]: "what" }))} className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all inline-flex items-center gap-1 ${view === "what" ? "bg-violet-600 text-white shadow" : "text-violet-700"}`}><ListChecks className="w-3.5 h-3.5" /> The WHAT (plan)</button>
             </div>
             {view === "why" ? (
               <div className="space-y-2">
-                <p className="text-xs text-gray-500">Why the risk exists - links history, current presentation and future risk. Prompts are tailored to {riskTitle(risk)}.</p>
+                <p className="text-xs text-gray-500">Why the risk exists - links history, current presentation and future risk.</p>
                 {FORMULATION_SECTIONS.map((sec) => (
-                  <SectionEditor key={sec.id} accent="violet" section={formulationSectionForRisk(sec, risk)} state={fGet(risk, sec.id)} onChange={(n) => fSet(risk, sec.id, n)} />
+                  <SectionEditor key={sec.id} accent="violet" section={formulationSectionForRisk(sec, r.chipRisk)} state={fGet(r.key, sec.id)} onChange={(n) => fSet(r.key, sec.id, n)} />
                 ))}
               </div>
             ) : (
               <div className="space-y-2">
                 <p className="text-xs text-gray-500">What you will do about it - the trust&apos;s 5-heading plan. The MDT line is added automatically.</p>
                 {RMP_SECTIONS.map((sec) => (
-                  <SectionEditor key={sec.id} accent="violet" section={rmpSectionForRisk(sec, risk)} state={rGet(risk, sec.id)} onChange={(n) => rSet(risk, sec.id, n)} />
+                  <SectionEditor key={sec.id} accent="violet" section={rmpSectionForRisk(sec, r.chipRisk)} state={rGet(r.key, sec.id)} onChange={(n) => rSet(r.key, sec.id, n)} />
                 ))}
               </div>
             )}
@@ -252,7 +242,6 @@ export default function WelcomePage() {
   return (
     <MainLayout>
       <div className="space-y-5">
-        {/* Header */}
         <div className="bg-gradient-to-r from-violet-600 to-purple-700 rounded-2xl p-6 text-white">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center"><HeartHandshake className="w-8 h-8" /></div>
@@ -322,13 +311,12 @@ export default function WelcomePage() {
             <ShieldAlert className="w-5 h-5 text-violet-600" />
             <h2 className="font-bold text-gray-800 flex-1">Risk screen - work through each area together</h2>
           </div>
-          <p className="text-xs text-gray-500">Open an area, tick the risks that apply (or &quot;no evidence&quot;), add the screen narrative, then fill each risk&apos;s WHY and WHAT. Everything feeds the outputs below.</p>
+          <p className="text-xs text-gray-500">These are the approved SystmOne domains and sub-domains. Tick the ones that apply (or &quot;no evidence&quot;), add the screen narrative, then fill each ticked risk&apos;s WHY and WHAT below it.</p>
           <div className="space-y-2">
             {RISK_DOMAINS.map((dm) => {
               const st = getDomain(dm.id);
               const open = openDomain === dm.id;
               const engaged = isEngaged(st);
-              const riskOptions = DOMAIN_RISKS[dm.id] || [];
               return (
                 <div key={dm.id} className={`rounded-xl border overflow-hidden ${engaged ? "border-violet-300" : "border-gray-200"}`}>
                   <button onClick={() => setOpenDomain((o) => (o === dm.id ? null : dm.id))} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
@@ -339,21 +327,17 @@ export default function WelcomePage() {
                   </button>
                   {open && (
                     <div className="px-4 pb-4 space-y-3 border-t border-gray-100 pt-3">
-                      {riskOptions.length > 0 ? (
-                        <div className="flex flex-wrap gap-1.5">
-                          {riskOptions.map((r) => {
-                            const on = st.risks.includes(r);
-                            return (
-                              <button key={r} onClick={() => toggleRisk(dm.id, r)} aria-pressed={on}
-                                className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all capitalize ${on ? "bg-violet-600 border-violet-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-violet-300 hover:bg-violet-50"}`}>
-                                {r}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      ) : (
-                        <p className="text-xs text-gray-400 italic">No preset risks for this domain - use &quot;Other / unlisted risk&quot; below, or just record the narrative.</p>
-                      )}
+                      <div className="flex flex-wrap gap-1.5">
+                        {dm.subtypes.map((label) => {
+                          const on = st.risks.includes(label);
+                          return (
+                            <button key={label} onClick={() => toggleSub(dm.id, label)} aria-pressed={on}
+                              className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all text-left ${on ? "bg-violet-600 border-violet-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-violet-300 hover:bg-violet-50"}`}>
+                              {label}
+                            </button>
+                          );
+                        })}
+                      </div>
 
                       <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
                         <input type="checkbox" checked={st.noEvidence} onChange={(e) => setDomain(dm.id, { ...st, noEvidence: e.target.checked, risks: e.target.checked ? [] : st.risks })} className="rounded border-gray-300 text-emerald-600 w-4 h-4" />
@@ -377,11 +361,10 @@ export default function WelcomePage() {
                         </div>
                       )}
 
-                      {/* per-risk WHY + WHAT */}
                       {st.risks.length > 0 && (
                         <div className="space-y-2">
                           <p className="text-[11px] font-mono uppercase tracking-wider text-violet-500">For each risk: the why &amp; the what</p>
-                          {st.risks.map((r) => renderRiskCapture(r))}
+                          {st.risks.map((label) => renderRiskCapture({ key: `${dm.id}::${label}`, label, chipRisk: SUBTYPE_RISK[`${dm.id}::${label}`] || "" }))}
                         </div>
                       )}
                     </div>
@@ -389,18 +372,6 @@ export default function WelcomePage() {
                 </div>
               );
             })}
-
-            {/* Other / unlisted */}
-            <div className="rounded-xl border border-dashed border-amber-300 overflow-hidden">
-              <div className="px-4 py-3">
-                <label className="flex items-center gap-2 text-sm font-medium text-amber-800 cursor-pointer">
-                  <input type="checkbox" checked={getDomain("__other").risks.includes(BLANK_RISK)}
-                    onChange={() => toggleRisk("__other", BLANK_RISK)} className="rounded border-amber-300 text-amber-600 w-4 h-4" />
-                  Other / unlisted risk (name it yourself)
-                </label>
-              </div>
-              {getDomain("__other").risks.includes(BLANK_RISK) && <div className="px-4 pb-4">{renderRiskCapture(BLANK_RISK)}</div>}
-            </div>
           </div>
 
           {/* Q8 + Q9 */}
@@ -452,9 +423,9 @@ export default function WelcomePage() {
 
             {tab === "formulation" && (
               <div className="space-y-3">
-                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Pick at least one risk above to build a formulation.</p>}
+                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Tick at least one risk above to build a formulation.</p>}
                 {allRisks.map((r) => (
-                  <CopyField key={r} id={`form-${r}`} label={`Formulation - ${riskTitle(r)}`} text={buildFormulation(formByRisk[r] || {}, `RISK FORMULATION: ${riskTitle(r).toUpperCase()}`)} done={copied.has(`form-${r}`)} onToggle={toggleCopied} />
+                  <CopyField key={r.key} id={`form-${r.key}`} label={`Formulation - ${r.label}`} text={buildFormulation(formByRisk[r.key] || {}, `RISK FORMULATION: ${r.label.toUpperCase()}`)} done={copied.has(`form-${r.key}`)} onToggle={toggleCopied} />
                 ))}
                 {finalSummary && <CopyField id="form-summary" label="Overall formulation summary" text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />}
               </div>
@@ -462,9 +433,9 @@ export default function WelcomePage() {
 
             {tab === "rmp" && (
               <div className="space-y-3">
-                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Pick at least one risk above to build a management plan.</p>}
+                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Tick at least one risk above to build a management plan.</p>}
                 {allRisks.map((r) => (
-                  <CopyField key={r} id={`rmp-${r}`} label={`RMP - ${riskTitle(r)}`} text={buildOneRmp(r, rmpByRisk[r] || {}, r === BLANK_RISK ? blankName : undefined)} done={copied.has(`rmp-${r}`)} onToggle={toggleCopied} />
+                  <CopyField key={r.key} id={`rmp-${r.key}`} label={`RMP - ${r.label}`} text={buildOneRmp(r.key, rmpByRisk[r.key] || {}, r.label)} done={copied.has(`rmp-${r.key}`)} onToggle={toggleCopied} />
                 ))}
               </div>
             )}
@@ -476,7 +447,7 @@ export default function WelcomePage() {
           </div>
         )}
 
-        <p className="text-xs text-gray-400 text-center">Drafting aid only - the clinical judgement and final wording stay yours. Nothing is stored. Aligned to the DHCFT WAA Inpatient Risk Screening Tool + RMP guidance.</p>
+        <p className="text-xs text-gray-400 text-center">Drafting aid only - the clinical judgement and final wording stay yours. Nothing is stored. Domains and sub-domains match the SystmOne WAA Inpatient Risk Screening Tool.</p>
       </div>
     </MainLayout>
   );

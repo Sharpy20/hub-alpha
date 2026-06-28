@@ -20,13 +20,16 @@
 // NOTHING IS STORED. All state is in memory, wiped on close. The banner is held in
 // memory only (no localStorage, no network); autoComplete off on those inputs.
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { useV2Href } from "@/lib/hooks/useV2";
 import {
   RISK_DOMAINS, SUBTYPE_RISK, OBS_LEVELS, LEGAL_STATUSES, WELCOME_INTROS,
 } from "@/lib/data/welcome/risk-screen";
+import {
+  RIGHTS_ITEMS, NEED_ITEMS, LAUNCH_FORMS, SAFEGUARDING_DUTY,
+} from "@/lib/data/welcome/admission";
 import { FORMULATION_SECTIONS, RMP_SECTIONS } from "@/lib/data/guides";
 import {
   SectionEditor, buildFormulation, buildOneRmp, formulationSectionForRisk,
@@ -36,6 +39,7 @@ import {
 import {
   ChevronDown, ChevronRight, Copy, Check, RotateCcw, Sparkles, Info,
   ShieldAlert, Lock, AlertTriangle, HeartHandshake, ClipboardCheck, Brain, ListChecks,
+  Scale, Phone, FileText, ExternalLink,
 } from "lucide-react";
 
 type YN = "" | "yes" | "no";
@@ -112,6 +116,22 @@ export default function WelcomePage() {
   const [copied, setCopied] = useState<Set<string>>(new Set());
   const [introsOpen, setIntrosOpen] = useState(false);
 
+  // ---- admission sections (rights/legal, contacts, safeguarding, needs) ----
+  const [rights, setRights] = useState<Set<string>>(new Set());
+  const [family, setFamily] = useState("");
+  const [emergency, setEmergency] = useState("");
+  const [sgConcern, setSgConcern] = useState<YN>("");
+  const [sgWho, setSgWho] = useState("");
+  const [sgDetails, setSgDetails] = useState("");
+  const [sgPeople, setSgPeople] = useState("");
+  const [sgWishes, setSgWishes] = useState("");
+  const [needs, setNeeds] = useState<Set<string>>(new Set());
+  // today - set on mount only, so SSR/client markup matches (no hydration drift)
+  const [today, setToday] = useState("");
+  useEffect(() => { setToday(new Date().toLocaleDateString("en-GB")); }, []);
+  const toggleInSet = (set: React.Dispatch<React.SetStateAction<Set<string>>>, id: string) =>
+    set((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+
   const getDomain = (id: string): DomainState => domains[id] || emptyDomain();
   const setDomain = (id: string, next: DomainState) => setDomains((s) => ({ ...s, [id]: next }));
   const fGet = (key: string, sec: string): SecState => formByRisk[key]?.[sec] || EMPTY;
@@ -133,6 +153,8 @@ export default function WelcomePage() {
     setBanner(emptyBanner()); setDomains({}); setFormByRisk({}); setRmpByRisk({});
     setQ8(""); setQ8note(""); setQ9(""); setGenerated(false); setCopied(new Set()); setOpenRisks(new Set());
     setTab("screen"); setOpenDomain(RISK_DOMAINS[0].id);
+    setRights(new Set()); setFamily(""); setEmergency(""); setNeeds(new Set());
+    setSgConcern(""); setSgWho(""); setSgDetails(""); setSgPeople(""); setSgWishes("");
   };
 
   const isEngaged = (d: DomainState) => d.risks.length > 0 || d.noEvidence || d.current.trim() !== "" || d.historical.trim() !== "" || d.indicators !== "" || d.safety !== "";
@@ -156,6 +178,24 @@ export default function WelcomePage() {
     const nm = banner.name.trim();
     return nm ? s.replace(/the person's/g, `${nm}'s`).replace(/the person/g, nm) : s;
   };
+
+  // ---- admission case-note builders ----
+  const fill = (s: string) => s.replace(/\{name\}/g, banner.name.trim() || "the patient").replace(/\{date\}/g, today || "[date]");
+  const rightsNote = RIGHTS_ITEMS.filter((i) => rights.has(i.id)).map((i) => fill(i.note)).join("\n");
+  const contactsNote = [
+    banner.nok.trim() && `Next of kin: ${banner.nok.trim()}`,
+    family.trim() && `Family / other contacts: ${family.trim()}`,
+    emergency.trim() && `Emergency numbers: ${emergency.trim()}`,
+  ].filter(Boolean).join("\n");
+  const sgNote = sgConcern === "yes" ? [
+    "Safeguarding concern raised during admission.",
+    sgWho.trim() && `Concern relates to: ${ensureStop(sgWho.trim())}`,
+    sgDetails.trim() && `Details: ${ensureStop(sgDetails.trim())}`,
+    sgPeople.trim() && `People involved (names / addresses / phone / ages): ${ensureStop(sgPeople.trim())}`,
+    sgWishes.trim() && `The person's wishes: ${ensureStop(sgWishes.trim())}`,
+    SAFEGUARDING_DUTY,
+  ].filter(Boolean).join("\n") : "";
+  const needsNote = needs.size ? `Referrals / follow-up identified on admission for ${banner.name.trim() || "the patient"}: ${naturalList(NEED_ITEMS.filter((n) => needs.has(n.id)).map((n) => n.label))}.` : "";
   const contextLine = useMemo(() => {
     const bits: string[] = [];
     if (banner.ward.trim()) bits.push(`admitted to ${banner.ward.trim()}`);
@@ -458,6 +498,96 @@ export default function WelcomePage() {
             </div>
           </div>
         )}
+
+        {/* ===== Rest of the admission ===== */}
+        <div className="flex items-center gap-3 pt-2">
+          <div className="h-px flex-1 bg-violet-200" />
+          <span className="text-xs font-semibold text-violet-500 uppercase tracking-wider">Rest of the admission</span>
+          <div className="h-px flex-1 bg-violet-200" />
+        </div>
+        <p className="text-xs text-gray-500 text-center -mt-2">v1: open each and copy the data across. v2 will let you set each as a diary task with the patient&apos;s name.</p>
+
+        {/* Rights & legal */}
+        <div className="rounded-2xl border-2 border-violet-200 bg-white p-4 space-y-3">
+          <div className="flex items-center gap-2"><Scale className="w-5 h-5 text-violet-600" /><h2 className="font-bold text-gray-800">Rights &amp; legal</h2></div>
+          <p className="text-xs text-gray-500">Tick what you&apos;ve done with {name} - it builds a case note. Open a guide if you need it.</p>
+          <div className="space-y-1.5">
+            {RIGHTS_ITEMS.map((i) => (
+              <div key={i.id} className="flex items-center gap-2">
+                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer flex-1">
+                  <input type="checkbox" checked={rights.has(i.id)} onChange={() => toggleInSet(setRights, i.id)} className="rounded border-gray-300 text-violet-600 w-4 h-4" />
+                  {i.label}
+                </label>
+                <Link href={v2Href(i.href)} className="inline-flex items-center gap-1 text-xs font-semibold text-violet-700 hover:text-violet-900 no-underline flex-shrink-0"><ExternalLink className="w-3.5 h-3.5" />Open</Link>
+              </div>
+            ))}
+          </div>
+          <CopyField id="rights-note" label="Rights & legal - case note" text={rightsNote} done={copied.has("rights-note")} onToggle={toggleCopied} />
+        </div>
+
+        {/* Contacts */}
+        <div className="rounded-2xl border-2 border-violet-200 bg-white p-4 space-y-3">
+          <div className="flex items-center gap-2"><Phone className="w-5 h-5 text-violet-600" /><h2 className="font-bold text-gray-800">Contacts &amp; emergency numbers</h2></div>
+          <p className="text-xs text-gray-500">For the care plan and discharge plan. Next of kin comes from the patient banner above.</p>
+          <Field label="Family / other contacts"><textarea value={family} onChange={(e) => setFamily(e.target.value)} rows={2} className={inputCls} placeholder="Names, relationship, phone" /></Field>
+          <Field label="Emergency numbers"><textarea value={emergency} onChange={(e) => setEmergency(e.target.value)} rows={2} className={inputCls} placeholder="Crisis team, GP, key contacts" /></Field>
+          <CopyField id="contacts-note" label="Contacts" text={contactsNote} done={copied.has("contacts-note")} onToggle={toggleCopied} />
+        </div>
+
+        {/* The curious nurse - safeguarding */}
+        <div className="rounded-2xl border-2 border-violet-200 bg-white p-4 space-y-3">
+          <div className="flex items-center gap-2"><ShieldAlert className="w-5 h-5 text-violet-600" /><h2 className="font-bold text-gray-800">The curious nurse - safeguarding</h2></div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-sm text-gray-700 flex-1 min-w-[220px]">Are you worried for your own or anyone else&apos;s safety?</span>
+            <YNToggle value={sgConcern} onChange={setSgConcern} />
+          </div>
+          {sgConcern === "yes" && (
+            <div className="space-y-2 rounded-lg bg-gray-50 p-3">
+              <p className="text-xs text-gray-500">Gently gather the detail, then use the safeguarding guides to refer.</p>
+              <Field label="Who / what are you worried about?"><input autoComplete="off" value={sgWho} onChange={(e) => setSgWho(e.target.value)} className={inputCls} /></Field>
+              <Field label="What's happened / the concern"><textarea value={sgDetails} onChange={(e) => setSgDetails(e.target.value)} rows={2} className={inputCls} /></Field>
+              <Field label="People involved - full names, addresses, phone, ages"><textarea value={sgPeople} onChange={(e) => setSgPeople(e.target.value)} rows={2} className={inputCls} /></Field>
+              <Field label="What does the person want us to do?"><textarea value={sgWishes} onChange={(e) => setSgWishes(e.target.value)} rows={2} className={inputCls} /></Field>
+              <div className="flex flex-wrap gap-3 text-xs">
+                <Link href={v2Href("/guides/safeguarding-adults-referral")} className="inline-flex items-center gap-1 font-semibold text-violet-700 no-underline"><ExternalLink className="w-3.5 h-3.5" />Safeguarding adults</Link>
+                <Link href={v2Href("/guides/safeguarding-children-referral")} className="inline-flex items-center gap-1 font-semibold text-violet-700 no-underline"><ExternalLink className="w-3.5 h-3.5" />Safeguarding children</Link>
+              </div>
+              <CopyField id="sg-note" label="Safeguarding - case note" text={sgNote} done={copied.has("sg-note")} onToggle={toggleCopied} />
+            </div>
+          )}
+        </div>
+
+        {/* Needs & referrals */}
+        <div className="rounded-2xl border-2 border-violet-200 bg-white p-4 space-y-3">
+          <div className="flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-violet-600" /><h2 className="font-bold text-gray-800">Needs &amp; referrals to follow up</h2></div>
+          <p className="text-xs text-gray-500">Tick what {name} needs - it builds a follow-up list. Open a referral guide to action it.</p>
+          <div className="grid sm:grid-cols-2 gap-1.5">
+            {NEED_ITEMS.map((n) => (
+              <div key={n.id} className="flex items-center gap-2">
+                <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer flex-1">
+                  <input type="checkbox" checked={needs.has(n.id)} onChange={() => toggleInSet(setNeeds, n.id)} className="rounded border-gray-300 text-violet-600 w-4 h-4" />
+                  {n.label}
+                </label>
+                <Link href={v2Href(n.href)} aria-label={`Open ${n.label} guide`} className="inline-flex items-center text-violet-700 hover:text-violet-900 no-underline flex-shrink-0"><ExternalLink className="w-3.5 h-3.5" /></Link>
+              </div>
+            ))}
+          </div>
+          <CopyField id="needs-note" label="Referrals / follow-up" text={needsNote} done={copied.has("needs-note")} onToggle={toggleCopied} />
+        </div>
+
+        {/* Other forms to open */}
+        <div className="rounded-2xl border-2 border-violet-200 bg-white p-4 space-y-3">
+          <div className="flex items-center gap-2"><FileText className="w-5 h-5 text-violet-600" /><h2 className="font-bold text-gray-800">Other forms to open</h2></div>
+          <p className="text-xs text-gray-500">The rest of the admission set - open each and build it. (v2 will set these as diary tasks.)</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            {LAUNCH_FORMS.map((f) => (
+              <Link key={f.id} href={v2Href(f.href)} className="rounded-xl border border-gray-200 hover:border-violet-300 hover:bg-violet-50 p-3 no-underline transition-colors">
+                <span className="block text-sm font-semibold text-violet-800">{f.label}</span>
+                <span className="block text-xs text-gray-500 mt-0.5">{f.note}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
 
         <p className="text-xs text-gray-400 text-center">Drafting aid only - the clinical judgement and final wording stay yours. Nothing is stored. Domains and sub-domains match the SystmOne WAA Inpatient Risk Screening Tool.</p>
       </div>

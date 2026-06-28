@@ -465,8 +465,9 @@ export default function RiskAssessmentPage() {
   // Only editors (contributor flag) can change the suggestion chips.
   const canEditChips = !!user?.isContributor;
   const [editChips, setEditChips] = useState(false);
-  // Which part the nurse is working on - only one shows at a time (less on screen).
-  const [stage, setStage] = useState<"formulation" | "rmp">("formulation");
+  // Which part the nurse is working on - starts null (neutral) so the page asks
+  // them to choose first; only one part shows at a time (less on screen).
+  const [stage, setStage] = useState<"formulation" | "rmp" | null>(null);
 
   // Formulation (one integrated formulation per patient).
   const [fState, setFState] = useState<AllState>({});
@@ -728,27 +729,58 @@ export default function RiskAssessmentPage() {
           )}
         </div>
 
-        {/* Big toggle: focus on one part at a time */}
-        {!editChips && (
-          <div className="grid grid-cols-2 gap-2 bg-rose-100/60 rounded-2xl p-1.5">
-            <button
-              onClick={() => setStage("formulation")}
-              aria-pressed={stage === "formulation"}
-              className={`rounded-xl px-4 py-3 text-center transition-all ${stage === "formulation" ? "bg-rose-600 text-white shadow-md" : "bg-white text-rose-700 hover:bg-rose-50"}`}
-            >
-              <span className="block text-[11px] font-mono uppercase tracking-wider opacity-80">Part 1</span>
-              <span className="block font-bold">Formulation</span>
-              <span className="block text-xs opacity-80">the WHY</span>
-            </button>
-            <button
-              onClick={() => setStage("rmp")}
-              aria-pressed={stage === "rmp"}
-              className={`rounded-xl px-4 py-3 text-center transition-all ${stage === "rmp" ? "bg-rose-600 text-white shadow-md" : "bg-white text-rose-700 hover:bg-rose-50"}`}
-            >
-              <span className="block text-[11px] font-mono uppercase tracking-wider opacity-80">Part 2</span>
-              <span className="block font-bold">Management Plan (RMP)</span>
-              <span className="block text-xs opacity-80">the WHAT</span>
-            </button>
+        {/* Neutral start: ask the user which part to tackle first */}
+        {!editChips && stage === null && (
+          <div className="bg-white rounded-2xl border-2 border-rose-300 p-5 text-center space-y-4">
+            <div>
+              <h2 className="text-lg font-bold text-gray-800">What do you want to tackle first?</h2>
+              <p className="text-sm text-gray-500 mt-1">
+                A good risk entry has two parts. Pick one to focus on - you can switch between them any time.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3">
+              <button
+                onClick={() => setStage("formulation")}
+                className="rounded-2xl border-2 border-rose-200 bg-rose-50/50 hover:border-rose-500 hover:bg-rose-50 p-4 text-left transition-all"
+              >
+                <span className="block text-[11px] font-mono uppercase tracking-wider text-rose-500">Part 1</span>
+                <span className="block text-lg font-bold text-gray-800">Formulation</span>
+                <span className="block text-sm text-gray-500">the WHY - why the risk exists</span>
+                <span className="inline-flex items-center gap-1 mt-2 text-sm font-semibold text-rose-700">Work on this <ChevronRight className="w-4 h-4" /></span>
+              </button>
+              <button
+                onClick={() => setStage("rmp")}
+                className="rounded-2xl border-2 border-rose-200 bg-rose-50/50 hover:border-rose-500 hover:bg-rose-50 p-4 text-left transition-all"
+              >
+                <span className="block text-[11px] font-mono uppercase tracking-wider text-rose-500">Part 2</span>
+                <span className="block text-lg font-bold text-gray-800">Management Plan (RMP)</span>
+                <span className="block text-sm text-gray-500">the WHAT - what we do about it</span>
+                <span className="inline-flex items-center gap-1 mt-2 text-sm font-semibold text-rose-700">Work on this <ChevronRight className="w-4 h-4" /></span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Segmented slider once a part is chosen - clearly switch between the two */}
+        {!editChips && stage !== null && (
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            <span className="text-sm font-semibold text-gray-500">Working on:</span>
+            <div className="inline-flex bg-rose-100 rounded-full p-1">
+              <button
+                onClick={() => setStage("formulation")}
+                aria-pressed={stage === "formulation"}
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${stage === "formulation" ? "bg-rose-600 text-white shadow" : "text-rose-700 hover:bg-white/60"}`}
+              >
+                Part 1 · Formulation
+              </button>
+              <button
+                onClick={() => setStage("rmp")}
+                aria-pressed={stage === "rmp"}
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${stage === "rmp" ? "bg-rose-600 text-white shadow" : "text-rose-700 hover:bg-white/60"}`}
+              >
+                Part 2 · RMP
+              </button>
+            </div>
           </div>
         )}
 

@@ -170,7 +170,7 @@ export function BookmarkCarousel() {
   };
 
   return (
-    <div className="bg-nhs-white rounded-xl shadow-sm border border-nhs-pale-grey p-6">
+    <div className="relative bg-nhs-white rounded-xl shadow-sm border border-nhs-pale-grey p-6">
       {/* Wheel container */}
       <div className="relative w-[440px] h-[440px] mx-auto max-w-full">
         {/* Connector lines */}
@@ -225,27 +225,29 @@ export function BookmarkCarousel() {
         </div>
       </div>
 
-      {/* Category dots */}
-      <div className="flex justify-center gap-2 mt-6">
-        {categories.map((cat, i) => (
-          <button
-            key={cat}
-            onClick={() => setCurrentCategoryIndex(i)}
-            className={`w-3 h-3 rounded-full transition-all ${
-              i === currentCategoryIndex
-                ? "bg-nhs-blue scale-125"
-                : "bg-nhs-pale-grey hover:bg-nhs-mid-grey"
-            }`}
-            aria-label={`Go to ${cat}`}
-          />
-        ))}
-      </div>
+      {/* Controls tucked into the bottom-left corner so they stop adding height
+          below the wheel - bottom aligns with the lowest bookmark. */}
+      <div className="absolute left-6 bottom-6 flex flex-col items-start gap-3 z-20">
+        {/* Category dots (page slider) */}
+        <div className="flex flex-wrap gap-2 max-w-[180px]">
+          {categories.map((cat, i) => (
+            <button
+              key={cat}
+              onClick={() => setCurrentCategoryIndex(i)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                i === currentCategoryIndex
+                  ? "bg-nhs-blue scale-125"
+                  : "bg-nhs-pale-grey hover:bg-nhs-mid-grey"
+              }`}
+              aria-label={`Go to ${cat}`}
+            />
+          ))}
+        </div>
 
-      {/* View all link */}
-      <div className="text-center mt-4">
+        {/* View all link */}
         <Link
           href="/links"
-          className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-nhs-blue text-white font-semibold rounded-xl hover:bg-nhs-dark-blue transition-colors no-underline"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2 bg-nhs-blue text-white font-semibold rounded-xl hover:bg-nhs-dark-blue transition-colors no-underline text-sm"
         >
           View all links
           <span className="text-white/70">&rarr;</span>

@@ -32,7 +32,8 @@ import {
 import { FORMULATION_SECTIONS, RMP_SECTIONS, BLANK_RISK } from "@/lib/data/guides";
 import {
   SectionEditor, buildFormulation, buildOneRmp, formulationSectionForRisk,
-  rmpSectionForRisk, cap, ensureStop, type AllState, type SecState, EMPTY,
+  rmpSectionForRisk, buildContent, naturalList, cap, ensureStop,
+  type AllState, type SecState, EMPTY,
 } from "@/components/guides/risk-capture";
 import {
   ChevronDown, ChevronRight, Copy, Check, RotateCcw, Sparkles, Info,
@@ -157,6 +158,25 @@ export default function WelcomePage() {
     return bits.length ? cap(bits.join(", ")) + "." : "";
   }, [banner.ward, banner.section, banner.obs]);
 
+  const riskTitle = (r: string) => (r === BLANK_RISK ? (blankName.trim() || "other (unlisted risk)") : r);
+
+  // ---- Overall formulation summary - AUTO-GENERATED from the per-risk
+  // formulations (each risk's presenting + overall judgement) woven into one
+  // narrative for the S1 "Risk Formulation" box. The nurse can append to it. ----
+  const overallSummary = useMemo(() => {
+    if (!allRisks.length) return "";
+    const lines: string[] = [`Risks identified on screening: ${naturalList(allRisks.map(riskTitle))}.`];
+    for (const r of allRisks) {
+      const present = buildContent(formByRisk[r]?.["presenting"]);
+      const judge = buildContent(formByRisk[r]?.["judgement"]);
+      const bits = [present, judge].filter((x) => x && x !== "Not yet established.");
+      if (bits.length) lines.push(`${cap(riskTitle(r))}: ${ensureStop(bits.join(" "))}`);
+    }
+    return lines.join(" ");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [domains, formByRisk, blankName]);
+  const finalSummary = [overallSummary, q9.trim()].filter(Boolean).join(" ");
+
   // ---- Risk screen output ----
   const fullScreenText = useMemo(() => {
     const engaged = RISK_DOMAINS.filter((dm) => isEngaged(getDomain(dm.id)));
@@ -175,13 +195,12 @@ export default function WelcomePage() {
       if (i < engaged.length - 1) parts.push("----------------------------------------");
     });
     if (q8) parts.push("----------------------------------------", `Anyone expressed concerns: ${q8 === "yes" ? "Yes" : "No"}${q8note.trim() ? ` - ${q8note.trim()}` : ""}`);
-    if (q9.trim()) parts.push("----------------------------------------", `Risk formulation summary: ${ensureStop(cap(q9.trim()))}`);
+    if (finalSummary) parts.push("----------------------------------------", `Risk formulation: ${finalSummary}`);
     return parts.join("\n");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [domains, contextLine, q8, q8note, q9]);
+  }, [domains, contextLine, q8, q8note, finalSummary]);
 
   const screenDomains = RISK_DOMAINS.filter((dm) => isEngaged(getDomain(dm.id)));
-  const riskTitle = (r: string) => (r === BLANK_RISK ? (blankName.trim() || "other (unlisted risk)") : r);
 
   const anyIntake = allRisks.length > 0 || RISK_DOMAINS.some((dm) => isEngaged(getDomain(dm.id))) || q8 !== "" || q9.trim() !== "";
 
@@ -389,8 +408,14 @@ export default function WelcomePage() {
             <div className="flex items-center gap-3 flex-wrap"><span className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">Do you, or has anyone else, expressed concerns?</span><YNToggle value={q8} onChange={setQ8} /></div>
             {q8 === "yes" && <input autoComplete="off" value={q8note} onChange={(e) => setQ8note(e.target.value)} className={inputCls} placeholder="Briefly, what are the concerns?" />}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Overall risk formulation summary (a few lines)</label>
-              <textarea value={q9} onChange={(e) => setQ9(e.target.value)} rows={3} className={inputCls} placeholder="Pull it together: the risk picture now, what's driving it, what helps..." />
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Overall risk formulation summary</label>
+              <p className="text-xs text-gray-500 mb-1.5">Auto-built from the risks and their formulations (each risk&apos;s presenting + overall judgement). Add anything else below if you want.</p>
+              {overallSummary ? (
+                <div className="rounded-lg border border-violet-200 bg-violet-50/50 px-3 py-2 text-sm text-gray-700 whitespace-pre-wrap mb-2">{overallSummary}</div>
+              ) : (
+                <p className="text-xs text-gray-400 italic mb-2">Pick risks and fill their formulations - the summary builds itself here.</p>
+              )}
+              <textarea value={q9} onChange={(e) => setQ9(e.target.value)} rows={2} className={inputCls} placeholder="Add anything else to the summary (optional)..." />
             </div>
           </div>
         </div>
@@ -431,7 +456,7 @@ export default function WelcomePage() {
                 {allRisks.map((r) => (
                   <CopyField key={r} id={`form-${r}`} label={`Formulation - ${riskTitle(r)}`} text={buildFormulation(formByRisk[r] || {}, `RISK FORMULATION: ${riskTitle(r).toUpperCase()}`)} done={copied.has(`form-${r}`)} onToggle={toggleCopied} />
                 ))}
-                {q9.trim() && <CopyField id="form-summary" label="Overall formulation summary" text={ensureStop(cap(q9.trim()))} done={copied.has("form-summary")} onToggle={toggleCopied} />}
+                {finalSummary && <CopyField id="form-summary" label="Overall formulation summary" text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />}
               </div>
             )}
 

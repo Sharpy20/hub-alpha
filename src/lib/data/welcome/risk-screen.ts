@@ -178,6 +178,60 @@ export const SUBTYPE_RISK: Record<string, string> = {
   "environmental::Housing issues": "homelessness / housing instability",
 };
 
+// Clinical indicators per domain - the approved S1 lists shown when "Display
+// clinical indicators for risk of ...?" is answered Yes (Xb.i / Xa.i). Verbatim
+// trust wording. Domain 5 (physical health) has no indicator sub-list on the form.
+export const CLINICAL_INDICATORS: Record<string, string[]> = {
+  "self-harm": [
+    "Expressing suicidal ideas", "Considered / planned intent", "Accidental overdose",
+    "Medication safety/security", "Use of violent methods", "Involvement with Criminal Justice/police",
+    "Major Psychiatric Diagnosis", "Believe no control over life", "Helplessness",
+    "Effected by suicide of a significant other", "Separated/ divorced/ widowed", "Unemployed/ retired",
+    "Significant life events", "Trauma", "Major Physical or life-threatening illness/disability",
+    "Significant and constant pain", "Financial Pressure/ worries",
+    "Hearing voices, which are of a persistent nature", "Misuse of drugs and alcohol",
+  ],
+  "self-neglect": [
+    "Failing to eat or drink properly", "Difficulty managing physical health",
+    "Living in inadequate accommodation", "Lacking basic amenities", "Pressure of eviction / repossession",
+    "Lack of positive social contacts", "Insufficient / inappropriate clothing including leaving naked",
+    "Difficulty maintaining hygiene", "Experiencing financial difficulties", "Denies problems perceived by others",
+    "Difficulty communicating needs", "Unable to shop for self", "Absconding / missing",
+    "Difficulties with engagement (medication, care plans and services)", "Driving",
+    "Wandering - (moving from self-neglect)", "Over estimation of abilities",
+  ],
+  "harm-to-others": [
+    "Incidents of violence", "Use of weapons", "Misuse of drugs and or alcohol", "Male gender, under 35 years",
+    "Known trigger factors", "Expressing intent to harm others", "Previous dangerous impulsive acts",
+    "Damage to property", "Harm to animals", "Stalking / harassment", "Involvement in Criminal Justice",
+    "Relating to internet", "Domestic abuse including coercion and control", "Paranoid delusions about others",
+    "Violent command hallucinations", "Signs of anger and frustration", "Sexually inappropriate behaviour",
+    "Preoccupation with violent fantasy", "Admission to secure settings",
+    "Denial or minimising of previous dangerous acts", "Person in contact with children and vulnerable people",
+    "Arson", "Accidental fire setting", "Misidentification of people", "Disinhibition / discrimination",
+    "Driving", "Patient is carer and or parent",
+  ],
+  "harm-by-others": [
+    "Safeguarding", "FGM", "Radicalisation / prevent", "Forced marriage", "Discriminatory abuse",
+    "Relating to internet", "Coercive control", "Carer stress / burnout", "Patient is carer and or parent",
+  ],
+  "children": [
+    "Admission to inpatient setting", "Looked after child (Child in care of local authority)",
+    "Parental/Family/Carer significant psychiatric illness",
+    "Personal History of being a looked after child (child in care of local authority)",
+    "Exploitation", "FGM", "Radicalisation / prevent", "Forced marriage", "Discriminatory abuse",
+    "Relating to internet", "Coercive control", "Deliberate harm to Foetus/Child",
+    "Accidental Harm to Foetus/Child", "Ideas of Harming Foetus /Child",
+  ],
+  "environmental": [
+    "Language / communication issues", "Lack of social stimulation / activities", "Hoarding",
+    "Shared living space, risk from cohabitee's", "Lack of adaptions", "Dangerous Living environment",
+    "Loss of home or eviction", "Inadequate staffing levels", "Inadequate staffing skill set",
+    "Lack of appropriate equipment /recourses/ care package", "Inappropriate environment",
+    "Behaviour that prevents access to service",
+  ],
+};
+
 // Observation levels (DHCFT Inpatient Therapeutic Observations & Engagement
 // Policy) - patient banner dropdown.
 export const OBS_LEVELS = [

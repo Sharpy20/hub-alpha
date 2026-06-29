@@ -52,6 +52,18 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // PARKED: the Welcome admission tool is removed from the live product (the code
+  // stays in the repo - src/app/welcome, src/lib/data/welcome, components/guides/
+  // risk-capture - and the nav tab is removed). It needs a lot more work and we
+  // don't want it holding up launch. To bring it back: delete this block and
+  // re-add the nav links in header.tsx. Any attempt to reach it redirects home.
+  if (pathname === "/welcome" || pathname.startsWith("/welcome/") ||
+      pathname === "/v2/welcome" || pathname.startsWith("/v2/welcome/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.startsWith("/v2") ? "/v2" : "/";
+    return NextResponse.redirect(url);
+  }
+
   // FULL build under /v2 - rewrite to the real route, full access (no blocking).
   if (pathname === "/v2" || pathname.startsWith("/v2/")) {
     const subpath = pathname === "/v2" ? "/" : pathname.slice("/v2".length);

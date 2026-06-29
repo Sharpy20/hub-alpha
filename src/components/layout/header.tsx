@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useApp, STYLE_THEMES, type StyleTheme, type ColorMode } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play, HeartHandshake } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import { getStaffByWard } from "@/lib/data/staff";
@@ -201,10 +201,6 @@ export function Header() {
                 <>
                   {/* Normal nav items */}
                   <div className="flex items-center gap-1 p-1 bg-slate-100/50 rounded-xl border border-slate-200">
-                    <Link href={link("/welcome")} className="px-3 py-1.5 rounded-lg bg-violet-50 hover:bg-violet-100 text-violet-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
-                      <HeartHandshake className="w-4 h-4" />
-                      Welcome
-                    </Link>
                     {!isV2 && (
                       <Link href={link("/tasks")} className="px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold flex items-center gap-1.5 transition-colors text-sm">
                         <CalendarDays className="w-4 h-4" />
@@ -517,9 +513,6 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-200">
             <nav className="flex flex-col px-4 py-2">
-              <Link href={link("/welcome")} className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <HeartHandshake className="w-5 h-5 text-violet-600" /> Welcome
-              </Link>
               {!isV2 && (
                 <Link href={link("/tasks")} className="py-3 border-b border-gray-100 font-semibold text-gray-700 flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
                   <CalendarDays className="w-5 h-5 text-indigo-600" /> Diary

@@ -1,5 +1,14 @@
 "use client";
 
+// ============================================================================
+// PARKED (28 Jun 2026): this tool is REMOVED FROM THE LIVE PRODUCT but the code
+// is kept here for when we resume it. The /welcome route is redirected home in
+// src/proxy.ts and the nav tab is removed from header.tsx. It needs a lot more
+// work (deeper form pre-fill, named-nurse content, v2 diary tasks) and we don't
+// want it delaying launch. To bring it back: remove the block in proxy.ts and
+// re-add the nav links in header.tsx. Nothing else needs changing.
+// ============================================================================
+//
 // Welcome - the admission co-production tool (Phase 1).
 //
 // A nurse works through this WITH the patient. ONE page captures everything the
@@ -25,7 +34,7 @@ import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { useV2Href } from "@/lib/hooks/useV2";
 import {
-  RISK_DOMAINS, SUBTYPE_RISK, OBS_LEVELS, LEGAL_STATUSES, WELCOME_INTROS,
+  RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, OBS_LEVELS, LEGAL_STATUSES, WELCOME_INTROS,
 } from "@/lib/data/welcome/risk-screen";
 import {
   RIGHTS_ITEMS, NEED_ITEMS, LAUNCH_FORMS, SAFEGUARDING_DUTY,
@@ -45,13 +54,13 @@ import {
 type YN = "" | "yes" | "no";
 
 interface DomainState {
-  indicators: YN; safety: YN; current: string; historical: string;
+  indicators: YN; indicatorList: string[]; safety: YN; current: string; historical: string;
   noEvidence: boolean; risks: string[]; // selected sub-domain labels
 }
-const emptyDomain = (): DomainState => ({ indicators: "", safety: "", current: "", historical: "", noEvidence: false, risks: [] });
+const emptyDomain = (): DomainState => ({ indicators: "", indicatorList: [], safety: "", current: "", historical: "", noEvidence: false, risks: [] });
 
-interface Banner { name: string; nok: string; address: string; ward: string; section: string; obs: string; description: string }
-const emptyBanner = (): Banner => ({ name: "", nok: "", address: "", ward: "", section: "", obs: "", description: "" });
+interface Banner { firstName: string; lastName: string; preferredName: string; nok: string; address: string; ward: string; section: string; obs: string; description: string }
+const emptyBanner = (): Banner => ({ firstName: "", lastName: "", preferredName: "", nok: "", address: "", ward: "", section: "", obs: "", description: "" });
 
 interface RiskRef { key: string; label: string; chipRisk: string }
 
@@ -170,17 +179,19 @@ export default function WelcomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [domains]);
 
-  const name = banner.name.trim() || "the patient";
-  // Personalise the trust-approved prompts on screen with the patient's name
-  // (display only - doesn't change what's copied into the form). Falls back to
+  const fullName = [banner.firstName.trim(), banner.lastName.trim()].filter(Boolean).join(" ");
+  const name = fullName || "the patient";          // case notes / outputs (full name)
+  const callName = banner.preferredName.trim() || banner.firstName.trim() || fullName; // friendly, for on-screen prompts
+  // Personalise the trust-approved prompts on screen with the patient's preferred
+  // name (display only - doesn't change what's copied into the form). Falls back to
   // the approved "the person" wording when no name is entered.
   const personalise = (s: string) => {
-    const nm = banner.name.trim();
+    const nm = callName;
     return nm ? s.replace(/the person's/g, `${nm}'s`).replace(/the person/g, nm) : s;
   };
 
   // ---- admission case-note builders ----
-  const fill = (s: string) => s.replace(/\{name\}/g, banner.name.trim() || "the patient").replace(/\{date\}/g, today || "[date]");
+  const fill = (s: string) => s.replace(/\{name\}/g, name).replace(/\{date\}/g, today || "[date]");
   const rightsNote = RIGHTS_ITEMS.filter((i) => rights.has(i.id)).map((i) => fill(i.note)).join("\n");
   const contactsNote = [
     banner.nok.trim() && `Next of kin: ${banner.nok.trim()}`,
@@ -195,7 +206,7 @@ export default function WelcomePage() {
     sgWishes.trim() && `The person's wishes: ${ensureStop(sgWishes.trim())}`,
     SAFEGUARDING_DUTY,
   ].filter(Boolean).join("\n") : "";
-  const needsNote = needs.size ? `Referrals / follow-up identified on admission for ${banner.name.trim() || "the patient"}: ${naturalList(NEED_ITEMS.filter((n) => needs.has(n.id)).map((n) => n.label))}.` : "";
+  const needsNote = needs.size ? `Referrals / follow-up identified on admission for ${name}: ${naturalList(NEED_ITEMS.filter((n) => needs.has(n.id)).map((n) => n.label))}.` : "";
   const contextLine = useMemo(() => {
     const bits: string[] = [];
     if (banner.ward.trim()) bits.push(`admitted to ${banner.ward.trim()}`);
@@ -214,6 +225,9 @@ export default function WelcomePage() {
       const bits = [present, judge].filter((x) => x && x !== "Not yet established.");
       if (bits.length) lines.push(`${cap(r.label)}: ${ensureStop(bits.join(" "))}`);
     }
+    // Clinical indicators (the Xb.i lists) pull through here, into the formulation.
+    const inds = [...new Set(RISK_DOMAINS.flatMap((dm) => getDomain(dm.id).indicatorList))];
+    if (inds.length) lines.push(`Clinical indicators noted: ${naturalList(inds)}.`);
     return lines.join(" ");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [domains, formByRisk]);
@@ -232,6 +246,7 @@ export default function WelcomePage() {
       else if (st.risks.length) st.risks.forEach((r) => parts.push(r));
       if (dm.safetyPrompt && st.safety) parts.push(`Concerns about safety: ${st.safety === "yes" ? "Yes" : "No"}`);
       if (st.indicators) parts.push(`Clinical indicators: ${st.indicators === "yes" ? "Yes" : "No"}`);
+      if (st.indicatorList.length) parts.push(`Indicators present: ${st.indicatorList.join("; ")}`);
       if (st.current.trim()) parts.push(`Current concerns: ${ensureStop(cap(st.current.trim()))}`);
       if (st.historical.trim()) parts.push(`Historical: ${ensureStop(cap(st.historical.trim()))}`);
       if (i < engaged.length - 1) parts.push("----------------------------------------");
@@ -334,7 +349,9 @@ export default function WelcomePage() {
             <h2 className="font-bold text-gray-800">Set once - pulls through every output</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <Field label="Name"><input autoComplete="off" value={banner.name} onChange={(e) => setBanner({ ...banner, name: e.target.value })} className={inputCls} placeholder="Patient name" /></Field>
+            <Field label="First name"><input autoComplete="off" value={banner.firstName} onChange={(e) => setBanner({ ...banner, firstName: e.target.value })} className={inputCls} placeholder="First name" /></Field>
+            <Field label="Last name"><input autoComplete="off" value={banner.lastName} onChange={(e) => setBanner({ ...banner, lastName: e.target.value })} className={inputCls} placeholder="Last name" /></Field>
+            <Field label="Preferred name"><input autoComplete="off" value={banner.preferredName} onChange={(e) => setBanner({ ...banner, preferredName: e.target.value })} className={inputCls} placeholder="What they like to be called" /></Field>
             <Field label="Ward"><input autoComplete="off" value={banner.ward} onChange={(e) => setBanner({ ...banner, ward: e.target.value })} className={inputCls} placeholder="e.g. Byron Ward" /></Field>
             <Field label="Legal status">
               <input autoComplete="off" list="legal-statuses" value={banner.section} onChange={(e) => setBanner({ ...banner, section: e.target.value })} className={inputCls} placeholder="e.g. Section 2" />
@@ -396,7 +413,23 @@ export default function WelcomePage() {
                           {dm.safetyPrompt && (
                             <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.safetyPrompt)}</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>
                           )}
-                          <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
+                          <div>
+                            <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
+                            {st.indicators === "yes" && CLINICAL_INDICATORS[dm.id] && (
+                              <div className="mt-2 flex flex-wrap gap-1.5">
+                                {CLINICAL_INDICATORS[dm.id].map((ind) => {
+                                  const on = st.indicatorList.includes(ind);
+                                  return (
+                                    <button key={ind} type="button" aria-pressed={on}
+                                      onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
+                                      className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-violet-600 border-violet-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-violet-300 hover:bg-violet-50"}`}>
+                                      {ind}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
                           <div>
                             <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
                             <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
@@ -518,7 +551,7 @@ export default function WelcomePage() {
                   <input type="checkbox" checked={rights.has(i.id)} onChange={() => toggleInSet(setRights, i.id)} className="rounded border-gray-300 text-violet-600 w-4 h-4" />
                   {i.label}
                 </label>
-                <Link href={v2Href(i.href)} className="inline-flex items-center gap-1 text-xs font-semibold text-violet-700 hover:text-violet-900 no-underline flex-shrink-0"><ExternalLink className="w-3.5 h-3.5" />Open</Link>
+                <Link href={v2Href(i.href)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-violet-700 hover:text-violet-900 no-underline flex-shrink-0"><ExternalLink className="w-3.5 h-3.5" />Open</Link>
               </div>
             ))}
           </div>
@@ -536,7 +569,7 @@ export default function WelcomePage() {
 
         {/* The curious nurse - safeguarding */}
         <div className="rounded-2xl border-2 border-violet-200 bg-white p-4 space-y-3">
-          <div className="flex items-center gap-2"><ShieldAlert className="w-5 h-5 text-violet-600" /><h2 className="font-bold text-gray-800">The curious nurse - safeguarding</h2></div>
+          <div className="flex items-center gap-2"><ShieldAlert className="w-5 h-5 text-violet-600" /><h2 className="font-bold text-gray-800">Safeguarding - exploring any concerns</h2></div>
           <div className="flex items-center gap-3 flex-wrap">
             <span className="text-sm text-gray-700 flex-1 min-w-[220px]">Are you worried for your own or anyone else&apos;s safety?</span>
             <YNToggle value={sgConcern} onChange={setSgConcern} />
@@ -549,8 +582,8 @@ export default function WelcomePage() {
               <Field label="People involved - full names, addresses, phone, ages"><textarea value={sgPeople} onChange={(e) => setSgPeople(e.target.value)} rows={2} className={inputCls} /></Field>
               <Field label="What does the person want us to do?"><textarea value={sgWishes} onChange={(e) => setSgWishes(e.target.value)} rows={2} className={inputCls} /></Field>
               <div className="flex flex-wrap gap-3 text-xs">
-                <Link href={v2Href("/guides/safeguarding-adults-referral")} className="inline-flex items-center gap-1 font-semibold text-violet-700 no-underline"><ExternalLink className="w-3.5 h-3.5" />Safeguarding adults</Link>
-                <Link href={v2Href("/guides/safeguarding-children-referral")} className="inline-flex items-center gap-1 font-semibold text-violet-700 no-underline"><ExternalLink className="w-3.5 h-3.5" />Safeguarding children</Link>
+                <Link href={v2Href("/guides/safeguarding-adults-referral")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-violet-700 no-underline"><ExternalLink className="w-3.5 h-3.5" />Safeguarding adults</Link>
+                <Link href={v2Href("/guides/safeguarding-children-referral")} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-violet-700 no-underline"><ExternalLink className="w-3.5 h-3.5" />Safeguarding children</Link>
               </div>
               <CopyField id="sg-note" label="Safeguarding - case note" text={sgNote} done={copied.has("sg-note")} onToggle={toggleCopied} />
             </div>
@@ -568,7 +601,7 @@ export default function WelcomePage() {
                   <input type="checkbox" checked={needs.has(n.id)} onChange={() => toggleInSet(setNeeds, n.id)} className="rounded border-gray-300 text-violet-600 w-4 h-4" />
                   {n.label}
                 </label>
-                <Link href={v2Href(n.href)} aria-label={`Open ${n.label} guide`} className="inline-flex items-center text-violet-700 hover:text-violet-900 no-underline flex-shrink-0"><ExternalLink className="w-3.5 h-3.5" /></Link>
+                <Link href={v2Href(n.href)} target="_blank" rel="noopener noreferrer" aria-label={`Open ${n.label} guide`} className="inline-flex items-center text-violet-700 hover:text-violet-900 no-underline flex-shrink-0"><ExternalLink className="w-3.5 h-3.5" /></Link>
               </div>
             ))}
           </div>
@@ -578,10 +611,10 @@ export default function WelcomePage() {
         {/* Other forms to open */}
         <div className="rounded-2xl border-2 border-violet-200 bg-white p-4 space-y-3">
           <div className="flex items-center gap-2"><FileText className="w-5 h-5 text-violet-600" /><h2 className="font-bold text-gray-800">Other forms to open</h2></div>
-          <p className="text-xs text-gray-500">The rest of the admission set - open each and build it. (v2 will set these as diary tasks.)</p>
+          <p className="text-xs text-gray-500">The rest of the admission set. Each opens in a new tab so you don&apos;t lose this session. (Pre-filling each form with the patient&apos;s data, and v2 diary tasks, come later.)</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {LAUNCH_FORMS.map((f) => (
-              <Link key={f.id} href={v2Href(f.href)} className="rounded-xl border border-gray-200 hover:border-violet-300 hover:bg-violet-50 p-3 no-underline transition-colors">
+              <Link key={f.id} href={v2Href(f.href)} target="_blank" rel="noopener noreferrer" className="rounded-xl border border-gray-200 hover:border-violet-300 hover:bg-violet-50 p-3 no-underline transition-colors">
                 <span className="block text-sm font-semibold text-violet-800">{f.label}</span>
                 <span className="block text-xs text-gray-500 mt-0.5">{f.note}</span>
               </Link>

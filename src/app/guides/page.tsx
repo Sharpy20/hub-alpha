@@ -6,6 +6,7 @@ import { Badge, StatusBadge } from "@/components/ui";
 import Link from "next/link";
 import { ArrowRight, Clock, Filter, FileText, Pencil, Search } from "lucide-react";
 import { guideApproval } from "@/lib/data/approval-status";
+import { WORKFLOWS } from "@/lib/data/guides";
 import { useReferralLog } from "@/app/referral-log-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
@@ -18,6 +19,25 @@ interface GuideItem {
   gradient: string;
   category: string;
   viewerPath: string;
+}
+
+// Guide TYPE label (Mike): make it obvious how a guide works. Most guides are
+// read-through "How-to"; referral workflows are "Step-by-step"; a few are
+// fill-and-copy "Builder"s, tick-list "Checklist"s, or "Tips" thinking guides.
+const GUIDE_TYPE: Record<string, string> = {
+  "care-plan": "Builder", "risk-assessment": "Builder", "mental-state-exam": "Builder", "abc-chart": "Builder",
+  "mha-checker": "Checklist", "admission-checklist": "Checklist", "leave-discharge-transfer": "Checklist", "fridge-temps": "Checklist",
+  "seclusion-support-plan": "Tips", "debrief": "Tips", "safety-plan": "Tips", "restraint-monitoring": "Tips", "observation-engagement": "Tips",
+};
+const TYPE_STYLE: Record<string, string> = {
+  "Builder": "bg-violet-100 text-violet-700",
+  "Checklist": "bg-emerald-100 text-emerald-700",
+  "Tips": "bg-amber-100 text-amber-700",
+  "Step-by-step": "bg-blue-100 text-blue-700",
+  "How-to": "bg-slate-100 text-slate-600",
+};
+function guideType(id: string): string {
+  return GUIDE_TYPE[id] || (WORKFLOWS[id] ? "Step-by-step" : "How-to");
 }
 
 // All guides grouped by category - this order drives the page (when no custom
@@ -258,6 +278,9 @@ export default function GuidesPage() {
                     <Badge className="bg-gray-100 text-gray-600 border-0 text-xs">
                       {guide.category}
                     </Badge>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${TYPE_STYLE[guideType(guide.id)]}`}>
+                      {guideType(guide.id)}
+                    </span>
                   </div>
                 </div>
                 <StatusBadge status={guideApproval(guide.id)} />

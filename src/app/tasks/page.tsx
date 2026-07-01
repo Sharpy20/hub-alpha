@@ -52,6 +52,7 @@ import {
   StaffManagementModal,
   StaffTasksModal,
   TaskDetailModal,
+  BulkPatientTasksModal,
 } from "@/components/modals";
 import { ConfirmDialog } from "@/components/ui";
 
@@ -960,6 +961,7 @@ function AddTaskModal({
   activeWard,
   defaultDate,
   currentUserName,
+  onBulkPatient,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -967,6 +969,7 @@ function AddTaskModal({
   activeWard: string;
   defaultDate?: string;
   currentUserName?: string;
+  onBulkPatient?: () => void;
 }) {
   const [taskType, setTaskType] = useState<"ward" | "patient" | "appointment">("ward");
   const [title, setTitle] = useState("");
@@ -1187,6 +1190,15 @@ function AddTaskModal({
                 }`}
               >
                 {bulkMode ? "Single task" : "Add several"}
+              </button>
+            )}
+            {taskType === "patient" && onBulkPatient && (
+              <button
+                type="button"
+                onClick={onBulkPatient}
+                className="text-xs font-semibold px-2 py-1 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors"
+              >
+                Add several
               </button>
             )}
           </div>
@@ -2399,6 +2411,7 @@ function TasksPageInner() {
   });
   const [showDiarySettings, setShowDiarySettings] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showBulkPatient, setShowBulkPatient] = useState(false);
   const [focusedDate, setFocusedDate] = useState<string>(() => formatDate(new Date()));
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
@@ -3005,6 +3018,15 @@ function TasksPageInner() {
         onAdd={handleAddTask}
         activeWard={activeWard}
         defaultDate={expandedDay || focusedDate || todayStr}
+        currentUserName={user?.name}
+        onBulkPatient={() => { setShowAddModal(false); setShowBulkPatient(true); }}
+      />
+
+      <BulkPatientTasksModal
+        isOpen={showBulkPatient}
+        onClose={() => setShowBulkPatient(false)}
+        onAdd={handleAddTask}
+        activeWard={activeWard}
         currentUserName={user?.name}
       />
 

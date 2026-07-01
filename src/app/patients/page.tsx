@@ -4,15 +4,17 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { useApp } from "@/app/providers";
+import { useTasks } from "@/app/tasks-provider";
 import { useWardSettings } from "@/app/ward-settings-provider";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { MainLayout } from "@/components/layout";
 import { Card } from "@/components/ui";
-import { PatientTransferModal, DischargeAuditModal, PatientTasksModal, TaskDetailModal } from "@/components/modals";
+import { PatientTransferModal, DischargeAuditModal, PatientTasksModal, TaskDetailModal, BulkPatientTasksModal } from "@/components/modals";
 import {
   User,
   Search,
   Filter,
+  ClipboardList,
   AlertTriangle,
   Calendar,
   ArrowRight,
@@ -62,8 +64,16 @@ type StatusFilter = "all" | PatientStatus;
 export default function PatientsPage() {
   const link = useV2Href();
   const { user, activeWard } = useApp();
+  const { addTask } = useTasks();
   const { getWardSettings } = useWardSettings();
   const wardSettings = getWardSettings(activeWard);
+
+  // Bulk "add tasks for a patient" - shared modal, adds into the diary context
+  const [isBulkTasksOpen, setIsBulkTasksOpen] = useState(false);
+  const [bulkPatientName, setBulkPatientName] = useState<string | undefined>(undefined);
+  const handleBulkAddTask = (t: Partial<DiaryTask>) => {
+    addTask({ ...t, id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}` } as DiaryTask);
+  };
 
   const [patients, setPatients] = useState<Patient[]>([]);
   const [tasks, setTasks] = useState<DiaryTask[]>([]);
@@ -401,6 +411,13 @@ export default function PatientsPage() {
             </div>
             <div className="flex items-center gap-3">
               <button
+                onClick={() => { setBulkPatientName(undefined); setIsBulkTasksOpen(true); }}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+              >
+                <ClipboardList className="w-5 h-5" />
+                Add Tasks
+              </button>
+              <button
                 onClick={() => setIsAddPatientModalOpen(true)}
                 className="flex items-center gap-2 px-4 py-2 bg-green-700 text-white rounded-xl font-semibold hover:bg-green-800 transition-all shadow-md hover:shadow-lg"
               >
@@ -725,6 +742,20 @@ export default function PatientsPage() {
         patient={selectedPatient}
         tasks={selectedPatient ? getPatientTasks(selectedPatient.id) : []}
         onTaskClick={handleTaskClick}
+        onAddTasks={selectedPatient ? () => {
+          setBulkPatientName(selectedPatient.name);
+          setIsTasksModalOpen(false);
+          setIsBulkTasksOpen(true);
+        } : undefined}
+      />
+
+      <BulkPatientTasksModal
+        isOpen={isBulkTasksOpen}
+        onClose={() => setIsBulkTasksOpen(false)}
+        onAdd={handleBulkAddTask}
+        activeWard={activeWard}
+        currentUserName={user?.name}
+        initialPatientName={bulkPatientName}
       />
 
       {/* Task Detail Modal */}

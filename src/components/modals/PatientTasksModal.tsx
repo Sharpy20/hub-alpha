@@ -18,6 +18,7 @@ interface PatientTasksModalProps {
   patient: Patient | null;
   tasks: DiaryTask[];
   onTaskClick?: (task: DiaryTask) => void;
+  onAddTasks?: () => void;
 }
 
 const STATUS_CONFIG = {
@@ -28,7 +29,7 @@ const STATUS_CONFIG = {
   cancelled: { label: "Cancelled", color: "text-gray-500", bgColor: "bg-gray-100", icon: Clock },
 };
 
-export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick }: PatientTasksModalProps) {
+export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick, onAddTasks }: PatientTasksModalProps) {
   if (!patient) return null;
 
   // Separate tasks by type
@@ -66,6 +67,16 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick
             <p className="text-xs text-green-600 font-medium">Completed</p>
           </div>
         </div>
+
+        {onAddTasks && (
+          <button
+            onClick={onAddTasks}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:shadow-lg transition-all"
+          >
+            <FileText className="w-4 h-4" />
+            Add tasks for {patient.name.split(" ")[0]}
+          </button>
+        )}
 
         {/* Patient info */}
         <div className="bg-gray-50 rounded-lg p-3 text-sm">

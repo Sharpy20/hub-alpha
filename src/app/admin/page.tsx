@@ -26,7 +26,7 @@ const GUIDE_COUNT = 13;    // Defined inline in how-to/[id] page
 const BOOKMARK_COUNT = bookmarks.length;
 
 export default function AdminPage() {
-  const { user } = useApp();
+  const { user, setUser } = useApp();
   const link = useV2Href();
   const isV2 = useIsV2();
   const [showCreatorRequest, setShowCreatorRequest] = useState(false);
@@ -73,8 +73,9 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Request Creator Privileges - shown for users without content admin access */}
-        {!isContentAdmin && (
+        {/* Request Creator Privileges - shown for users without content admin access
+            (kept visible after a demo grant so the explanatory message shows). */}
+        {(!isContentAdmin || showCreatorRequest) && (
           <div className="bg-white rounded-xl border-2 border-amber-200 p-6 max-w-lg mx-auto">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -93,19 +94,20 @@ export default function AdminPage() {
                     Request editor rights
                   </a>
                 ) : showCreatorRequest ? (
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                    <p className="text-sm text-amber-800 font-medium mb-1">Request submitted</p>
-                    <p className="text-xs text-amber-700">
-                      Needs approval from a Ward Admin or Manager, plus completion of Creator Training.
-                      Your request has been noted - please speak to your Ward Admin or Manager.
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                    <p className="text-sm text-emerald-800 font-medium mb-1">Editor rights granted (demo)</p>
+                    <p className="text-xs text-emerald-700">
+                      You can now create and edit content - try the Editor cards below. In the live version this
+                      request would go to a Ward Admin or Senior Admin for approval (plus Creator Training) before
+                      rights are granted; here in the demo it&apos;s granted instantly so you can explore.
                     </p>
                   </div>
                 ) : (
                   <button
-                    onClick={() => setShowCreatorRequest(true)}
+                    onClick={() => { if (user) setUser({ ...user, isContributor: true }); setShowCreatorRequest(true); }}
                     className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-medium hover:shadow-lg transition-all"
                   >
-                    Request Creator Privileges
+                    Request editor rights
                   </button>
                 )}
               </div>

@@ -328,7 +328,7 @@ export default function UnifiedGuidePage() {
 
         {/* Step navigation pills/grid */}
         <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-4">
-          <div className={isReferral ? "grid grid-cols-2 md:grid-cols-3 gap-2" : "flex overflow-x-auto gap-2 pb-1"}>
+          <div className={isReferral ? "grid grid-cols-2 md:grid-cols-3 gap-2" : "flex flex-wrap gap-2"}>
             {isReferral ? (
               workflow.steps.map((s, index) => {
                 const Icon = STEP_ICONS[s.type] || CheckCircle;
@@ -345,11 +345,11 @@ export default function UnifiedGuidePage() {
               })
             ) : (
               guide.steps.map((s, index) => (
-                <button key={s.id} onClick={() => { if (index <= currentStep) setCurrentStep(index); }} disabled={index > currentStep}
-                  className={`flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                <button key={s.id} onClick={() => setCurrentStep(index)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     index === currentStep ? `bg-gradient-to-r ${config.gradient} text-white shadow-md`
                       : completedSteps.includes(s.id) ? "bg-green-100 text-green-800 hover:bg-green-200"
-                      : "bg-white text-gray-400"
+                      : "bg-white text-gray-600 hover:bg-gray-100"
                   }`}>
                   {completedSteps.includes(s.id) && <Check className="w-3 h-3" />}
                   <span>{index + 1}</span>
@@ -601,17 +601,17 @@ export default function UnifiedGuidePage() {
 
         {/* Side navigation arrows */}
         {currentStep > 0 && (
-          <button onClick={handlePrev} style={{ left: "max(0px, calc(50vw - 640px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-r-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Previous step">
+          <button onClick={handlePrev} style={{ left: "max(0px, calc(50vw - 672px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-r-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Previous step">
             <ArrowLeft className="w-7 h-7 text-white" />
           </button>
         )}
         {!isComplete && (
-          <button onClick={handleNext} disabled={!canProceed()} style={{ right: "max(0px, calc(50vw - 640px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:w-14" aria-label="Next step">
+          <button onClick={handleNext} disabled={!canProceed()} style={{ right: "max(0px, calc(50vw - 672px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:w-14" aria-label="Next step">
             <ArrowRight className="w-7 h-7 text-white" />
           </button>
         )}
         {!isReferral && isComplete && (
-          <button onClick={handleNext} style={{ right: "max(0px, calc(50vw - 640px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-green-600/80 hover:bg-green-700 backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Next step">
+          <button onClick={handleNext} style={{ right: "max(0px, calc(50vw - 672px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-green-600/80 hover:bg-green-700 backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Next step">
             <Check className="w-7 h-7 text-white" />
           </button>
         )}

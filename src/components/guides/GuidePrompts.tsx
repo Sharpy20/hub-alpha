@@ -11,6 +11,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
+import { PatientLink } from "@/components/guides/PatientLink";
+import { Patient } from "@/lib/types";
 import { useV2Href } from "@/lib/hooks/useV2";
 import type { GuidePromptConfig, GuidePromptSection } from "@/lib/data/guides/guideprompt";
 import {
@@ -86,6 +88,7 @@ function Section({ section, defaultOpen }: { section: GuidePromptSection; defaul
 export function GuidePrompts({ config }: { config: GuidePromptConfig }) {
   const v2Href = useV2Href();
   const [allOpen, setAllOpen] = useState(false);
+  const [patient, setPatient] = useState<Patient | null>(null);
 
   return (
     <MainLayout>
@@ -111,6 +114,7 @@ export function GuidePrompts({ config }: { config: GuidePromptConfig }) {
               <ArrowLeft className="w-4 h-4" /> All guides
             </Link>
           </div>
+          <PatientLink patient={patient} onChange={setPatient} guideTitle={config.title} note="Links this guidance to a patient for your reference" />
         </div>
 
         {/* Notice */}

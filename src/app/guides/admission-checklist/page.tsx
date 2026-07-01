@@ -90,16 +90,6 @@ export default function AdmissionChecklistPage() {
           />
         </div>
 
-        <div className="print:hidden space-y-1.5">
-          <PatientLink patient={patient} onChange={setPatient} guideTitle="Admission Checklist" />
-          {patient && (
-            <p className="text-xs text-indigo-600 flex items-center gap-1.5 px-1">
-              <Info className="w-3.5 h-3.5 flex-shrink-0" />
-              Ticking risk management, physical health, advocacy, rights, care plan, safety plan and HoNOS updates {patient.name}&apos;s Care Review admission badge.
-            </p>
-          )}
-        </div>
-
         {/* Header */}
         <div className="bg-gradient-to-r from-green-500 to-emerald-700 rounded-2xl p-6 text-white">
           <div className="flex items-start justify-between gap-4">
@@ -122,7 +112,15 @@ export default function AdmissionChecklistPage() {
               All guides
             </Link>
           </div>
+          <PatientLink patient={patient} onChange={setPatient} guideTitle="Admission Checklist" note="Ticks save against this patient and update their Care Review admission badge" />
         </div>
+
+        {patient && (
+          <p className="print:hidden text-xs text-indigo-600 flex items-center gap-1.5 px-1">
+            <Info className="w-3.5 h-3.5 flex-shrink-0" />
+            Ticking any item here saves against {patient.name}&apos;s admission record - their Admission badge turns green once every item is done.
+          </p>
+        )}
 
         {/* Progress + actions */}
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 flex flex-wrap items-center gap-4">

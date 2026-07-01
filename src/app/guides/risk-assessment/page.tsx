@@ -594,7 +594,6 @@ export default function RiskAssessmentPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Risk Assessment" }]} />
         </div>
-        <PatientLink patient={patient} onChange={setPatient} guideTitle="Risk Assessment" />
         <FocusLinks links={[
           { label: "Risk Screening Assessment (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/10368/2454" },
           { label: "Risk Node", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/5321/2454" },
@@ -616,6 +615,7 @@ export default function RiskAssessmentPage() {
               <ArrowLeft className="w-4 h-4" /> All guides
             </Link>
           </div>
+          <PatientLink patient={patient} onChange={setPatient} guideTitle="Risk Assessment" note="Adds the patient's name to the formulation and RMP" />
         </div>
 
         {/* Context + reset */}

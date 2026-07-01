@@ -54,7 +54,6 @@ export default function LeaveDischargeTransferPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Leave / Discharge / Transfer" }]} />
         </div>
-        <PatientLink patient={patient} onChange={setPatient} guideTitle="Leave / Discharge / Transfer" />
         <FocusLinks links={[
           { label: "Discharge Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4829/2454" },
           { label: "Discharge, Transfers & Leave (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1795/2454" },
@@ -74,6 +73,7 @@ export default function LeaveDischargeTransferPage() {
               <ArrowLeft className="w-4 h-4" /> All guides
             </Link>
           </div>
+          <PatientLink patient={patient} onChange={setPatient} guideTitle="Leave / Discharge / Transfer" note="Adds the patient's name to the case-note summary" />
         </div>
 
         {/* Notice */}

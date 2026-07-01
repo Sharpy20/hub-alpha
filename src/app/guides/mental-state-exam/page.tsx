@@ -121,9 +121,8 @@ export default function MseBuilderPage() {
               All guides
             </Link>
           </div>
+          <PatientLink patient={patient} onChange={setPatient} guideTitle="Mental State Examination" note="Adds the patient's name to the MSE" />
         </div>
-
-        <PatientLink patient={patient} onChange={setPatient} guideTitle="Mental State Examination" />
 
         {/* Sticky output panel */}
         <div className="sticky top-2 z-20 rounded-2xl bg-slate-900 text-slate-100 shadow-xl overflow-hidden">

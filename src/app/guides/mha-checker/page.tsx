@@ -10,6 +10,8 @@ import {
 } from "@/lib/data/guides";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
+import { PatientLink } from "@/components/guides/PatientLink";
+import { Patient } from "@/lib/types";
 import {
   ArrowLeft, Check, Printer, ScrollText, AlertTriangle, Info, Plus, ClipboardList, Download,
 } from "lucide-react";
@@ -32,6 +34,7 @@ function FormTile({ form, tone = "blue" }: { form: MhaForm; tone?: "blue" | "gre
 export default function MhaCheckerPage() {
   const v2Href = useV2Href();
   const [pathwayId, setPathwayId] = useState<string | null>(null);
+  const [patient, setPatient] = useState<Patient | null>(null);
   // Per-requirement chosen alternative (for OR options like A3 vs 2x A4).
   const [choice, setChoice] = useState<Record<number, number>>({});
   const [showScrutiny, setShowScrutiny] = useState(false);
@@ -82,6 +85,7 @@ export default function MhaCheckerPage() {
               All guides
             </Link>
           </div>
+          <PatientLink patient={patient} onChange={setPatient} guideTitle="Section Papers" note="Links this check to a patient for your reference" />
         </div>
 
         {/* Trust MHA policies on FOCUS */}

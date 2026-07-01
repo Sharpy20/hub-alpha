@@ -216,7 +216,6 @@ export default function CarePlanPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Care Plan" }]} />
         </div>
-        <PatientLink patient={patient} onChange={setPatient} guideTitle="Care Plan" />
         <FocusLinks links={[
           { label: "Creating a Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/7498/2454" },
           { label: "Review / Update a Care Plan", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/5322/2454" },
@@ -239,6 +238,7 @@ export default function CarePlanPage() {
               <ArrowLeft className="w-4 h-4" /> All guides
             </Link>
           </div>
+          <PatientLink patient={patient} onChange={setPatient} guideTitle="Care Plan" note="Adds the patient's name to the care plan" />
         </div>
 
         {/* Principles + reset */}

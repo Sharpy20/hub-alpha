@@ -120,7 +120,7 @@ export default function MseBuilderPage() {
         </div>
 
         {/* Sticky output panel */}
-        <div className="sticky top-2 z-30 rounded-2xl bg-slate-900 text-slate-100 shadow-xl overflow-hidden">
+        <div className="sticky top-2 z-20 rounded-2xl bg-slate-900 text-slate-100 shadow-xl overflow-hidden">
           <div className="flex items-center justify-between px-4 pt-3 pb-2">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400">
               Your MSE

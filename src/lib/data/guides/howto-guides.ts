@@ -1186,3 +1186,68 @@ export const DEFAULT_GUIDE: GuideData = {
     },
   ],
 };
+
+// Descriptive "Copy to the patient's notes" templates, one per how-to guide.
+// [DATE] and [NURSE] are auto-filled by the guide viewer; the other [BRACKETS]
+// are quick fill-ins the nurse completes. Written to describe the task actually
+// done, not just "guide reviewed". No em dashes.
+const GUIDE_CASE_NOTES: Record<string, string> = {
+  "capacity-assessment":
+    "Mental capacity assessment completed on [DATE] regarding [SPECIFIC DECISION]. Two-stage test applied: (1) impairment or disturbance of the mind or brain identified: [YES/NO - CAUSE]; (2) patient able to understand, retain, weigh up and communicate the decision: [YES/NO - DETAIL]. Conclusion: patient [HAS/LACKS] capacity for this decision. Where capacity lacking, a best-interests decision was made and recorded, least-restrictive option considered. Assessment by [NURSE].",
+  "section-132":
+    "Section 132 rights read to patient on [DATE] by [NURSE]. Detention under [SECTION] explained, including the reason for detention, right of appeal to the Tribunal and Hospital Managers, access to an IMHA, consent to treatment provisions and discharge arrangements. Patient's understanding: [FULLY UNDERSTOOD / PARTIALLY / DID NOT UNDERSTAND - REASON]. Rights leaflet provided. To be re-read if not understood, on request, or if status changes.",
+  "section-17":
+    "Section 17 leave taken on [DATE]. Leave type: [ESCORTED / UNESCORTED, GROUNDS / COMMUNITY]. Authorised by the RC on the current S17 form. Agreed times: [OUT / EXPECTED BACK]. Conditions and risk reviewed and explained to patient beforehand. Patient departed [TIME], returned [TIME]. Presentation and any incidents on return: [DETAILS]. Recorded by [NURSE].",
+  "news2":
+    "NEWS2 physical observations recorded on [DATE] at [TIME]. Aggregate score [SCORE] (RR [ ], SpO2 [ ], O2 [ ], BP [ ], HR [ ], consciousness [ ], temp [ ]). Trigger: [LOW / LOW-MEDIUM / MEDIUM / HIGH]. Action taken: [CONTINUE ROUTINE MONITORING / INCREASED FREQUENCY / ESCALATED TO - WHO AND WHEN]. Recorded by [NURSE].",
+  "fridge-temps":
+    "Medication fridge temperature checked on [DATE] at [TIME]. Current [ ]C, minimum [ ]C, maximum [ ]C (acceptable range 2-8C). Reading: [IN RANGE / OUT OF RANGE - ACTION TAKEN AND PHARMACY INFORMED]. Min/max reset after reading. Logged on the Assurance Dashboard by [NURSE].",
+  "abc-chart":
+    "ABC chart completed on [DATE] for behaviour observed at [TIME]. Antecedent (what was happening before): [DETAILS]. Behaviour (objective description): [DETAILS]. Consequence (what happened after, including staff response): [DETAILS]. Possible function or pattern: [DETAILS]. Shared with the MDT and reflected in the PBS / care plan. Recorded by [NURSE].",
+  "awol":
+    "Patient absent from the ward identified on [DATE] at [TIME]. Status: [ABSENT WITHOUT LEAVE (detained) / MISSING (informal)]. Legal status: [SECTION / INFORMAL]. Ward and grounds searched immediately. Actions: nurse in charge informed, [RC / DUTY DOCTOR / FAMILY / POLICE via 101 or 999 - REFERENCE], risk level [DETAILS]. RCRP threshold considered. Recorded by [NURSE]. (Add update note on return or when located.)",
+  "dama":
+    "Patient expressed a wish to self-discharge against medical advice on [DATE] at [TIME]. Legal status: [INFORMAL - free to leave / DETAINED - holding power under s5(2)/s5(4) considered]. Capacity for the decision: [ASSESSED - OUTCOME]. Risks discussed with patient: [DETAILS]. Nurse in charge, RC and duty doctor informed: [WHO]. Outcome: [REMAINED ON WARD / LEFT AT (TIME)]. DAMA form completed and safety-netting given. Recorded by [NURSE].",
+  "transfer-in":
+    "Patient accepted back to the ward on [DATE] from [GENERAL WARD / HOSPITAL] following physical health treatment for [REASON]. Handover received from [WHO]. On return: NEWS2 [SCORE], medications reconciled, wounds / lines / devices [DETAILS], mobility [LEVEL], outstanding investigations or follow-up [DETAILS], VTE and pressure care reviewed. MHA status [SECTION]. Room/bed [ ]. Received by [NURSE].",
+  "tribunal-report":
+    "Mental Health Tribunal nursing report prepared on [DATE] for the hearing on [HEARING DATE]. Covers presentation and engagement on the ward, risk, use of leave, progress against the care plan and discharge planning. Submitted to [MHA OFFICE / TRIBUNAL] on [DATE]. Nurse attending the hearing: [NAME]. Prepared by [NURSE].",
+  "arrange-mha-assessment":
+    "MHA assessment requested on [DATE] following medical review. Reason: [PRESENTATION / RISK]. [DERBY CITY / DERBYSHIRE COUNTY] AMHP service contacted via [PHONE / EMAIL]. Doctors arranged: [SECTION 12 DOCTOR / GP / RC]. Nearest relative and AMHP duties considered. Status: awaiting assessment. Arranged by [NURSE].",
+  "section-136":
+    "Person received under Section 136 at the health-based place of safety on [DATE] at [TIME], brought in by police (reference [IF GIVEN]). 24-hour assessment clock started at [TIME] (extendable once by 12 hours). MHA assessment arranged with [AMHP / SECTION 12 DOCTOR]. Physical and mental state on arrival: [DETAILS]. Any medical concerns escalated. Recorded by [NURSE].",
+  "safeguarding-adults-referral":
+    "Adult safeguarding concern raised on [DATE] under s.42 of the Care Act 2014. Person at risk: [PATIENT]. Nature of concern: [TYPE OF ABUSE OR NEGLECT AND DETAIL]. Referred to [DERBY CITY / DERBYSHIRE COUNTY] Adult Social Care via [PHONE / EMAIL]. Consent: [OBTAINED / OVERRIDDEN - PUBLIC INTEREST OR LACK OF CAPACITY]. Immediate safety actions: [DETAILS]. Reference: [IF GIVEN]. Raised by [NURSE].",
+  "safeguarding-children-referral":
+    "Child safeguarding concern raised on [DATE]. Child: [NAME / DOB / RELATIONSHIP TO PATIENT]. Nature of concern: [DETAILS]. Referred to [DERBY CITY / DERBYSHIRE COUNTY] Starting Point / Children's MASH via [PHONE / EMAIL]. Think Family applied. Parental awareness: [WAS / WAS NOT INFORMED - REASON]. Reference: [IF GIVEN]. Raised by [NURSE].",
+  "peer-conflict-guide":
+    "Peer-on-peer incident on [DATE] at [TIME] involving [PATIENT] and [OTHER PARTY - INITIALS]. What happened: [DESCRIPTION]. Harm or impact: [DETAILS]. Immediate action: [SEPARATION / SUPPORT / MEDICAL REVIEW]. Escalation: [LEVEL / SAFEGUARDING REFERRAL - REFERENCE]. Incident (Datix) form completed. Recorded by [NURSE].",
+  "domestic-abuse-guide":
+    "Domestic abuse concern identified on [DATE] regarding [PATIENT]. Indicators or disclosure: [DETAILS]. Enquiry made with professional curiosity; risk (DASH) considered: [OUTCOME]. Immediate safety planning: [DETAILS]. Onward action: [MARAC / SAFEGUARDING / IDVA REFERRAL - REFERENCE]. Consent: [OBTAINED / OVERRIDDEN]. Recorded by [NURSE].",
+  "non-recent-abuse":
+    "Disclosure of non-recent (historical) abuse made by patient on [DATE]. Response: listened, did not investigate or ask leading questions, reassured. Any current risk to the patient or to children or adults now: [DETAILS]. Onward action: [SAFEGUARDING REFERRAL / POLICE IF CURRENT RISK - REFERENCE]. Patient's wishes: [DETAILS]. Emotional support offered: [DETAILS]. Recorded by [NURSE].",
+  "honour-based-abuse":
+    "Concern regarding honour-based abuse, FGM or forced marriage identified on [DATE] for [PATIENT / FAMILY MEMBER]. Indicators: [DETAILS]. One-chance rule considered; not discussed with family. Discussed with safeguarding lead. Action: [SAFEGUARDING REFERRAL / POLICE / FORCED MARRIAGE UNIT - REFERENCE]. Recorded by [NURSE].",
+  "modern-slavery-radicalisation":
+    "Concern regarding [MODERN SLAVERY / RADICALISATION] identified on [DATE] for [PATIENT]. Indicators: [DETAILS]. Discussed with safeguarding / Prevent lead. Action: [NATIONAL REFERRAL MECHANISM / PREVENT REFERRAL / SAFEGUARDING - REFERENCE]. Recorded by [NURSE].",
+  "faith-belief-abuse":
+    "Concern regarding abuse linked to faith or belief identified on [DATE] for [PATIENT / CHILD]. Indicators: [DETAILS]. Discussed with safeguarding lead. Action: [SAFEGUARDING REFERRAL - REFERENCE]. Recorded by [NURSE].",
+  "send-safeguarding":
+    "Safeguarding consideration for a child or young person with SEND on [DATE]. Child: [NAME / DOB]. Additional vulnerability and communication needs: [DETAILS]. Reasonable adjustments made: [DETAILS]. Action: [SAFEGUARDING REFERRAL / MDT - REFERENCE]. Recorded by [NURSE].",
+  "child-in-need":
+    "Child in Need (s.17 Children Act 1989) consideration on [DATE]. Child: [NAME / DOB]. Needs identified: [DETAILS]. Onward action: [REFERRAL TO CHILDREN'S SOCIAL CARE / MULTI-AGENCY PLAN - REFERENCE]. Think Family applied. Recorded by [NURSE].",
+  "special-guardianship":
+    "Special Guardianship considered or discussed on [DATE] regarding [CHILD]. Context: [DETAILS]. Onward action: [CHILDREN'S SOCIAL CARE / LEGAL - REFERENCE]. Recorded by [NURSE].",
+  "information-sharing":
+    "Information-sharing decision recorded on [DATE] regarding [PATIENT]. Information shared: [WHAT] with [WHO] for [PURPOSE]. Basis: [CONSENT / SAFEGUARDING / VITAL INTERESTS - seven golden rules applied]. Sharing judged necessary and proportionate. Recorded by [NURSE].",
+  "online-safety-children":
+    "Online safety concern regarding a child identified on [DATE]. Nature: [NUDES / CYBERBULLYING / SEXTORTION / GROOMING]. Child: [NAME / DOB]. Action: [SAFEGUARDING REFERRAL / POLICE / CEOP REPORT - REFERENCE]. Evidence preserved as advised. Recorded by [NURSE].",
+  "escalation-pathway":
+    "Safeguarding escalation (children) on [DATE] for [CHILD]. Level: [BRONZE / SILVER / GOLD]. Reason for escalation: [DETAILS]. Escalated to: [WHO]. Outcome or plan: [DETAILS]. Recorded by [NURSE].",
+  "mha-statuses":
+    "Patient's Mental Health Act status discussed and explained on [DATE]. Current status: [SECTION / INFORMAL]. Key points covered with patient: reason for status, rights, appeal routes and discharge provisions (formal s.132 rights recorded separately where detained). Patient's understanding: [DETAILS]. Recorded by [NURSE].",
+};
+
+for (const [id, note] of Object.entries(GUIDE_CASE_NOTES)) {
+  if (GUIDES[id]) GUIDES[id].caseNote = note;
+}

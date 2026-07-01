@@ -970,6 +970,8 @@ function AddTaskModal({
 }) {
   const [taskType, setTaskType] = useState<"ward" | "patient" | "appointment">("ward");
   const [title, setTitle] = useState("");
+  // Bulk mode (team tasks only) - one task per line
+  const [bulkMode, setBulkMode] = useState(false);
   const [category, setCategory] = useState<string>("referral");
   const [patientName, setPatientName] = useState("");
   const [patientSearch, setPatientSearch] = useState("");
@@ -1072,9 +1074,9 @@ function AddTaskModal({
     } else {
       // Ward task - use wardTaskDate for one-off, today for recurring
       const taskDueDate = isRecurring ? formatDate(new Date()) : wardTaskDate;
-      onAdd({
+      const wardBase = {
         ...baseTask,
-        type: "ward",
+        type: "ward" as const,
         dueDate: taskDueDate,
         shift: selectedShift,
         isRecurring,
@@ -1083,11 +1085,19 @@ function AddTaskModal({
         linkedGuideId: linkedGuide || undefined,
         // If requiresApproval is set for repeating tasks, add a note to the description
         description: isRecurring && requiresApproval ? "✅ Leadership approved" : undefined,
-      });
+      };
+      if (bulkMode) {
+        // One task per line - each becomes its own team task with these settings
+        const lines = title.split("\n").map((l) => l.trim()).filter(Boolean);
+        lines.forEach((line) => onAdd({ ...wardBase, title: line }));
+      } else {
+        onAdd(wardBase);
+      }
     }
 
     // Reset form
     setTitle("");
+    setBulkMode(false);
     setPatientName("");
     setPatientRepeat(false);
     setRepeatIntervalDays(7);
@@ -1164,14 +1174,44 @@ function AddTaskModal({
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Task Title *</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder={getPlaceholder()}
-            className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-          />
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-sm font-medium text-gray-700">
+              {bulkMode && taskType === "ward" ? "Task Titles *" : "Task Title *"}
+            </label>
+            {taskType === "ward" && (
+              <button
+                type="button"
+                onClick={() => setBulkMode((b) => !b)}
+                className={`text-xs font-semibold px-2 py-1 rounded-lg transition-colors ${
+                  bulkMode ? "bg-indigo-100 text-indigo-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                }`}
+              >
+                {bulkMode ? "Single task" : "Add several"}
+              </button>
+            )}
+          </div>
+          {bulkMode && taskType === "ward" ? (
+            <>
+              <textarea
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                rows={5}
+                placeholder={"One task per line, e.g.\nRecord fridge temps\nFire door check\nStock resus trolley"}
+                className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none resize-y"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Each line becomes its own team task with the date, shift and priority set below.
+              </p>
+            </>
+          ) : (
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={getPlaceholder()}
+              className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
+            />
+          )}
         </div>
 
         {(taskType === "patient" || taskType === "appointment") && (
@@ -1772,7 +1812,12 @@ function AddTaskModal({
             disabled={!title.trim() || (taskType === "appointment" && !appointmentDate)}
             className="flex-1 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium hover:shadow-lg transition-all disabled:opacity-50"
           >
-            Add Task
+            {bulkMode && taskType === "ward"
+              ? (() => {
+                  const n = title.split("\n").map((l) => l.trim()).filter(Boolean).length;
+                  return n > 1 ? `Add ${n} Tasks` : "Add Task";
+                })()
+              : "Add Task"}
           </button>
         </div>
       </div>
@@ -2496,9 +2541,11 @@ function TasksPageInner() {
   };
 
   const handleAddTask = (newTask: Partial<DiaryTask>) => {
+    // Random suffix keeps ids unique when several tasks are added in the same
+    // tick (bulk add) - Date.now() alone collides.
     const task = {
       ...newTask,
-      id: `task-${Date.now()}`,
+      id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     } as DiaryTask;
     addTask(task);
   };

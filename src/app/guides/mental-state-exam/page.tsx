@@ -28,6 +28,8 @@ export default function MseBuilderPage() {
   // domainId -> selected words (array keeps insertion order for the output)
   const [selected, setSelected] = useState<Record<string, string[]>>({});
   const [openDomains, setOpenDomains] = useState<Record<string, boolean>>({ appearance: true });
+  // domainId -> free-text the nurse adds beyond the chips
+  const [freeText, setFreeText] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
 
   const today = useMemo(() => toLocalDateStr(), []);
@@ -41,20 +43,26 @@ export default function MseBuilderPage() {
   };
 
   const totalSelected = Object.values(selected).reduce((n, arr) => n + arr.length, 0);
+  const hasContent = totalSelected > 0 || Object.values(freeText).some((v) => v.trim() !== "");
 
   // Build the written MSE (plain text, headed lines).
   const output = useMemo(() => {
     const lines: string[] = [];
     for (const d of MSE_DOMAINS) {
       const picks = selected[d.id] || [];
-      if (!picks.length) continue;
-      const body = naturalList(picks);
-      const text = d.prefix ? `${d.title}: ${d.prefix} ${body}.` : `${d.title}: ${cap(body)}.`;
-      lines.push(text);
+      const extra = (freeText[d.id] || "").trim();
+      if (!picks.length && !extra) continue;
+      const segs: string[] = [];
+      if (picks.length) {
+        const body = naturalList(picks);
+        segs.push(d.prefix ? `${d.prefix} ${body}` : cap(body));
+      }
+      if (extra) segs.push(cap(extra));
+      lines.push(`${d.title}: ${segs.join(". ")}.`);
     }
     if (!lines.length) return "";
     return `Mental State Examination (${today})\n\n${lines.join("\n")}`;
-  }, [selected, today]);
+  }, [selected, freeText, today]);
 
   const copy = async () => {
     if (!output) return;
@@ -72,7 +80,7 @@ export default function MseBuilderPage() {
     setTimeout(() => setCopied(false), 1600);
   };
 
-  const reset = () => setSelected({});
+  const reset = () => { setSelected({}); setFreeText({}); };
   const wordCount = output ? output.split(/\s+/).filter(Boolean).length : 0;
 
   return (
@@ -118,7 +126,7 @@ export default function MseBuilderPage() {
               Your MSE
             </span>
             <span className="text-[11px] font-mono text-slate-400">
-              {totalSelected ? `${wordCount} words` : "empty"}
+              {hasContent ? `${wordCount} words` : "empty"}
             </span>
           </div>
           <div className="px-4 pb-4">
@@ -143,7 +151,7 @@ export default function MseBuilderPage() {
               </button>
               <button
                 onClick={reset}
-                disabled={!totalSelected}
+                disabled={!hasContent}
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold bg-slate-700 text-slate-200 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -176,9 +184,9 @@ export default function MseBuilderPage() {
                 >
                   <span className="text-xs font-mono text-gray-400 w-5">{String(i + 1).padStart(2, "0")}</span>
                   <span className="font-bold text-gray-800 flex-1">{domain.title}</span>
-                  {picks.length > 0 && (
+                  {(picks.length > 0 || (freeText[domain.id] || "").trim() !== "") && (
                     <span className="text-xs font-semibold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full">
-                      {picks.length}
+                      {picks.length || "•"}
                     </span>
                   )}
                   {isOpen ? (
@@ -223,6 +231,18 @@ export default function MseBuilderPage() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                    <div className="mt-3">
+                      <label className="block text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">
+                        Free text (anything the chips do not cover)
+                      </label>
+                      <textarea
+                        value={freeText[domain.id] || ""}
+                        onChange={(e) => setFreeText((f) => ({ ...f, [domain.id]: e.target.value }))}
+                        rows={2}
+                        placeholder={`Add your own ${domain.title.toLowerCase()} detail...`}
+                        className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400 focus:border-purple-400 resize-y"
+                      />
                     </div>
                   </div>
                 )}

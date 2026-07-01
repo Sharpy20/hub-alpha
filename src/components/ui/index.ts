@@ -9,3 +9,4 @@ export { ConfirmDialog } from "./confirm-dialog";
 export { VerificationBadge } from "./VerificationBadge";
 export { StatusBadge } from "./StatusBadge";
 export { Breadcrumb } from "./Breadcrumb";
+export { GuideSelect } from "./GuideSelect";

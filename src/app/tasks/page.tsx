@@ -54,7 +54,7 @@ import {
   TaskDetailModal,
   BulkPatientTasksModal,
 } from "@/components/modals";
-import { ConfirmDialog } from "@/components/ui";
+import { ConfirmDialog, GuideSelect } from "@/components/ui";
 
 // Helper functions – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {
@@ -1115,23 +1115,6 @@ function AddTaskModal({
     onClose();
   };
 
-  const REFERRAL_OPTIONS = [
-    { id: "imha-advocacy", label: "IMHA / Advocacy" },
-    { id: "picu", label: "PICU" },
-    { id: "safeguarding", label: "Safeguarding Adults" },
-    { id: "dietitian", label: "Dietitian" },
-    { id: "social-care", label: "Social Care" },
-    { id: "homeless-discharge", label: "Housing / DTR" },
-  ];
-
-  const GUIDE_OPTIONS = [
-    { id: "fridge-temps", label: "Fridge Temperature Check" },
-    { id: "capacity-assessment", label: "Capacity Assessment" },
-    { id: "news2", label: "NEWS2 Observations" },
-    { id: "section-17", label: "Section 17 Leave" },
-    { id: "discharge-planning", label: "Discharge Planning" },
-  ];
-
   // Get placeholder based on task type
   const getPlaceholder = () => {
     switch (taskType) {
@@ -1408,18 +1391,12 @@ function AddTaskModal({
                 </button>
                 {showApptReferral && (
                   <div className="p-3 border-t border-gray-200 bg-gray-50">
-                    <select
+                    <GuideSelect
                       value={apptLinkedReferral}
-                      onChange={(e) => setApptLinkedReferral(e.target.value)}
+                      onChange={setApptLinkedReferral}
+                      placeholder="Select referral..."
                       className="w-full p-2 border border-gray-200 rounded-lg text-sm focus:border-indigo-500 focus:outline-none"
-                    >
-                      <option value="">Select referral...</option>
-                      {REFERRAL_OPTIONS.map((ref) => (
-                        <option key={ref.id} value={ref.id}>
-                          {ref.label}
-                        </option>
-                      ))}
-                    </select>
+                    />
                   </div>
                 )}
               </div>
@@ -1442,18 +1419,12 @@ function AddTaskModal({
                 </button>
                 {showApptGuide && (
                   <div className="p-3 border-t border-gray-200 bg-gray-50">
-                    <select
+                    <GuideSelect
                       value={apptLinkedGuide}
-                      onChange={(e) => setApptLinkedGuide(e.target.value)}
+                      onChange={setApptLinkedGuide}
+                      placeholder="Select guide..."
                       className="w-full p-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-500 focus:outline-none"
-                    >
-                      <option value="">Select guide...</option>
-                      {GUIDE_OPTIONS.map((guide) => (
-                        <option key={guide.id} value={guide.id}>
-                          {guide.label}
-                        </option>
-                      ))}
-                    </select>
+                    />
                   </div>
                 )}
               </div>
@@ -1725,18 +1696,11 @@ function AddTaskModal({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Link to Referral Guide (optional)
             </label>
-            <select
+            <GuideSelect
               value={linkedReferral}
-              onChange={(e) => setLinkedReferral(e.target.value)}
+              onChange={setLinkedReferral}
               className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-            >
-              <option value="">No linked guide</option>
-              {REFERRAL_OPTIONS.map((ref) => (
-                <option key={ref.id} value={ref.id}>
-                  {ref.label}
-                </option>
-              ))}
-            </select>
+            />
           </div>
         )}
 
@@ -1746,18 +1710,11 @@ function AddTaskModal({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Optionally match to a guide
             </label>
-            <select
+            <GuideSelect
               value={linkedGuide}
-              onChange={(e) => setLinkedGuide(e.target.value)}
+              onChange={setLinkedGuide}
               className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-            >
-              <option value="">No linked guide</option>
-              {GUIDE_OPTIONS.map((guide) => (
-                <option key={guide.id} value={guide.id}>
-                  {guide.label}
-                </option>
-              ))}
-            </select>
+            />
           </div>
         )}
 

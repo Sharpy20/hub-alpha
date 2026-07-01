@@ -11,14 +11,16 @@ import {
 } from "@/lib/types";
 import { getActivePatientsByWard } from "@/lib/data/tasks";
 import { toLocalDateStr } from "@/lib/utils/date";
+import { GuideSelect } from "@/components/ui";
 
 interface Row {
   title: string;
   category: PatientTaskCategory;
   priority: TaskPriority;
+  guideId: string;
 }
 
-const emptyRow = (): Row => ({ title: "", category: "referral", priority: "routine" });
+const emptyRow = (): Row => ({ title: "", category: "referral", priority: "routine", guideId: "" });
 
 // Bulk patient-task entry: pick one patient, then add several tasks for them in a
 // table. Shared by the diary Add Task flow ("Add several") and the Patients page.
@@ -88,6 +90,7 @@ export function BulkPatientTasksModal({
         ward: selectedPatient?.ward || wardCap,
         dueDate,
         carryOver: true,
+        linkedGuideId: r.guideId || undefined,
         createdAt: today,
         createdBy: currentUserName || "Current User",
         ...claim,
@@ -226,16 +229,17 @@ export function BulkPatientTasksModal({
             </div>
 
             {/* Column headers (desktop) */}
-            <div className="hidden sm:grid grid-cols-[1fr_170px_140px_36px] gap-2 px-1 mb-1">
+            <div className="hidden sm:grid grid-cols-[1fr_140px_120px_160px_36px] gap-2 px-1 mb-1">
               <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Task</span>
               <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Category</span>
               <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Priority</span>
+              <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Guide (optional)</span>
               <span />
             </div>
 
             <div className="space-y-2">
               {rows.map((row, i) => (
-                <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_170px_140px_36px] gap-2 items-center">
+                <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_140px_120px_160px_36px] gap-2 items-center">
                   <input
                     type="text"
                     value={row.title}
@@ -265,6 +269,12 @@ export function BulkPatientTasksModal({
                       </option>
                     ))}
                   </select>
+                  <GuideSelect
+                    value={row.guideId}
+                    onChange={(id) => updateRow(i, { guideId: id })}
+                    placeholder="Link guide..."
+                    className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm bg-white focus:border-indigo-500 focus:outline-none"
+                  />
                   <button
                     onClick={() => removeRow(i)}
                     disabled={rows.length <= 1}

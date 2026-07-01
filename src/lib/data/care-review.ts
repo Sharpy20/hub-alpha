@@ -27,7 +27,7 @@ export const REVIEW_ITEMS: ReviewItem[] = [
 // One-time tasks to complete on admission.
 export const ADMISSION_ITEMS: { id: string; label: string; guideId?: string }[] = [
   { id: "rmp", label: "Risk Management Plan completed", guideId: "risk-assessment" },
-  { id: "phys-health", label: "Physical health assessment completed", guideId: "news2" },
+  { id: "phys-health", label: "Physical health assessment completed" },
   { id: "advocacy", label: "Advocacy (IMHA) referral offered", guideId: "imha-advocacy" },
   { id: "rights", label: "Rights read (Section 132)", guideId: "section-132" },
   { id: "consent-initial", label: "Consent to share asked", guideId: "information-sharing" },

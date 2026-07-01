@@ -11,6 +11,7 @@ import {
   getPatientsByWard,
 } from "@/lib/data/tasks";
 import { WARDS, Patient, DiaryTask } from "@/lib/types";
+import { CareReviewRollup } from "@/components/reports/CareReviewRollup";
 import {
   FileText,
   Users,
@@ -475,6 +476,9 @@ export default function ReportsPage() {
 
         {!showReport ? (
           <>
+            {/* Care review roll-up (weekly audit at a glance) */}
+            <CareReviewRollup />
+
             {/* Report Scope Selection */}
             <Card>
               <CardContent className="p-6">

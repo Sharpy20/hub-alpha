@@ -272,6 +272,7 @@ export function BulkPatientTasksModal({
                   <GuideSelect
                     value={row.guideId}
                     onChange={(id) => updateRow(i, { guideId: id })}
+                    suggestFrom={row.title}
                     placeholder="Link guide..."
                     className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm bg-white focus:border-indigo-500 focus:outline-none"
                   />

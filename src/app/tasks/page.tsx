@@ -1394,6 +1394,7 @@ function AddTaskModal({
                     <GuideSelect
                       value={apptLinkedReferral}
                       onChange={setApptLinkedReferral}
+                      suggestFrom={title}
                       placeholder="Select referral..."
                       className="w-full p-2 border border-gray-200 rounded-lg text-sm focus:border-indigo-500 focus:outline-none"
                     />
@@ -1422,6 +1423,7 @@ function AddTaskModal({
                     <GuideSelect
                       value={apptLinkedGuide}
                       onChange={setApptLinkedGuide}
+                      suggestFrom={title}
                       placeholder="Select guide..."
                       className="w-full p-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-500 focus:outline-none"
                     />
@@ -1699,6 +1701,7 @@ function AddTaskModal({
             <GuideSelect
               value={linkedReferral}
               onChange={setLinkedReferral}
+              suggestFrom={title}
               className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
             />
           </div>
@@ -1713,6 +1716,7 @@ function AddTaskModal({
             <GuideSelect
               value={linkedGuide}
               onChange={setLinkedGuide}
+              suggestFrom={title}
               className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
             />
           </div>

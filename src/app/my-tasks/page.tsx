@@ -6,7 +6,7 @@ import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import { useV2Href } from "@/lib/hooks/useV2";
 import Link from "next/link";
-import { Users, ClipboardList, CalendarDays, Info, UserSquare2, Filter } from "lucide-react";
+import { Users, ClipboardList, CalendarDays, Info, UserPlus, Filter } from "lucide-react";
 import { DiaryTask } from "@/lib/types";
 import { KanbanBoard } from "@/components/kanban";
 import {
@@ -182,15 +182,15 @@ export default function MyTasksPage() {
           {/* Add my patients tasks toggle */}
           <button
             onClick={() => setShowMyPatients(!showMyPatients)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium transition-all ${
+            className={`flex items-center gap-2 px-3 py-2 rounded-xl font-medium text-sm transition-all ${
               showMyPatients
-                ? "bg-teal-100 text-teal-800 ring-2 ring-teal-300"
+                ? "bg-purple-100 text-purple-800 ring-2 ring-purple-300"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
-            title="Include tasks for patients where you are the ward professional"
+            title={showMyPatients ? "Showing tasks for your patients too (claimed by anyone)" : "Showing only tasks you personally claimed"}
           >
-            <UserSquare2 className="w-5 h-5" />
-            <span className="hidden sm:inline">{showMyPatients ? "My Patients Added" : "Add My Patients Tasks"}</span>
+            <UserPlus className="w-4 h-4" />
+            {showMyPatients ? "My tasks + my patients" : "My tasks only"}
           </button>
 
           <div className="flex items-center gap-2 ml-auto" />

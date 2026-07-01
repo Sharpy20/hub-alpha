@@ -9,17 +9,31 @@ import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
 import { ADMISSION_CHECKLIST } from "@/lib/data/guides";
+import { DEMO_PATIENTS } from "@/lib/data/tasks";
 import {
-  ADMISSION_CHECKLIST_MAP, loadTracker, saveTracker, seedPatient,
+  ADMISSION_ITEMS, loadTracker, saveTracker, seedPatient,
 } from "@/lib/data/care-review";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { ArrowLeft, Check, Printer, RotateCcw, ClipboardList, Info } from "lucide-react";
 
+// Every checklist item is a care-review admission item (same id), so ticks map
+// 1:1 to the patient's Admission badge.
+const ADMISSION_IDS = new Set(ADMISSION_ITEMS.map((i) => i.id));
+
 export default function AdmissionChecklistPage() {
   const v2Href = useV2Href();
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [patient, setPatient] = useState<Patient | null>(null);
+
+  // Auto-link a patient passed via ?patient=<id> (e.g. from the Care Review pop-up).
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("patient");
+    if (id) {
+      const p = DEMO_PATIENTS.find((x) => x.id === id);
+      if (p) setPatient(p);
+    }
+  }, []);
 
   // Cross-reference with the patient's Care Review admission tracker: when a
   // patient is linked, pull their already-done admission tasks into the ticks,
@@ -35,9 +49,7 @@ export default function AdmissionChecklistPage() {
     }
     setChecked((c) => {
       const next = { ...c };
-      for (const [checklistId, crId] of Object.entries(ADMISSION_CHECKLIST_MAP)) {
-        next[checklistId] = !!pt.admission[crId];
-      }
+      for (const it of ADMISSION_ITEMS) next[it.id] = !!pt.admission[it.id];
       return next;
     });
   }, [patient]);
@@ -52,13 +64,13 @@ export default function AdmissionChecklistPage() {
 
   const toggle = (id: string) => {
     const nowChecked = !checked[id];
-    // Sync mapped items to the linked patient's Care Review admission tracker.
-    if (patient && ADMISSION_CHECKLIST_MAP[id]) {
+    // Ticks on real checklist items (not sub-items) sync to the linked patient's
+    // Care Review admission tracker.
+    if (patient && ADMISSION_IDS.has(id)) {
       const tr = loadTracker();
       const pt = tr[patient.id] || { admission: {}, reviews: {} };
-      const crId = ADMISSION_CHECKLIST_MAP[id];
-      if (nowChecked) pt.admission[crId] = toLocalDateStr();
-      else delete pt.admission[crId];
+      if (nowChecked) pt.admission[id] = toLocalDateStr();
+      else delete pt.admission[id];
       tr[patient.id] = pt;
       saveTracker(tr);
     }
@@ -148,15 +160,26 @@ export default function AdmissionChecklistPage() {
           </div>
         </div>
 
-        {/* Note */}
-        <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-xl p-3 text-sm text-blue-800 print:hidden">
-          <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
-          <p>
-            Ticks are just for you and reset when you leave the page - this is a memory aid, not a patient record.
-            Record completed tasks in SystemOne. Links marked{" "}
-            <span className="font-semibold text-amber-800">FOCUS</span> only open on a Trust computer.
-          </p>
-        </div>
+        {/* Note - persistent when a patient is linked, memory aid otherwise */}
+        {patient ? (
+          <div className="flex items-start gap-2 bg-green-50 border border-green-100 rounded-xl p-3 text-sm text-green-800 print:hidden">
+            <Check className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <p>
+              Ticks are saved against <span className="font-semibold">{patient.name}</span> and update their Care Review
+              admission badge - the badge only turns green when every item here is done. Still record completed tasks in
+              SystmOne. Links marked <span className="font-semibold text-amber-800">FOCUS</span> only open on a Trust computer.
+            </p>
+          </div>
+        ) : (
+          <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-xl p-3 text-sm text-blue-800 print:hidden">
+            <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <p>
+              Link a patient above to save progress against them. Otherwise ticks are just for you and reset when you
+              leave the page - a memory aid, not a patient record. Record completed tasks in SystmOne. Links marked{" "}
+              <span className="font-semibold text-amber-800">FOCUS</span> only open on a Trust computer.
+            </p>
+          </div>
+        )}
 
         {/* Groups */}
         {ADMISSION_CHECKLIST.map((group) => {

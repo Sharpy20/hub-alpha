@@ -5,6 +5,7 @@
 // admission date so the board looks alive without real data.
 
 import { toLocalDateStr } from "@/lib/utils/date";
+import { ADMISSION_CHECKLIST } from "./guides/admission";
 
 export interface ReviewItem {
   id: string;
@@ -24,30 +25,31 @@ export const REVIEW_ITEMS: ReviewItem[] = [
   { id: "safety-plan", label: "Safety plan", short: "Safety plan", intervalDays: 30, guideId: "safety-plan" },
 ];
 
-// One-time tasks to complete on admission.
-export const ADMISSION_ITEMS: { id: string; label: string; guideId?: string }[] = [
-  { id: "rmp", label: "Risk Management Plan completed", guideId: "risk-assessment" },
-  { id: "phys-health", label: "Physical health assessment completed" },
-  { id: "advocacy", label: "Advocacy (IMHA) referral offered", guideId: "imha-advocacy" },
-  { id: "rights", label: "Rights read (Section 132)", guideId: "section-132" },
-  { id: "consent-initial", label: "Consent to share asked", guideId: "information-sharing" },
-  { id: "care-plan-started", label: "Care plan started", guideId: "care-plan" },
-  { id: "safety-plan-started", label: "Safety plan started", guideId: "safety-plan" },
-  { id: "honos-baseline", label: "HONOS baseline recorded" },
-];
-
-// Maps Admission Checklist guide item ids -> care-review admission item ids, so
-// ticking the checklist for a linked patient updates their Care Review admission
-// badge (and vice versa). Items with no counterpart are simply not synced.
-export const ADMISSION_CHECKLIST_MAP: Record<string, string> = {
-  "risk-management": "rmp",
-  "physical-health": "phys-health",
-  "advocacy": "advocacy",
-  "read-rights": "rights",
-  "care-plan": "care-plan-started",
-  "safety-plan": "safety-plan-started",
-  "honos": "honos-baseline",
+// The admission tasks ARE the Admission Checklist items (same ids), so the
+// patient's Admission badge only goes green when the whole checklist is done and
+// ticking either place keeps both in sync. A few items link to a relevant guide.
+const ADMISSION_GUIDE_MAP: Record<string, string> = {
+  "risk-screening": "risk-assessment",
+  "risk-management": "risk-assessment",
+  "capacity-admission": "capacity-assessment",
+  "capacity-treatment": "capacity-assessment",
+  "safety-plan": "safety-plan",
+  "care-plan": "care-plan",
+  "read-rights": "section-132",
+  "advocacy": "imha-advocacy",
+  "news2": "news2",
 };
+
+export interface AdmissionItem {
+  id: string;
+  label: string;
+  group: string;
+  guideId?: string;
+}
+
+export const ADMISSION_ITEMS: AdmissionItem[] = ADMISSION_CHECKLIST.flatMap((g) =>
+  g.items.map((i) => ({ id: i.id, label: i.text, group: g.title, guideId: ADMISSION_GUIDE_MAP[i.id] }))
+);
 
 export interface PatientTracker {
   admission: Record<string, string>; // itemId -> date completed (YYYY-MM-DD)
@@ -55,7 +57,9 @@ export interface PatientTracker {
 }
 export type CareTracker = Record<string, PatientTracker>;
 
-const KEY = "wardhub_care_tracker";
+// v2: admission items now derive from the full Admission Checklist (new ids), so
+// bump the key to discard any old-shaped tracker and re-seed cleanly.
+const KEY = "wardhub_care_tracker_v2";
 
 export function loadTracker(): CareTracker {
   if (typeof window === "undefined") return {};
@@ -109,15 +113,15 @@ export function seedPatient(patientId: string, admissionDate: string, today: str
   const reviews: Record<string, string> = {};
 
   if (daysAdmitted < 7) {
-    // New admission: mark the first few admission tasks done, reviews start today.
-    const done = 3 + (h % 3); // 3-5 of 8 done
+    // New admission: still working through the checklist - mark a majority done.
+    const done = Math.floor(ADMISSION_ITEMS.length * 0.6) + (h % 4);
     ADMISSION_ITEMS.forEach((it, i) => {
       if (i < done) admission[it.id] = admissionDate.slice(0, 10);
     });
     REVIEW_ITEMS.forEach((it) => {
       // only the started items have a baseline review date
-      if (admission["care-plan-started"] && it.id.startsWith("care-plan")) reviews[it.id] = admissionDate.slice(0, 10);
-      if (admission["safety-plan-started"] && it.id === "safety-plan") reviews[it.id] = admissionDate.slice(0, 10);
+      if (admission["care-plan"] && it.id.startsWith("care-plan")) reviews[it.id] = admissionDate.slice(0, 10);
+      if (admission["safety-plan"] && it.id === "safety-plan") reviews[it.id] = admissionDate.slice(0, 10);
     });
   } else {
     // Established patient: all admission tasks done.

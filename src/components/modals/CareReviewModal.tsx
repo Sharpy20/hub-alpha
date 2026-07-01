@@ -1,6 +1,7 @@
 "use client";
 
-import { X, Check, Clock, AlertTriangle, BookOpen } from "lucide-react";
+import Link from "next/link";
+import { X, Clock, AlertTriangle, BookOpen, ClipboardCheck } from "lucide-react";
 import { Patient } from "@/lib/types";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { useV2Href } from "@/lib/hooks/useV2";
@@ -45,13 +46,8 @@ export function CareReviewModal({
 
   const today = toLocalDateStr();
   const adm = admissionProgress(tracker);
-
-  const toggleAdmission = (id: string) => {
-    const admission = { ...tracker.admission };
-    if (admission[id]) delete admission[id];
-    else admission[id] = today;
-    onUpdate({ ...tracker, admission });
-  };
+  const outstanding = ADMISSION_ITEMS.filter((it) => !tracker.admission[it.id]);
+  const admPct = adm.total ? Math.round((adm.done / adm.total) * 100) : 0;
 
   const markReviewed = (id: string) => {
     onUpdate({ ...tracker, reviews: { ...tracker.reviews, [id]: today } });
@@ -77,47 +73,56 @@ export function CareReviewModal({
         </div>
 
         <div className="p-5 space-y-6">
-          {/* Admission tasks */}
+          {/* Admission tasks - summary + link to the full Admission Checklist */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-bold text-gray-800">Admission tasks</h3>
               <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${adm.complete ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}>
-                {adm.complete ? "Complete" : `${adm.done}/${adm.total}`}
+                {adm.complete ? "Complete" : `${adm.done}/${adm.total} done`}
               </span>
             </div>
-            <div className="space-y-1.5">
-              {ADMISSION_ITEMS.map((it) => {
-                const done = tracker.admission[it.id];
-                return (
-                  <div key={it.id} className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => toggleAdmission(it.id)}
-                      className={`flex-1 flex items-center gap-3 p-2.5 rounded-lg text-left transition-colors ${
-                        done ? "bg-green-50 hover:bg-green-100" : "bg-gray-50 hover:bg-gray-100"
-                      }`}
-                    >
-                      <span className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 ${done ? "bg-green-600 text-white" : "border-2 border-gray-300"}`}>
-                        {done && <Check className="w-3.5 h-3.5" />}
-                      </span>
-                      <span className={`flex-1 text-sm ${done ? "text-green-900" : "text-gray-700"}`}>{it.label}</span>
-                      {done && <span className="text-[11px] text-green-600">{new Date(done).toLocaleDateString("en-GB")}</span>}
-                    </button>
-                    {it.guideId && (
-                      <a
-                        href={v2Href(`/guides/${it.guideId}`)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="Open the relevant guide"
-                        className="p-2 text-indigo-500 hover:bg-indigo-50 rounded-lg flex-shrink-0"
-                      >
-                        <BookOpen className="w-4 h-4" />
-                      </a>
-                    )}
-                  </div>
-                );
-              })}
+            <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-3">
+              <div
+                className={`h-full transition-all ${adm.complete ? "bg-green-500" : "bg-amber-400"}`}
+                style={{ width: `${admPct}%` }}
+              />
             </div>
-            <p className="text-xs text-gray-400 mt-2">Tap to tick. Goes green on the tile when all are done.</p>
+
+            {!adm.complete && (
+              <div className="mb-3">
+                <p className="text-[11px] font-mono uppercase tracking-wider text-gray-400 mb-1">Outstanding</p>
+                <div className="space-y-1">
+                  {outstanding.map((it) => (
+                    <div key={it.id} className="flex items-center gap-2 text-sm text-gray-600">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+                      <span className="flex-1 min-w-0 truncate">{it.label}</span>
+                      {it.guideId && (
+                        <a
+                          href={v2Href(`/guides/${it.guideId}`)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Open the relevant guide"
+                          className="p-1 text-indigo-500 hover:bg-indigo-50 rounded flex-shrink-0"
+                        >
+                          <BookOpen className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <Link
+              href={v2Href(`/guides/admission-checklist?patient=${patient.id}`)}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-colors no-underline"
+            >
+              <ClipboardCheck className="w-4 h-4" />
+              Open Admission Checklist
+            </Link>
+            <p className="text-xs text-gray-400 mt-2">
+              Tick items off in the Admission Checklist - the badge goes green when every item is done.
+            </p>
           </div>
 
           {/* Recurring reviews */}

@@ -225,14 +225,6 @@ export const ADMISSION_CHECKLIST: ChecklistGroup[] = [
         // Project rule: advocacy is handled by the IMHA guide (city/county branching there).
         links: [{ label: "IMHA / advocacy guide", url: "/guides/imha-advocacy" }],
       },
-      {
-        id: "online-forms",
-        text: "Online MHA forms",
-        links: [
-          { label: "MHA 1983 statutory forms", url: "https://www.mentalhealthlaw.co.uk/Mental_Health_Act_1983_Statutory_Forms" },
-          { label: "Section papers checker", url: "/guides/mha-checker" },
-        ],
-      },
     ],
   },
 ];

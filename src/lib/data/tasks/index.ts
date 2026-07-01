@@ -36,17 +36,25 @@ const fiveDaysStr = formatDate(addDays(today, 5));
 // Staff names - use imported STAFF_NAMES
 const WARD_STAFF = STAFF_NAMES;
 
-// Patient naming function - generates Patient_1 through Patient_20 for each ward
-// Ward prefix added for uniqueness across wards
-const getPatientName = (ward: string, index: number): string => {
-  const wardPrefixes: Record<string, string> = {
-    Byron: "BY",
-    Shelley: "SH",
-    Keats: "KE",
-    Wordsworth: "WO",
-    Dickinson: "DI",
-  };
-  return `Patient_${wardPrefixes[ward]}_${index + 1}`;
+// Real (fictional) patient names - 5 per ward for now (Mike: 5 max per ward).
+const PATIENT_NAMES: Record<string, string[]> = {
+  Byron: ["Arthur Pledger", "Denise Holt", "Marcus Quinn", "Yvonne Carr", "Liam Ashby"],
+  Shelley: ["Brenda Nash", "Colin Reeves", "Aisha Karim", "Gordon Platt", "Melanie Dodd"],
+  Keats: ["Harold Venn", "Tina Busby", "Omar Sadiq", "Pauline Rooke", "Wesley Groom"],
+  Wordsworth: ["Edith Marsh", "Ryan Colgan", "Nadia Bell", "Stuart Vane", "Gloria Ashton"],
+  Dickinson: ["Bernard Lowe", "Kayleigh Munro", "Idris Kane", "Sheila Prewett", "Tony Farrow"],
+};
+const getPatientName = (ward: string, index: number): string =>
+  PATIENT_NAMES[ward]?.[index] || `Patient ${index + 1}`;
+
+// Consultant psychiatrist per ward (kept out of the ward staff list so the staff
+// list stays nurses/leadership; used for patient.consultant + appointments).
+const CONSULTANTS: Record<string, string> = {
+  Byron: "Dr. Rachel Mbeki",
+  Shelley: "Dr. Alan Whitaker",
+  Keats: "Dr. Fiona Grant",
+  Wordsworth: "Dr. Peter Hollis",
+  Dickinson: "Dr. Nina Kaur",
 };
 
 // Legal statuses distribution (weighted for realistic ward mix)
@@ -106,15 +114,14 @@ const generateAllPatients = (): Patient[] => {
 
   for (const ward of WARDS) {
     const staff = WARD_STAFF[ward];
-    const doctors = staff.filter(s => s.startsWith("Dr."));
-    const nurses = staff.filter(s => !s.startsWith("Dr."));
+    const nurses = staff; // all ward staff are nurses/leadership now (consultants are separate)
     // Get eligible ward professionals (staff, lead, manager - not ward_admin/senior_admin)
     const wpCandidates = getWardProfessionalCandidates(ward);
     const wardProfessionals = wpCandidates.length > 0
       ? wpCandidates.map(s => s.name)
       : nurses.slice(0, 4); // Fallback to first 4 nurses
 
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < (PATIENT_NAMES[ward]?.length || 0); i++) {
       const patientName = getPatientName(ward, i);
       const status = PATIENT_STATUSES[i % PATIENT_STATUSES.length];
       const legalStatus = LEGAL_STATUSES[i % LEGAL_STATUSES.length];
@@ -140,7 +147,7 @@ const generateAllPatients = (): Patient[] => {
         admissionDate: generateAdmissionDate(i),
         admissionTime: generateAdmissionTime(i),
         namedNurse: nurses[i % nurses.length],
-        consultant: doctors[i % doctors.length],
+        consultant: CONSULTANTS[ward],
         wardProfessional,
         ...(alerts.length > 0 && { alerts }),
         ...(status === "pending_discharge" && { expectedDischargeDate: tomorrowStr }),
@@ -377,7 +384,7 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
 const generateAppointments = (ward: string, startId: number): Appointment[] => {
   const wardPatients = DEMO_PATIENTS.filter(p => p.ward === ward && p.status !== "discharged");
   const staff = WARD_STAFF[ward];
-  const doctors = staff.filter(s => s.startsWith("Dr."));
+  const consultant = CONSULTANTS[ward];
   const appointments: Appointment[] = [];
   let id = startId;
 
@@ -396,12 +403,12 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
     appointmentDate: yesterdayStr,
     appointmentTime: "10:00",
     location: "Ward Office",
-    attendees: [doctors[0], staff[0], "OT"],
+    attendees: [consultant, staff[0], "OT"],
     ward,
     createdAt: twoDaysAgoStr,
     createdBy: "System",
     completedAt: yesterdayStr,
-    completedBy: doctors[0],
+    completedBy: consultant,
   });
 
   // Today's appointments
@@ -417,7 +424,7 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
     appointmentDate: todayStr,
     appointmentTime: "14:00",
     location: "Conference Room A",
-    attendees: [doctors[0], "IMHA", "Social Worker", "Legal Rep"],
+    attendees: [consultant, "IMHA", "Social Worker", "Legal Rep"],
     ward,
     createdAt: "2025-01-10",
     createdBy: "MHA Office",
@@ -436,7 +443,7 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
     appointmentDate: tomorrowStr,
     appointmentTime: "14:30",
     location: "Family Room",
-    attendees: [doctors[1] || doctors[0], "Social Worker", "Family"],
+    attendees: [consultant, "Social Worker", "Family"],
     ward,
     createdAt: todayStr,
     createdBy: staff[1],
@@ -454,10 +461,10 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
     appointmentDate: threeDaysStr,
     appointmentTime: "10:00",
     location: "MDT Room",
-    attendees: [doctors[0], staff[0], "Social Worker", "OT", "Psychology"],
+    attendees: [consultant, staff[0], "Social Worker", "OT", "Psychology"],
     ward,
     createdAt: todayStr,
-    createdBy: doctors[0],
+    createdBy: consultant,
   });
 
   return appointments;

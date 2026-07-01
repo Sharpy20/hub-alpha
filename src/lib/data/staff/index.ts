@@ -4,38 +4,16 @@ import { StaffMember, UserRole } from "@/lib/types";
 export const WARDS = ["Byron", "Shelley", "Keats", "Wordsworth", "Dickinson"] as const;
 export type WardName = (typeof WARDS)[number];
 
-// Staff member names for each ward
-// First entries are role-based positions, then regular staff follow
-const STAFF_LETTERS = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T"];
-
-const generateStaffNames = (wardPrefix: string, wardName: string): string[] => {
-  // First entries are the named role positions
-  const names = [
-    `${wardName} Ward Admin`,
-    `${wardName} Senior Admin`,
-    `${wardName} Lead`,
-    `${wardName} Manager`,
-  ];
-
-  // Add the rest of the staff (16 more to reach 20)
-  STAFF_LETTERS.slice(0, 16).forEach((letter, i) => {
-    // Make some doctors (indices 2, 5 in the letter array - typically senior positions)
-    if (i === 2 || i === 5) {
-      names.push(`Dr. ${wardPrefix}_${letter}`);
-    } else {
-      names.push(`Staff_${wardPrefix}_${letter}`);
-    }
-  });
-
-  return names;
-};
-
+// Real (fictional) staff names - 5 per ward for now (Mike: 5 max per ward).
+// Role is assigned by INDEX in getRoleForIndex below: 0 Ward Admin, 1 Senior
+// Admin, 2 Lead, 3 Manager, 4 Staff. Consultants are separate (CONSULTANTS in
+// tasks/index.ts) so the ward staff list stays nurse/leadership only.
 export const STAFF_NAMES: Record<string, string[]> = {
-  Byron: generateStaffNames("BY", "Byron"),
-  Shelley: generateStaffNames("SH", "Shelley"),
-  Keats: generateStaffNames("KE", "Keats"),
-  Wordsworth: generateStaffNames("WO", "Wordsworth"),
-  Dickinson: generateStaffNames("DI", "Dickinson"),
+  Byron: ["Karen Whitfield", "Paul Roberts", "Emma Docherty", "James Okafor", "Sophie Bennett"],
+  Shelley: ["Lisa Hammond", "David Chen", "Grace Adeyemi", "Tom Fielding", "Hannah Price"],
+  Keats: ["Marie Dawson", "Steven Blake", "Priya Nair", "Chris O'Neill", "Amy Sutton"],
+  Wordsworth: ["Janet Cole", "Mohammed Iqbal", "Rebecca Lloyd", "Gary Simmons", "Olivia Reid"],
+  Dickinson: ["Susan Frost", "Daniel Osei", "Chloe Barnes", "Neil Patterson", "Jack Merton"],
 };
 
 // Role distribution pattern: first four are named roles, rest are normal staff

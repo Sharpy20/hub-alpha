@@ -90,7 +90,7 @@ export function Providers({ children }: { children: ReactNode }) {
       // No saved user: default to a demo staff member so visitors can use the
       // diary straight away without logging in. The login page is still there
       // to switch user/ward.
-      setUser({ name: "Staff_BY_D", role: "staff", ward: "byron", isContributor: false });
+      setUser({ name: "Sophie Bennett", role: "staff", ward: "byron", isContributor: false });
     }
     const savedGdpr = localStorage.getItem("wardhub_gdpr") || localStorage.getItem("inpatient_hub_gdpr");
     if (savedGdpr === "true") {

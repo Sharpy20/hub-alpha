@@ -5,6 +5,8 @@ import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import { FocusLinks } from "@/components/guides/FocusLinks";
+import { PatientLink } from "@/components/guides/PatientLink";
+import { Patient } from "@/lib/types";
 import {
   CAREPLAN_SECTIONS, CAREPLAN_PRINCIPLES, CAREPLAN_TEACHING, CAREPLAN_EXAMPLE,
   type CareSection,
@@ -181,6 +183,7 @@ function Collapse({ icon: Icon, title, children }: { icon: typeof Info; title: s
 export default function CarePlanPage() {
   const v2Href = useV2Href();
   const [state, setState] = useState<AllState>({});
+  const [patient, setPatient] = useState<Patient | null>(null);
   const get = (id: string): CareState => state[id] || EMPTY;
   const set = (id: string, next: CareState) => setState((s) => ({ ...s, [id]: next }));
   const reset = () => setState({});
@@ -191,8 +194,10 @@ export default function CarePlanPage() {
       const content = buildSection(state[sec.id]);
       if (content) lines.push(`${sec.heading.toUpperCase()}\n${content}`);
     }
-    return lines.length ? `MY CARE PLAN\n\n${lines.join("\n\n")}` : "";
-  }, [state]);
+    if (!lines.length) return "";
+    const header = patient ? `MY CARE PLAN - ${patient.name}` : "MY CARE PLAN";
+    return `${header}\n\n${lines.join("\n\n")}`;
+  }, [state, patient]);
 
   const [copied, setCopied] = useState(false);
   const copy = async () => {
@@ -211,6 +216,7 @@ export default function CarePlanPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Care Plan" }]} />
         </div>
+        <PatientLink patient={patient} onChange={setPatient} guideTitle="Care Plan" />
         <FocusLinks links={[
           { label: "Creating a Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/7498/2454" },
           { label: "Review / Update a Care Plan", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/5322/2454" },

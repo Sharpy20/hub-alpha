@@ -6,6 +6,8 @@ import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import { ResourceLinks } from "@/components/guides/ResourceLinks";
 import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
+import { PatientLink } from "@/components/guides/PatientLink";
+import { Patient } from "@/lib/types";
 import { ADMISSION_CHECKLIST } from "@/lib/data/guides";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { ArrowLeft, Check, Printer, RotateCcw, ClipboardList, Info } from "lucide-react";
@@ -13,6 +15,7 @@ import { ArrowLeft, Check, Printer, RotateCcw, ClipboardList, Info } from "lucid
 export default function AdmissionChecklistPage() {
   const v2Href = useV2Href();
   const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const [patient, setPatient] = useState<Patient | null>(null);
 
   const allItems = useMemo(
     () => ADMISSION_CHECKLIST.flatMap((g) => g.items.map((i) => i.id)),
@@ -35,6 +38,10 @@ export default function AdmissionChecklistPage() {
               { label: "Admission Checklist" },
             ]}
           />
+        </div>
+
+        <div className="print:hidden">
+          <PatientLink patient={patient} onChange={setPatient} guideTitle="Admission Checklist" />
         </div>
 
         {/* Header */}
@@ -194,6 +201,7 @@ export default function AdmissionChecklistPage() {
         {/* Case note entry (optional, low priority) */}
         <ChecklistSummary
           title="Admission checklist"
+          patientName={patient?.name}
           completed={ADMISSION_CHECKLIST.flatMap((g) => g.items).filter((i) => checked[i.id]).map((i) => i.text)}
           outstanding={ADMISSION_CHECKLIST.flatMap((g) => g.items).filter((i) => !checked[i.id]).map((i) => i.text)}
         />

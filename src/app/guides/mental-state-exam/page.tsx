@@ -7,6 +7,8 @@ import { Breadcrumb } from "@/components/ui";
 import { MSE_DOMAINS } from "@/lib/data/guides";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { toLocalDateStr } from "@/lib/utils/date";
+import { PatientLink } from "@/components/guides/PatientLink";
+import { Patient } from "@/lib/types";
 import {
   ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info, Lightbulb,
 } from "lucide-react";
@@ -31,6 +33,7 @@ export default function MseBuilderPage() {
   // domainId -> free-text the nurse adds beyond the chips
   const [freeText, setFreeText] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState(false);
+  const [patient, setPatient] = useState<Patient | null>(null);
 
   const today = useMemo(() => toLocalDateStr(), []);
 
@@ -61,8 +64,9 @@ export default function MseBuilderPage() {
       lines.push(`${d.title}: ${segs.join(". ")}.`);
     }
     if (!lines.length) return "";
-    return `Mental State Examination (${today})\n\n${lines.join("\n")}`;
-  }, [selected, freeText, today]);
+    const header = patient ? `Patient: ${patient.name}\nMental State Examination (${today})` : `Mental State Examination (${today})`;
+    return `${header}\n\n${lines.join("\n")}`;
+  }, [selected, freeText, today, patient]);
 
   const copy = async () => {
     if (!output) return;
@@ -118,6 +122,8 @@ export default function MseBuilderPage() {
             </Link>
           </div>
         </div>
+
+        <PatientLink patient={patient} onChange={setPatient} guideTitle="Mental State Examination" />
 
         {/* Sticky output panel */}
         <div className="sticky top-2 z-20 rounded-2xl bg-slate-900 text-slate-100 shadow-xl overflow-hidden">

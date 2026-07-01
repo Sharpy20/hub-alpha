@@ -11,6 +11,8 @@ import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
+import { PatientLink } from "@/components/guides/PatientLink";
+import { Patient } from "@/lib/types";
 import { FocusLinks } from "@/components/guides/FocusLinks";
 import { LDT_SECTIONS, LDT_PATHWAYS, type LdtPathway } from "@/lib/data/guides";
 import {
@@ -21,6 +23,7 @@ export default function LeaveDischargeTransferPage() {
   const v2Href = useV2Href();
   const [pathway, setPathway] = useState<LdtPathway>("leave");
   const [checked, setChecked] = useState<Record<string, boolean>>({});
+  const [patient, setPatient] = useState<Patient | null>(null);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const toggleCheck = (id: string) => setChecked((c) => ({ ...c, [id]: !c[id] }));
@@ -51,6 +54,7 @@ export default function LeaveDischargeTransferPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Leave / Discharge / Transfer" }]} />
         </div>
+        <PatientLink patient={patient} onChange={setPatient} guideTitle="Leave / Discharge / Transfer" />
         <FocusLinks links={[
           { label: "Discharge Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4829/2454" },
           { label: "Discharge, Transfers & Leave (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1795/2454" },
@@ -196,6 +200,7 @@ export default function LeaveDischargeTransferPage() {
         {/* Case note entry (optional, low priority) */}
         <ChecklistSummary
           title={`${activePathway.label} checklist`}
+          patientName={patient?.name}
           completed={visibleSections.flatMap((s) => s.items).filter((i) => checked[i.id]).map((i) => i.label)}
           outstanding={visibleSections.flatMap((s) => s.items).filter((i) => !checked[i.id]).map((i) => i.label)}
         />

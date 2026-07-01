@@ -11,10 +11,12 @@ export function ChecklistSummary({
   title,
   completed,
   outstanding,
+  patientName,
 }: {
   title: string;
   completed: string[];
   outstanding: string[];
+  patientName?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -22,6 +24,7 @@ export function ChecklistSummary({
   const d = new Date();
   const date = `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
   const text =
+    (patientName ? `Patient: ${patientName}\n` : "") +
     `${title} - ${date}\n\n` +
     `Completed tasks: ${completed.length ? completed.join("; ") + "." : "none yet."}\n\n` +
     `Outstanding tasks: ${outstanding.length ? outstanding.join("; ") + "." : "none - all done."}`;

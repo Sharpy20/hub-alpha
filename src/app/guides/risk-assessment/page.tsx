@@ -13,6 +13,8 @@ import {
 import { useApp } from "@/app/providers";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
+import { PatientLink } from "@/components/guides/PatientLink";
+import { Patient } from "@/lib/types";
 import {
   ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info,
   Lightbulb, AlertTriangle, GraduationCap, ListChecks, Sparkles, Plus, X, Pencil,
@@ -309,7 +311,7 @@ const TXT_DIV = "----------------------------------------";
 
 // Build one RMP block (trust template) for a single named risk. `displayName`
 // overrides the title for the free-text "other" risk.
-function buildOneRmp(risk: string, secs: Record<string, SecState>, displayName?: string): string {
+function buildOneRmp(risk: string, secs: Record<string, SecState>, displayName?: string, patientName?: string): string {
   const name = (displayName && displayName.trim()) || risk;
   const body = (id: string): string => {
     if (id === "what") {
@@ -322,7 +324,12 @@ function buildOneRmp(risk: string, secs: Record<string, SecState>, displayName?:
     }
     return buildContent(secs[id]) || "Not yet established.";
   };
-  const blocks: string[] = [TXT_BAR, `RISK MANAGEMENT PLAN: ${name.toUpperCase()}`, TXT_BAR];
+  const blocks: string[] = [
+    TXT_BAR,
+    `RISK MANAGEMENT PLAN: ${name.toUpperCase()}`,
+    ...(patientName ? [`Patient: ${patientName}`] : []),
+    TXT_BAR,
+  ];
   RMP_SECTIONS.forEach((sec, i) => {
     blocks.push(sec.heading.toUpperCase());
     blocks.push(body(sec.id));
@@ -469,6 +476,7 @@ export default function RiskAssessmentPage() {
   // them to choose first; only one part shows at a time (less on screen).
   const [stage, setStage] = useState<"formulation" | "rmp" | null>(null);
 
+  const [patient, setPatient] = useState<Patient | null>(null);
   // Formulation (one integrated formulation per patient).
   const [fState, setFState] = useState<AllState>({});
   // RMP: one separate plan per selected risk -> risk name -> section -> state.
@@ -560,19 +568,24 @@ export default function RiskAssessmentPage() {
       .map((sec) => ({ heading: sec.heading, body: buildContent(fState[sec.id]) }))
       .filter((s) => s.body);
     if (!filled.length) return "";
-    const blocks: string[] = [TXT_BAR, "RISK FORMULATION", TXT_BAR];
+    const blocks: string[] = [
+      TXT_BAR,
+      "RISK FORMULATION",
+      ...(patient ? [`Patient: ${patient.name}`] : []),
+      TXT_BAR,
+    ];
     filled.forEach((s, i) => {
       blocks.push(s.heading.toUpperCase());
       blocks.push(s.body);
       if (i < filled.length - 1) blocks.push(TXT_DIV);
     });
     return blocks.join("\n");
-  }, [fState]);
+  }, [fState, patient]);
 
   // One RMP per selected risk, plus a combined "copy all".
   const allRmpsText = useMemo(
-    () => risks.map((r) => buildOneRmp(r, rmp[r] || {}, r === BLANK_RISK ? blankName : undefined)).join("\n\n"),
-    [risks, rmp, blankName]
+    () => risks.map((r) => buildOneRmp(r, rmp[r] || {}, r === BLANK_RISK ? blankName : undefined, patient?.name)).join("\n\n"),
+    [risks, rmp, blankName, patient]
   );
 
   return (
@@ -581,6 +594,7 @@ export default function RiskAssessmentPage() {
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: "Risk Assessment" }]} />
         </div>
+        <PatientLink patient={patient} onChange={setPatient} guideTitle="Risk Assessment" />
         <FocusLinks links={[
           { label: "Risk Screening Assessment (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/10368/2454" },
           { label: "Risk Node", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/5321/2454" },
@@ -883,7 +897,7 @@ export default function RiskAssessmentPage() {
                           />
                         ))}
                         <OutputBox
-                          text={buildOneRmp(risk, rmp[risk] || {}, rmpTitleFor(risk))}
+                          text={buildOneRmp(risk, rmp[risk] || {}, rmpTitleFor(risk), patient?.name)}
                           label={`RMP - ${risk === BLANK_RISK ? (blankName.trim() || "other") : risk} - copy into SystmOne`}
                         />
                       </>

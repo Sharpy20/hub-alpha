@@ -6,3 +6,4 @@ export { DischargeAuditModal } from "./DischargeAuditModal";
 export { PatientTasksModal } from "./PatientTasksModal";
 export { PatientPickerModal } from "./PatientPickerModal";
 export { BulkPatientTasksModal } from "./BulkPatientTasksModal";
+export { CareReviewModal } from "./CareReviewModal";

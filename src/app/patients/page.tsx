@@ -9,7 +9,11 @@ import { useWardSettings } from "@/app/ward-settings-provider";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { MainLayout } from "@/components/layout";
 import { Card } from "@/components/ui";
-import { PatientTransferModal, DischargeAuditModal, PatientTasksModal, TaskDetailModal, BulkPatientTasksModal } from "@/components/modals";
+import { PatientTransferModal, DischargeAuditModal, PatientTasksModal, TaskDetailModal, BulkPatientTasksModal, CareReviewModal } from "@/components/modals";
+import {
+  CareTracker, PatientTracker, REVIEW_ITEMS, loadTracker, saveTracker, seedPatient,
+  admissionProgress, daysUntilDue, reviewStatus,
+} from "@/lib/data/care-review";
 import {
   User,
   Search,
@@ -75,6 +79,12 @@ export default function PatientsPage() {
     addTask({ ...t, id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}` } as DiaryTask);
   };
 
+  // Care review tracker (admission tasks + recurring review countdowns)
+  const [careTracker, setCareTracker] = useState<CareTracker>({});
+  const [careReviewPatient, setCareReviewPatient] = useState<Patient | null>(null);
+  const [isCareReviewOpen, setIsCareReviewOpen] = useState(false);
+  const [today, setToday] = useState("");
+
   const [patients, setPatients] = useState<Patient[]>([]);
   const [tasks, setTasks] = useState<DiaryTask[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -138,6 +148,31 @@ export default function PatientsPage() {
     setPatients([...DEMO_PATIENTS]);
     setTasks([...ALL_DEMO_TASKS]);
   }, []);
+
+  // Load + seed the care-review tracker (client-only, so no hydration mismatch)
+  useEffect(() => {
+    const t = toLocalDateStr();
+    setToday(t);
+    const tracker = loadTracker();
+    let changed = false;
+    for (const p of DEMO_PATIENTS) {
+      if (p.status === "discharged") continue;
+      if (!tracker[p.id]) {
+        tracker[p.id] = seedPatient(p.id, p.admissionDate, t);
+        changed = true;
+      }
+    }
+    if (changed) saveTracker(tracker);
+    setCareTracker(tracker);
+  }, []);
+
+  const updatePatientTracker = (patientId: string, next: PatientTracker) => {
+    setCareTracker((prev) => {
+      const updated = { ...prev, [patientId]: next };
+      saveTracker(updated);
+      return updated;
+    });
+  };
 
   // Filter patients by ward and status
   const filteredPatients = patients.filter((patient) => {
@@ -523,6 +558,9 @@ export default function PatientsPage() {
               const statusConfig = PATIENT_STATUS_CONFIG[patient.status];
               const legalConfig = LEGAL_STATUS_CONFIG[patient.legalStatus];
               const outstandingTasks = getOutstandingTaskCount(patient.id);
+              const pt = careTracker[patient.id];
+              const adm = admissionProgress(pt);
+              const showCare = patient.status !== "discharged" && !!pt && !!today;
 
               return (
                 <Card
@@ -670,6 +708,43 @@ export default function PatientsPage() {
                     </button>
                   )}
 
+                  {/* Care review - admission badge + review countdowns */}
+                  {showCare && (
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setCareReviewPatient(patient); setIsCareReviewOpen(true); }}
+                      className="w-full text-left mb-4 p-2.5 rounded-xl border border-gray-100 hover:border-indigo-200 hover:bg-indigo-50/40 transition-colors"
+                      title="Open care review"
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${adm.complete ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}>
+                          {adm.complete ? "✓ Admission complete" : `Admission ${adm.done}/${adm.total}`}
+                        </span>
+                        <span className="text-[11px] text-gray-400 ml-auto">Care review</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {REVIEW_ITEMS.map((it) => {
+                          const days = daysUntilDue(pt.reviews[it.id], it.intervalDays, today);
+                          const status = reviewStatus(days, it.intervalDays);
+                          const chip =
+                            status === "overdue" ? "bg-red-100 text-red-800"
+                            : status === "due" ? "bg-amber-100 text-amber-800"
+                            : status === "ok" ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-500";
+                          const label =
+                            days === null ? "--"
+                            : days < 0 ? `${Math.abs(days)}d over`
+                            : days === 0 ? "today"
+                            : `${days}d`;
+                          return (
+                            <span key={it.id} className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${chip}`} title={`${it.label}: ${status === "overdue" ? "overdue" : status === "none" ? "not started" : "due in " + days + " days"}`}>
+                              {it.short} {label}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </button>
+                  )}
+
                   {/* Actions */}
                   {patient.status !== "discharged" && (
                     <div className="flex gap-2 pt-3 border-t border-gray-100">
@@ -768,6 +843,16 @@ export default function PatientsPage() {
         currentUserName={user?.name}
         initialPatientName={bulkPatientName}
       />
+
+      {careReviewPatient && careTracker[careReviewPatient.id] && (
+        <CareReviewModal
+          isOpen={isCareReviewOpen}
+          onClose={() => { setIsCareReviewOpen(false); setCareReviewPatient(null); }}
+          patient={careReviewPatient}
+          tracker={careTracker[careReviewPatient.id]}
+          onUpdate={(next) => updatePatientTracker(careReviewPatient.id, next)}
+        />
+      )}
 
       {/* Task Detail Modal */}
       {selectedTask && (

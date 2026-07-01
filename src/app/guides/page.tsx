@@ -81,6 +81,7 @@ const ALL_GUIDES: GuideItem[] = [
   { id: "speech-therapy", title: "Speech & Language", description: "SALT assessment and swallowing review", icon: "\ud83d\uDCAC", gradient: "from-purple-500 to-purple-700", category: "Allied Health", viewerPath: "/guides/speech-therapy" },
   // Physical Health
   { id: "news2", title: "NEWS2 Observations", description: "National Early Warning Score - recognising deterioration", icon: "\ud83d\uDCCA", gradient: "from-rose-500 to-rose-700", category: "Physical Health", viewerPath: "/guides/news2" },
+  { id: "prenoxad", title: "Prenoxad (take-home naloxone)", description: "Nurse-led take-home naloxone under the PGD for opioid-overdose risk", icon: "\ud83d\uDC89", gradient: "from-teal-500 to-emerald-700", category: "Physical Health", viewerPath: "/guides/prenoxad" },
   { id: "transfer-in", title: "Accepting a Transfer from a General Ward", description: "Pre-transfer checklist for a patient coming back after physical treatment", icon: "🔄", gradient: "from-cyan-500 to-blue-700", category: "Physical Health", viewerPath: "/guides/transfer-in" },
   { id: "tissue-viability", title: "Tissue Viability", description: "Wound care and pressure ulcer concerns", icon: "\uD83E\uDE79", gradient: "from-teal-500 to-teal-700", category: "Physical Health", viewerPath: "/guides/tissue-viability" },
   { id: "dental", title: "Dental Referral", description: "Dental care access for inpatients", icon: "\uD83E\uDDB7", gradient: "from-cyan-500 to-cyan-700", category: "Physical Health", viewerPath: "/guides/dental" },

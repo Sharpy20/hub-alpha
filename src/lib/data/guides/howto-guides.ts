@@ -52,6 +52,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "special-guardianship": { icon: "👨‍👧", gradient: "from-emerald-600 to-emerald-800", category: "Safeguarding" },
   "child-in-need": { icon: "🤲", gradient: "from-sky-600 to-sky-800", category: "Safeguarding" },
   "abc-chart": { icon: "📋", gradient: "from-amber-500 to-orange-700", category: "Clinical Assessment" },
+  prenoxad: { icon: "💉", gradient: "from-teal-500 to-emerald-700", category: "Physical Health" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -62,6 +63,76 @@ export const GUIDE_WAGOLLS: Record<string, { label: string; url: string }[]> = {
 };
 
 export const GUIDES: Record<string, GuideData> = {
+  prenoxad: {
+    id: "prenoxad",
+    title: "Prenoxad (take-home naloxone injection)",
+    description: "Nurse-led supply of take-home naloxone under the PGD - for patients at risk of opioid overdose on leave or discharge",
+    steps: [
+      {
+        id: "overview",
+        title: "What Prenoxad is (in one line)",
+        content: `Prenoxad is a take-home naloxone injection you can give a patient to take out on leave or discharge, so that if they (or someone near them) overdoses on opioids, a bystander can reverse it while the ambulance is on its way.\n\nNurse-led. No prescription. No doctor needed - supplied under a Patient Group Direction (PGD) by a trained, authorised registered nurse.\n\nWritten from the Trust PGD guidance (Feb 2024, v1; PGD valid to 30/10/2026). Nothing here overrides the PGD - if in doubt, read the PGD or ask Pharmacy / ward leadership.`,
+        tip: "Offer it at extended leave or discharge - that is the danger point, because tolerance drops after a spell as an inpatient and an old 'normal' dose can now be fatal.",
+      },
+      {
+        id: "name",
+        title: "First, clear up the name",
+        content: `- Prenoxad = take-home naloxone. It goes home with the patient, in the community, for emergency use by whoever is there.\n- This is NOT the emergency naloxone kept in the clinic room for use on the ward.\n- Same drug (naloxone), different job.\n\nWhen you talk to patients or colleagues, call it "Prenoxad, the take-home naloxone injection" so nobody mixes the two up.`,
+      },
+      {
+        id: "can-issue",
+        title: "Can I issue this?",
+        content: `You can supply Prenoxad under the PGD only if ALL of these are true about you:\n\n- You are a registered nurse employed by DHCFT\n- You have read the PGD\n- You have watched the "How to administer naloxone (injectable)" training video\n- Your ILS / resuscitation and overdose-management training is in date (annual)\n- Your name is on your ward's PGD authorisation register, signed by you and a member of the leadership team\n\nIf any of these is missing, you are not yet signed off - see "Getting yourself signed off" below. It is quick.`,
+      },
+      {
+        id: "when-who",
+        title: "When do I offer it, and to whom?",
+        content: `Offer Prenoxad at extended leave or discharge.\n\nThe patient is eligible when ALL of these are met (from the PGD):\n\n- DHCFT inpatient, aged 18 or over\n- At risk of a future opioid overdose, agreed at MDM/MDT\n- Valid consent given\n- Has completed the overdose-awareness + Prenoxad training (you deliver it, 5-10 min; a carer can be trained too)\n\n"At risk of opioid overdose" - flag at MDM if the patient has any of:\n\n- History of opioid dependence\n- Currently on OST (e.g. methadone, buprenorphine) or other prescription opioids\n- Injecting opioids\n- Recent detox, discharge, or any period of abstinence (tolerance lost)\n- Using opioids on top of alcohol, benzodiazepines or other sedatives\n- High-dose opioids (over ~100 mg morphine equivalent daily)\n- Co-existing HIV, liver or lung disease\n\nHigher risk still: male, older, lower socio-economic status. Not exhaustive - MDT judgement decides.`,
+      },
+      {
+        id: "exclusions",
+        title: "When I must NOT supply (exclusions)",
+        content: `- Under 18\n- No valid consent\n- Declines the training, or won't / can't complete it\n- MDT has reviewed and decided it is not appropriate\n- Known hypersensitivity to naloxone or any component of the pack`,
+        tip: "In an opioid-dependent person, naloxone can trigger acute withdrawal - that is expected and is NOT a reason to withhold it in an overdose. Prenoxad does not reverse non-opioid (e.g. benzo or alcohol) respiratory depression.",
+      },
+      {
+        id: "declines",
+        title: "If the patient declines",
+        content: `- Acknowledge their right to decline. Make sure they understand the risk.\n- Offer harm-reduction info anyway (overdose / heroin / fentanyl leaflets, or the video).\n- Refer on / seek advice where appropriate (Substance Misuse Services).\n- Document the decline and the alternatives discussed on SystmOne.`,
+      },
+      {
+        id: "signoff",
+        title: "Getting yourself signed off",
+        content: `1. Read the PGD (in the PGD folder in the clinic room / on FOCUS).\n2. Watch "How to administer naloxone (injectable)".\n3. Make sure your ILS / resus + overdose training is current.\n4. Leadership adds you to the ward PGD register; you both sign.\n\nThat is it - you can now supply take-home Prenoxad.`,
+      },
+      {
+        id: "supply",
+        title: "How to supply it",
+        content: `- Supplied as a pre-packed Prenoxad kit once the MDT has agreed.\n- Ordered from Pharmacy; Pharmacy technicians track expiry and re-order stock. If you dispense one, note it in the Pharmacy diary.\n- Stored in the patient's own drugs (POD) cupboard. Keep the syringe in its original box (protects it from light).\n- Give one kit to take home. Further supplies after discharge come from Derbyshire Recovery Partnership.\n\nWhat's in the kit:\n\n- 1 x 2ml pre-filled syringe - naloxone 1mg/ml (2mg total), marked in 5 x 0.4mg doses (0.4mg = the minimum effective dose)\n- 2 x 23G 1 1/4" needles for intramuscular injection\n- Product instruction sheet\n- Opioid-overdose emergency flow-chart in the front pocket of the pack`,
+      },
+      {
+        id: "train",
+        title: "Train the patient (5-10 minutes)",
+        content: `Cover these before you hand the pack over. Do it every time a pack is issued or replaced. Show them the "How to administer naloxone (injectable)" video, demonstrate, check understanding, invite questions.\n\nIf you think someone has overdosed on opioids:\n\n1. Personal safety first.\n2. Call an ambulance (999).\n3. Put them in the recovery position.\n4. Inject Prenoxad into a muscle - thigh or upper arm. Dose: 0.4mg (one mark) every 2-3 minutes, repeat until they are breathing normally, wake up, help arrives, or the syringe is empty.\n5. Stay with them until the ambulance arrives, and hand the used pack safely to the paramedics.`,
+        tip: "Naloxone wears off faster than opioids, so the person can slip back under - that is why the ambulance and staying with them both matter. Keep the pack out of reach of children and pets. Return for a replacement if used, lost or expired, and dispose of needles safely.",
+      },
+      {
+        id: "record",
+        title: "Record it on SystmOne",
+        content: `Record:\n\n- The identified risk of future opioid overdose (as agreed by MDT / substance misuse)\n- That valid, informed consent was given\n- Date the DHCFT training was completed, and with which nurse\n- Medication supplied, date, quantity, batch number and expiry\n- Advice given\n- "Supplied via Patient Group Direction (PGD)"\n\nAdd it to the patient's leave and discharge plans too.\n\nCase-note prompt (copy and edit):\n\nTake-home Prenoxad (naloxone injection) supplied under PGD on [DATE]. Patient identified at risk of opioid overdose and agreed at MDT. Informed consent obtained. Overdose-awareness and Prenoxad administration training completed with patient [+/- carer] on [DATE] by [NURSE]. Kit supplied: 1 x Prenoxad, batch [BATCH], expiry [EXPIRY]. Advised: call 999, IM injection, recovery position, stay until ambulance arrives, naloxone is short-acting. Added to leave/discharge plan. Further supplies via Derbyshire Recovery Partnership.`,
+      },
+      {
+        id: "legal",
+        title: "The legal bit (why no prescription)",
+        content: `Since the Human Medicines (Amendment) (No. 3) Regulations 2015, naloxone can be supplied without a prescription when it is being made available to save a life in an emergency. Here it is supplied under a Patient Group Direction (PGD) by a trained, authorised registered nurse. That is what keeps medics out of the loop and makes this genuinely nurse-led.`,
+      },
+      {
+        id: "resources",
+        title: "Resources",
+        content: `- "How to administer naloxone (injectable)" training video\n- Prenoxad client's guide, and harm-reduction / overdose / heroin / fentanyl leaflets\n- Product SPC / PIL: www.medicines.org.uk - BNF: bnf.nice.org.uk\n- Report adverse reactions via the MHRA Yellow Card scheme: yellowcard.mhra.gov.uk\n- Full PGD and protocol: on FOCUS (Medicine Management folder)`,
+      },
+    ],
+  },
   // Real AMHP numbers (hidden in demo per Rule 4): City 01332 255609, County 01629 537904.
   "arrange-mha-assessment": {
     id: "arrange-mha-assessment",

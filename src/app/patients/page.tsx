@@ -527,7 +527,17 @@ export default function PatientsPage() {
               return (
                 <Card
                   key={patient.id}
-                  className="p-4 hover:shadow-lg transition-shadow"
+                  onClick={() => openTasksModal(patient)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      openTasksModal(patient);
+                    }
+                  }}
+                  aria-label={`View tasks for ${patient.name}`}
+                  className="p-4 cursor-pointer hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 >
                   {/* Header */}
                   <div className="flex items-start justify-between mb-3">
@@ -577,6 +587,7 @@ export default function PatientsPage() {
                       {editingWPPatientId === patient.id ? (
                         <select
                           value={patient.wardProfessional || ""}
+                          onClick={(e) => e.stopPropagation()}
                           onChange={(e) => handleChangeWP(patient.id, e.target.value)}
                           onBlur={() => setEditingWPPatientId(null)}
                           autoFocus
@@ -663,14 +674,14 @@ export default function PatientsPage() {
                   {patient.status !== "discharged" && (
                     <div className="flex gap-2 pt-3 border-t border-gray-100">
                       <button
-                        onClick={() => openTransferModal(patient)}
+                        onClick={(e) => { e.stopPropagation(); openTransferModal(patient); }}
                         className="flex-1 px-3 py-2 bg-amber-100 text-amber-700 rounded-lg font-medium hover:bg-amber-200 transition-colors flex items-center justify-center gap-2 text-sm"
                       >
                         <ArrowRight className="w-4 h-4" />
                         Transfer
                       </button>
                       <button
-                        onClick={() => openDischargeConfirm(patient)}
+                        onClick={(e) => { e.stopPropagation(); openDischargeConfirm(patient); }}
                         className="flex-1 px-3 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors flex items-center justify-center gap-2 text-sm"
                       >
                         <LogOut className="w-4 h-4" />
@@ -683,7 +694,7 @@ export default function PatientsPage() {
                   {patient.status === "discharged" && (
                     <div className="flex gap-2 pt-3 border-t border-gray-100">
                       <button
-                        onClick={() => openAuditModal(patient)}
+                        onClick={(e) => { e.stopPropagation(); openAuditModal(patient); }}
                         className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 text-sm"
                       >
                         <FileText className="w-4 h-4" />
@@ -691,7 +702,7 @@ export default function PatientsPage() {
                       </button>
                       {!patient.dischargeConfirmed && user?.role === "ward_admin" && (
                         <button
-                          onClick={() => openAuditModal(patient)}
+                          onClick={(e) => { e.stopPropagation(); openAuditModal(patient); }}
                           className="flex-1 px-3 py-2 bg-green-100 text-green-700 rounded-lg font-medium hover:bg-green-200 transition-colors flex items-center justify-center gap-2 text-sm"
                         >
                           <CheckCircle2 className="w-4 h-4" />

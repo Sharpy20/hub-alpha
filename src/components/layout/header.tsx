@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useApp, STYLE_THEMES, type StyleTheme, type ColorMode } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play, Brain } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import { getStaffByWard } from "@/lib/data/staff";
@@ -241,6 +241,10 @@ export function Header() {
 
                     {settingsDropdownOpen && (
                       <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-50">
+                        <Link href={link("/quiz")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                          <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Brain className="w-5 h-5 text-white" /></div>
+                          <div><p className="font-semibold text-gray-900">Quiz</p><p className="text-xs text-gray-500 mt-0.5">Just-for-fun knowledge refresher - nothing tracked</p></div>
+                        </Link>
                         {!isV2 && (
                           <Link href={link("/staff")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                             <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-5 h-5 text-white" /></div>
@@ -537,6 +541,10 @@ export function Header() {
               <div className="py-3 border-b border-gray-100">
                 <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">More</p>
                 <div className="space-y-2">
+                  <Link href={link("/quiz")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-fuchsia-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Brain className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Quiz</p><p className="text-xs text-gray-500">Just-for-fun refresher, nothing tracked</p></div>
+                  </Link>
                   {!isV2 && (
                     <Link href={link("/staff")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                       <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Users className="w-4 h-4 text-white" /></div>

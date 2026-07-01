@@ -11,27 +11,28 @@ export interface ReviewItem {
   label: string;
   short: string;
   intervalDays: number;
+  guideId?: string; // the relevant guide (/guides/<id>), if there is one
 }
 
 // The recurring items the weekly ward audit checks (from the named-nurse cadence).
 export const REVIEW_ITEMS: ReviewItem[] = [
-  { id: "care-plan", label: "Care plan updated (with patient)", short: "Care plan", intervalDays: 7 },
-  { id: "care-plan-offered", label: "Care plan offered", short: "Offered", intervalDays: 7 },
-  { id: "risk", label: "Risk assessment", short: "Risk ax", intervalDays: 7 },
-  { id: "consent", label: "Consent to share (re-ask)", short: "Consent", intervalDays: 7 },
+  { id: "care-plan", label: "Care plan updated (with patient)", short: "Care plan", intervalDays: 7, guideId: "care-plan" },
+  { id: "care-plan-offered", label: "Care plan offered", short: "Offered", intervalDays: 7, guideId: "care-plan" },
+  { id: "risk", label: "Risk assessment", short: "Risk ax", intervalDays: 7, guideId: "risk-assessment" },
+  { id: "consent", label: "Consent to share (re-ask)", short: "Consent", intervalDays: 7, guideId: "information-sharing" },
   { id: "honos", label: "HONOS", short: "HONOS", intervalDays: 30 },
-  { id: "safety-plan", label: "Safety plan", short: "Safety plan", intervalDays: 30 },
+  { id: "safety-plan", label: "Safety plan", short: "Safety plan", intervalDays: 30, guideId: "safety-plan" },
 ];
 
 // One-time tasks to complete on admission.
-export const ADMISSION_ITEMS: { id: string; label: string }[] = [
-  { id: "rmp", label: "Risk Management Plan completed" },
-  { id: "phys-health", label: "Physical health assessment completed" },
-  { id: "advocacy", label: "Advocacy (IMHA) referral offered" },
-  { id: "rights", label: "Rights read (Section 132)" },
-  { id: "consent-initial", label: "Consent to share asked" },
-  { id: "care-plan-started", label: "Care plan started" },
-  { id: "safety-plan-started", label: "Safety plan started" },
+export const ADMISSION_ITEMS: { id: string; label: string; guideId?: string }[] = [
+  { id: "rmp", label: "Risk Management Plan completed", guideId: "risk-assessment" },
+  { id: "phys-health", label: "Physical health assessment completed", guideId: "news2" },
+  { id: "advocacy", label: "Advocacy (IMHA) referral offered", guideId: "imha-advocacy" },
+  { id: "rights", label: "Rights read (Section 132)", guideId: "section-132" },
+  { id: "consent-initial", label: "Consent to share asked", guideId: "information-sharing" },
+  { id: "care-plan-started", label: "Care plan started", guideId: "care-plan" },
+  { id: "safety-plan-started", label: "Safety plan started", guideId: "safety-plan" },
   { id: "honos-baseline", label: "HONOS baseline recorded" },
 ];
 

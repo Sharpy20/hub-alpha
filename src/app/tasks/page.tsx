@@ -2463,13 +2463,19 @@ function TasksPageInner() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [expandedDay]);
 
-  // Scroll to a specific date
+  // Scroll to a specific date. Centre the column using getBoundingClientRect so
+  // it is correct regardless of the column's offsetParent (the container is not
+  // positioned, so offsetLeft was measured against a higher ancestor and could
+  // push the scroll to the far end - the "jumps to the furthest date" bug).
   const scrollToDate = useCallback((date: string) => {
     const container = scrollContainerRef.current;
     const columnEl = columnRefs.current.get(date);
     if (container && columnEl) {
-      const scrollLeft = columnEl.offsetLeft - container.offsetWidth / 2 + columnEl.offsetWidth / 2;
-      container.scrollTo({ left: scrollLeft, behavior: "smooth" });
+      const cRect = container.getBoundingClientRect();
+      const colRect = columnEl.getBoundingClientRect();
+      const target =
+        container.scrollLeft + (colRect.left - cRect.left) - (container.clientWidth - colRect.width) / 2;
+      container.scrollTo({ left: Math.max(0, target), behavior: "smooth" });
     }
     setFocusedDate(date);
   }, []);

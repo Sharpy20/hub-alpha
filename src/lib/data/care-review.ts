@@ -36,6 +36,19 @@ export const ADMISSION_ITEMS: { id: string; label: string; guideId?: string }[] 
   { id: "honos-baseline", label: "HONOS baseline recorded" },
 ];
 
+// Maps Admission Checklist guide item ids -> care-review admission item ids, so
+// ticking the checklist for a linked patient updates their Care Review admission
+// badge (and vice versa). Items with no counterpart are simply not synced.
+export const ADMISSION_CHECKLIST_MAP: Record<string, string> = {
+  "risk-management": "rmp",
+  "physical-health": "phys-health",
+  "advocacy": "advocacy",
+  "read-rights": "rights",
+  "care-plan": "care-plan-started",
+  "safety-plan": "safety-plan-started",
+  "honos": "honos-baseline",
+};
+
 export interface PatientTracker {
   admission: Record<string, string>; // itemId -> date completed (YYYY-MM-DD)
   reviews: Record<string, string>; // itemId -> date last reviewed (YYYY-MM-DD)

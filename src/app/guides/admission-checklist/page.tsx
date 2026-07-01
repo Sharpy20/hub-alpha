@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
@@ -9,6 +9,10 @@ import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
 import { ADMISSION_CHECKLIST } from "@/lib/data/guides";
+import {
+  ADMISSION_CHECKLIST_MAP, loadTracker, saveTracker, seedPatient,
+} from "@/lib/data/care-review";
+import { toLocalDateStr } from "@/lib/utils/date";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { ArrowLeft, Check, Printer, RotateCcw, ClipboardList, Info } from "lucide-react";
 
@@ -16,6 +20,27 @@ export default function AdmissionChecklistPage() {
   const v2Href = useV2Href();
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [patient, setPatient] = useState<Patient | null>(null);
+
+  // Cross-reference with the patient's Care Review admission tracker: when a
+  // patient is linked, pull their already-done admission tasks into the ticks,
+  // and write ticks back so the patient tile's Admission badge stays in sync.
+  useEffect(() => {
+    if (!patient) return;
+    const tr = loadTracker();
+    let pt = tr[patient.id];
+    if (!pt) {
+      pt = seedPatient(patient.id, patient.admissionDate, toLocalDateStr());
+      tr[patient.id] = pt;
+      saveTracker(tr);
+    }
+    setChecked((c) => {
+      const next = { ...c };
+      for (const [checklistId, crId] of Object.entries(ADMISSION_CHECKLIST_MAP)) {
+        next[checklistId] = !!pt.admission[crId];
+      }
+      return next;
+    });
+  }, [patient]);
 
   const allItems = useMemo(
     () => ADMISSION_CHECKLIST.flatMap((g) => g.items.map((i) => i.id)),
@@ -25,7 +50,20 @@ export default function AdmissionChecklistPage() {
   const total = allItems.length;
   const pct = total ? Math.round((doneCount / total) * 100) : 0;
 
-  const toggle = (id: string) => setChecked((c) => ({ ...c, [id]: !c[id] }));
+  const toggle = (id: string) => {
+    const nowChecked = !checked[id];
+    // Sync mapped items to the linked patient's Care Review admission tracker.
+    if (patient && ADMISSION_CHECKLIST_MAP[id]) {
+      const tr = loadTracker();
+      const pt = tr[patient.id] || { admission: {}, reviews: {} };
+      const crId = ADMISSION_CHECKLIST_MAP[id];
+      if (nowChecked) pt.admission[crId] = toLocalDateStr();
+      else delete pt.admission[crId];
+      tr[patient.id] = pt;
+      saveTracker(tr);
+    }
+    setChecked((c) => ({ ...c, [id]: nowChecked }));
+  };
   const reset = () => setChecked({});
 
   return (
@@ -40,8 +78,14 @@ export default function AdmissionChecklistPage() {
           />
         </div>
 
-        <div className="print:hidden">
+        <div className="print:hidden space-y-1.5">
           <PatientLink patient={patient} onChange={setPatient} guideTitle="Admission Checklist" />
+          {patient && (
+            <p className="text-xs text-indigo-600 flex items-center gap-1.5 px-1">
+              <Info className="w-3.5 h-3.5 flex-shrink-0" />
+              Ticking risk management, physical health, advocacy, rights, care plan, safety plan and HoNOS updates {patient.name}&apos;s Care Review admission badge.
+            </p>
+          )}
         </div>
 
         {/* Header */}

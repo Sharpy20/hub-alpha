@@ -125,8 +125,9 @@ export function GlobalSearch() {
             className="relative w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Input */}
-            <div className="flex items-center gap-3 px-4 border-b border-gray-100">
+            {/* Input - pt keeps the input's focus outline from being clipped
+                by the panel's rounded overflow-hidden top edge */}
+            <div className="flex items-center gap-3 px-4 pt-1.5 border-b border-gray-100">
               <Search className="w-5 h-5 text-gray-400 flex-shrink-0" />
               <input
                 ref={inputRef}

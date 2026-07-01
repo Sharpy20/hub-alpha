@@ -601,17 +601,17 @@ export default function UnifiedGuidePage() {
 
         {/* Side navigation arrows */}
         {currentStep > 0 && (
-          <button onClick={handlePrev} className="fixed left-0 top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-r-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Previous step">
+          <button onClick={handlePrev} style={{ left: "max(0px, calc(50vw - 640px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-r-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Previous step">
             <ArrowLeft className="w-7 h-7 text-white" />
           </button>
         )}
         {!isComplete && (
-          <button onClick={handleNext} disabled={!canProceed()} className="fixed right-0 top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:w-14" aria-label="Next step">
+          <button onClick={handleNext} disabled={!canProceed()} style={{ right: "max(0px, calc(50vw - 640px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:w-14" aria-label="Next step">
             <ArrowRight className="w-7 h-7 text-white" />
           </button>
         )}
         {!isReferral && isComplete && (
-          <button onClick={handleNext} className="fixed right-0 top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-green-600/80 hover:bg-green-700 backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Next step">
+          <button onClick={handleNext} style={{ right: "max(0px, calc(50vw - 640px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-green-600/80 hover:bg-green-700 backdrop-blur-sm rounded-l-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Next step">
             <Check className="w-7 h-7 text-white" />
           </button>
         )}

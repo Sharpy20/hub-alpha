@@ -19,6 +19,7 @@ export default function GuidesPage() {
   const link = useV2Href();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedType, setSelectedType] = useState<string>("all");
   const [customOrder, setCustomOrder] = useState<{ id: string; category: string }[] | null>(null);
   const pendingCount = getPendingCount();
 
@@ -55,13 +56,29 @@ export default function GuidesPage() {
     ? orderedGuides
     : orderedGuides.filter((g) => g.category === selectedCategory);
 
+  // Filter by guide type (Builder / Checklist / Step-by-step / Tips / How-to)
+  const typeFiltered = selectedType === "all"
+    ? categoryFiltered
+    : categoryFiltered.filter((g) => guideType(g.id) === selectedType);
+
   // Filter by search
   const filteredGuides = searchQuery.trim()
-    ? categoryFiltered.filter((g) => {
+    ? typeFiltered.filter((g) => {
         const q = searchQuery.toLowerCase();
         return g.title.toLowerCase().includes(q) || g.description.toLowerCase().includes(q);
       })
-    : categoryFiltered;
+    : typeFiltered;
+
+  // Types present, in a sensible order, for the type filter row
+  const TYPE_ORDER = ["How-to", "Step-by-step", "Builder", "Checklist", "Tips"];
+  const presentTypes = TYPE_ORDER.filter((t) => orderedGuides.some((g) => guideType(g.id) === t));
+  const TYPE_HELP: Record<string, string> = {
+    "How-to": "Read-through reference",
+    "Step-by-step": "Follow the steps in order",
+    "Builder": "Fill in and copy to notes",
+    "Checklist": "Tick items off",
+    "Tips": "Points to think through",
+  };
 
   return (
     <MainLayout>
@@ -150,6 +167,45 @@ export default function GuidesPage() {
                   }`}
                 >
                   {category}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Type filter - makes it clear how each guide works */}
+        {presentTypes.length > 1 && (
+          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 mb-3">
+              <FileText className="w-5 h-5 text-gray-500" />
+              <span className="font-bold text-gray-700">Type</span>
+              <span className="text-xs text-gray-400">
+                {selectedType === "all" ? "How each guide works" : TYPE_HELP[selectedType]}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedType("all")}
+                className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                  selectedType === "all"
+                    ? "bg-indigo-100 text-indigo-700"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                All
+              </button>
+              {presentTypes.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setSelectedType(type)}
+                  title={TYPE_HELP[type]}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+                    selectedType === type
+                      ? `${TYPE_STYLE[type]} ring-2 ring-offset-1 ring-current`
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  {type}
                 </button>
               ))}
             </div>

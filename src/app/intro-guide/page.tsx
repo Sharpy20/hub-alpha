@@ -288,6 +288,7 @@ const guideSections: GuideSection[] = [
           "Links - Quick links to useful resources",
           "Guides - Referral workflows and clinical how-to guides",
           "Patients - Patient list, transfers, and discharge",
+          "Search - press Ctrl+K (or the search box) to jump to any guide or link",
           "More/Help/Demo Mode - Extra tools and settings"
         ],
         visual: <NavVisual />,
@@ -409,7 +410,7 @@ export default function IntroGuidePage() {
     ? guideSections
         .filter((s) => s.id !== "ward-diary" && s.id !== "my-tasks")
         .map((s) => {
-          if (s.id === "welcome") {
+          if (s.id === "getting-started") {
             return {
               ...s,
               slides: s.slides.map((sl) => {
@@ -420,6 +421,7 @@ export default function IntroGuidePage() {
                     tips: [
                       "Links - Quick links to useful resources",
                       "Guides - Referral workflows and clinical how-to guides",
+                      "Search - press Ctrl+K (or the search box) to jump to any guide or link",
                       "More - Staff list and Editor",
                       "Help - Interactive Demo, this Intro Guide, FAQ, and Feedback",
                     ],

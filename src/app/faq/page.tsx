@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MainLayout } from "@/components/layout";
-import { ChevronDown, HelpCircle, Shield, Smartphone, Users, Lock, AlertCircle, Stethoscope } from "lucide-react";
+import { ChevronDown, HelpCircle, Shield, Smartphone, Users, Lock, AlertCircle, Stethoscope, Search } from "lucide-react";
 import Link from "next/link";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
@@ -56,6 +56,28 @@ function buildFAQItems(isV2: boolean, link: (h: string) => string): FAQItem[] {
         </p>
         <p className="text-sm text-gray-500">
           See our <Link href={link("/gdpr")} className="text-indigo-600 hover:underline">GDPR & Privacy page</Link> for more details.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "search",
+    question: "How do I find a guide or link quickly?",
+    icon: <Search className="w-5 h-5" />,
+    answer: (
+      <div className="space-y-3">
+        <p>
+          Use the search box in the top bar, or press <strong>Ctrl+K</strong> (Cmd+K on a Mac)
+          from anywhere. Start typing and it searches across every guide and link at once.
+        </p>
+        <ul className="list-disc list-inside space-y-1 ml-2">
+          <li>Results are grouped into guides and links, with a badge showing each guide&apos;s type</li>
+          <li>Use the up/down arrows to move and Enter to open; Esc closes it</li>
+          <li>Links open in a new tab; a lock icon means the link needs FOCUS access</li>
+        </ul>
+        <p>
+          On the Guides page you can also filter by category or by type (How-to, Step-by-step,
+          Builder, Checklist, Tips).
         </p>
       </div>
     ),

@@ -6,7 +6,7 @@ import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import {
   FORMULATION_SECTIONS, RMP_SECTIONS, MANDATORY_MDT_LINE,
-  RISK_TEACHING, RISK_EXAMPLES, S1_STEPS, RISK_TYPES, SEPARATE_PLANS_NOTE,
+  RISK_TEACHING, RISK_EXAMPLES, S1_STEPS, RISK_TYPES, RISK_DOMAINS, SEPARATE_PLANS_NOTE,
   RMP_RISK_CHIPS, FORMULATION_RISK_CHIPS, BLANK_RISK,
   type RiskSection, type RiskChipGroup, type RmpSectionId, type FormulationSectionId,
 } from "@/lib/data/guides";
@@ -682,9 +682,9 @@ export default function RiskAssessmentPage() {
             )}
           </div>
           <p className="text-xs text-gray-500">
-            Pick the patient&apos;s risks. The prompts in both stages below tailor to what you choose. Use
-            {" "}<strong>other (unlisted risk)</strong> for anything the list misses - it brings up every prompt so
-            you can cover it.
+            Pick the patient&apos;s risks, grouped by the seven SystmOne risk-screen domains. The prompts in both
+            stages below tailor to what you choose. Use{" "}<strong>other (unlisted risk)</strong> for anything the
+            list misses - it brings up every prompt so you can cover it.
           </p>
 
           {editChips && (
@@ -697,35 +697,51 @@ export default function RiskAssessmentPage() {
             </div>
           )}
 
-          <div className="flex flex-wrap gap-1.5">
-            {RISK_TYPES.map((rt) => {
-              const on = risks.includes(rt);
-              return (
-                <button
-                  key={rt}
-                  onClick={() => toggleRisk(rt)}
-                  aria-pressed={on}
-                  className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ${
-                    on
-                      ? "bg-rose-600 border-rose-600 text-white font-medium"
-                      : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"
-                  }`}
-                >
-                  {rt}
-                </button>
-              );
-            })}
-            <button
-              onClick={() => toggleRisk(BLANK_RISK)}
-              aria-pressed={risks.includes(BLANK_RISK)}
-              className={`px-2.5 py-1.5 rounded-lg text-sm border border-dashed transition-all ${
-                risks.includes(BLANK_RISK)
-                  ? "bg-amber-500 border-amber-500 text-white font-medium"
-                  : "bg-white border-amber-300 text-amber-700 hover:bg-amber-50"
-              }`}
-            >
-              + other (unlisted risk)
-            </button>
+          <div className="space-y-3">
+            {RISK_DOMAINS.map((domain) => (
+              <div key={domain.title}>
+                <p className="text-[11px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">{domain.title}</p>
+                {domain.risks.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5">
+                    {domain.risks.map((rt) => {
+                      const on = risks.includes(rt);
+                      return (
+                        <button
+                          key={rt}
+                          onClick={() => toggleRisk(rt)}
+                          aria-pressed={on}
+                          className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ${
+                            on
+                              ? "bg-rose-600 border-rose-600 text-white font-medium"
+                              : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"
+                          }`}
+                        >
+                          {rt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400 italic">
+                    No preset risks here - use &ldquo;+ other (unlisted risk)&rdquo; below for a specific child or foetus risk.
+                  </p>
+                )}
+              </div>
+            ))}
+
+            <div className="pt-1">
+              <button
+                onClick={() => toggleRisk(BLANK_RISK)}
+                aria-pressed={risks.includes(BLANK_RISK)}
+                className={`px-2.5 py-1.5 rounded-lg text-sm border border-dashed transition-all ${
+                  risks.includes(BLANK_RISK)
+                    ? "bg-amber-500 border-amber-500 text-white font-medium"
+                    : "bg-white border-amber-300 text-amber-700 hover:bg-amber-50"
+                }`}
+              >
+                + other (unlisted risk)
+              </button>
+            </div>
           </div>
 
           {risks.includes(BLANK_RISK) && (

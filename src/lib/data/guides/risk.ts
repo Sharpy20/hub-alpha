@@ -72,6 +72,57 @@ export const RISK_TYPES: string[] = [
   "observations / refusal of obs",
 ];
 
+// ---- The 7 SystmOne risk-screen domains ----
+// The WAA Inpatient Risk Screening Tool groups risk under 7 domains. The 28
+// RISK_TYPES above are bucketed here so the picker mirrors SystmOne. Every risk
+// appears in exactly one domain; "other (unlisted risk)" covers the rest
+// (including domain 6, for which none of the 28 map directly).
+export interface RiskDomain {
+  title: string;
+  risks: string[];
+}
+export const RISK_DOMAINS: RiskDomain[] = [
+  {
+    title: "1. Self-harm or suicide",
+    risks: ["self-harm", "suicide"],
+  },
+  {
+    title: "2. Risk to self (self-neglect, ADLs, life skills)",
+    risks: [
+      "self-neglect / ADLs", "diet and nutrition", "medication non-concordance",
+      "substance misuse", "refusal to engage", "observations / refusal of obs",
+      "sleep disturbance", "hoarding", "AWOL / absconsion", "discharge risk",
+    ],
+  },
+  {
+    title: "3. Harm or neglect to others",
+    risks: [
+      "violence and aggression", "risk to others", "risk to family", "fire risk",
+      "sexual disinhibition", "weapon access", "boundary violations",
+      "paranoia / persecutory beliefs", "mania / impulsivity",
+    ],
+  },
+  {
+    title: "4. Harm or neglect by others",
+    risks: ["vulnerability / exploitation", "financial exploitation"],
+  },
+  {
+    title: "5. Physical health and frailty",
+    risks: [
+      "physical health deterioration", "falls", "infection / delirium",
+      "cognitive impairment / confusion",
+    ],
+  },
+  {
+    title: "6. Risk to a foetus, infant or child under 18",
+    risks: [],
+  },
+  {
+    title: "7. Environmental and external factors",
+    risks: ["homelessness / housing instability"],
+  },
+];
+
 // ---- "Other / unlisted risk" catch-all ----
 // A free-text risk the nurse names themselves, so they can cover anything the
 // 28 predefined risks miss. When picked, the builder shows EVERY prompt from

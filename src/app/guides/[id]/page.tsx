@@ -2,6 +2,7 @@
 
 import { MainLayout } from "@/components/layout";
 import { Button, Card, CardContent, Badge, Breadcrumb } from "@/components/ui";
+import { GuideFeedback } from "@/components/guides/GuideFeedback";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
@@ -758,6 +759,7 @@ export default function UnifiedGuidePage() {
             </div>
           </div>
         )}
+        <GuideFeedback guideId={guideId} />
       </div>
 
       {!isV2 && (

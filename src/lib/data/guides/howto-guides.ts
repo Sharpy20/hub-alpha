@@ -57,6 +57,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "abc-chart": { icon: "📋", gradient: "from-amber-500 to-orange-700", category: "Clinical Assessment" },
   prenoxad: { icon: "💉", gradient: "from-teal-500 to-emerald-700", category: "Physical Health" },
   "named-nurse": { icon: "📋", gradient: "from-emerald-500 to-emerald-700", category: "Nurse Tools" },
+  "admission-note": { icon: "📝", gradient: "from-sky-500 to-blue-700", category: "Nurse Tools" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -67,59 +68,81 @@ export const GUIDE_WAGOLLS: Record<string, { label: string; url: string }[]> = {
 };
 
 export const GUIDES: Record<string, GuideData> = {
+  "admission-note": {
+    id: "admission-note",
+    title: "Admission Note Template",
+    description: "The nine points to cover when you write up an admission - copy the skeleton into SystmOne",
+    caseNote: "ADMISSION NOTE ([DATE], by [NURSE])\n1. Reason for admission: [ ]\n2. Presentation on admission; patient welcomed and orientated (recorded as a 1:1): [ ]\n3. Physical observations, including height and weight: [ ]\n4. Level of observations and rationale: [ ]\n5. Patient description: [ ]\n6. Patient informed of named nurse; named nurse emailed: [ ]\n7. Carers informed - consent to share obtained, family/friend contacted (recorded as carer's contact): [ ]\n8. Section 132 rights: [READ / patient lacks capacity - documented on the S132 form]\n9. Outstanding admission documentation handed over to next shift; named nurse emailed: [ ]",
+    steps: [
+      {
+        id: "cover",
+        title: "What to cover in the admission note",
+        content:
+          "Work through these nine points when you write up an admission:\n\n1. Reason for admission\n2. Presentation on admission, and the patient being welcomed and orientated (document this as a 1:1)\n3. Physical observations, including height and weight\n4. Level of observations and the rationale for it\n5. Patient description\n6. Inform the patient of their named nurse (check the named nurse is working over the next few days and email them)\n7. Carers to be informed - obtain consent to share, then contact family/friend if the patient consents; document as a carer's contact\n8. Section 132 rights to be completed - if the patient does not have capacity, document this on the S132 rights form (completing it shows you attempted to explain their rights)\n9. Hand over any outstanding admission documentation to the next shift and email the named nurse",
+        tip: "Use the Copy button below to drop the numbered skeleton straight into your SystmOne note, then fill it in.",
+      },
+      {
+        id: "reminders",
+        title: "Three easy-to-miss details",
+        content:
+          "- The welcome and orientation counts as a 1:1 - record it as one.\n- Carer's contact needs the patient's consent to share first; if you cannot reach the carer, record that you tried.\n- If the patient lacks capacity to understand their rights, you still complete the S132 form - it evidences that you attempted to explain them.",
+        tip: "This is the note you type up. The Admission Checklist guide is the tick-list of the tasks themselves.",
+      },
+    ],
+  },
   "named-nurse": {
     id: "named-nurse",
     title: "Named Nurse Checklist",
-    description: "The weekly and monthly rhythm for keeping your patients' records current - and dated",
-    caseNote: "Named nurse weekly review completed on [DATE] by [NURSE]. Care plan updated with patient input and offered: [DONE / DECLINED]. Risk assessment reviewed and updated: [DONE]. Consent to share re-asked: [OUTCOME] (recorded in care plan and SystmOne daily notes). Monthly items: HONOS last updated [DATE], safety plan last updated [DATE]. Outstanding this week: [ITEMS]. Recorded by [NURSE].",
+    description: "The weekly and monthly rhythm for keeping your named patients' records current - and dated",
+    caseNote: "Named nurse review completed on [DATE] by [NURSE]. Named nurse 1:1 done and recorded as 'named nurse 1:1': [DONE]. Carer's contact done and recorded as 'carer's contact': [DONE / UNABLE - REASON]. My Care Plan updated with patient voice and offered: [DONE / DECLINED]. Risk screening tool reviewed: [DONE]. Consent to share re-asked (recorded in care plan and daily notes): [OUTCOME]. Red folder / ward round sheet updated: [DONE]. Outstanding this week: [ITEMS]. Recorded by [NURSE].",
     steps: [
       {
         id: "role",
         title: "Your job, and the one golden rule",
         content:
-          "As named nurse you own your patients' core records and keep them current.\n\nThe single most important habit, and the one the weekly audit checks for, is this: DATE everything you update. If you add or change any information, put the date against it.\n\nWithout dates it is impossible to tell whether an entry is this week's work or months old - and it looks like nothing has moved on. Continuity is shown by dated, weekly updates, not by how much text there is.\n\nThis guide sets out the rhythm: what to do on admission, what to refresh every week, what to refresh every month, and what is triggered by incidents or changes. Use it as your weekly checklist.",
+          "As named nurse you hold overall responsibility for your patients' core records and keep them current, contacting other professionals where needed to do so.\n\nThe single most important habit, and the one the weekly audit checks for, is this: DATE everything you update. If you add or change any information, put the date against it. Without dates it is impossible to tell whether an entry is this week's work or months old, and it looks like nothing has moved on. Continuity is shown by dated, weekly updates, not by how much text there is.\n\nIf there are ANY changes, update the paperwork (care plans, safety assessment) immediately. If you cannot do it yourself, hand it over to another qualified nurse, even if it is not their patient. If you are on annual leave, agree cover with the other named nurse and tell them when things need updating. Any concerns, seek support from your B6/B7.",
         tip: "If you touch a record, date it. That one habit is what the audit is looking for.",
       },
       {
         id: "admission",
         title: "On admission (do once)",
         content:
-          "Complete these once, when the patient is admitted:\n\n- Risk Management Plan (RMP) - completed on admission\n- Physical health assessment - completed fully on admission\n- Advocacy (IMHA) referral - offered and completed once on admission\n- Rights read to the patient (Section 132) - on admission\n- Consent to share information - asked on admission\n- Start the care plan and safety plan, and record a baseline HONOS\n\nIf the physical health assessment identifies any need, create an interventions care plan for that need.",
+          "Complete these once, when the patient is admitted:\n\n- My Care Plan - commence it with all the details you have to hand (or continue the community one). Document 'unable to establish on admission' rather than leaving sections blank\n- Risk Management Plan (RMP)\n- Physical health assessment - completed fully, including height and weight\n- Advocacy (IMHA) referral - offered\n- Rights read to the patient (Section 132) - if the patient lacks capacity, document this on the S132 rights form (it shows you attempted to explain their rights)\n- Consent to share information - asked\n- Start the safety plan and record a baseline HONOS\n- Inform the patient of their named nurse and email the named nurse; inform carers if the patient consents\n\nIf the physical health assessment identifies any need, create an interventions care plan for that need.",
         tip: "New admissions are the busiest point - the Admission Checklist guide walks the full arrival list.",
       },
       {
         id: "weekly",
         title: "Every week",
         content:
-          "Refresh these weekly, and put the date on each update:\n\n- Care plan - updated weekly WITH patient input\n- Care plan - offered to the patient weekly\n- Risk assessment - updated weekly as a minimum (sooner after any incident)\n- Consent to share information - re-asked weekly, and documented in BOTH the care plan and the SystmOne daily notes",
+          "Refresh these weekly (unless there is a change or something new to add), and put the date on each update:\n\n- My Care Plan - update it, or start a new one if there is none. Complete the 'intervention and support' section. Make sure the patient's voice is updated, importantly in the mental health and level-of-observations sections\n- Offer the care plan to the patient (print a paper copy if they would rather complete it outside the 1:1)\n- Risk screening tool\n- Named nurse 1:1 - have it and record it on SystmOne as 'named nurse 1:1'\n- Carer's contact - contact the carer/family and offer them support too; record on SystmOne as 'carer's contact'. If you cannot reach them, record that too\n- Red folder contents, including the ward round sheet, and print off new care plans\n- Capacity assessment in relation to their care/care plans if anything has changed (you can do this in the 1:1)\n- Consent to share information - update in the care plan and document the discussion in the notes\n- MUST (unless indicated otherwise, e.g. already being seen by a dietitian)",
         tip: "Care plans are updated WITH the patient, not just about them - record their input and the date.",
       },
       {
         id: "monthly",
         title: "Every month",
         content:
-          "Refresh these monthly, unless something significant changes sooner:\n\n- HONOS - updated monthly\n- Safety plan - updated monthly\n\nMonthly items still get a date each time, even if little has changed.",
+          "Refresh these monthly, unless something changes sooner:\n\n- Waterlow (if necessary - if no need identified, review when there is a change)\n- Physical health assessment\n- Falls assessment\n- HONOS\n\nMonthly items still get a date each time, even if little has changed.",
         tip: "A dated 'reviewed, no change' entry is still evidence the review happened.",
       },
       {
-        id: "after-incident",
-        title: "After any incident",
+        id: "triggers",
+        title: "Triggered by an event (not the calendar)",
         content:
-          "These are triggered by events, not by a timer. After any incident:\n\n- Risk assessment - update it\n- Risk Management Plan (RMP) - update it\n\nA post-incident debrief also feeds these updates - capture the learning and reflect it in the plans.",
-        tip: "Same day where you can. An incident with no matching risk/RMP update stands out in the audit.",
+          "Some things are driven by a change rather than a timer:\n\n- Safety plan - completed on admission, updated on any change, and again on discharge\n- After ANY incident - update the risk screening tool and the Risk Management Plan (a post-incident debrief feeds these)\n- Read rights again (Section 132) on: transfer between wards, change of Responsible Clinician (RC), or any change in the patient's capacity\n- Physical health assessment - update if there is a significant change\n- If a physical health need is identified at any point, create an interventions care plan for it",
+        tip: "An incident with no matching risk/RMP update stands out in the audit - do it the same day where you can.",
       },
       {
-        id: "on-change",
-        title: "On specific changes",
+        id: "care-plan-how",
+        title: "How the My Care Plan works",
         content:
-          "Some tasks are triggered by a change rather than the calendar:\n\n- Read rights again (Section 132) on: admission, transfer between wards, change of Responsible Clinician (RC), or any change in the patient's capacity\n- Physical health assessment - update if there is any significant change\n- If a physical health need is identified at any point, create an interventions care plan for it",
-        tip: "Rights are not just an admission task - a ward transfer or RC change means reading them again.",
+          "My Care Plan should already exist from the community for known patients. On admission the admitting nurse commences it with the details to hand.\n\n- The named nurse, OT and psychology all input into it using the agreed template; the named nurse holds overall responsibility for keeping it up to date\n- Complete all aspects of the agreed template to meet the AIMS standards\n- The weekly MDT is a prompt to update it; OTs feed in their goals after their 1-2 day initial contact and 72-hour assessment\n- Keep the patient's voice throughout - use the patient prompt sheet to support them\n- For a complex, lengthy plan, use 1:1 time to make a short bullet-point summary (helpful for bank/agency staff too)\n- Keep the office white board up to date with the traffic-light system: red = not complete, green = complete and up to date",
+        tip: "Document 'unable to establish on admission' rather than leaving a section blank.",
       },
       {
         id: "audit",
         title: "The weekly audit (why dates matter)",
         content:
-          "The ward runs a weekly audit across all patients, checking that the above is current. The recurring feedback is simple: put dates on everything you update, so it is clear what is new and what is old.\n\nNew admissions are excluded from that week's audit while they settle in.\n\nIf your entries are dated and kept to the cadence above, the audit shows continuity and active, patient-centred care.",
+          "The ward runs a weekly audit across all patients, checking the above is current. The recurring feedback is simple: put dates on everything you update, so it is clear what is new and what is old. Care-plan completion is also monitored via the 72-hour audits and the ward leadership care-plan reports, which are there to support you.\n\nNew admissions are excluded from that week's audit while they settle in.\n\nIf your entries are dated and kept to the cadence above, the audit shows continuity and active, patient-centred care.",
         tip: "If in doubt: date it, and note the patient's input.",
       },
     ],

@@ -348,8 +348,75 @@ const SEED: QuizQuestion[] = [
   },
 ];
 
-// Web-verified questions from the research pass get merged here.
-const RESEARCH: QuizQuestion[] = [];
+// ---------------------------------------------------------------------------
+// RESEARCH BANK - web-verified questions harvested from national guidance.
+// Each JSON file is one research batch (raw shape has no id). We normalise:
+// generate a stable id, drop a null/empty scenario, and drop a "not stated"
+// source date. Categories are already stored with a real "&" in the JSON.
+// ---------------------------------------------------------------------------
+import researchMha from "./research-mha.json";
+import researchNice from "./research-nice.json";
+import researchBnf from "./research-bnf.json";
+import researchPractice from "./research-practice.json";
+import researchCamhs from "./research-camhs.json";
+import researchOlder from "./research-olderadult.json";
+import researchInfogov from "./research-infogov.json";
+import researchSuicide from "./research-suicide.json";
+import researchSubstance from "./research-substance.json";
+import researchRights from "./research-rights.json";
+import researchEmerg from "./research-emergencies.json";
+import researchLd from "./research-ldautism.json";
+import researchRestrict from "./research-restrictive.json";
+import researchPerinatal from "./research-perinatal.json";
+
+interface RawQuizQuestion {
+  category: string;
+  difficulty: string;
+  scenario?: string | null;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  rationale: string;
+  source: string;
+  sourceUrl?: string;
+  sourceDate?: string;
+}
+
+function normalise(raw: RawQuizQuestion[], prefix: string): QuizQuestion[] {
+  return raw.map((q, i) => {
+    const out: QuizQuestion = {
+      id: `${prefix}-${i + 1}`,
+      category: q.category,
+      difficulty: q.difficulty as QuizDifficulty,
+      question: q.question,
+      options: q.options,
+      correctIndex: q.correctIndex,
+      rationale: q.rationale,
+      source: q.source,
+    };
+    if (q.scenario) out.scenario = q.scenario;
+    if (q.sourceUrl) out.sourceUrl = q.sourceUrl;
+    if (q.sourceDate && q.sourceDate !== "not stated") out.sourceDate = q.sourceDate;
+    return out;
+  });
+}
+
+const RESEARCH: QuizQuestion[] = [
+  ...normalise(researchMha as RawQuizQuestion[], "mha"),
+  ...normalise(researchNice as RawQuizQuestion[], "nice"),
+  ...normalise(researchBnf as RawQuizQuestion[], "bnf"),
+  ...normalise(researchPractice as RawQuizQuestion[], "prac"),
+  ...normalise(researchCamhs as RawQuizQuestion[], "camhs"),
+  ...normalise(researchOlder as RawQuizQuestion[], "older"),
+  ...normalise(researchInfogov as RawQuizQuestion[], "infogov"),
+  ...normalise(researchSuicide as RawQuizQuestion[], "suicide"),
+  ...normalise(researchSubstance as RawQuizQuestion[], "subst"),
+  ...normalise(researchRights as RawQuizQuestion[], "rights"),
+  ...normalise(researchEmerg as RawQuizQuestion[], "emerg"),
+  ...normalise(researchLd as RawQuizQuestion[], "ld"),
+  ...normalise(researchRestrict as RawQuizQuestion[], "restrict"),
+  ...normalise(researchPerinatal as RawQuizQuestion[], "perinatal"),
+];
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [...SEED, ...RESEARCH];
 

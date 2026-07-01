@@ -17,6 +17,7 @@ export const DEFAULT_APPROVAL: ApprovalStatus = "amber";
 // Keyed by guide id (the id in ALL_GUIDES on the guides page).
 export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "prenoxad": "red",
+  "admission-note": "red",
   // Generic placeholder content only - not real guidance yet (need Mike's copy).
   "dols": "red",
   // named-nurse now has real content (from the ward audit cadence) - amber until Mike signs it off.

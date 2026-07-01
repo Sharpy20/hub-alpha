@@ -17,6 +17,9 @@ export const DEFAULT_APPROVAL: ApprovalStatus = "amber";
 // Keyed by guide id (the id in ALL_GUIDES on the guides page).
 export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "prenoxad": "red",
+  // Generic placeholder content only - not real guidance yet (need Mike's copy).
+  "dols": "red",
+  "named-nurse": "red",
   // New pure-guidance tools - being reworked, not ready to trust.
   "seclusion-support-plan": "red",
   "debrief": "red",

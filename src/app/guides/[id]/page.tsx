@@ -676,11 +676,11 @@ export default function UnifiedGuidePage() {
                 <p className="text-sm text-gray-500 mt-0.5">Copy to the patient's notes</p>
               </div>
               <div className="p-6">
-                <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl font-mono text-sm leading-relaxed border border-amber-200">
-                  {linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}{title} reviewed on {todayDate}.{caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}
+                <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl font-mono text-sm leading-relaxed border border-amber-200 whitespace-pre-wrap">
+                  {(linkedPatient ? `Patient: ${linkedPatient.name}. ` : "") + (guide.caseNote ? guide.caseNote.replace(/\[DATE\]/g, todayDate).replace(/\[NURSE\]/g, caseNoteBy || "[NURSE]") : `${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`)}
                 </div>
                 <Button onClick={() => {
-                  const text = `${linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`;
+                  const text = `${linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}` + (guide.caseNote ? guide.caseNote.replace(/\[DATE\]/g, todayDate).replace(/\[NURSE\]/g, caseNoteBy || "[NURSE]") : `${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`);
                   handleCopy(text);
                 }} className={`w-full mt-3 py-3 ${copied ? "bg-green-600 hover:bg-green-700" : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"}`}>
                   {copied ? <><Check className="w-5 h-5 mr-2" /> Copied!</> : <><Copy className="w-5 h-5 mr-2" /> Copy to Clipboard</>}

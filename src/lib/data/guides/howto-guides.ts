@@ -14,6 +14,9 @@ export interface GuideData {
   steps: GuideStep[];
   // SystmOne how-to guides on FOCUS (trust login needed) shown under the guide.
   focus?: { label: string; url: string }[];
+  // Optional custom case-note template for the end-of-guide orange copy box.
+  // [DATE] is auto-filled; other [PLACEHOLDERS] are left for the nurse to edit.
+  caseNote?: string;
 }
 
 export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: string }> = {
@@ -119,7 +122,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "record",
         title: "Record it on SystmOne",
-        content: `Record:\n\n- The identified risk of future opioid overdose (as agreed by MDT / substance misuse)\n- That valid, informed consent was given\n- Date the DHCFT training was completed, and with which nurse\n- Medication supplied, date, quantity, batch number and expiry\n- Advice given\n- "Supplied via Patient Group Direction (PGD)"\n\nAdd it to the patient's leave and discharge plans too.\n\nCase-note prompt (copy and edit):\n\nTake-home Prenoxad (naloxone injection) supplied under PGD on [DATE]. Patient identified at risk of opioid overdose and agreed at MDT. Informed consent obtained. Overdose-awareness and Prenoxad administration training completed with patient [+/- carer] on [DATE] by [NURSE]. Kit supplied: 1 x Prenoxad, batch [BATCH], expiry [EXPIRY]. Advised: call 999, IM injection, recovery position, stay until ambulance arrives, naloxone is short-acting. Added to leave/discharge plan. Further supplies via Derbyshire Recovery Partnership.`,
+        content: `Record:\n\n- The identified risk of future opioid overdose (as agreed by MDT / substance misuse)\n- That valid, informed consent was given\n- Date the DHCFT training was completed, and with which nurse\n- Medication supplied, date, quantity, batch number and expiry\n- Advice given\n- "Supplied via Patient Group Direction (PGD)"\n\nAdd it to the patient's leave and discharge plans too.\n\nA ready-to-paste case note is in the orange box at the end of this guide - copy it and fill in the [brackets].`,
       },
       {
         id: "legal",
@@ -132,6 +135,7 @@ export const GUIDES: Record<string, GuideData> = {
         content: `- "How to administer naloxone (injectable)" training video\n- Prenoxad client's guide, and harm-reduction / overdose / heroin / fentanyl leaflets\n- Product SPC / PIL: www.medicines.org.uk - BNF: bnf.nice.org.uk\n- Report adverse reactions via the MHRA Yellow Card scheme: yellowcard.mhra.gov.uk\n- Full PGD and protocol: on FOCUS (Medicine Management folder)`,
       },
     ],
+    caseNote: `Take-home Prenoxad (naloxone injection) supplied under PGD on [DATE]. Patient identified at risk of opioid overdose and agreed at MDT. Informed consent obtained. Overdose-awareness and Prenoxad administration training completed with patient [+/- carer] on [DATE] by [NURSE]. Kit supplied: 1 x Prenoxad, batch [BATCH], expiry [EXPIRY]. Advised: call 999, IM injection, recovery position, stay until ambulance arrives, naloxone is short-acting. Added to leave/discharge plan. Further supplies via Derbyshire Recovery Partnership.`,
   },
   // Real AMHP numbers (hidden in demo per Rule 4): City 01332 255609, County 01629 537904.
   "arrange-mha-assessment": {

@@ -56,6 +56,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "child-in-need": { icon: "🤲", gradient: "from-sky-600 to-sky-800", category: "Safeguarding" },
   "abc-chart": { icon: "📋", gradient: "from-amber-500 to-orange-700", category: "Clinical Assessment" },
   prenoxad: { icon: "💉", gradient: "from-teal-500 to-emerald-700", category: "Physical Health" },
+  "named-nurse": { icon: "📋", gradient: "from-emerald-500 to-emerald-700", category: "Nurse Tools" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -66,6 +67,63 @@ export const GUIDE_WAGOLLS: Record<string, { label: string; url: string }[]> = {
 };
 
 export const GUIDES: Record<string, GuideData> = {
+  "named-nurse": {
+    id: "named-nurse",
+    title: "Named Nurse Checklist",
+    description: "The weekly and monthly rhythm for keeping your patients' records current - and dated",
+    caseNote: "Named nurse weekly review completed on [DATE] by [NURSE]. Care plan updated with patient input and offered: [DONE / DECLINED]. Risk assessment reviewed and updated: [DONE]. Consent to share re-asked: [OUTCOME] (recorded in care plan and SystmOne daily notes). Monthly items: HONOS last updated [DATE], safety plan last updated [DATE]. Outstanding this week: [ITEMS]. Recorded by [NURSE].",
+    steps: [
+      {
+        id: "role",
+        title: "Your job, and the one golden rule",
+        content:
+          "As named nurse you own your patients' core records and keep them current.\n\nThe single most important habit, and the one the weekly audit checks for, is this: DATE everything you update. If you add or change any information, put the date against it.\n\nWithout dates it is impossible to tell whether an entry is this week's work or months old - and it looks like nothing has moved on. Continuity is shown by dated, weekly updates, not by how much text there is.\n\nThis guide sets out the rhythm: what to do on admission, what to refresh every week, what to refresh every month, and what is triggered by incidents or changes. Use it as your weekly checklist.",
+        tip: "If you touch a record, date it. That one habit is what the audit is looking for.",
+      },
+      {
+        id: "admission",
+        title: "On admission (do once)",
+        content:
+          "Complete these once, when the patient is admitted:\n\n- Risk Management Plan (RMP) - completed on admission\n- Physical health assessment - completed fully on admission\n- Advocacy (IMHA) referral - offered and completed once on admission\n- Rights read to the patient (Section 132) - on admission\n- Consent to share information - asked on admission\n- Start the care plan and safety plan, and record a baseline HONOS\n\nIf the physical health assessment identifies any need, create an interventions care plan for that need.",
+        tip: "New admissions are the busiest point - the Admission Checklist guide walks the full arrival list.",
+      },
+      {
+        id: "weekly",
+        title: "Every week",
+        content:
+          "Refresh these weekly, and put the date on each update:\n\n- Care plan - updated weekly WITH patient input\n- Care plan - offered to the patient weekly\n- Risk assessment - updated weekly as a minimum (sooner after any incident)\n- Consent to share information - re-asked weekly, and documented in BOTH the care plan and the SystmOne daily notes",
+        tip: "Care plans are updated WITH the patient, not just about them - record their input and the date.",
+      },
+      {
+        id: "monthly",
+        title: "Every month",
+        content:
+          "Refresh these monthly, unless something significant changes sooner:\n\n- HONOS - updated monthly\n- Safety plan - updated monthly\n\nMonthly items still get a date each time, even if little has changed.",
+        tip: "A dated 'reviewed, no change' entry is still evidence the review happened.",
+      },
+      {
+        id: "after-incident",
+        title: "After any incident",
+        content:
+          "These are triggered by events, not by a timer. After any incident:\n\n- Risk assessment - update it\n- Risk Management Plan (RMP) - update it\n\nA post-incident debrief also feeds these updates - capture the learning and reflect it in the plans.",
+        tip: "Same day where you can. An incident with no matching risk/RMP update stands out in the audit.",
+      },
+      {
+        id: "on-change",
+        title: "On specific changes",
+        content:
+          "Some tasks are triggered by a change rather than the calendar:\n\n- Read rights again (Section 132) on: admission, transfer between wards, change of Responsible Clinician (RC), or any change in the patient's capacity\n- Physical health assessment - update if there is any significant change\n- If a physical health need is identified at any point, create an interventions care plan for it",
+        tip: "Rights are not just an admission task - a ward transfer or RC change means reading them again.",
+      },
+      {
+        id: "audit",
+        title: "The weekly audit (why dates matter)",
+        content:
+          "The ward runs a weekly audit across all patients, checking that the above is current. The recurring feedback is simple: put dates on everything you update, so it is clear what is new and what is old.\n\nNew admissions are excluded from that week's audit while they settle in.\n\nIf your entries are dated and kept to the cadence above, the audit shows continuity and active, patient-centred care.",
+        tip: "If in doubt: date it, and note the patient's input.",
+      },
+    ],
+  },
   prenoxad: {
     id: "prenoxad",
     title: "Prenoxad (take-home naloxone injection)",

@@ -19,7 +19,7 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "prenoxad": "red",
   // Generic placeholder content only - not real guidance yet (need Mike's copy).
   "dols": "red",
-  "named-nurse": "red",
+  // named-nurse now has real content (from the ward audit cadence) - amber until Mike signs it off.
   // New pure-guidance tools - being reworked, not ready to trust.
   "seclusion-support-plan": "red",
   "debrief": "red",

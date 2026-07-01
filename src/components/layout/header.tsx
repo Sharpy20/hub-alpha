@@ -8,6 +8,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import { getStaffByWard } from "@/lib/data/staff";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
+import { GlobalSearch } from "./global-search";
 
 export function Header() {
   const router = useRouter();
@@ -158,6 +159,9 @@ export function Header() {
             >
               <Sparkles className="w-4 h-4" />
             </button>
+
+            {/* Global search (guides + links). Ctrl/Cmd+K anywhere. */}
+            <GlobalSearch />
 
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-3">

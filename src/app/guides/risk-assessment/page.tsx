@@ -155,8 +155,9 @@ function withExamples(text: string, examples: DatedExample[] = []): string {
   const base = text.trim();
   const exs = examples.filter((e) => e.text.trim());
   if (!exs.length) return base;
-  const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("; ");
-  return `${base ? base + " " : ""}Specific examples: ${fmt}`;
+  // Each example on its own line so the block reads as a list in S1.
+  const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("\n");
+  return `${base ? base + "\n" : ""}Specific examples:\n${fmt}`;
 }
 
 async function copyText(text: string) {

@@ -53,13 +53,14 @@ export function buildContent(st: SecState | undefined): string {
   const parts: string[] = [];
   if (st.chips.length) parts.push(cap(naturalList(st.chips)));
   if (st.text.trim()) parts.push(cap(st.text.trim()));
+  let out = parts.length ? ensureStop(parts.map(ensureStop).join(" ")) : "";
   const exs = (st.examples || []).filter((e) => e.text.trim());
   if (exs.length) {
-    const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("; ");
-    parts.push(`Specific examples: ${fmt}`);
+    // Each example on its own line so the block reads as a list.
+    const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("\n");
+    out = `${out ? out + "\n" : ""}Specific examples:\n${fmt}`;
   }
-  if (!parts.length) return "";
-  return ensureStop(parts.map(ensureStop).join(" "));
+  return out;
 }
 
 // ---- plain-text format (SystmOne risk screen strips blank rows) ----

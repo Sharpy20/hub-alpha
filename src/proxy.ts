@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { COLLAPSED_FOR_DEMO } from "@/lib/config/build";
 
 // Next 16.2 renamed the "middleware" file convention to "proxy" (same behaviour,
 // runs on the Node.js runtime). Function renamed middleware -> proxy, file
@@ -60,8 +61,22 @@ export function proxy(request: NextRequest) {
   if (pathname === "/welcome" || pathname.startsWith("/welcome/") ||
       pathname === "/v2/welcome" || pathname.startsWith("/v2/welcome/")) {
     const url = request.nextUrl.clone();
-    url.pathname = pathname.startsWith("/v2") ? "/v2" : "/";
+    url.pathname = (!COLLAPSED_FOR_DEMO && pathname.startsWith("/v2")) ? "/v2" : "/";
     return NextResponse.redirect(url);
+  }
+
+  // DEMO COLLAPSE (see src/lib/config/build.ts): the whole product lives at the
+  // root. Redirect any old /v2 link to the same page at the root, and do NOT
+  // block the full-build routes. Set COLLAPSED_FOR_DEMO=false to restore the split.
+  if (COLLAPSED_FOR_DEMO) {
+    if (pathname === "/v2" || pathname.startsWith("/v2/")) {
+      const subpath = pathname === "/v2" ? "/" : pathname.slice("/v2".length);
+      const legacy = legacyTarget(subpath);
+      const url = request.nextUrl.clone();
+      url.pathname = legacy || subpath || "/";
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next();
   }
 
   // FULL build under /v2 - rewrite to the real route, full access (no blocking).

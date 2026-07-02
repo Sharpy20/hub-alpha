@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { COLLAPSED_FOR_DEMO } from "@/lib/config/build";
 
 // ---------------------------------------------------------------------------
 // THE SWAP (21 Jun 2026, Session 23)
@@ -34,6 +35,8 @@ function underV2Prefix(pathname: string | null): boolean {
 // True for the stripped / PII-free experience (now the default site at root).
 export function useIsV2(): boolean {
   const pathname = usePathname();
+  // Demo collapse: the whole product is the full build - never the limited variant.
+  if (COLLAPSED_FOR_DEMO) return false;
   // Default to the limited experience when the path is unknown (safer: hides PII).
   return !underV2Prefix(pathname);
 }
@@ -41,6 +44,8 @@ export function useIsV2(): boolean {
 // Prefix internal links with /v2 when the user is inside the full (/v2) build so
 // navigation stays in that build. `inFull` = "are we under the /v2 prefix".
 export function v2Href(href: string, inFull: boolean): string {
+  // Demo collapse: everything lives at the root, so never add the /v2 prefix.
+  if (COLLAPSED_FOR_DEMO) return href;
   if (!inFull) return href;
   if (!href) return href;
   // Leave external URLs, anchors and absolute-non-app paths alone.

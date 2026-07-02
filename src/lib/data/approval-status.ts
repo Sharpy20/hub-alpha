@@ -18,8 +18,9 @@ export const DEFAULT_APPROVAL: ApprovalStatus = "amber";
 export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "prenoxad": "red",
   "admission-note": "red",
-  // Generic placeholder content only - not real guidance yet (need Mike's copy).
+  // DoLS + Blanket Restrictions built from Trust policies (2 Jul) - red until Mike signs off.
   "dols": "red",
+  "blanket-restrictions": "red",
   // named-nurse now has real content (from the ward audit cadence) - amber until Mike signs it off.
   // New pure-guidance tools - being reworked, not ready to trust.
   "seclusion-support-plan": "red",

@@ -59,6 +59,8 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "named-nurse": { icon: "📋", gradient: "from-emerald-500 to-emerald-700", category: "Nurse Tools" },
   "admission-note": { icon: "📝", gradient: "from-sky-500 to-blue-700", category: "Nurse Tools" },
   honos: { icon: "📊", gradient: "from-cyan-600 to-teal-800", category: "Nurse Tools" },
+  dols: { icon: "🔒", gradient: "from-violet-500 to-violet-700", category: "Legal & Advocacy" },
+  "blanket-restrictions": { icon: "⛔", gradient: "from-orange-600 to-red-700", category: "Restrictive Practice" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -147,6 +149,115 @@ export const GUIDES: Record<string, GuideData> = {
         tip: "If in doubt: date it, and note the patient's input.",
       },
     ],
+  },
+  dols: {
+    id: "dols",
+    title: "DoLS Ward Guidance",
+    description: "Deprivation of Liberty Safeguards - when they apply, DoLS vs the MHA, and how the ward applies for authorisation",
+    steps: [
+      {
+        id: "what",
+        title: "What DoLS is, and who it covers",
+        content: `The Deprivation of Liberty Safeguards (DoLS) are part of the Mental Capacity Act 2005. They give legal protection (Article 5, the right to liberty) to people who are deprived of their liberty in a hospital or care home when they:\n\n- are aged 18 or over,\n- lack the capacity to consent to their care / accommodation arrangements, and\n- are being kept there in their own best interests.\n\nDoLS do NOT apply to anyone detained under the Mental Health Act.\n\nWho does what:\n- Managing Authority = the Trust (in practice, the ward manager) - applies for authorisation.\n- Supervisory Body = the Local Authority (Derby City Council or Derbyshire County Council) - assesses and authorises.`,
+        tip: "On a psychiatric ward, a patient who lacks capacity to consent to being there is very likely being deprived of their liberty - so this needs actively considering, not assuming.",
+      },
+      {
+        id: "acid-test",
+        title: "Is it a deprivation of liberty? (the acid test)",
+        content: `From the Supreme Court in Cheshire West (2014), a person is deprived of their liberty if ALL three are true:\n\n1. They are under continuous (complete) supervision and control, AND\n2. They are not free to leave (they would be stopped if they tried), AND\n3. They lack capacity to consent to these arrangements.\n\nThese things do NOT change the answer:\n- whether the person is compliant or not objecting,\n- the reason or purpose of the placement,\n- how "normal" the placement is.\n\nSigns that "control" is happening: preventing attempts to leave; controlling movement, assessments, residence or social contacts for a significant period; refusing to discharge the person to carers; using restraint or regular medication to control behaviour.`,
+      },
+      {
+        id: "dols-or-mha",
+        title: "DoLS or the Mental Health Act?",
+        content: `This is the key ward decision:\n\n- If the person needs treatment for a mental disorder and is OBJECTING to being in hospital or to that treatment, treat them as you would a person WITH capacity who is refusing - use the Mental Health Act, not DoLS.\n- DoLS is for a person who lacks capacity, is NOT objecting, and is not liable to be detained under the MHA (often where the deprivation is about broader care needs, e.g. physical health or frailty).\n- A person is NOT eligible for DoLS if they are detained, or liable to be detained / recalled, under the MHA.\n- DoLS cannot be used if admission is SOLELY to protect other people.\n\nDoLS covers whatever care is in the person's best interests; the MHA covers treatment for mental disorder. If you are unsure which applies, raise it urgently with the responsible clinician and the senior nurse.`,
+      },
+      {
+        id: "least-restrictive",
+        title: "Try the least restrictive option first",
+        content: `Before anyone applies for an authorisation, consider how the care could be given WITHOUT depriving the person of their liberty. If a deprivation genuinely cannot be avoided, it must be for no longer than necessary.\n\nThe care plan must show that the restrictions are in the person's best interests, are a proportionate response to the likelihood and seriousness of harm, and that there is no less restrictive way to achieve the same aim.`,
+      },
+      {
+        id: "apply",
+        title: "Applying: urgent vs standard authorisation",
+        content: `STANDARD - apply to the Local Authority BEFORE the deprivation starts (e.g. when a care plan is agreed that would deprive the person of liberty). The Local Authority commissions the assessments and must complete them within 21 days. The maximum authorisation is 12 months.\n\nURGENT - if the deprivation is already happening or is needed straight away, the ward (managing authority) can grant ITSELF an urgent authorisation. It makes the deprivation lawful for up to 7 days, and a standard authorisation must be requested at the same time. If more time is genuinely needed, the Local Authority can extend the urgent authorisation by up to a further 7 days (ask before it expires).\n\nA DoLS authorisation does NOT authorise treatment - treatment is still given with consent or under the MCA best-interests process.`,
+        tip: "Urgent authorisations are for sudden, unforeseen needs - not a substitute for planning ahead with a standard application.",
+      },
+      {
+        id: "assessments",
+        title: "The 6 assessments the Local Authority makes",
+        content: `When the ward applies, the Local Authority checks six things:\n\n1. Age - 18 or over.\n2. Mental health - has a mental disorder (within the meaning of the MHA).\n3. Mental capacity - lacks capacity to consent to being in hospital.\n4. Eligibility - not detained or subject to recall under the MHA.\n5. Best interests - the deprivation is in their best interests, necessary to prevent harm, and proportionate.\n6. No refusals - it does not conflict with a valid advance decision, or a decision by an attorney (LPA) or a Court-appointed deputy.\n\nIf any is not met, the application is refused and a less restrictive way of providing care must be found.`,
+      },
+      {
+        id: "duties",
+        title: "What the ward has to do",
+        content: `Ward staff:\n- Make sure a capacity assessment (for admission and treatment) is done on admission - escalate urgently if not.\n- Make sure the care plan reflects best interests, proportionality and least restriction.\n- Complete the standard forms fully, upload them to the electronic record, and send them to the Local Authority DoLS team.\n- Notify the Mental Health Act Office, and notify the CQC of new authorisations.\n- Keep a record of DoLS patients and authorisation expiry dates, and remind clinicians of key dates.\n\nSenior nurse:\n- Tell the patient AND their representative about their rights - to request a review, to challenge at the Court of Protection, to an IMCA, and to complain - both verbally and in writing, and record this on the electronic record.\n- Notify family / carers when an urgent authorisation is requested, so they can offer support.`,
+      },
+      {
+        id: "rights-review-transfer",
+        title: "Rights, IMCA, reviews and transfers",
+        content: `- IMCA: if there is no-one appropriate to consult about the person's best interests, an Independent Mental Capacity Advocate must be requested. The patient or their representative can also ask for one.\n- Review / challenge: the patient, their representative, attorney, deputy or IMCA can ask the Local Authority for a review, or challenge the deprivation at the Court of Protection.\n- Transfers: a DoLS authorisation STOPS being valid if the person moves to another hospital or care home. The receiving place must apply for a fresh authorisation - so flag it when arranging any transfer, in or out of the Trust.`,
+      },
+      {
+        id: "forms",
+        title: "Forms and where to get them",
+        content: `Managing-authority forms:\n- Form 1 - request a standard authorisation and/or grant an urgent authorisation (also used to extend an urgent authorisation).\n- Form 2 - request a further standard authorisation (when the current one is ending).\n- Form 7 / Form 10 - suspension (eligibility no longer met) or review of a current authorisation.\n- Form 12 - notification to the coroner of a death.\n\nThe Local Authority replies on Form 5 (authorisation granted) or Form 6 (refused).\n\nDownload the standard forms from GOV.UK ("Deprivation of Liberty Safeguards: resources"). The Trust DoLS Policy and the DoLS office contacts are on FOCUS; the MHA Office / MCA-MHA team can help.`,
+      },
+      {
+        id: "lps",
+        title: "A note on LPS",
+        content: `The Liberty Protection Safeguards (LPS) were passed to replace DoLS, but their implementation has been shelved with no confirmed date. So DoLS remains the law and the process to follow.`,
+      },
+    ],
+    focus: [{ label: "Deprivation of Liberty (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1794/2454" }],
+    caseNote: `Possible deprivation of liberty considered for [PATIENT] on [DATE]: lacks capacity to consent to admission / care, under continuous supervision and control, and not free to leave. Not detained or liable to be detained under the MHA. Discussed with the responsible clinician and senior nurse. [Urgent authorisation granted by the ward at [TIME] on [DATE], valid 7 days; standard authorisation requested from the Local Authority the same day.] Least-restrictive options considered; care plan updated. Patient and representative informed of their rights (review, Court of Protection, IMCA, complaints) verbally and in writing. MHA Office and CQC notified. Recorded by [NURSE].`,
+  },
+  "blanket-restrictions": {
+    id: "blanket-restrictions",
+    title: "Blanket Restrictions & Restrictive Practice",
+    description: "What counts as a restrictive practice or a blanket restriction, which are allowed, and how to justify and review a restriction",
+    steps: [
+      {
+        id: "what",
+        title: "What this is about",
+        content: `The Trust must use the LEAST restrictive practice necessary at all times (Positive and Proactive Care, 2014; the Mental Health Act Code of Practice, 2015; and a CQC-regulated expectation).\n\nThis applies to detained AND informal patients. A restriction is only ever a proportionate, measured response to an identified risk - never used to punish or humiliate, and for no longer than necessary.`,
+      },
+      {
+        id: "three-types",
+        title: "Three things that get confused",
+        content: `- Restrictive INTERVENTIONS - deliberate acts to take control of a dangerous situation: physical intervention, rapid tranquillisation, seclusion. (Each covered by its own Trust policy.)\n- Restrictive PRACTICES - things that limit liberty to keep people safe: room / rub-down searches, restricting access to courtyards / kitchens / calm rooms, monitoring communications and visits, locking ward doors, observations.\n- BLANKET restrictions - rules applied to ALL patients (or a class of patients) routinely, WITHOUT an individual risk assessment.`,
+      },
+      {
+        id: "blanket",
+        title: "Blanket restrictions - the rule",
+        content: `A blanket restriction is a rule applied to everyone without an individual risk assessment. The MHA Code of Practice only allows them in very specific circumstances.\n\nThey should be avoided unless they are a necessary and proportionate response to identified risk, applied for no longer than can be shown to be necessary, with their impact on each patient considered and documented.\n\nExamples of blanket restrictions to AVOID (unless individually justified): forbidding takeaway food, banning mobile phones / chargers, locking the ward door just because it is busy, no snacks or drinks.`,
+      },
+      {
+        id: "individual",
+        title: "The individualised approach",
+        content: `A patient would normally have access to all the activities of the unit. Removing access, for a clinical or risk reason, must be:\n\n- based on a multidisciplinary risk assessment,\n- with a clear rationale for why it is not appropriate right now, and\n- with a review date.\n\nTell the patient why the decision was made, and how and when it will be reviewed. Document the decision, and its impact on the patient, on the electronic record.`,
+      },
+      {
+        id: "authorised",
+        title: "Trust-authorised blanket restrictions (these ARE allowed)",
+        content: `These are agreed across all inpatient services as necessary and proportionate:\n\n- No smoking (smoke-free Trust) and no ignition sources (lighters / matches) on the ward.\n- No alcohol, illicit drugs, or new psychoactive substances (NPS) on Trust premises.\n- No illegal pornographic material, and no material that incites violence or racial / cultural / religious / gender hatred.\n- No weapons (firearms are never allowed, even if legally held; a knife held for religious reasons is individually risk-assessed).\n- Doors into inpatient units are access-controlled; on Adults of Working Age wards, patients are escorted to the door to leave.\n- Access to courtyards / outdoor spaces is restricted at night (opened on an individual or group basis when staffing allows).\n- Quiet rooms on the Carsington and Derwent units are locked (no door-alarm fitted), so patients access them when escorted by staff.`,
+      },
+      {
+        id: "not-blanket",
+        title: "What must NOT be a blanket restriction",
+        content: `These should NOT be applied to everyone - they need individual justification, documented (possible exceptions in the Low Secure Unit):\n\n- Access to (or banning) mobile phones and chargers.\n- Random searches without due cause.\n- Food restrictions, or buying takeaway food.\n- Monitoring telephone calls.\n- Access to the internet.`,
+      },
+      {
+        id: "authorise-review",
+        title: "Authorising and reviewing a ward-level restriction",
+        content: `If a ward needs a blanket restriction over and above the Trust-wide list, it should:\n\n- be for the shortest reasonable time,\n- be monitored and reviewed through local governance, and\n- if it needs to run indefinitely, be agreed with the Hospital Managers and taken to the Reducing Restrictive Practice Group for oversight.\n\nOnce in place, communicate it clearly to patients and visitors (e.g. signage in reception).`,
+      },
+      {
+        id: "contraband",
+        title: "Prohibited and restricted items",
+        content: `Prohibited and restricted (contraband) items are listed on the ward contraband list (the Working Age Adult Acute Inpatient Services Contraband List). Check the current list - it is kept in step with the Trust Smoke Free policy and is updated from time to time.`,
+      },
+    ],
+    caseNote: `Individual restriction agreed for [PATIENT] on [DATE] following MDT risk assessment: [RESTRICTION]. Rationale: [RISK]. Less restrictive options considered. Discussed with the patient, including the impact and how / when it will be reviewed (review date [DATE]). Documented on the electronic record. Agreed by [MDT / lead].`,
   },
   honos: {
     id: "honos",

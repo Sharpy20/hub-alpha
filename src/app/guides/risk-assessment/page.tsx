@@ -133,7 +133,11 @@ function buildCombinedFormulation(risks: RiskRef[], caps: Record<string, AllStat
     const secs = deriveForm(caps[r.key]);
     const bodies = FORMULATION_SECTIONS.map((sec) => buildContent(secs[sec.id])).filter(Boolean);
     if (!bodies.length) continue;
-    perRisk.push([TXT_BAR, r.label, TXT_BAR, bodies.join(" ")].join("\n"));
+    // Flowing prose, but grouped ~3 sentences per paragraph with a blank line
+    // between - readable, not one dense block, not a break after every section.
+    const paras: string[] = [];
+    for (let i = 0; i < bodies.length; i += 3) paras.push(bodies.slice(i, i + 3).join(" "));
+    perRisk.push([TXT_BAR, r.label, TXT_BAR, paras.join("\n\n")].join("\n"));
   }
   if (!perRisk.length) return "";
   const head = patientName ? `Patient: ${patientName}\n\n` : "";

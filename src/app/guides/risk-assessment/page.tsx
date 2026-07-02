@@ -527,7 +527,13 @@ export default function RiskAssessmentPage() {
           {dm.noEvidence}
         </label>
 
-        {engaged && (
+        {st.noEvidence && (
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+            <CheckCircle2 className="w-4 h-4 flex-shrink-0" /> Signed off - no evidence in this domain. Nothing further to add here.
+          </p>
+        )}
+
+        {engaged && !st.noEvidence && (
           <div className="space-y-3 rounded-lg bg-gray-50 p-3">
             {dm.safetyPrompt && (
               <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.safetyPrompt)}</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>

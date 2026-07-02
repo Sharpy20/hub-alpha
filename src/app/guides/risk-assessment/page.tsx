@@ -33,7 +33,7 @@ import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS,
 } from "@/lib/data/welcome/risk-screen";
 import {
-  SectionEditor, buildFormulation, buildOneRmp, formulationSectionForRisk,
+  SectionEditor, buildOneRmp, formulationSectionForRisk,
   rmpSectionForRisk, buildContent, naturalList, cap, ensureStop,
   type AllState, type SecState, type DatedExample, EMPTY,
 } from "@/components/guides/risk-capture";
@@ -115,6 +115,25 @@ function deriveRmp(cap: AllState | undefined): AllState {
   for (const q of UNIFIED_QUESTIONS) if (q.writes.doc === "r") out[q.writes.id] = cap?.[q.id] || EMPTY;
   return out;
 }
+// ONE formulation covering all risks (SystmOne has a single formulation field),
+// with each risk as a sub-heading. Kept as one block so the nurse copies once.
+// (The RMPs stay separate per risk - trust rule.)
+function buildCombinedFormulation(risks: RiskRef[], caps: Record<string, AllState>, patientName?: string): string {
+  const perRisk: string[] = [];
+  for (const r of risks) {
+    const secs = deriveForm(caps[r.key]);
+    const filled = FORMULATION_SECTIONS
+      .map((sec) => ({ heading: sec.heading, body: buildContent(secs[sec.id]) }))
+      .filter((s) => s.body);
+    if (!filled.length) continue;
+    const sub: string[] = [`### ${r.label} ###`];
+    filled.forEach((s, i) => { sub.push(s.heading.toUpperCase()); sub.push(s.body); if (i < filled.length - 1) sub.push(TXT_DIV); });
+    perRisk.push(sub.join("\n"));
+  }
+  if (!perRisk.length) return "";
+  const head = [TXT_BAR, "RISK FORMULATION", ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
+  return head.join("\n") + "\n" + perRisk.join("\n" + TXT_BAR + "\n");
+}
 const answered = (st?: SecState) => !!st && (st.chips.length > 0 || st.text.trim() !== "" || st.na || (st.examples || []).some((e) => e.text.trim()));
 
 const TXT_BAR = "========================================";
@@ -166,6 +185,10 @@ function DatedExamples({ examples, onChange }: { examples?: DatedExample[]; onCh
   const list = examples || [];
   const upd = (i: number, patch: Partial<DatedExample>) => onChange(list.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
   const selCls = "text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:ring-2 focus:ring-rose-400 focus:border-rose-400";
+  // Only rendered after the user adds an example (client-side), so new Date() here
+  // is safe from hydration mismatch.
+  const thisYear = new Date().getFullYear();
+  const years = Array.from({ length: 71 }, (_, i) => thisYear - i);
   return (
     <div className="mt-2 rounded-lg border border-rose-100 bg-rose-50/40 p-2.5 space-y-2">
       <p className="text-[10px] font-mono uppercase tracking-wider text-rose-500">
@@ -182,7 +205,10 @@ function DatedExamples({ examples, onChange }: { examples?: DatedExample[]; onCh
               <option value="">Month</option>
               {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
             </select>
-            <input type="number" value={ex.year} placeholder="Year" onChange={(e) => upd(i, { year: e.target.value })} aria-label="Year" className="w-20 text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400" />
+            <select value={ex.year} onChange={(e) => upd(i, { year: e.target.value })} aria-label="Year" className={selCls}>
+              <option value="">Year</option>
+              {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
+            </select>
             <button onClick={() => onChange(list.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
           </div>
           <input type="text" value={ex.text} placeholder="what happened" onChange={(e) => upd(i, { text: e.target.value })} className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400" />
@@ -252,8 +278,9 @@ export default function RiskAssessmentPage() {
   const [copied, setCopied] = useState<Set<string>>(new Set());
 
   const patientName = patient?.name;
-  const REVIEW_STEP = RISK_DOMAINS.length; // index of the final Review step
-  const TOTAL_STEPS = RISK_DOMAINS.length + 1;
+  const REVIEW_STEP = RISK_DOMAINS.length;       // concerns / summary step
+  const GENERATE_STEP = RISK_DOMAINS.length + 1; // final step - holds the Generate button
+  const TOTAL_STEPS = RISK_DOMAINS.length + 2;
 
   const getDomain = (id: string): DomainState => domains[id] || emptyDomain();
   const setDomain = (id: string, next: DomainState) => setDomains((s) => ({ ...s, [id]: next }));
@@ -279,6 +306,7 @@ export default function RiskAssessmentPage() {
     (d.currentExamples || []).some((e) => e.text.trim()) || (d.historicalExamples || []).some((e) => e.text.trim());
 
   const stepComplete = (i: number): boolean => {
+    if (i === GENERATE_STEP) return generated;
     if (i === REVIEW_STEP) return q8 !== "" || q9.trim() !== "";
     return isEngaged(getDomain(RISK_DOMAINS[i].id));
   };
@@ -425,6 +453,7 @@ export default function RiskAssessmentPage() {
             )}
             <div>
               <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
+              <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: add any other indicators, or what has happened recently.</p>
               <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
               <DatedExamples examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
             </div>
@@ -603,7 +632,10 @@ export default function RiskAssessmentPage() {
         <div className="bg-white rounded-2xl border border-rose-100 p-3">
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
             {Array.from({ length: TOTAL_STEPS }, (_, i) => {
-              const label = i === REVIEW_STEP ? "Review" : String(RISK_DOMAINS[i].number);
+              const isReview = i === REVIEW_STEP;
+              const isGenerate = i === GENERATE_STEP;
+              const label = isGenerate ? "Generate" : isReview ? "Review" : String(RISK_DOMAINS[i].number);
+              const aria = isGenerate ? "Generate step" : isReview ? "Review step" : `Domain ${RISK_DOMAINS[i].number}: ${RISK_DOMAINS[i].title}`;
               const done = stepComplete(i);
               const current = step === i;
               return (
@@ -611,7 +643,7 @@ export default function RiskAssessmentPage() {
                   key={i}
                   onClick={() => setStep(i)}
                   aria-current={current}
-                  aria-label={i === REVIEW_STEP ? "Review step" : `Domain ${RISK_DOMAINS[i].number}: ${RISK_DOMAINS[i].title}`}
+                  aria-label={aria}
                   className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-sm font-bold flex-shrink-0 border transition-all ${
                     current ? "bg-rose-600 border-rose-600 text-white"
                       : done ? "bg-emerald-50 border-emerald-300 text-emerald-700"
@@ -619,7 +651,7 @@ export default function RiskAssessmentPage() {
                   }`}
                 >
                   {done && !current ? <CheckCircle2 className="w-4 h-4" /> : null}
-                  {i === REVIEW_STEP ? <span>Review</span> : <span>{label}</span>}
+                  <span>{label}</span>
                 </button>
               );
             })}
@@ -632,9 +664,9 @@ export default function RiskAssessmentPage() {
             <ShieldAlert className="w-5 h-5 text-rose-600" />
             <div className="flex-1">
               <p className="text-[11px] font-mono uppercase tracking-wider text-rose-500">
-                {onDomainStep ? `Domain ${currentDomain!.number} of ${RISK_DOMAINS.length}` : "Final step"}
+                {onDomainStep ? `Domain ${currentDomain!.number} of ${RISK_DOMAINS.length}` : step === REVIEW_STEP ? "Review" : "Final step"}
               </p>
-              <h2 className="font-bold text-gray-800">{onDomainStep ? currentDomain!.title : "Review & concerns"}</h2>
+              <h2 className="font-bold text-gray-800">{onDomainStep ? currentDomain!.title : step === REVIEW_STEP ? "Review & concerns" : "Generate the documents"}</h2>
             </div>
             {stepComplete(step) && <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full"><CheckCircle2 className="w-3.5 h-3.5" /> Done</span>}
           </div>
@@ -647,7 +679,7 @@ export default function RiskAssessmentPage() {
               </p>
               {renderDomain(currentDomain!)}
             </>
-          ) : (
+          ) : step === REVIEW_STEP ? (
             <div className="space-y-3">
               <div className="flex items-center gap-3 flex-wrap"><span className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">Do you, or has anyone else, expressed concerns?</span><YNToggle value={q8} onChange={setQ8} /></div>
               {q8 === "yes" && <input autoComplete="off" value={q8note} onChange={(e) => setQ8note(e.target.value)} className={inputCls} placeholder="Briefly, what are the concerns?" />}
@@ -662,6 +694,22 @@ export default function RiskAssessmentPage() {
                 <textarea value={q9} onChange={(e) => setQ9(e.target.value)} rows={2} className={inputCls} placeholder="Add anything else to the summary (optional)..." />
               </div>
             </div>
+          ) : (
+            <div className="space-y-3 text-center py-2">
+              <p className="text-sm text-gray-600">
+                You&apos;ve worked through {engagedDomains.length} {engagedDomains.length === 1 ? "domain" : "domains"} and identified{" "}
+                {allRisks.length} {allRisks.length === 1 ? "risk" : "risks"}. When you&apos;re ready, generate the documents to copy into SystmOne.
+              </p>
+              <button
+                onClick={doGenerate}
+                disabled={!anyIntake}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 text-white font-bold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all"
+              >
+                <Sparkles className="w-5 h-5" /> Generate the risk documents
+              </button>
+              {!anyIntake && <p className="text-xs text-gray-400">Identify at least one risk first.</p>}
+              {generated && <p className="text-xs text-emerald-700 font-semibold">Generated - see below.</p>}
+            </div>
           )}
 
           {/* Wizard nav */}
@@ -673,9 +721,9 @@ export default function RiskAssessmentPage() {
             >
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
-            {step < REVIEW_STEP ? (
+            {step < GENERATE_STEP ? (
               <button
-                onClick={() => setStep((s) => Math.min(REVIEW_STEP, s + 1))}
+                onClick={() => setStep((s) => Math.min(GENERATE_STEP, s + 1))}
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-rose-600 text-white hover:bg-rose-700 transition-colors"
               >
                 Next <ArrowRight className="w-4 h-4" />
@@ -684,17 +732,6 @@ export default function RiskAssessmentPage() {
               <span className="text-xs text-gray-400">Last step</span>
             )}
           </div>
-        </div>
-
-        {/* Generate - always available once anything is entered */}
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <button
-            onClick={doGenerate}
-            disabled={!anyIntake}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 text-white font-bold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all"
-          >
-            <Sparkles className="w-5 h-5" /> Generate the risk documents
-          </button>
         </div>
 
         {/* Outputs */}
@@ -725,9 +762,8 @@ export default function RiskAssessmentPage() {
             {tab === "formulation" && (
               <div className="space-y-3">
                 {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Identify at least one risk to build a formulation.</p>}
-                {allRisks.map((r) => (
-                  <CopyField key={r.key} id={`form-${r.key}`} label={`Formulation - ${r.label}`} text={buildFormulation(deriveForm(capByRisk[r.key]), `RISK FORMULATION: ${r.label.toUpperCase()}`, patientName)} done={copied.has(`form-${r.key}`)} onToggle={toggleCopied} />
-                ))}
+                <p className="text-xs text-gray-500">One formulation covering all risks (SystmOne has a single formulation field), with each risk as a sub-heading. The management plans stay separate per risk (next tab).</p>
+                <CopyField id="form-all" label="Risk formulation (all risks)" text={buildCombinedFormulation(allRisks, capByRisk, patientName)} done={copied.has("form-all")} onToggle={toggleCopied} />
                 {finalSummary && <CopyField id="form-summary" label="Overall formulation summary" text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />}
               </div>
             )}

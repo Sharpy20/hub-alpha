@@ -489,11 +489,11 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "physical health deterioration": {
     present: [{ words: ["abnormal NEWS2 / observations", "drowsiness or reduced consciousness", "breathlessness or chest pain", "new confusion / delirium", "not eating, drinking or mobilising", "new pain or physical symptoms", "signs of infection (fever)"] }],
     prevent: [
-      { label: MANAGE, words: ["full physical observations (NEWS2)", "escalate per NEWS2 / sepsis pathway", "urgent medical review", "ABCDE assessment", "monitor food and fluid intake", "ECG / bloods as indicated", "call 999 / 2222 if critical"] },
+      { label: MANAGE, words: ["full physical observations (NEWS2)", "escalate per NEWS2 / sepsis pathway", "urgent medical review", "ABCDE assessment", "monitor food and fluid intake", "ECG / bloods as indicated", "call 999 if critical"] },
       { label: REDUCE, words: ["regular physical health monitoring", "physical health care plan", "manage long-term conditions / medication", "encourage diet, fluids and mobility", "infection prevention measures", "GP / acute liaison as needed"] },
     ],
     evaluate: [{ words: ["observations within normal range", "improving symptoms", "eating, drinking and mobilising", "no signs of infection", "stable NEWS2"] }],
-    next: [{ words: ["escalate per NEWS2 / sepsis protocol", "urgent medical review or 999 / 2222", "transfer to acute care if needed", "MDT / duty doctor review", "increase observation level"] }],
+    next: [{ words: ["escalate per NEWS2 / sepsis protocol", "urgent medical review or 999", "transfer to acute care if needed", "MDT / duty doctor review", "increase observation level"] }],
   },
   "fire risk": {
     present: [{ words: ["requests for lighters / matches", "concealing igniters or flammables", "talk of setting fires", "previous fire-setting history", "hoarding flammable materials", "smoking in unauthorised areas", "fascination with fire"] }],
@@ -565,7 +565,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["infection prevention measures", "treat infection promptly as prescribed", "maintain hydration and nutrition", "delirium-aware care plan", "regular physical monitoring", "reorientation and consistent staff"] },
     ],
     evaluate: [{ words: ["observations normalising", "confusion resolving", "infection markers improving", "eating, drinking and mobilising", "stable NEWS2"] }],
-    next: [{ words: ["escalate per NEWS2 / sepsis protocol", "urgent medical review or 999 / 2222", "transfer to acute care if needed", "MDT / duty doctor review", "isolate / IPC measures if required"] }],
+    next: [{ words: ["escalate per NEWS2 / sepsis protocol", "urgent medical review or 999", "transfer to acute care if needed", "MDT / duty doctor review", "isolate / IPC measures if required"] }],
   },
   "risk to family": {
     present: [{ words: ["hostility or threats towards a family member", "fixation or blame towards family", "distress or escalation after family contact", "history of harm to family", "intent to harm a relative", "agitation around visits or leave"] }],

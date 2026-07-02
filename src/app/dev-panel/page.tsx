@@ -2616,6 +2616,91 @@ function EvaluationsSection() {
   );
 }
 
+// Conflicts found in the trust source material (from docs/policy-conflict-audit-02-Jul-2026.md,
+// a research-only audit - no policies or app code were changed by it).
+function ConflictsCard() {
+  const sev = (s: "high" | "med" | "low" | "app") => {
+    const map = {
+      high: ["bg-red-100 text-red-700", "High"],
+      med: ["bg-amber-100 text-amber-700", "Medium"],
+      low: ["bg-gray-100 text-gray-600", "Low"],
+      app: ["bg-indigo-100 text-indigo-700", "App"],
+    } as const;
+    const [cls, label] = map[s];
+    return <span className={`px-2 py-0.5 ${cls} text-[10px] font-semibold rounded-full flex-shrink-0`}>{label}</span>;
+  };
+  const groups: { title: string; items: { s: "high" | "med" | "low" | "app"; text: string }[] }[] = [
+    {
+      title: "Expired / overdue policies (raise with the Trust)",
+      items: [
+        { s: "high", text: "S62 Urgent Treatment - expired (review lapsed ~Dec 2025). Safety-critical." },
+        { s: "high", text: "Missing & Absent (AWOL / RCRP) - review date Jun 2026, now overdue." },
+        { s: "med", text: "CPA - on its stated maximum extension (re-ratify before Oct 2026); framework being nationally retired." },
+        { s: "med", text: "Joint S135/136 - due for review Sep 2026 and carries substantive errors (below)." },
+      ],
+    },
+    {
+      title: "A policy that disagrees with itself",
+      items: [
+        { s: "high", text: "Observations - Level 3 (Intermittent) review interval is stated as BOTH 24h and 72h across §5, §6.2 and Appendix 3. The app uses 72h (the body/quick-reference value); the 24h figure is the policy's own defect." },
+        { s: "high", text: "S135/136 - the s135(1) escape-retake window is described as '36 hours' in one place vs the correct s138(3) 24h (+12h) rule in another." },
+        { s: "med", text: "Observations - the 72h escalation names two different senior-role sets (§6.1 vs Appendix 3)." },
+      ],
+    },
+    {
+      title: "Cross-policy mismatches",
+      items: [
+        { s: "med", text: "Stale unit name - the S135/136 form still lists 'Hartington Unit'; it was renamed 'Derwent Unit'." },
+        { s: "med", text: "CTO says 6-monthly rights re-read is 'recommended'; the S132 policy says the team 'must'." },
+        { s: "med", text: "Who obtains the S135(2) warrant differs (CTO: care co-ordinator; S17: the hospital)." },
+        { s: "med", text: "Tribunal report deadlines use different anchors (3 weeks from application vs 4 weeks before expiry)." },
+        { s: "med", text: "Safeguarding - the actual City/County referral routes appear in only 1 of the 4 SOPs; 'MASH' is used for two different bodies." },
+        { s: "low", text: "Assorted broken appendix cross-references, name/title/email typos, and legacy terms ('FACE Risk Assessment', 'CAADA-DASH')." },
+      ],
+    },
+    {
+      title: "App vs live policy",
+      items: [
+        { s: "app", text: "IMHA Derby City provider - the app uses Disability Direct (deliberately switched, session 28b); the current S132 policy names One Advocacy Derby. Source of truth to be reconciled. County (Cloverleaf) matches on both." },
+        { s: "app", text: "mha-statuses says S4's recommendation is 'ideally from a doctor who knows the patient' - not stated in the S4 policy; to soften." },
+      ],
+    },
+  ];
+  return (
+    <Card>
+      <CardHeader>
+        <h2 className="text-lg font-bold text-nhs-black flex items-center gap-2">
+          <AlertTriangle className="w-5 h-5 text-amber-600" /> Conflicts in source material
+        </h2>
+        <p className="text-xs text-nhs-mid-grey mt-1">
+          From a research-only audit of the trust policies against the app (2 July 2026). The app encodes the policies
+          accurately - most items below are defects in the source policies to raise with the Trust. Full write-up and the
+          two action lists: <code>docs/policy-conflict-audit-02-Jul-2026.md</code>.
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-5">
+        {groups.map((g) => (
+          <div key={g.title}>
+            <h3 className="font-semibold text-nhs-black text-sm mb-2">{g.title}</h3>
+            <div className="space-y-2">
+              {g.items.map((it, i) => (
+                <div key={i} className="flex items-start gap-2 p-3 bg-nhs-pale-grey rounded-lg">
+                  {sev(it.s)}
+                  <p className="text-xs text-nhs-dark-grey">{it.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <p className="text-xs text-nhs-mid-grey italic">
+          Data-safety note: the raw AWOL source contains real internal security numbers and an on-call bleep - these are
+          kept out of the public demo. The app itself was verified clean against current policy on all time limits and holding powers.
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
 function DataSourcesSection() {
   const DATA_SOURCES = [
     // Workflows
@@ -2639,6 +2724,12 @@ function DataSourcesSection() {
     { id: "mha-sections", name: "MHA Section Checklist", type: "guide" as const, description: "Mental Health Act section requirements checklist", source: "Internal MHA documentation", sourceType: "internal" as const, addedDate: "2026-01-26", lastVerified: "2026-01-26", notes: "Reference to MHA Code of Practice (public)" },
     { id: "mha-statuses", name: "MHA Statuses Guide", type: "guide" as const, description: "Comprehensive guide to all MHA detention sections and patient rights", source: "MHA Code of Practice (public) and internal trust MHA documentation", sourceType: "public" as const, addedDate: "2026-04-14", lastVerified: "2026-04-14", notes: "Covers Sections 2, 3, 4, 5(2)/5(4), 17A (CTO), 37, 37/41, 47/49, and informal status" },
     { id: "tribunal-report", name: "Tribunal Report Writing", type: "guide" as const, description: "Nursing tribunal report guidance", source: "Internal tribunal report template", sourceType: "internal" as const, addedDate: "2026-01-26", lastVerified: "2026-01-26" },
+    { id: "risk-assessment", name: "Risk Screen, Formulation & RMP", type: "guide" as const, description: "SystmOne-mirrored risk screen that builds the formulation and management plans", source: "SystmOne WAA Inpatient Risk Screening Tool structure + DHCFT Risk Management Plans guidance", sourceType: "internal" as const, addedDate: "2026-07-02", lastVerified: "2026-07-02", notes: "Approved S1 domains/sub-domains + clinical-indicator lists used verbatim. No PII retained from source form." },
+    { id: "care-plan", name: "My Care Plan builder", type: "guide" as const, description: "Patient-voice care plan builder", source: "DHCFT 'My Care Plan' SystmOne template + patient prompt sheet", sourceType: "internal" as const, addedDate: "2026-06-18", lastVerified: "2026-07-02" },
+    { id: "honos", name: "HoNOS & Clustering explained", type: "guide" as const, description: "What HoNOS is, the 12 scales, scoring and clustering", source: "RCPsych HoNOS (public) + Trust 'SystmOne - HoNOS and Clustering' guide", sourceType: "public" as const, addedDate: "2026-07-02", lastVerified: "2026-07-02" },
+    { id: "dols", name: "DoLS Ward Guidance", type: "guide" as const, description: "Deprivation of Liberty Safeguards - acid test, DoLS vs MHA, authorisation", source: "DHCFT Deprivation of Liberty Policy & Procedures (2023) + MCA 2005 / Cheshire West (public)", sourceType: "internal" as const, addedDate: "2026-07-02", lastVerified: "2026-07-02" },
+    { id: "blanket-restrictions", name: "Blanket Restrictions & Restrictive Practice", type: "guide" as const, description: "Restrictive practices, blanket restrictions and how to justify them", source: "DHCFT Blanket Restrictions Policy (Nov 2025) + MHA Code of Practice 2015 (public)", sourceType: "internal" as const, addedDate: "2026-07-02", lastVerified: "2026-07-02" },
+    { id: "observation-engagement", name: "Observation & Engagement Plan", type: "guide" as const, description: "Observation level rationale and engagement", source: "DHCFT Inpatient Therapeutic Observations & Engagement Policy (Feb 2025 v10)", sourceType: "internal" as const, addedDate: "2026-06-22", lastVerified: "2026-07-02", notes: "Policy self-contradicts on the Level 3 review interval - app uses 72h (see Conflicts below)." },
     // Links (formerly Bookmarks)
     { id: "samaritans", name: "Samaritans", type: "link" as const, description: "24/7 emotional support helpline", source: "Samaritans public website", sourceType: "public" as const, addedDate: "2026-01-24", lastVerified: "2026-01-26" },
     { id: "nhs111", name: "NHS 111", type: "link" as const, description: "NHS urgent care advice", source: "NHS public website", sourceType: "public" as const, addedDate: "2026-01-24", lastVerified: "2026-01-26" },
@@ -2727,6 +2818,8 @@ function DataSourcesSection() {
         </div>
       </div>
 
+      <ConflictsCard />
+
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Referral Workflows ({workflows.length})</h2>
@@ -2751,7 +2844,7 @@ function DataSourcesSection() {
 
       <Card>
         <CardContent className="p-4 text-center text-sm text-nhs-mid-grey">
-          <p>This audit log is maintained as part of wardHub GDPR compliance. Last updated: 26 January 2026</p>
+          <p>This audit log is a representative sample - the authoritative sourcing lives in each guide (and its FOCUS links). Maintained as part of wardHub GDPR compliance. Last updated: 2 July 2026</p>
         </CardContent>
       </Card>
     </div>

@@ -243,6 +243,26 @@ function CopyField({ id, label, text, done, onToggle }: {
   );
 }
 
+// The pasteable output for ONE S1 narrative field (current or historical),
+// merging the typed narrative with its dated examples. The ticks above are done
+// by hand on S1; only these narrative fields are pasted. Green "copy into S1"
+// prompt bottom-right. Hidden until there is something to copy.
+function S1CopyBox({ text }: { text: string }) {
+  const [flash, setFlash] = useState(false);
+  if (!text.trim()) return null;
+  const doCopy = async () => { await copyText(text); setFlash(true); setTimeout(() => setFlash(false), 1600); };
+  return (
+    <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 overflow-hidden">
+      <pre className="px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap font-sans text-slate-700 max-h-48 overflow-y-auto">{text}</pre>
+      <div className="flex justify-end px-2 pb-1.5">
+        <button onClick={doCopy} className="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700 hover:text-green-800 transition-colors">
+          {flash ? <><Check className="w-3.5 h-3.5" /> Copied</> : <><Copy className="w-3.5 h-3.5" /> Copy into S1 when completed</>}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Collapse({ icon: Icon, title, children, tone = "gray" }: {
   icon: typeof Info; title: string; children: React.ReactNode; tone?: "gray" | "rose";
 }) {
@@ -456,6 +476,7 @@ export default function RiskAssessmentPage() {
               <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: add any other indicators, or what has happened recently.</p>
               <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
               <DatedExamples examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
+              <S1CopyBox text={withExamples(st.current, st.currentExamples)} />
             </div>
             <div>
               <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
@@ -466,6 +487,7 @@ export default function RiskAssessmentPage() {
               )}
               <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} className={inputCls} />
               <DatedExamples examples={st.historicalExamples} onChange={(next) => setDomain(dm.id, { ...st, historicalExamples: next })} />
+              <S1CopyBox text={withExamples(st.historical, st.historicalExamples)} />
             </div>
           </div>
         )}
@@ -674,8 +696,10 @@ export default function RiskAssessmentPage() {
           {onDomainStep ? (
             <>
               <p className="text-xs text-gray-500">
-                Tick the sub-domains that apply (or &quot;no evidence&quot;), add the screen narrative, then answer the
-                questions for each risk. If nothing applies here, tick &quot;no evidence&quot; and move on.
+                This whole section is the SystmOne risk screen for this domain - fill it in on S1 as you go. Tick the
+                sub-domains and clinical indicators on SystmOne (or tick &quot;no evidence&quot; and move on), then type the
+                two narratives below and use their green <strong>Copy into S1</strong> boxes to paste each one across.
+                After that, answer the questions for each risk - that builds the formulation and management plan.
               </p>
               {renderDomain(currentDomain!)}
             </>
@@ -749,12 +773,12 @@ export default function RiskAssessmentPage() {
               <div className="space-y-3">
                 <div className="flex items-start gap-2 bg-sky-50 border border-sky-200 rounded-xl p-3 text-sm text-sky-800">
                   <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <p>First, in the SystmOne risk screen, <strong>tick these options if you haven&apos;t already</strong> (the domains, sub-domains and clinical indicators below). Then paste the narrative blocks into the matching notes fields.</p>
+                  <p>The risk screen is completed <strong>on SystmOne as you go</strong> - tick the sub-domains and clinical indicators there, and paste each narrative using the green <strong>Copy into S1</strong> boxes in each domain step. The block below is a full text summary you can drop into a case note or handover.</p>
                 </div>
                 {!engagedDomains.length && q8 === "" && <p className="text-sm text-gray-400 text-center py-4">Nothing entered on the risk screen yet.</p>}
-                <CopyField id="screen-all" label="Whole risk screen (one block)" text={fullScreenText} done={copied.has("screen-all")} onToggle={toggleCopied} />
+                <CopyField id="screen-all" label="Risk screen summary (for a case note / handover)" text={fullScreenText} done={copied.has("screen-all")} onToggle={toggleCopied} />
                 {engagedDomains.length > 1 && engagedDomains.map((dm) => (
-                  <CopyField key={dm.id} id={`screen-${dm.id}`} label={`${dm.number}. ${dm.short}`} text={domainScreenText(dm)} done={copied.has(`screen-${dm.id}`)} onToggle={toggleCopied} />
+                  <CopyField key={dm.id} id={`screen-${dm.id}`} label={`${dm.number}. ${dm.short} (summary)`} text={domainScreenText(dm)} done={copied.has(`screen-${dm.id}`)} onToggle={toggleCopied} />
                 ))}
               </div>
             )}

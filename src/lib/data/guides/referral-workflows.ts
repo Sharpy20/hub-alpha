@@ -23,7 +23,7 @@ export interface SubmissionMethod {
 
 export interface WorkflowStep {
   id: string;
-  type: "criteria" | "consent" | "section" | "area" | "forms" | "submission" | "casenote" | "reminder" | "gdpr";
+  type: "info" | "criteria" | "consent" | "section" | "area" | "forms" | "submission" | "casenote" | "reminder" | "gdpr";
   title: string;
   content: string;
   checkboxLabel?: string;
@@ -601,6 +601,12 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
     icon: "⚖️",
     gradient: "from-purple-600 to-purple-800",
     steps: [
+      {
+        id: "aftercare-info",
+        type: "info",
+        title: "S117 Aftercare & Funding – the basics",
+        content: "Section 117 of the Mental Health Act places a joint duty on the ICB (health) and the Local Authority (social care) to provide free aftercare on discharge. Read this first so you understand what is being planned – and who pays for it.\n\nWho qualifies:\n• The s117 duty arises for patients discharged from Section 3, 37, 45A, 47 or 48 (including their restricted forms, e.g. 37/41, 47/49).\n• It does not arise from Section 2 or an informal admission – though a robust discharge meeting still helps prevent re-admission, which is why the meeting itself is expected regardless of section.\n\nWhat it means:\n• Aftercare that meets a need arising from the mental disorder AND reduces the risk of re-admission must be provided free of charge – the patient cannot be charged for it.\n• It is jointly funded and commissioned by the ICB and the Local Authority. Which body pays for which part – or how the cost is split – is usually where funding gets argued out.\n• Ordinary residence decides which Local Authority is responsible, normally the area the patient lived in when they were detained under Section 3. Check this early (the MHA Office can confirm).\n• The duty continues until BOTH the ICB and the Local Authority agree the person no longer needs aftercare. It cannot be ended by one body alone, and not simply because the patient has been discharged.\n\nHow the funding split is decided (DST):\n• Where NHS Continuing Healthcare (CHC) may apply, or to agree the health/social split, a Decision Support Tool (DST) is completed across care domains: behaviour, cognition, psychological/emotional needs, communication, mobility, nutrition, continence, skin, breathing, drug therapies/medication, altered states of consciousness, and other significant needs.\n• These domains overlap heavily with the nursing needs/placement assessment and with a tribunal nursing report – the same evidence supports all three.\n\nNurse tip:\n• The funding argument (and any placement or tribunal report) is built on nursing documentation. Record the level and frequency of support a patient needs, not just the diagnosis – that is what evidences the domains.",
+      },
       {
         id: "criteria",
         type: "criteria",
@@ -1250,6 +1256,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
 };
 
 export const STEP_GRADIENTS: Record<string, string> = {
+  info: "from-sky-500 to-blue-700",
   criteria: "from-emerald-500 to-emerald-700",
   consent: "from-teal-500 to-teal-700",
   section: "from-indigo-500 to-indigo-700",

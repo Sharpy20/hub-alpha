@@ -16,7 +16,7 @@ import { useTour } from "@/app/tour-provider";
 import {
   CheckCircle, FileText, Eye, BookOpen, Send, Clipboard, ClipboardList,
   Calendar, Shield, ArrowLeft, ArrowRight, Check, Copy, Download,
-  ExternalLink, Phone, Mail, Pencil, UserPlus, AlertCircle, Lightbulb,
+  ExternalLink, Phone, Mail, Pencil, UserPlus, AlertCircle, Lightbulb, Info,
 } from "lucide-react";
 import {
   WORKFLOWS, DEFAULT_WORKFLOW, STEP_GRADIENTS, SECTION_OPTIONS, AREA_OPTIONS,
@@ -31,7 +31,7 @@ import { toLocalDateStr } from "@/lib/utils/date";
 
 // Step icons for referral workflows
 const STEP_ICONS: Record<string, typeof CheckCircle> = {
-  criteria: CheckCircle, consent: CheckCircle, section: FileText, area: FileText,
+  info: Info, criteria: CheckCircle, consent: CheckCircle, section: FileText, area: FileText,
   forms: FileText, submission: Send, casenote: Clipboard, reminder: Calendar, gdpr: Shield,
 };
 
@@ -380,7 +380,11 @@ export default function UnifiedGuidePage() {
                   <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-1">{rStep.title}</h2>
                 </div>
               </div>
-              <p className="text-gray-600 text-lg mb-6">{rStep.content}</p>
+              <div className="mb-6">
+                {rStep.content.split("\n").map((line, i) => (
+                  <p key={i} className={`text-gray-600 text-lg ${line.startsWith("•") ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}>{line}</p>
+                ))}
+              </div>
 
               {/* Criteria */}
               {rStep.type === "criteria" && (

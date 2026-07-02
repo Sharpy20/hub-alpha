@@ -44,11 +44,14 @@ const COMMON_EMOJIS = ["🔗", "📞", "💚", "🧠", "🏥", "💻", "📧", "
 
 function BookmarksContent() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get("category") || "all";
+  // ?add=1 (e.g. from the home wheel's "Add your own") opens the add modal on the
+  // My Personal view straight away.
+  const addOnLoad = searchParams.get("add") === "1";
+  const initialCategory = searchParams.get("category") || (addOnLoad ? "My Personal" : "all");
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState("");
   const [focusModalUrl, setFocusModalUrl] = useState<string | null>(null);
-  const [showAddPersonal, setShowAddPersonal] = useState(false);
+  const [showAddPersonal, setShowAddPersonal] = useState(addOnLoad);
   const [editingPersonal, setEditingPersonal] = useState<PersonalBookmark | null>(null);
   const [recommendModal, setRecommendModal] = useState<PersonalBookmark | null>(null);
   const { user } = useApp();
@@ -579,6 +582,13 @@ function PersonalBookmarkModal({
               placeholder="Brief description"
             />
           </div>
+
+          {!bookmark && (
+            <p className="text-xs text-gray-500 bg-violet-50 border border-violet-100 rounded-lg p-2.5">
+              This link is private to you and appears on your <strong>My Personal</strong> wheel. Think it would help others?
+              After saving, tap <strong>Recommend for everyone</strong> on it - a creator or senior admin reviews it before it goes site-wide.
+            </p>
+          )}
 
           <div className="flex gap-3 pt-2">
             <button

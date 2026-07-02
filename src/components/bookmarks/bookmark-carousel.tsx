@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { ChevronLeft, ChevronRight, Lock, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock, Star, Plus } from "lucide-react";
 import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings } from "@/app/ward-settings-provider";
@@ -246,14 +246,22 @@ export function BookmarkCarousel() {
           ))}
         </div>
 
-        {/* View all link */}
-        <Link
-          href="/links"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2 bg-nhs-blue text-white font-semibold rounded-xl hover:bg-nhs-dark-blue transition-colors no-underline text-sm"
-        >
-          View all links
-          <span className="text-white/70">&rarr;</span>
-        </Link>
+        {/* View all + add your own */}
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/links"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2 bg-nhs-blue text-white font-semibold rounded-xl hover:bg-nhs-dark-blue transition-colors no-underline text-sm"
+          >
+            View all links
+            <span className="text-white/70">&rarr;</span>
+          </Link>
+          <Link
+            href="/links?add=1"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-violet-100 text-violet-700 font-semibold rounded-xl hover:bg-violet-200 transition-colors no-underline text-sm"
+          >
+            <Plus className="w-4 h-4" /> Add your own
+          </Link>
+        </div>
       </div>
     </div>
   );

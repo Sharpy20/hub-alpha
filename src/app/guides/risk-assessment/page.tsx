@@ -46,7 +46,7 @@ import { toLocalDateStr } from "@/lib/utils/date";
 import {
   ArrowLeft, ArrowRight, Copy, Check, CheckCircle2, RotateCcw, ChevronDown,
   ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
-  Sparkles, ShieldAlert, ClipboardCheck, Plus, X,
+  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star,
 } from "lucide-react";
 
 type YN = "" | "yes" | "no";
@@ -264,6 +264,30 @@ function CopyField({ id, label, text, done, onToggle }: {
         </label>
       </div>
       <pre className="px-3 py-2.5 text-sm leading-relaxed whitespace-pre-wrap font-sans text-slate-700 max-h-72 overflow-y-auto">{text}</pre>
+    </div>
+  );
+}
+
+// A large star "Tips" badge; hover or click shows a short usage note.
+function TipBadge() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative inline-block" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Tip: when to use this tool"
+        className="flex flex-col items-center text-amber-300 hover:text-amber-200 transition-transform hover:scale-105"
+      >
+        <Star className="w-11 h-11 drop-shadow" fill="currentColor" strokeWidth={1} />
+        <span className="text-[11px] font-bold -mt-1.5 text-white">Tips</span>
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-2 z-40 w-72 rounded-xl bg-white text-gray-700 text-sm leading-relaxed p-3 shadow-xl border border-amber-200">
+          This tool is great for a <strong>new admission</strong>, but a lot of work for a weekly review. If you only need to
+          update one domain, copy that section from SystmOne and tidy it up with this tool.
+        </div>
+      )}
     </div>
   );
 }
@@ -671,6 +695,9 @@ export default function RiskAssessmentPage() {
             <Link href={v2Href("/guides")} className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline">
               <ArrowLeft className="w-4 h-4" /> All guides
             </Link>
+          </div>
+          <div className="mt-3">
+            <TipBadge />
           </div>
           <PatientLink patient={patient} onChange={setPatient} guideTitle="Risk Assessment" note="Adds the patient's name to the risk screen, formulation and RMP" />
         </div>

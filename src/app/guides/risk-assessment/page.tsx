@@ -1,26 +1,24 @@
 "use client";
 
-// Risk Formulation & Management Plan tool.
+// Risk Screen, Formulation & Management Plan tool.
 //
-// Reworked (2 Jul 2026) to mirror the SystmOne WAA Inpatient Risk Screening Tool.
-// Mike's steer: the risk screen, formulation and RMP are "the one same document"
-// in S1 - the screen identifies the risks, and those same risks flow into the
-// formulation (the WHY) and the management plan (the WHAT). So we gather once,
-// against the approved S1 domains + sub-domains, then generate all three outputs.
+// Reworked (2 Jul 2026, v2) after Mike's feedback that one long 7-domain page was
+// daunting and the WHY/WHAT split felt duplicated. Two changes:
 //
-// Flow:
-//   1. Work through the 7 approved S1 domains (progressive disclosure): tick the
-//      sub-domains that apply (or "no evidence"), answer the S1 follow-ups
-//      (safety / clinical indicators Y/N + list / current narrative / historical
-//      narrative), and for each ticked sub-domain fill its WHY (formulation) and
-//      WHAT (management plan).
-//   2. Concerns question + an auto-built overall formulation summary.
-//   3. Generate -> three copy-out tabs (Risk Screen, Formulation, Management Plan),
-//      each block with a "pasted into SystmOne" tick.
+// 1. STEP-BY-STEP WIZARD. The SystmOne risk screen is worked one domain at a time
+//    (like a step-by-step guide), with a progress bar that ticks green as each
+//    domain is done, plus a final "Review" step. Much less on screen at once.
 //
-// Nothing is saved. All state is in memory. The approved S1 wording is never
-// paraphrased - only "the person" is personalised on screen with the linked
-// patient's name (display only; the copied wording keeps the approved terms).
+// 2. ONE QUESTION SET (not WHY vs WHAT). For each identified risk the nurse
+//    answers ONE ordered run of plain questions - they don't need to know they're
+//    building two documents. Each question maps behind the scenes to a formulation
+//    section OR an RMP section (see UNIFIED_QUESTIONS). "Generate" then splits the
+//    answers into the Risk Screen, the Formulation and the Management Plan. No
+//    chip is shown twice.
+//
+// Still the approved SystmOne WAA Risk Screening Tool wording (never paraphrased);
+// only "the person" is personalised on screen with the linked patient's name.
+// Nothing is saved - all state is in memory.
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
@@ -29,6 +27,7 @@ import { Breadcrumb } from "@/components/ui";
 import {
   FORMULATION_SECTIONS, RMP_SECTIONS,
   RISK_TEACHING, RISK_EXAMPLES, S1_STEPS,
+  type RiskSection,
 } from "@/lib/data/guides";
 import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS,
@@ -43,9 +42,9 @@ import { FocusLinks } from "@/components/guides/FocusLinks";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
 import {
-  ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info,
-  Lightbulb, AlertTriangle, GraduationCap, ListChecks, Sparkles, ShieldAlert,
-  Brain, ClipboardCheck, Plus, X,
+  ArrowLeft, ArrowRight, Copy, Check, CheckCircle2, RotateCcw, ChevronDown,
+  ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
+  Sparkles, ShieldAlert, ClipboardCheck, Plus, X,
 } from "lucide-react";
 
 type YN = "" | "yes" | "no";
@@ -53,8 +52,8 @@ type YN = "" | "yes" | "no";
 interface DomainState {
   indicators: YN; indicatorList: string[]; safety: YN; current: string; historical: string;
   noEvidence: boolean; risks: string[]; // selected sub-domain labels
-  currentExamples: DatedExample[];       // dated examples under the current narrative
-  historicalExamples: DatedExample[];    // dated examples under the historical narrative
+  currentExamples: DatedExample[];
+  historicalExamples: DatedExample[];
 }
 const emptyDomain = (): DomainState => ({
   indicators: "", indicatorList: [], safety: "", current: "", historical: "",
@@ -63,6 +62,61 @@ const emptyDomain = (): DomainState => ({
 
 interface RiskRef { key: string; label: string; chipRisk: string }
 
+// ---- The one ordered question set (per risk) --------------------------------
+// The nurse answers these in order; each maps to ONE output section so the answer
+// flows straight into the Formulation (doc "f") or the Management Plan (doc "r").
+// `chip` says where the suggestion chips come from: "generic" = the section's own
+// chips; "f"/"r" = that risk's tailored formulation / RMP chips. No section's
+// chips appear under more than one question, so nothing is duplicated.
+interface UnifiedQuestion {
+  id: string;
+  question: string;
+  hint: string;
+  gap?: string;
+  examples?: boolean;
+  chip: { doc: "generic" | "f" | "r"; id: string };
+  writes: { doc: "f" | "r"; id: string };
+}
+const UNIFIED_QUESTIONS: UnifiedQuestion[] = [
+  { id: "q_seen", question: "What is the risk, and what have you seen or heard recently?", hint: "The events that bring this risk to attention now.", gap: "What has happened recently?", chip: { doc: "generic", id: "presenting" }, writes: { doc: "f", id: "presenting" } },
+  { id: "q_signs", question: "What are the early warning signs it is building or happening?", hint: "The specific, observable signs to watch for in THIS patient.", gap: "What are the early warning signs?", examples: true, chip: { doc: "r", id: "present" }, writes: { doc: "r", id: "present" } },
+  { id: "q_history", question: "What in their history makes this more likely?", hint: "Longer-term background - trauma, diagnosis, past attempts, admissions.", gap: "What raises the baseline risk?", chip: { doc: "f", id: "predisposing" }, writes: { doc: "f", id: "predisposing" } },
+  { id: "q_trigger", question: "What has happened recently to trigger it?", hint: "Recent events or stressors that set it off.", gap: "What triggers the risk?", chip: { doc: "f", id: "precipitating" }, writes: { doc: "f", id: "precipitating" } },
+  { id: "q_keeps", question: "What is keeping it going?", hint: "What sustains the risk once it has started.", gap: "What keeps it going?", chip: { doc: "f", id: "perpetuating" }, writes: { doc: "f", id: "perpetuating" } },
+  { id: "q_pattern", question: "Is it escalating, repeating, or new?", hint: "How it has changed over days, weeks or admissions.", gap: "What is the pattern over time?", chip: { doc: "f", id: "pattern" }, writes: { doc: "f", id: "pattern" } },
+  { id: "q_when", question: "When and where is the risk highest?", hint: "Times, situations or people that make the risk rise.", gap: "When is the risk highest?", chip: { doc: "f", id: "dynamic" }, writes: { doc: "f", id: "dynamic" } },
+  { id: "q_helps", question: "What helps - their strengths and what keeps them safe?", hint: "Protective factors, and how stable or fragile they are right now.", gap: "What is protective, and how robust is it?", chip: { doc: "f", id: "protective" }, writes: { doc: "f", id: "protective" } },
+  { id: "q_engage", question: "How engaged are they, and do they recognise the risk?", hint: "Engagement and insight.", gap: "What helps them engage?", chip: { doc: "f", id: "engagement" }, writes: { doc: "f", id: "engagement" } },
+  { id: "q_do", question: "What will we do to manage, prevent or reduce the risk?", hint: "What to do when it happens, and what prevents or reduces it. Say why where it helps.", gap: "What specifically helps this patient?", chip: { doc: "r", id: "prevent" }, writes: { doc: "r", id: "prevent" } },
+  { id: "q_working", question: "How will we know it is working?", hint: "Measurable change - avoid vague. How will you KNOW the risk is reducing?", gap: "What measurable change shows the risk is reducing?", chip: { doc: "r", id: "evaluate" }, writes: { doc: "r", id: "evaluate" } },
+  { id: "q_escalate", question: "What if the plan is not working - when and how do we escalate?", hint: "Escalation thresholds. The mandatory MDT line is added for you.", gap: "When and how do you escalate?", chip: { doc: "r", id: "next" }, writes: { doc: "r", id: "next" } },
+  { id: "q_judgement", question: "Overall, what is your clinical judgement of the risk?", hint: "Short and medium term. Pull the threads together.", gap: "What is your overall judgement?", chip: { doc: "f", id: "judgement" }, writes: { doc: "f", id: "judgement" } },
+];
+
+const F_SECTION = (id: string) => FORMULATION_SECTIONS.find((s) => s.id === id)!;
+const R_SECTION = (id: string) => RMP_SECTIONS.find((s) => s.id === id)!;
+
+// Build the display section for one question against a given risk's chip bank.
+function questionSectionFor(q: UnifiedQuestion, risk: string): RiskSection {
+  let src: RiskSection;
+  if (q.chip.doc === "generic") src = F_SECTION(q.chip.id);
+  else if (q.chip.doc === "f") src = formulationSectionForRisk(F_SECTION(q.chip.id), risk);
+  else src = rmpSectionForRisk(R_SECTION(q.chip.id), risk);
+  return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups: src.groups, examples: q.examples };
+}
+// Split one risk's unified answers into formulation-section and RMP-section states.
+function deriveForm(cap: AllState | undefined): AllState {
+  const out: AllState = {};
+  for (const q of UNIFIED_QUESTIONS) if (q.writes.doc === "f") out[q.writes.id] = cap?.[q.id] || EMPTY;
+  return out;
+}
+function deriveRmp(cap: AllState | undefined): AllState {
+  const out: AllState = {};
+  for (const q of UNIFIED_QUESTIONS) if (q.writes.doc === "r") out[q.writes.id] = cap?.[q.id] || EMPTY;
+  return out;
+}
+const answered = (st?: SecState) => !!st && (st.chips.length > 0 || st.text.trim() !== "" || st.na || (st.examples || []).some((e) => e.text.trim()));
+
 const TXT_BAR = "========================================";
 const TXT_DIV = "----------------------------------------";
 
@@ -70,23 +124,41 @@ const MONTHS = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
 ];
-// A natural date from any combination of day / month / year (often only the year
-// or month+year of an incident is known, so every part is optional).
 function formatPartialDate(d: { day: string; month: string; year: string }): string {
   const monthName = d.month ? MONTHS[Number(d.month) - 1] : "";
   const parts: string[] = [];
-  if (d.day && monthName) parts.push(d.day); // a day only makes sense with a month
+  if (d.day && monthName) parts.push(d.day);
   if (monthName) parts.push(monthName);
   if (d.year) parts.push(d.year);
   return parts.join(" ");
 }
-// A narrative string with its dated examples appended (for the copy-out).
 function withExamples(text: string, examples: DatedExample[] = []): string {
   const base = text.trim();
   const exs = examples.filter((e) => e.text.trim());
   if (!exs.length) return base;
   const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("; ");
   return `${base ? base + " " : ""}Specific examples: ${fmt}`;
+}
+
+async function copyText(text: string) {
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+  }
+}
+
+function YNToggle({ value, onChange }: { value: YN; onChange: (v: YN) => void }) {
+  return (
+    <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
+      {(["yes", "no"] as const).map((v) => (
+        <button key={v} type="button" onClick={() => onChange(value === v ? "" : v)} aria-pressed={value === v}
+          className={`px-3 py-1.5 text-sm font-semibold transition-colors ${value === v ? (v === "yes" ? "bg-rose-600 text-white" : "bg-emerald-600 text-white") : "bg-white text-gray-500 hover:bg-gray-50"}`}>
+          {v === "yes" ? "Yes" : "No"}
+        </button>
+      ))}
+    </div>
+  );
 }
 
 // Dated specific-examples list under a narrative field (date optional).
@@ -123,35 +195,6 @@ function DatedExamples({ examples, onChange }: { examples?: DatedExample[]; onCh
   );
 }
 
-async function copyText(text: string) {
-  try { await navigator.clipboard.writeText(text); }
-  catch {
-    const ta = document.createElement("textarea");
-    ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
-  }
-}
-
-// Yes / No pill toggle (Yes = rose, No = emerald), clears on re-click.
-function YNToggle({ value, onChange }: { value: YN; onChange: (v: YN) => void }) {
-  return (
-    <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
-      {(["yes", "no"] as const).map((v) => (
-        <button
-          key={v} type="button" onClick={() => onChange(value === v ? "" : v)} aria-pressed={value === v}
-          className={`px-3 py-1.5 text-sm font-semibold transition-colors ${
-            value === v
-              ? (v === "yes" ? "bg-rose-600 text-white" : "bg-emerald-600 text-white")
-              : "bg-white text-gray-500 hover:bg-gray-50"
-          }`}
-        >
-          {v === "yes" ? "Yes" : "No"}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-// A copy-out block with a "pasted in" tick. Hidden when empty.
 function CopyField({ id, label, text, done, onToggle }: {
   id: string; label: string; text: string; done: boolean; onToggle: (id: string, copied: boolean) => void;
 }) {
@@ -174,7 +217,6 @@ function CopyField({ id, label, text, done, onToggle }: {
   );
 }
 
-// Collapsible teaching/help block.
 function Collapse({ icon: Icon, title, children, tone = "gray" }: {
   icon: typeof Info; title: string; children: React.ReactNode; tone?: "gray" | "rose";
 }) {
@@ -198,11 +240,9 @@ export default function RiskAssessmentPage() {
 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [domains, setDomains] = useState<Record<string, DomainState>>({});
-  const [formByRisk, setFormByRisk] = useState<Record<string, AllState>>({});
-  const [rmpByRisk, setRmpByRisk] = useState<Record<string, AllState>>({});
-  const [openDomain, setOpenDomain] = useState<string | null>(RISK_DOMAINS[0].id);
+  const [capByRisk, setCapByRisk] = useState<Record<string, AllState>>({});
   const [openRisks, setOpenRisks] = useState<Set<string>>(new Set());
-  const [riskTab, setRiskTab] = useState<Record<string, "why" | "what">>({});
+  const [step, setStep] = useState(0); // 0..RISK_DOMAINS.length-1 = domains, last = Review
   const [q8, setQ8] = useState<YN>("");
   const [q8note, setQ8note] = useState("");
   const [q9, setQ9] = useState("");
@@ -211,13 +251,13 @@ export default function RiskAssessmentPage() {
   const [copied, setCopied] = useState<Set<string>>(new Set());
 
   const patientName = patient?.name;
+  const REVIEW_STEP = RISK_DOMAINS.length; // index of the final Review step
+  const TOTAL_STEPS = RISK_DOMAINS.length + 1;
 
   const getDomain = (id: string): DomainState => domains[id] || emptyDomain();
   const setDomain = (id: string, next: DomainState) => setDomains((s) => ({ ...s, [id]: next }));
-  const fGet = (key: string, sec: string): SecState => formByRisk[key]?.[sec] || EMPTY;
-  const fSet = (key: string, sec: string, v: SecState) => setFormByRisk((s) => ({ ...s, [key]: { ...s[key], [sec]: v } }));
-  const rGet = (key: string, sec: string): SecState => rmpByRisk[key]?.[sec] || EMPTY;
-  const rSet = (key: string, sec: string, v: SecState) => setRmpByRisk((s) => ({ ...s, [key]: { ...s[key], [sec]: v } }));
+  const cGet = (key: string, qid: string): SecState => capByRisk[key]?.[qid] || EMPTY;
+  const cSet = (key: string, qid: string, v: SecState) => setCapByRisk((s) => ({ ...s, [key]: { ...s[key], [qid]: v } }));
   const toggleCopied = (id: string, on: boolean) => setCopied((s) => { const n = new Set(s); if (on) n.add(id); else n.delete(id); return n; });
 
   const toggleSub = (domainId: string, label: string) => {
@@ -229,23 +269,24 @@ export default function RiskAssessmentPage() {
   const toggleOpenRisk = (key: string) => setOpenRisks((s) => { const n = new Set(s); if (n.has(key)) n.delete(key); else n.add(key); return n; });
 
   const reset = () => {
-    setDomains({}); setFormByRisk({}); setRmpByRisk({});
-    setQ8(""); setQ8note(""); setQ9(""); setGenerated(false); setCopied(new Set());
-    setOpenRisks(new Set()); setTab("screen"); setOpenDomain(RISK_DOMAINS[0].id);
+    setDomains({}); setCapByRisk({}); setQ8(""); setQ8note(""); setQ9("");
+    setGenerated(false); setCopied(new Set()); setOpenRisks(new Set()); setTab("screen"); setStep(0);
   };
 
   const isEngaged = (d: DomainState) =>
     d.risks.length > 0 || d.noEvidence || d.current.trim() !== "" || d.historical.trim() !== "" || d.indicators !== "" || d.safety !== "" ||
     (d.currentExamples || []).some((e) => e.text.trim()) || (d.historicalExamples || []).some((e) => e.text.trim());
 
-  // Personalise the approved prompts on screen only (copied wording keeps the
-  // approved "the person" terms).
+  const stepComplete = (i: number): boolean => {
+    if (i === REVIEW_STEP) return q8 !== "" || q9.trim() !== "";
+    return isEngaged(getDomain(RISK_DOMAINS[i].id));
+  };
+
   const personalise = (s: string) => {
     const nm = patientName;
     return nm ? s.replace(/the person's/g, `${nm}'s`).replace(/the person/g, nm) : s;
   };
 
-  // Every ticked sub-domain across all domains, in S1 order.
   const allRisks = useMemo<RiskRef[]>(() => {
     const out: RiskRef[] = [];
     for (const dm of RISK_DOMAINS) for (const label of getDomain(dm.id).risks) {
@@ -256,14 +297,12 @@ export default function RiskAssessmentPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [domains]);
 
-  // Auto overall formulation summary - each risk's presenting + judgement, plus
-  // the clinical indicators (they pull through into the formulation).
   const overallSummary = useMemo(() => {
     if (!allRisks.length) return "";
     const lines: string[] = [`Risks identified on screening: ${naturalList(allRisks.map((r) => r.label))}.`];
     for (const r of allRisks) {
-      const present = buildContent(formByRisk[r.key]?.["presenting"]);
-      const judge = buildContent(formByRisk[r.key]?.["judgement"]);
+      const present = buildContent(capByRisk[r.key]?.["q_seen"]);
+      const judge = buildContent(capByRisk[r.key]?.["q_judgement"]);
       const bits = [present, judge].filter((x) => x && x !== "Not yet established.");
       if (bits.length) lines.push(`${cap(r.label)}: ${ensureStop(bits.join(" "))}`);
     }
@@ -271,10 +310,9 @@ export default function RiskAssessmentPage() {
     if (inds.length) lines.push(`Clinical indicators noted: ${naturalList(inds)}.`);
     return lines.join(" ");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [domains, formByRisk]);
+  }, [domains, capByRisk]);
   const finalSummary = [overallSummary, q9.trim()].filter(Boolean).join(" ");
 
-  // One domain's risk-screen text (matches S1 field order).
   const domainScreenText = (dm: typeof RISK_DOMAINS[number]): string => {
     const st = getDomain(dm.id);
     if (!isEngaged(st)) return "";
@@ -293,7 +331,6 @@ export default function RiskAssessmentPage() {
 
   const engagedDomains = RISK_DOMAINS.filter((dm) => isEngaged(getDomain(dm.id)));
 
-  // Whole risk screen (one block).
   const fullScreenText = useMemo(() => {
     if (!engagedDomains.length && q8 === "") return "";
     const parts: string[] = [TXT_BAR, "RISK SCREENING TOOL", ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
@@ -309,46 +346,112 @@ export default function RiskAssessmentPage() {
 
   const anyIntake = allRisks.length > 0 || engagedDomains.length > 0 || q8 !== "" || q9.trim() !== "";
 
-  // One risk's rich capture (WHY + WHAT). Plain render function (NOT a nested
+  const doGenerate = () => { setGenerated(true); setTimeout(() => document.getElementById("risk-output")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+
+  // One risk's unified question run. Plain render function (NOT a nested
   // component) so editing a field doesn't remount and drop textarea focus.
   const renderRiskCapture = (r: RiskRef) => {
     const open = openRisks.has(r.key);
-    const view = riskTab[r.key] || "why";
-    const fCount = FORMULATION_SECTIONS.reduce((n, s) => { const v = formByRisk[r.key]?.[s.id]; return n + (v && (v.chips.length || v.text.trim() || v.na) ? 1 : 0); }, 0);
-    const wCount = RMP_SECTIONS.reduce((n, s) => { const v = rmpByRisk[r.key]?.[s.id]; return n + (v && (v.chips.length || v.text.trim() || v.na) ? 1 : 0); }, 0);
+    const done = UNIFIED_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[r.key]?.[q.id]) ? 1 : 0), 0);
     return (
       <div key={r.key} className="rounded-xl border border-rose-200 bg-white overflow-hidden">
         <button onClick={() => toggleOpenRisk(r.key)} className="w-full flex items-center gap-2 px-3.5 py-2.5 bg-rose-50/60 hover:bg-rose-50 transition-colors text-left">
           <span className="font-bold text-rose-900 text-sm flex-1">{r.label}</span>
-          <span className="text-[10px] text-rose-600">why {fCount}/9 · what {wCount}/5</span>
+          <span className="text-[10px] text-rose-600">{done}/{UNIFIED_QUESTIONS.length} answered</span>
           {open ? <ChevronDown className="w-4 h-4 text-rose-400" /> : <ChevronRight className="w-4 h-4 text-rose-400" />}
         </button>
         {open && (
-          <div className="p-3 space-y-3">
-            <div className="inline-flex bg-rose-100 rounded-full p-1">
-              <button onClick={() => setRiskTab((s) => ({ ...s, [r.key]: "why" }))} className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all inline-flex items-center gap-1 ${view === "why" ? "bg-rose-600 text-white shadow" : "text-rose-700"}`}><Brain className="w-3.5 h-3.5" /> The WHY (formulation)</button>
-              <button onClick={() => setRiskTab((s) => ({ ...s, [r.key]: "what" }))} className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all inline-flex items-center gap-1 ${view === "what" ? "bg-rose-600 text-white shadow" : "text-rose-700"}`}><ListChecks className="w-3.5 h-3.5" /> The WHAT (plan)</button>
-            </div>
-            {view === "why" ? (
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500">Why the risk exists - links history, current presentation and future risk.</p>
-                {FORMULATION_SECTIONS.map((sec) => (
-                  <SectionEditor key={sec.id} section={formulationSectionForRisk(sec, r.chipRisk)} state={fGet(r.key, sec.id)} onChange={(n) => fSet(r.key, sec.id, n)} />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <p className="text-xs text-gray-500">What you will do about it - the trust&apos;s 5-heading plan. The mandatory MDT line is added automatically.</p>
-                {RMP_SECTIONS.map((sec) => (
-                  <SectionEditor key={sec.id} section={rmpSectionForRisk(sec, r.chipRisk)} state={rGet(r.key, sec.id)} onChange={(n) => rSet(r.key, sec.id, n)} />
-                ))}
-              </div>
-            )}
+          <div className="p-3 space-y-2">
+            <p className="text-xs text-gray-500">
+              Answer these in your own words - it builds this risk&apos;s formulation and management plan for you. The
+              headings are added when you generate.
+            </p>
+            {UNIFIED_QUESTIONS.map((q) => (
+              <SectionEditor key={q.id} section={questionSectionFor(q, r.chipRisk)} state={cGet(r.key, q.id)} onChange={(n) => cSet(r.key, q.id, n)} />
+            ))}
           </div>
         )}
       </div>
     );
   };
+
+  // One domain's full progressive-disclosure page.
+  const renderDomain = (dm: typeof RISK_DOMAINS[number]) => {
+    const st = getDomain(dm.id);
+    const engaged = isEngaged(st);
+    return (
+      <div className="space-y-3">
+        <div className="flex flex-wrap gap-1.5">
+          {dm.subtypes.map((label) => {
+            const on = st.risks.includes(label);
+            return (
+              <button key={label} onClick={() => toggleSub(dm.id, label)} aria-pressed={on}
+                className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+          <input type="checkbox" checked={st.noEvidence} onChange={(e) => setDomain(dm.id, { ...st, noEvidence: e.target.checked, risks: e.target.checked ? [] : st.risks })} className="rounded border-gray-300 text-emerald-600 w-4 h-4" />
+          {dm.noEvidence}
+        </label>
+
+        {engaged && (
+          <div className="space-y-3 rounded-lg bg-gray-50 p-3">
+            {dm.safetyPrompt && (
+              <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.safetyPrompt)}</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>
+            )}
+            {CLINICAL_INDICATORS[dm.id] && (
+              <div>
+                <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
+                {st.indicators === "yes" && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {CLINICAL_INDICATORS[dm.id].map((ind) => {
+                      const on = st.indicatorList.includes(ind);
+                      return (
+                        <button key={ind} type="button" aria-pressed={on}
+                          onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
+                          className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
+                          {ind}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
+              <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
+              <DatedExamples examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
+              {dm.historicalSubPrompts && (
+                <ul className="mb-1.5 ml-1 space-y-0.5">
+                  {dm.historicalSubPrompts.map((sp) => <li key={sp} className="text-xs text-gray-400">- {personalise(sp)}</li>)}
+                </ul>
+              )}
+              <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} className={inputCls} />
+              <DatedExamples examples={st.historicalExamples} onChange={(next) => setDomain(dm.id, { ...st, historicalExamples: next })} />
+            </div>
+          </div>
+        )}
+
+        {st.risks.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-[11px] font-mono uppercase tracking-wider text-rose-500">Answer the questions for each risk</p>
+            {st.risks.map((label) => renderRiskCapture({ key: `${dm.id}::${label}`, label, chipRisk: SUBTYPE_RISK[`${dm.id}::${label}`] || "" }))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const onDomainStep = step < REVIEW_STEP;
+  const currentDomain = onDomainStep ? RISK_DOMAINS[step] : null;
 
   return (
     <MainLayout>
@@ -369,7 +472,7 @@ export default function RiskAssessmentPage() {
               <div>
                 <h1 className="text-3xl font-bold">Risk Screen, Formulation & Management Plan</h1>
                 <p className="text-white/80 mt-1">
-                  Work through the SystmOne risk screen once - it builds the screen, the formulation and a plan for each risk to copy across.
+                  Work through the risk screen one area at a time. Answer the questions for each risk - it builds all three documents to copy across.
                 </p>
               </div>
             </div>
@@ -425,126 +528,97 @@ export default function RiskAssessmentPage() {
           </Collapse>
         </div>
 
-        {/* The risk screen - the 7 approved S1 domains */}
-        <div className="bg-white rounded-2xl border-2 border-rose-300 p-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-rose-600" />
-            <h2 className="font-bold text-gray-800 flex-1">Risk screen - work through each area</h2>
-          </div>
-          <p className="text-xs text-gray-500">
-            These are the approved SystmOne domains and sub-domains. Tick the ones that apply (or &quot;no evidence&quot;),
-            add the screen narrative, then fill each ticked risk&apos;s WHY (formulation) and WHAT (plan) below it. The
-            same risks flow into all three outputs.
-          </p>
-
-          <div className="space-y-2">
-            {RISK_DOMAINS.map((dm) => {
-              const st = getDomain(dm.id);
-              const open = openDomain === dm.id;
-              const engaged = isEngaged(st);
+        {/* Progress bar - one dot per domain + Review */}
+        <div className="bg-white rounded-2xl border border-rose-100 p-3">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+            {Array.from({ length: TOTAL_STEPS }, (_, i) => {
+              const label = i === REVIEW_STEP ? "Review" : String(RISK_DOMAINS[i].number);
+              const done = stepComplete(i);
+              const current = step === i;
               return (
-                <div key={dm.id} className={`rounded-xl border overflow-hidden ${engaged ? "border-rose-300" : "border-gray-200"}`}>
-                  <button onClick={() => setOpenDomain((o) => (o === dm.id ? null : dm.id))} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
-                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${engaged ? "bg-rose-600 text-white" : "bg-gray-100 text-gray-500"}`}>{dm.number}</span>
-                    <span className="font-semibold text-gray-800 text-sm flex-1">{dm.title}</span>
-                    {engaged && <span className="text-[11px] font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full">{st.noEvidence ? "none" : st.risks.length || "•"}</span>}
-                    {open ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
-                  </button>
-                  {open && (
-                    <div className="px-4 pb-4 space-y-3 border-t border-gray-100 pt-3">
-                      <div className="flex flex-wrap gap-1.5">
-                        {dm.subtypes.map((label) => {
-                          const on = st.risks.includes(label);
-                          return (
-                            <button key={label} onClick={() => toggleSub(dm.id, label)} aria-pressed={on}
-                              className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
-                              {label}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                        <input type="checkbox" checked={st.noEvidence} onChange={(e) => setDomain(dm.id, { ...st, noEvidence: e.target.checked, risks: e.target.checked ? [] : st.risks })} className="rounded border-gray-300 text-emerald-600 w-4 h-4" />
-                        {dm.noEvidence}
-                      </label>
-
-                      {engaged && (
-                        <div className="space-y-3 rounded-lg bg-gray-50 p-3">
-                          {dm.safetyPrompt && (
-                            <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.safetyPrompt)}</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>
-                          )}
-                          {CLINICAL_INDICATORS[dm.id] && (
-                            <div>
-                              <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
-                              {st.indicators === "yes" && (
-                                <div className="mt-2 flex flex-wrap gap-1.5">
-                                  {CLINICAL_INDICATORS[dm.id].map((ind) => {
-                                    const on = st.indicatorList.includes(ind);
-                                    return (
-                                      <button key={ind} type="button" aria-pressed={on}
-                                        onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
-                                        className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
-                                        {ind}
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                            </div>
-                          )}
-                          <div>
-                            <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
-                            <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
-                            <DatedExamples examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
-                          </div>
-                          <div>
-                            <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
-                            {dm.historicalSubPrompts && (
-                              <ul className="mb-1.5 ml-1 space-y-0.5">
-                                {dm.historicalSubPrompts.map((sp) => <li key={sp} className="text-xs text-gray-400">- {personalise(sp)}</li>)}
-                              </ul>
-                            )}
-                            <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} className={inputCls} />
-                            <DatedExamples examples={st.historicalExamples} onChange={(next) => setDomain(dm.id, { ...st, historicalExamples: next })} />
-                          </div>
-                        </div>
-                      )}
-
-                      {st.risks.length > 0 && (
-                        <div className="space-y-2">
-                          <p className="text-[11px] font-mono uppercase tracking-wider text-rose-500">For each risk: the why &amp; the what</p>
-                          {st.risks.map((label) => renderRiskCapture({ key: `${dm.id}::${label}`, label, chipRisk: SUBTYPE_RISK[`${dm.id}::${label}`] || "" }))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+                <button
+                  key={i}
+                  onClick={() => setStep(i)}
+                  aria-current={current}
+                  aria-label={i === REVIEW_STEP ? "Review step" : `Domain ${RISK_DOMAINS[i].number}: ${RISK_DOMAINS[i].title}`}
+                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-sm font-bold flex-shrink-0 border transition-all ${
+                    current ? "bg-rose-600 border-rose-600 text-white"
+                      : done ? "bg-emerald-50 border-emerald-300 text-emerald-700"
+                        : "bg-white border-gray-200 text-gray-500 hover:border-rose-300"
+                  }`}
+                >
+                  {done && !current ? <CheckCircle2 className="w-4 h-4" /> : null}
+                  {i === REVIEW_STEP ? <span>Review</span> : <span>{label}</span>}
+                </button>
               );
             })}
           </div>
+        </div>
 
-          {/* Concerns + auto summary */}
-          <div className="rounded-xl bg-gray-50 p-3 space-y-3">
-            <div className="flex items-center gap-3 flex-wrap"><span className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">Do you, or has anyone else, expressed concerns?</span><YNToggle value={q8} onChange={setQ8} /></div>
-            {q8 === "yes" && <input autoComplete="off" value={q8note} onChange={(e) => setQ8note(e.target.value)} className={inputCls} placeholder="Briefly, what are the concerns?" />}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">Overall risk formulation summary</label>
-              <p className="text-xs text-gray-500 mb-1.5">Auto-built from the risks and their formulations (each risk&apos;s presenting + overall judgement, plus any clinical indicators). Add anything else below.</p>
-              {overallSummary ? (
-                <div className="rounded-lg border border-rose-200 bg-rose-50/50 px-3 py-2 text-sm text-gray-700 whitespace-pre-wrap mb-2">{overallSummary}</div>
-              ) : (
-                <p className="text-xs text-gray-400 italic mb-2">Tick risks and fill their formulations - the summary builds itself here.</p>
-              )}
-              <textarea value={q9} onChange={(e) => setQ9(e.target.value)} rows={2} className={inputCls} placeholder="Add anything else to the summary (optional)..." />
+        {/* Current step card */}
+        <div className="bg-white rounded-2xl border-2 border-rose-300 p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <ShieldAlert className="w-5 h-5 text-rose-600" />
+            <div className="flex-1">
+              <p className="text-[11px] font-mono uppercase tracking-wider text-rose-500">
+                {onDomainStep ? `Domain ${currentDomain!.number} of ${RISK_DOMAINS.length}` : "Final step"}
+              </p>
+              <h2 className="font-bold text-gray-800">{onDomainStep ? currentDomain!.title : "Review & concerns"}</h2>
             </div>
+            {stepComplete(step) && <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full"><CheckCircle2 className="w-3.5 h-3.5" /> Done</span>}
+          </div>
+
+          {onDomainStep ? (
+            <>
+              <p className="text-xs text-gray-500">
+                Tick the sub-domains that apply (or &quot;no evidence&quot;), add the screen narrative, then answer the
+                questions for each risk. If nothing applies here, tick &quot;no evidence&quot; and move on.
+              </p>
+              {renderDomain(currentDomain!)}
+            </>
+          ) : (
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 flex-wrap"><span className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">Do you, or has anyone else, expressed concerns?</span><YNToggle value={q8} onChange={setQ8} /></div>
+              {q8 === "yes" && <input autoComplete="off" value={q8note} onChange={(e) => setQ8note(e.target.value)} className={inputCls} placeholder="Briefly, what are the concerns?" />}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Overall risk formulation summary</label>
+                <p className="text-xs text-gray-500 mb-1.5">Auto-built from the risks and their answers (each risk&apos;s recent events + overall judgement, plus any clinical indicators). Add anything else below.</p>
+                {overallSummary ? (
+                  <div className="rounded-lg border border-rose-200 bg-rose-50/50 px-3 py-2 text-sm text-gray-700 whitespace-pre-wrap mb-2">{overallSummary}</div>
+                ) : (
+                  <p className="text-xs text-gray-400 italic mb-2">Work through the domains and answer the risk questions - the summary builds itself here.</p>
+                )}
+                <textarea value={q9} onChange={(e) => setQ9(e.target.value)} rows={2} className={inputCls} placeholder="Add anything else to the summary (optional)..." />
+              </div>
+            </div>
+          )}
+
+          {/* Wizard nav */}
+          <div className="flex items-center justify-between gap-2 pt-1">
+            <button
+              onClick={() => setStep((s) => Math.max(0, s - 1))}
+              disabled={step === 0}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+            {step < REVIEW_STEP ? (
+              <button
+                onClick={() => setStep((s) => Math.min(REVIEW_STEP, s + 1))}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-rose-600 text-white hover:bg-rose-700 transition-colors"
+              >
+                Next <ArrowRight className="w-4 h-4" />
+              </button>
+            ) : (
+              <span className="text-xs text-gray-400">Last step</span>
+            )}
           </div>
         </div>
 
-        {/* Generate */}
+        {/* Generate - always available once anything is entered */}
         <div className="flex flex-wrap items-center justify-center gap-3">
           <button
-            onClick={() => { setGenerated(true); setTimeout(() => document.getElementById("risk-output")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); }}
+            onClick={doGenerate}
             disabled={!anyIntake}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-red-700 text-white font-bold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all"
           >
@@ -565,6 +639,10 @@ export default function RiskAssessmentPage() {
 
             {tab === "screen" && (
               <div className="space-y-3">
+                <div className="flex items-start gap-2 bg-sky-50 border border-sky-200 rounded-xl p-3 text-sm text-sky-800">
+                  <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <p>First, in the SystmOne risk screen, <strong>tick these options if you haven&apos;t already</strong> (the domains, sub-domains and clinical indicators below). Then paste the narrative blocks into the matching notes fields.</p>
+                </div>
                 {!engagedDomains.length && q8 === "" && <p className="text-sm text-gray-400 text-center py-4">Nothing entered on the risk screen yet.</p>}
                 <CopyField id="screen-all" label="Whole risk screen (one block)" text={fullScreenText} done={copied.has("screen-all")} onToggle={toggleCopied} />
                 {engagedDomains.length > 1 && engagedDomains.map((dm) => (
@@ -575,9 +653,9 @@ export default function RiskAssessmentPage() {
 
             {tab === "formulation" && (
               <div className="space-y-3">
-                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Tick at least one risk above to build a formulation.</p>}
+                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Identify at least one risk to build a formulation.</p>}
                 {allRisks.map((r) => (
-                  <CopyField key={r.key} id={`form-${r.key}`} label={`Formulation - ${r.label}`} text={buildFormulation(formByRisk[r.key] || {}, `RISK FORMULATION: ${r.label.toUpperCase()}`, patientName)} done={copied.has(`form-${r.key}`)} onToggle={toggleCopied} />
+                  <CopyField key={r.key} id={`form-${r.key}`} label={`Formulation - ${r.label}`} text={buildFormulation(deriveForm(capByRisk[r.key]), `RISK FORMULATION: ${r.label.toUpperCase()}`, patientName)} done={copied.has(`form-${r.key}`)} onToggle={toggleCopied} />
                 ))}
                 {finalSummary && <CopyField id="form-summary" label="Overall formulation summary" text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />}
               </div>
@@ -585,9 +663,9 @@ export default function RiskAssessmentPage() {
 
             {tab === "rmp" && (
               <div className="space-y-3">
-                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Tick at least one risk above to build a management plan.</p>}
+                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Identify at least one risk to build a management plan.</p>}
                 {allRisks.map((r) => (
-                  <CopyField key={r.key} id={`rmp-${r.key}`} label={`RMP - ${r.label}`} text={buildOneRmp(r.key, rmpByRisk[r.key] || {}, r.label, patientName)} done={copied.has(`rmp-${r.key}`)} onToggle={toggleCopied} />
+                  <CopyField key={r.key} id={`rmp-${r.key}`} label={`RMP - ${r.label}`} text={buildOneRmp(r.key, deriveRmp(capByRisk[r.key]), r.label, patientName)} done={copied.has(`rmp-${r.key}`)} onToggle={toggleCopied} />
                 ))}
               </div>
             )}

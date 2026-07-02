@@ -36,7 +36,7 @@ import {
 import {
   SectionEditor, buildFormulation, buildOneRmp, formulationSectionForRisk,
   rmpSectionForRisk, buildContent, naturalList, cap, ensureStop,
-  type AllState, type SecState, EMPTY,
+  type AllState, type SecState, type DatedExample, EMPTY,
 } from "@/components/guides/risk-capture";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
@@ -45,7 +45,7 @@ import { Patient } from "@/lib/types";
 import {
   ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info,
   Lightbulb, AlertTriangle, GraduationCap, ListChecks, Sparkles, ShieldAlert,
-  Brain, ClipboardCheck,
+  Brain, ClipboardCheck, Plus, X,
 } from "lucide-react";
 
 type YN = "" | "yes" | "no";
@@ -53,16 +53,75 @@ type YN = "" | "yes" | "no";
 interface DomainState {
   indicators: YN; indicatorList: string[]; safety: YN; current: string; historical: string;
   noEvidence: boolean; risks: string[]; // selected sub-domain labels
+  currentExamples: DatedExample[];       // dated examples under the current narrative
+  historicalExamples: DatedExample[];    // dated examples under the historical narrative
 }
 const emptyDomain = (): DomainState => ({
   indicators: "", indicatorList: [], safety: "", current: "", historical: "",
-  noEvidence: false, risks: [],
+  noEvidence: false, risks: [], currentExamples: [], historicalExamples: [],
 });
 
 interface RiskRef { key: string; label: string; chipRisk: string }
 
 const TXT_BAR = "========================================";
 const TXT_DIV = "----------------------------------------";
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+// A natural date from any combination of day / month / year (often only the year
+// or month+year of an incident is known, so every part is optional).
+function formatPartialDate(d: { day: string; month: string; year: string }): string {
+  const monthName = d.month ? MONTHS[Number(d.month) - 1] : "";
+  const parts: string[] = [];
+  if (d.day && monthName) parts.push(d.day); // a day only makes sense with a month
+  if (monthName) parts.push(monthName);
+  if (d.year) parts.push(d.year);
+  return parts.join(" ");
+}
+// A narrative string with its dated examples appended (for the copy-out).
+function withExamples(text: string, examples: DatedExample[] = []): string {
+  const base = text.trim();
+  const exs = examples.filter((e) => e.text.trim());
+  if (!exs.length) return base;
+  const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("; ");
+  return `${base ? base + " " : ""}Specific examples: ${fmt}`;
+}
+
+// Dated specific-examples list under a narrative field (date optional).
+function DatedExamples({ examples, onChange }: { examples?: DatedExample[]; onChange: (next: DatedExample[]) => void }) {
+  const list = examples || [];
+  const upd = (i: number, patch: Partial<DatedExample>) => onChange(list.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
+  const selCls = "text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:ring-2 focus:ring-rose-400 focus:border-rose-400";
+  return (
+    <div className="mt-2 rounded-lg border border-rose-100 bg-rose-50/40 p-2.5 space-y-2">
+      <p className="text-[10px] font-mono uppercase tracking-wider text-rose-500">
+        Give dated examples (date optional - just the year, the month and year, or the full date)
+      </p>
+      {list.map((ex, i) => (
+        <div key={i} className="space-y-1.5">
+          <div className="flex items-center gap-1.5">
+            <select value={ex.day} onChange={(e) => upd(i, { day: e.target.value })} aria-label="Day" className={selCls}>
+              <option value="">Day</option>
+              {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
+            </select>
+            <select value={ex.month} onChange={(e) => upd(i, { month: e.target.value })} aria-label="Month" className={selCls}>
+              <option value="">Month</option>
+              {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
+            </select>
+            <input type="number" value={ex.year} placeholder="Year" onChange={(e) => upd(i, { year: e.target.value })} aria-label="Year" className="w-20 text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400" />
+            <button onClick={() => onChange(list.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
+          </div>
+          <input type="text" value={ex.text} placeholder="what happened" onChange={(e) => upd(i, { text: e.target.value })} className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400" />
+        </div>
+      ))}
+      <button onClick={() => onChange([...list, { day: "", month: "", year: "", text: "" }])} className="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 hover:text-rose-900 transition-colors">
+        <Plus className="w-3.5 h-3.5" /> Add example
+      </button>
+    </div>
+  );
+}
 
 async function copyText(text: string) {
   try { await navigator.clipboard.writeText(text); }
@@ -176,7 +235,8 @@ export default function RiskAssessmentPage() {
   };
 
   const isEngaged = (d: DomainState) =>
-    d.risks.length > 0 || d.noEvidence || d.current.trim() !== "" || d.historical.trim() !== "" || d.indicators !== "" || d.safety !== "";
+    d.risks.length > 0 || d.noEvidence || d.current.trim() !== "" || d.historical.trim() !== "" || d.indicators !== "" || d.safety !== "" ||
+    (d.currentExamples || []).some((e) => e.text.trim()) || (d.historicalExamples || []).some((e) => e.text.trim());
 
   // Personalise the approved prompts on screen only (copied wording keeps the
   // approved "the person" terms).
@@ -224,8 +284,10 @@ export default function RiskAssessmentPage() {
     if (dm.safetyPrompt && st.safety) parts.push(`Concerns about safety: ${st.safety === "yes" ? "Yes" : "No"}`);
     if (st.indicators) parts.push(`Clinical indicators: ${st.indicators === "yes" ? "Yes" : "No"}`);
     if (st.indicatorList.length) parts.push(`Indicators present: ${st.indicatorList.join("; ")}`);
-    if (st.current.trim()) parts.push(`Current concerns: ${ensureStop(cap(st.current.trim()))}`);
-    if (st.historical.trim()) parts.push(`Historical: ${ensureStop(cap(st.historical.trim()))}`);
+    const curText = withExamples(st.current, st.currentExamples);
+    if (curText) parts.push(`Current concerns: ${ensureStop(cap(curText))}`);
+    const histText = withExamples(st.historical, st.historicalExamples);
+    if (histText) parts.push(`Historical: ${ensureStop(cap(histText))}`);
     return parts.join("\n");
   };
 
@@ -412,26 +474,29 @@ export default function RiskAssessmentPage() {
                           {dm.safetyPrompt && (
                             <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.safetyPrompt)}</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>
                           )}
-                          <div>
-                            <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
-                            {st.indicators === "yes" && CLINICAL_INDICATORS[dm.id] && (
-                              <div className="mt-2 flex flex-wrap gap-1.5">
-                                {CLINICAL_INDICATORS[dm.id].map((ind) => {
-                                  const on = st.indicatorList.includes(ind);
-                                  return (
-                                    <button key={ind} type="button" aria-pressed={on}
-                                      onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
-                                      className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
-                                      {ind}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            )}
-                          </div>
+                          {CLINICAL_INDICATORS[dm.id] && (
+                            <div>
+                              <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
+                              {st.indicators === "yes" && (
+                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                  {CLINICAL_INDICATORS[dm.id].map((ind) => {
+                                    const on = st.indicatorList.includes(ind);
+                                    return (
+                                      <button key={ind} type="button" aria-pressed={on}
+                                        onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
+                                        className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
+                                        {ind}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          )}
                           <div>
                             <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
                             <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
+                            <DatedExamples examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
                           </div>
                           <div>
                             <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
@@ -441,6 +506,7 @@ export default function RiskAssessmentPage() {
                               </ul>
                             )}
                             <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} className={inputCls} />
+                            <DatedExamples examples={st.historicalExamples} onChange={(next) => setDomain(dm.id, { ...st, historicalExamples: next })} />
                           </div>
                         </div>
                       )}

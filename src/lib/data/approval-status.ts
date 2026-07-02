@@ -16,6 +16,8 @@ export const DEFAULT_APPROVAL: ApprovalStatus = "amber";
 
 // Keyed by guide id (the id in ALL_GUIDES on the guides page).
 export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
+  // Mike signed off the S117 aftercare & funding content (2 Jul).
+  "s117-meeting": "green",
   "prenoxad": "red",
   "admission-note": "red",
   // Rebuilt / new on 2 Jul - red until Mike signs each off.

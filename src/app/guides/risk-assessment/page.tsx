@@ -26,7 +26,7 @@ import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import {
   FORMULATION_SECTIONS, RMP_SECTIONS,
-  RISK_TEACHING, RISK_EXAMPLES, S1_STEPS,
+  RISK_TEACHING, RISK_EXAMPLES,
   type RiskSection,
 } from "@/lib/data/guides";
 import {
@@ -52,12 +52,13 @@ type YN = "" | "yes" | "no";
 interface DomainState {
   indicators: YN; indicatorList: string[]; safety: YN; current: string; historical: string;
   noEvidence: boolean; risks: string[]; // selected sub-domain labels
+  customSubs: string[];                 // nurse-named extra sub-domains for this domain
   currentExamples: DatedExample[];
   historicalExamples: DatedExample[];
 }
 const emptyDomain = (): DomainState => ({
   indicators: "", indicatorList: [], safety: "", current: "", historical: "",
-  noEvidence: false, risks: [], currentExamples: [], historicalExamples: [],
+  noEvidence: false, risks: [], customSubs: [], currentExamples: [], historicalExamples: [],
 });
 
 interface RiskRef { key: string; label: string; chipRisk: string }
@@ -118,21 +119,35 @@ function deriveRmp(cap: AllState | undefined): AllState {
 // ONE formulation covering all risks (SystmOne has a single formulation field),
 // with each risk as a sub-heading. Kept as one block so the nurse copies once.
 // (The RMPs stay separate per risk - trust rule.)
+// ONE formulation covering all risks. Each risk in double == bars (obvious where
+// it goes, so no "RISK FORMULATION" title), followed by the answers as flowing
+// prose - NOT the per-section headers (that read too much like the RMP).
 function buildCombinedFormulation(risks: RiskRef[], caps: Record<string, AllState>, patientName?: string): string {
   const perRisk: string[] = [];
   for (const r of risks) {
     const secs = deriveForm(caps[r.key]);
-    const filled = FORMULATION_SECTIONS
-      .map((sec) => ({ heading: sec.heading, body: buildContent(secs[sec.id]) }))
-      .filter((s) => s.body);
-    if (!filled.length) continue;
-    const sub: string[] = [`### ${r.label} ###`];
-    filled.forEach((s, i) => { sub.push(s.heading.toUpperCase()); sub.push(s.body); if (i < filled.length - 1) sub.push(TXT_DIV); });
-    perRisk.push(sub.join("\n"));
+    const bodies = FORMULATION_SECTIONS.map((sec) => buildContent(secs[sec.id])).filter(Boolean);
+    if (!bodies.length) continue;
+    perRisk.push([TXT_BAR, r.label, TXT_BAR, bodies.join(" ")].join("\n"));
   }
   if (!perRisk.length) return "";
-  const head = [TXT_BAR, "RISK FORMULATION", ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
-  return head.join("\n") + "\n" + perRisk.join("\n" + TXT_BAR + "\n");
+  const head = patientName ? `Patient: ${patientName}\n\n` : "";
+  return head + perRisk.join("\n\n");
+}
+
+// ONE management-plan document - every plan, grouped by S1 domain. The patient
+// name appears once at the top (not repeated on each plan).
+function buildCombinedRmp(risks: RiskRef[], caps: Record<string, AllState>, patientName?: string): string {
+  const out: string[] = [];
+  for (const dm of RISK_DOMAINS) {
+    const domainRisks = risks.filter((r) => r.key.startsWith(`${dm.id}::`));
+    if (!domainRisks.length) continue;
+    const plans = domainRisks.map((r) => buildOneRmp(r.key, deriveRmp(caps[r.key]), r.label));
+    out.push(`${dm.number}. ${dm.title.toUpperCase()}\n\n${plans.join("\n\n")}`);
+  }
+  if (!out.length) return "";
+  const head = patientName ? `Patient: ${patientName}\n\n` : "";
+  return head + out.join("\n\n\n");
 }
 const answered = (st?: SecState) => !!st && (st.chips.length > 0 || st.text.trim() !== "" || st.na || (st.examples || []).some((e) => e.text.trim()));
 
@@ -249,6 +264,31 @@ function CopyField({ id, label, text, done, onToggle }: {
   );
 }
 
+// "Add another sub-domain" - name it, and it becomes a selected risk with its
+// own question set. Own state so typing doesn't disturb the domain.
+function AddSubDomain({ onAdd }: { onAdd: (name: string) => void }) {
+  const [val, setVal] = useState("");
+  const submit = () => { const v = val.trim(); if (v) { onAdd(v); setVal(""); } };
+  return (
+    <div className="flex items-center gap-1.5">
+      <input
+        value={val}
+        onChange={(e) => setVal(e.target.value)}
+        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submit(); } }}
+        placeholder="add another sub-domain..."
+        className="flex-1 min-w-0 text-sm border border-dashed border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+      />
+      <button
+        onClick={submit}
+        disabled={!val.trim()}
+        className="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 hover:text-rose-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0 px-2 py-1.5"
+      >
+        <Plus className="w-3.5 h-3.5" /> Add
+      </button>
+    </div>
+  );
+}
+
 // The pasteable output for ONE S1 narrative field (current or historical),
 // merging the typed narrative with its dated examples. The ticks above are done
 // by hand on S1; only these narrative fields are pasted. Green "copy into S1"
@@ -308,7 +348,9 @@ export default function RiskAssessmentPage() {
   const GENERATE_STEP = RISK_DOMAINS.length + 1; // final step - holds the Generate button
   const TOTAL_STEPS = RISK_DOMAINS.length + 2;
 
-  const getDomain = (id: string): DomainState => domains[id] || emptyDomain();
+  // Merge over a fresh empty domain so every field is always present (guards
+  // against any partially-shaped state, e.g. after a field is added).
+  const getDomain = (id: string): DomainState => (domains[id] ? { ...emptyDomain(), ...domains[id] } : emptyDomain());
   const setDomain = (id: string, next: DomainState) => setDomains((s) => ({ ...s, [id]: next }));
   const cGet = (key: string, qid: string): SecState => capByRisk[key]?.[qid] || EMPTY;
   const cSet = (key: string, qid: string, v: SecState) => setCapByRisk((s) => ({ ...s, [key]: { ...s[key], [qid]: v } }));
@@ -321,6 +363,21 @@ export default function RiskAssessmentPage() {
     if (!has) setOpenRisks((s) => new Set(s).add(`${domainId}::${label}`));
   };
   const toggleOpenRisk = (key: string) => setOpenRisks((s) => { const n = new Set(s); if (n.has(key)) n.delete(key); else n.add(key); return n; });
+
+  // Add a nurse-named sub-domain to a domain: it becomes a selected risk with its
+  // own (generic-chip) question set. Deduped against existing subs.
+  const addCustomSub = (domainId: string, rawName: string) => {
+    const name = rawName.trim();
+    if (!name) return;
+    const d = getDomain(domainId);
+    if (d.customSubs.includes(name) || d.risks.includes(name)) return;
+    setDomain(domainId, { ...d, noEvidence: false, customSubs: [...d.customSubs, name], risks: [...d.risks, name] });
+    setOpenRisks((s) => new Set(s).add(`${domainId}::${name}`));
+  };
+  const removeCustomSub = (domainId: string, name: string) => {
+    const d = getDomain(domainId);
+    setDomain(domainId, { ...d, customSubs: d.customSubs.filter((x) => x !== name), risks: d.risks.filter((x) => x !== name) });
+  };
 
   const reset = () => {
     setDomains({}); setCapByRisk({}); setQ8(""); setQ8note(""); setQ9("");
@@ -409,11 +466,18 @@ export default function RiskAssessmentPage() {
     const open = openRisks.has(r.key);
     const done = UNIFIED_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[r.key]?.[q.id]) ? 1 : 0), 0);
     return (
-      <div key={r.key} className="rounded-xl border border-rose-200 bg-white overflow-hidden">
-        <button onClick={() => toggleOpenRisk(r.key)} className="w-full flex items-center gap-2 px-3.5 py-2.5 bg-rose-50/60 hover:bg-rose-50 transition-colors text-left">
-          <span className="font-bold text-rose-900 text-sm flex-1">{r.label}</span>
-          <span className="text-[10px] text-rose-600">{done}/{UNIFIED_QUESTIONS.length} answered</span>
-          {open ? <ChevronDown className="w-4 h-4 text-rose-400" /> : <ChevronRight className="w-4 h-4 text-rose-400" />}
+      <div key={r.key} className="rounded-xl border border-rose-200 bg-white">
+        {/* Header styled like a selected chip; sticks below the app header (top-16)
+            so you always see which risk you're on while scrolling its questions. */}
+        <button
+          onClick={() => toggleOpenRisk(r.key)}
+          className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${
+            open ? "bg-rose-600 text-white shadow-sm" : "bg-rose-50 text-rose-900 hover:bg-rose-100"
+          }`}
+        >
+          <span className="font-bold text-sm flex-1">{r.label}</span>
+          <span className={`text-[10px] ${open ? "text-rose-100" : "text-rose-600"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
+          {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-rose-400" />}
         </button>
         {open && (
           <div className="p-3 space-y-2">
@@ -446,7 +510,17 @@ export default function RiskAssessmentPage() {
               </button>
             );
           })}
+          {st.customSubs.map((label) => {
+            const on = st.risks.includes(label);
+            return (
+              <span key={label} className={`inline-flex items-center rounded-lg border text-sm transition-all ${on ? "bg-rose-600 border-rose-600 text-white" : "bg-white border-gray-200 text-gray-600"}`}>
+                <button onClick={() => toggleSub(dm.id, label)} aria-pressed={on} className="pl-2.5 pr-1 py-1.5 font-medium text-left">{label}</button>
+                <button onClick={() => removeCustomSub(dm.id, label)} aria-label={`Remove ${label}`} className={`pr-2 pl-0.5 py-1.5 ${on ? "text-white/80 hover:text-white" : "text-gray-400 hover:text-red-600"}`}><X className="w-3.5 h-3.5" /></button>
+              </span>
+            );
+          })}
         </div>
+        <AddSubDomain onAdd={(name) => addCustomSub(dm.id, name)} />
 
         <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
           <input type="checkbox" checked={st.noEvidence} onChange={(e) => setDomain(dm.id, { ...st, noEvidence: e.target.checked, risks: e.target.checked ? [] : st.risks })} className="rounded border-gray-300 text-emerald-600 w-4 h-4" />
@@ -644,16 +718,6 @@ export default function RiskAssessmentPage() {
               ))}
             </div>
           </Collapse>
-          <Collapse icon={ListChecks} title="Where this goes in SystemOne">
-            <ol className="space-y-1.5">
-              {S1_STEPS.map((s, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                  <span className="text-xs font-mono text-gray-400 mt-0.5">{i + 1}.</span>
-                  <span>{s}</span>
-                </li>
-              ))}
-            </ol>
-          </Collapse>
         </div>
 
         {/* Progress bar - one dot per domain + Review */}
@@ -792,8 +856,8 @@ export default function RiskAssessmentPage() {
             {tab === "formulation" && (
               <div className="space-y-3">
                 {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Identify at least one risk to build a formulation.</p>}
-                <p className="text-xs text-gray-500">One formulation covering all risks (SystmOne has a single formulation field), with each risk as a sub-heading. The management plans stay separate per risk (next tab).</p>
-                <CopyField id="form-all" label="Risk formulation (all risks)" text={buildCombinedFormulation(allRisks, capByRisk, patientName)} done={copied.has("form-all")} onToggle={toggleCopied} />
+                <p className="text-xs text-gray-500">One formulation covering all risks - each risk in its own == block, then written up as prose. Copy it into the single SystmOne formulation field.</p>
+                <CopyField id="form-all" label="Formulation" text={buildCombinedFormulation(allRisks, capByRisk, patientName)} done={copied.has("form-all")} onToggle={toggleCopied} />
                 {finalSummary && <CopyField id="form-summary" label="Overall formulation summary" text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />}
               </div>
             )}
@@ -801,9 +865,8 @@ export default function RiskAssessmentPage() {
             {tab === "rmp" && (
               <div className="space-y-3">
                 {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Identify at least one risk to build a management plan.</p>}
-                {allRisks.map((r) => (
-                  <CopyField key={r.key} id={`rmp-${r.key}`} label={`RMP - ${r.label}`} text={buildOneRmp(r.key, deriveRmp(capByRisk[r.key]), r.label, patientName)} done={copied.has(`rmp-${r.key}`)} onToggle={toggleCopied} />
-                ))}
+                <p className="text-xs text-gray-500">Every management plan in one block, grouped by domain (a separate plan per risk, per trust guidance).</p>
+                <CopyField id="rmp-all" label="Management plans (all risks, grouped by domain)" text={buildCombinedRmp(allRisks, capByRisk, patientName)} done={copied.has("rmp-all")} onToggle={toggleCopied} />
               </div>
             )}
           </div>

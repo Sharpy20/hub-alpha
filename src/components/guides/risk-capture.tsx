@@ -146,6 +146,9 @@ export function SectionEditor({
   const exampleCount = examples.filter((e) => e.text.trim()).length;
   const count = state.chips.length + (state.text.trim() ? 1 : 0) + exampleCount + (state.na ? 1 : 0);
   const chipsOnlyNoDetail = state.chips.length > 0 && !state.text.trim() && !state.na && exampleCount === 0;
+  // Only rendered once a section is opened (interaction), so new Date() is safe.
+  const thisYear = new Date().getFullYear();
+  const years = Array.from({ length: 71 }, (_, i) => thisYear - i);
 
   return (
     <div className="rounded-xl border border-gray-100 bg-white overflow-hidden">
@@ -157,7 +160,13 @@ export function SectionEditor({
 
       {open && (
         <div className="px-3.5 pb-3.5 space-y-3">
-          <p className="flex items-start gap-1.5 text-xs text-gray-500"><Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" />{section.hint}</p>
+          <div className="flex items-start justify-between gap-2">
+            <p className="flex items-start gap-1.5 text-xs text-gray-500 flex-1"><Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" />{section.hint}</p>
+            <button onClick={() => onChange({ chips: [], text: "", na: !state.na })} aria-pressed={state.na}
+              className={`flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg border transition-colors ${state.na ? "bg-gray-700 text-white border-gray-700" : "bg-white border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-800"}`}>
+              Not yet established
+            </button>
+          </div>
 
           {section.groups.map((g, gi) => (
             <div key={gi}>
@@ -198,7 +207,10 @@ export function SectionEditor({
                         <option value="">Month</option>
                         {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
                       </select>
-                      <input type="number" value={ex.year} placeholder="Year" onChange={(e) => upd({ year: e.target.value })} aria-label="Year" className={`w-20 text-sm border border-gray-200 rounded-lg px-2 py-1.5 ${A.ring}`} />
+                      <select value={ex.year} onChange={(e) => upd({ year: e.target.value })} aria-label="Year" className={`text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${A.ring}`}>
+                        <option value="">Year</option>
+                        {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
+                      </select>
                       <button onClick={() => setExamples(examples.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
                     </div>
                     <input type="text" value={ex.text} placeholder="what happened" onChange={(e) => upd({ text: e.target.value })} className={`w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${A.ring}`} />
@@ -211,13 +223,7 @@ export function SectionEditor({
             </div>
           )}
 
-          <div className="flex items-center justify-between">
-            {chipsOnlyNoDetail ? <span className="text-xs text-amber-600 flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> Add patient-specific detail</span> : <span />}
-            <button onClick={() => onChange({ chips: [], text: "", na: !state.na })}
-              className={`text-xs font-semibold px-2 py-1 rounded transition-colors ${state.na ? "bg-gray-200 text-gray-700" : "text-gray-400 hover:text-gray-700"}`}>
-              Not yet established
-            </button>
-          </div>
+          {chipsOnlyNoDetail && <span className="text-xs text-amber-600 flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> Add patient-specific detail</span>}
         </div>
       )}
     </div>

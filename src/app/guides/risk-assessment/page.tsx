@@ -53,12 +53,13 @@ interface DomainState {
   indicators: YN; indicatorList: string[]; safety: YN; current: string; historical: string;
   noEvidence: boolean; risks: string[]; // selected sub-domain labels
   customSubs: string[];                 // nurse-named extra sub-domains for this domain
+  customIndicators: string[];           // nurse-named extra clinical indicators
   currentExamples: DatedExample[];
   historicalExamples: DatedExample[];
 }
 const emptyDomain = (): DomainState => ({
   indicators: "", indicatorList: [], safety: "", current: "", historical: "",
-  noEvidence: false, risks: [], customSubs: [], currentExamples: [], historicalExamples: [],
+  noEvidence: false, risks: [], customSubs: [], customIndicators: [], currentExamples: [], historicalExamples: [],
 });
 
 interface RiskRef { key: string; label: string; chipRisk: string }
@@ -267,7 +268,7 @@ function CopyField({ id, label, text, done, onToggle }: {
 
 // "Add another sub-domain" - name it, and it becomes a selected risk with its
 // own question set. Own state so typing doesn't disturb the domain.
-function AddSubDomain({ onAdd }: { onAdd: (name: string) => void }) {
+function AddSubDomain({ onAdd, placeholder = "add another sub-domain..." }: { onAdd: (name: string) => void; placeholder?: string }) {
   const [val, setVal] = useState("");
   const submit = () => { const v = val.trim(); if (v) { onAdd(v); setVal(""); } };
   return (
@@ -276,7 +277,7 @@ function AddSubDomain({ onAdd }: { onAdd: (name: string) => void }) {
         value={val}
         onChange={(e) => setVal(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submit(); } }}
-        placeholder="add another sub-domain..."
+        placeholder={placeholder}
         className="flex-1 min-w-0 text-sm border border-dashed border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
       />
       <button
@@ -378,6 +379,19 @@ export default function RiskAssessmentPage() {
   const removeCustomSub = (domainId: string, name: string) => {
     const d = getDomain(domainId);
     setDomain(domainId, { ...d, customSubs: d.customSubs.filter((x) => x !== name), risks: d.risks.filter((x) => x !== name) });
+  };
+
+  // Add a nurse-named clinical indicator (added to the domain's chip set + selected).
+  const addCustomIndicator = (domainId: string, rawName: string) => {
+    const name = rawName.trim();
+    if (!name) return;
+    const d = getDomain(domainId);
+    if (d.customIndicators.includes(name) || (CLINICAL_INDICATORS[domainId] || []).includes(name)) return;
+    setDomain(domainId, { ...d, customIndicators: [...d.customIndicators, name], indicatorList: [...d.indicatorList, name] });
+  };
+  const removeCustomIndicator = (domainId: string, name: string) => {
+    const d = getDomain(domainId);
+    setDomain(domainId, { ...d, customIndicators: d.customIndicators.filter((x) => x !== name), indicatorList: d.indicatorList.filter((x) => x !== name) });
   };
 
   const reset = () => {
@@ -543,24 +557,38 @@ export default function RiskAssessmentPage() {
               <div>
                 <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
                 {st.indicators === "yes" && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {CLINICAL_INDICATORS[dm.id].map((ind) => {
-                      const on = st.indicatorList.includes(ind);
-                      return (
-                        <button key={ind} type="button" aria-pressed={on}
-                          onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
-                          className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
-                          {ind}
-                        </button>
-                      );
-                    })}
+                  <div className="mt-2 space-y-2">
+                    <div className="flex flex-wrap gap-1.5">
+                      {CLINICAL_INDICATORS[dm.id].map((ind) => {
+                        const on = st.indicatorList.includes(ind);
+                        return (
+                          <button key={ind} type="button" aria-pressed={on}
+                            onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
+                            className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
+                            {ind}
+                          </button>
+                        );
+                      })}
+                      {st.customIndicators.map((ind) => {
+                        const on = st.indicatorList.includes(ind);
+                        return (
+                          <span key={ind} className={`inline-flex items-center rounded-lg border text-xs transition-all ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600"}`}>
+                            <button type="button" aria-pressed={on}
+                              onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
+                              className="pl-2 pr-1 py-1 text-left">{ind}</button>
+                            <button type="button" onClick={() => removeCustomIndicator(dm.id, ind)} aria-label={`Remove ${ind}`} className={`pr-1.5 pl-0.5 py-1 ${on ? "text-white/80 hover:text-white" : "text-gray-400 hover:text-red-600"}`}><X className="w-3 h-3" /></button>
+                          </span>
+                        );
+                      })}
+                    </div>
+                    <AddSubDomain placeholder="add another indicator..." onAdd={(name) => addCustomIndicator(dm.id, name)} />
                   </div>
                 )}
               </div>
             )}
             <div>
               <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
-              <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: add any other indicators, or what has happened recently.</p>
+              <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what has happened recently.</p>
               <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
               <DatedExamples examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
               <S1CopyBox text={withExamples(st.current, st.currentExamples)} />

@@ -243,6 +243,7 @@ export default function RiskAssessmentPage() {
   const [capByRisk, setCapByRisk] = useState<Record<string, AllState>>({});
   const [openRisks, setOpenRisks] = useState<Set<string>>(new Set());
   const [step, setStep] = useState(0); // 0..RISK_DOMAINS.length-1 = domains, last = Review
+  const [introOpen, setIntroOpen] = useState(true);
   const [q8, setQ8] = useState<YN>("");
   const [q8note, setQ8note] = useState("");
   const [q9, setQ9] = useState("");
@@ -481,6 +482,76 @@ export default function RiskAssessmentPage() {
             </Link>
           </div>
           <PatientLink patient={patient} onChange={setPatient} guideTitle="Risk Assessment" note="Adds the patient's name to the risk screen, formulation and RMP" />
+        </div>
+
+        {/* Intro / explainer */}
+        <div className="rounded-2xl border border-rose-100 bg-white overflow-hidden">
+          <button onClick={() => setIntroOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
+            <Info className="w-4 h-4 text-rose-500 flex-shrink-0" />
+            <span className="font-bold text-gray-800 flex-1">New to this? How the tool works</span>
+            {introOpen ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
+          </button>
+          {introOpen && (
+            <div className="px-4 pb-4 space-y-4">
+              <p className="text-sm text-gray-600">
+                Use this tool to build the framework for a patient&apos;s <strong>risk screening tool</strong> - it helps you
+                generate a quality <strong>formulation</strong> and <strong>risk management plans</strong>. Each step matches a
+                risk domain from the Risk Screening Tool on SystmOne.
+              </p>
+
+              {/* Flow visual */}
+              <div className="rounded-xl border border-rose-100 bg-rose-50/40 p-3">
+                <div className="grid sm:grid-cols-3 gap-2">
+                  {[
+                    { n: 1, icon: ShieldAlert, title: "Screen with the patient", body: "Work the seven SystmOne risk domains together, ticking what applies." },
+                    { n: 2, icon: ListChecks, title: "Answer the questions", body: "For each risk identified, answer a short set of plain questions in the patient's words." },
+                    { n: 3, icon: Sparkles, title: "Generate", body: "One click turns your answers into three documents to copy across." },
+                  ].map((s) => (
+                    <div key={s.n} className="rounded-lg bg-white border border-rose-100 p-3">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">{s.n}</span>
+                        <s.icon className="w-4 h-4 text-rose-500" />
+                      </div>
+                      <p className="text-sm font-bold text-gray-800">{s.title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{s.body}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex items-center justify-center flex-wrap gap-1.5 mt-3">
+                  <span className="text-xs font-semibold text-gray-500">Generates</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-rose-400" />
+                  {["Risk Screen", "Formulation", "Risk Management Plan"].map((d) => (
+                    <span key={d} className="text-xs font-semibold text-rose-700 bg-rose-100 px-2 py-1 rounded-full">{d}</span>
+                  ))}
+                </div>
+                <p className="text-center text-[11px] text-gray-500 mt-2">Copy each one into SystmOne and tick it off as you go.</p>
+              </div>
+
+              {/* Before you start */}
+              <div>
+                <p className="text-[10px] font-mono uppercase tracking-wider text-rose-500 mb-1.5">Before you start</p>
+                <ul className="space-y-1.5">
+                  {[
+                    "If a risk screen already exists in the patient's record, open it and use that information.",
+                    "Check the questionnaire section of SystmOne carefully first. If there isn't one, build it here, then copy it into a new one.",
+                    "Complete it with the patient. It must be done in their best interests and, where possible, in their own voice.",
+                  ].map((t) => (
+                    <li key={t} className="flex items-start gap-2 text-sm text-gray-600">
+                      <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0 text-emerald-600" />
+                      <span>{t}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <p className="text-xs text-gray-400">
+                Good practice: a person-centred risk <em>formulation</em> is preferred over predictive risk-stratification tools
+                (NICE NG225, Self-harm, 2022; Department of Health, Best Practice in Managing Risk, 2007). Decisions for a patient who
+                lacks capacity must be in their best interests (Mental Capacity Act 2005), and care is planned <em>with</em> the patient,
+                not just for them. Headings follow the DHCFT Risk Management Plans guidance.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Context + reset */}

@@ -58,6 +58,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   prenoxad: { icon: "💉", gradient: "from-teal-500 to-emerald-700", category: "Physical Health" },
   "named-nurse": { icon: "📋", gradient: "from-emerald-500 to-emerald-700", category: "Nurse Tools" },
   "admission-note": { icon: "📝", gradient: "from-sky-500 to-blue-700", category: "Nurse Tools" },
+  honos: { icon: "📊", gradient: "from-cyan-600 to-teal-800", category: "Nurse Tools" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -146,6 +147,56 @@ export const GUIDES: Record<string, GuideData> = {
         tip: "If in doubt: date it, and note the patient's input.",
       },
     ],
+  },
+  honos: {
+    id: "honos",
+    title: "HoNOS & Clustering explained",
+    description: "What the Health of the Nation Outcome Scales are, how to score them, and how they drive clustering - written guidance, not the SystmOne tool",
+    steps: [
+      {
+        id: "what",
+        title: "What HoNOS is",
+        content: `HoNOS (Health of the Nation Outcome Scales) is a set of 12 scales that rate a person's mental health and social functioning. Each scale is scored 0 (no problem) to 4 (severe), based on the last 2 weeks.\n\nIt is an OUTCOME measure: you repeat it over time (admission, review, discharge) to see whether the person is getting better.\n\nIt is not a diagnosis and not a risk assessment - it is a snapshot of how someone is doing across behaviour, symptoms, physical/cognitive health and social life.\n\nThe adult version is used here. There are variants for other groups (HoNOS 65+ for older adults, HoNOSCA for children and adolescents, HoNOS-Secure for forensic settings).`,
+        tip: "Rate what has actually been seen or reported in the rating period - from the notes, your own observations and the MDT - not a general impression.",
+      },
+      {
+        id: "when",
+        title: "When you complete it",
+        content: `On our wards, complete HoNOS:\n\n- as a BASELINE on admission (so there is a starting point),\n- at review (monthly), and\n- at discharge.\n\nDoing it at these points lets you compare scores and show whether care is working. Also repeat it after any significant change. The Care Review here reminds you when the next HoNOS is due.`,
+      },
+      {
+        id: "scales",
+        title: "The 12 scales",
+        content: `The 12 scales fall into four groups:\n\nBEHAVIOUR\n1. Overactive, aggressive, disruptive or agitated behaviour\n2. Non-accidental self-injury\n3. Problem drinking or drug-taking\n\nIMPAIRMENT\n4. Cognitive problems (memory, orientation, understanding)\n5. Physical illness or disability problems\n\nSYMPTOMS\n6. Problems with hallucinations and delusions\n7. Problems with depressed mood\n8. Other mental and behavioural problems (e.g. anxiety, phobic, OCD, eating, sleep - specify which)\n\nSOCIAL\n9. Problems with relationships\n10. Problems with activities of daily living\n11. Problems with living conditions\n12. Problems with occupation and activities`,
+      },
+      {
+        id: "score",
+        title: "How to score each scale (0-4)",
+        content: `Every scale uses the same anchor points:\n\n- 0 - no problem\n- 1 - minor problem, needs no action\n- 2 - mild problem, definitely present\n- 3 - moderately severe problem\n- 4 - severe to very severe problem\n\nUse 9 only if the rating is genuinely not known.\n\nRating rules:\n- Rate the MOST SEVERE occurrence in the period (usually the last 2 weeks).\n- Work through the scales in order, 1 to 12.\n- Do not count the same problem twice - if you rated it on an earlier scale, do not rate it again on a later one.\n- Rate a behaviour on the behaviour scale (1 or 2) even when a symptom is driving it - the symptom itself is rated separately on 6, 7 or 8.`,
+        tip: "Use the HoNOS glossary / rating guide for each scale's anchor points - it gives worked examples of what a 2 vs a 3 looks like, which keeps ratings consistent between different raters.",
+      },
+      {
+        id: "clustering",
+        title: "How clustering works",
+        content: `HoNOS is the backbone of the Mental Health Clustering Tool (MHCT). The MHCT is the 12 HoNOS scales PLUS a Summary Assessment of historical and risk items. Together these scores group the person into one of the care CLUSTERS (0-21).\n\nThe clusters sit in three broad super-classes:\n- Non-psychotic (clusters 1-8)\n- Psychotic (clusters 10-17)\n- Organic (clusters 18-21)\n\nA cluster describes NEED, not a diagnosis. It is used to plan care and, historically, to set the care 'currency' / funding. Because the cluster is driven by the HoNOS scores, rating HoNOS accurately matters - a wrong score can put someone in the wrong cluster.`,
+        tip: "The tool SUGGESTS a cluster from the scores, but clinical judgement decides the final one - the MDT can override the suggested cluster with a documented reason.",
+      },
+      {
+        id: "tips",
+        title: "Getting the ratings right",
+        content: `- Base each rating on evidence (observations, notes, MDT discussion), not a gut feeling.\n- When you are unsure between two scores, discuss it in the MDT.\n- Do not leave scales blank - score 0 if there is no problem, or 9 only if it is genuinely not known.\n- Remember it is a snapshot of the rating period, not the person's whole history.\n- Look at the previous HoNOS to see the direction of travel (better, the same, or worse).`,
+      },
+      {
+        id: "s1",
+        title: "Where it goes on SystmOne",
+        content: `Record HoNOS on SystmOne (see the how-to below). Complete it at admission (baseline), each monthly review, and at discharge, so the outcome can be tracked. It shows on the patient's Care Review here.\n\nThis is a scored SystmOne tool with a lot of clicks - this guide explains WHAT to score and WHY; do the scoring itself on SystmOne.`,
+      },
+    ],
+    focus: [
+      { label: "HoNOS & Clustering on SystmOne (Trust how-to)", url: "https://focus.derbyshirehealthcareft.nhs.uk/application/files/4217/3633/9115/SystmOne_-_Honos_and_Clustering_v1.1.pdf" },
+      { label: "About HoNOS (RCPsych)", url: "https://www.rcpsych.ac.uk/improving-care/ccqi/health-of-nation-outcome-scales" },
+    ],
+    caseNote: `HoNOS completed on [DATE] ([baseline on admission / monthly review / discharge]). Scores recorded on SystmOne; total [X]. Scales of note: [e.g. 1 Agitated behaviour 3, 7 Depressed mood 3]. Compared with previous HoNOS ([DATE], total [Y]): [improved / unchanged / deteriorated]. Suggested cluster [N] - agreed / amended by MDT. Discussed at MDT.`,
   },
   prenoxad: {
     id: "prenoxad",

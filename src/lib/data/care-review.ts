@@ -21,7 +21,7 @@ export const REVIEW_ITEMS: ReviewItem[] = [
   { id: "care-plan-offered", label: "Care plan offered", short: "Offered", intervalDays: 7, guideId: "care-plan" },
   { id: "risk", label: "Risk assessment", short: "Risk ax", intervalDays: 7, guideId: "risk-assessment" },
   { id: "consent", label: "Consent to share (re-ask)", short: "Consent", intervalDays: 7, guideId: "information-sharing" },
-  { id: "honos", label: "HONOS", short: "HONOS", intervalDays: 30 },
+  { id: "honos", label: "HONOS", short: "HONOS", intervalDays: 30, guideId: "honos" },
   { id: "safety-plan", label: "Safety plan", short: "Safety plan", intervalDays: 30, guideId: "safety-plan" },
 ];
 
@@ -38,6 +38,7 @@ const ADMISSION_GUIDE_MAP: Record<string, string> = {
   "read-rights": "section-132",
   "advocacy": "imha-advocacy",
   "news2": "news2",
+  "honos": "honos",
 };
 
 export interface AdmissionItem {

@@ -162,6 +162,12 @@ export const GUIDES: Record<string, GuideData> = {
         tip: "On a psychiatric ward, a patient who lacks capacity to consent to being there is very likely being deprived of their liberty - so this needs actively considering, not assuming.",
       },
       {
+        id: "quick-decision",
+        title: "Quick decision: MHA, DoLS, or neither?",
+        content: `A fast way to orient yourself (then check the detail below):\n\n1. Does the person have CAPACITY to consent to being here and to their treatment? If yes and they consent - no MHA, no DoLS needed. If they have capacity and REFUSE, you cannot use DoLS; if they need to be kept for treatment of a mental disorder, that is the MHA.\n\n2. They LACK capacity. Are they being deprived of their liberty (the acid test: continuous supervision and control + not free to leave)? If no - act in their best interests under the MCA, no DoLS needed. If yes, keep going.\n\n3. Is the deprivation mainly to give treatment for a MENTAL DISORDER, and are they OBJECTING? Use the MHA.\n\n4. Otherwise - lacks capacity, not objecting, and the deprivation is for their broader care (often physical health or frailty) and they are not detainable under the MHA - that is DoLS.`,
+        tip: "The safest error is to ASK. An unauthorised deprivation of liberty is unlawful - a quick conversation with the responsible clinician and senior nurse settles which route applies.",
+      },
+      {
         id: "acid-test",
         title: "Is it a deprivation of liberty? (the acid test)",
         content: `From the Supreme Court in Cheshire West (2014), a person is deprived of their liberty if ALL three are true:\n\n1. They are under continuous (complete) supervision and control, AND\n2. They are not free to leave (they would be stopped if they tried), AND\n3. They lack capacity to consent to these arrangements.\n\nThese things do NOT change the answer:\n- whether the person is compliant or not objecting,\n- the reason or purpose of the placement,\n- how "normal" the placement is.\n\nSigns that "control" is happening: preventing attempts to leave; controlling movement, assessments, residence or social contacts for a significant period; refusing to discharge the person to carers; using restraint or regular medication to control behaviour.`,
@@ -196,6 +202,21 @@ export const GUIDES: Record<string, GuideData> = {
         id: "rights-review-transfer",
         title: "Rights, IMCA, reviews and transfers",
         content: `- IMCA: if there is no-one appropriate to consult about the person's best interests, an Independent Mental Capacity Advocate must be requested. The patient or their representative can also ask for one.\n- Review / challenge: the patient, their representative, attorney, deputy or IMCA can ask the Local Authority for a review, or challenge the deprivation at the Court of Protection.\n- Transfers: a DoLS authorisation STOPS being valid if the person moves to another hospital or care home. The receiving place must apply for a fresh authorisation - so flag it when arranging any transfer, in or out of the Trust.`,
+      },
+      {
+        id: "pitfalls",
+        title: "Common pitfalls and myths",
+        content: `- "They're not complaining, so it's fine." Compliance or not objecting does NOT stop it being a deprivation of liberty (Cheshire West was explicit).\n- "DoLS lets me treat them." It does not. DoLS only makes the deprivation lawful - treatment is separate, under consent or the MCA best-interests process.\n- "They can leave any time." If they would be stopped or brought back, they are not free to leave - that is the test, whether or not they have tried.\n- "It's only for a few days, so leave it." Any deprivation needs a legal basis from the start - use an urgent authorisation on day one and request the standard at the same time.\n- "Once it's authorised we're done." Keep reviewing - if capacity returns, a less restrictive option appears, or the person becomes detainable under the MHA, the basis may need to change. DoLS also lapses on transfer.\n- "It covers under-18s." DoLS is 18+. For 16-17s a different route applies (Court of Protection; parental responsibility does not stretch to a deprivation of liberty).`,
+      },
+      {
+        id: "examples",
+        title: "Worked examples",
+        content: `1. Older adult with dementia, informal, not objecting, needs constant supervision and would be brought back if they left, lacks capacity to consent to being on the ward. -> A deprivation of liberty; not objecting to / not detainable for mental-disorder treatment -> DoLS (urgent now + standard requested).\n\n2. Person with psychosis who lacks capacity, is actively trying to leave, and is refusing the antipsychotic they need. -> Objecting + needs treatment for a mental disorder -> MHA assessment, not DoLS.\n\n3. Person with a learning disability admitted for physical treatment, lacks capacity, settled and compliant, but under continuous supervision and not free to leave. -> Compliance is irrelevant; still a deprivation -> DoLS.\n\n4. Person WITH capacity who consents to admission and treatment. -> Neither DoLS nor MHA; document the capacitous consent.`,
+      },
+      {
+        id: "faq",
+        title: "Quick answers",
+        content: `- Do I need DoLS if they're happy to stay? Possibly yes - if they lack capacity and are under continuous supervision and not free to leave, being content does not remove the need.\n- Does DoLS authorise medication or treatment? No - that is consent or the MCA best-interests process.\n- What if they regain capacity? The DoLS no longer applies - tell the Local Authority (suspend) and review.\n- What if they need the MHA instead? DoLS is not available while someone is detained or liable to be detained under the MHA - switch to the MHA route.\n- How long does an urgent authorisation last? Up to 7 days (the Local Authority can extend by up to 7 more). Request the standard at the same time.\n- Who authorises? The Local Authority (supervisory body) authorises; the ward (managing authority) applies and can self-grant the urgent authorisation.`,
       },
       {
         id: "forms",

@@ -114,6 +114,8 @@ function deriveForm(cap: AllState | undefined): AllState {
 function deriveRmp(cap: AllState | undefined): AllState {
   const out: AllState = {};
   for (const q of UNIFIED_QUESTIONS) if (q.writes.doc === "r") out[q.writes.id] = cap?.[q.id] || EMPTY;
+  // WHAT IS THE RISK also carries the "what have you seen or heard" answer (q_seen).
+  out["what"] = cap?.["q_seen"] || EMPTY;
   return out;
 }
 // ONE formulation covering all risks (SystmOne has a single formulation field),

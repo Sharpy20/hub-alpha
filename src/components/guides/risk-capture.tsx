@@ -90,7 +90,7 @@ export function buildOneRmp(risk: string, secs: AllState, displayName?: string, 
   const body = (id: string): string => {
     if (id === "what") {
       const ctx = buildContent(secs["what"]);
-      return ctx || ensureStop(cap(name));
+      return ctx ? `${ensureStop(cap(name))} ${ctx}` : ensureStop(cap(name));
     }
     if (id === "next") {
       const n = buildContent(secs["next"]);

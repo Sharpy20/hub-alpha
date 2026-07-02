@@ -41,6 +41,8 @@ import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
+import { loadTracker, saveTracker, seedPatient } from "@/lib/data/care-review";
+import { toLocalDateStr } from "@/lib/utils/date";
 import {
   ArrowLeft, ArrowRight, Copy, Check, CheckCircle2, RotateCcw, ChevronDown,
   ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
@@ -344,6 +346,7 @@ export default function RiskAssessmentPage() {
   const [generated, setGenerated] = useState(false);
   const [tab, setTab] = useState<"screen" | "formulation" | "rmp">("screen");
   const [copied, setCopied] = useState<Set<string>>(new Set());
+  const [riskMarked, setRiskMarked] = useState(false);
 
   const patientName = patient?.name;
   const REVIEW_STEP = RISK_DOMAINS.length;       // concerns / summary step
@@ -396,7 +399,7 @@ export default function RiskAssessmentPage() {
 
   const reset = () => {
     setDomains({}); setCapByRisk({}); setQ8(""); setQ8note(""); setQ9("");
-    setGenerated(false); setCopied(new Set()); setOpenRisks(new Set()); setTab("screen"); setStep(0);
+    setGenerated(false); setCopied(new Set()); setOpenRisks(new Set()); setTab("screen"); setStep(0); setRiskMarked(false);
   };
 
   const isEngaged = (d: DomainState) =>
@@ -473,7 +476,29 @@ export default function RiskAssessmentPage() {
 
   const anyIntake = allRisks.length > 0 || engagedDomains.length > 0 || q8 !== "" || q9.trim() !== "";
 
-  const doGenerate = () => { setGenerated(true); setTimeout(() => document.getElementById("risk-output")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); };
+  // Stamp this patient's Care Review: the weekly "Risk assessment" review item +
+  // the two admission checklist items go done today, so the patient tile / Care
+  // Review shows it complete. Seeds a missing tracker first so the admission badge
+  // isn't left blank (the patients page only seeds if no entry exists). /v2 only
+  // (patient is null at root, so no-op there).
+  const markRiskDone = () => {
+    if (!patient) return;
+    const today = toLocalDateStr();
+    const t = loadTracker();
+    const pt = t[patient.id] || seedPatient(patient.id, patient.admissionDate, today);
+    t[patient.id] = {
+      admission: { ...pt.admission, "risk-screening": today, "risk-management": today },
+      reviews: { ...pt.reviews, risk: today },
+    };
+    saveTracker(t);
+    setRiskMarked(true);
+  };
+
+  const doGenerate = () => {
+    setGenerated(true);
+    markRiskDone(); // no-op unless a patient is linked (/v2)
+    setTimeout(() => document.getElementById("risk-output")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  };
 
   // One risk's unified question run. Plain render function (NOT a nested
   // component) so editing a field doesn't remount and drop textarea focus.
@@ -838,6 +863,19 @@ export default function RiskAssessmentPage() {
               </button>
               {!anyIntake && <p className="text-xs text-gray-400">Identify at least one risk first.</p>}
               {generated && <p className="text-xs text-emerald-700 font-semibold">Generated - see below.</p>}
+              {patient && (
+                <div className="pt-1">
+                  {riskMarked ? (
+                    <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
+                      <CheckCircle2 className="w-4 h-4" /> Risk assessment marked done for {patient.name} today - shows on their Care Review.
+                    </p>
+                  ) : (
+                    <button onClick={markRiskDone} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-white border border-emerald-300 text-emerald-700 hover:bg-emerald-50 transition-colors">
+                      <CheckCircle2 className="w-4 h-4" /> Mark risk assessment done for {patient.name}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           )}
 

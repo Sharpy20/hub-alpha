@@ -135,19 +135,18 @@ function buildCombinedFormulation(risks: RiskRef[], caps: Record<string, AllStat
   return head + perRisk.join("\n\n");
 }
 
-// ONE management-plan document - every plan, grouped by S1 domain. The patient
-// name appears once at the top (not repeated on each plan).
+// ONE management-plan document - every plan (each headed by its sub-domain name
+// in == bars), in S1 domain order. Patient name once at the top.
 function buildCombinedRmp(risks: RiskRef[], caps: Record<string, AllState>, patientName?: string): string {
-  const out: string[] = [];
+  const plans: string[] = [];
   for (const dm of RISK_DOMAINS) {
-    const domainRisks = risks.filter((r) => r.key.startsWith(`${dm.id}::`));
-    if (!domainRisks.length) continue;
-    const plans = domainRisks.map((r) => buildOneRmp(r.key, deriveRmp(caps[r.key]), r.label));
-    out.push(`${dm.number}. ${dm.title.toUpperCase()}\n\n${plans.join("\n\n")}`);
+    for (const r of risks.filter((x) => x.key.startsWith(`${dm.id}::`))) {
+      plans.push(buildOneRmp(r.key, deriveRmp(caps[r.key]), r.label));
+    }
   }
-  if (!out.length) return "";
+  if (!plans.length) return "";
   const head = patientName ? `Patient: ${patientName}\n\n` : "";
-  return head + out.join("\n\n\n");
+  return head + plans.join("\n\n");
 }
 const answered = (st?: SecState) => !!st && (st.chips.length > 0 || st.text.trim() !== "" || st.na || (st.examples || []).some((e) => e.text.trim()));
 
@@ -871,8 +870,8 @@ export default function RiskAssessmentPage() {
             {tab === "rmp" && (
               <div className="space-y-3">
                 {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Identify at least one risk to build a management plan.</p>}
-                <p className="text-xs text-gray-500">Every management plan in one block, grouped by domain (a separate plan per risk, per trust guidance).</p>
-                <CopyField id="rmp-all" label="Management plans (all risks, grouped by domain)" text={buildCombinedRmp(allRisks, capByRisk, patientName)} done={copied.has("rmp-all")} onToggle={toggleCopied} />
+                <p className="text-xs text-gray-500">Every management plan in one block, in domain order (a separate plan per risk, per trust guidance).</p>
+                <CopyField id="rmp-all" label="Management plans (all risks)" text={buildCombinedRmp(allRisks, capByRisk, patientName)} done={copied.has("rmp-all")} onToggle={toggleCopied} />
               </div>
             )}
           </div>

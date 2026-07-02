@@ -98,7 +98,7 @@ export function buildOneRmp(risk: string, secs: AllState, displayName?: string, 
     }
     return buildContent(secs[id]) || "Not yet established.";
   };
-  const blocks: string[] = [TXT_BAR, `RISK MANAGEMENT PLAN: ${name.toUpperCase()}`, ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
+  const blocks: string[] = [TXT_BAR, name.toUpperCase(), ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
   RMP_SECTIONS.forEach((sec, i) => {
     blocks.push(sec.heading.toUpperCase());
     blocks.push(body(sec.id));

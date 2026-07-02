@@ -18,7 +18,9 @@ export const DEFAULT_APPROVAL: ApprovalStatus = "amber";
 export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "prenoxad": "red",
   "admission-note": "red",
-  // DoLS + Blanket Restrictions built from Trust policies (2 Jul) - red until Mike signs off.
+  // Rebuilt / new on 2 Jul - red until Mike signs each off.
+  "risk-assessment": "red",
+  "honos": "red",
   "dols": "red",
   "blanket-restrictions": "red",
   // named-nurse now has real content (from the ward audit cadence) - amber until Mike signs it off.

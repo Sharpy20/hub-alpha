@@ -1644,6 +1644,17 @@ Then open http://localhost:3000
 
 **Build Status:** All builds pass. Pushed to Vercel via Sharpy20.
 
+### 2 July 2026 - Session 32 (Risk tool rebuild, guides, v2 collapse)
+**Completed (all pushed, build clean, 32/32 tests pass):**
+- [x] **Risk tool rebuilt** (`/guides/risk-assessment`) - SystmOne risk-screen wizard (one domain per step + green ticks), ONE merged question set per risk (dropped the WHY/WHAT split), add-your-own sub-domains + clinical indicators, dated examples (year dropdown, newest-first), per-domain "Copy into S1" narrative boxes, combined RMP + prose formulation in == bars, "no evidence" signs a domain off, links the patient Care Review "done", intro/explainer + Tips star. Status red pending sign-off.
+- [x] **New/finished guides:** HoNOS & Clustering, DoLS Ward Guidance (was the last empty placeholder - built from the Trust DoLS policy + made practical), Blanket Restrictions & Restrictive Practice. Prenoxad + Quiz (364 Qs) verified working. All red pending sign-off. No empty placeholder guides remain.
+- [x] **v1/v2 collapsed into one full demo build** via a single reversible switch `src/lib/config/build.ts` `COLLAPSED_FOR_DEMO=true` (undo = set false). Root now serves all features; `/v2/*` redirects to the same page at the root. useIsV2()->false, v2Href no prefix, proxy redirects + stops root blocking.
+- [x] **Data Sources** (Dev Panel) - new "Conflicts in source material" card from `docs/policy-conflict-audit-02-Jul-2026.md`; source list refreshed + dated.
+- [x] **Bookmarks** - "Add your own" on the home wheel -> `/links?add=1` opens the Add Personal Link modal; prompt to Recommend useful ones for everyone (creator/admin review). Feature reused the existing /links personal-bookmark + recommend flow.
+- Homework: `docs/homework-02-Jul-2026.md`. Key decisions for Mike: IMHA Derby City source of truth (app DDA vs policy One Advocacy Derby), confirm v2 collapse, sign off the red guides.
+
+**Build Status:** All builds pass, 32/32 tests pass. Pushed to Vercel via Sharpy20.
+
 ---
 
 *This file is maintained by Claude Code during development sessions.*

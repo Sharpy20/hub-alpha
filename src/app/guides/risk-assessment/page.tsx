@@ -151,13 +151,18 @@ function formatPartialDate(d: { day: string; month: string; year: string }): str
   if (d.year) parts.push(d.year);
   return parts.join(" ");
 }
+// Sort key for a dated example - higher is more recent. Missing parts count as 0,
+// so undated examples sink to the bottom.
+const exampleKey = (e: { day: string; month: string; year: string }) =>
+  (Number(e.year) || 0) * 10000 + (Number(e.month) || 0) * 100 + (Number(e.day) || 0);
+
 function withExamples(text: string, examples: DatedExample[] = []): string {
   const base = text.trim();
-  const exs = examples.filter((e) => e.text.trim());
+  const exs = examples.filter((e) => e.text.trim()).sort((a, b) => exampleKey(b) - exampleKey(a));
   if (!exs.length) return base;
-  // Each example on its own line so the block reads as a list in S1.
+  // Most recent first, each on its own line, straight into the dates (no label).
   const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("\n");
-  return `${base ? base + "\n" : ""}Specific examples:\n${fmt}`;
+  return `${base ? base + "\n" : ""}${fmt}`;
 }
 
 async function copyText(text: string) {

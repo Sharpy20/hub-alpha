@@ -46,6 +46,9 @@ function formatPartialDate(d: { day: string; month: string; year: string }): str
   if (d.year) parts.push(d.year);
   return parts.join(" ");
 }
+// Sort key for a dated example - higher is more recent; missing parts count as 0.
+const exampleKey = (e: { day: string; month: string; year: string }) =>
+  (Number(e.year) || 0) * 10000 + (Number(e.month) || 0) * 100 + (Number(e.day) || 0);
 
 export function buildContent(st: SecState | undefined): string {
   if (!st) return "";
@@ -54,11 +57,12 @@ export function buildContent(st: SecState | undefined): string {
   if (st.chips.length) parts.push(cap(naturalList(st.chips)));
   if (st.text.trim()) parts.push(cap(st.text.trim()));
   let out = parts.length ? ensureStop(parts.map(ensureStop).join(" ")) : "";
-  const exs = (st.examples || []).filter((e) => e.text.trim());
+  const exs = (st.examples || []).filter((e) => e.text.trim())
+    .sort((a, b) => exampleKey(b) - exampleKey(a));
   if (exs.length) {
-    // Each example on its own line so the block reads as a list.
+    // Most recent first, each on its own line, straight into the dates (no label).
     const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("\n");
-    out = `${out ? out + "\n" : ""}Specific examples:\n${fmt}`;
+    out = `${out ? out + "\n" : ""}${fmt}`;
   }
   return out;
 }

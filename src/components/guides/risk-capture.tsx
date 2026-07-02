@@ -66,12 +66,12 @@ export function buildContent(st: SecState | undefined): string {
 const TXT_BAR = "========================================";
 const TXT_DIV = "----------------------------------------";
 
-export function buildFormulation(state: AllState, title = "RISK FORMULATION"): string {
+export function buildFormulation(state: AllState, title = "RISK FORMULATION", patientName?: string): string {
   const filled = FORMULATION_SECTIONS
     .map((sec) => ({ heading: sec.heading, body: buildContent(state[sec.id]) }))
     .filter((s) => s.body);
   if (!filled.length) return "";
-  const blocks: string[] = [TXT_BAR, title, TXT_BAR];
+  const blocks: string[] = [TXT_BAR, title, ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
   filled.forEach((s, i) => {
     blocks.push(s.heading.toUpperCase());
     blocks.push(s.body);
@@ -80,7 +80,7 @@ export function buildFormulation(state: AllState, title = "RISK FORMULATION"): s
   return blocks.join("\n");
 }
 
-export function buildOneRmp(risk: string, secs: AllState, displayName?: string): string {
+export function buildOneRmp(risk: string, secs: AllState, displayName?: string, patientName?: string): string {
   const name = (displayName && displayName.trim()) || risk;
   const body = (id: string): string => {
     if (id === "what") {
@@ -93,7 +93,7 @@ export function buildOneRmp(risk: string, secs: AllState, displayName?: string):
     }
     return buildContent(secs[id]) || "Not yet established.";
   };
-  const blocks: string[] = [TXT_BAR, `RISK MANAGEMENT PLAN: ${name.toUpperCase()}`, TXT_BAR];
+  const blocks: string[] = [TXT_BAR, `RISK MANAGEMENT PLAN: ${name.toUpperCase()}`, ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
   RMP_SECTIONS.forEach((sec, i) => {
     blocks.push(sec.heading.toUpperCase());
     blocks.push(body(sec.id));

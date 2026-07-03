@@ -35,6 +35,26 @@ const STEP_ICONS: Record<string, typeof CheckCircle> = {
   forms: FileText, submission: Send, casenote: Clipboard, reminder: Calendar, gdpr: Shield,
 };
 
+// Turn bare URLs in guide step text into clickable links (trailing punctuation
+// like a full stop or bracket is kept out of the link).
+function renderWithLinks(text: string) {
+  const parts = text.split(/(https?:\/\/[^\s]+|www\.[^\s]+)/g);
+  return parts.map((part, i) => {
+    if (/^(https?:\/\/|www\.)/.test(part)) {
+      const trail = part.match(/[.,;:)\]]+$/)?.[0] ?? "";
+      const url = trail ? part.slice(0, -trail.length) : part;
+      const href = url.startsWith("http") ? url : `https://${url}`;
+      return (
+        <span key={i}>
+          <a href={href} target="_blank" rel="noopener noreferrer" className="text-nhs-blue font-medium hover:text-nhs-dark-blue break-words">{url}</a>
+          {trail}
+        </span>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
 export default function UnifiedGuidePage() {
   const params = useParams();
   const router = useRouter();
@@ -588,7 +608,7 @@ export default function UnifiedGuidePage() {
               </div>
               <div className="prose prose-gray max-w-none">
                 {hStep.content.split("\n").map((line, i) => (
-                  <p key={i} className={`${line.startsWith("- ") ? "ml-4" : ""} ${line === "" ? "h-2" : "mb-2"} text-gray-700 leading-relaxed`}>{line}</p>
+                  <p key={i} className={`${line.startsWith("- ") ? "ml-4" : ""} ${line === "" ? "h-2" : "mb-2"} text-gray-700 leading-relaxed`}>{renderWithLinks(line)}</p>
                 ))}
               </div>
               {hStep.tip && (

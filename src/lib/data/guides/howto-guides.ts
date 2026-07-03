@@ -1032,7 +1032,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "6",
         title: "DASH Risk Assessment",
-        content: "If domestic abuse is suspected or disclosed, consider using the CAADA-DASH risk assessment – even when the victim may not recognise it as abuse.\n\nThe DASH helps identify high-risk cases that may need MARAC (Multi-Agency Risk Assessment Conference) referral.\n\nForms available in multiple languages at:\nsaferderbyshire.gov.uk/what-we-do/domestic-abuse/marac/\n\nFor general domestic abuse information and support:\nsaferderbyshire.gov.uk/what-we-do/domestic-abuse/",
+        content: "If domestic abuse is suspected or disclosed, consider using the DASH risk assessment - even when the victim may not recognise it as abuse.\n\nThe DASH (Domestic Abuse, Stalking and Harassment) risk checklist is a nationally recognised tool developed by SafeLives (formerly CAADA - hence 'CAADA-DASH'). It helps identify high-risk cases that may need a MARAC (Multi-Agency Risk Assessment Conference) referral.\n\nSafeLives (the DASH source):\nhttps://safelives.org.uk\n\nMARAC referral forms (multiple languages) - Safer Derbyshire:\nhttps://www.saferderbyshire.gov.uk/what-we-do/domestic-abuse/marac/\n\nGeneral domestic abuse information and support:\nhttps://www.saferderbyshire.gov.uk/what-we-do/domestic-abuse/",
       },
       {
         id: "7",

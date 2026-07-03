@@ -537,8 +537,9 @@ export default function WorkflowsAdminPage() {
 
 // ---- Guide Order Editor ----
 const GUIDE_CATEGORIES = [
-  "Legal & Advocacy", "Nurse Tools", "Restrictive Practice", "Safeguarding", "Urgent Care",
-  "Social & Housing", "Allied Health", "Physical Health", "Specialist Pathways",
+  "Legal & Advocacy", "Nurse Tools", "Medics Tools", "OT Tools", "Restrictive Practice",
+  "Safeguarding", "Urgent Care", "Social & Housing", "Allied Health", "Physical Health",
+  "Specialist Pathways",
 ];
 
 function GuideOrderEditor() {

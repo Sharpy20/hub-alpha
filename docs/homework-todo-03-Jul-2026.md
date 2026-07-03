@@ -19,6 +19,12 @@
 
 **Still blocked on you (couldn't do without real values):** section-132 forms URL + MHA office email (Rule 4 - not Google-able); arrange-mha-assessment final wording for social care's secure email system name.
 
+### Second batch (also 3 Jul, pushed + browser-verified)
+- **Medics Tools group created** - Mental State Examination moved there (filter shows it sitting between Nurse Tools and Restrictive Practice). "Medics Tools" and "OT Tools" both added to the editor's category dropdown.
+  - **OT Tools note:** the group won't appear on the guides index until it has at least one guide (the index only shows categories that contain a guide). Tell me which OT tool(s) to seed it with, or I can draft a starter.
+  - Only MSE moved (as you asked). HoNOS/clustering is a candidate for Medics Tools too if you want - say the word.
+- **domestic-abuse-guide** - URLs are now clickable (added a general linkifier to how-to step content, so bare URLs in any how-to guide now link out). Answered "where's the DASH from": attributed to SafeLives (formerly CAADA) with a link; MARAC + support URLs made full clickable links. (Deeper spacing/related-resources polish still open if you want it.)
+
 ---
 
 ## 0. How we'll work

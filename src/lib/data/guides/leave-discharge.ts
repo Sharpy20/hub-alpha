@@ -16,6 +16,7 @@ export interface LdtItem {
   pathways: LdtPathway[]; // which pathways this item shows for
   highRisk?: boolean; // safety-critical - flagged red
   guidance?: string; // optional "why this matters / what to do"
+  guideLink?: { label: string; guideId: string }; // optional link to another in-app guide
 }
 
 export interface LdtSection {
@@ -126,8 +127,10 @@ export const LDT_SECTIONS: LdtSection[] = [
       },
       {
         id: "risk-substance",
-        label: "Substance use / intoxication risk on return considered",
-        pathways: ["leave"],
+        label: "Substance use / intoxication risk on return considered - has Prenoxad been considered?",
+        pathways: ["leave", "discharge"],
+        guidance: "If the patient is at risk of opioid overdose (on return from leave, or after discharge), consider whether take-home naloxone (Prenoxad) should be supplied. Yes / no - and record the decision.",
+        guideLink: { label: "Open the Prenoxad guide", guideId: "prenoxad" },
       },
     ],
   },
@@ -283,6 +286,12 @@ export const LDT_SECTIONS: LdtSection[] = [
         pathways: ["discharge", "transfer"],
         highRisk: true,
         guidance: "Confirm how the patient is travelling, that it is appropriate to their risk, and (for transfer) any escort required.",
+      },
+      {
+        id: "day-fire-board",
+        label: "Fire board / evacuation list updated",
+        pathways: ALL,
+        guidance: "For leave, mark the patient as off the ward and note the expected return time - then update it again when they return. For discharge or transfer, remove them from the board.",
       },
       { id: "day-property", label: "Property and valuables returned and signed for", pathways: ["discharge", "transfer"] },
       { id: "day-means-home", label: "Patient has money / keys / a way to get home", pathways: ["leave", "discharge"] },

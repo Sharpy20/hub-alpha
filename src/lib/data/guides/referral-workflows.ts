@@ -31,6 +31,13 @@ export interface WorkflowStep {
   methods?: SubmissionMethod[];
   clipboardText?: string;
   isDynamic?: boolean; // For dynamically generated content
+  // Consent step only - override the two button labels/descriptions. Defaults are
+  // generic ("Consent Obtained" / "No Consent"); set these where the wording needs
+  // to be about a family/carer or a specific referral (e.g. IMHA, safeguarding).
+  consentYesLabel?: string;
+  consentYesDesc?: string;
+  consentNoLabel?: string;
+  consentNoDesc?: string;
 }
 
 export interface WorkflowData {
@@ -83,6 +90,10 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "consent",
         title: "Patient Consent",
         content: "Have you asked the patient if they consent to an IMHA referral? (This is asked on the referral form - select as a reminder before proceeding)",
+        consentYesLabel: "Patient Consents",
+        consentYesDesc: "I have asked and the patient consents to IMHA referral",
+        consentNoLabel: "Patient Does Not Consent",
+        consentNoDesc: "Patient has declined or cannot give consent (referral can still proceed)",
       },
       {
         id: "section",
@@ -234,6 +245,10 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "consent",
         type: "consent",
         title: "Consent",
+        consentYesLabel: "Consent Obtained",
+        consentYesDesc: "I have discussed the referral with the adult and they consent",
+        consentNoLabel: "Referring Without Consent",
+        consentNoDesc: "Consent not given or not sought - proceeding due to risk (record your reasons)",
         content: "Best practice is to get consent before referring. However:\n\n- Don't let consent stop you if you're genuinely worried\n- You can override consent if there's immediate risk of harm or risk to your own safety\n- If you can't get consent, explain why in the referral\n- Always try to inform the person you're making a referral, even if consent wasn't obtained\n- Consider whether the person has capacity to consent\n\nHaving consent is ideal but not essential. A referral without consent is better than no referral at all.",
       },
       {
@@ -286,7 +301,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "reminder",
         type: "reminder",
         title: "Follow-up Task",
-        content: "Safeguarding is everybody's responsibility - submitting the referral is not the finish line.\n\nDocument the referral in patient notes. Log on Datix if required. The S.42 enquiry may task your team with further actions. If the same concerns keep being raised without resolution, escalate to the Assistant Director of Safeguarding.\n\n39% of Derby City and 54% of Derbyshire County referrals become S.42 enquiries. That means many referrals don't meet threshold - but it's always better to refer than to stay silent.",
+        content: "Safeguarding is everybody's responsibility - submitting the referral is not the finish line.\n\nDocument the referral in patient notes. Log on Datix if required. The S.42 enquiry may task your team with further actions. If the same concerns keep being raised without resolution, escalate to the Assistant Director of Safeguarding.\n\n39% of Derby City and 54% of Derbyshire County referrals become S.42 enquiries. That means many referrals don't meet the threshold this time - but even those that aren't taken up are still logged. They help services build a picture of the person and spot other risk factors over time, so it is always better to refer than to stay silent.",
         checkboxLabel: "",
       },
       {
@@ -379,6 +394,10 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "consent",
         type: "consent",
         title: "Discuss with Family",
+        consentYesLabel: "Family Discussed / Consents",
+        consentYesDesc: "I have discussed the concern with the family and they are aware of / consent to the referral",
+        consentNoLabel: "Referring Without Family Consent",
+        consentNoDesc: "Not discussed with family - doing so would raise the risk or is not appropriate (record your reasons). The child's safety comes first.",
         content: "Best practice is to discuss concerns with the family and gain consent before referring.\n\nHowever, do NOT seek consent if:\n- Doing so would put the child at greater risk\n- Doing so would put you or others at risk\n- It would compromise a police investigation\n- The alleged perpetrator is a family member and may destroy evidence\n\nIf you refer without consent, record your reasons clearly in the referral.",
       },
       {

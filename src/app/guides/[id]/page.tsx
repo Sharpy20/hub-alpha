@@ -39,8 +39,8 @@ export default function UnifiedGuidePage() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user } = useApp();
-  const { addTask } = useTasks();
+  const { user, activeWard } = useApp();
+  const { addTask, tasks, toggleComplete } = useTasks();
   const { addReferralLog } = useReferralLog();
   const { canEdit } = useCanEdit();
   const { isTourActive, setIsInLiveWalkthrough, setCurrentSection, setCurrentSlide } = useTour();
@@ -61,6 +61,23 @@ export default function UnifiedGuidePage() {
   const config = isReferral
     ? { icon: workflow.icon, gradient: workflow.gradient, category: "Referral" }
     : (GUIDE_CONFIG[guideId] || { icon: "\uD83D\uDCD6", gradient: "from-blue-500 to-blue-700", category: "Guide" });
+
+  // Some how-to guides are the write-up for a recurring ward diary task (e.g.
+  // fridge temps). If one of today's ward tasks for the active ward is linked to
+  // this guide, offer a "Mark completed for today" button at the end - so the job
+  // gets ticked off in the diary however the nurse reached the guide.
+  const linkedWardTask = (() => {
+    if (isReferral) return undefined;
+    const today = toLocalDateStr();
+    const dow = new Date(today + "T12:00:00").getDay();
+    return tasks.find(
+      (t) =>
+        t.type === "ward" &&
+        t.linkedGuideId === guideId &&
+        t.ward === activeWard &&
+        ((t.isRecurring && Array.isArray(t.recurringDays) && t.recurringDays.includes(dow)) || t.dueDate === today)
+    );
+  })();
 
   // Shared state
   const [currentStep, setCurrentStep] = useState(0);
@@ -399,11 +416,11 @@ export default function UnifiedGuidePage() {
                 <div className="space-y-3">
                   <button onClick={() => setPatientConsent("yes")} className={`w-full p-5 rounded-xl text-left flex items-center gap-4 transition-all border-2 ${patientConsent === "yes" ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-green-500" : "bg-green-50 text-gray-800 border-green-200 hover:border-green-400"}`}>
                     <span className="text-3xl">{"\u2705"}</span>
-                    <div><p className="font-bold text-lg">Patient Consents</p><p className={patientConsent === "yes" ? "text-white/80" : "text-gray-500"}>I have asked and the patient consents to IMHA referral</p></div>
+                    <div><p className="font-bold text-lg">{rStep.consentYesLabel || "Consent Obtained"}</p><p className={patientConsent === "yes" ? "text-white/80" : "text-gray-500"}>{rStep.consentYesDesc || "I have asked and consent has been given"}</p></div>
                   </button>
                   <button onClick={() => setPatientConsent("no")} className={`w-full p-5 rounded-xl text-left flex items-center gap-4 transition-all border-2 ${patientConsent === "no" ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-500" : "bg-amber-50 text-gray-800 border-amber-200 hover:border-amber-400"}`}>
                     <span className="text-3xl">{"\u26A0\uFE0F"}</span>
-                    <div><p className="font-bold text-lg">Patient Does Not Consent</p><p className={patientConsent === "no" ? "text-white/80" : "text-gray-500"}>Patient has declined or cannot give consent (referral can still proceed)</p></div>
+                    <div><p className="font-bold text-lg">{rStep.consentNoLabel || "No Consent"}</p><p className={patientConsent === "no" ? "text-white/80" : "text-gray-500"}>{rStep.consentNoDesc || "Consent declined or could not be obtained (referral can still proceed)"}</p></div>
                   </button>
                 </div>
               )}
@@ -603,6 +620,20 @@ export default function UnifiedGuidePage() {
           </div>
         )}
 
+        {/* Related in-app guides */}
+        {!isReferral && guide?.related && guide.related.length > 0 && (
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
+            <h3 className="font-bold text-blue-900 text-sm mb-3">Related guides</h3>
+            <div className="flex flex-wrap gap-2">
+              {guide.related.map((r, i) => (
+                <Link key={i} href={link(`/guides/${r.guideId}`)} className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm font-medium text-blue-700 hover:bg-blue-100 no-underline">
+                  <BookOpen className="w-4 h-4" /> {r.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Side navigation arrows */}
         {currentStep > 0 && (
           <button onClick={handlePrev} style={{ left: "max(0px, calc(50vw - 672px))" }} className="fixed top-1/2 -translate-y-1/2 z-40 w-14 h-48 bg-nhs-blue/80 hover:bg-nhs-blue backdrop-blur-sm rounded-r-2xl flex items-center justify-center transition-all shadow-lg hover:shadow-xl hover:w-16" aria-label="Previous step">
@@ -707,6 +738,25 @@ export default function UnifiedGuidePage() {
                 </Button>
               </div>
             </div>
+
+            {/* Ward diary task - mark today's linked task complete (full build only) */}
+            {!isV2 && linkedWardTask && (
+              <div className="bg-white rounded-xl border-2 border-teal-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-teal-50 to-emerald-50 px-6 py-3 border-b border-teal-200">
+                  <h3 className="font-bold text-gray-800 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-600" /> Ward diary task</h3>
+                  <p className="text-sm text-gray-500 mt-0.5">This guide is linked to a task in today&apos;s {activeWard} diary</p>
+                </div>
+                <div className="p-6">
+                  {linkedWardTask.status === "completed" ? (
+                    <p className="flex items-center gap-2 text-sm font-semibold text-emerald-700"><Check className="w-5 h-5" /> Marked complete for today in the {activeWard} diary.</p>
+                  ) : (
+                    <Button onClick={() => toggleComplete(linkedWardTask.id, user?.name || "Unknown")} className="w-full py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700">
+                      <CheckCircle className="w-5 h-5 mr-2" /> Mark completed for today
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Follow-up task - hidden in v2 (no job diary) */}
             {!isV2 && (

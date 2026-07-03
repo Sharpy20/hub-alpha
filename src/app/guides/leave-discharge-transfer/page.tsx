@@ -16,7 +16,7 @@ import { Patient } from "@/lib/types";
 import { FocusLinks } from "@/components/guides/FocusLinks";
 import { LDT_SECTIONS, LDT_PATHWAYS, type LdtPathway } from "@/lib/data/guides";
 import {
-  ArrowLeft, Printer, RotateCcw, ChevronDown, ChevronRight, Flag, Info, AlertTriangle,
+  ArrowLeft, Printer, RotateCcw, ChevronDown, ChevronRight, Flag, Info, AlertTriangle, BookOpen,
 } from "lucide-react";
 
 export default function LeaveDischargeTransferPage() {
@@ -170,7 +170,7 @@ export default function LeaveDischargeTransferPage() {
                           </button>
                         </div>
 
-                        {item.guidance && (
+                        {(item.guidance || item.guideLink) && (
                           <button
                             onClick={() => toggleExpand(item.id)}
                             className="flex-shrink-0 text-gray-400 hover:text-gray-700 transition-colors"
@@ -181,12 +181,19 @@ export default function LeaveDischargeTransferPage() {
                         )}
                       </div>
 
-                      {item.guidance && isOpen && (
-                        <div className="px-3.5 pb-3 pl-11">
-                          <p className="flex items-start gap-1.5 text-xs text-gray-600 bg-gray-50 rounded-lg p-2.5">
-                            <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" />
-                            {item.guidance}
-                          </p>
+                      {(item.guidance || item.guideLink) && isOpen && (
+                        <div className="px-3.5 pb-3 pl-11 space-y-2">
+                          {item.guidance && (
+                            <p className="flex items-start gap-1.5 text-xs text-gray-600 bg-gray-50 rounded-lg p-2.5">
+                              <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" />
+                              {item.guidance}
+                            </p>
+                          )}
+                          {item.guideLink && (
+                            <Link href={v2Href(`/guides/${item.guideLink.guideId}`)} className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 hover:text-teal-900 no-underline">
+                              <BookOpen className="w-3.5 h-3.5" /> {item.guideLink.label}
+                            </Link>
+                          )}
                         </div>
                       )}
                     </li>

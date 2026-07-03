@@ -565,7 +565,6 @@ export default function RiskAssessmentPage() {
   // One domain's full progressive-disclosure page.
   const renderDomain = (dm: typeof RISK_DOMAINS[number]) => {
     const st = getDomain(dm.id);
-    const engaged = isEngaged(st);
     return (
       <div className="space-y-3">
         <div className="flex flex-wrap gap-1.5">
@@ -601,18 +600,21 @@ export default function RiskAssessmentPage() {
           </p>
         )}
 
-        {engaged && !st.noEvidence && (
+        {!st.noEvidence && (
           <div className="space-y-3 rounded-lg bg-gray-50 p-3">
             {dm.safetyPrompt && (
               <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.safetyPrompt)}</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>
             )}
-            {CLINICAL_INDICATORS[dm.id] && (
+            {/* "Display clinical indicators?" shows on every domain (indicatorsPrompt
+                is always set). The chip list only appears once answered Yes; domain 5
+                (physical health) has no S1 chip list, so only "add your own" shows. */}
+            {dm.indicatorsPrompt && (
               <div>
                 <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
                 {st.indicators === "yes" && (
                   <div className="mt-2 space-y-2">
                     <div className="flex flex-wrap gap-1.5">
-                      {CLINICAL_INDICATORS[dm.id].map((ind) => {
+                      {(CLINICAL_INDICATORS[dm.id] || []).map((ind) => {
                         const on = st.indicatorList.includes(ind);
                         return (
                           <button key={ind} type="button" aria-pressed={on}

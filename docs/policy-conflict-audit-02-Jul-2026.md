@@ -104,11 +104,11 @@ The DA-recognition SOP references "CAADA-DASH" (pre-2014 branding; now "SafeLive
 
 ## D. Project (wardHub) clashes
 
-### D1. 🔴 IMHA provider for Derby City — app and live policy disagree
+### D1. ✅ IMHA provider for Derby City — RESOLVED (Mike, 3 Jul 2026)
 - **App:** Derby City = **Disability Direct (DDA)**, 01332 299449 — `src/lib/data/guides/referral-workflows.ts:106-128`
 - **Live S132 policy (Mar 2025):** Derby City = "**One Advocacy Derby – 01332 228748**" — `s132-rights.txt:203`
 
-The app was deliberately switched to DDA in Session 28b (POhWER removed) on Mike's confirmation, so this is **not necessarily an app error** — but the app now contradicts the current Trust policy. **Reconcile which is authoritative.** County (Cloverleaf, 01924 454875) matches on both sides. Note the policy is also internally loose here — it labels the county provider "Cloverleaf Advocacy **Derby**" while assigning it to **county** residents.
+**Resolution:** Disability Direct is the source of truth; One Advocacy Derby is no longer used. The app is correct. The only outstanding action is at source — the S132 trust policy PDF still names One Advocacy Derby and needs the MHA office to update it. County (Cloverleaf, 01924 454875) matches on both sides.
 
 ### D2. ℹ️ Observation Level 3 — app is defensible, policy is the defect
 The app uses **72h** (`src/lib/data/guides/observation.ts:26,113`), matching the policy body/appendix quick-reference. The policy's own **24h** figure (B1) is the internal defect, not the app. The app's in-code comment already acknowledges the self-contradiction. Feed B1 back to the policy owners.
@@ -148,7 +148,7 @@ Verified correct with no clash: S4 (72h; forms A10/A9 + A11 → H3; 24h "seen wi
 
 ## List 2 — Project fixes for the dev chat
 
-1. 🔴 **D1 — IMHA Derby City provider:** reconcile app (Disability Direct) vs live policy (One Advocacy Derby). Decide the source of truth, then align. County (Cloverleaf) already matches.
+1. ✅ **D1 — IMHA Derby City provider:** RESOLVED (Mike, 3 Jul 2026) - Disability Direct is the source of truth (One Advocacy Derby no longer used); app is correct. Only outstanding action is the MHA office updating the S132 policy PDF at source. County (Cloverleaf) already matches.
 2. 🟡 **D3 — mha-statuses S4 wording:** drop or soften "ideally from a doctor who knows the patient" (not in the S4 policy).
 3. ℹ️ **D2 — Observation Level 3:** no change needed; the app's 72h is correct. Keep the in-code comment flagging the policy self-contradiction until the policy is fixed.
 4. ⚠️ Pre-launch: confirm no real internal numbers (AWOL security lines, "291 bleep") leak into the public build; keep `docs/` FOCUS dumps out of any public repo.

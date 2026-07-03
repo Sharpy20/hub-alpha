@@ -2661,7 +2661,7 @@ function ConflictsCard() {
     {
       title: "App vs live policy",
       items: [
-        { s: "app", text: "IMHA Derby City provider - the app uses Disability Direct (deliberately switched, session 28b); the current S132 policy names One Advocacy Derby. Source of truth to be reconciled. County (Cloverleaf) matches on both." },
+        { s: "app", text: "IMHA Derby City provider - RESOLVED (Mike, 3 Jul 2026): Disability Direct is the source of truth; One Advocacy Derby is no longer used. The app uses Disability Direct everywhere and County = Cloverleaf. Outstanding at source only: the S132 trust policy PDF still names One Advocacy Derby and needs the MHA office to update it." },
         { s: "app", text: "mha-statuses says S4's recommendation is 'ideally from a doctor who knows the patient' - not stated in the S4 policy; to soften." },
       ],
     },

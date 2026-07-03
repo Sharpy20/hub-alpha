@@ -17,6 +17,8 @@ export interface GuideData {
   // Optional custom case-note template for the end-of-guide orange copy box.
   // [DATE] is auto-filled; other [PLACEHOLDERS] are left for the nurse to edit.
   caseNote?: string;
+  // Other in-app guides worth linking to from this one (internal /guides links).
+  related?: { label: string; guideId: string }[];
 }
 
 export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: string }> = {
@@ -427,15 +429,10 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "4",
         title: "Send the supporting paperwork",
-        content: "The AMHP team will give you an email address. Send across:\n\n- The medical recommendation\n- The current risk assessment\n- The care plan\n- Any other supporting documentation\n\nSend it securely (nhs.net to nhs.net).",
+        content: "The AMHP team will give you an email address. Send across:\n\n- The medical recommendation\n- The current risk assessment\n- The care plan\n- Any other supporting documentation\n\nSend it securely. Ask the AMHP team which secure email address to use - social care use their own secure email system, not nhs.net, so check with them rather than assuming.\n\nRecord on SystmOne what you sent, to whom, and when. That is the audit trail if someone picks the task up later.",
       },
       {
         id: "5",
-        title: "Document on SystmOne",
-        content: "Record clearly on SystmOne what was sent, to whom, and when. That is the audit trail if someone picks the task up later.",
-      },
-      {
-        id: "6",
         title: "Hand over if it is not done on your shift",
         content: "If the assessment is not completed on your shift, make sure the next shift can access the medical recommendation - email it to them or print a copy and hand it over as an ongoing task.",
         tip: "Do not let the recommendation get lost at handover - it is the thing the whole assessment hangs on.",
@@ -505,7 +502,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "2",
         title: "Talk first - many are avoidable",
-        content: "Before anything formal, talk with the patient: why do they want to leave, what are their concerns, what would help them stay? Involve the doctor early. A calm conversation resolves many would-be self-discharges.",
+        content: "Before anything formal, talk with the patient: why do they want to leave, what are their concerns, what would help them stay? Involve the doctor early. A calm conversation resolves many would-be self-discharges.\n\nOffer alternatives before a full self-discharge - for example a short period of leave or agreed time off the ward can defuse the situation and keep the admission open.\n\nOut of hours, offer to arrange a discharge meeting with the ward's regular medics and the MDT so the discharge can be planned properly - take-home medication, a safety plan and community follow-up - rather than leaving abruptly overnight.",
       },
       {
         id: "3",
@@ -520,8 +517,8 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "5",
-        title: "Record and make the safety net clear",
-        content: "Record the discharge and the conversation in the medical notes and the nursing communication sheet. Inform the named professional / care coordinator if involved, and make sure the patient leaves with GP and crisis contact details.",
+        title: "Record, Datix, and make the safety net clear",
+        content: "Record the discharge and the conversation in the medical notes and the nursing communication sheet. Inform the named professional / care coordinator if involved, and make sure the patient leaves with GP and crisis contact details.\n\nAn unplanned discharge is an unsafe discharge regardless of medical advice - complete a Datix. Where possible still arrange follow-up (GP, care coordinator, crisis team) and any take-home medication, so the person is not left without a plan.",
         tip: "The person is leaving against advice - a clear crisis plan and follow-up matter more here, not less.",
       },
     ],
@@ -728,6 +725,9 @@ export const GUIDES: Record<string, GuideData> = {
     id: "mha-statuses",
     title: "Mental Health Act Statuses Explained",
     description: "Understanding the legal framework for patient care under the MHA",
+    related: [
+      { label: "Section 132 - Reading Patient Rights", guideId: "section-132" },
+    ],
     steps: [
       {
         id: "1",

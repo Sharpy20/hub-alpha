@@ -15,7 +15,7 @@ import {
   EMPTY_FACTS, SAMPLE_PATIENTS,
   type Facts, type Area, type Evaluation,
 } from "@/lib/data/service-map";
-import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban } from "lucide-react";
+import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone } from "lucide-react";
 
 const CX = 550, CY = 500;
 const BANDS = [175, 300, 400];
@@ -73,6 +73,8 @@ export default function ServiceMapPage() {
   const [facts, setFacts] = useState<Facts>({ ...EMPTY_FACTS });
   const [selected, setSelected] = useState<string | null>(null);
   const [clusterFilter, setClusterFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
+  const searchLc = search.trim().toLowerCase();
 
   const set = <K extends keyof Facts>(k: K, v: Facts[K]) => setFacts((f) => ({ ...f, [k]: v }));
   const toggleArr = (k: "diagnoses" | "flags", v: string) =>
@@ -262,6 +264,12 @@ export default function ServiceMapPage() {
 
           {/* map */}
           <div className="space-y-3">
+            <div className="relative">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search services by name..." aria-label="Search services"
+                className="w-full text-sm border border-gray-200 rounded-lg pl-9 pr-3 py-2 focus:ring-2 focus:ring-nhs-blue focus:border-nhs-blue" />
+              {searchLc && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{visServices.filter((s) => s.name.toLowerCase().includes(searchLc)).length} on map</span>}
+            </div>
             <div className="bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-gray-200 p-2">
               <svg viewBox="0 0 1100 1000" className="w-full h-auto" role="img" aria-label="Service town map">
                 {/* band rings */}
@@ -302,11 +310,13 @@ export default function ServiceMapPage() {
                   const meta = EFF_META[eff];
                   const r = nodeR(p.depth);
                   const isSel = selected === s.id;
+                  const hit = !searchLc || s.name.toLowerCase().includes(searchLc);
                   const lines = wrap(s.name, clusterFilter === "all" ? 15 : 18);
                   return (
                     <g key={s.id} onClick={() => setSelected(s.id)} style={{ cursor: "pointer" }} tabIndex={0} role="button"
-                      aria-label={`${s.name}: ${meta.label}`} opacity={eff === "cutoff" ? 0.55 : 1}
+                      aria-label={`${s.name}: ${meta.label}`} opacity={eff === "cutoff" ? 0.5 : hit ? 1 : 0.15}
                       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(s.id); } }}>
+                      {searchLc && hit && <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke="#f59e0b" strokeWidth={3} />}
                       <circle cx={p.x} cy={p.y} r={r} fill={meta.fill} stroke={meta.border} strokeWidth={isSel ? 4 : 2.5} style={{ transition: "fill 0.35s, stroke 0.35s" }} />
                       {eff === "blocked" && <line x1={p.x - r * 0.6} y1={p.y - r * 0.6} x2={p.x + r * 0.6} y2={p.y + r * 0.6} stroke="#dc2626" strokeWidth={2.5} />}
                       {eff === "open" && <text x={p.x} y={p.y - r - 3} textAnchor="middle" fontSize="13">{"✅"}</text>}
@@ -339,6 +349,7 @@ export default function ServiceMapPage() {
                   {CLUSTERS.find((c) => c.id === selSvc.cluster)?.label} - serves {selSvc.areas.map((a) => AREA_LABEL[a]).join(", ")}
                   {parentName ? ` - reached via ${parentName}` : ""}. {selSvc.note || ""}
                 </p>
+                {selSvc.contact && <p className="flex items-start gap-1.5 text-sm text-gray-700 mb-2 font-medium"><Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-nhs-blue" /> {selSvc.contact}</p>}
                 {selEff === "cutoff" && <p className="flex items-start gap-1.5 text-sm text-gray-500 mb-1"><Ban className="w-4 h-4 mt-0.5 flex-shrink-0" /> Cut off - you reach this via {parentName}, which is currently closed.</p>}
                 {selEv.blockedReason && <p className="flex items-start gap-1.5 text-sm text-red-700 mb-1"><XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {selEv.blockedReason}</p>}
                 {selEv.met.map((c) => <p key={c} className="flex items-start gap-1.5 text-sm text-green-700"><CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" /> {c}</p>)}

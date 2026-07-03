@@ -60,6 +60,7 @@ These stay red until the above is sorted or they're reworked:
 - **Formulation output rethink** - the two-box output was painful with a real patient.
 - **Risk tool rethink** - beyond the quick fixes already done.
 - **DoLS** - make it more visual/interactive (flow chart / graphics).
+- **Service "town map"** (new idea, 3 Jul) - open a patient, build up and store what we know (diagnosis, PIP, housing, drug/alcohol history, trauma, etc.). Render a simulated town: primary services in the centre, charities / third sector on the outskirts, linked by paths. Paths start grey; meeting a service's inclusion criteria turns its path green; meeting an exclusion criterion closes it off. Postcode-based access too. Matches our existing service directories - so staff can see at a glance what's potentially open to a service user. Full-build/PII feature; its own spec + session.
 
 ---
 

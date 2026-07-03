@@ -26,6 +26,7 @@ export const OBSERVATION_BUILDER: GuidePromptConfig = {
     "Level 3 - Intermittent: visual checks at varying times within a 15-minute period (never exactly every 15 minutes). Not automatically reduced at night; reviewed at least every 72 hours.",
     "Level 2 - Within eyesight: kept in clear sight at all times, day and night (including bathroom and while asleep); reviewed at least every 24 hours.",
     "Level 1 - Within arm's length: one or more staff within arm's length at all times - the highest level; reviewed at least every 24 hours. Students must not undertake Level 1.",
+    "Patients on Level 1 or 2 rarely leave the ward. Any leave off the ward for a patient on enhanced observations must be agreed by the MDT first, with the observation arrangements for that leave made explicit (verify the exact wording against the current policy).",
     "Every level still needs a rationale tied to the current risk, genuine engagement (not just watching), and a clear step-up / step-down trigger.",
   ],
   focus: [
@@ -57,14 +58,16 @@ export const OBSERVATION_BUILDER: GuidePromptConfig = {
       think: [
         "What should a new or bank staff member actually do, in each setting?",
         "What proximity is required at meals, the bathroom, at night, in communal areas?",
+        "How closely should staff observe during intimate care - showering, using the toilet - balancing safety with privacy and dignity? Put the specifics in the care plan so it is not left to interpretation.",
       ],
       examples: [
         "Maintain the required proximity at all times",
         "Supervision at meals; same-gender support at the bathroom",
+        "Intimate care (shower / toilet): state exactly how much observation is needed - e.g. same-gender staff, door ajar, or within eyesight - balancing safety against dignity",
         "Night checks without disturbing sleep where safe",
         "Handover of the level at every shift change",
       ],
-      tip: "Concrete enough that someone who has never met the patient could follow it.",
+      tip: "Concrete enough that someone who has never met the patient could follow it. Spell out intimate-care observation (shower, toilet) in the care plan rather than leaving it to the individual member of staff.",
     },
     {
       id: "watching",

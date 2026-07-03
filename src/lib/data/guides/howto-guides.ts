@@ -29,6 +29,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "pain-assessment": { icon: "📊", gradient: "from-orange-500 to-orange-700", category: "Observations" },
   choking: { icon: "🚨", gradient: "from-red-600 to-red-800", category: "Emergency Response" },
   "cardiac-arrest": { icon: "❤️‍🔥", gradient: "from-rose-600 to-rose-800", category: "Emergency Response" },
+  mohost: { icon: "🧩", gradient: "from-violet-500 to-purple-700", category: "OT Tools" },
   "mha-statuses": { icon: "⚖️", gradient: "from-indigo-600 to-purple-800", category: "MHA & Legal" },
   "section-17": { icon: "📋", gradient: "from-indigo-500 to-indigo-700", category: "MHA & Legal" },
   "arrange-mha-assessment": { icon: "⚖️", gradient: "from-indigo-500 to-indigo-700", category: "MHA & Legal" },
@@ -77,13 +78,13 @@ export const GUIDES: Record<string, GuideData> = {
     id: "admission-note",
     title: "Admission Note Template",
     description: "The nine points to cover when you write up an admission - copy the skeleton into SystmOne",
-    caseNote: "ADMISSION NOTE ([DATE], by [NURSE])\n1. Reason for admission: [ ]\n2. Presentation on admission; patient welcomed and orientated (recorded as a 1:1): [ ]\n3. Physical observations, including height and weight: [ ]\n4. Level of observations and rationale: [ ]\n5. Patient description: [ ]\n6. Patient informed of named nurse; named nurse emailed: [ ]\n7. Carers informed - consent to share obtained, family/friend contacted (recorded as carer's contact): [ ]\n8. Section 132 rights: [READ / patient lacks capacity - documented on the S132 form]\n9. Outstanding admission documentation handed over to next shift; named nurse emailed: [ ]",
+    caseNote: "ADMISSION NOTE ([DATE], by [NURSE])\nAdmitted to: [WARD], [UNIT]\n1. Reason for admission: [ ]\n2. Presentation on admission; patient welcomed and orientated (recorded as a 1:1): [ ]\n3. Physical observations, including height and weight: [ ]\n4. Level of observations and rationale: [ ]\n5. Patient description: [ ]\n6. Patient informed of named nurse; named nurse emailed: [ ]\n7. Carers informed - consent to share obtained, family/friend contacted (recorded as carer's contact): [ ]\n8. Section 132 rights: [READ / patient lacks capacity - documented on the S132 form]\n9. Outstanding admission documentation handed over to next shift; named nurse emailed: [ ]",
     steps: [
       {
         id: "cover",
         title: "What to cover in the admission note",
         content:
-          "Work through these nine points when you write up an admission:\n\n1. Reason for admission\n2. Presentation on admission, and the patient being welcomed and orientated (document this as a 1:1)\n3. Physical observations, including height and weight\n4. Level of observations and the rationale for it\n5. Patient description\n6. Inform the patient of their named nurse (check the named nurse is working over the next few days and email them)\n7. Carers to be informed - obtain consent to share, then contact family/friend if the patient consents; document as a carer's contact\n8. Section 132 rights to be completed - if the patient does not have capacity, document this on the S132 rights form (completing it shows you attempted to explain their rights)\n9. Hand over any outstanding admission documentation to the next shift and email the named nurse",
+          "Start by recording which ward and unit the patient has been admitted to. Ward and unit names change over the years, so stating them at the top keeps the note clear to anyone reading it back later.\n\nThen work through these nine points when you write up an admission:\n\n1. Reason for admission\n2. Presentation on admission, and the patient being welcomed and orientated (document this as a 1:1)\n3. Physical observations, including height and weight\n4. Level of observations and the rationale for it\n5. Patient description\n6. Inform the patient of their named nurse (check the named nurse is working over the next few days and email them)\n7. Carers to be informed - obtain consent to share, then contact family/friend if the patient consents; document as a carer's contact\n8. Section 132 rights to be completed - if the patient does not have capacity, document this on the S132 rights form (completing it shows you attempted to explain their rights)\n9. Hand over any outstanding admission documentation to the next shift and email the named nurse",
         tip: "Use the Copy button below to drop the numbered skeleton straight into your SystmOne note, then fill it in.",
       },
       {
@@ -331,6 +332,53 @@ export const GUIDES: Record<string, GuideData> = {
       { label: "About HoNOS (RCPsych)", url: "https://www.rcpsych.ac.uk/improving-care/ccqi/health-of-nation-outcome-scales" },
     ],
     caseNote: `HoNOS completed on [DATE] ([baseline on admission / monthly review / discharge]). Scores recorded on SystmOne; total [X]. Scales of note: [e.g. 1 Agitated behaviour 3, 7 Depressed mood 3]. Compared with previous HoNOS ([DATE], total [Y]): [improved / unchanged / deteriorated]. Suggested cluster [N] - agreed / amended by MDT. Discussed at MDT.`,
+  },
+  mohost: {
+    id: "mohost",
+    title: "MOHOST (OT screening) explained",
+    description: "What the MOHOST occupational-therapy screen covers, how it is rated, and where it feeds - an explainer, not the licensed tool",
+    steps: [
+      {
+        id: "what",
+        title: "What MOHOST is (in one line)",
+        content: "MOHOST - the Model of Human Occupation Screening Tool - is the occupational therapist's screen of how well someone is functioning in everyday occupation: their motivation, routines, communication, thinking, movement and environment.\n\nIt is based on the Model of Human Occupation (MOHO) and is one of the most widely used OT screens in UK inpatient mental health. It gives the team a shared, structured picture of what the patient can do, what is getting in the way, and where OT input will help.\n\nThis guide explains WHAT MOHOST looks at and WHY, so the whole team understands the OT assessment. It is not the scoring form itself.",
+        tip: "Think of MOHOST as the OT equivalent of a structured overview - like HoNOS is for symptoms, MOHOST is for day-to-day functioning and occupation.",
+      },
+      {
+        id: "why",
+        title: "Why OTs use it (and why it suits mental health)",
+        content: "MOHOST can be completed largely from observation and everyday contact, so it works well for patients who are unwell, withdrawn, suspicious, or who find formal question-and-answer assessments hard. The OT does not need the patient to sit a test.\n\nIt is designed to be repeated over time, so it shows change - improvement or deterioration - across an admission, and it feeds directly into goals, the care plan and discharge/placement planning.",
+        tip: "Because it is unobtrusive and repeatable, it is often redone at reviews (for example around CPA / MDT review points) to track progress.",
+      },
+      {
+        id: "areas",
+        title: "The six areas it covers",
+        content: "MOHOST screens occupational functioning across six areas (24 items in total):\n\n1. Motivation for occupation - how the person appraises their own ability, expects to succeed, shows interest, and makes choices.\n2. Pattern of occupation - their routine, roles, responsibility and adaptability.\n3. Communication & interaction skills - non-verbal skills, conversation, vocal expression and relationships.\n4. Process skills - knowledge, timing, organisation and problem-solving when doing a task.\n5. Motor skills - posture, mobility, coordination, strength and energy.\n6. Environment - the physical space and resources, social groups, and the demands of their occupations.",
+        tip: "It is deliberately broad - person, their doing, and their environment - because occupation depends on all three.",
+      },
+      {
+        id: "rating",
+        title: "How it is rated",
+        content: "Each item is rated on a simple four-point scale describing how much that area helps or hinders the person's occupational participation:\n\n- F = Facilitates participation (a strength)\n- A = Allows participation (okay, no real problem)\n- I = Inhibits participation (a difficulty)\n- R = Restricts participation (a major difficulty)\n\n(These are often recorded as 4 / 3 / 2 / 1.) The ratings are guided by clear criteria in the manual - it is a structured professional judgement, not a tick-box.",
+        tip: "The point is the pattern across the areas, not one total number - it shows WHERE support is needed.",
+      },
+      {
+        id: "uses",
+        title: "What it is used for",
+        content: "The MOHOST picture feeds into:\n\n- OT goals and the OT part of the care plan - specific, functional goals (routine, activity, self-care, social confidence).\n- MDT understanding - a shared view of day-to-day functioning, not just symptoms.\n- Discharge and placement planning - what level of support the person is likely to need at home or in a placement.\n- Tracking change - repeated over the admission to show progress.",
+      },
+      {
+        id: "s1",
+        title: "Where it fits - and a note on the tool itself",
+        content: "MOHOST is a licensed, copyrighted tool (from the MOHO Clearinghouse / MOHO Web) with its own manual and forms - so the actual rating is done on the official MOHOST form / your OT recording system, not reproduced here.\n\nCheck your local OT process: your team may use MOHOST, a MOHOST-based initial assessment, or a local OT initial-assessment form. If you are not an OT, you do not complete MOHOST - but understanding it helps you read the OT notes and support the goals that come out of it.\n\nRecord the OT assessment and goals on SystmOne so the MDT and the care plan stay aligned.",
+        tip: "Not sure what your ward OT actually uses? Ask them - and tell us, so we can point this guide at the right local form.",
+      },
+      {
+        id: "resources",
+        title: "Resources",
+        content: "- Model of Human Occupation (MOHO) and MOHOST information: https://www.moho.uic.edu\n- Royal College of Occupational Therapists: https://www.rcot.co.uk\n\nMOHOST was developed by Sue Parkinson, Kirsty Forsyth and Gary Kielhofner.",
+      },
+    ],
   },
   prenoxad: {
     id: "prenoxad",
@@ -1038,7 +1086,7 @@ export const GUIDES: Record<string, GuideData> = {
         id: "7",
         title: "Where to Get Help",
         content: "For the patient:\n• National DA Helpline: 0808 2000 247 (24hr, free)\n• Safer Derbyshire website for local services\n\nFor professional advice:\n• DHCFT Safeguarding Team: Hidden in demo mode\n• MASH Health Advisors: Hidden in demo mode\n\nIf children are in the household:\n• Always consider a children's safeguarding referral\n• Starting Point: Hidden in demo mode\n\nIn immediate danger: call 999",
-        tip: "Document your concerns and actions in the patient's notes. If you suspect DA but the patient doesn't disclose, record your professional concerns and revisit at future contacts.",
+        tip: "Document your concerns and actions in the patient's notes. If you suspect DA but the patient doesn't disclose, record your professional concerns and revisit at future contacts. When you save the record on SystmOne, tick 'Safeguarding relevant' at the bottom so it is flagged correctly.",
       },
     ],
   },

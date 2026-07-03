@@ -57,8 +57,10 @@ export const ALL_GUIDES: GuideItem[] = [
   { id: "leave-discharge-transfer", title: "Leave, Discharge & Transfer", description: "Safety checklist with a Leave / Discharge / Transfer toggle and high-risk flags", icon: "🚪", gradient: "from-teal-500 to-emerald-700", category: "Nurse Tools", viewerPath: "/guides/leave-discharge-transfer" },
   { id: "dama", title: "Discharge Against Medical Advice", description: "The process and form when a patient self-discharges against advice", icon: "🚪", gradient: "from-orange-500 to-red-700", category: "Nurse Tools", viewerPath: "/guides/dama" },
   { id: "fridge-temps", title: "Fridge Temperature Recording", description: "Medication fridge monitoring and Assurance Dashboard recording", icon: "🌡️", gradient: "from-cyan-500 to-cyan-700", category: "Nurse Tools", viewerPath: "/guides/fridge-temps" },
-  // Medics Tools (new group - build up over time; OT Tools appears once it has a guide)
+  // Medics Tools (new group - build up over time)
   { id: "mental-state-exam", title: "Mental State Examination", description: "Interactive MSE builder - pick words per domain, copy to notes", icon: "🧠", gradient: "from-purple-500 to-purple-700", category: "Medics Tools", viewerPath: "/guides/mental-state-exam" },
+  // OT Tools (new group - build up over time)
+  { id: "mohost", title: "MOHOST (OT screening) explained", description: "What the MOHOST occupational-therapy screen covers, how it is rated, and where it feeds - explainer, not the licensed tool", icon: "🧩", gradient: "from-violet-500 to-purple-700", category: "OT Tools", viewerPath: "/guides/mohost" },
   // Restrictive Practice
   { id: "seclusion-support-plan", title: "Seclusion Support Plan", description: "Think-it-through guide for the seclusion support plan - safer, sooner out of seclusion", icon: "🚪", gradient: "from-rose-600 to-red-800", category: "Restrictive Practice", viewerPath: "/guides/seclusion-support-plan" },
   { id: "restraint-monitoring", title: "Restraint & Rapid Tranq Monitoring", description: "Draft a defensible monitoring narrative for restraint or rapid tranquillisation", icon: "🩺", gradient: "from-orange-600 to-red-700", category: "Restrictive Practice", viewerPath: "/guides/restraint-monitoring" },

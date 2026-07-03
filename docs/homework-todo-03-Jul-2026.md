@@ -19,6 +19,15 @@
 
 **Still blocked on you (couldn't do without real values):** section-132 forms URL + MHA office email (Rule 4 - not Google-able); arrange-mha-assessment final wording for social care's secure email system name.
 
+### Third batch - autonomous pass (3 Jul, browser-verified) - REVIEW THESE
+You said "do anything you can, a little guessing is fine, I'll review later." All amber/red pending your check.
+- **MOHOST explainer built** (`/guides/mohost`, new "OT Tools" group - now live, 61 guides). HoNOS-style: what MOHOST covers (6 areas/24 items), the F/A/I/R rating, why it suits MH, where it feeds; clearly flagged as an explainer, not the licensed tool. **You wanted better examples + to confirm the local OT form - still open.** Status amber.
+- **Status rule applied:** seclusion-support-plan "good" → amber. section-17 already amber. (Green stays reserved for department sign-off once everything's ready.)
+- **care-plan:** added word-bank prompts to the four thin sections (What matters / Keeping well / Risks / Review) so each box now suggests "what can go here".
+- **observation-engagement:** added intimate-care observation guidance (shower/toilet - put specifics in the care plan) and a principle that patients on Level 1/2 rarely leave the ward and any leave needs MDT agreement. **Both flagged "verify against policy" - please check the exact wording.**
+- **admission-note:** added an "Admitted to: [WARD], [UNIT]" line to the note + a prompt to record ward/unit (since names change over time). Placeholders, not guessed names.
+- **safeguarding guides:** added the "tick 'Safeguarding relevant' on the SystmOne record" reminder to Safeguarding Adults, Safeguarding Children and Domestic Abuse. (The link to an S1 how-to is still to wire when we have it.)
+
 ### Second batch (also 3 Jul, pushed + browser-verified)
 - **Medics Tools group created** - Mental State Examination moved there (filter shows it sitting between Nurse Tools and Restrictive Practice). "Medics Tools" and "OT Tools" both added to the editor's category dropdown.
   - **OT Tools note:** the group won't appear on the guides index until it has at least one guide (the index only shows categories that contain a guide). Tell me which OT tool(s) to seed it with, or I can draft a starter.

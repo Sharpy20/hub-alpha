@@ -40,6 +40,18 @@ export const CAREPLAN_SECTIONS: CareSection[] = [
     hint: "The patient's goals, hopes and what they want from this admission. Their priorities, in their words.",
     gap: "What matters to you? What do you hope for or want to achieve with your care? Any advance directives?",
     patientVoice: true,
+    groups: [
+      {
+        label: "Common goals (write them in the patient's words)",
+        words: [
+          "get home", "see / rebuild contact with family", "be a better parent",
+          "sleep better", "manage my mood / anxiety", "feel safe",
+          "understand my diagnosis", "get back to work or study",
+          "sort out money / benefits", "reduce or stop substances",
+          "rebuild a daily routine", "get out and about again",
+        ],
+      },
+    ],
     placeholder: "Goals agreed with the patient / OT, advance directives, what they want from admission...",
   },
   {
@@ -67,6 +79,17 @@ export const CAREPLAN_SECTIONS: CareSection[] = [
     hint: "Protective factors: strengths, skills, hobbies, how they fill their time, coping strategies.",
     gap: "What keeps you well? Your strengths and skills, hobbies, and what you do to cope?",
     patientVoice: true,
+    groups: [
+      {
+        label: "Strengths, interests & coping (prompts)",
+        words: [
+          "family and friends", "faith / community", "exercise / walking",
+          "being outdoors", "music", "art / creative activities", "pets",
+          "work or study", "a daily routine", "medication",
+          "talking to someone I trust", "grounding / breathing techniques",
+        ],
+      },
+    ],
     placeholder: "Strengths, interests, coping strategies, OT / rec activities...",
   },
   {
@@ -114,6 +137,18 @@ export const CAREPLAN_SECTIONS: CareSection[] = [
     gap: "What helps you feel safe? (Document word for word.)",
     patientVoice: true,
     linkRmp: true,
+    groups: [
+      {
+        label: "What to cover (reference the RMP, do not duplicate it)",
+        words: [
+          "the key risks that shape day-to-day care",
+          "current observation level and why",
+          "what the patient says helps them feel safe",
+          "agreed practical safety measures",
+          "cross-reference the relevant RMP(s)",
+        ],
+      },
+    ],
     placeholder: "Key risks and how they shape care. Point to the relevant RMP(s)...",
   },
   {
@@ -175,6 +210,17 @@ export const CAREPLAN_SECTIONS: CareSection[] = [
     hint: "How we know the plan is working, when it is reviewed, and what happens if it is not helping.",
     gap: "How will you know this plan is working? If it doesn't help, what would you like to happen?",
     patientVoice: true,
+    groups: [
+      {
+        label: "How we'll know it's working (prompts)",
+        words: [
+          "agreed goals being met", "improved mood / sleep / engagement",
+          "using coping strategies", "reduced incidents",
+          "patient and family feedback", "reviewed at the weekly MDM",
+          "what to do if not improving (escalate / consider RESPECT)",
+        ],
+      },
+    ],
     placeholder: "Signs the plan is working, review timing, escalation if not improving (consider RESPECT)...",
   },
 ];

@@ -26,8 +26,11 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "dols": "red",
   "blanket-restrictions": "red",
   // named-nurse now has real content (from the ward audit cadence) - amber until Mike signs it off.
+  // Mike's homework verdict "good" = amber (built, awaiting clinical sign-off).
+  // Green is reserved for formal department sign-off, which can't happen until all
+  // guides are ready to go for review. section-17 ("good") already falls back to amber.
+  "seclusion-support-plan": "amber",
   // New pure-guidance tools - being reworked, not ready to trust.
-  "seclusion-support-plan": "red",
   "debrief": "red",
   "safety-plan": "red",
   "restraint-monitoring": "red",

@@ -1649,6 +1649,9 @@ export const GUIDES: Record<string, GuideData> = {
     id: "abc-chart",
     title: "ABC Charts - Antecedent, Behaviour, Consequence",
     description: "Recording and analysing challenging behaviour to identify triggers, patterns and functions",
+    downloads: [
+      { label: "Blank ABC chart to print", url: "/abc-chart-blank.html" },
+    ],
     steps: [
       {
         id: "1",

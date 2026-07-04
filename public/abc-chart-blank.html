@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABC Chart (behavioural) - Blank Form</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, "Source Sans 3", sans-serif; background: #f3f4f6; color: #212B32; padding: 16px; }
+    .banner { background: #FFB81C; color: #212B32; padding: 12px 20px; border-radius: 8px; margin: 0 auto 16px; max-width: 820px; font-size: 13px; font-weight: 600; text-align: center; }
+    .banner small { font-weight: 400; display: block; margin-top: 4px; }
+    .toolbar { max-width: 820px; margin: 0 auto 12px; display: flex; justify-content: space-between; align-items: center; }
+    .back-link { color: #005EB8; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; }
+    .print-btn { background: #005EB8; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .print-btn:hover { background: #003087; }
+    .form { background: #fff; border: 1px solid #d1d5db; border-radius: 4px; max-width: 820px; margin: 0 auto; font-size: 13px; }
+    .form-header { background: #f9fafb; padding: 12px 16px; border-bottom: 2px solid #005EB8; }
+    .form-header h1 { font-size: 18px; font-weight: 700; }
+    .form-header p { font-size: 12px; color: #425563; margin-top: 2px; }
+    .field { padding: 10px 16px; border-bottom: 1px solid #e5e7eb; }
+    .field .label { font-weight: 700; color: #005EB8; display: block; margin-bottom: 4px; font-size: 12px; }
+    .field .hint { font-weight: 400; color: #768692; font-style: italic; font-size: 11px; }
+    .lines { min-height: 44px; background-image: repeating-linear-gradient(#fff, #fff 21px, #e5e7eb 22px); }
+    .row2 { display: flex; }
+    .row2 .field { flex: 1; border-right: 1px solid #e5e7eb; }
+    .row2 .field:last-child { border-right: none; }
+    .checks { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 4px; }
+    .checks label { font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
+    .box { width: 13px; height: 13px; border: 1px solid #768692; display: inline-block; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .toolbar, .banner { display: none; }
+      .form { border: none; max-width: 100%; }
+      .field { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    wardHub reference copy of the ABC Chart (behavioural)
+    <small>For reference and printing. Record on SystmOne / your ward's official chart when one is required. Do not enter real patient data on screen.</small>
+  </div>
+  <div class="toolbar">
+    <a class="back-link" href="/guides/abc-chart">&larr; Back to the ABC Charts guide</a>
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <div class="form">
+    <div class="form-header">
+      <h1>ABC Chart (behavioural)</h1>
+      <p>Record the facts of what happened. Describe behaviour objectively - do not interpret.</p>
+    </div>
+
+    <div class="field"><span class="label">Behaviour being considered</span><div class="lines"></div></div>
+    <div class="row2">
+      <div class="field"><span class="label">1. Date &amp; time</span><div class="lines"></div></div>
+      <div class="field"><span class="label">2. Where did it happen?</span><div class="lines"></div></div>
+    </div>
+    <div class="field"><span class="label">3. Person(s) / carer(s) present</span><div class="lines"></div></div>
+    <div class="field"><span class="label">4. Antecedent <span class="hint">- what was the person doing just before?</span></span><div class="lines"></div></div>
+    <div class="field"><span class="label">5. Behaviour <span class="hint">- the facts of what happened. Do NOT interpret.</span></span><div class="lines" style="min-height:66px"></div></div>
+    <div class="field"><span class="label">6. Consequence <span class="hint">- what happened afterwards / how did it end?</span></span><div class="lines" style="min-height:66px"></div></div>
+
+    <div class="field">
+      <span class="label">7. How did the person appear BEFORE the behaviour?</span>
+      <div class="checks">
+        <label><span class="box"></span> Angry</label><label><span class="box"></span> Anxious</label><label><span class="box"></span> Bored</label>
+        <label><span class="box"></span> Content</label><label><span class="box"></span> Depressed</label><label><span class="box"></span> Despairing</label>
+        <label><span class="box"></span> Frightened</label><label><span class="box"></span> Frustrated</label><label><span class="box"></span> Happy</label>
+        <label><span class="box"></span> Irritable</label><label><span class="box"></span> Physically unwell</label><label><span class="box"></span> Restless</label>
+        <label><span class="box"></span> Sad</label><label><span class="box"></span> Worried</label><label><span class="box"></span> Other</label>
+      </div>
+    </div>
+    <div class="field"><span class="label">8. Other (before)</span><div class="lines"></div></div>
+
+    <div class="field">
+      <span class="label">9. How did the person appear DURING the behaviour?</span>
+      <div class="checks">
+        <label><span class="box"></span> Angry</label><label><span class="box"></span> Anxious</label><label><span class="box"></span> Bored</label>
+        <label><span class="box"></span> Content</label><label><span class="box"></span> Depressed</label><label><span class="box"></span> Despairing</label>
+        <label><span class="box"></span> Frightened</label><label><span class="box"></span> Frustrated</label><label><span class="box"></span> Happy</label>
+        <label><span class="box"></span> Irritable</label><label><span class="box"></span> Physically unwell</label><label><span class="box"></span> Restless</label>
+        <label><span class="box"></span> Sad</label><label><span class="box"></span> Worried</label><label><span class="box"></span> Other</label>
+      </div>
+    </div>
+    <div class="field"><span class="label">10. Other (during)</span><div class="lines"></div></div>
+
+    <div class="field"><span class="label">General comments</span><div class="lines" style="min-height:66px"></div></div>
+  </div>
+</body>
+</html>

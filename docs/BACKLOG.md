@@ -89,9 +89,9 @@ capacity-assessment, blanket-restrictions, abc-chart, no-smoking, informal-patie
 > @nhs.net inboxes/managers stay OUT of live.
 
 ### F. Homework - now-actionable (unblocked by Mike's `docs 1\` docs)
-- [ ] **section-132** (RED) - build from `S132_policy.docx` + `SystmOne_-_Recording_Section_132_Rights_Conversation_V1.2.pdf`; add 132 forms link + MHA office email (email still needed from Mike).
+- [x] **section-132** (RED, enriched 4 Jul, commit 4152ca1) - added "Record it on SystmOne" step (S132/S132A questionnaires, Save-Final-Version auto-tasks MHA team, leaflet printing), S133 discharge duty, S132A/CTO recall note. FOCUS recording + policy links already wired. STILL BLOCKED: MHA office email (add when Mike supplies).
 - [ ] **capacity-assessment** (amber, needs expanding) - add S1 capacity questionnaire (screenshots image1-3) + police form (`MCA - Police Capacity Ax.docx`); link S1 guide + external capacity + trust policy.
-- [ ] **blanket-restrictions** (RED) - add trust guide/leaflet links from `Blanket_Restrictions_Policy_...Feb_2026_v2.docx` + FOCUS brief-guide PDF.
+- [x] **blanket-restrictions** (RED, enriched 4 Jul, commit add0a44) - added FOCUS brief-guide link, three-tier contraband list (banned/risk-assessed/advisory), ward-level authorisation aligned to policy (Ward Manager sign-off + register + Clinical Meeting/daily-huddle review).
 - [ ] **abc-chart** (amber) - better example from `completed ABC chart example.pdf`; link blank; consider builder using `ABC charts - Copy to add to.pptx`.
 - [ ] **honos** (RED) - use image6 (New Cluster box) + `waa honos.mp4` / `waa honos hist.mp4`; note WAA/secure/CAMHS formats differ.
 - [ ] **NEW guide: no-smoking-in-the-trust** - from `Staff legal warning. Smoking on NHS Wards.docx` (enforce; paraphernalia only returned on discharge, not for fresh air/leave).

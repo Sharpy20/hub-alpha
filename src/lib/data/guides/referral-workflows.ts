@@ -339,6 +339,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
             { label: "Dietitian Referral Example", url: "#", note: "Include MUST score and weight history" },
           ],
           otherGuides: [
+            { label: "Referring to Dietetics via SystmOne", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/view/9465/685", note: "On FOCUS - trust login needed", icon: "🔒" },
             { label: "MUST Assessment Guide", url: "#" },
             { label: "Nutrition Screening Tool", url: "#" },
           ],
@@ -835,12 +836,13 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Download physiotherapy referral forms.",
         forms: {
           blank: [
-            { label: "Physio Referral Form", url: "#", icon: "📄" },
+            { label: "MH Physiotherapy External Referral Form", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/view/9363/685", icon: "📄", note: "On FOCUS - trust login needed" },
           ],
           wagoll: [
             { label: "Physio Referral Example", url: "#", note: "Include falls history and mobility level" },
           ],
           otherGuides: [
+            { label: "Physiotherapy Leaflet 2024", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/view/9364/685", note: "On FOCUS - trust login needed" },
             { label: "Falls Risk Assessment", url: "#" },
             { label: "Mobility Assessment Guide", url: "#" },
           ],
@@ -1090,7 +1092,8 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Download ERP referral forms and patient information.",
         forms: {
           blank: [
-            { label: "ERP Referral Form v5", url: "#", icon: "📄" },
+            { label: "ERP Referral Form / Flowchart / Guidance (v12)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/view/9592/685", icon: "📄", note: "On FOCUS - trust login needed" },
+            { label: "ERP Referral Checklist", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/view/9593/685", icon: "📄", note: "On FOCUS - trust login needed" },
             { label: "SV2 Referral Form", url: "#", icon: "📄" },
           ],
           wagoll: [
@@ -1098,6 +1101,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
           ],
 
           otherGuides: [
+            { label: "ERP Patient Information Leaflet", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/view/9591/685", note: "On FOCUS - trust login needed" },
             { label: "DBT Patient Leaflet", url: "#" },
             { label: "SCM Patient Leaflet", url: "#" },
             { label: "Coping with Emotions Leaflet", url: "#" },

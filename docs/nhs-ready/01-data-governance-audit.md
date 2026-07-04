@@ -125,7 +125,7 @@ and no .env, key or credential was ever committed.
 - **F2. Trust-name wording** in the footer and the "Data Controller" line in the
   dev-panel DPIA: agree the honest interim wording.
 
-### Applied by Prompt 2 (fix pass)
+### Applied by Prompt 2 (fix pass) - ALL DONE 4 Jul except noted, browser-verified
 
 - F3. Hide the live MHA Office extension at referral-workflows.ts:552,591 (use the
   hidden-in-demo pattern) and reword the bleep-291 reference.
@@ -143,8 +143,10 @@ and no .env, key or credential was ever committed.
   dev-panel), the modal's "demonstration only" claim, the stale Light/Medium/Max and
   FOCUS-badge references, and add: named processors (Vercel, none-after-F8), a contact
   route, a last-reviewed date, and a note that Supabase is configured but unused.
-- F10. Make logout also clear `wardhub-referral-logs`, `wardhub_feedback` identity keys
-  and the care tracker, or add a "clear ward data" prompt - decide smallest honest change.
+- F10. DONE as: logout now clears `wardhub-referral-logs` + `wardhub_care_tracker_v2`
+  (the two patient-identifying stores). Feedback board deliberately persists - it is a
+  community board holding staff free text, not patient records, and wiping it on every
+  logout would empty the demo. GDPR page documents this.
 - F11. Delete stale files: Project-Review-v1/2/3, processed homework docs (01-03 Jul),
   clinical-safety/files.zip, .vercel-trigger. Rewrite README for a trust audience.
 - F12. Remove the dead site_access route + logout fetch and the no-op fetch("/guides");

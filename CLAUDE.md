@@ -868,7 +868,7 @@ Mike dropped a big folder (E:\Hub\temp\wardhub docs) + prompts.md backlog and as
 | 212 | [x] | **IMHA rewired** - Derby City provider is now Disability Direct (was POhWER), County = Cloverleaf; both wired to source (verified live), public contacts shown. |
 | 213 | [x] | **Observation guide** - real DHCFT levels baked in from the Inpatient Therapeutic Observations & Engagement Policy (Feb 2025 v10): L1 arm's length (most restrictive) to L4 general; review cadence. (Policy self-contradicts on L3 review interval - used 72h.) |
 | 214 | [x] | **Physical-health 5 helper tools REMOVED** (Mike: kill) - Physical Health Assessment, Falls, Personal Handling, Nutrition (MUST), Pressure (Waterlow): routes + data files + index exports + ALL_GUIDES + approval entries deleted. news2 / tissue-viability / dental remain in the category. |
-| 215 | [x] | **snag 148 (data dump)** - `docs/data dump from work to sort/` untracked from git + gitignored (a `git add -A` had started tracking it). Local copies kept. NOTE: `docs/focus-data-collection/*.md` still tracked - separate snag-148 cleanup if the repo ever goes public. |
+| 215 | [x] | **snag 148 (data dump)** - `docs/data dump from work to sort/` untracked from git + gitignored (a `git add -A` had started tracking it). Local copies kept. UPDATE 4 Jul: `docs/focus-data-collection/*.md` untracked + gitignored (moved to E:Hub	empocus-data-collection). Both dumps remain in git HISTORY until the history rewrite (see docs/nhs-ready/01-data-governance-audit.md finding F1). |
 
 ## SNAG LIST (25 Jun 2026 - Session 28: MHA forms + v1 governance split)
 

@@ -80,7 +80,7 @@ Tribunal policy: "**within 3 weeks of the date of application**" `tribunal-mht.t
 "more than 7 days **and each subsequent 7-day period**" `cto.txt:222` vs "more than seven **consecutive** days **in total**" `s17-leave.txt:186`.
 
 ### C6. 🟡 Role/name inconsistencies for the same person
-Arun Chidambaram is "**MHA Lead**" in `s132-rights.txt:325` but "**Medical Director**" in cto/s17/tribunal. Email typo "**chrstine**.henson1@nhs.net" `s132-rights.txt:322` vs correct "christine" elsewhere (same typo class also seen as "chrstine.henson1" in `s4.txt:240`).
+Arun Chidambaram is "**MHA Lead**" in `s132-rights.txt:325` but "**Medical Director**" in cto/s17/tribunal. Email typo a personal nhs.net address with a "chrstine" typo `s132-rights.txt:322` vs correct the correct spelling elsewhere (same typo also in `s4.txt:240`); address held outside the repo.
 
 ### C7. 🟡 Observations Appendix 3 cites legacy "FACE Risk Assessment"
 `:634` still says "FACE Risk Assessment/Safety Plan" while the policy body and the care-plan/risk guide use the current "Risk Screen / Risk Management Plan / Safety Plan" terminology.
@@ -95,7 +95,7 @@ Only `Safeguarding referrals info.docx` gives the actual local-authority routes:
 The other three docs (including "Making a good safeguarding referral") route staff only to the internal DHCFT advice line **01332 623730 opt 1** and never say where the referral actually goes. A nurse using only that doc would not know the City-vs-County routes.
 
 ### C9. 🟡 "MASH" used to mean two different bodies
-The internal DHCFT advice inbox (`dhcft.safeguardingadults@nhs.net`) in two docs, vs the Derby City council MASH (`AdultsMASH@derby.gov.uk`) in another — risk of mis-routing.
+The internal DHCFT advice inbox (the internal DHCFT safeguarding advice inbox) in two docs, vs the Derby City council MASH (`AdultsMASH@derby.gov.uk`) in another — risk of mis-routing.
 
 ### C10. 🟡 Domestic-abuse terminology currency
 The DA-recognition SOP references "CAADA-DASH" (pre-2014 branding; now "SafeLives Dash"). No numeric DASH tick-count / MARAC threshold is stated in the text.

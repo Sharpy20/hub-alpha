@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Raw trust-docs dump - source material only, never track/deploy (snag 148)
 docs/data dump from work to sort/
+
+# Raw FOCUS intranet harvests (real internal contacts) - live in E:\Hub\temp\focus-data-collection
+docs/focus-data-collection/

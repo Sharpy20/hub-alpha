@@ -62,7 +62,7 @@ The only thing blocking a chunk of guides. A photo or copy of each is enough.
   - Social care / AMHP provide an email address; send the medical recommendation + risk assessment, care plan and supporting docs.
   - Clear documentation on SystmOne.
   - If not completed on shift, ensure next shift have access to the medical recommendation (email or print).
-  - **CITY - 01332 255609 / COUNTY - 01629 537904** (internal AMHP numbers - keep OUT of live per Rule 4).
+  - **[INTERNAL AMHP numbers - held in E:Hub	empinternal-contacts.md]** (internal AMHP numbers - keep OUT of live per Rule 4).
   - Mike: step 3 email is dynamic / depends who is on duty - flag where we add the email and word it differently.
 - **honos** - A screenshot of the S1 tool showing how it suggests a cluster. [Mike: see avi files "WAA Honos" and "waa honos hist" - note different HONOS formats: working age adult, secure, CAMHS]. → screenshot = image6; videos supplied.
 - **abc-chart** - A current ABC chart (to confirm if a builder would work) + a better example. Email summary: A = before the incident (trigger, how they were); B = during (behaviours, how they presented); C = after (what you did to help e.g. de-escalation, PRN). Do ABC alongside session note and Datix. For verbal aggression, violence, physical aggression, self-harm, agitation. Helps build evidence for supported accommodation / challenging-behaviour placements. → `completed ABC chart example.pdf` + `ABC charts - Copy to add to.pptx` supplied.

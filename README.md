@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# wardHub
 
-## Getting Started
+One place for the stuff an inpatient mental health ward actually needs mid-shift:
+referral workflows that walk you to a finished case note, how-to guides built from trust
+policy, a links directory that replaces the laminated phone list, a team task diary, and
+a training quiz. Built by a Ward NIC at Derbyshire Healthcare NHS Foundation Trust as a
+personal development project.
 
-First, run the development server:
+**Live demo:** https://www.wardhub.live
+
+## The important bit for reviewers
+
+This demo holds no real patient data. All patients and staff are fictional, wards use
+poet pseudonyms, trust-internal phone numbers show as "Hidden in demo mode", and nothing
+a user enters ever leaves their browser (localStorage only - no accounts, no analytics,
+no external requests; the Content-Security-Policy enforces it). The in-app GDPR page and
+the Developer & Governance Panel (linked from it) carry the detail: data map, draft DPIA,
+clinical safety hazard log, RBAC and technical spec.
+
+It is not yet a trust-approved system. Content approval status is shown honestly on every
+guide tile (green approved / amber awaiting approval / red in development).
+
+## Running it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build - must stay clean
+npm test
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Deploys automatically to Vercel on push to `main`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where things live
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| What | Where |
+|---|---|
+| Guide content (referrals + how-to) | `src/lib/data/guides/` |
+| Links directory | `src/lib/data/bookmarks/` |
+| Quiz question bank | `src/lib/data/quiz/` |
+| Demo staff/patients | `src/lib/data/staff/`, `src/lib/data/tasks/` |
+| Guide approval traffic lights | `src/lib/data/approval-status.ts` |
+| Routing / demo-build switches | `src/proxy.ts`, `src/lib/config/build.ts` |
+| Project instructions + history | `CLAUDE.md`, `docs/BACKLOG.md` |
+| Governance pack | `docs/clinical-safety/`, `docs/nhs-ready/` |
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Content is plain TypeScript data - a future rebuild on trust infrastructure can lift the
+datasets wholesale (see `docs/nhs-ready/` for the portability pack).

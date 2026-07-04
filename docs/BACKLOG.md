@@ -42,6 +42,7 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] Refinement idea: a child off an "unknown" (not just "closed") parent still shows open - consider inheriting parent state.
 - [ ] Sweep other FOCUS sections for more services/links (Mike logged in; only did /clinical/referrals).
 - [PARK] Real vs demo: criteria stay illustrative until the full research/sign-off pass.
+- [ ] **Postcode / GP-surgery lookup (Mike, 4 Jul)** - some teams allocate by **GP surgery location**, others by **home address**; build a checker that takes a postcode (and/or GP surgery) and tells you: Derby **City vs County**, which **AMHP team** to call, which **CMHT**, and the **S117 responsible authority**. Build it into the "which services are accessible" tool (this service map / town-map). Data already in hand: Derby City GP-surgery -> Team B/C allocation + all CMHT area numbers (odds-and-sods p6-8 digest); city/county AMHP split (arrange-mha flowchart). Decide static lookup table (works offline in demo) vs a postcode API (external call - Rule: check before sending anything out).
 
 ## C. Guides - review + edits (from homework, condensed - see homework-remaining doc for detail)
 - [ ] Review-only sign-offs: ~47 amber guides for Mike to read + colour (green needs dept sign-off).
@@ -51,6 +52,12 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] section-136: expand with FAQ vs leave (Mike's call).
 
 ## D. Bigger builds (each its own session)
+- [ ] **Contacts directory - single source of truth (Mike, 4 Jul)** - one central contacts store; an **editor-role** edit to a contact updates it **everywhere it appears** (guides, service map, links, CMHT lists, referral submission steps). Design notes:
+  - Data model per contact: `id`, `name`, `type` (CMHT/crisis/social-care/AMHP/IMHA/MHA-office/ward/team...), `phone`, `email`, `area` (city/county/all), `public` vs `internal` flag (Rule 4: internal = "Hidden in demo mode", real value in a protected field), optional `focus`/notes, `lastReviewed`.
+  - Everything references contacts **by id**, not inline copies, so one edit propagates. (Same pattern as approval-status / RMP-chips maps.)
+  - For edits to show for **everyone** (not just one device), needs a persistent store = full-build/Supabase; localStorage-only would be per-device. Note this when scoping.
+  - Seed from data already extracted: CMHT directory + numbers, crisis teams, social care (MHSOCIALCARE@DERBY.GOV.UK / 01332 640777), MHA office, city/county AMHP, IMHA (DDA / Cloverleaf), ECT dept. Internal @nhs.net inboxes/managers stay internal-flagged (see temp `_DIGEST.md`, NOT committed).
+  - Pairs with the postcode lookup (Section B) which reads from this directory.
 - [PARK] Named Nurse Checklist -> schedulable tasks ticking off on the patient job list.
 - [PARK] Tribunal / DST / OT-report combined builder (ties to the DLT/CHC funding finding in A/B).
 - [PARK] Formulation output rethink.

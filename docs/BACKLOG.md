@@ -74,6 +74,7 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [PARK] Service "town map" -> full patient-profile integration (see B).
 
 ## E. Side quests / smaller
+- [x] **Print on guides** (4 Jul eve, commits 7c4f9c1 + be77d18) - Print button on every how-to guide, referral workflow and thinking-guide, rendering all steps/sections from the SAME data so future edits flow through. Reusable `downloads` field + printable blank forms (police capacity, ABC chart). Builders (risk/care-plan) skipped - they already copy out.
 - [ ] Quiz: add "report an issue" per question (feeds feedback board).
 - [ ] Printable guide "clue cards" (title + 1 line, 4/A4, per group) for physical re-grouping.
 - [ ] Diary-task audit: which other guides map to a ward diary task (like fridge-temps) -> add "mark done" buttons.
@@ -111,7 +112,7 @@ capacity-assessment, blanket-restrictions, abc-chart, no-smoking, informal-patie
 - [x] **section-132** (RED, enriched 4 Jul, commit 4152ca1) - added "Record it on SystmOne" step (S132/S132A questionnaires, Save-Final-Version auto-tasks MHA team, leaflet printing), S133 discharge duty, S132A/CTO recall note. FOCUS recording + policy links already wired. STILL BLOCKED: MHA office email (add when Mike supplies).
 - [x] **capacity-assessment** (RED, enriched 4 Jul, commit 99f6f02) - added the SystmOne Combined Capacity form (functional + diagnostic stages) and the police Capacity Request form. FOCUS S1 + policy links already wired.
 - [x] **blanket-restrictions** (RED, enriched 4 Jul, commit add0a44) - added FOCUS brief-guide link, three-tier contraband list (banned/risk-assessed/advisory), ward-level authorisation aligned to policy (Ward Manager sign-off + register + Clinical Meeting/daily-huddle review).
-- [ ] **abc-chart** (amber) - better example from `completed ABC chart example.pdf`; link blank; consider builder using `ABC charts - Copy to add to.pptx`. (WAGOLL already linked; a builder is the bigger job.)
+- [~] **abc-chart** (amber) - blank ABC chart to print now added (`/abc-chart-blank.html`, 4 Jul eve, commit 1f11591) alongside the existing completed-example WAGOLL. Still open: a fuller worked example + an optional builder from `ABC charts - Copy to add to.pptx`.
 - [ ] **honos** (RED) - use image6 (New Cluster box) + `waa honos.mp4` / `waa honos hist.mp4`; note WAA/secure/CAMHS formats differ. (Left - needs the video/image processing, Mike's eye.)
 - [x] **NEW guide: no-smoking** (RED, 4 Jul, commit 99f6f02) - "Smoke-Free Ward - Your Legal Duty", from the staff legal-warning doc; legal framework + what-to-do + ties to blanket restrictions. Restrictive Practice category.
 - [x] **NEW guide: informal-patient-contract** (RED, 4 Jul, commit 99f6f02) - Gatekeeping Assessment (18 mandatory Qs) + Informal Admission Questionnaire, from the two Dec-2025 SystmOne guides. Nurse Tools category.

@@ -7,7 +7,7 @@
 // dashed) if its parent is closed. Filter to one cluster to see it clearly.
 // Demo data only, no PII.
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import {
@@ -15,12 +15,24 @@ import {
   EMPTY_FACTS, SAMPLE_PATIENTS,
   type Facts, type Area, type Evaluation,
 } from "@/lib/data/service-map";
-import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone } from "lucide-react";
+import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 
 const CX = 550, CY = 500;
 const BANDS = [175, 300, 400];
 // Round SVG coords so server and client stringify identical values (no hydration mismatch).
 const rnd = (n: number) => Math.round(n * 100) / 100;
+
+// Zoom / pan: we drive the SVG viewBox. FULL is the fully-zoomed-out frame.
+const FULL_VIEW = { x: 0, y: 0, w: 1100, h: 1000 };
+const VIEW_ASPECT = 1000 / 1100;
+type ViewBox = { x: number; y: number; w: number; h: number };
+function clampView(v: ViewBox): ViewBox {
+  const w = Math.max(260, Math.min(1100, v.w)); // up to ~4x zoom in
+  const h = w * VIEW_ASPECT;
+  const x = Math.max(-220, Math.min(1100 - w + 220, v.x));
+  const y = Math.max(-220, Math.min(1000 - h + 220, v.y));
+  return { x, y, w, h };
+}
 
 type Effective = "open" | "partial" | "unknown" | "blocked" | "cutoff";
 const GREY = [148, 163, 184], GREEN = [22, 163, 74];
@@ -75,6 +87,56 @@ export default function ServiceMapPage() {
   const [clusterFilter, setClusterFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const searchLc = search.trim().toLowerCase();
+
+  // Zoom + pan (drives the SVG viewBox)
+  const [view, setView] = useState<ViewBox>({ ...FULL_VIEW });
+  const viewRef = useRef(view); viewRef.current = view;
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const panRef = useRef<{ px: number; py: number; vx: number; vy: number } | null>(null);
+  const draggedRef = useRef(false);
+
+  const toSvg = (clientX: number, clientY: number) => {
+    const el = svgRef.current; const v = viewRef.current;
+    if (!el) return { x: v.x + v.w / 2, y: v.y + v.h / 2 };
+    const r = el.getBoundingClientRect();
+    return { x: v.x + ((clientX - r.left) / r.width) * v.w, y: v.y + ((clientY - r.top) / r.height) * v.h };
+  };
+  const zoomAt = (factor: number, fx: number, fy: number) =>
+    setView((v) => {
+      const nw = Math.max(260, Math.min(1100, v.w * factor));
+      const nh = nw * VIEW_ASPECT;
+      return clampView({ x: fx - (fx - v.x) * (nw / v.w), y: fy - (fy - v.y) * (nh / v.h), w: nw, h: nh });
+    });
+  const zoomCentre = (factor: number) => { const v = viewRef.current; zoomAt(factor, v.x + v.w / 2, v.y + v.h / 2); };
+  const resetView = () => setView({ ...FULL_VIEW });
+
+  // Wheel-to-cursor zoom (non-passive so we can preventDefault the page scroll).
+  useEffect(() => {
+    const el = svgRef.current; if (!el) return;
+    const onWheel = (e: WheelEvent) => { e.preventDefault(); const p = toSvg(e.clientX, e.clientY); zoomAt(e.deltaY > 0 ? 1.12 : 0.89, p.x, p.y); };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Re-fit when the cluster filter changes (layout changes).
+  useEffect(() => { setView({ ...FULL_VIEW }); }, [clusterFilter]);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    panRef.current = { px: e.clientX, py: e.clientY, vx: viewRef.current.x, vy: viewRef.current.y };
+    draggedRef.current = false;
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    const p = panRef.current; if (!p) return;
+    const el = svgRef.current; if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (Math.abs(e.clientX - p.px) + Math.abs(e.clientY - p.py) > 4) draggedRef.current = true;
+    const dx = ((e.clientX - p.px) / r.width) * viewRef.current.w;
+    const dy = ((e.clientY - p.py) / r.height) * viewRef.current.h;
+    setView((v) => clampView({ ...v, x: p.vx - dx, y: p.vy - dy }));
+  };
+  const endPan = () => { panRef.current = null; };
+  const isZoomed = view.w < 1099;
 
   const set = <K extends keyof Facts>(k: K, v: Facts[K]) => setFacts((f) => ({ ...f, [k]: v }));
   const toggleArr = (k: "diagnoses" | "flags", v: string) =>
@@ -270,8 +332,16 @@ export default function ServiceMapPage() {
                 className="w-full text-sm border border-gray-200 rounded-lg pl-9 pr-3 py-2 focus:ring-2 focus:ring-nhs-blue focus:border-nhs-blue" />
               {searchLc && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{visServices.filter((s) => s.name.toLowerCase().includes(searchLc)).length} on map</span>}
             </div>
-            <div className="bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-gray-200 p-2">
-              <svg viewBox="0 0 1100 1000" className="w-full h-auto" role="img" aria-label="Service town map">
+            <div className="relative bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-gray-200 p-2">
+              {/* Zoom controls */}
+              <div className="absolute top-3 right-3 z-10 flex flex-col gap-1">
+                <button onClick={() => zoomCentre(0.8)} aria-label="Zoom in" className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-700"><ZoomIn className="w-4 h-4" /></button>
+                <button onClick={() => zoomCentre(1.25)} aria-label="Zoom out" className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-700"><ZoomOut className="w-4 h-4" /></button>
+                <button onClick={resetView} aria-label="Reset zoom" disabled={!isZoomed} className={`w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-gray-200 shadow-sm text-gray-700 ${isZoomed ? "hover:bg-gray-50" : "opacity-40 cursor-default"}`}><Maximize2 className="w-4 h-4" /></button>
+              </div>
+              {isZoomed && <span className="absolute top-3 left-3 z-10 text-[11px] font-semibold text-gray-500 bg-white/80 rounded px-2 py-0.5 border border-gray-200">Drag to pan - scroll to zoom</span>}
+              <svg ref={svgRef} viewBox={`${rnd(view.x)} ${rnd(view.y)} ${rnd(view.w)} ${rnd(view.h)}`} className="w-full h-auto touch-none select-none" style={{ cursor: panRef.current ? "grabbing" : "grab" }} role="img" aria-label="Service town map"
+                onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={endPan} onPointerLeave={endPan}>
                 {/* band rings */}
                 {BANDS.map((r) => <circle key={r} cx={CX} cy={CY} r={r} fill="none" stroke="#eef2f7" strokeDasharray="3 7" />)}
 
@@ -313,7 +383,7 @@ export default function ServiceMapPage() {
                   const hit = !searchLc || s.name.toLowerCase().includes(searchLc);
                   const lines = wrap(s.name, clusterFilter === "all" ? 15 : 18);
                   return (
-                    <g key={s.id} onClick={() => setSelected(s.id)} style={{ cursor: "pointer" }} tabIndex={0} role="button"
+                    <g key={s.id} onClick={() => { if (draggedRef.current) { draggedRef.current = false; return; } setSelected(s.id); }} style={{ cursor: "pointer" }} tabIndex={0} role="button"
                       aria-label={`${s.name}: ${meta.label}`} opacity={eff === "cutoff" ? 0.5 : hit ? 1 : 0.15}
                       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(s.id); } }}>
                       {searchLc && hit && <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke="#f59e0b" strokeWidth={3} />}

@@ -38,7 +38,7 @@ export function GdprModal({ isOpen, onAccept }: GdprModalProps) {
           <ul className="list-disc list-inside space-y-2 text-sm ml-2">
             <li>All patient information shown is <strong>fictional test data</strong></li>
             <li><strong>DO NOT</strong> enter real patient information</li>
-            <li>All phone numbers and contacts are for demonstration only</li>
+            <li>Public helplines and services shown are real; Trust-internal numbers are hidden in demo mode</li>
             <li>This is not connected to any NHS clinical systems</li>
           </ul>
         </div>

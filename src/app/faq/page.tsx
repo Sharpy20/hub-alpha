@@ -46,7 +46,7 @@ function buildFAQItems(isV2: boolean, link: (h: string) => string): FAQItem[] {
     answer: (
       <div className="space-y-3">
         <p>
-          In the current demo, all data is stored locally in your browser. No patient information should be entered, and no data is sent to external servers.
+          In the current demo, everything you enter is stored locally in your browser and never sent to a server. No patient information should be entered. There is no tracking or analytics; the site is hosted on Vercel, which keeps standard request logs like any web host.
         </p>
         <p>
           When deployed on Trust infrastructure, data will be stored with full encryption, audit logging, and NHS DSPT compliance.

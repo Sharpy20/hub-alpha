@@ -59,12 +59,13 @@ export default function GdprPage() {
                 information are made up for demonstration purposes
               </li>
               <li>
-                <strong>Public contact information</strong> - Phone numbers and
-                emails are from publicly available sources
+                <strong>Public contact information</strong> - Publicly listed
+                phone numbers and services (Samaritans, NHS 111, advocacy
+                providers) are real and safe to use
               </li>
               <li>
-                <strong>Placeholder internal data</strong> - Internal Trust
-                numbers are marked as "FOCUS login needed"
+                <strong>Internal numbers hidden</strong> - Trust-internal
+                numbers and extensions show as "Hidden in demo mode"
               </li>
             </ul>
           </CardContent>
@@ -79,25 +80,23 @@ export default function GdprPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-nhs-dark-grey">
-              When deployed as a live system, wardHub will:
+              Before wardHub is used for real ward work, it will:
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>
-                Be hosted on Trust infrastructure or approved cloud services
+                Move to Trust infrastructure or a Trust-approved hosting arrangement
               </li>
               <li>
-                Require Trust authentication (NHS OpenAthens or equivalent)
+                Require Trust authentication - no open access
               </li>
               <li>
-                Store minimal patient data (names only, no NHS numbers in Light/Medium versions)
+                Complete a Data Protection Impact Assessment (DPIA) and clinical
+                safety review (DCB0129) before any real patient data is processed
               </li>
-              <li>Maintain comprehensive audit logs for all actions</li>
+              <li>Keep audit logs and align with NHS Data Security and Protection Toolkit requirements</li>
               <li>
-                Comply with NHS Data Security and Protection Toolkit requirements
-              </li>
-              <li>
-                Undergo Data Protection Impact Assessment (DPIA) before processing
-                any PII
+                Store the minimum patient data the ward actually needs, agreed with
+                the Trust's IG team
               </li>
             </ul>
           </CardContent>
@@ -137,25 +136,29 @@ export default function GdprPage() {
           <CardHeader>
             <h2 className="text-xl font-bold text-nhs-black flex items-center gap-2">
               <Database className="w-6 h-6 text-nhs-orange" />
-              Data Retention (Light Version)
+              Data Retention (This Demo)
             </h2>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-nhs-dark-grey">
-              In this demo (Light) version of wardHub:
+              In this demo version of wardHub:
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>
-                <strong>Browser storage only</strong> - All data is stored in
-                your browser's localStorage
+                <strong>Browser storage only</strong> - Everything you enter
+                (login choice, tasks, feedback, personal links) is stored in your
+                browser's localStorage and never sent to a server
               </li>
               <li>
-                <strong>No external transmission</strong> - No data is sent to
-                or stored on external servers
+                <strong>No tracking</strong> - No analytics, no cookies in use,
+                no external scripts or fonts. The only party that sees any
+                traffic is Vercel, which hosts the site and keeps standard
+                request logs (as any web host does)
               </li>
               <li>
                 <strong>Automatic clearing</strong> - Data is removed when you
-                clear your browser data/cache
+                clear your browser data/cache; logging out also clears anything
+                patient-related (the referral chase log and care review tracker)
               </li>
               <li>
                 <strong>Device-specific</strong> - Data does not sync between
@@ -203,26 +206,15 @@ export default function GdprPage() {
 
             <div className="border-t border-gray-200 pt-4 mt-4">
               <h3 className="font-semibold text-nhs-black mb-2">
-                Medium+ Version Retention
+                Future Live Version Retention
               </h3>
               <p className="text-sm text-nhs-dark-grey">
-                In future Medium, Max, and Max+ versions deployed on Trust
-                infrastructure, different data retention policies will apply:
+                A live deployment would store data on Trust-approved servers with
+                retention aligned to NHS records management policies, audit logs,
+                and deletion requests through formal IG channels. A database
+                connection (Supabase) is configured in the codebase but is not
+                used by this demo - no data is sent to it.
               </p>
-              <ul className="list-disc list-inside space-y-1 text-sm text-nhs-mid-grey mt-2">
-                <li>
-                  Data stored on secure Trust/Supabase servers
-                </li>
-                <li>
-                  Retention periods aligned with NHS records management policies
-                </li>
-                <li>
-                  Audit logs maintained for compliance
-                </li>
-                <li>
-                  Users can request data deletion through formal IG channels
-                </li>
-              </ul>
             </div>
           </CardContent>
         </Card>
@@ -268,7 +260,13 @@ export default function GdprPage() {
               your Trust's Information Governance team.
             </p>
             <p className="text-nhs-mid-grey text-sm mt-4">
-              For questions about this demo, contact the project owner.
+              This demo is run by the project owner (a Ward NIC at Derbyshire
+              Healthcare NHS Foundation Trust) as a personal development project -
+              it is not yet a Trust-approved system. Questions and concerns:
+              use the Feedback page.
+            </p>
+            <p className="text-nhs-mid-grey text-xs mt-2">
+              This page last reviewed: 4 July 2026
             </p>
           </CardContent>
         </Card>

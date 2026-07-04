@@ -1380,7 +1380,11 @@ function DPIASection() {
           </div>
           <div>
             <h3 className="font-semibold text-nhs-dark-grey">Data Controller</h3>
-            <p className="text-nhs-dark-grey">Derbyshire Healthcare NHS Foundation Trust</p>
+            <p className="text-nhs-dark-grey">
+              Proposed: Derbyshire Healthcare NHS Foundation Trust (subject to Trust
+              approval - not yet accepted). Until then the demo is run by the project
+              owner and processes no real patient data.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -1454,12 +1458,12 @@ function DPIASection() {
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <div className="bg-nhs-pale-grey p-4 rounded-lg">
-            <h3 className="font-semibold text-nhs-dark-grey mb-2">Light Mode (No PII)</h3>
-            <p className="text-nhs-dark-grey">User → Browser localStorage (device only). No external transmission.</p>
+            <h3 className="font-semibold text-nhs-dark-grey mb-2">Current Demo (No PII)</h3>
+            <p className="text-nhs-dark-grey">User → Browser localStorage (device only). Nothing the user enters is transmitted. Hosting (Vercel) sees standard request logs; fonts are self-hosted; the Content-Security-Policy blocks connections to any other host.</p>
           </div>
           <div className="bg-nhs-pale-grey p-4 rounded-lg">
-            <h3 className="font-semibold text-nhs-dark-grey mb-2">Medium/Max (Supabase)</h3>
-            <p className="text-nhs-dark-grey">User → Portal → Supabase (encrypted in transit, at rest). UK region.</p>
+            <h3 className="font-semibold text-nhs-dark-grey mb-2">Future Live Build (Supabase)</h3>
+            <p className="text-nhs-dark-grey">User → Portal → Supabase (encrypted in transit, at rest). Region to be confirmed as UK before go-live. Configured but unused in the demo - no data is sent to it.</p>
           </div>
           <div className="bg-nhs-pale-grey p-4 rounded-lg">
             <h3 className="font-semibold text-nhs-dark-grey mb-2">Max+ (Nexus Assurance)</h3>

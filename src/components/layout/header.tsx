@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useApp, STYLE_THEMES, type StyleTheme, type ColorMode } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play, Brain } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, BarChart3, ArrowLeft, Play, Brain, Map } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import { getStaffByWard } from "@/lib/data/staff";
@@ -244,6 +244,10 @@ export function Header() {
                         <Link href={link("/quiz")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                           <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Brain className="w-5 h-5 text-white" /></div>
                           <div><p className="font-semibold text-gray-900">Quiz</p><p className="text-xs text-gray-500 mt-0.5">Just-for-fun knowledge refresher - nothing tracked</p></div>
+                        </Link>
+                        <Link href={link("/service-map")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                          <div className="w-10 h-10 bg-gradient-to-br from-sky-500 to-blue-700 rounded-lg flex items-center justify-center flex-shrink-0"><Map className="w-5 h-5 text-white" /></div>
+                          <div><p className="font-semibold text-gray-900">Service Map <span className="text-[10px] font-bold uppercase text-amber-700 bg-amber-100 rounded px-1.5 py-0.5 ml-1">Prototype</span></p><p className="text-xs text-gray-500 mt-0.5">Which community services a person may be eligible for</p></div>
                         </Link>
                         {!isV2 && (
                           <Link href={link("/staff")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
@@ -544,6 +548,10 @@ export function Header() {
                   <Link href={link("/quiz")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-fuchsia-500 to-purple-700 rounded-lg flex items-center justify-center flex-shrink-0"><Brain className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">Quiz</p><p className="text-xs text-gray-500">Just-for-fun refresher, nothing tracked</p></div>
+                  </Link>
+                  <Link href={link("/service-map")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-sky-500 to-blue-700 rounded-lg flex items-center justify-center flex-shrink-0"><Map className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Service Map <span className="text-[10px] font-bold uppercase text-amber-700">(Prototype)</span></p><p className="text-xs text-gray-500">Services a person may be eligible for</p></div>
                   </Link>
                   {!isV2 && (
                     <Link href={link("/staff")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>

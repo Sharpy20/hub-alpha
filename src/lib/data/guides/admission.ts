@@ -70,17 +70,10 @@ const FOCUS = {
     "https://focus.derbyshirehealthcareft.nhs.uk/application/files/6117/3140/9909/SystmOne_-_Recording_Section_132_Rights_Conversation_V1.2.pdf",
 };
 
-// Personal NHS OneDrive shares from the source doc. Wired up at Mike's request
-// (Session 21). These open Mike's personal OneDrive and rely on its share
-// permissions - swap for Trust-controlled URLs if those permissions change.
-const PERSONAL = {
-  blankH3:
-    "https://nhs-my.sharepoint.com/:b:/g/personal/michael_sharpe4_nhs_net/EV0nPiy9p7hOmSeSVGvDLc0BmVi6Fs9L8G1gvzPfATlazQ?e=JUiABs",
-  riskManagementPlan:
-    "https://nhs-my.sharepoint.com/:w:/r/personal/michael_sharpe4_nhs_net/Documents/Fav%20Shares/Resources%20-%20save%20a%20copy%20DONT%20EDIT/4.%20Named%20Nurse%20help/Risk%20Tools/Risk%20Management%20Plans%2018.04.24.docx?d=w7e91a31c42664e20bd2fe84c1255eea8&csf=1&web=1&e=J4ZM7J",
-  carePlanHelp:
-    "https://nhs-my.sharepoint.com/:f:/g/personal/michael_sharpe4_nhs_net/Ek7Wf0cK-fBEpQxwxdbcKkQBmNYIt_xFXqy8ygM98DSfsA?e=ftJ7Fy",
-};
+// The three personal NHS OneDrive shares from the source doc (Session 21) were
+// swapped out (4 Jul) for the in-app wardHub builders (Risk & Management Plan,
+// My Care Plan) and the Mental Health Law Online statutory-forms index for the
+// blank H3 - so nothing here depends on one person's personal OneDrive.
 
 export const ADMISSION_CHECKLIST: ChecklistGroup[] = [
   {
@@ -102,7 +95,7 @@ export const ADMISSION_CHECKLIST: ChecklistGroup[] = [
         links: [
           { label: "How to accept MHA paperwork", url: FOCUS.nursesChecklist, requiresFocus: true },
           { label: "Section papers checker", url: "/guides/mha-checker" },
-          { label: "Blank H3", url: PERSONAL.blankH3, isForm: true },
+          { label: "Blank H3 (statutory forms)", url: "https://www.mentalhealthlaw.co.uk/Mental_Health_Act_1983_Statutory_Forms", isForm: true },
         ],
       },
       { id: "property", text: "Property list completed and placed in the scanning file" },
@@ -148,7 +141,7 @@ export const ADMISSION_CHECKLIST: ChecklistGroup[] = [
       {
         id: "risk-management",
         text: "Risk management plan",
-        links: [{ label: "Risk management plan", url: PERSONAL.riskManagementPlan, isForm: true }],
+        links: [{ label: "Risk & Management Plan builder", url: "/guides/risk-assessment" }],
       },
       {
         id: "safety-plan",
@@ -201,7 +194,7 @@ export const ADMISSION_CHECKLIST: ChecklistGroup[] = [
         text: "Complete the care plan - 'my care plan'",
         links: [
           { label: "Creating a care plan", url: FOCUS.carePlan, requiresFocus: true },
-          { label: "Help guides", url: PERSONAL.carePlanHelp },
+          { label: "My Care Plan builder", url: "/guides/care-plan" },
         ],
       },
       {

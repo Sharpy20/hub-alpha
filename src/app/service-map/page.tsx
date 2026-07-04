@@ -34,14 +34,16 @@ function clampView(v: ViewBox): ViewBox {
   return { x, y, w, h };
 }
 
-type Effective = "open" | "partial" | "unknown" | "blocked" | "cutoff";
+type Effective = "open" | "everyone" | "partial" | "unknown" | "blocked" | "cutoff";
 const GREY = [148, 163, 184], GREEN = [22, 163, 74];
 function lerp(t: number) {
   const c = GREY.map((g, i) => Math.round(g + (GREEN[i] - g) * t));
   return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
 }
+const EVERYONE_COLOR = "#0d9488"; // teal - open to anyone in catchment, no eligibility criteria
 const EFF_META: Record<Effective, { label: string; badge: string; fill: string; border: string }> = {
-  open: { label: "Open", badge: "bg-green-100 text-green-800", fill: "#dcfce7", border: "#16a34a" },
+  open: { label: "Open (meets criteria)", badge: "bg-green-100 text-green-800", fill: "#dcfce7", border: "#16a34a" },
+  everyone: { label: "Open to everyone", badge: "bg-teal-100 text-teal-800", fill: "#ccfbf1", border: EVERYONE_COLOR },
   partial: { label: "Partly open", badge: "bg-lime-100 text-lime-800", fill: "#ecfccb", border: "#65a30d" },
   unknown: { label: "Not eligible yet", badge: "bg-gray-100 text-gray-600", fill: "#ffffff", border: "#cbd5e1" },
   blocked: { label: "Closed", badge: "bg-red-100 text-red-700", fill: "#fef2f2", border: "#dc2626" },
@@ -162,11 +164,13 @@ export default function ServiceMapPage() {
     const ev = evals[id];
     if (ev.state === "blocked") return "blocked";
     if (!reach[id]) return "cutoff";
+    // Open with no eligibility criteria = open to anyone in catchment.
+    if (ev.state === "open" && (SERVICES.find((s) => s.id === id)?.include.length ?? 0) === 0) return "everyone";
     return ev.state;
   };
 
   const counts = useMemo(() => {
-    const c: Record<Effective, number> = { open: 0, partial: 0, unknown: 0, blocked: 0, cutoff: 0 };
+    const c: Record<Effective, number> = { open: 0, everyone: 0, partial: 0, unknown: 0, blocked: 0, cutoff: 0 };
     for (const s of SERVICES) c[effective(s.id)]++;
     return c;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -321,7 +325,7 @@ export default function ServiceMapPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-center">
-              {(["open", "partial", "unknown", "blocked", "cutoff"] as Effective[]).map((k) => (
+              {(["open", "everyone", "partial", "unknown", "blocked", "cutoff"] as Effective[]).map((k) => (
                 <div key={k} className="rounded-xl border border-gray-200 bg-white py-2">
                   <p className="text-lg font-bold text-gray-800">{counts[k]}</p>
                   <p className="text-[11px] font-semibold text-gray-500">{EFF_META[k].label}</p>
@@ -364,7 +368,7 @@ export default function ServiceMapPage() {
                   const from = s.parent && pos[s.parent] ? pos[s.parent] : { x: CX, y: CY };
                   const eff = effective(s.id);
                   if (hiddenStates.has(eff)) return null;
-                  const color = eff === "blocked" ? "#dc2626" : eff === "cutoff" ? "#cbd5e1" : lerp(evals[s.id].score);
+                  const color = eff === "blocked" ? "#dc2626" : eff === "cutoff" ? "#cbd5e1" : eff === "everyone" ? EVERYONE_COLOR : lerp(evals[s.id].score);
                   return (
                     <line key={"p" + s.id} x1={from.x} y1={from.y} x2={p.x} y2={p.y}
                       stroke={color} strokeWidth={eff === "open" ? 4.5 : eff === "partial" ? 3.2 : 2}
@@ -397,7 +401,7 @@ export default function ServiceMapPage() {
                       {searchLc && hit && <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke="#f59e0b" strokeWidth={3} />}
                       <circle cx={p.x} cy={p.y} r={r} fill={meta.fill} stroke={meta.border} strokeWidth={isSel ? 4 : 2.5} style={{ transition: "fill 0.35s, stroke 0.35s" }} />
                       {eff === "blocked" && <line x1={p.x - r * 0.6} y1={p.y - r * 0.6} x2={p.x + r * 0.6} y2={p.y + r * 0.6} stroke="#dc2626" strokeWidth={2.5} />}
-                      {eff === "open" && <text x={p.x} y={p.y - r - 3} textAnchor="middle" fontSize="13">{"✅"}</text>}
+                      {(eff === "open" || eff === "everyone") && <text x={p.x} y={p.y - r - 3} textAnchor="middle" fontSize="13">{"✅"}</text>}
                       <text textAnchor="middle" fontSize={clusterFilter === "all" ? 8.5 : 10} fontWeight="600" className="fill-gray-700" pointerEvents="none">
                         {lines.map((ln, i) => <tspan key={i} x={p.x} y={p.y + (lines.length === 1 ? 3 : i === 0 ? -2 : 9)}>{ln}</tspan>)}
                       </text>
@@ -411,7 +415,8 @@ export default function ServiceMapPage() {
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="text-xs text-gray-400 mr-1">Show / hide:</span>
               {([
-                { k: "open" as Effective, label: "Open", swatch: <span className="w-4 h-1 rounded bg-green-600" /> },
+                { k: "open" as Effective, label: "Open (meets criteria)", swatch: <span className="w-4 h-1 rounded bg-green-600" /> },
+                { k: "everyone" as Effective, label: "Open to everyone", swatch: <span className="w-4 h-1 rounded" style={{ background: EVERYONE_COLOR }} /> },
                 { k: "partial" as Effective, label: "Partly open", swatch: <span className="w-4 h-1 rounded bg-lime-500" /> },
                 { k: "unknown" as Effective, label: "Not eligible yet", swatch: <span className="w-4 h-1 rounded bg-slate-300" /> },
                 { k: "blocked" as Effective, label: "Closed", swatch: <span className="w-4 h-1 rounded" style={{ backgroundImage: "repeating-linear-gradient(90deg,#dc2626 0 4px,transparent 4px 8px)" }} /> },

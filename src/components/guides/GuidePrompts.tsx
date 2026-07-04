@@ -16,7 +16,7 @@ import { Patient } from "@/lib/types";
 import { useV2Href } from "@/lib/hooks/useV2";
 import type { GuidePromptConfig, GuidePromptSection } from "@/lib/data/guides/guideprompt";
 import {
-  ArrowLeft, ChevronDown, ChevronRight, AlertTriangle, Sparkles, Check, Lightbulb,
+  ArrowLeft, ChevronDown, ChevronRight, AlertTriangle, Sparkles, Check, Lightbulb, Printer,
 } from "lucide-react";
 
 function Section({ section, defaultOpen }: { section: GuidePromptSection; defaultOpen: boolean }) {
@@ -92,7 +92,34 @@ export function GuidePrompts({ config }: { config: GuidePromptConfig }) {
 
   return (
     <MainLayout>
-      <div className="space-y-5">
+      {/* Print-only full guide - renders every section expanded from the same
+          config, so future edits to the guidance flow through to the printout. */}
+      <div className="hidden print:block text-black">
+        <h1 className="text-2xl font-bold">{config.title}</h1>
+        <p className="text-sm text-gray-700 mb-1">{config.subtitle}</p>
+        <p className="text-[10px] uppercase tracking-wide text-gray-500 mb-3">wardHub - pointers to think through, not a form. Printed reference; verify against the live guide.</p>
+        {config.intro && <p className="text-sm mb-2">{config.intro}</p>}
+        {config.principles && config.principles.length > 0 && (
+          <ul className="text-sm list-disc ml-5 mb-3">{config.principles.map((p, i) => <li key={i}>{p}</li>)}</ul>
+        )}
+        {config.sections.map((sec, i) => (
+          <section key={sec.id} className="mb-3" style={{ breakInside: "avoid" }}>
+            <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {sec.heading}</h2>
+            {sec.why && <p className="text-sm mb-1">{sec.why}</p>}
+            {sec.think && sec.think.length > 0 && (
+              <><p className="text-xs font-bold uppercase text-gray-600">Prompt yourself</p>
+              <ul className="text-sm list-disc ml-5 mb-1">{sec.think.map((t, j) => <li key={j}>{t}</li>)}</ul></>
+            )}
+            {sec.examples && sec.examples.length > 0 && (
+              <><p className="text-xs font-bold uppercase text-gray-600">Examples - to spark thinking, not to copy</p>
+              <ul className="text-sm list-disc ml-5 mb-1">{sec.examples.map((ex, j) => <li key={j}>{ex}</li>)}</ul></>
+            )}
+            {sec.tip && <p className="text-sm italic text-gray-600">Tip: {sec.tip}</p>}
+          </section>
+        ))}
+      </div>
+
+      <div className="space-y-5 print:hidden">
         <div>
           <Breadcrumb items={[{ label: "Guides", href: v2Href("/guides") }, { label: config.breadcrumb }]} />
         </div>
@@ -110,9 +137,14 @@ export function GuidePrompts({ config }: { config: GuidePromptConfig }) {
                 </span>
               </div>
             </div>
-            <Link href={v2Href("/guides")} className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline">
-              <ArrowLeft className="w-4 h-4" /> All guides
-            </Link>
+            <div className="flex items-center gap-2">
+              <button onClick={() => window.print()} aria-label="Print this guide" className="flex items-center gap-2 px-3 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors print:hidden">
+                <Printer className="w-4 h-4" /> Print
+              </button>
+              <Link href={v2Href("/guides")} className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline">
+                <ArrowLeft className="w-4 h-4" /> All guides
+              </Link>
+            </div>
           </div>
           <PatientLink patient={patient} onChange={setPatient} guideTitle={config.title} note="Links this guidance to a patient for your reference" />
         </div>

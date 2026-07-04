@@ -301,7 +301,7 @@ const DeliveryConfigModal = ({
                   type={localConfig.method === "email" ? "email" : "url"}
                   placeholder={
                     localConfig.method === "email"
-                      ? "ward.reports@nhs.net"
+                      ? "ward.reports@example.nhs.net"
                       : "https://outlook.office.com/webhook/..."
                   }
                   value={localConfig.method === "email" ? localConfig.email || "" : localConfig.teamsWebhook || ""}

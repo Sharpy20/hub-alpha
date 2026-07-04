@@ -481,7 +481,7 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Professional consultation line for Derby City children's concerns (Mon-Fri 10am-4pm)",
     phone: "Hidden in demo mode",
-    // Real: 07812 300329
+    // Real: personal mobile - held in E:\Hub\temp\internal-contacts.md (kept out of the repo)
   },
   {
     id: "sg-derbyshire-consultation",
@@ -1049,7 +1049,7 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Teams phones, 0300 numbers, mobiles, voicemail, pagers. Mon-Fri 9-5.",
     phone: "Hidden in demo mode",
-    // Real: 01332 389206 (Rob Mason)
+    // Real: named individual's direct dial - held in E:\Hub\temp\internal-contacts.md (kept out of the repo)
   },
 
   // ===== COUNTER FRAUD =====
@@ -1113,7 +1113,7 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Risk register, incident reviews, serious incidents",
     phone: "Hidden in demo mode",
-    // Real: kelly.sims@nhs.net (Head of Risk)
+    // Real: named individual's email - held in E:\Hub\temp\internal-contacts.md (kept out of the repo)
   },
 ];
 

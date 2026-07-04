@@ -1,1 +1,1 @@
-export * from './client';
+export * from './feedback-types';

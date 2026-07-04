@@ -81,18 +81,16 @@ export function Header() {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     setUser(null);
     setMobileMenuOpen(false);
     setProfileDropdownOpen(false);
     localStorage.removeItem("wardhub_user");
     localStorage.removeItem("wardhub_gdpr");
     localStorage.removeItem("wardhub_active_ward");
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-    } catch {
-      // Continue with redirect even if API call fails
-    }
+    // Patient-identifying stores must not outlive the session on a shared ward computer
+    localStorage.removeItem("wardhub-referral-logs");
+    localStorage.removeItem("wardhub_care_tracker_v2");
     router.push(link("/login"));
   };
 

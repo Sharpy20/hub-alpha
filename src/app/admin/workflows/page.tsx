@@ -553,13 +553,7 @@ function GuideOrderEditor() {
     if (saved) {
       try { setGuideOrder(JSON.parse(saved)); return; } catch { /* fall through */ }
     }
-    // Default order - fetch from the page (we'll use an import-free approach by hardcoding the IDs)
-    fetch("/guides")
-      .then(() => {
-        // Use the default order from ALL_GUIDES
-        setGuideOrder(DEFAULT_GUIDE_ORDER);
-      })
-      .catch(() => setGuideOrder(DEFAULT_GUIDE_ORDER));
+    setGuideOrder(DEFAULT_GUIDE_ORDER);
   }, []);
 
   const moveUp = (index: number) => {

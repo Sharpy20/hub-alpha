@@ -637,7 +637,7 @@ footer a:hover {
 .patient-guide-container .guide-header-inner { position: relative; z-index: 1; }
 
 .patient-guide-container .guide-header h1 {
-  font-family: 'Lora', serif;
+  font-family: var(--font-lora), Georgia, serif;
   font-size: clamp(22px, 3.5vw, 34px);
   font-weight: 700;
   color: #fff;
@@ -649,7 +649,7 @@ footer a:hover {
   color: rgba(255,255,255,0.82);
   font-size: 15px;
   font-style: italic;
-  font-family: 'Lora', serif;
+  font-family: var(--font-lora), Georgia, serif;
 }
 
 .patient-guide-container .guide-body {
@@ -661,7 +661,7 @@ footer a:hover {
 }
 
 .patient-guide-container .guide-body h2 {
-  font-family: 'Lora', serif;
+  font-family: var(--font-lora), Georgia, serif;
   font-size: 20px;
   font-weight: 600;
   margin: 36px 0 12px;
@@ -785,7 +785,7 @@ footer a:hover {
 .patient-guide-container .bubble-content { flex: 1; }
 
 .patient-guide-container .bubble-content h3 {
-  font-family: 'Lora', serif;
+  font-family: var(--font-lora), Georgia, serif;
   font-size: 17px;
   font-weight: 600;
   color: var(--pg-text);
@@ -938,7 +938,7 @@ footer a:hover {
 .patient-guide-container .care-plan-icon { font-size: 22px; color: var(--pg-care-border); }
 
 .patient-guide-container .care-plan-header h2 {
-  font-family: 'Lora', serif;
+  font-family: var(--font-lora), Georgia, serif;
   font-size: 19px;
   color: var(--pg-care-border);
   border: none;

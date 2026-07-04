@@ -202,7 +202,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Contact the PICU team for bed availability and submit referral:",
         methods: [
           { type: "phone", label: "PICU Direct Line", value: "01234 567890" },
-          { type: "email", label: "PICU Coordinator", value: "picu.referrals@nhs.net" },
+          { type: "email", label: "PICU Coordinator", value: "picu.referrals@example.nhs.net" },
         ],
       },
       {
@@ -351,7 +351,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to the dietetics team:",
         methods: [
-          { type: "email", label: "Dietetics Team", value: "dietetics.referrals@nhs.net" },
+          { type: "email", label: "Dietetics Team", value: "dietetics.referrals@example.nhs.net" },
           { type: "phone", label: "Dietetics Dept", value: "01234 567891" },
         ],
       },
@@ -549,7 +549,8 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "criteria",
         type: "criteria",
         title: "Confirm Criteria",
-        content: "Patient has potential Care Act needs, requires Enablement input, or requires Adult Social Care attendance for S117 meetings.\n\nBefore referral, confirm:\n• Patient is a Derby City resident (check usual address / funding authority)\n• If S117 – confirm who has S117 aftercare responsibility\n• What was the patient's address when they were made subject to Section 3?\n\nMHA Office number to check if Derby City are S117 responsible: 01332 623700 ext 33333",
+        // Real: MHA Office 01332 623700 ext 33333 (internal extension - hidden per Rule 4)
+        content: "Patient has potential Care Act needs, requires Enablement input, or requires Adult Social Care attendance for S117 meetings.\n\nBefore referral, confirm:\n• Patient is a Derby City resident (check usual address / funding authority)\n• If S117 – confirm who has S117 aftercare responsibility\n• What was the patient's address when they were made subject to Section 3?\n\nMHA Office number to check if Derby City are S117 responsible: Hidden in demo mode",
         checkboxLabel: "I confirm the patient is a Derby City resident and meets criteria for this referral",
       },
       {
@@ -588,7 +589,8 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         methods: [
           { type: "email", label: "Derby City MH Social Care (All referrals & S117 meeting requests)", value: "MHSOCIALCARE@DERBY.GOV.UK" },
           { type: "phone", label: "Derby City MH Social Care Team", value: "01332 640777" },
-          { type: "phone", label: "MHA Office (S117 responsibility check)", value: "01332 623700 ext 33333" },
+          // Real: 01332 623700 ext 33333 (internal extension - hidden per Rule 4)
+          { type: "phone", label: "MHA Office (S117 responsibility check)", value: "Hidden in demo mode" },
           { type: "phone", label: "Derbyshire County ASC", value: "01629 533190", area: "county" },
         ],
       },
@@ -725,7 +727,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Contact the Tissue Viability service:",
         methods: [
-          { type: "email", label: "TV Team", value: "tissueviability@nhs.net" },
+          { type: "email", label: "TV Team", value: "tissueviability@example.nhs.net" },
           { type: "phone", label: "TV Nurse Ext", value: "Ext. 5678" },
         ],
       },
@@ -790,7 +792,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Submit to dental services:",
         methods: [
           { type: "phone", label: "Special Care Dental", value: "01234 567892" },
-          { type: "email", label: "Dental Referrals", value: "dental.referrals@nhs.net" },
+          { type: "email", label: "Dental Referrals", value: "dental.referrals@example.nhs.net" },
         ],
       },
       {
@@ -854,7 +856,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to physiotherapy:",
         methods: [
-          { type: "email", label: "Physio Team", value: "physio.referrals@nhs.net" },
+          { type: "email", label: "Physio Team", value: "physio.referrals@example.nhs.net" },
           { type: "phone", label: "Physio Dept", value: "Ext. 4567" },
         ],
       },
@@ -918,7 +920,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to OT team:",
         methods: [
-          { type: "email", label: "OT Team", value: "ot.referrals@nhs.net" },
+          { type: "email", label: "OT Team", value: "ot.referrals@example.nhs.net" },
           { type: "phone", label: "Ward OT", value: "Ext. 3456" },
         ],
       },
@@ -983,7 +985,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to SALT team:",
         methods: [
-          { type: "email", label: "SALT Team", value: "salt.referrals@nhs.net" },
+          { type: "email", label: "SALT Team", value: "salt.referrals@example.nhs.net" },
           { type: "phone", label: "SALT Urgent", value: "Ext. 2345" },
         ],
       },

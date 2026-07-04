@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Sans_3 } from "next/font/google";
+import { Source_Sans_3, Lora } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { TasksProvider } from "./tasks-provider";
@@ -15,6 +15,15 @@ const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
   subsets: ["latin"],
   weight: ["400", "600", "700"],
+});
+
+// Lora for patient-facing MH guides. Self-hosted via next/font (downloaded at build,
+// served from our domain) so no visitor data reaches Google - keep it that way.
+const lora = Lora({
+  variable: "--font-lora",
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -40,13 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Lora font for patient-facing MH guides */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
-      </head>
-      <body className={`${sourceSans.variable} font-sans antialiased`}>
+      <body className={`${sourceSans.variable} ${lora.variable} font-sans antialiased`}>
         <Providers>
           <TasksProvider>
             <WardSettingsProvider>

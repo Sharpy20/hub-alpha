@@ -814,7 +814,8 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "6",
         title: "If in doubt",
-        content: "Contact the patient's regular doctor, or the 291 bleep holder out of hours.",
+        // Real: the "291" bleep (internal bleep id - hidden per Rule 4)
+        content: "Contact the patient's regular doctor, or the duty doctor bleep holder out of hours (bleep number hidden in demo mode).",
       },
     ],
   },

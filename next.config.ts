@@ -9,13 +9,15 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
+            // Locked to 'self': fonts are self-hosted (next/font) and no data leaves the
+            // site. If a backend (e.g. Supabase) goes live, add its host to connect-src.
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https:",
-              "connect-src 'self' https:",
+              "style-src 'self' 'unsafe-inline'",
+              "font-src 'self'",
+              "img-src 'self' data:",
+              "connect-src 'self'",
               "frame-ancestors 'none'",
             ].join("; "),
           },

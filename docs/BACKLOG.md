@@ -45,7 +45,7 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 
 ## C. Guides - review + edits (from homework, condensed - see homework-remaining doc for detail)
 - [ ] Review-only sign-offs: ~47 amber guides for Mike to read + colour (green needs dept sign-off).
-- [BLOCKED] Items needing Mike's docs/photos: section-132 forms + MHA office email; honos cluster screenshot; ABC chart; restraint holds images; capacity S1 questionnaire; social-care secure-email name; debrief headers; blanket-restriction leaflet links; admission-checklist personal-SharePoint link swaps.
+- [~] Items needing Mike's docs/photos: **MOSTLY SUPPLIED 4 Jul** in `docs 1\` - see Sections F-I. Still blocked: MHA office email; social-care secure-email name; restraint holds images (Mike to photograph).
 - [ ] mh-talking-points: reorder/group + add alternative grounding/distraction techniques (needs Mike's steer on grouping).
 - [ ] OT Tools: confirm the local OT form (MOHOST vs local); improve MOHOST examples.
 - [ ] section-136: expand with FAQ vs leave (Mike's call).
@@ -66,5 +66,46 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 
 ---
 
-## MIKE'S HOMEWORK DUMP (paste below - captured verbatim, then organised into A-E)
-<!-- paste here; nothing actioned until sorted -->
+## MIKE'S HOMEWORK DUMP (4 Jul 2026 - captured, organised into A-E below)
+Full verbatim capture + per-guide notes + source-doc inventory: **`docs/homework-04-Jul-2026-dump.md`**.
+Source files on disk (outside repo): `E:\Hub\temp\dump july\` (doc, 6 screenshots, 2 HoNOS videos, `docs 1\` set).
+
+**Big win:** Mike supplied the docs that were blocking guides. `docs 1\` unblocks section-132,
+capacity-assessment, blanket-restrictions, abc-chart, no-smoking, informal-patient-contract (see table in the dump doc).
+
+### F. Homework - now-actionable (unblocked by Mike's `docs 1\` docs)
+- [ ] **section-132** (RED) - build from `S132_policy.docx` + `SystmOne_-_Recording_Section_132_Rights_Conversation_V1.2.pdf`; add 132 forms link + MHA office email (email still needed from Mike).
+- [ ] **capacity-assessment** (amber, needs expanding) - add S1 capacity questionnaire (screenshots image1-3) + police form (`MCA - Police Capacity Ax.docx`); link S1 guide + external capacity + trust policy.
+- [ ] **blanket-restrictions** (RED) - add trust guide/leaflet links from `Blanket_Restrictions_Policy_...Feb_2026_v2.docx` + FOCUS brief-guide PDF.
+- [ ] **abc-chart** (amber) - better example from `completed ABC chart example.pdf`; link blank; consider builder using `ABC charts - Copy to add to.pptx`.
+- [ ] **honos** (RED) - use image6 (New Cluster box) + `waa honos.mp4` / `waa honos hist.mp4`; note WAA/secure/CAMHS formats differ.
+- [ ] **NEW guide: no-smoking-in-the-trust** - from `Staff legal warning. Smoking on NHS Wards.docx` (enforce; paraphernalia only returned on discharge, not for fresh air/leave).
+- [ ] **NEW guide: informal patient contract** - from `SystmOne_-_Gatekeeping_Assessment_v1.pdf` + `Informal_Admission_Questionnaire_v1.pdf` (new Informal Admissions Checklist, live 9 Dec).
+- [ ] **debrief** (RED->amber?) - confirm headers vs the real tool text (in dump doc); likely just a header check.
+- [ ] **admission-checklist** (amber) - swap any `Michael.sharpe4` personal-SharePoint links; link built wardHub guides.
+- [ ] Review **`odds and sods.pdf`** - Mike: "loads of stuff here, work through and grab it all."
+
+### G. Homework - quick edits (small, mostly no doc needed)
+- [ ] **leave-discharge-transfer** - add "Has Prenoxad been considered? y/n" + prenoxad link under substance/intoxication-on-return; add "update fire board" to day-of nurse-in-charge tasks.
+- [ ] **dama** - out-of-hours: offer discharge meeting w/ regular medics + MDT; state unplanned = unsafe discharge, needs Datix; suggest short leave alternative.
+- [ ] **fridge-temps** - "Mark completed for today" button that ticks the linked diary task (feeds Section E diary-task audit).
+- [ ] **observation-engagement** - care-plan specifics (shower/toilet obs closeness); note lvl 1/2 rarely leave ward, MDT-agreed - fact-check + quote policy.
+- [ ] **safeguarding** - reword the 39%/54% line (referrals logged + build a picture even if not taken up).
+- [ ] **safeguarding-children** - the two consent press-options are about patient not family - fix.
+- [ ] **domestic-abuse-guide** - make URLs clickable; source/link the CADDA-DASH; reduce text density.
+- [ ] **mha-statuses** - add link to section-132 guide.
+- [ ] **arrange-mha-assessment** - drop step 5 (S1 doc, covered by step 6); fix "nhs.net to nhs.net" (social care use their own secure email, name TBC from Mike).
+- [ ] **admission-note** - add ward/unit names; make interactive (click a line -> pop-up suggestions, e.g. body-map/tattoos prompt for AWOL risk).
+- [ ] **Flip to amber if happy:** `prenoxad`, `transfer-in`, `awol` (complete drafts - await Mike's word).
+
+### H. Homework - decisions still on Mike
+- [BLOCKED] **section-136** - expand with FAQ (force treatment / seclude / out-of-area / child in 136) or drop? Research FOCUS+external first, then decide.
+- [BLOCKED] **mh-talking-points** - grouping steer + which extra grounding/distraction techniques.
+- [BLOCKED] **arrange-mha-assessment** / **section-132** - social care secure-email name; MHA office email address.
+- [x] **HoNOS group** = Nurse Tools (Mike decided). **IMHA** = Disability Direct (confirmed, One Advocacy dropped). **v1/v2 merge** = keep.
+
+### I. Homework - bigger builds (own sessions, parked - overlaps Section D)
+- [PARK] Named Nurse Checklist -> schedulable ticking tasks (also D). Red Folder content in `Red folders - set up.docx`.
+- [PARK] Tribunal/DST/OT-report combined builder - write tribunal on the new gov.uk template (also D).
+- [PARK] Formulation output rethink; Risk tool rethink; DoLS visual/interactive (also D).
+- [PARK] restraint-monitoring - reasonable-force image + law; core-skills hold images (Mike to supply); clickable "monitoring ceased" workflow that greens out.

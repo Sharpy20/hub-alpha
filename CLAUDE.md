@@ -30,7 +30,8 @@
 
 **This project is deployed LIVE on Vercel. Do NOT just run locally.**
 
-- **Live URL:** https://inpatient-hub-alpha.vercel.app
+- **Live URL (canonical):** https://www.wardHub.live
+- **Vercel URL (underlying deploy, also live):** https://inpatient-hub-alpha.vercel.app
 - **GitHub Repo:** https://github.com/Sharpy20/hub-alpha
 - **Deployment:** Automatic via Vercel on push to `main` branch
 

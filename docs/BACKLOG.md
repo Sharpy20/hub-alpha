@@ -83,6 +83,15 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] **Read-only MDT / external task view (Optica-inspired, Mike 4 Jul)** - give the wider MDT read-only visibility of a patient's tasks, and (with consent) external partners like social care/family - potentially via links to the patient's existing MS Teams MDT workspace (reuses infra, avoids building an auth layer). Full-build/PII; consent + lawful basis required (real PII sharing).
 - Strategic context for both: [[optica-governance-insight]] - the Optica demo showed the org WILL accept data-outside-S1 + external access when it is governance-wrapped (DCB0129, data-controller, DPIA). wardHub's approval path is the wrapper, not "store no data".
 
+### Full E:\Hub source sweep (4 Jul) - gap check vs the 66 guides
+Cross-referenced every .docx/.pdf/.pptx across E:\Hub against the current guide catalogue. **Coverage is strong** - almost every clinical topic already has a guide, is tracked in Section A (referral form-wiring / new-guide-needed: autism, CAMHS, ECT, perinatal, day-services, DLT), or is a parked build (Red Folders, DST). Psychoeducation docs (PD types, Window of Tolerance, Abandonment) are already covered by the 23 patient-guides. **Genuine gaps found (source in hand, no guide):**
+- [ ] **STOP AND WATCH** (`temp/wardhub docs/STOP_AND_WATCH_Poster_Word (2).docx`) - early physical-deterioration soft-signs tool (S/T/O/P + AND + W/A/T/C/H), sits *before* NEWS2 triggers. Strong small Physical Health guide; full content captured. Complements news2.
+- [ ] **Bowel monitoring / chart** (`temp/wardhub docs/Bowel-chart.doc`) - bowel-chart tool; real safety issue (clozapine/antipsychotic constipation; STOP-AND-WATCH flags "no bowel movement in 3 days"). Small Physical Health guide.
+- [ ] **Nearest Relative (MHA s26-30)** (`temp/wardhub docs/Nearest_Relative.pdf`) - who the NR is, their rights, county-court displacement. Fold into `mha-statuses` or small standalone Legal & Advocacy guide.
+- [ ] (Optional) **CTO guide** - `Community_Treatment_Order_Policy_MHA_1983.docx` exists; CTO currently only partial in mha-checker/mha-statuses. Dedicated guide is optional (lower priority).
+- Note: `Nurses_checklist.docx` (MHA papers acceptance checklist) = already covered by `mha-checker`, and is the source for the **rectifiable-vs-invalid errors** enhancement (papers-complete? = invalid if No; names/addresses = rectifiable; med recs <=5 clear days apart; joint rec both doctors present). Feeds mha-checker snag 196.
+- Excluded (Mike's standing flag): **MAPPA** (`MAPPA_Policy...2025.docx`) - forensic-adjacent, parked/do-not-surface. Not guide material: AI policy, CQC leaflet, business-case/demo/dev-panel docs, DCB0129 clinical-safety docs, `from trust other example projects`.
+
 ---
 
 ## MIKE'S HOMEWORK DUMP (4 Jul 2026 - captured, organised into A-E below)

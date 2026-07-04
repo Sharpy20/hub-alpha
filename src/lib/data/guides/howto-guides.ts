@@ -64,6 +64,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   honos: { icon: "📊", gradient: "from-cyan-600 to-teal-800", category: "Nurse Tools" },
   dols: { icon: "🔒", gradient: "from-violet-500 to-violet-700", category: "Legal & Advocacy" },
   "blanket-restrictions": { icon: "⛔", gradient: "from-orange-600 to-red-700", category: "Restrictive Practice" },
+  "student-placement": { icon: "🎓", gradient: "from-blue-500 to-indigo-700", category: "Learning & Development" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -74,6 +75,96 @@ export const GUIDE_WAGOLLS: Record<string, { label: string; url: string }[]> = {
 };
 
 export const GUIDES: Record<string, GuideData> = {
+  "student-placement": {
+    id: "student-placement",
+    title: "Student Nurse Placement Guide",
+    description: "Your welcome, first-day setup, the ward routine, emergencies and what's expected - a starting point for a mental health inpatient placement",
+    related: [
+      { label: "Observation & Engagement Plan", guideId: "observation-engagement" },
+      { label: "Restraint & Rapid Tranq Monitoring", guideId: "restraint-monitoring" },
+      { label: "MHA Statuses Explained", guideId: "mha-statuses" },
+      { label: "Capacity Assessment", guideId: "capacity-assessment" },
+      { label: "Safeguarding Adults - Making a Referral", guideId: "safeguarding" },
+      { label: "NEWS2 Observations", guideId: "news2" },
+    ],
+    steps: [
+      {
+        id: "welcome",
+        title: "Welcome to your placement",
+        content:
+          "We hope you enjoy your time on the ward and get the most out of it - you get out of a placement what you put in.\n\nA few things that make placements go well:\n\n- Ask questions. People love to share what they know, and asking shows you are keen to learn.\n- Speak up early. If anything is difficult - the shifts, the work, or how you are feeling - tell your supervisor, assessor or the senior nursing team as soon as possible, so there is plenty of time to sort it out.\n- Say if something affects your placement (for example pregnancy or an injury) so the team can support you safely.\n- This ward links to lots of other services, so ask about insight visits.\n- Mark your university days clearly in the duty book so they count towards your hours.",
+        tip: "Nobody minds a question. The only mistake is staying quiet when you are unsure.",
+      },
+      {
+        id: "first-day",
+        title: "Your first day - get set up",
+        content:
+          "Work through this on day one (your own student booklet has the full orientation checklist):\n\n- Collect your key card and personal safety (SAS) alarm from reception - these are signed in and out each shift.\n- Be shown the fire points and equipment, and find the fire key on your alarm.\n- Be shown how the personal alarm system works.\n- Learn the emergency procedures, medical and non-medical.\n- Be orientated to the ward.\n- Meet your allocated supervisor (mentor) and assessor (associate mentor).\n- Self-roster so you work with your supervisor a good chunk of the time - aim for at least 40%, ideally around 60% of shifts.",
+        tip: "Collect your key card and alarm at the START of every shift, and sign them back in at the end.",
+      },
+      {
+        id: "ward",
+        title: "About the ward",
+        content:
+          "You are on an acute admission mental health ward. Wards care for people through a spell of acute mental illness - conditions vary, and can include psychosis, bipolar affective disorder, depression, OCD, schizoaffective disorder and personality disorder. Acute wards generally do not care for organic conditions such as dementia or acquired brain injury.\n\nMany acute wards are 'open' rather than secure, though doors may be access-controlled in line with policy.\n\nNursing runs 24 hours a day, 365 days a year, across early, late, long-day and night shifts.",
+        tip: "Ward layouts, patient groups and shift times differ between wards - treat the specifics here as typical, and confirm the detail on your own ward.",
+      },
+      {
+        id: "team",
+        title: "Who's who in the team",
+        content:
+          "You will work alongside a wide team. Roles you will come across:\n\n- Nurse Consultant and Senior Nurse\n- Lead Nurses / bleep holders - a lead nurse each shift who supports and co-ordinates the unit (out of hours there is a duty doctor)\n- Doctors, including junior doctors on training rotations\n- Registered nurses and nursing assistants\n- Occupational therapists (OTs) and OT assistants, and the recreation team\n- Psychologists, advocates and housekeepers\n- Community teams - CPNs and social workers\n\nRespect and listen to every member of the team. Nursing assistants, OTs and housekeepers often spend time with patients that busy qualified staff cannot, and notice things about someone's mental state that others miss.",
+      },
+      {
+        id: "expected",
+        title: "What's expected of you",
+        content:
+          "- Be enthusiastic - this is your opportunity, so make the most of it.\n- Be safe - if you are unsure of anything, ask. You will never be told off for being over-cautious, but brushing off something that seems small can be dangerous.\n- Spend time with patients. Nursing is not all paperwork. Sitting and chatting, a 1:1, a walk or a board game all build the therapeutic relationship - just check it out with the regular staff first.\n- Work towards your outcomes, and gather evidence of your learning early, with time to spare, so your assessor can see you are meeting the level.\n- Be proactive - look for learning opportunities, ways to help colleagues, and ways to improve patient care.",
+        tip: "Get your evidence together well before the deadline - it takes the pressure off you and your assessor.",
+      },
+      {
+        id: "day",
+        title: "A typical ward day",
+        content:
+          "No two days are identical, but the shape is usually:\n\n- Morning: shift handover; personal physical observations (blood pressure, temperature, pulse, respirations) for those due them, and weekly weights; breakfast; medication.\n- Mid-morning: a daily planning meeting or walkaround, where patients can make requests and say what they want from the day. On most weekdays, ward round / MDM runs through the morning - each patient has a meeting about once a week with the whole team.\n- Lunchtime: lunch, then a medication round.\n- Afternoon: handover to the afternoon staff; visiting; ward round may continue.\n- Evening: dinner, medication, visiting and ward activities, then a wind-down towards bed.\n- Overnight: night staff take over, and observations continue.\n\nThis is the basic structure only - many more activities and meetings happen around it.",
+        tip: "The ward round diary in the office shows each patient's MDM time - a good place to look if you want to sit in (with the patient's agreement).",
+      },
+      {
+        id: "obs",
+        title: "Observation levels - quick reference",
+        content:
+          "Every patient is on a level of observation matched to their risk. In this Trust the levels run from Level 1 (most restrictive) to Level 4 (general):\n\n- Level 1 - continuous observation within arm's length. For a serious and imminent risk of suicide or self-harm with impulsivity, or a significant risk to others.\n- Level 2 - continuous observation within clear eyesight at all times. For a serious short-term risk of suicide, self-harm or other significant risk.\n- Level 3 - observation at least every 15 minutes. Where there is a risk of self-harm or unpredictability, risks are unclear, or as a step down from a higher level.\n- Level 4 - general awareness of the patient's whereabouts and wellbeing. The baseline for everyone unless a higher level is needed (typically checked hourly by day and half-hourly at night).\n\nThe person 'on the door' does the Level 3 and 4 checks and keeps an eye on who comes and goes.",
+        tip: "Levels step up and down as risk changes - always check the current level before assuming, and the Observation & Engagement guide explains the thinking behind each one.",
+      },
+      {
+        id: "emergency",
+        title: "In an emergency - your role",
+        content:
+          "If you see something worrying - a patient absconding, self-harm, a suicide attempt, or you feel unsafe - activate your personal alarm and tell the staff who respond what is happening. Responders include colleagues on the ward, the unit bleep holder and response staff from other wards. You will not get into trouble for pulling your alarm when you were being cautious.\n\nAs a student you will not be expected to lead. The nurse in charge will give you instruction - your job is usually to support the other patients, help staff, or wait at the door to let the ambulance crew in.\n\n- Fire: if you find a fire, activate your alarm and use the fire key on it in the nearest fire point. Keep yourself safe. If you only hear the alarm, find the nearest staff member and await instruction. Be extra aware of patients with hearing or mobility needs.\n- Medical emergency (for example a cardiac arrest): activate your alarm. Staff will call the unit's internal emergency number and then 999 for an ambulance. You will learn these numbers on your induction.",
+        tip: "Familiarise yourself with the emergency procedures even though you are unlikely to lead - the full procedure is usually displayed by the office phone.",
+      },
+      {
+        id: "distress",
+        title: "Distress, conflict and restrictive practice",
+        content:
+          "Despite everyone's best efforts at prevention and de-escalation, there will be times of high distress or conflict on the ward - someone very agitated, self-harming, or needing medication against their wishes. It is not frequent, but you may see it.\n\nStaff are trained by the Positive and Proactive (Safe) team in a clear, least-restrictive hierarchy:\n\n- Primary - no physical contact - verbal de-escalation.\n- Secondary - supportive or fixed holds, needing a trained team.\n- Tertiary - taking a patient safely to the floor, only when everything else has failed. This is always a last resort, and can include enforced IM medication or nursing in seclusion.\n\nYou will NEVER be expected to take part in physical restraint. If you see it used, it is because other attempts have not worked. In an incident, your role is to clear the corridor for responders, protect the privacy and dignity of the person in distress, support the other patients, and follow the team's direction (for example taking over Level 3 or 4 observations).\n\nIt can be upsetting to watch restraint - trained staff still find it hard. A debrief is arranged for staff after serious incidents, and you can ask for that support too.",
+        tip: "If anything you see leaves you worried or upset, talk to your supervisor, the nurse in charge or the Positive and Proactive team - none of them will mind.",
+      },
+      {
+        id: "terms",
+        title: "Terms you'll hear",
+        content:
+          "- Emergency / red trolley - holds the equipment for a medical emergency.\n- Levels of observation - the four levels of monitoring, matched to risk.\n- On the door - the person doing the Level 3 and 4 checks and watching who enters and leaves.\n- Section patient - detained under the Mental Health Act 1983.\n- Informal patient - in hospital voluntarily, with no legal restrictions.\n- Section 17 - leave from the ward, authorised and signed by the consultant.\n- MDM / ward round - the weekly multidisciplinary meeting with the patient and the team, sometimes with family.\n- Bleep holder - the lead nurse co-ordinating the unit that shift.\n- Duty doctor - the doctor covering the unit out of hours.\n- Response - the alarm response; trained staff carry a response bleep that sounds when someone activates their alarm.",
+      },
+      {
+        id: "research",
+        title: "Things to read up on",
+        content:
+          "Good areas to research during your placement:\n\n- The Recovery Approach, and the Care Programme Approach (CPA)\n- Psychotropic medication - antipsychotics, antidepressants, benzodiazepines - and their complications (for example clozapine toxicity, lithium toxicity, neuroleptic malignant syndrome)\n- The Mental Health Act 1983 (and the 2007 changes)\n- The Mental Capacity Act and Deprivation of Liberty Safeguards\n- Safeguarding - spotting concerns, procedures and care planning\n- Electroconvulsive therapy (ECT)\n- Managing physical health in a mental health setting\n\nResources on and off the ward: your student resource folder and information leaflets, the clinical team, the Trust intranet, NICE, the NHS website, the BNF, and clinical experts (infection control, tissue viability, Positive and Proactive, the resus officer, dietitian, pharmacists and psychologists).\n\nMany of these have their own guide here in wardHub - see the related guides below.",
+        tip: "Pick two or three of these to go deep on rather than skimming all of them - depth impresses assessors more than breadth.",
+      },
+    ],
+  },
   "admission-note": {
     id: "admission-note",
     title: "Admission Note Template",

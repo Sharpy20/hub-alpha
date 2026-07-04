@@ -104,4 +104,6 @@ export const ALL_GUIDES: GuideItem[] = [
   { id: "edt", title: "Early Discharge Team", description: "EDT referral for discharge planning support", icon: "🚪", gradient: "from-sky-500 to-sky-700", category: "Specialist Pathways", viewerPath: "/guides/edt" },
   { id: "erp", title: "Emotional Regulation (ERP/DBT)", description: "DBT skills and emotional regulation pathway", icon: "🧠", gradient: "from-fuchsia-500 to-fuchsia-700", category: "Specialist Pathways", viewerPath: "/guides/erp" },
   { id: "ctr-dsp", title: "CTR / DSP Review", description: "Care Treatment Review for ASD/LD patients (mandatory)", icon: "📋", gradient: "from-lime-600 to-lime-800", category: "Specialist Pathways", viewerPath: "/guides/ctr-dsp" },
+  // Learning & Development
+  { id: "student-placement", title: "Student Nurse Placement Guide", description: "Welcome, first-day setup, ward routine and what's expected on a mental health inpatient placement", icon: "🎓", gradient: "from-blue-500 to-indigo-700", category: "Learning & Development", viewerPath: "/guides/student-placement" },
 ];

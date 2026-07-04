@@ -45,6 +45,7 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "tribunal-report": "red",          // fact-check + new gov.uk template
   "transfer-in": "red",
   "awol": "red",
+  "student-placement": "red",        // new 4 Jul from the Student Information Pack - generic/demo-safe, awaiting Mike's review
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

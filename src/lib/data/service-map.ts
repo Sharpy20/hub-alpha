@@ -37,6 +37,7 @@ export const FLAG_OPTIONS = [
   { v: "carer", label: "Carer" },
   { v: "domestic-abuse", label: "Domestic abuse" },
   { v: "dependent-children", label: "Has children" },
+  { v: "perinatal", label: "Pregnant / <24m postpartum" },
   { v: "bereaved", label: "Recently bereaved" },
   { v: "gambling", label: "Gambling concern" },
 ];
@@ -74,11 +75,16 @@ export interface Service {
   name: string;
   cluster: string;
   parent?: string;        // node-off-node: reached via this service
+  // areas = the areas of RESIDENCE the service accepts (where the PERSON LIVES),
+  // NOT where the service building is. A service based in Derby can still accept
+  // county residents, and vice versa. For most Derbyshire services catchment is
+  // set by the person's home address or their registered GP - see catchmentNote.
   areas: Area[];
   include: Criterion[];
   exclude: Criterion[];
   contact?: string;       // public phone and/or website
   note?: string;
+  catchmentNote?: string; // how catchment is decided (home address vs registered GP)
 }
 
 const dx = (f: Facts, d: string) => f.diagnoses.includes(d);
@@ -94,8 +100,8 @@ export const SERVICES: Service[] = [
   // ============ Crisis & Urgent ============
   { id: "mh-helpline", name: "Derbyshire MH Helpline", cluster: "crisis", areas: CC, include: [], exclude: [], contact: "111 (option 2), 24/7", note: "The front door to urgent Derbyshire mental-health help." },
   { id: "crisis-hht", name: "Crisis / Home Treatment", cluster: "crisis", parent: "mh-helpline", areas: CC, include: [{ label: "Elevated or acute risk", test: (f) => f.risk !== "low" }], exclude: [], contact: "Derby/South 01332 623900; Chesterfield 01246 293284 (24h)", note: "Intensive support as an alternative to admission." },
-  { id: "safe-haven", name: "Safe Haven (Derby)", cluster: "crisis", parent: "mh-helpline", areas: ["city"], include: [{ label: "In distress / elevated risk", test: (f) => f.risk !== "low" }], exclude: [], contact: "0330 008 3722, 4:30pm-12:30am (Waythrough)", note: "Out-of-hours safe space, 18+." },
-  { id: "safe-haven-ches", name: "Safe Haven (Chesterfield)", cluster: "crisis", parent: "mh-helpline", areas: ["county"], include: [{ label: "In distress / elevated risk", test: (f) => f.risk !== "low" }], exclude: [], contact: "01246 949410, 4:30pm-12:30am (P3)", note: "North Derbyshire out-of-hours safe space, 18+." },
+  { id: "safe-haven", name: "Safe Haven (Derby)", cluster: "crisis", parent: "mh-helpline", areas: ["city"], include: [{ label: "In distress / elevated risk", test: (f) => f.risk !== "low" }, { label: "Aged 18+", test: (f) => f.age >= 18 }], exclude: [], contact: "0330 008 3722, 4:30pm-12:30am (P3)", note: "Out-of-hours drop-in safe space, self-referral, no appointment. For Derby City residents 18+.", catchmentNote: "By home address (Derby City residents)." },
+  { id: "safe-haven-ches", name: "Safe Haven (Chesterfield)", cluster: "crisis", parent: "mh-helpline", areas: ["county"], include: [{ label: "In distress / elevated risk", test: (f) => f.risk !== "low" }, { label: "Aged 18+", test: (f) => f.age >= 18 }], exclude: [], contact: "01246 949410, 4:30pm-12:30am (P3)", note: "North Derbyshire out-of-hours drop-in safe space, self-referral. 18+.", catchmentNote: "By home address (north Derbyshire)." },
   { id: "picu", name: "PICU (Kingfisher)", cluster: "crisis", areas: NAT, include: [{ label: "Acute risk needing intensive care", test: (f) => f.risk === "acute" }, { label: "Mental health diagnosis", test: anyDx }], exclude: [] },
   { id: "samaritans", name: "Samaritans", cluster: "crisis", areas: NAT, include: [], exclude: [], contact: "116 123 (free, 24/7)", note: "Open to anyone, any time." },
   { id: "shout", name: "SHOUT crisis text", cluster: "crisis", parent: "samaritans", areas: NAT, include: [], exclude: [], contact: "Text SHOUT to 85258", note: "24/7 crisis text line, all ages." },
@@ -105,21 +111,21 @@ export const SERVICES: Service[] = [
   { id: "stay-alive", name: "Stay Alive app / Staying Safe", cluster: "crisis", areas: NAT, include: [{ label: "Any suicidal ideation", test: (f) => f.risk !== "low" }], exclude: [], contact: "stayingsafe.net", note: "Self-help safety-planning tools." },
 
   // ============ Community & Secondary MH ============
-  { id: "cmht", name: "Living Well / CMHT (Adults)", cluster: "community", areas: CC, include: [{ label: "18+ with significant MH needs not met by primary care / IAPT", test: (f) => f.age >= 18 && (severe(f) || (anyDx(f) && f.risk !== "low")) }], exclude: [], note: "Living Well - 18+, serious or complex MH needs incl. dual diagnosis, complex trauma, homelessness. SMI not an exclusion. Internal referral via SPoA/SystmOne." },
+  { id: "cmht", name: "Living Well / CMHT (Adults)", cluster: "community", areas: CC, include: [{ label: "18+ with significant MH needs not met by primary care / IAPT", test: (f) => f.age >= 18 && (severe(f) || (anyDx(f) && f.risk !== "low")) }], exclude: [], note: "Living Well - short-term (up to 12 weeks) for people too unwell for primary care but below the CMHT threshold. Working age 18-65 (will see 65+ where needs align). GP referral. Serious/complex MH incl. dual diagnosis, complex trauma, homelessness - SMI not an exclusion.", catchmentNote: "By registered GP surgery (each Living Well team covers set surgeries)." },
   { id: "eip", name: "Early Intervention (Psychosis)", cluster: "community", parent: "cmht", areas: CC, include: [{ label: "Psychosis", test: (f) => dx(f, "Psychosis") }, { label: "Aged 14-65", test: (f) => between(f, 14, 65) }], exclude: [] },
   { id: "rehab", name: "Rehabilitation & Recovery", cluster: "community", parent: "cmht", areas: CC, include: [{ label: "Severe / enduring mental illness", test: severe }], exclude: [], note: "Longer-term recovery support." },
   { id: "complex-needs", name: "Complex Emotional Needs pathway", cluster: "community", parent: "cmht", areas: CC, include: [{ label: "Personality disorder / complex emotional needs", test: (f) => dx(f, "Personality disorder") }], exclude: [] },
   { id: "older-adult", name: "Older Adult Mental Health", cluster: "community", areas: CC, include: [{ label: "Aged 65+", test: (f) => f.age >= 65 }, { label: "Mental health need", test: anyDx }], exclude: [] },
-  { id: "perinatal", name: "Perinatal Mental Health", cluster: "community", areas: CC, include: [{ label: "Pregnant / new parent (has children)", test: (f) => flag(f, "dependent-children") }], exclude: [], note: "Pregnancy to ~24 months - verify eligibility." },
+  { id: "perinatal", name: "Perinatal Mental Health", cluster: "community", areas: CC, include: [{ label: "Pregnant (12+ weeks) or up to 24 months postpartum", test: (f) => flag(f, "perinatal") }, { label: "Serious or significant perinatal MH need", test: (f) => severe(f) || dx(f, "Depression / anxiety") || dx(f, "OCD") || dx(f, "PTSD / trauma") }], exclude: [], contact: "Derby 01332 623911; Chesterfield 01246 216523", note: "From 12 weeks pregnant to 24 months postpartum. Serious mental illness, or significant difficulties beyond primary care (incl. severe depression/anxiety, OCD, at risk of/history of puerperal psychosis). Self- or professional referral.", catchmentNote: "Live in Derbyshire and registered with a listed Derbyshire GP." },
   { id: "liaison", name: "Liaison Psychiatry", cluster: "community", areas: CC, include: [], exclude: [], note: "MH support within the acute general hospital (Royal Derby / Chesterfield Royal)." },
-  { id: "eating-disorder", name: "Derbyshire Eating Disorder Service", cluster: "community", areas: CC, include: [{ label: "Eating disorder", test: (f) => dx(f, "Eating disorder") }], exclude: [], note: "Adult eating-disorder service (GP/professional referral)." },
+  { id: "eating-disorder", name: "Derbyshire Eating Disorder Service", cluster: "community", areas: CC, include: [{ label: "Eating disorder", test: (f) => dx(f, "Eating disorder") }, { label: "Aged 18+", test: (f) => f.age >= 18 }], exclude: [], note: "Adult eating-disorder service. GP/professional referral (not self-referral). Referral criteria widened - no longer BMI/weight alone.", catchmentNote: "By registered GP (Derby, Chesterfield, NE Derbyshire, High Peak)." },
   { id: "erp", name: "Emotion Regulation Pathway (ERP)", cluster: "community", parent: "cmht", areas: CC, include: [{ label: "Borderline PD / significant traits, high distress + service use", test: (f) => dx(f, "Personality disorder") }], exclude: [{ label: "Active / untreated psychosis - stabilise first", test: (f) => dx(f, "Psychosis") }, { label: "Ongoing substance use - address first", test: (f) => f.substance === "using" }], note: "SCM / DBT. Needs 2+ of impulsivity, emotional instability, relationship problems. Professional referral via SystmOne." },
   { id: "day-services", name: "Specialist Day Services (Midway/Dovedale)", cluster: "community", parent: "cmht", areas: CC, include: [{ label: "Would benefit from structured day-service groups", test: anyDx }], exclude: [], note: "Groups: Living Well, Cognitive Stimulation Therapy, Lifestyle Matters, Coping with Emotions." },
   { id: "mh-physio", name: "Mental Health Physiotherapy", cluster: "community", areas: CC, include: [{ label: "Physical problem + complex MH, open to DHCFT", test: anyDx }], exclude: [], note: "Secondary-care physio for those who can't access mainstream physio (falls assessment first if a falls risk)." },
   { id: "life-links", name: "Derby City Life Links", cluster: "community", areas: ["city"], include: [{ label: "Any mental health need", test: anyDx }], exclude: [], contact: "derbycitylifelinks.org.uk", note: "Richmond Fellowship - primary MH support." },
 
   // ============ Talking Therapies ============
-  { id: "talking-therapies", name: "Derby & Derbyshire NHS Talking Therapies", cluster: "talking", areas: CC, include: [{ label: "Depression / anxiety, aged 16+", test: (f) => dx(f, "Depression / anxiety") && f.age >= 16 }], exclude: [{ label: "Active psychosis - needs secondary care", test: (f) => dx(f, "Psychosis") }, { label: "Acute risk - needs crisis care", test: (f) => f.risk === "acute" }], contact: "0333 041 7262 / derby-talk.co.uk", note: "Self-referral. Delivered by Vita Health Group since Jul 2025." },
+  { id: "talking-therapies", name: "Derby & Derbyshire NHS Talking Therapies", cluster: "talking", areas: CC, include: [{ label: "Depression / anxiety, aged 16+", test: (f) => dx(f, "Depression / anxiety") && f.age >= 16 }], exclude: [{ label: "Active psychosis - needs secondary care", test: (f) => dx(f, "Psychosis") }, { label: "Acute risk / recent suicide attempt - needs crisis care", test: (f) => f.risk === "acute" }], contact: "0333 041 7262 / derby-talk.co.uk", note: "Self-referral, 16+. Not accepted if a suicide attempt in the last 4 weeks. Already under a mental health service - needs a professional referral, not self-referral.", catchmentNote: "By registered GP (a Derby or Derbyshire GP)." },
   { id: "everyturn", name: "Everyturn (was Insight)", cluster: "talking", parent: "talking-therapies", areas: CC, include: [], exclude: [], contact: "via derby-talk.co.uk", note: "Talking Therapies delivery partner." },
   { id: "trent-pts", name: "Trent PTS (legacy)", cluster: "talking", parent: "talking-therapies", areas: CC, include: [], exclude: [], contact: "01332 265659", note: "Former IAPT provider - NHS referrals now via derby-talk.co.uk." },
   { id: "drcs", name: "Derwent Rural Counselling", cluster: "talking", parent: "talking-therapies", areas: ["county"], include: [], exclude: [], contact: "0800 047 6861", note: "DRCS - county provider." },
@@ -127,8 +133,8 @@ export const SERVICES: Service[] = [
   { id: "relate-chesterfield", name: "Relate Chesterfield", cluster: "talking", areas: ["county"], include: [], exclude: [], contact: "01246 231010" },
 
   // ============ Substance & Addiction ============
-  { id: "drp", name: "Derbyshire Recovery Partnership", cluster: "substance", areas: ["county"], include: [{ label: "Current use or in recovery", test: (f) => f.substance !== "none" }], exclude: [], contact: "01246 206514 (self-referral)", note: "County drug & alcohol service (DRP)." },
-  { id: "derby-das", name: "Derby Drug & Alcohol Recovery (Cranstoun)", cluster: "substance", areas: ["city"], include: [{ label: "Current use or in recovery", test: (f) => f.substance !== "none" }], exclude: [], contact: "0300 790 0265", note: "Derby City drug & alcohol service (Cranstoun)." },
+  { id: "drp", name: "Derbyshire Recovery Partnership", cluster: "substance", areas: ["county"], include: [{ label: "Current use or in recovery", test: (f) => f.substance !== "none" }, { label: "Aged 18+", test: (f) => f.age >= 18 }], exclude: [], contact: "01246 206514 (self-referral)", note: "County drug & alcohol service (DRP), 18+. Self-referral.", catchmentNote: "By home address - for people who live in Derbyshire county (not Derby City)." },
+  { id: "derby-das", name: "Derby Drug & Alcohol Recovery (Cranstoun)", cluster: "substance", areas: ["city"], include: [{ label: "Current use or in recovery", test: (f) => f.substance !== "none" }, { label: "Aged 18+", test: (f) => f.age >= 18 }], exclude: [], contact: "0300 790 0265", note: "Derby City drug & alcohol service (Cranstoun), 18+. Self-referral.", catchmentNote: "By home address - for people who live in Derby City." },
   { id: "aa", name: "Alcoholics Anonymous", cluster: "substance", areas: NAT, include: [{ label: "Alcohol use", test: (f) => f.substance !== "none" }], exclude: [], contact: "0800 917 7650 (24/7)" },
   { id: "na", name: "Narcotics Anonymous", cluster: "substance", areas: NAT, include: [{ label: "Drug use", test: (f) => f.substance !== "none" }], exclude: [], contact: "0300 999 1212" },
   { id: "alanon", name: "Al-Anon (families)", cluster: "substance", areas: NAT, include: [], exclude: [], contact: "0800 0086 811", note: "For families affected by someone's drinking." },
@@ -181,7 +187,7 @@ export const SERVICES: Service[] = [
   { id: "sobs", name: "SOBS (Bereaved by Suicide)", cluster: "life", parent: "cruse", areas: NAT, include: [{ label: "Recently bereaved", test: (f) => flag(f, "bereaved") }], exclude: [], contact: "0300 111 5065" },
   { id: "derbys-bereavement", name: "Derbyshire Bereavement Hub", cluster: "life", parent: "cruse", areas: ["county"], include: [{ label: "Recently bereaved", test: (f) => flag(f, "bereaved") }], exclude: [], contact: "derbyshirebereavementhub.co.uk" },
   { id: "silverline", name: "Silver Line (older people)", cluster: "life", areas: NAT, include: [{ label: "Aged 55+", test: (f) => f.age >= 55 }], exclude: [], contact: "0800 4 70 80 90 (24/7)" },
-  { id: "age-uk", name: "Age UK Derby & Derbyshire", cluster: "life", areas: ["county"], include: [{ label: "Aged 65+", test: (f) => f.age >= 65 }], exclude: [], contact: "01773 768240" },
+  { id: "age-uk", name: "Age UK Derby & Derbyshire", cluster: "life", areas: CC, include: [{ label: "Older adult (roughly 50+)", test: (f) => f.age >= 50 }], exclude: [], contact: "01773 768240", note: "Covers both Derby City and Derbyshire county.", catchmentNote: "By home address (Derby City + Derbyshire)." },
   { id: "carers-derbyshire", name: "Carers in Derbyshire", cluster: "life", areas: ["county"], include: [{ label: "Is a carer", test: (f) => flag(f, "carer") }], exclude: [], contact: "01773 833 833", note: "County carers - assessments, advice, peer groups (not Derby City)." },
   { id: "carers-direct", name: "NHS Carers Direct", cluster: "life", parent: "carers-derbyshire", areas: NAT, include: [{ label: "Is a carer", test: (f) => flag(f, "carer") }], exclude: [], contact: "0300 123 1053" },
 
@@ -201,14 +207,14 @@ export const SERVICES: Service[] = [
   // ============ Learning Disability & Autism ============
   { id: "ist", name: "Intensive Support Team (LD/Autism)", cluster: "ld-autism", areas: CC, include: [{ label: "Learning disability or autism", test: (f) => dx(f, "Learning disability") || dx(f, "Autism (ASD)") }], exclude: [], contact: "01332 268455", note: "Crisis/behaviour support, 16+." },
   { id: "ld-team", name: "Community LD Team (health)", cluster: "ld-autism", areas: CC, include: [{ label: "Learning disability", test: (f) => dx(f, "Learning disability") }], exclude: [] },
-  { id: "neuro-assess", name: "Adult Autism / ADHD Assessment", cluster: "ld-autism", areas: CC, include: [{ label: "Autism assessment, aged 18+", test: (f) => dx(f, "Autism (ASD)") && f.age >= 18 }], exclude: [{ label: "Global learning disability - use LD services", test: (f) => dx(f, "Learning disability") }], contact: "via GP; needs AQ50 + clinical rationale", note: "Adult neurodevelopmental assessment. Not for a pre-existing autism diagnosis." },
+  { id: "neuro-assess", name: "Adult Autism Assessment", cluster: "ld-autism", areas: CC, include: [{ label: "Autism assessment, aged 18+", test: (f) => dx(f, "Autism (ASD)") && f.age >= 18 }], exclude: [{ label: "Learning disability - use LD services instead", test: (f) => dx(f, "Learning disability") }], contact: "0300 1234574; self-referral + AQ50", note: "Adult autism assessment (18+), self-referral with AQ50, where autism is suspected of affecting mental health or day-to-day functioning. Not for a pre-existing autism diagnosis. Adult ADHD is NOT assessed here - GP refers via Right to Choose.", catchmentNote: "By registered GP (a Derby or Derbyshire GP)." },
   { id: "mencap", name: "Mencap", cluster: "ld-autism", areas: NAT, include: [{ label: "Learning disability", test: (f) => dx(f, "Learning disability") }], exclude: [], contact: "0808 808 1111" },
   { id: "autism-derbyshire", name: "Derbyshire Autism Information Service", cluster: "ld-autism", areas: ["county"], include: [{ label: "Autism", test: (f) => dx(f, "Autism (ASD)") }], exclude: [], contact: "autisminformationservice.org.uk" },
   { id: "nas", name: "National Autistic Society", cluster: "ld-autism", areas: NAT, include: [{ label: "Autism", test: (f) => dx(f, "Autism (ASD)") }], exclude: [], contact: "0808 800 4104" },
   { id: "autistica", name: "Autistica", cluster: "ld-autism", parent: "nas", areas: NAT, include: [{ label: "Autism", test: (f) => dx(f, "Autism (ASD)") }], exclude: [], note: "Research + telephone-appointment tips." },
 
   // ============ Veterans ============
-  { id: "op-courage", name: "Op COURAGE (NHS Veterans MH)", cluster: "vets", areas: NAT, include: [{ label: "Armed-forces veteran", test: (f) => flag(f, "veteran") }], exclude: [], contact: "0300 323 0137" },
+  { id: "op-courage", name: "Op COURAGE (NHS Veterans MH)", cluster: "vets", areas: NAT, include: [{ label: "Served 1+ day in the UK armed forces", test: (f) => flag(f, "veteran") }], exclude: [], contact: "0300 323 0137", note: "NHS veterans' mental health service. Any length of service, however long ago. Self-, family- or professional referral.", catchmentNote: "Resident in England + registered with (or willing to register with) an English GP." },
   { id: "combat-stress", name: "Combat Stress", cluster: "vets", parent: "op-courage", areas: NAT, include: [{ label: "Veteran with mental-health need", test: (f) => flag(f, "veteran") }], exclude: [], contact: "0800 138 1619 (24/7)" },
   { id: "help-heroes", name: "Help for Heroes", cluster: "vets", areas: NAT, include: [{ label: "Veteran / forces community", test: (f) => flag(f, "veteran") }], exclude: [], contact: "helpforheroes.org.uk" },
   { id: "ssafa", name: "SSAFA (Forces charity)", cluster: "vets", areas: NAT, include: [{ label: "Forces community", test: (f) => flag(f, "veteran") }], exclude: [], contact: "0800 731 4880" },
@@ -237,7 +243,7 @@ export interface Evaluation {
 
 export function evaluate(svc: Service, f: Facts): Evaluation {
   if (!svc.areas.includes(f.area)) {
-    return { state: "blocked", score: 0, blockedReason: `Outside catchment - serves ${svc.areas.map((a) => AREA_LABEL[a]).join(" / ")}`, met: [], unmet: [] };
+    return { state: "blocked", score: 0, blockedReason: `Outside catchment - accepts people living in ${svc.areas.map((a) => AREA_LABEL[a]).join(" / ")}`, met: [], unmet: [] };
   }
   const exHit = svc.exclude.find((c) => c.test(f));
   if (exHit) return { state: "blocked", score: 0, blockedReason: exHit.label, met: [], unmet: [] };

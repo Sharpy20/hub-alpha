@@ -216,8 +216,9 @@ export default function ServiceMapPage() {
           <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
           <span>
             <strong>Prototype v2.</strong> Services are grouped into <strong>type clusters</strong> and branch off each other where you reach one via another
-            (e.g. Trent PTS via Talking Therapies). A branch <strong>cuts off</strong> if its parent closes. Set the profile on the left; filter to one cluster to see it clearly.
-            Services + criteria are <strong>illustrative demo data</strong> (widened from the Derbyshire MH Helpline pack) - real criteria come from the research session.
+            (e.g. Trent PTS via Talking Therapies). A branch <strong>cuts off</strong> if its parent closes. Set the profile on the left; scroll to zoom and drag to pan; filter to one cluster to see it clearly.
+            <strong> Area means where the person LIVES</strong>, not where the service is based - most Derbyshire services set catchment by home address or registered GP (shown per service).
+            Criteria are being researched from each service&apos;s own site and are still <strong>to be clinically verified</strong>.
           </span>
         </div>
 
@@ -260,7 +261,7 @@ export default function ServiceMapPage() {
 
               <div className="space-y-2.5 text-sm">
                 <div>
-                  <p className="text-xs font-semibold text-gray-500 mb-1 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> Area (postcode)</p>
+                  <p className="text-xs font-semibold text-gray-500 mb-1 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> Where the person lives</p>
                   <Seg value={facts.area} onChange={(v) => set("area", v as Area)} options={[{ v: "city", label: "City" }, { v: "county", label: "County" }, { v: "out", label: "Out of area" }]} />
                 </div>
                 <div className="flex items-center justify-between gap-2">
@@ -416,9 +417,12 @@ export default function ServiceMapPage() {
                   <span className={`text-xs font-bold px-2 py-1 rounded-full ${EFF_META[selEff].badge}`}>{EFF_META[selEff].label}</span>
                 </div>
                 <p className="text-xs text-gray-500 mb-2">
-                  {CLUSTERS.find((c) => c.id === selSvc.cluster)?.label} - serves {selSvc.areas.map((a) => AREA_LABEL[a]).join(", ")}
+                  {CLUSTERS.find((c) => c.id === selSvc.cluster)?.label} - accepts people living in {selSvc.areas.map((a) => AREA_LABEL[a]).join(", ")}
                   {parentName ? ` - reached via ${parentName}` : ""}. {selSvc.note || ""}
                 </p>
+                {selSvc.catchmentNote && (
+                  <p className="flex items-start gap-1.5 text-xs text-gray-600 mb-2"><MapPin className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" /> Catchment: {selSvc.catchmentNote}</p>
+                )}
                 {selSvc.contact && <p className="flex items-start gap-1.5 text-sm text-gray-700 mb-2 font-medium"><Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-nhs-blue" /> {selSvc.contact}</p>}
                 {selEff === "cutoff" && <p className="flex items-start gap-1.5 text-sm text-gray-500 mb-1"><Ban className="w-4 h-4 mt-0.5 flex-shrink-0" /> Cut off - you reach this via {parentName}, which is currently closed.</p>}
                 {selEv.blockedReason && <p className="flex items-start gap-1.5 text-sm text-red-700 mb-1"><XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {selEv.blockedReason}</p>}

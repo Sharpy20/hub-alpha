@@ -20,28 +20,28 @@
     .form-header p { font-size: 12px; color: #425563; margin-top: 4px; }
     .field { padding: 10px 16px; border-bottom: 1px solid #e5e7eb; }
     .field .label { font-weight: 700; color: #005EB8; font-size: 12px; }
-    .fill { border-bottom: 1px dotted #9ca3af; min-height: 20px; display: inline-block; min-width: 180px; }
-    .item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #e5e7eb; }
-    .item .num { font-weight: 700; color: #005EB8; min-width: 18px; }
-    .item .topic { flex: 1; }
-    .item .topic .name { font-weight: 700; }
-    .item .topic .line { border-bottom: 1px dotted #cbd5e1; min-height: 18px; margin-top: 6px; }
-    .item .agree { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #425563; white-space: nowrap; }
-    .box { width: 15px; height: 15px; border: 1.5px solid #005EB8; display: inline-block; border-radius: 2px; }
+    .fill { border-bottom: 1px dotted #9ca3af; min-height: 20px; display: inline-block; min-width: 200px; }
+    .sec { border-bottom: 1px solid #e5e7eb; }
+    .sec-head { display: flex; gap: 10px; align-items: baseline; padding: 10px 16px 6px; }
+    .sec-head .num { font-weight: 700; color: #005EB8; min-width: 18px; }
+    .sec-head .name { font-weight: 700; }
+    .item { display: flex; align-items: flex-start; gap: 9px; padding: 4px 16px 4px 44px; }
+    .item:last-child { padding-bottom: 10px; }
+    .box { width: 14px; height: 14px; border: 1.4px solid #768692; border-radius: 2px; flex-shrink: 0; margin-top: 2px; }
     .foot { display: flex; gap: 24px; padding: 14px 16px; }
     .foot .cell { flex: 1; }
     @media print {
-      body { background: #fff; padding: 0; }
+      body { background: #fff; padding: 0; font-size: 12px; }
       .toolbar, .banner { display: none; }
       .form { border: none; max-width: 100%; }
-      .item { break-inside: avoid; }
+      .sec, .field { break-inside: avoid; }
     }
   </style>
 </head>
 <body>
   <div class="banner">
     wardHub reference copy of the Informal Inpatient Admission Questionnaire
-    <small>The topic headings and structure match the SystmOne form. The full statement under each heading is on the live SystmOne questionnaire - complete it there when a record is required. Do not enter real patient data on screen.</small>
+    <small>Wording taken from the live SystmOne questionnaire. Complete it on SystmOne when a record is required. Do not enter real patient data on screen.</small>
   </div>
   <div class="toolbar">
     <a class="back-link" href="/guides/informal-patient-contract">&larr; Back to the Informal Admission guide</a>
@@ -50,24 +50,74 @@
 
   <div class="form">
     <div class="form-header">
-      <h1>Informal Inpatient Admission Questionnaire</h1>
-      <p>A shared reference point between you and the ward team, so everyone is clear on your rights, the ward rules and how leave works. Each item below is discussed with you and the box is ticked when you have agreed it.</p>
+      <h1>Informal Inpatient Admission</h1>
+      <p>Discuss each point with the patient and tick the box once they have understood and agreed it.</p>
     </div>
 
-    <div class="field"><span class="label">1. Date of admission:</span> <span class="fill">&nbsp;</span></div>
+    <div class="field"><span class="label">1. Date of Admission:</span> <span class="fill">&nbsp;</span></div>
 
-    <div class="item"><span class="num">2</span><div class="topic"><span class="name">Rights as an informal patient</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
-    <div class="item"><span class="num">3</span><div class="topic"><span class="name">Leaving the ward</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
-    <div class="item"><span class="num">4</span><div class="topic"><span class="name">Safety and security rules</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
-    <div class="item"><span class="num">5</span><div class="topic"><span class="name">Smoking</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
-    <div class="item"><span class="num">6</span><div class="topic"><span class="name">Searching</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
-    <div class="item"><span class="num">7</span><div class="topic"><span class="name">Respect and behaviour</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
-    <div class="item"><span class="num">8</span><div class="topic"><span class="name">Treatment and care planning</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
-    <div class="item"><span class="num">9</span><div class="topic"><span class="name">Mobile phones and devices</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+    <div class="sec">
+      <div class="sec-head"><span class="num">2</span><span class="name">Your Rights as an Informal Patient</span></div>
+      <div class="item"><span class="box"></span><span>I understand I am free to leave the hospital at any time unless assessed otherwise under the Mental Health Act.</span></div>
+      <div class="item"><span class="box"></span><span>I will be involved in decisions about my care and treatment.</span></div>
+      <div class="item"><span class="box"></span><span>My confidentiality and privacy will be maintained, subject to safety requirements.</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><span class="num">3</span><span class="name">Leaving the Ward</span></div>
+      <div class="item"><span class="box"></span><span>I will discuss any leave from the ward with staff in advance.</span></div>
+      <div class="item"><span class="box"></span><span>I will inform staff before leaving and return by the agreed time.</span></div>
+      <div class="item"><span class="box"></span><span>I understand leave may be restricted for my safety.</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><span class="num">4</span><span class="name">Safety and Security Rules</span></div>
+      <div class="item"><span class="box"></span><span>I will not bring alcohol or illicit substances onto the ward.</span></div>
+      <div class="item"><span class="box"></span><span>I will not engage in violence, threats, or aggression.</span></div>
+      <div class="item"><span class="box"></span><span>I will inform staff immediately if I feel unsafe.</span></div>
+      <div class="item"><span class="box"></span><span>I will not bring restricted items (e.g., lighters, sharp objects) onto the ward.</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><span class="num">5</span><span class="name">Smoking</span></div>
+      <div class="item"><span class="box"></span><span>I understand that I cannot smoke whilst on the wards or on the grounds of the hospital.</span></div>
+      <div class="item"><span class="box"></span><span>I understand that I cannot keep lighters, matches, cigarettes or any tobacco on me in my belongings. Anything brought on to the ward will be disposed of.</span></div>
+      <div class="item"><span class="box"></span><span>I understand that I can only vape the Trust purchased vapes (this is due to safety and to ensure that the vapes used will not set off fire alarms).</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><span class="num">6</span><span class="name">Searching</span></div>
+      <div class="item"><span class="box"></span><span>I understand that safety checks and searches will be carried out. (This is to ensure your safety and the safety of others.)</span></div>
+      <div class="item"><span class="box"></span><span>I understand that ALL parcels and deliveries, including food deliveries will be searched. (If you do not wish for items to be searched please make alternative arrangements to have deliveries sent to family or friends).</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><span class="num">7</span><span class="name">Respect and Behaviour</span></div>
+      <div class="item"><span class="box"></span><span>I will treat everyone with kindness and respect.</span></div>
+      <div class="item"><span class="box"></span><span>I will not use discriminatory, racial or abusive language and this will be reported as a criminal act.</span></div>
+      <div class="item"><span class="box"></span><span>I will respect other patients' privacy and space.</span></div>
+      <div class="item"><span class="box"></span><span>I will keep noise to a minimum, especially during quiet hours.</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><span class="num">8</span><span class="name">Treatment and Care Planning</span></div>
+      <div class="item"><span class="box"></span><span>I will participate in care planning and treatment decisions.</span></div>
+      <div class="item"><span class="box"></span><span>I will discuss any concerns about medication or therapy with staff.</span></div>
+      <div class="item"><span class="box"></span><span>I will attend regular reviews with my care team.</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-head"><span class="num">9</span><span class="name">Mobile Phones and Devices</span></div>
+      <div class="item"><span class="box"></span><span>I will follow the ward policy regarding device use.</span></div>
+      <div class="item"><span class="box"></span><span>I will not record or photograph other patients or staff.</span></div>
+      <div class="item"><span class="box"></span><span>I understand that I may not have my own room as some wards are dormitories with shared bathrooms and toilets. I am agreeing to an informal admission and I will adhere to the Trust policies and procedures.</span></div>
+    </div>
+
+    <div class="field" style="background:#f9fafb;"><span class="box" style="margin-right:8px;vertical-align:middle;"></span><span>I confirm that I have discussed the above points with the patient and they understand their rights and responsibilities as an informal inpatient.</span></div>
 
     <div class="foot">
-      <div class="cell"><span class="label">10. Staff member completing the form:</span><br><span class="fill" style="min-width:220px">&nbsp;</span></div>
-      <div class="cell"><span class="label">11. Date completed:</span><br><span class="fill">&nbsp;</span></div>
+      <div class="cell"><span class="label">10. Staff Name:</span><br><span class="fill" style="min-width:240px">&nbsp;</span></div>
+      <div class="cell"><span class="label">11. Date:</span><br><span class="fill">&nbsp;</span></div>
     </div>
   </div>
 </body>

@@ -7,7 +7,7 @@ updates their row: status (done / partial / blocked), date, and a one-line resul
 
 | # | Prompt | Status | Date | Result |
 |---|--------|--------|------|--------|
-| 1 | Data map and governance audit | not started | | |
+| 1 | Data map and governance audit | done | 4 Jul | 12 findings in 01-data-governance-audit.md. Big one: 110 MB trust-docs dump still in GitHub history (needs Mike-approved history rewrite, F1). Also live ext 33333 in a guide, tracked FOCUS harvests, privacy copy contradicting code. |
 | 2 | Governance fix pass | not started | | |
 | 3 | DPIA + clinical safety starter pack | not started | | |
 | 4 | Security sweep | not started | | |

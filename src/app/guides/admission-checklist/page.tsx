@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import { ResourceLinks } from "@/components/guides/ResourceLinks";
+import { FocusLinks } from "@/components/guides/FocusLinks";
 import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
@@ -88,6 +89,13 @@ export default function AdmissionChecklistPage() {
               { label: "Admission Checklist" },
             ]}
           />
+        </div>
+
+        <div className="print:hidden">
+          <FocusLinks links={[
+            { label: "Admission to Inpatient Unit SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3464/2456" },
+            { label: "Core Assessment SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/2694/2456" },
+          ]} />
         </div>
 
         {/* Header */}

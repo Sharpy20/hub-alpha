@@ -33,6 +33,7 @@ export const SECLUSION_BUILDER: GuidePromptConfig = {
   focus: [
     { label: "Seclusion (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/9793/2454" },
     { label: "Seclusion & Long Term Segregation (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1858/2454" },
+    { label: "Segregation, Seclusion & Isolation SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3493/2456" },
   ],
   sections: [
     {

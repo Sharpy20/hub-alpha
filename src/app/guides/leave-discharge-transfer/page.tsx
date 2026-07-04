@@ -57,6 +57,8 @@ export default function LeaveDischargeTransferPage() {
         <FocusLinks links={[
           { label: "Discharge Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4829/2454" },
           { label: "Discharge, Transfers & Leave (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1795/2454" },
+          { label: "Discharge from Inpatient Unit SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3474/2456" },
+          { label: "Transfer to Another Ward SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3492/2456" },
         ]} />
 
         {/* Header */}

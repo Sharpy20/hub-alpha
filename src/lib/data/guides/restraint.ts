@@ -27,6 +27,7 @@ export const RESTRAINT_BUILDER: GuidePromptConfig = {
     { label: "Physical Restraint (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/12795/2454" },
     { label: "Rapid Tranquilisation", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/8105/2454" },
     { label: "Violence & Aggression / RT (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1944/2454" },
+    { label: "Rapid Tranquilisation SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3494/2456" },
   ],
   sections: [
     {

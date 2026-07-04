@@ -95,6 +95,7 @@ export default function MhaCheckerPage() {
           { label: "Section 5(2) (policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1827/2454" },
           { label: "Section 5(4) (policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1831/2454" },
           { label: "CTO (policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1822/2454" },
+          { label: "MHA Documents SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3481/2456" },
         ]} />
 
         {/* Step 1: pick the pathway */}

@@ -23,7 +23,10 @@ export const SAFETY_PLAN_BUILDER: GuidePromptConfig = {
     "Built on what already works for this person - not a generic template.",
     "Move from what they can do alone, to who they can turn to, to professional help.",
   ],
-  focus: [{ label: "Mental Health Safety Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4831/2454" }],
+  focus: [
+    { label: "Mental Health Safety Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4831/2454" },
+    { label: "Safety Planning SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/2701/2456" },
+  ],
   sections: [
     {
       id: "warning-signs",

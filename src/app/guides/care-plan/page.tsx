@@ -220,6 +220,7 @@ export default function CarePlanPage() {
           { label: "Creating a Care Plan (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/7498/2454" },
           { label: "Review / Update a Care Plan", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/5322/2454" },
           { label: "Viewing MH Care Plans", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/12869/2454" },
+          { label: "Care Planning SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/2710/2456" },
         ]} />
 
         {/* Header */}

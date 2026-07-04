@@ -510,6 +510,7 @@ export const GUIDES: Record<string, GuideData> = {
     ],
     focus: [
       { label: "HoNOS & Clustering on SystmOne (Trust how-to)", url: "https://focus.derbyshirehealthcareft.nhs.uk/application/files/4217/3633/9115/SystmOne_-_Honos_and_Clustering_v1.1.pdf" },
+      { label: "HoNOS SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3479/2456" },
       { label: "About HoNOS (RCPsych)", url: "https://www.rcpsych.ac.uk/improving-care/ccqi/health-of-nation-outcome-scales" },
     ],
     caseNote: `HoNOS completed on [DATE] ([baseline on admission / monthly review / discharge]). Scores recorded on SystmOne; total [X]. Scales of note: [e.g. 1 Agitated behaviour 3, 7 Depressed mood 3]. Compared with previous HoNOS ([DATE], total [Y]): [improved / unchanged / deteriorated]. Suggested cluster [N] - agreed / amended by MDT. Discussed at MDT.`,
@@ -901,7 +902,10 @@ export const GUIDES: Record<string, GuideData> = {
     id: "awol",
     title: "Absent & Missing Patients (AWOL)",
     description: "What to do when a patient is absent or missing, under Right Care Right Person",
-    focus: [{ label: "Missing & Absent Patients (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1833/2454" }],
+    focus: [
+      { label: "Missing & Absent Patients (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1833/2454" },
+      { label: "AWOL SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3467/2456" },
+    ],
     steps: [
       {
         id: "1",
@@ -1044,6 +1048,7 @@ export const GUIDES: Record<string, GuideData> = {
     focus: [
       { label: "Combined Capacity to Consent (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/11045/2454" },
       { label: "Mental Capacity (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1820/2454" },
+      { label: "Capacity & Competency SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3468/2456" },
     ],
     downloads: [
       { label: "Capacity Request (Police) - blank form to print", url: "/police-capacity-form.html" },
@@ -1094,6 +1099,7 @@ export const GUIDES: Record<string, GuideData> = {
       { label: "Section 17 Leave (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3431/2454" },
       { label: "Amending Section 17 Leave", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/8172/2454" },
       { label: "Section 17 Leave (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1828/2454" },
+      { label: "Section 17 SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3490/2456" },
     ],
     steps: [
       {

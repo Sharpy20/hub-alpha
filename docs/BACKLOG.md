@@ -17,15 +17,21 @@ Real FOCUS URLs now captured (temp link map). These fill the long-standing "86 p
 `#` form links" in the referral guides. Wire each as an "On FOCUS (login needed)" chip
 (existing FocusLinks pattern). Public ones (derby-talk, Living Well, perinatal portal) show openly.
 
-- [ ] Autism assessment guide <- Autism Referral Form (`/download_file/view/9204/685`) + AQ50 (`/download_file/view/1124/685`)
-- [ ] CAMHS <- CAMHS SPOA form (`/9315/685`) + Triage & Assessment Operational Policy (`/9478/685`)
-- [ ] ERP / emotion-regulation <- ERP leaflet (`/9591/685`), referral form/flowchart/guidance v12 (`/9592/685`), checklist (`/9593/685`)
-- [ ] Dietitian guide <- Referring to Dietetics via SystmOne (`/9465/685`)
-- [ ] ECT (if/where referenced) <- policy (`/9238/685`), anaesthesia policy (`/9237/685`), consent form 1 (`/2059/685`), consent form 4 (`/2060/685`), how-to (`/9239/685`)
-- [ ] Physiotherapy guide <- MH Physio external referral form (`/9363/685`) + leaflet (`/9364/685`)
-- [ ] Perinatal <- community referral form (.docx, trust site), Beeches referrer guide (`/10045/685`), community referrer guide (`/10047/685`), referral portal (perinatal.cpms.necsu.nhs.uk)
-- [ ] Specialist Day Services <- referral diagram (`/2411/685`) + 4 group leaflets (Living Well 1134, CST 1132, Lifestyle Matters 1133, Coping w/ Emotions 2410)
-- [ ] Discharge Liaison / placement <- DLT referral form (`/9715/685`)
+> **4 Jul progress (commit 65e24a8):** wired the 3 referral guides that already exist -
+> **dietitian, physio, ERP** - with their real FOCUS URLs. Also enhanced the guide viewer so
+> blank-form + other-guide tiles render `form.note` and show a "Blocked in demo" badge for
+> dead `#` links (was only blank forms + wagoll). The rest below need the guide BUILDING first
+> (they have no workflow yet) - that's a bigger job (full referral template + criteria), left for Mike to prioritise.
+
+- [ ] **NEW GUIDE needed** Autism assessment <- Autism Referral Form (`/download_file/view/9204/685`) + AQ50 (`/download_file/view/1124/685`)
+- [ ] **NEW GUIDE needed** CAMHS <- CAMHS SPOA form (`/9315/685`) + Triage & Assessment Operational Policy (`/9478/685`)
+- [x] ERP / emotion-regulation <- leaflet (`/9591/685`), referral form/flowchart/guidance v12 (`/9592/685`), checklist (`/9593/685`) - WIRED
+- [x] Dietitian guide <- Referring to Dietetics via SystmOne (`/9465/685`) - WIRED
+- [ ] **NEW GUIDE needed** ECT <- policy (`/9238/685`), anaesthesia policy (`/9237/685`), consent form 1 (`/2059/685`), consent form 4 (`/2060/685`), how-to (`/9239/685`) [ECT fasting/post-ECT content also in `_DIGEST.md` odds p3-5]
+- [x] Physiotherapy guide <- MH Physio external referral form (`/9363/685`) + leaflet (`/9364/685`) - WIRED
+- [ ] **NEW GUIDE needed** Perinatal <- community referral form (.docx, trust site), Beeches referrer guide (`/10045/685`), community referrer guide (`/10047/685`), referral portal (perinatal.cpms.necsu.nhs.uk)
+- [ ] **NEW GUIDE needed** Specialist Day Services <- referral diagram (`/2411/685`) + 4 group leaflets (Living Well 1134, CST 1132, Lifestyle Matters 1133, Coping w/ Emotions 2410)
+- [ ] **NEW GUIDE needed** Discharge Liaison / placement <- DLT referral form (`/9715/685`) (NB: distinct from the existing EDT guide - do not merge)
 - [ ] Talking Therapies references -> https://derby-talk.co.uk/for-professionals/ (and confirm Vita/Everyturn wording everywhere)
 - [ ] CMHT / Living Well references -> Living Well Operational Policy (.docx) + livingwellderbyshire.org.uk
 - FOCUS base host to prepend: `https://focus.derbyshirehealthcareft.nhs.uk`
@@ -94,28 +100,29 @@ capacity-assessment, blanket-restrictions, abc-chart, no-smoking, informal-patie
 
 ### F. Homework - now-actionable (unblocked by Mike's `docs 1\` docs)
 - [x] **section-132** (RED, enriched 4 Jul, commit 4152ca1) - added "Record it on SystmOne" step (S132/S132A questionnaires, Save-Final-Version auto-tasks MHA team, leaflet printing), S133 discharge duty, S132A/CTO recall note. FOCUS recording + policy links already wired. STILL BLOCKED: MHA office email (add when Mike supplies).
-- [ ] **capacity-assessment** (amber, needs expanding) - add S1 capacity questionnaire (screenshots image1-3) + police form (`MCA - Police Capacity Ax.docx`); link S1 guide + external capacity + trust policy.
+- [x] **capacity-assessment** (RED, enriched 4 Jul, commit 99f6f02) - added the SystmOne Combined Capacity form (functional + diagnostic stages) and the police Capacity Request form. FOCUS S1 + policy links already wired.
 - [x] **blanket-restrictions** (RED, enriched 4 Jul, commit add0a44) - added FOCUS brief-guide link, three-tier contraband list (banned/risk-assessed/advisory), ward-level authorisation aligned to policy (Ward Manager sign-off + register + Clinical Meeting/daily-huddle review).
-- [ ] **abc-chart** (amber) - better example from `completed ABC chart example.pdf`; link blank; consider builder using `ABC charts - Copy to add to.pptx`.
-- [ ] **honos** (RED) - use image6 (New Cluster box) + `waa honos.mp4` / `waa honos hist.mp4`; note WAA/secure/CAMHS formats differ.
-- [ ] **NEW guide: no-smoking-in-the-trust** - from `Staff legal warning. Smoking on NHS Wards.docx` (enforce; paraphernalia only returned on discharge, not for fresh air/leave).
-- [ ] **NEW guide: informal patient contract** - from `SystmOne_-_Gatekeeping_Assessment_v1.pdf` + `Informal_Admission_Questionnaire_v1.pdf` (new Informal Admissions Checklist, live 9 Dec).
-- [ ] **debrief** (RED->amber?) - confirm headers vs the real tool text (in dump doc); likely just a header check.
-- [ ] **admission-checklist** (amber) - swap any `Michael.sharpe4` personal-SharePoint links; link built wardHub guides.
-- [ ] Review **`odds and sods.pdf`** - Mike: "loads of stuff here, work through and grab it all."
+- [ ] **abc-chart** (amber) - better example from `completed ABC chart example.pdf`; link blank; consider builder using `ABC charts - Copy to add to.pptx`. (WAGOLL already linked; a builder is the bigger job.)
+- [ ] **honos** (RED) - use image6 (New Cluster box) + `waa honos.mp4` / `waa honos hist.mp4`; note WAA/secure/CAMHS formats differ. (Left - needs the video/image processing, Mike's eye.)
+- [x] **NEW guide: no-smoking** (RED, 4 Jul, commit 99f6f02) - "Smoke-Free Ward - Your Legal Duty", from the staff legal-warning doc; legal framework + what-to-do + ties to blanket restrictions. Restrictive Practice category.
+- [x] **NEW guide: informal-patient-contract** (RED, 4 Jul, commit 99f6f02) - Gatekeeping Assessment (18 mandatory Qs) + Informal Admission Questionnaire, from the two Dec-2025 SystmOne guides. Nurse Tools category.
+- [ ] **debrief** (already amber) - confirm headers vs the real tool text (in dump doc); likely just a header check. (Left - Mike's eye on exact headers.)
+- [x] **admission-checklist** (4 Jul, commit d15addb) - the 3 personal michael.sharpe4 OneDrive links swapped for in-app builders (risk-assessment, care-plan) + MHLO statutory-forms index for blank H3. PERSONAL block removed.
+- [x] Reviewed **`odds and sods.pdf`** - digested in `_DIGEST.md`; ECT/CMHT/arrange-MHA content pulled (arrange-mha rebuilt from the 8-step flowchart, commit d15addb). Remaining ECT/CMHT/day-services content needs NEW guides (see Section A).
 
 ### G. Homework - quick edits (small, mostly no doc needed)
-- [ ] **leave-discharge-transfer** - add "Has Prenoxad been considered? y/n" + prenoxad link under substance/intoxication-on-return; add "update fire board" to day-of nurse-in-charge tasks.
-- [ ] **dama** - out-of-hours: offer discharge meeting w/ regular medics + MDT; state unplanned = unsafe discharge, needs Datix; suggest short leave alternative.
-- [ ] **fridge-temps** - "Mark completed for today" button that ticks the linked diary task (feeds Section E diary-task audit).
-- [ ] **observation-engagement** - care-plan specifics (shower/toilet obs closeness); note lvl 1/2 rarely leave ward, MDT-agreed - fact-check + quote policy.
-- [ ] **safeguarding** - reword the 39%/54% line (referrals logged + build a picture even if not taken up).
-- [ ] **safeguarding-children** - the two consent press-options are about patient not family - fix.
-- [ ] **domestic-abuse-guide** - make URLs clickable; source/link the CADDA-DASH; reduce text density.
-- [ ] **mha-statuses** - add link to section-132 guide.
-- [ ] **arrange-mha-assessment** - drop step 5 (S1 doc, covered by step 6); fix "nhs.net to nhs.net" (social care use their own secure email, name TBC from Mike).
-- [ ] **admission-note** - add ward/unit names; make interactive (click a line -> pop-up suggestions, e.g. body-map/tattoos prompt for AWOL risk).
-- [ ] **Flip to amber if happy:** `prenoxad`, `transfer-in`, `awol` (complete drafts - await Mike's word).
+> **Most of Section G was ALREADY done in a prior session** (the BACKLOG was stale). Confirmed 4 Jul.
+- [x] **leave-discharge-transfer** - Prenoxad consideration + guide link AND "Fire board / evacuation list updated" in day-of tasks BOTH already present.
+- [x] **dama** - out-of-hours discharge meeting, "unplanned = unsafe discharge -> Datix", and short-leave alternative all already present.
+- [ ] **fridge-temps** - "Mark completed for today" button that ticks the linked diary task (feeds Section E diary-task audit). (Interactive/code feature - bigger, left.)
+- [x] **observation-engagement** - shower/toilet intimate-care obs closeness AND "L1/L2 rarely leave ward, MDT-agreed" already present.
+- [x] **safeguarding** - the 39%/54% line already reworded ("even those not taken up are still logged... build a picture").
+- [ ] **safeguarding-children** - the two consent press-options are about patient not family - fix. (Left - the consent step is family-consent; needs Mike's eye on exact intent.)
+- [ ] **domestic-abuse-guide** - make URLs clickable; source/link the CADDA-DASH; reduce text density. (Left - subjective density call for Mike.)
+- [x] **mha-statuses** - already has the related link to section-132.
+- [x] **arrange-mha-assessment** - REBUILT from the 8-step flowchart (commit d15addb); nhs.net line already reflects "social care use their own secure email". Still RED: secure-email name TBC from Mike.
+- [ ] **admission-note** - add ward/unit names; make interactive (click a line -> pop-up suggestions). (Interactive = bigger, left.)
+- [ ] **Flip to amber if happy:** `prenoxad`, `transfer-in`, `awol` (complete drafts - await Mike's word). [Claude won't self-flip approval status - that's Mike's editorial call.]
 
 ### H. Homework - decisions still on Mike
 - [BLOCKED] **section-136** - expand with FAQ (force treatment / seclude / out-of-area / child in 136) or drop? Research FOCUS+external first, then decide.

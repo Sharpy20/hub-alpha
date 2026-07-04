@@ -43,7 +43,10 @@ Built this session: ~109 demo services, 12 type clusters, node-off-node branchin
 cutoff, public contacts in detail panel, search, and real FOCUS criteria folded in (CMHT/Living Well,
 ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standalone page, not in nav.
 
-- [ ] Tighten remaining criteria from FOCUS (perinatal, CAMHS pathways, others) - best-effort now, "verify".
+- [x] **Zoom + pan added** (4 Jul eve, commit 6999d8f) - wheel-to-cursor zoom, zoom buttons, drag-to-pan.
+- [x] **Area = where the person LIVES made explicit** (commit c3ab1c5) - `areas[]` documented as residence-catchment (not service location); new `catchmentNote` per service (home address vs registered GP); UI reworded. New "Pregnant/<24m postpartum" profile flag.
+- [~] **Per-service research** - key ~11 local services now researched from their own sites + criteria/catchment corrected (Talking Therapies, Living Well/CMHT, Eating Disorder, Cranstoun/DRP substance, Perinatal, Safe Havens, Adult Autism, Op COURAGE, Age UK). REMAINING ~90 services still illustrative demo - need further research rounds; each still marked "to be clinically verified".
+- [ ] Tighten remaining criteria from FOCUS (CAMHS pathways, condition charities, etc.) - best-effort now, "verify".
 - [ ] Decide real home: a button on the patient profile ("what's open to this person"), pulling approved dated facts instead of manual toggles (full-build/PII feature).
 - [ ] Refinement idea: a child off an "unknown" (not just "closed") parent still shows open - consider inheriting parent state.
 - [ ] Sweep other FOCUS sections for more services/links (Mike logged in; only did /clinical/referrals).

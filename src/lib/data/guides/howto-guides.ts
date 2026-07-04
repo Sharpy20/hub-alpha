@@ -239,6 +239,9 @@ export const GUIDES: Record<string, GuideData> = {
     id: "blanket-restrictions",
     title: "Blanket Restrictions & Restrictive Practice",
     description: "What counts as a restrictive practice or a blanket restriction, which are allowed, and how to justify and review a restriction",
+    focus: [
+      { label: "Brief guide - blanket restrictions on mental health wards (Trust)", url: "https://focus.derbyshirehealthcareft.nhs.uk/application/files/5815/6595/2361/Brief_guide_blanket_restrictions_mental_health_wards.pdf" },
+    ],
     steps: [
       {
         id: "what",
@@ -273,12 +276,12 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "authorise-review",
         title: "Authorising and reviewing a ward-level restriction",
-        content: `If a ward needs a blanket restriction over and above the Trust-wide list, it should:\n\n- be for the shortest reasonable time,\n- be monitored and reviewed through local governance, and\n- if it needs to run indefinitely, be agreed with the Hospital Managers and taken to the Reducing Restrictive Practice Group for oversight.\n\nOnce in place, communicate it clearly to patients and visitors (e.g. signage in reception).`,
+        content: `If a ward needs a blanket restriction over and above the Trust-wide list:\n\n- explore less restrictive alternatives first,\n- get it authorised by the Ward Manager or above,\n- keep it proportionate and for the shortest reasonable time,\n- tell every affected patient why, and document it,\n- review it at the ward Clinical Meeting and in the daily huddle / handover, and\n- have the Ward Manager record it on the ward's register of blanket restrictions.\n\nIf it needs to run indefinitely, agree it with the Hospital Managers and take it to the Reducing Restrictive Practice Group for oversight. Communicate it clearly to patients and visitors (for example, signage in reception).`,
       },
       {
         id: "contraband",
         title: "Prohibited and restricted items",
-        content: `Prohibited and restricted (contraband) items are listed on the ward contraband list (the Working Age Adult Acute Inpatient Services Contraband List). Check the current list - it is kept in step with the Trust Smoke Free policy and is updated from time to time.`,
+        content: `The ward contraband list (the Working Age Adult Acute Inpatient Services Contraband List) sorts items into three groups. Always check the current list on your ward - it is kept in step with the Trust Smoke Free policy and updated from time to time.\n\nBANNED outright (no patient may have them): ignition sources (lighters, matches), alcohol, illicit drugs, new psychoactive substances, illegal pornography, material inciting violence or hatred, weapons, coat hangers, plastic bags, vapes bought outside the hospital, tobacco and cigarettes, chewing gum.\n\nRESTRICTED - allowed only after an individual risk assessment: glass items, mirrors and bottles, scissors, clippers and files, razors, aerosols, essential oils, metal cans.\n\nADVISORY - discouraged but a personal choice: more than £20 in cash, expensive jewellery, watches or clothing.`,
       },
     ],
     caseNote: `Individual restriction agreed for [PATIENT] on [DATE] following MDT risk assessment: [RESTRICTION]. Rationale: [RISK]. Less restrictive options considered. Discussed with the patient, including the impact and how / when it will be reviewed (review date [DATE]). Documented on the electronic record. Agreed by [MDT / lead].`,

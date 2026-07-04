@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capacity Request (Police) - Blank Form</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, "Source Sans 3", sans-serif; background: #f3f4f6; color: #212B32; padding: 16px; }
+    .banner { background: #FFB81C; color: #212B32; padding: 12px 20px; border-radius: 8px; margin: 0 auto 16px; max-width: 800px; font-size: 13px; font-weight: 600; text-align: center; }
+    .banner small { font-weight: 400; display: block; margin-top: 4px; }
+    .toolbar { max-width: 800px; margin: 0 auto 12px; display: flex; justify-content: space-between; align-items: center; }
+    .back-link { color: #005EB8; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; }
+    .print-btn { background: #005EB8; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .print-btn:hover { background: #003087; }
+    .form { background: #fff; border: 1px solid #d1d5db; border-radius: 4px; max-width: 800px; margin: 0 auto; font-size: 13px; }
+    .form-header { background: #f9fafb; padding: 12px 16px; border-bottom: 2px solid #005EB8; }
+    .form-header h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+    .form-header p { font-size: 12px; color: #425563; margin-top: 2px; }
+    .section-title { background: #005EB8; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 16px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .row { display: flex; border-bottom: 1px solid #e5e7eb; }
+    .row:last-child { border-bottom: none; }
+    .cell { padding: 10px 16px; flex: 1; border-right: 1px solid #e5e7eb; }
+    .cell:last-child { border-right: none; }
+    .label { font-weight: 600; color: #425563; display: block; margin-bottom: 4px; }
+    .fill { border-bottom: 1px dotted #9ca3af; min-height: 20px; display: block; }
+    .q { padding: 10px 16px; border-bottom: 1px solid #e5e7eb; }
+    .q .ask { font-weight: 600; }
+    .q .comment { margin-top: 6px; }
+    .q .comment .label { font-weight: 400; font-style: italic; }
+    .yn { float: right; font-weight: 700; letter-spacing: 4px; }
+    .foot { padding: 14px 16px; display: flex; gap: 24px; }
+    .foot .cell { border: none; padding: 0; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .toolbar, .banner { display: none; }
+      .form { border: none; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    wardHub reference copy of the Capacity Request (Police) form
+    <small>For reference and printing. Use your ward's current official form when one is required. Do not enter real patient data on screen.</small>
+  </div>
+  <div class="toolbar">
+    <a class="back-link" href="/guides/capacity-assessment">&larr; Back to the Capacity Assessment guide</a>
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <div class="form">
+    <div class="form-header">
+      <h1>CAPACITY REQUEST</h1>
+      <p>For completion by the Responsible Clinician / MH Nurse</p>
+    </div>
+
+    <div class="row">
+      <div class="cell"><span class="label">Name</span><span class="fill">&nbsp;</span></div>
+      <div class="cell"><span class="label">Contact No.</span><span class="fill">&nbsp;</span></div>
+    </div>
+    <div class="row">
+      <div class="cell"><span class="label">Email</span><span class="fill">&nbsp;</span></div>
+      <div class="cell"><span class="label">Designation</span><span class="fill">&nbsp;</span></div>
+    </div>
+
+    <div class="section-title">Service User Details</div>
+    <div class="row">
+      <div class="cell"><span class="label">Name</span><span class="fill">&nbsp;</span></div>
+      <div class="cell"><span class="label">DOB</span><span class="fill">&nbsp;</span></div>
+    </div>
+    <div class="row">
+      <div class="cell"><span class="label">Incident Type</span><span class="fill">&nbsp;</span></div>
+      <div class="cell"><span class="label">Date</span><span class="fill">&nbsp;</span></div>
+    </div>
+    <div class="row">
+      <div class="cell"><span class="label">Datix</span><span class="fill">&nbsp;</span></div>
+      <div class="cell"><span class="label">Address (if not an inpatient)</span><span class="fill">&nbsp;</span></div>
+    </div>
+    <div class="row">
+      <div class="cell"><span class="label">Detained under MHA - Section</span><span class="fill">&nbsp;</span></div>
+      <div class="cell"><span class="label">NHS No.</span><span class="fill">&nbsp;</span></div>
+    </div>
+
+    <div class="section-title">Service User's Mental State</div>
+    <div class="q" style="font-style: italic; color: #425563;">Please use your professional judgement and opinion to answer the questions below.</div>
+    <div class="q">
+      <div class="ask">Would you consider the service user at the time of the alleged offence was capable of understanding his/her actions?</div>
+      <div class="comment"><span class="label">Comment:</span><span class="fill">&nbsp;</span></div>
+    </div>
+    <div class="q">
+      <div class="ask">Would you consider the service user at the time of the alleged offence was capable of controlling his/her actions?</div>
+      <div class="comment"><span class="label">Comment:</span><span class="fill">&nbsp;</span></div>
+    </div>
+    <div class="q">
+      <div class="ask">Would you consider the service user is capable of understanding the legal process if a prosecution is sought?</div>
+      <div class="comment"><span class="label">Comment:</span><span class="fill">&nbsp;</span></div>
+    </div>
+    <div class="q">
+      <div class="ask">Is the Service User fit to be interviewed by the Police? <span class="yn">Y / N</span></div>
+    </div>
+    <div class="q">
+      <div class="ask">Does the Service User require an Appropriate Adult? <span class="yn">Y / N</span></div>
+      <div class="comment"><span class="label">Comment:</span><span class="fill">&nbsp;</span></div>
+    </div>
+    <div class="q">
+      <div class="ask">Would you consider that a prosecution of the service user would be detrimental to his/her care plan?</div>
+      <div class="comment"><span class="label">Comment:</span><span class="fill">&nbsp;</span></div>
+    </div>
+
+    <div class="foot">
+      <div class="cell" style="flex:2"><span class="label">Signed</span><span class="fill">&nbsp;</span></div>
+      <div class="cell" style="flex:2"><span class="label">Print Name</span><span class="fill">&nbsp;</span></div>
+      <div class="cell" style="flex:1"><span class="label">Date</span><span class="fill">&nbsp;</span></div>
+    </div>
+  </div>
+</body>
+</html>

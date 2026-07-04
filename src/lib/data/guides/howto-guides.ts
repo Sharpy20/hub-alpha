@@ -19,6 +19,9 @@ export interface GuideData {
   caseNote?: string;
   // Other in-app guides worth linking to from this one (internal /guides links).
   related?: { label: string; guideId: string }[];
+  // Printable / downloadable blank forms (public HTML in /public, e.g. a blank
+  // form the nurse prints). Rendered as a "Printable forms" section.
+  downloads?: { label: string; url: string }[];
 }
 
 export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: string }> = {
@@ -1038,6 +1041,9 @@ export const GUIDES: Record<string, GuideData> = {
     focus: [
       { label: "Combined Capacity to Consent (SystmOne)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/11045/2454" },
       { label: "Mental Capacity (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1820/2454" },
+    ],
+    downloads: [
+      { label: "Capacity Request (Police) - blank form to print", url: "/police-capacity-form.html" },
     ],
     steps: [
       {

@@ -16,7 +16,7 @@ import { useTour } from "@/app/tour-provider";
 import {
   CheckCircle, FileText, Eye, BookOpen, Send, Clipboard, ClipboardList,
   Calendar, Shield, ArrowLeft, ArrowRight, Check, Copy, Download,
-  ExternalLink, Phone, Mail, Pencil, UserPlus, AlertCircle, Lightbulb, Info,
+  ExternalLink, Phone, Mail, Pencil, UserPlus, AlertCircle, Lightbulb, Info, Printer,
 } from "lucide-react";
 import {
   WORKFLOWS, DEFAULT_WORKFLOW, STEP_GRADIENTS, SECTION_OPTIONS, AREA_OPTIONS,
@@ -284,7 +284,70 @@ export default function UnifiedGuidePage() {
         </div>
       )}
 
-      <div className="space-y-6">
+      {/* Print-only full guide. Renders EVERY step from the same GUIDES / WORKFLOWS
+          data the interactive view uses, so any future edit to a guide automatically
+          flows through to its printout - there is no separate copy to keep in sync. */}
+      <div className="hidden print:block text-black">
+        <h1 className="text-2xl font-bold">{title}</h1>
+        <p className="text-sm text-gray-700 mb-1">{description}</p>
+        <p className="text-[10px] uppercase tracking-wide text-gray-500 mb-4">
+          wardHub{!isReferral ? ` - ${config.category}` : " - Referral workflow"} - printed reference, verify against the live guide
+        </p>
+
+        {!isReferral && guide.steps.map((s, i) => (
+          <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
+            <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
+            <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content)}</div>
+            {s.tip && <p className="text-sm italic text-gray-600 mt-1">Tip: {s.tip}</p>}
+          </section>
+        ))}
+
+        {isReferral && workflow.steps.map((s, i) => {
+          const links = s.forms ? [...s.forms.blank, ...s.forms.wagoll, ...s.forms.otherGuides].filter((f) => f.url && f.url !== "#") : [];
+          return (
+            <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
+              <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
+              <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content)}</div>
+              {links.length > 0 && (
+                <ul className="text-sm list-disc ml-5 mt-1">
+                  {links.map((f) => <li key={f.label}>{f.label}: {f.url}</li>)}
+                </ul>
+              )}
+              {s.methods && s.methods.length > 0 && (
+                <ul className="text-sm list-disc ml-5 mt-1">
+                  {s.methods.map((m) => <li key={m.label + m.value}>{m.label}: {m.value}</li>)}
+                </ul>
+              )}
+              {s.clipboardText && (
+                <pre className="text-sm whitespace-pre-wrap bg-gray-50 border border-gray-200 rounded p-2 mt-1">{s.clipboardText}</pre>
+              )}
+            </section>
+          );
+        })}
+
+        {!isReferral && guide.caseNote && (
+          <section className="mt-4" style={{ breakInside: "avoid" }}>
+            <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">Case note</h2>
+            <pre className="text-sm whitespace-pre-wrap bg-gray-50 border border-gray-200 rounded p-2">{guide.caseNote}</pre>
+          </section>
+        )}
+
+        {!isReferral && guide.focus && guide.focus.length > 0 && (
+          <section className="mt-4">
+            <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">On FOCUS (trust login needed)</h2>
+            <ul className="text-sm list-disc ml-5">{guide.focus.map((f) => <li key={f.url}>{f.label}: {f.url}</li>)}</ul>
+          </section>
+        )}
+
+        {!isReferral && guide.downloads && guide.downloads.length > 0 && (
+          <section className="mt-4">
+            <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">Printable forms</h2>
+            <ul className="text-sm list-disc ml-5">{guide.downloads.map((d) => <li key={d.url}>{d.label}: {d.url}</li>)}</ul>
+          </section>
+        )}
+      </div>
+
+      <div className="space-y-6 print:hidden">
         <Breadcrumb items={[
           { label: "Guides", href: link("/guides") },
           { label: title },
@@ -297,11 +360,20 @@ export default function UnifiedGuidePage() {
               <ArrowLeft className="w-5 h-5" />
               <span className="font-medium">Back to Guides</span>
             </button>
-            {canEdit && (
-              <Link href={link("/admin/workflows")} className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline">
-                <Pencil className="w-4 h-4" /> Edit
-              </Link>
-            )}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => window.print()}
+                aria-label="Print this guide"
+                className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors print:hidden"
+              >
+                <Printer className="w-4 h-4" /> Print
+              </button>
+              {canEdit && (
+                <Link href={link("/admin/workflows")} className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline">
+                  <Pencil className="w-4 h-4" /> Edit
+                </Link>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">
@@ -843,6 +915,20 @@ export default function UnifiedGuidePage() {
               ))}
             </div>
             <p className="text-xs text-amber-700 mt-2 italic">Example only - do not submit. Fictional data.</p>
+          </div>
+        )}
+
+        {/* How-to: Printable / downloadable blank forms */}
+        {!isReferral && guide.downloads && guide.downloads.length > 0 && (
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+            <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2"><Download className="w-5 h-5 text-blue-600" /> Printable forms</h3>
+            <div className="flex flex-wrap gap-2">
+              {guide.downloads.map((d, i) => (
+                <a key={i} href={d.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-lg text-sm font-semibold text-blue-800 hover:bg-blue-100 border border-blue-300 transition-colors no-underline">
+                  <FileText className="w-4 h-4" /> {d.label}
+                </a>
+              ))}
+            </div>
           </div>
         )}
 

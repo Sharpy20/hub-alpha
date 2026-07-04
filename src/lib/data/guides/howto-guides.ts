@@ -128,6 +128,9 @@ export const GUIDES: Record<string, GuideData> = {
       { label: "Section 132 - Reading Patient Rights", guideId: "section-132" },
       { label: "Capacity Assessment", guideId: "capacity-assessment" },
     ],
+    downloads: [
+      { label: "Informal Admission Questionnaire - blank form to print", url: "/informal-admission-agreement.html" },
+    ],
     steps: [
       {
         id: "what",
@@ -146,8 +149,8 @@ export const GUIDES: Record<string, GuideData> = {
         id: "informal-questionnaire",
         title: "Informal Admission Questionnaire - the agreement with the patient",
         content:
-          "Go through this WITH the patient, ticking each item as you discuss and they agree it. It reduces misunderstandings and makes sure the patient knows their rights, the ward safety rules and how leave works.\n\n1. Date of admission.\n2. Rights as an informal patient.\n3. Leaving the ward.\n4. Safety and security rules.\n5. Smoking.\n6. Searching.\n7. Respect and behaviour.\n8. Treatment and care planning.\n9. Mobile phones and devices.\n10. Your name, as the staff member confirming the patient has been informed.\n11. The date the form was completed.",
-        tip: "This is a conversation, not a form to read at someone. It pairs with the Section 132 rights an informal patient is also owed - do both properly and the patient starts the admission knowing where they stand.",
+          "This is a questionnaire the patient agrees to, item by item - not a list you read out. You take each topic in turn, discuss it with the patient, and tick the box when they have understood and agreed it. It reduces misunderstandings and makes sure the patient knows their rights, the ward safety rules and how leave works.\n\nFirst record the date of admission (question 1). Then, for each of the following, discuss it and tick when agreed:\n\n2. Rights as an informal patient - agreed\n3. Leaving the ward - agreed\n4. Safety and security rules - agreed\n5. Smoking - agreed\n6. Searching - agreed\n7. Respect and behaviour - agreed\n8. Treatment and care planning - agreed\n9. Mobile phones and devices - agreed\n\nThen enter your name as the staff member confirming the patient has been informed (question 10), and the date the form was completed (question 11).\n\nYou can print a blank copy in this agree-per-item format from the Printable forms link below the steps.",
+        tip: "Do it as a conversation and tick each item only once the patient genuinely agrees it. It pairs with the Section 132 rights an informal patient is also owed - do both properly and the patient starts the admission knowing where they stand.",
       },
       {
         id: "finish",

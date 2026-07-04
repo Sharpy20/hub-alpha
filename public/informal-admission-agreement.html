@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informal Inpatient Admission Questionnaire - Blank Form</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, "Source Sans 3", sans-serif; background: #f3f4f6; color: #212B32; padding: 16px; }
+    .banner { background: #FFB81C; color: #212B32; padding: 12px 20px; border-radius: 8px; margin: 0 auto 16px; max-width: 820px; font-size: 13px; font-weight: 600; text-align: center; }
+    .banner small { font-weight: 400; display: block; margin-top: 4px; }
+    .toolbar { max-width: 820px; margin: 0 auto 12px; display: flex; justify-content: space-between; align-items: center; }
+    .back-link { color: #005EB8; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; }
+    .print-btn { background: #005EB8; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .print-btn:hover { background: #003087; }
+    .form { background: #fff; border: 1px solid #d1d5db; border-radius: 4px; max-width: 820px; margin: 0 auto; font-size: 13px; }
+    .form-header { background: #f9fafb; padding: 12px 16px; border-bottom: 2px solid #005EB8; }
+    .form-header h1 { font-size: 18px; font-weight: 700; }
+    .form-header p { font-size: 12px; color: #425563; margin-top: 4px; }
+    .field { padding: 10px 16px; border-bottom: 1px solid #e5e7eb; }
+    .field .label { font-weight: 700; color: #005EB8; font-size: 12px; }
+    .fill { border-bottom: 1px dotted #9ca3af; min-height: 20px; display: inline-block; min-width: 180px; }
+    .item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 16px; border-bottom: 1px solid #e5e7eb; }
+    .item .num { font-weight: 700; color: #005EB8; min-width: 18px; }
+    .item .topic { flex: 1; }
+    .item .topic .name { font-weight: 700; }
+    .item .topic .line { border-bottom: 1px dotted #cbd5e1; min-height: 18px; margin-top: 6px; }
+    .item .agree { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #425563; white-space: nowrap; }
+    .box { width: 15px; height: 15px; border: 1.5px solid #005EB8; display: inline-block; border-radius: 2px; }
+    .foot { display: flex; gap: 24px; padding: 14px 16px; }
+    .foot .cell { flex: 1; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .toolbar, .banner { display: none; }
+      .form { border: none; max-width: 100%; }
+      .item { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    wardHub reference copy of the Informal Inpatient Admission Questionnaire
+    <small>The topic headings and structure match the SystmOne form. The full statement under each heading is on the live SystmOne questionnaire - complete it there when a record is required. Do not enter real patient data on screen.</small>
+  </div>
+  <div class="toolbar">
+    <a class="back-link" href="/guides/informal-patient-contract">&larr; Back to the Informal Admission guide</a>
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <div class="form">
+    <div class="form-header">
+      <h1>Informal Inpatient Admission Questionnaire</h1>
+      <p>A shared reference point between you and the ward team, so everyone is clear on your rights, the ward rules and how leave works. Each item below is discussed with you and the box is ticked when you have agreed it.</p>
+    </div>
+
+    <div class="field"><span class="label">1. Date of admission:</span> <span class="fill">&nbsp;</span></div>
+
+    <div class="item"><span class="num">2</span><div class="topic"><span class="name">Rights as an informal patient</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+    <div class="item"><span class="num">3</span><div class="topic"><span class="name">Leaving the ward</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+    <div class="item"><span class="num">4</span><div class="topic"><span class="name">Safety and security rules</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+    <div class="item"><span class="num">5</span><div class="topic"><span class="name">Smoking</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+    <div class="item"><span class="num">6</span><div class="topic"><span class="name">Searching</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+    <div class="item"><span class="num">7</span><div class="topic"><span class="name">Respect and behaviour</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+    <div class="item"><span class="num">8</span><div class="topic"><span class="name">Treatment and care planning</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+    <div class="item"><span class="num">9</span><div class="topic"><span class="name">Mobile phones and devices</span><div class="line"></div></div><span class="agree"><span class="box"></span> Discussed &amp; agreed</span></div>
+
+    <div class="foot">
+      <div class="cell"><span class="label">10. Staff member completing the form:</span><br><span class="fill" style="min-width:220px">&nbsp;</span></div>
+      <div class="cell"><span class="label">11. Date completed:</span><br><span class="fill">&nbsp;</span></div>
+    </div>
+  </div>
+</body>
+</html>

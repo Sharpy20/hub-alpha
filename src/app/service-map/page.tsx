@@ -138,6 +138,11 @@ export default function ServiceMapPage() {
   const endPan = () => { panRef.current = null; };
   const isZoomed = view.w < 1099;
 
+  // Show/hide paths by their effective state (e.g. hide Closed, hide Not-eligible-yet).
+  const [hiddenStates, setHiddenStates] = useState<Set<Effective>>(() => new Set());
+  const toggleState = (k: Effective) =>
+    setHiddenStates((s) => { const n = new Set(s); if (n.has(k)) n.delete(k); else n.add(k); return n; });
+
   const set = <K extends keyof Facts>(k: K, v: Facts[K]) => setFacts((f) => ({ ...f, [k]: v }));
   const toggleArr = (k: "diagnoses" | "flags", v: string) =>
     setFacts((f) => ({ ...f, [k]: f[k].includes(v) ? f[k].filter((x) => x !== v) : [...f[k], v] }));
@@ -358,6 +363,7 @@ export default function ServiceMapPage() {
                   const p = pos[s.id];
                   const from = s.parent && pos[s.parent] ? pos[s.parent] : { x: CX, y: CY };
                   const eff = effective(s.id);
+                  if (hiddenStates.has(eff)) return null;
                   const color = eff === "blocked" ? "#dc2626" : eff === "cutoff" ? "#cbd5e1" : lerp(evals[s.id].score);
                   return (
                     <line key={"p" + s.id} x1={from.x} y1={from.y} x2={p.x} y2={p.y}
@@ -378,6 +384,7 @@ export default function ServiceMapPage() {
                 {visServices.map((s) => {
                   const p = pos[s.id];
                   const eff = effective(s.id);
+                  if (hiddenStates.has(eff)) return null;
                   const meta = EFF_META[eff];
                   const r = nodeR(p.depth);
                   const isSel = selected === s.id;
@@ -400,13 +407,28 @@ export default function ServiceMapPage() {
               </svg>
             </div>
 
-            {/* legend */}
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600">
-              <span className="inline-flex items-center gap-1.5"><span className="w-4 h-1 rounded bg-green-600" /> Open</span>
-              <span className="inline-flex items-center gap-1.5"><span className="w-4 h-1 rounded bg-lime-500" /> Partly open</span>
-              <span className="inline-flex items-center gap-1.5"><span className="w-4 h-1 rounded bg-slate-300" /> Not eligible yet</span>
-              <span className="inline-flex items-center gap-1.5"><span className="w-4 h-1 rounded bg-red-600" style={{ backgroundImage: "repeating-linear-gradient(90deg,#dc2626 0 4px,transparent 4px 8px)" }} /> Closed</span>
-              <span className="inline-flex items-center gap-1.5"><Ban className="w-3.5 h-3.5 text-slate-400" /> Cut off (parent closed)</span>
+            {/* legend = show/hide toggles */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-xs text-gray-400 mr-1">Show / hide:</span>
+              {([
+                { k: "open" as Effective, label: "Open", swatch: <span className="w-4 h-1 rounded bg-green-600" /> },
+                { k: "partial" as Effective, label: "Partly open", swatch: <span className="w-4 h-1 rounded bg-lime-500" /> },
+                { k: "unknown" as Effective, label: "Not eligible yet", swatch: <span className="w-4 h-1 rounded bg-slate-300" /> },
+                { k: "blocked" as Effective, label: "Closed", swatch: <span className="w-4 h-1 rounded" style={{ backgroundImage: "repeating-linear-gradient(90deg,#dc2626 0 4px,transparent 4px 8px)" }} /> },
+                { k: "cutoff" as Effective, label: "Cut off", swatch: <Ban className="w-3.5 h-3.5 text-slate-400" /> },
+              ]).map(({ k, label, swatch }) => {
+                const hidden = hiddenStates.has(k);
+                return (
+                  <button key={k} onClick={() => toggleState(k)} aria-pressed={!hidden}
+                    title={hidden ? `Show ${label}` : `Hide ${label}`}
+                    className={`inline-flex items-center gap-1.5 text-xs border rounded-lg px-2 py-1 transition-colors ${hidden ? "border-gray-200 bg-gray-50 text-gray-300 line-through" : "border-gray-200 bg-white text-gray-600 hover:border-nhs-blue"}`}>
+                    <span className={hidden ? "opacity-30" : ""}>{swatch}</span> {label} ({counts[k]})
+                  </button>
+                );
+              })}
+              {hiddenStates.size > 0 && (
+                <button onClick={() => setHiddenStates(new Set())} className="text-xs font-semibold text-nhs-blue hover:text-nhs-dark-blue ml-1">Show all</button>
+              )}
             </div>
 
             {/* selected detail */}

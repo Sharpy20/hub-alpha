@@ -65,6 +65,8 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   dols: { icon: "🔒", gradient: "from-violet-500 to-violet-700", category: "Legal & Advocacy" },
   "blanket-restrictions": { icon: "⛔", gradient: "from-orange-600 to-red-700", category: "Restrictive Practice" },
   "student-placement": { icon: "🎓", gradient: "from-blue-500 to-indigo-700", category: "Learning & Development" },
+  "no-smoking": { icon: "🚭", gradient: "from-red-600 to-orange-700", category: "Restrictive Practice" },
+  "informal-patient-contract": { icon: "🤝", gradient: "from-sky-500 to-blue-700", category: "Nurse Tools" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -75,6 +77,85 @@ export const GUIDE_WAGOLLS: Record<string, { label: string; url: string }[]> = {
 };
 
 export const GUIDES: Record<string, GuideData> = {
+  "no-smoking": {
+    id: "no-smoking",
+    title: "Smoke-Free Ward - Your Legal Duty",
+    description: "Why smoking on the ward is a staff accountability issue, not just a patient one, and exactly what to do when you see it",
+    related: [
+      { label: "Blanket Restrictions & Restrictive Practice", guideId: "blanket-restrictions" },
+    ],
+    steps: [
+      {
+        id: "bottom-line",
+        title: "The bottom line",
+        content:
+          "The whole Trust is smoke-free. Allowing or ignoring smoking on NHS premises breaches UK law and Trust policy, and the accountability sits with staff, not only the patient.\n\nIf you see it and do nothing, you are accountable.\n\nThis is not about being hard on patients. It is about fire safety, everyone's health, and your own professional registration. A cigarette on an inpatient ward is a genuine fire risk in a building full of vulnerable people.",
+        tip: "Smoking is not a grey area to leave for the next shift. See it, act on it, record it.",
+      },
+      {
+        id: "law",
+        title: "The law and standards behind it",
+        content:
+          "Several duties apply at once:\n\n- Regulatory Reform (Fire Safety) Order 2005 - failing to prevent or report smoking is a breach of statutory duty. If a fire follows, staff can face criminal investigation under fire safety law.\n- Health Act 2006 (smoke-free legislation) - it is illegal to smoke, or to permit smoking, in enclosed NHS spaces. Allowing it is a criminal offence.\n- Health and Safety at Work Act 1974, section 7 - you have a legal duty to protect others from harm. Not acting when a patient smokes puts lives at risk.\n- NMC / HCPC / GMC codes - ignoring dangerous behaviour breaches your duty of care and can lead to a fitness-to-practise investigation.\n- The Trust Fire Safety and Smoke-Free Policy - staff must intervene, escalate and document every smoking incident. Non-compliance is a policy breach and may result in disciplinary action.",
+      },
+      {
+        id: "what-to-do",
+        title: "What to do when you see it",
+        content:
+          "Three things, every time:\n\n1. Intervene - explain the smoke-free policy, ask the patient to stop, and remove the smoking materials and any ignition source.\n2. Escalate - tell the nurse in charge.\n3. Datix - complete an incident report.\n\nIf safety is compromised, place the patient on Level 2 observations.\n\nRecord what you saw, what you did and what was removed on SystmOne.",
+        tip: "Removing the lighter or matches matters as much as stopping the cigarette - the ignition source is the fire risk.",
+      },
+      {
+        id: "smoke-free-ward",
+        title: "How this fits the smoke-free ward",
+        content:
+          "No smoking, and no ignition sources on the ward, are authorised Trust-wide blanket restrictions - so this applies to every patient, detained or informal, without needing an individual risk assessment (see the Blanket Restrictions guide).\n\nSmoking materials, lighters and matches are contraband. They are held for the patient and returned on discharge - not handed back for leave or a trip outside for fresh air.\n\nSupport, not just enforcement: the Trust manages this as a health issue too. Offer nicotine replacement therapy (NRT) under the nicotine management arrangements, so patients are supported to cope while they cannot smoke.",
+        tip: "Framing it as 'we will help you manage the cravings' lands far better than a flat 'no' - and it is Trust policy to offer NRT.",
+      },
+    ],
+    caseNote:
+      "Smoking incident on [DATE] at [TIME]. [PATIENT] observed smoking / in possession of smoking materials in [LOCATION]. Action: intervened, explained the smoke-free policy, removed [MATERIALS / IGNITION SOURCE] and held for return on discharge. Escalated to nurse in charge. Datix completed. Observation level reviewed: [UNCHANGED / RAISED TO LEVEL 2 - SAFETY COMPROMISED]. Nicotine replacement offered: [YES / NO - REASON]. Recorded by [NURSE].",
+  },
+  "informal-patient-contract": {
+    id: "informal-patient-contract",
+    title: "Informal Admission - Gatekeeping & the Patient Agreement",
+    description: "The gatekeeping assessment before a bed is requested, and the informal admission questionnaire that sets shared expectations with the patient",
+    related: [
+      { label: "Admission Checklist", guideId: "admission-checklist" },
+      { label: "Section 132 - Reading Patient Rights", guideId: "section-132" },
+      { label: "Capacity Assessment", guideId: "capacity-assessment" },
+    ],
+    steps: [
+      {
+        id: "what",
+        title: "Two forms, two jobs",
+        content:
+          "Both live in the Gatekeeping Launch Pad on the SystmOne Clinical Tree, and both went live in December 2025:\n\n- The Gatekeeping Assessment is completed BEFORE a bed is requested. It is a mandatory part of the admission process and gives assurance that admission is the right call.\n- The Informal Inpatient Admission Questionnaire is completed WITH the patient once they arrive as an informal (voluntary) patient. It is a shared reference point - a plain agreement about rights, ward rules and leave, so nobody is unclear on what to expect.\n\nThis guide walks through both. Save each as a Final Version when done (that locks it).",
+      },
+      {
+        id: "gatekeeping",
+        title: "Gatekeeping Assessment - before you request a bed",
+        content:
+          "18 mandatory questions (plus up to 2 optional), grouped like this:\n\n- Date/time and the clinicians/teams involved.\n- Clinical need - severity, functional impairment, trauma, and previous response to community interventions.\n- Risk - risk to self, risk to others, and vulnerability. This is NOT a substitute for the Risk Screening Tool, which must also be completed.\n- Legal status - Mental Health Act criteria, and consent and capacity.\n- Social context - support networks, carer/family involvement, housing stability, and pets.\n- Alternatives tried - treatment started in the community, whether a medication review has happened, and whether Crisis (and any open community teams) have increased visits and treated at home.\n- Status - right to reside in the UK and registration with a Derbyshire GP; ASD / learning disability; and the decision outcome (Admit / Divert / Escalate).\n- Optional - the patient's own views and comments.",
+        tip: "If you tick Yes to ASD / learning disability, a further question appears: has the Neurodevelopmental Team been contacted and a LEAP done? Sort that before you finalise.",
+      },
+      {
+        id: "informal-questionnaire",
+        title: "Informal Admission Questionnaire - the agreement with the patient",
+        content:
+          "Go through this WITH the patient, ticking each item as you discuss and they agree it. It reduces misunderstandings and makes sure the patient knows their rights, the ward safety rules and how leave works.\n\n1. Date of admission.\n2. Rights as an informal patient.\n3. Leaving the ward.\n4. Safety and security rules.\n5. Smoking.\n6. Searching.\n7. Respect and behaviour.\n8. Treatment and care planning.\n9. Mobile phones and devices.\n10. Your name, as the staff member confirming the patient has been informed.\n11. The date the form was completed.",
+        tip: "This is a conversation, not a form to read at someone. It pairs with the Section 132 rights an informal patient is also owed - do both properly and the patient starts the admission knowing where they stand.",
+      },
+      {
+        id: "finish",
+        title: "Finishing up",
+        content:
+          "For each form: once complete, click Save Final Version and confirm at the lock dialogue. The screen returns to the Launch Pad.\n\nWhen you have finished in the patient record, save using the appropriate Activity Template and Event Details.\n\nRemember the informal questionnaire is about clarity and safety - it is a good moment to cover restricted items, search procedures and the smoke-free rule while you have the patient's attention.",
+      },
+    ],
+    caseNote:
+      "Informal admission process completed on [DATE]. Gatekeeping Assessment completed and saved as final version before the bed request; Risk Screening Tool also completed. Decision outcome: [ADMIT / DIVERT / ESCALATE]. Informal Inpatient Admission Questionnaire completed with the patient - rights, leaving the ward, safety and security rules, smoking, searching, respect and behaviour, treatment and care planning, and mobile phones/devices all discussed and agreed. Section 132 rights also explained. Completed by [NURSE].",
+  },
   "student-placement": {
     id: "student-placement",
     title: "Student Nurse Placement Guide",
@@ -962,6 +1043,18 @@ export const GUIDES: Record<string, GuideData> = {
         title: "Documentation",
         content: "Document your assessment including:\n\n• What decision is being assessed\n• Evidence of impairment/disturbance\n• How you applied the functional test\n• Steps taken to help the person decide\n• Your conclusion and reasoning",
         tip: "A clear, contemporaneous record protects both the patient and the assessor.",
+      },
+      {
+        id: "5",
+        title: "On SystmOne - the Combined Capacity form",
+        content: "The Trust records capacity on the Combined Capacity to Consent form on SystmOne (see the how-to below). It walks the same two-stage test:\n\n• First, state the decision, and how you supported the person to make it themselves\n• Say whether you are confident about their capacity (Yes/No)\n• Stage 1 - functional test: can they understand, retain, use and weigh, and communicate the decision? Each is Yes/No with your reasoning\n• Stage 2 - diagnostic test: is there a disturbance or impairment of the mind or brain, and is it the reason they fail the functional test?\n\nSave it as the Final Version. On admission it is routine to record capacity to consent to admission and capacity to consent to treatment separately.",
+        tip: "The functional and diagnostic tests must connect - lacking capacity means the impairment is WHY the person cannot make this decision, not just that the two happen to coincide.",
+      },
+      {
+        id: "6",
+        title: "Police capacity request after an incident",
+        content: "If the police are involved after a reportable incident on the ward (always linked to a Datix), they may ask the Responsible Clinician or a mental health nurse to complete a Capacity Request form. Using your professional judgement, it asks whether, in your opinion:\n\n• at the time of the alleged offence, the person was capable of understanding their actions\n• at the time, they were capable of controlling their actions\n• they are capable of understanding the legal process if a prosecution is sought\n• they are fit to be interviewed by the police (Y/N)\n• they need an appropriate adult (Y/N)\n• a prosecution would be detrimental to their care plan\n\nRecord the service-user details, section and Datix number, then sign and date it.",
+        tip: "This is your clinical opinion for the police, not a formal MCA assessment of a treatment decision - keep the two separate in your records.",
       },
     ],
   },

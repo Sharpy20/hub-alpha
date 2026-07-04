@@ -46,6 +46,8 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "transfer-in": "red",
   "awol": "red",
   "student-placement": "red",        // new 4 Jul from the Student Information Pack - generic/demo-safe, awaiting Mike's review
+  "no-smoking": "red",               // new 4 Jul from the smoking staff-legal-warning doc
+  "informal-patient-contract": "red", // new 4 Jul from the Gatekeeping + Informal Admission SystmOne guides
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

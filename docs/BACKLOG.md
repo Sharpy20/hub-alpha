@@ -73,6 +73,12 @@ Source files on disk (outside repo): `E:\Hub\temp\dump july\` (doc, 6 screenshot
 **Big win:** Mike supplied the docs that were blocking guides. `docs 1\` unblocks section-132,
 capacity-assessment, blanket-restrictions, abc-chart, no-smoking, informal-patient-contract (see table in the dump doc).
 
+> **Source extraction done 4 Jul** - all 17 docs + odds-and-sods read; mapped digest at
+> `E:\Hub\temp\dump july\extracted\_DIGEST.md`. Bonus finds: 8-step arrange-MHA flowchart (odds p13),
+> ECT fasting/post-ECT content (odds p3-5), public CMHT directory (odds p6-8), "A CARE PLAN!" case-note
+> mnemonic, seclusion review timings, red-folders + ward-roles content. Rule-4: odds pp9-10 internal
+> @nhs.net inboxes/managers stay OUT of live.
+
 ### F. Homework - now-actionable (unblocked by Mike's `docs 1\` docs)
 - [ ] **section-132** (RED) - build from `S132_policy.docx` + `SystmOne_-_Recording_Section_132_Rights_Conversation_V1.2.pdf`; add 132 forms link + MHA office email (email still needed from Mike).
 - [ ] **capacity-assessment** (amber, needs expanding) - add S1 capacity questionnaire (screenshots image1-3) + police form (`MCA - Police Capacity Ax.docx`); link S1 guide + external capacity + trust policy.

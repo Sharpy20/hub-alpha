@@ -176,3 +176,29 @@ Note: when saving the S1 patient record after documenting anything safeguarding-
 - **Quiz** - built + working (364 questions), still draft until Mike proofreads the bank. Add a "report issue" option in question feedback -> feeds the reddit-style feedback board when live.
 - **Parked (remind Mike):** combined builder for DST/CHC funding assessment + nursing placement assessment + tribunal nursing report - shared domains, capture once, copy each out.
 - **Parked:** a "build your own landing page" option in settings (the personal bookmark wheel covers part of this).
+
+---
+
+# SOURCE EXTRACTION COMPLETE (4 Jul 2026)
+All 17 docs in `docs 1\` + the 13-page `odds and sods.pdf` extracted and read. Full mapped digest
+(with the internal-contact material that must stay OUT of the live build) is at
+`E:\Hub\temp\dump july\extracted\_DIGEST.md` (kept outside the repo deliberately - it holds @nhs.net
+team inboxes and named managers). Repo-safe highlights:
+
+**New content that changes the plan:**
+- **arrange-mha-assessment** - `odds and sods` p13 has a proper **8-step flowchart** (better than the email). Steps captured in the digest. Still blocked ONLY on the social-care secure-email name.
+- **section-132** - full policy facts captured: 24h verbal rights, 3-monthly reminders, informal + detained + CTO info lists, S1 questionnaire names + auto-task to MHA office. Buildable now (email address still needed).
+- **blanket-restrictions** - the full authorised trust-wide list + the "must NOT be blanket" list + contraband appendix captured. Buildable now.
+- **capacity-assessment** - police CAPACITY REQUEST form fields + the S1 Stage 1/Stage 2 test captured. Buildable now.
+- **informal-patient-contract (NEW)** - the Informal Admission Questionnaire is literally the "contract" (9 discussion topics). Gatekeeping Assessment = the 18-Q pre-bed form. Buildable now.
+- **no-smoking (NEW)** - exact legal basis captured (Fire Safety Order 2005, Health Act 2006, HSWA s7, NMC/HCPC/GMC, Trust policy). Buildable now.
+- **abc-chart** - confirmed a builder works; exact S1 form structure captured (A/B/C + two mood checklists + comments).
+- **ECT (bonus, not previously scoped)** - `odds and sods` p3-5 has fasting guidelines + post-ECT ward info + pre-ECT obs. Enough to build/enrich an ECT guide if wanted.
+- **CMHT directory (bonus)** - `odds and sods` p6-8 has all public 0300 CMHT numbers + Derby City GP-surgery allocation -> feeds service-map / CMHT links.
+- **care-plan / case-notes** - "A CARE PLAN!" mnemonic (Alerts/Cognition/Affect/Response/Engagement/Physical health/Living well/Administration of medication/Next of kin/Formulation) - candidate new case-note guide or care-plan addition.
+- **seclusion** - Trust process guide gives exact review timings to fact-check the seclusion guide (nursing 2h, medical 1h then 4h, internal MDT 24h, independent MDT >8h consec / 12h intermittent-over-48h).
+- **red-folders (NEW, Named Nurse)** + **ward-roles** (obs levels L1-L4 with intervals) - candidate guides.
+
+**⚠️ Rule-4 caution:** `odds and sods` pp9-10 (crisis/CMHT @nhs.net inboxes + named managers), the MHA-office
+extension, Red Folder ward-contact names, and ECT dept internal ext must NOT reach the live build. They live
+only in the temp digest.

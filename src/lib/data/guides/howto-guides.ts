@@ -862,7 +862,10 @@ export const GUIDES: Record<string, GuideData> = {
     id: "section-136",
     title: "Section 136 - Place of Safety",
     description: "Receiving a person brought in by police under Section 136",
-    focus: [{ label: "Operation of Section 136 (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1995/2454" }],
+    focus: [
+      { label: "Operation of Section 136 (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1995/2454" },
+      { label: "136 Suite Process Map (pathway)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/4694/1270" },
+    ],
     steps: [
       {
         id: "1",

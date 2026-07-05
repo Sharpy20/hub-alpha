@@ -6,6 +6,7 @@ import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import { useV2Href } from "@/lib/hooks/useV2";
+import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import Link from "next/link";
 import {
   ChevronLeft,
@@ -223,7 +224,7 @@ function TaskCard({
                 <h4 className={`font-semibold text-white truncate ${isCompleted ? "line-through" : ""} ${compact ? "text-xs" : "text-sm"}`}>
                   {task.title}
                 </h4>
-                {isOverdue && <span className="bg-red-500 text-white text-[10px] px-1 py-0.5 rounded font-medium flex-shrink-0">Overdue</span>}
+                {isOverdue && <span className="bg-red-700 text-white text-[10px] px-1 py-0.5 rounded font-medium flex-shrink-0">Overdue</span>}
                 {task.type === "patient" && task.repeatIntervalDays && <span className="text-white/70 text-[10px] flex-shrink-0" title={`Repeats every ${task.repeatIntervalDays} days`}>🔄</span>}
                 {task.type === "ward" && task.isRecurring && <span className="text-white/70 text-[10px] flex-shrink-0" title="Repeating team task">🔄</span>}
               </div>
@@ -616,14 +617,14 @@ function PriorityGroupedTasks({
         return (
           <div
             key={priority}
-            className={`rounded-lg border-2 ${config.borderColor} ${config.bgColor} p-2`}
+            className={`priority-band rounded-lg border-2 ${config.borderColor} ${config.bgColor} p-2`}
           >
             <div className="flex items-center gap-1.5 mb-2 px-1">
               <span className="text-sm">{config.icon}</span>
-              <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+              <span className="diary-muted text-xs font-semibold uppercase tracking-wide">
                 {config.label}
               </span>
-              <span className="text-xs text-gray-500">({priorityTasks.length})</span>
+              <span className="diary-muted text-xs">({priorityTasks.length})</span>
             </div>
             <div className="space-y-2">
               {priorityTasks.map(renderTask)}
@@ -656,7 +657,9 @@ function CollapsibleSection({
   const { styleTheme } = useApp();
   const isFantastical = styleTheme === "fluent";
   const isNotion = styleTheme === "oneui";
-  const sectionTextColor = isFantastical ? "#818CF8" : isNotion ? "#9B9A97" : "#6B7280";
+  // NHS default reads from a CSS var so dark mode can lift it to an
+  // AA-passing grey (see globals.css --diary-section-text)
+  const sectionTextColor = isFantastical ? "#818CF8" : isNotion ? "#9B9A97" : "var(--diary-section-text, #4b5563)";
   const sectionBadgeBg = isFantastical ? "rgba(99,102,241,0.2)" : isNotion ? "#F7F7F5" : "#F3F4F6";
 
   return (
@@ -918,7 +921,7 @@ function DayColumn({
 
         {/* Empty state */}
         {totalVisible === 0 && (
-          <div className={`text-center ${isFocused ? "py-8" : "py-4"} text-gray-400`}>
+          <div className={`diary-muted text-center ${isFocused ? "py-8" : "py-4"}`}>
             <p className={isFocused ? "text-4xl mb-2" : "text-2xl mb-1"}>
               {hideCompleted ? "🎉" : "📋"}
             </p>
@@ -926,7 +929,7 @@ function DayColumn({
               {hideCompleted ? "All done!" : "No tasks scheduled"}
             </p>
             {isFocused && (
-              <p className="text-xs mt-1 text-gray-300">
+              <p className="diary-muted text-xs mt-1">
                 {hideCompleted
                   ? "Show completed tasks to see your progress"
                   : "Click 'Add Task' to create one"}
@@ -1023,6 +1026,10 @@ function AddTaskModal({
   const [showApptReferral, setShowApptReferral] = useState(false);
   const [showApptGuide, setShowApptGuide] = useState(false);
   const [showApptDetails, setShowApptDetails] = useState(false);
+
+  // Keyboard support: focus trap + Escape-to-close (WCAG 2.1.2)
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalA11y(dialogRef, onClose, isOpen);
 
   if (!isOpen) return null;
 
@@ -1130,6 +1137,7 @@ function AddTaskModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Add new task"
@@ -2652,7 +2660,7 @@ function TasksPageInner() {
           <div className="flex items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 theme-heading">{isMyDiaryMode ? "📋 My Diary" : "📋 Team Diary"}</h1>
-              <p className="text-gray-600">
+              <p className="diary-muted">
                 {isMyDiaryMode ? `${user?.name} · ` : ""}{activeWard} Ward · {formatDisplayDate(focusedDate || todayStr)}
               </p>
             </div>

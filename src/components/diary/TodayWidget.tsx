@@ -67,6 +67,8 @@ function MiniTaskCard({
               e.stopPropagation();
               onToggleComplete(task.id);
             }}
+            aria-label={isCompleted ? "Mark task as not complete" : "Mark task as complete"}
+            aria-pressed={isCompleted}
             className={`flex-shrink-0 w-5 h-5 rounded-full border-2 border-white/50 flex items-center justify-center transition-all ${
               isCompleted ? "bg-white/30" : "hover:bg-white/20"
             }`}
@@ -125,7 +127,7 @@ function TaskColumn({
       {/* Tasks */}
       <div className="p-2 flex-1 overflow-y-auto max-h-64 space-y-1.5">
         {pendingTasks.length === 0 && completedTasks.length === 0 ? (
-          <div className="text-center py-6 text-gray-400">
+          <div className="text-center py-6 text-gray-600">
             <p className="text-2xl mb-1">✨</p>
             <p className="text-xs">{emptyMessage}</p>
           </div>
@@ -140,7 +142,7 @@ function TaskColumn({
             ))}
             {completedTasks.length > 0 && (
               <div className="pt-2 border-t border-gray-100 mt-2">
-                <p className="text-xs text-gray-400 mb-1.5 px-1">
+                <p className="text-xs text-gray-600 mb-1.5 px-1">
                   Completed ({completedTasks.length})
                 </p>
                 {completedTasks.slice(0, 2).map((task) => (
@@ -151,7 +153,7 @@ function TaskColumn({
                   />
                 ))}
                 {completedTasks.length > 2 && (
-                  <p className="text-xs text-gray-400 text-center mt-1">
+                  <p className="text-xs text-gray-600 text-center mt-1">
                     +{completedTasks.length - 2} more
                   </p>
                 )}

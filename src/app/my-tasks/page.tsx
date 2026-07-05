@@ -134,8 +134,8 @@ export default function MyTasksPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">My Jobs</h1>
-              <p className="text-gray-600">
+              <h1 className="text-3xl font-bold text-foreground">My Jobs</h1>
+              <p className="diary-muted">
                 {user.name} · {user.ward} Ward
               </p>
             </div>
@@ -203,7 +203,7 @@ export default function MyTasksPage() {
             <div>
               <p className="font-medium text-blue-800">No tasks claimed yet</p>
               <p className="text-sm text-blue-600 mt-1">
-                Go to the <Link href={link("/tasks")} className="underline font-medium">Team Diary</Link> and
+                Go to the <Link href={link("/tasks")} className="underline font-medium text-blue-700">Team Diary</Link> and
                 click &quot;Claim&quot; on tasks to add them to your personal board. Claimed tasks will
                 appear here where you can track your progress.
               </p>

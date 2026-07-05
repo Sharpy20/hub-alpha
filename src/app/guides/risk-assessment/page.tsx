@@ -220,7 +220,7 @@ function DatedExamples({ examples, onChange }: { examples?: DatedExample[]; onCh
   const years = Array.from({ length: 71 }, (_, i) => thisYear - i);
   return (
     <div className="mt-2 rounded-lg border border-rose-100 bg-rose-50/40 p-2.5 space-y-2">
-      <p className="text-[10px] font-mono uppercase tracking-wider text-rose-500">
+      <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700">
         Give dated examples (date optional - just the year, the month and year, or the full date)
       </p>
       {list.map((ex, i) => (
@@ -238,9 +238,9 @@ function DatedExamples({ examples, onChange }: { examples?: DatedExample[]; onCh
               <option value="">Year</option>
               {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
             </select>
-            <button onClick={() => onChange(list.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
+            <button onClick={() => onChange(list.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-500 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
           </div>
-          <input type="text" value={ex.text} placeholder="what happened" onChange={(e) => upd(i, { text: e.target.value })} className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400" />
+          <input type="text" value={ex.text} placeholder="what happened" aria-label="What happened" onChange={(e) => upd(i, { text: e.target.value })} className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400" />
         </div>
       ))}
       <button onClick={() => onChange([...list, { day: "", month: "", year: "", text: "" }])} className="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 hover:text-rose-900 transition-colors">
@@ -348,9 +348,9 @@ function Collapse({ icon: Icon, title, children, tone = "gray" }: {
   return (
     <div className="rounded-xl border border-gray-100 bg-white overflow-hidden">
       <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
-        <Icon className={`w-4 h-4 ${tone === "rose" ? "text-rose-500" : "text-gray-400"}`} />
+        <Icon className={`w-4 h-4 ${tone === "rose" ? "text-rose-500" : "text-gray-500"}`} />
         <span className="font-bold text-gray-800 flex-1">{title}</span>
-        {open ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
+        {open ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
       </button>
       {open && <div className="px-4 pb-4">{children}</div>}
     </div>
@@ -582,7 +582,7 @@ export default function RiskAssessmentPage() {
             return (
               <span key={label} className={`inline-flex items-center rounded-lg border text-sm transition-all ${on ? "bg-rose-600 border-rose-600 text-white" : "bg-white border-gray-200 text-gray-600"}`}>
                 <button onClick={() => toggleSub(dm.id, label)} aria-pressed={on} className="pl-2.5 pr-1 py-1.5 font-medium text-left">{label}</button>
-                <button onClick={() => removeCustomSub(dm.id, label)} aria-label={`Remove ${label}`} className={`pr-2 pl-0.5 py-1.5 ${on ? "text-white/80 hover:text-white" : "text-gray-400 hover:text-red-600"}`}><X className="w-3.5 h-3.5" /></button>
+                <button onClick={() => removeCustomSub(dm.id, label)} aria-label={`Remove ${label}`} className={`pr-2 pl-0.5 py-1.5 ${on ? "text-white/80 hover:text-white" : "text-gray-500 hover:text-red-600"}`}><X className="w-3.5 h-3.5" /></button>
               </span>
             );
           })}
@@ -631,7 +631,7 @@ export default function RiskAssessmentPage() {
                             <button type="button" aria-pressed={on}
                               onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
                               className="pl-2 pr-1 py-1 text-left">{ind}</button>
-                            <button type="button" onClick={() => removeCustomIndicator(dm.id, ind)} aria-label={`Remove ${ind}`} className={`pr-1.5 pl-0.5 py-1 ${on ? "text-white/80 hover:text-white" : "text-gray-400 hover:text-red-600"}`}><X className="w-3 h-3" /></button>
+                            <button type="button" onClick={() => removeCustomIndicator(dm.id, ind)} aria-label={`Remove ${ind}`} className={`pr-1.5 pl-0.5 py-1 ${on ? "text-white/80 hover:text-white" : "text-gray-500 hover:text-red-600"}`}><X className="w-3 h-3" /></button>
                           </span>
                         );
                       })}
@@ -644,7 +644,7 @@ export default function RiskAssessmentPage() {
             <div>
               <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
               <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what has happened recently.</p>
-              <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} className={inputCls} />
+              <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} aria-label={personalise(dm.currentPrompt)} className={inputCls} />
               <DatedExamples examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
               <S1CopyBox text={withExamples(st.current, st.currentExamples)} />
             </div>
@@ -652,10 +652,10 @@ export default function RiskAssessmentPage() {
               <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
               {dm.historicalSubPrompts && (
                 <ul className="mb-1.5 ml-1 space-y-0.5">
-                  {dm.historicalSubPrompts.map((sp) => <li key={sp} className="text-xs text-gray-400">- {personalise(sp)}</li>)}
+                  {dm.historicalSubPrompts.map((sp) => <li key={sp} className="text-xs text-gray-600">- {personalise(sp)}</li>)}
                 </ul>
               )}
-              <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} className={inputCls} />
+              <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} aria-label={personalise(dm.historicalPrompt)} className={inputCls} />
               <DatedExamples examples={st.historicalExamples} onChange={(next) => setDomain(dm.id, { ...st, historicalExamples: next })} />
               <S1CopyBox text={withExamples(st.historical, st.historicalExamples)} />
             </div>
@@ -664,7 +664,7 @@ export default function RiskAssessmentPage() {
 
         {st.risks.length > 0 && (
           <div className="space-y-2">
-            <p className="text-[11px] font-mono uppercase tracking-wider text-rose-500">Answer the questions for each risk</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-rose-700">Answer the questions for each risk</p>
             {st.risks.map((label) => renderRiskCapture({ key: `${dm.id}::${label}`, label, chipRisk: SUBTYPE_RISK[`${dm.id}::${label}`] || "" }))}
           </div>
         )}
@@ -713,7 +713,7 @@ export default function RiskAssessmentPage() {
           <button onClick={() => setIntroOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
             <Info className="w-4 h-4 text-rose-500 flex-shrink-0" />
             <span className="font-bold text-gray-800 flex-1">New to this? How the tool works</span>
-            {introOpen ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
+            {introOpen ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
           </button>
           {introOpen && (
             <div className="px-4 pb-4 space-y-4">
@@ -753,7 +753,7 @@ export default function RiskAssessmentPage() {
 
               {/* Before you start */}
               <div>
-                <p className="text-[10px] font-mono uppercase tracking-wider text-rose-500 mb-1.5">Before you start</p>
+                <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700 mb-1.5">Before you start</p>
                 <ul className="space-y-1.5">
                   {[
                     "If a risk screen already exists in the patient's record, open it and use that information.",
@@ -768,7 +768,7 @@ export default function RiskAssessmentPage() {
                 </ul>
               </div>
 
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-600">
                 Good practice: a person-centred risk <em>formulation</em> is preferred over predictive risk-stratification tools
                 (NICE NG225, Self-harm, 2022; Department of Health, Best Practice in Managing Risk, 2007). Decisions for a patient who
                 lacks capacity must be in their best interests (Mental Capacity Act 2005), and care is planned <em>with</em> the patient,
@@ -848,7 +848,7 @@ export default function RiskAssessmentPage() {
           <div className="flex items-center gap-2">
             <ShieldAlert className="w-5 h-5 text-rose-600" />
             <div className="flex-1">
-              <p className="text-[11px] font-mono uppercase tracking-wider text-rose-500">
+              <p className="text-[11px] font-mono uppercase tracking-wider text-rose-700">
                 {onDomainStep ? `Domain ${currentDomain!.number} of ${RISK_DOMAINS.length}` : step === REVIEW_STEP ? "Review" : "Final step"}
               </p>
               <h2 className="font-bold text-gray-800">{onDomainStep ? currentDomain!.title : step === REVIEW_STEP ? "Review & concerns" : "Generate the documents"}</h2>
@@ -876,7 +876,7 @@ export default function RiskAssessmentPage() {
                 {overallSummary ? (
                   <div className="rounded-lg border border-rose-200 bg-rose-50/50 px-3 py-2 text-sm text-gray-700 whitespace-pre-wrap mb-2">{overallSummary}</div>
                 ) : (
-                  <p className="text-xs text-gray-400 italic mb-2">Work through the domains and answer the risk questions - the summary builds itself here.</p>
+                  <p className="text-xs text-gray-600 italic mb-2">Work through the domains and answer the risk questions - the summary builds itself here.</p>
                 )}
                 <textarea value={q9} onChange={(e) => setQ9(e.target.value)} rows={2} className={inputCls} placeholder="Add anything else to the summary (optional)..." />
               </div>
@@ -894,7 +894,7 @@ export default function RiskAssessmentPage() {
               >
                 <Sparkles className="w-5 h-5" /> Generate the risk documents
               </button>
-              {!anyIntake && <p className="text-xs text-gray-400">Identify at least one risk first.</p>}
+              {!anyIntake && <p className="text-xs text-gray-600">Identify at least one risk first.</p>}
               {generated && <p className="text-xs text-emerald-700 font-semibold">Generated - see below.</p>}
               {patient && (
                 <div className="pt-1">
@@ -929,7 +929,7 @@ export default function RiskAssessmentPage() {
                 Next <ArrowRight className="w-4 h-4" />
               </button>
             ) : (
-              <span className="text-xs text-gray-400">Last step</span>
+              <span className="text-xs text-gray-600">Last step</span>
             )}
           </div>
         </div>
@@ -951,7 +951,7 @@ export default function RiskAssessmentPage() {
                   <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
                   <p>The risk screen is completed <strong>on SystmOne as you go</strong> - tick the sub-domains and clinical indicators there, and paste each narrative using the green <strong>Copy into S1</strong> boxes in each domain step. The block below is a full text summary you can drop into a case note or handover.</p>
                 </div>
-                {!engagedDomains.length && q8 === "" && <p className="text-sm text-gray-400 text-center py-4">Nothing entered on the risk screen yet.</p>}
+                {!engagedDomains.length && q8 === "" && <p className="text-sm text-gray-600 text-center py-4">Nothing entered on the risk screen yet.</p>}
                 <CopyField id="screen-all" label="Risk screen summary (for a case note / handover)" text={fullScreenText} done={copied.has("screen-all")} onToggle={toggleCopied} />
                 {engagedDomains.length > 1 && engagedDomains.map((dm) => (
                   <CopyField key={dm.id} id={`screen-${dm.id}`} label={`${dm.number}. ${dm.short} (summary)`} text={domainScreenText(dm)} done={copied.has(`screen-${dm.id}`)} onToggle={toggleCopied} />
@@ -961,7 +961,7 @@ export default function RiskAssessmentPage() {
 
             {tab === "formulation" && (
               <div className="space-y-3">
-                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Identify at least one risk to build a formulation.</p>}
+                {allRisks.length === 0 && <p className="text-sm text-gray-600 text-center py-4">Identify at least one risk to build a formulation.</p>}
                 <p className="text-xs text-gray-500">One formulation covering all risks - each risk in its own == block, then written up as prose. Copy it into the single SystmOne formulation field.</p>
                 <CopyField id="form-all" label="Formulation" text={buildCombinedFormulation(allRisks, capByRisk, patientName)} done={copied.has("form-all")} onToggle={toggleCopied} />
                 {finalSummary && <CopyField id="form-summary" label="Overall formulation summary" text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />}
@@ -970,7 +970,7 @@ export default function RiskAssessmentPage() {
 
             {tab === "rmp" && (
               <div className="space-y-3">
-                {allRisks.length === 0 && <p className="text-sm text-gray-400 text-center py-4">Identify at least one risk to build a management plan.</p>}
+                {allRisks.length === 0 && <p className="text-sm text-gray-600 text-center py-4">Identify at least one risk to build a management plan.</p>}
                 <p className="text-xs text-gray-500">Every management plan in one block, in domain order (a separate plan per risk, per trust guidance).</p>
                 <CopyField id="rmp-all" label="Management plans (all risks)" text={buildCombinedRmp(allRisks, capByRisk, patientName)} done={copied.has("rmp-all")} onToggle={toggleCopied} />
               </div>
@@ -1004,7 +1004,7 @@ export default function RiskAssessmentPage() {
           </div>
         </Collapse>
 
-        <p className="text-xs text-gray-400 text-center">
+        <p className="text-xs text-gray-600 text-center">
           Drafting aid only. Domains and sub-domains match the SystmOne WAA Inpatient Risk Screening Tool; the formulation and
           management-plan headings follow the DHCFT Risk Management Plans guidance. Nothing is saved. Always review wording before it goes in the record.
         </p>

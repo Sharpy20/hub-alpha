@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { ExternalLink, Lock, Shield, X, FileText, AlertCircle } from "lucide-react";
 import { useV2Href } from "@/lib/hooks/useV2";
+import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import type { GuideLink } from "@/lib/data/guides/admission";
 
 // Renders a row of resource-link chips with the right behaviour per kind:
@@ -14,6 +15,9 @@ import type { GuideLink } from "@/lib/data/guides/admission";
 export function ResourceLinks({ links }: { links: GuideLink[] }) {
   const v2Href = useV2Href();
   const [focusUrl, setFocusUrl] = useState<string | null>(null);
+  // Keyboard support for the FOCUS warning modal (WCAG 2.1.2)
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalA11y(dialogRef, () => setFocusUrl(null), !!focusUrl);
 
   if (!links?.length) return null;
 
@@ -93,6 +97,7 @@ export function ResourceLinks({ links }: { links: GuideLink[] }) {
           onClick={() => setFocusUrl(null)}
         >
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label="FOCUS login required"

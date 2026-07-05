@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useRef } from "react";
+import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout";
 import { Badge, StatusBadge } from "@/components/ui";
@@ -55,6 +56,9 @@ function BookmarksContent() {
   const [showAddPersonal, setShowAddPersonal] = useState(addOnLoad);
   const [editingPersonal, setEditingPersonal] = useState<PersonalBookmark | null>(null);
   const [recommendModal, setRecommendModal] = useState<PersonalBookmark | null>(null);
+  // Keyboard support for the inline FOCUS modal (WCAG 2.1.2)
+  const focusDialogRef = useRef<HTMLDivElement>(null);
+  useModalA11y(focusDialogRef, () => setFocusModalUrl(null), !!focusModalUrl);
   const { user } = useApp();
   const {
     userFavoriteBookmarks, toggleFavoriteBookmark,
@@ -340,7 +344,7 @@ function BookmarksContent() {
                       </p>
                     )}
                     {bookmark.phone && (
-                      <p className="text-lg font-bold text-emerald-600 mt-1">
+                      <p className="text-lg font-bold text-emerald-700 mt-1">
                         {bookmark.phone}
                       </p>
                     )}
@@ -408,7 +412,7 @@ function BookmarksContent() {
 
         {/* Count */}
         {!isPersonalView && (
-          <div className="text-center text-sm text-gray-500">
+          <div className="diary-muted text-center text-sm">
             Showing {filteredBookmarks.length} of {bookmarks.length} links
           </div>
         )}
@@ -417,7 +421,7 @@ function BookmarksContent() {
       {/* FOCUS Login Required Modal */}
       {focusModalUrl && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setFocusModalUrl(null)}>
-          <div role="dialog" aria-modal="true" aria-label="FOCUS login required" className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
+          <div ref={focusDialogRef} role="dialog" aria-modal="true" aria-label="FOCUS login required" className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
@@ -526,6 +530,9 @@ function PersonalBookmarkModal({
   const [url, setUrl] = useState(bookmark?.url || "");
   const [icon, setIcon] = useState(bookmark?.icon || "🔗");
   const [description, setDescription] = useState(bookmark?.description || "");
+  // Keyboard support: focus trap + Escape-to-close (WCAG 2.1.2)
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalA11y(dialogRef, onClose);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -535,7 +542,7 @@ function PersonalBookmarkModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div role="dialog" aria-modal="true" aria-label="Personal link" className="bg-white rounded-2xl w-full max-w-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Personal link" className="bg-white rounded-2xl w-full max-w-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-violet-500 to-purple-600 p-4 flex items-center justify-between">
           <h3 className="text-white font-bold text-lg">
             {bookmark ? "Edit Personal Link" : "Add Personal Link"}
@@ -641,10 +648,13 @@ function RecommendModal({
 }) {
   const categories = getCategories();
   const [selectedCategory, setSelectedCategory] = useState("Not sure / Other");
+  // Keyboard support: focus trap + Escape-to-close (WCAG 2.1.2)
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalA11y(dialogRef, onClose);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div role="dialog" aria-modal="true" aria-label="Recommend link for everyone" className="bg-white rounded-2xl w-full max-w-sm overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-label="Recommend link for everyone" className="bg-white rounded-2xl w-full max-w-sm overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Send className="w-5 h-5 text-white" />

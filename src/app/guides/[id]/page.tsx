@@ -423,11 +423,11 @@ export default function UnifiedGuidePage() {
                 }`} />
               ))}
             </div>
-            <p className="text-sm text-gray-600 text-center font-medium">Step {currentStep + 1} of {totalSteps}: {rStep?.title}</p>
+            <p className="diary-muted text-sm text-center font-medium">Step {currentStep + 1} of {totalSteps}: {rStep?.title}</p>
           </div>
         ) : (
-          <div className="flex items-center gap-3 text-sm text-gray-500 font-medium">
-            <span>Step <strong className="text-gray-800">{currentStep + 1}</strong> of <strong className="text-gray-800">{totalSteps}</strong></span>
+          <div className="flex items-center gap-3 diary-muted text-sm font-medium">
+            <span>Step <strong className="text-foreground">{currentStep + 1}</strong> of <strong className="text-foreground">{totalSteps}</strong></span>
             <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-300" style={{ width: `${((currentStep + 1) / totalSteps) * 100}%` }} />
             </div>

@@ -33,7 +33,7 @@ export function GuideFeedback({ guideId }: { guideId: string }) {
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-3 py-5 border-t border-gray-100 mt-4">
-      <span className="text-sm text-gray-500">Was this guide helpful?</span>
+      <span className="diary-muted text-sm">Was this guide helpful?</span>
       <button
         onClick={() => choose("up")}
         aria-pressed={vote === "up"}

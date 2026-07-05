@@ -126,8 +126,8 @@ export default function QuizPage() {
             <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-purple-700 shadow-md">
               <Brain className="h-7 w-7 text-white" />
             </div>
-            <h1 className="text-3xl font-black text-gray-900">Quiz</h1>
-            <p className="mt-1 text-gray-600">
+            <h1 className="text-3xl font-black text-foreground">Quiz</h1>
+            <p className="mt-1 diary-muted">
               A quick, no-pressure knowledge refresher for ward staff.
             </p>
           </div>
@@ -254,13 +254,13 @@ export default function QuizPage() {
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-purple-700 shadow-md">
             <Brain className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-black text-gray-900">Round complete</h1>
+          <h1 className="text-3xl font-black text-foreground">Round complete</h1>
           <div className="rounded-2xl border border-gray-200 bg-white p-8">
             <p className="text-5xl font-black text-purple-700">
               {correctCount}
               <span className="text-2xl font-bold text-gray-400"> / {total}</span>
             </p>
-            <p className="mt-3 text-gray-600">{msg}</p>
+            <p className="mt-3 diary-muted">{msg}</p>
           </div>
           <PrivacyStrip />
           <div className="flex flex-wrap justify-center gap-3">
@@ -293,7 +293,7 @@ export default function QuizPage() {
       <div className="mx-auto max-w-2xl space-y-5">
         {/* Progress */}
         <div className="flex items-center justify-between text-sm">
-          <span className="font-semibold text-gray-500">
+          <span className="font-semibold diary-muted">
             Question {index + 1} of {round.length}
           </span>
           <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${DIFF_STYLE[q.difficulty]}`}>
@@ -349,8 +349,8 @@ export default function QuizPage() {
                     {String.fromCharCode(65 + i)}
                   </span>
                   <span className="flex-1 text-gray-800">{opt}</span>
-                  {showCorrect && <CheckCircle2 className="h-5 w-5 text-emerald-500" />}
-                  {showWrong && <XCircle className="h-5 w-5 text-rose-500" />}
+                  {showCorrect && <CheckCircle2 aria-label="Correct answer" className="h-5 w-5 text-emerald-500" />}
+                  {showWrong && <XCircle aria-label="Your answer, incorrect" className="h-5 w-5 text-rose-500" />}
                 </button>
               );
             })}
@@ -359,6 +359,7 @@ export default function QuizPage() {
           {/* Feedback */}
           {answered && (
             <div
+              role="status"
               className={`mt-4 rounded-xl border p-4 ${
                 isCorrect ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"
               }`}

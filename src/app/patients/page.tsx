@@ -440,8 +440,8 @@ export default function PatientsPage() {
                 <User className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Patient List</h1>
-                <p className="text-gray-600">{activeWard} Ward</p>
+                <h1 className="text-2xl font-bold text-foreground">Patient List</h1>
+                <p className="diary-muted">{activeWard} Ward</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -566,7 +566,11 @@ export default function PatientsPage() {
                 <Card
                   key={patient.id}
                   onClick={() => openTasksModal(patient)}
-                  role="button"
+                  /* Deliberately NOT role="button": the card contains nested
+                     interactive controls (WP dropdown, transfer/discharge),
+                     and a button role may not contain them (axe
+                     nested-interactive). Same pattern as the diary task
+                     cards from the Session 26 audit. */
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
@@ -719,7 +723,7 @@ export default function PatientsPage() {
                         <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${adm.complete ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}>
                           {adm.complete ? "✓ Admission complete" : `Admission ${adm.done}/${adm.total}`}
                         </span>
-                        <span className="text-[11px] text-gray-400 ml-auto">Care review</span>
+                        <span className="text-[11px] text-gray-600 ml-auto">Care review</span>
                       </div>
                       <div className="flex flex-wrap gap-1">
                         {REVIEW_ITEMS.map((it) => {
@@ -729,7 +733,7 @@ export default function PatientsPage() {
                             status === "overdue" ? "bg-red-100 text-red-800"
                             : status === "due" ? "bg-amber-100 text-amber-800"
                             : status === "ok" ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-500";
+                            : "bg-gray-100 text-gray-600";
                           const label =
                             days === null ? "--"
                             : days < 0 ? `${Math.abs(days)}d over`

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { X, Search, User, Calendar, AlertTriangle, Check } from "lucide-react";
+import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import { DEMO_PATIENTS, WARDS } from "@/lib/data/tasks";
 import { Patient } from "@/lib/types";
 
@@ -68,6 +69,11 @@ export function PatientPickerModal({
     setSelectedPatient(null);
   };
 
+  // Keyboard support: focus trap + Escape (WCAG 2.1.2). On the confirmation
+  // screen Escape steps back to the picker rather than closing outright.
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalA11y(dialogRef, showConfirmation ? handleCancel : onClose, isOpen);
+
   if (!isOpen) return null;
 
   // Confirmation screen
@@ -75,6 +81,7 @@ export function PatientPickerModal({
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={handleCancel}>
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label="Confirm selection"
@@ -157,6 +164,7 @@ export function PatientPickerModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Select patient"

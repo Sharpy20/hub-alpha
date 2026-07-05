@@ -275,7 +275,7 @@ export default function ServiceMapPage() {
                 </div>
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-gray-500">Age</span>
-                  <input type="number" min={0} max={110} value={facts.age} onChange={(e) => set("age", Number(e.target.value))} className="w-20 text-sm border border-gray-200 rounded-lg px-2 py-1" />
+                  <input type="number" min={0} max={110} value={facts.age} onChange={(e) => set("age", Number(e.target.value))} aria-label="Age" className="w-20 text-sm text-gray-900 bg-white border border-gray-200 rounded-lg px-2 py-1" />
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-gray-500 mb-1">Risk</p>
@@ -340,7 +340,7 @@ export default function ServiceMapPage() {
               <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search services by name..." aria-label="Search services"
                 className="w-full text-sm border border-gray-200 rounded-lg pl-9 pr-3 py-2 focus:ring-2 focus:ring-nhs-blue focus:border-nhs-blue" />
-              {searchLc && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">{visServices.filter((s) => s.name.toLowerCase().includes(searchLc)).length} on map</span>}
+              {searchLc && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-600">{visServices.filter((s) => s.name.toLowerCase().includes(searchLc)).length} on map</span>}
             </div>
             <div className="relative bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-gray-200 p-2">
               {/* Zoom controls */}
@@ -350,7 +350,7 @@ export default function ServiceMapPage() {
                 <button onClick={resetView} aria-label="Reset zoom" disabled={!isZoomed} className={`w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-gray-200 shadow-sm text-gray-700 ${isZoomed ? "hover:bg-gray-50" : "opacity-40 cursor-default"}`}><Maximize2 className="w-4 h-4" /></button>
               </div>
               {isZoomed && <span className="absolute top-3 left-3 z-10 text-[11px] font-semibold text-gray-500 bg-white/80 rounded px-2 py-0.5 border border-gray-200">Drag to pan - scroll to zoom</span>}
-              <svg ref={svgRef} viewBox={`${rnd(view.x)} ${rnd(view.y)} ${rnd(view.w)} ${rnd(view.h)}`} className="w-full h-auto touch-none select-none" style={{ cursor: panRef.current ? "grabbing" : "grab" }} role="img" aria-label="Service town map"
+              <svg ref={svgRef} viewBox={`${rnd(view.x)} ${rnd(view.y)} ${rnd(view.w)} ${rnd(view.h)}`} className="w-full h-auto touch-none select-none" style={{ cursor: panRef.current ? "grabbing" : "grab" }} role="group" aria-label="Service town map"
                 onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={endPan} onPointerLeave={endPan}>
                 {/* band rings */}
                 {BANDS.map((r) => <circle key={r} cx={CX} cy={CY} r={r} fill="none" stroke="#eef2f7" strokeDasharray="3 7" />)}
@@ -413,7 +413,7 @@ export default function ServiceMapPage() {
 
             {/* legend = show/hide toggles */}
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-xs text-gray-400 mr-1">Show / hide:</span>
+              <span className="diary-muted text-xs mr-1">Show / hide:</span>
               {([
                 { k: "open" as Effective, label: "Open (meets criteria)", swatch: <span className="w-4 h-1 rounded bg-green-600" /> },
                 { k: "everyone" as Effective, label: "Open to everyone", swatch: <span className="w-4 h-1 rounded" style={{ background: EVERYONE_COLOR }} /> },
@@ -426,7 +426,7 @@ export default function ServiceMapPage() {
                 return (
                   <button key={k} onClick={() => toggleState(k)} aria-pressed={!hidden}
                     title={hidden ? `Show ${label}` : `Hide ${label}`}
-                    className={`inline-flex items-center gap-1.5 text-xs border rounded-lg px-2 py-1 transition-colors ${hidden ? "border-gray-200 bg-gray-50 text-gray-300 line-through" : "border-gray-200 bg-white text-gray-600 hover:border-nhs-blue"}`}>
+                    className={`inline-flex items-center gap-1.5 text-xs border rounded-lg px-2 py-1 transition-colors ${hidden ? "border-gray-200 bg-gray-50 text-gray-500 line-through" : "border-gray-200 bg-white text-gray-600 hover:border-nhs-blue"}`}>
                     <span className={hidden ? "opacity-30" : ""}>{swatch}</span> {label} ({counts[k]})
                   </button>
                 );
@@ -454,16 +454,16 @@ export default function ServiceMapPage() {
                 {selEff === "cutoff" && <p className="flex items-start gap-1.5 text-sm text-gray-500 mb-1"><Ban className="w-4 h-4 mt-0.5 flex-shrink-0" /> Cut off - you reach this via {parentName}, which is currently closed.</p>}
                 {selEv.blockedReason && <p className="flex items-start gap-1.5 text-sm text-red-700 mb-1"><XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {selEv.blockedReason}</p>}
                 {selEv.met.map((c) => <p key={c} className="flex items-start gap-1.5 text-sm text-green-700"><CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" /> {c}</p>)}
-                {selEv.unmet.map((c) => <p key={c} className="flex items-start gap-1.5 text-sm text-gray-400"><CircleDashed className="w-4 h-4 mt-0.5 flex-shrink-0" /> {c}</p>)}
+                {selEv.unmet.map((c) => <p key={c} className="flex items-start gap-1.5 text-sm text-gray-500"><CircleDashed className="w-4 h-4 mt-0.5 flex-shrink-0" /> {c}</p>)}
                 {selSvc.include.length === 0 && !selEv.blockedReason && selEff !== "cutoff" && <p className="text-sm text-green-700">Open to anyone in catchment - no eligibility criteria.</p>}
               </div>
             ) : (
-              <p className="text-sm text-gray-400 text-center py-2">Click a service to see its criteria and why it is open, closed or cut off.</p>
+              <p className="diary-muted text-sm text-center py-2">Click a service to see its criteria and why it is open, closed or cut off.</p>
             )}
           </div>
         </div>
 
-        <p className="text-xs text-gray-400 text-center">
+        <p className="diary-muted text-xs text-center">
           Prototype of Mike&apos;s service-map idea. Demo services + illustrative criteria (widened from the Derbyshire MH Helpline signposting pack). No PII.
           The real version is driven by approved, dated profile facts and the actual service directory.
         </p>

@@ -179,7 +179,7 @@ export default function GuidesPage() {
             <div className="flex items-center gap-2 mb-3">
               <FileText className="w-5 h-5 text-gray-500" />
               <span className="font-bold text-gray-700">Type</span>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-gray-600">
                 {selectedType === "all" ? "How each guide works" : TYPE_HELP[selectedType]}
               </span>
             </div>
@@ -257,7 +257,7 @@ export default function GuidesPage() {
         )}
 
         {/* Count */}
-        <div className="text-center text-sm text-gray-500">
+        <div className="diary-muted text-center text-sm">
           {filteredGuides.length} of {ALL_GUIDES.length} guides
         </div>
       </div>

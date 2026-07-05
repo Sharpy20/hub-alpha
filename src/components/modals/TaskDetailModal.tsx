@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Hand, Check, Clock, AlertTriangle, Calendar, User, FileText, Link as LinkIcon, Save } from "lucide-react";
+import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import { DiaryTask, SHIFT_CONFIG, TASK_CATEGORY_CONFIG, PRIORITY_CONFIG } from "@/lib/types";
 import Link from "next/link";
 import { toasts, showInfo } from "@/lib/utils/toast";
@@ -54,6 +55,10 @@ export function TaskDetailModal({
       setIsEditing(false);
     }
   }, [task]);
+
+  // Keyboard support: focus trap + Escape-to-close (WCAG 2.1.2)
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useModalA11y(dialogRef, onClose, isOpen && !!task);
 
   if (!isOpen || !task) return null;
 
@@ -150,6 +155,7 @@ export function TaskDetailModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label={`Task details: ${task.title}`}

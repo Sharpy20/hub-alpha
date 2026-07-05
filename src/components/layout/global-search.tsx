@@ -6,6 +6,7 @@ import { Search, FileText, Link2, ExternalLink, Lock, CornerDownLeft } from "luc
 import { ALL_GUIDES, guideType } from "@/lib/data/guides/catalog";
 import { bookmarks } from "@/lib/data/bookmarks";
 import { useV2Href } from "@/lib/hooks/useV2";
+import { useModalA11y } from "@/lib/hooks/useModalA11y";
 
 type Result =
   | { kind: "guide"; id: string; title: string; sub: string; icon: string; type: string; path: string }
@@ -28,6 +29,10 @@ export function GlobalSearch() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Focus trap + Escape + focus return while the palette is open
+  useModalA11y(panelRef, () => setOpen(false), open);
 
   // Ctrl/Cmd+K toggles the palette from anywhere
   useEffect(() => {
@@ -105,15 +110,16 @@ export function GlobalSearch() {
         onClick={() => setOpen(true)}
         aria-label="Search guides and links"
         title="Search (Ctrl+K)"
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
       >
         <Search className="w-4 h-4" />
         <span className="hidden lg:inline text-sm font-medium">Search</span>
-        <kbd className="hidden lg:inline text-[10px] font-mono bg-white border border-slate-300 rounded px-1 py-0.5 text-slate-400">Ctrl K</kbd>
+        <kbd className="hidden lg:inline text-[10px] font-mono bg-white border border-slate-300 rounded px-1 py-0.5 text-slate-500">Ctrl K</kbd>
       </button>
 
       {open && (
         <div
+          ref={panelRef}
           className="fixed inset-0 z-[60] flex items-start justify-center pt-[12vh] px-4"
           role="dialog"
           aria-modal="true"
@@ -134,20 +140,21 @@ export function GlobalSearch() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}
+                aria-label="Search guides and links"
                 placeholder="Search guides and links..."
                 className="flex-1 py-4 text-base outline-none placeholder:text-gray-400"
               />
-              <kbd className="text-[10px] font-mono bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5 text-gray-400">Esc</kbd>
+              <kbd className="text-[10px] font-mono bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5 text-gray-600">Esc</kbd>
             </div>
 
             {/* Results */}
             <div className="max-h-[50vh] overflow-y-auto">
               {query.trim().length < 2 ? (
-                <p className="px-4 py-8 text-center text-sm text-gray-400">
+                <p className="px-4 py-8 text-center text-sm text-gray-500">
                   Type to search across every guide and link.
                 </p>
               ) : results.length === 0 ? (
-                <p className="px-4 py-8 text-center text-sm text-gray-400">
+                <p className="px-4 py-8 text-center text-sm text-gray-500">
                   No matches for &quot;{query.trim()}&quot;.
                 </p>
               ) : (
@@ -169,7 +176,7 @@ export function GlobalSearch() {
                               <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" aria-label="FOCUS login needed" />
                             )}
                           </span>
-                          <span className="block text-xs text-gray-400 truncate">{r.sub}</span>
+                          <span className="block text-xs text-gray-500 truncate">{r.sub}</span>
                         </span>
                         <span className="flex items-center gap-1.5 flex-shrink-0 text-[10px] font-semibold uppercase tracking-wide">
                           {r.kind === "guide" ? (
@@ -187,7 +194,7 @@ export function GlobalSearch() {
             </div>
 
             {/* Footer hint */}
-            <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100 bg-gray-50 text-[11px] text-gray-400">
+            <div className="flex items-center justify-between px-4 py-2 border-t border-gray-100 bg-gray-50 text-[11px] text-gray-600">
               <span className="flex items-center gap-1"><ExternalLink className="w-3 h-3" /> Links open in a new tab</span>
               <span>&uarr; &darr; to move &middot; &crarr; to open</span>
             </div>

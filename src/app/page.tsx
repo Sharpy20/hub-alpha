@@ -311,7 +311,7 @@ export default function HomePage() {
 
         {/* Bookmark Carousel */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mb-4">
             Quick Links
           </h2>
           <BookmarkCarousel />
@@ -319,7 +319,7 @@ export default function HomePage() {
 
         {/* Quick Actions */}
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold text-foreground mb-4">
             I need to...
           </h2>
           <div className="space-y-4">
@@ -352,7 +352,7 @@ export default function HomePage() {
 
         {/* GDPR link */}
         <section className="text-center">
-          <Link href={link("/gdpr")} className="text-sm text-indigo-600 hover:text-indigo-800">
+          <Link href={link("/gdpr")} className="text-sm text-nhs-blue hover:text-nhs-dark-blue">
             GDPR &amp; Privacy
           </Link>
         </section>

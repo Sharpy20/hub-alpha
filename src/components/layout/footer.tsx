@@ -65,11 +65,11 @@ export function Footer() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-white/20 text-center text-sm text-white/70 space-y-2">
-          <p className="text-xs text-white/40 font-medium tracking-wider uppercase">
+          <p className="text-xs text-white/70 font-medium tracking-wider uppercase">
             Derbyshire Healthcare NHS Foundation Trust
           </p>
           <p>&copy; {currentYear} wardHub &ndash; Alpha Demo. Not for clinical use.</p>
-          <div className="flex items-center justify-center gap-4 text-xs text-white/50">
+          <div className="flex items-center justify-center gap-4 text-xs text-white/70">
             <Link href={link("/gdpr")} className="hover:text-white transition-colors">Privacy</Link>
             {!isV2 && (
               <>

@@ -94,6 +94,9 @@
   --theme-col-border-focused: #818cf8;
   --theme-col-border-today: #c7d2fe;
   --theme-col-border-default: #e5e7eb;
+  /* Diary section headings (Team Tasks / Patient Tasks / Appointments) -
+     gray-600, passes 4.5:1 on the white and gray-100 surfaces it sits on */
+  --diary-section-text: #4b5563;
 }
 
 /* ============================================
@@ -116,7 +119,8 @@
   --theme-col-header-today-bg: #EBF5FF;
   --theme-col-header-today-text: #007AFF;
   --theme-col-header-past-bg: #F2F2F7;
-  --theme-col-header-past-text: #8E8E93;
+  /* was #8E8E93 (2.9:1 on #F2F2F7) - lifted for WCAG AA, still muted */
+  --theme-col-header-past-text: #636366;
   --theme-col-header-future-bg: #F2F2F7;
   --theme-col-header-future-text: #3C3C43;
   --theme-col-border-focused: #007AFF;
@@ -179,12 +183,26 @@
   --theme-col-header-today-bg: #1E1B52;
   --theme-col-header-today-text: #818CF8;
   --theme-col-header-past-bg: #0F0E2E;
-  --theme-col-header-past-text: #4B5563;
+  /* was #4B5563 (2.5:1 on the indigo canvas) - lifted for WCAG AA */
+  --theme-col-header-past-text: #9CA3AF;
   --theme-col-header-future-bg: #0F0E2E;
   --theme-col-header-future-text: #818CF8;
   --theme-col-border-focused: #7C3AED;
   --theme-col-border-today: #4338CA;
   --theme-col-border-default: rgba(99,102,241,0.2);
+  --diary-section-text: #a3adc2;
+}
+
+/* Fantastical is dark even in light mode, so the light-surface greys and
+   dark headings need the same lift as .dark (WCAG 1.4.3). */
+[data-theme="fluent"] .diary-muted {
+  color: #a3adc2;
+}
+[data-theme="fluent"] .theme-heading.text-gray-900 {
+  color: #f0f4f8;
+}
+[data-theme="fluent"] .priority-band {
+  background-color: rgba(15, 14, 46, 0.5);
 }
 
 /* ============================================
@@ -207,7 +225,8 @@
   --theme-col-header-today-bg: #FFFAE5;
   --theme-col-header-today-text: #37352F;
   --theme-col-header-past-bg: #ffffff;
-  --theme-col-header-past-text: #9B9A97;
+  /* was #9B9A97 (2.8:1 on white) - lifted for WCAG AA, still Notion-muted */
+  --theme-col-header-past-text: #6f6e6b;
   --theme-col-header-future-bg: #ffffff;
   --theme-col-header-future-text: #37352F;
   --theme-col-border-focused: #37352F;
@@ -250,7 +269,9 @@
   --theme-col-header-today-bg: #1e293b;
   --theme-col-header-today-text: #93C5FD;
   --theme-col-header-past-bg: #111827;
-  --theme-col-header-past-text: #6B7280;
+  /* gray-400: still visibly muted next to future-day #D1D5DB but passes
+     4.5:1 on the #111827 header background (gray-500 was 3.7:1) */
+  --theme-col-header-past-text: #9CA3AF;
   --theme-col-header-future-bg: #111827;
   --theme-col-header-future-text: #D1D5DB;
   --theme-col-border-focused: #6366f1;
@@ -259,12 +280,44 @@
   --theme-card-bg: #1e2533;
   --theme-card-border: 1px solid #374151;
   --theme-card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --diary-section-text: #9aa5b1;
 
   color-scheme: dark;
 }
 .dark body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Muted diary text that sits directly on the themed diary surfaces
+   (white cards in light mode, #1e2533 cards in dark mode). A blanket
+   .dark grey override is NOT safe here because plenty of light surfaces
+   (header, amber banners, priority bands) persist inside dark mode. */
+.diary-muted {
+  color: #4b5563; /* gray-600: 7.6:1 on white */
+}
+.dark .diary-muted {
+  color: #9aa5b1; /* 6.1:1 on #1e2533 */
+}
+
+/* Priority group bands use translucent light tints (bg-green-50/50 etc.)
+   which blend to a murky mid-grey over the dark cards and sink the label
+   contrast. Re-tint them dark in dark mode; the coloured border keeps the
+   priority cue. */
+.dark .priority-band {
+  background-color: rgba(17, 24, 39, 0.45);
+}
+
+/* In dark mode --nhs-blue is lightened to #41B6E6, where white text is
+   only 2.3:1. Flip solid nhs-blue elements to dark text (7.7:1). */
+.dark .bg-nhs-blue.text-white {
+  color: #111827;
+}
+
+/* Dark mode: the footer keeps its NHS blue band, but --nhs-dark-blue is
+   lightened to #005EB8 in dark mode, where white/70 is only 3.9:1. */
+.dark footer .text-white\/70 {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 /* Apply theme to diary page */
@@ -974,3 +1027,4 @@ footer a:hover {
   .patient-guide-container .breath-engine,
   .patient-guide-container .ground-icons { flex-direction: row; width: auto; flex-wrap: wrap; }
 }
+

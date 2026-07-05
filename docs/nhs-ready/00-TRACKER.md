@@ -16,7 +16,7 @@ updates their row: status (done / partial / blocked), date, and a one-line resul
 
 | # | Prompt | Status | Date | Result |
 |---|--------|--------|------|--------|
-| 5 | Accessibility re-audit and fix | not started | | |
+| 5 | Accessibility re-audit and fix | done | 5 Jul | 05-accessibility.md: axe-core live audit, 10 pages, light+dark - 32 issues fixed, now ZERO A/AA violations on all audited pages. Snag 192 closed: contrast sweep, theme fixes, new useModalA11y hook (Escape + focus trap) on 8 top modals, keyboard drag-drop equivalent documented. Exceptions listed honestly (secondary admin pages, ~20 low-traffic modals). Trust-facing conformance statement included. |
 | 6 | Content and dead-link sweep (+ guide consistency) | done | 5 Jul | 06-content-sweep.md: 289 URLs inventoried (51 FOCUS, 131 placeholders), 1 dead + 3 stale links found, 12 copy fixes, 19 consistency fixes (badge gaps closed, stale viewer categories aligned). All 17 workflows follow the standard step order. 41/64 guides missing approval-status entries (silently amber). 12-item judgement list for Mike incl. 7 orphan how-to guides. |
 | 7 | Code health pass | not started | | |
 | 8 | Rebuild pack (portability) | done | 5 Jul | 08a architecture (verified route map, 24 localStorage keys, 12 gotchas), 08b data inventory (measured counts: 64 guides, 113 links, 364 quiz Qs, 109 services), 08c options - recommends keep-Next.js-on-trust-infra (~1-2 dev-weeks). Flags: static export would re-expose parked /welcome (proxy-blocked only); docs say 100/100 demo staff/patients but code generates 25/25, all "active". |

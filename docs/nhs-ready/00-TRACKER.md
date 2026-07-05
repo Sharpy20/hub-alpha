@@ -19,7 +19,7 @@ updates their row: status (done / partial / blocked), date, and a one-line resul
 | 5 | Accessibility re-audit and fix | not started | | |
 | 6 | Content and dead-link sweep (+ guide consistency) | not started | | |
 | 7 | Code health pass | not started | | |
-| 8 | Rebuild pack (portability) | not started | | |
+| 8 | Rebuild pack (portability) | done | 5 Jul | 08a architecture (verified route map, 24 localStorage keys, 12 gotchas), 08b data inventory (measured counts: 64 guides, 113 links, 364 quiz Qs, 109 services), 08c options - recommends keep-Next.js-on-trust-infra (~1-2 dev-weeks). Flags: static export would re-expose parked /welcome (proxy-blocked only); docs say 100/100 demo staff/patients but code generates 25/25, all "active". |
 | 8b | Fast loading (performance) | not started | | |
 
 ## Day 3 - The pitch

@@ -56,6 +56,14 @@ function WheelItem({ bookmark, index, total, radius }: WheelItemProps) {
       <span className="text-[11px] font-medium text-nhs-black leading-tight">
         {bookmark.title}
       </span>
+      {!bookmark.requiresFocus && bookmark.url === "#" && (
+        <span
+          className="absolute -bottom-1 bg-amber-100 text-amber-800 text-[9px] px-1.5 py-0.5 rounded font-medium"
+          title="The link is disabled in the demo"
+        >
+          Blocked in demo
+        </span>
+      )}
       {bookmark.requiresFocus && (
         <span className="absolute -bottom-1 bg-nhs-yellow text-nhs-black text-[9px] px-1.5 py-0.5 rounded font-medium flex items-center gap-0.5">
           <Lock className="w-2.5 h-2.5" />

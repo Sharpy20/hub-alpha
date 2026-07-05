@@ -201,7 +201,7 @@ export const FORMULATION_SECTIONS: RiskSection[] = [
     groups: [
       { words: ["engaging with staff", "future-oriented thinking", "supportive family", "children / dependents", "faith / cultural beliefs", "responds to 1:1 support", "no current access to means", "fragile and easily lost"] },
     ],
-    placeholder: "What is protective, and how robust is it...",
+    placeholder: "What is protective, and how steady is it...",
   },
   {
     id: "engagement",

@@ -446,7 +446,7 @@ export default function ReportsPage() {
                   Patient Progress Reports
                 </h1>
                 <p className="text-white/80 mt-1">
-                  Generate comprehensive patient status audits
+                  Generate full patient status audits
                 </p>
               </div>
             </div>

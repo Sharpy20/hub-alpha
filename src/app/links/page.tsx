@@ -257,7 +257,7 @@ function BookmarksContent() {
                       toggleFavoriteBookmark(pb.id);
                     }}
                     className="p-2 rounded-lg hover:bg-amber-50 transition-colors"
-                    title={userFavoriteBookmarks.includes(pb.id) ? "Remove from favorites" : "Add to favorites"}
+                    title={userFavoriteBookmarks.includes(pb.id) ? "Remove from favourites" : "Add to favourites"}
                   >
                     <Star
                       className={`w-5 h-5 transition-colors ${
@@ -354,6 +354,14 @@ function BookmarksContent() {
                           FOCUS
                         </Badge>
                       )}
+                      {bookmark.url === "#" && !bookmark.requiresFocus && (
+                        <span
+                          className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap"
+                          title="The link is disabled in the demo. Use the phone number or details shown instead."
+                        >
+                          Blocked in demo
+                        </span>
+                      )}
                     </div>
                   </div>
                   <StatusBadge status={linkApproval(bookmark.id)} />
@@ -364,7 +372,7 @@ function BookmarksContent() {
                         toggleFavoriteBookmark(bookmark.id);
                       }}
                       className="p-2 rounded-lg hover:bg-amber-50 transition-colors"
-                      title={userFavoriteBookmarks.includes(bookmark.id) ? "Remove from favorites" : "Add to favorites"}
+                      title={userFavoriteBookmarks.includes(bookmark.id) ? "Remove from favourites" : "Add to favourites"}
                     >
                       <Star
                         className={`w-5 h-5 transition-colors ${
@@ -429,6 +437,11 @@ function BookmarksContent() {
                   <p className="text-xs text-amber-700 mt-1">
                     This link requires FOCUS login. You must be connected to the Trust network to access this resource.
                   </p>
+                  {focusModalUrl === "#" && (
+                    <p className="text-xs text-amber-700 mt-1 font-medium">
+                      The link itself is blocked in this demo - the live version opens the FOCUS page.
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex gap-3">
@@ -438,12 +451,14 @@ function BookmarksContent() {
                 >
                   Cancel
                 </button>
-                <button
-                  onClick={handleFocusContinue}
-                  className="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium hover:shadow-lg transition-all"
-                >
-                  Open Anyway
-                </button>
+                {focusModalUrl !== "#" && (
+                  <button
+                    onClick={handleFocusContinue}
+                    className="flex-1 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium hover:shadow-lg transition-all"
+                  >
+                    Open Anyway
+                  </button>
+                )}
               </div>
             </div>
           </div>

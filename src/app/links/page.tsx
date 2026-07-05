@@ -8,6 +8,7 @@ import { DynamicIcon } from "@/components/common";
 import { linkApproval } from "@/lib/data/approval-status";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings, PersonalBookmark } from "@/app/ward-settings-provider";
+import { sanitizeExternalUrl } from "@/lib/utils/url";
 import { useApp } from "@/app/providers";
 import { Lock, ExternalLink, Link2, Filter, Star, Check, X, Shield, Plus, Pencil, Trash2, Send, User, Search } from "lucide-react";
 
@@ -96,13 +97,13 @@ function BookmarksContent() {
       return;
     }
     if (bookmark.url !== "#") {
-      window.open(bookmark.url, "_blank");
+      window.open(sanitizeExternalUrl(bookmark.url), "_blank", "noopener,noreferrer");
     }
   };
 
   const handleFocusContinue = () => {
     if (focusModalUrl && focusModalUrl !== "#") {
-      window.open(focusModalUrl, "_blank");
+      window.open(sanitizeExternalUrl(focusModalUrl), "_blank", "noopener,noreferrer");
     }
     setFocusModalUrl(null);
   };
@@ -219,7 +220,7 @@ function BookmarksContent() {
                 key={pb.id}
                 className="bg-white rounded-xl border-2 border-gray-100 p-5 flex items-center gap-4 hover:border-purple-300 hover:shadow-lg transition-all cursor-pointer group"
                 onClick={() => {
-                  if (pb.url !== "#") window.open(pb.url, "_blank");
+                  if (pb.url !== "#") window.open(sanitizeExternalUrl(pb.url), "_blank", "noopener,noreferrer");
                 }}
               >
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-violet-500 to-purple-700">

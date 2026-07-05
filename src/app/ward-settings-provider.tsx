@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
 import { WardSettings, DEFAULT_WARD_SETTINGS, Bookmark } from "@/lib/types";
+import { sanitizeExternalUrl } from "@/lib/utils/url";
 
 export interface PersonalBookmark {
   id: string;
@@ -141,6 +142,7 @@ export function WardSettingsProvider({ children }: { children: ReactNode }) {
   const addPersonalBookmark = useCallback((bookmark: Omit<PersonalBookmark, "id" | "createdAt">) => {
     const newBookmark: PersonalBookmark = {
       ...bookmark,
+      url: sanitizeExternalUrl(bookmark.url),
       id: `personal-${Date.now()}`,
       createdAt: new Date().toISOString(),
     };
@@ -148,8 +150,11 @@ export function WardSettingsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const updatePersonalBookmark = useCallback((id: string, updates: Partial<PersonalBookmark>) => {
+    const safeUpdates = updates.url !== undefined
+      ? { ...updates, url: sanitizeExternalUrl(updates.url) }
+      : updates;
     setPersonalBookmarks((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, ...updates } : b))
+      prev.map((b) => (b.id === id ? { ...b, ...safeUpdates } : b))
     );
   }, []);
 

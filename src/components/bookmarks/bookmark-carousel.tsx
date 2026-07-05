@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Lock, Plus } from "lucide-react";
 import { DynamicIcon } from "@/components/common";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings } from "@/app/ward-settings-provider";
+import { sanitizeExternalUrl } from "@/lib/utils/url";
 import type { Bookmark } from "@/lib/types";
 import Link from "next/link";
 
@@ -31,7 +32,7 @@ function WheelItem({ bookmark, index, total, radius }: WheelItemProps) {
 
   const handleClick = () => {
     if (bookmark.url !== "#") {
-      window.open(bookmark.url, "_blank");
+      window.open(sanitizeExternalUrl(bookmark.url), "_blank", "noopener,noreferrer");
     }
   };
 

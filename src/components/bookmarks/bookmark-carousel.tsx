@@ -100,7 +100,6 @@ export function BookmarkCarousel() {
     if (hasFavourites) front.push(MY_FAVOURITES);
     if (hasPersonal) front.push(MY_PERSONAL);
     return [...front, ...base];
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasFavourites, hasPersonal]);
 
   // Find the index of the default category

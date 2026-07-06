@@ -33,7 +33,6 @@ export function VerificationProvider({ children }: { children: ReactNode }) {
   const [store, setStore] = useState<VerificationStore>({});
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -48,7 +47,6 @@ export function VerificationProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save to localStorage when store changes
   useEffect(() => {
     if (isLoaded && typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(store));

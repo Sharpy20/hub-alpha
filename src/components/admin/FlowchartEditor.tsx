@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Plus,
   Trash2,
-  GripVertical,
   CheckCircle,
   FileText,
   Send,
@@ -13,17 +12,12 @@ import {
   Shield,
   Users,
   MapPin,
-  MessageSquare,
   ChevronDown,
   ArrowDown,
   X,
   Save,
   Eye,
   Pencil,
-  Link as LinkIcon,
-  Download,
-  BookOpen,
-  ExternalLink,
   GitBranch,
   ListTree,
   Square,
@@ -288,9 +282,7 @@ export function FlowchartEditor({
   const [previewMode, setPreviewMode] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [validation, setValidation] = useState<{ valid: boolean; errors: string[] }>({ valid: true, errors: [] });
-  const [editingBranchPath, setEditingBranchPath] = useState<string | null>(null);
   const [justSavedStepId, setJustSavedStepId] = useState<string | null>(null);
-  const [errorStepIds, setErrorStepIds] = useState<string[]>([]);
 
   // Validate on steps change
   useEffect(() => {
@@ -920,7 +912,7 @@ function StepBlock({
 
                 {/* Branch steps */}
                 <div className="space-y-2">
-                  {branch.steps.map((branchStep, bsIdx) => {
+                  {branch.steps.map((branchStep) => {
                     const bConfig = STEP_TYPE_CONFIG[branchStep.type];
                     const BIcon = bConfig.icon;
                     return (
@@ -990,7 +982,6 @@ function StepBlock({
 
 // Drop zone component
 function DropZone({
-  index,
   isActive,
   onDragOver,
   onDragLeave,

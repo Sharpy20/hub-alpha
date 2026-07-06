@@ -25,9 +25,10 @@ const getRoleForIndex = (index: number): UserRole => {
   return "staff";  // All other staff are regular staff
 };
 
-// Some staff members have contributor privileges (granted by ward_admin or manager)
+// Some staff members have contributor privileges (granted by ward_admin or manager).
+// Lead (2) and Manager (3) get it by default. Indexes 6 and 10 are leftovers from
+// the old 20-per-ward roster - with 5 staff per ward they never match.
 const hasContributorFlag = (index: number): boolean => {
-  // Lead and Manager get contributor by default, plus a couple of regular staff
   return index === 2 || index === 3 || index === 6 || index === 10;
 };
 
@@ -44,7 +45,7 @@ const generateAllStaff = (): StaffMember[] => {
         name: names[i],
         role: getRoleForIndex(i),
         ward,
-        isActive: i !== 8, // Index 8 is inactive
+        isActive: i !== 8, // leftover from the 20-per-ward roster - index 8 never occurs with 5 staff, so everyone is active
         isContributor: hasContributorFlag(i) || undefined,
       });
       idCounter++;
@@ -54,7 +55,8 @@ const generateAllStaff = (): StaffMember[] => {
   return staff;
 };
 
-// All staff across all wards (100 total: 20 × 5 wards)
+// All staff across all wards (currently 25 total: 5 per ward x 5 wards,
+// driven by STAFF_NAMES above - Mike capped it at 5 per ward)
 export const DEMO_STAFF: StaffMember[] = generateAllStaff();
 
 // Helper to get staff by ward

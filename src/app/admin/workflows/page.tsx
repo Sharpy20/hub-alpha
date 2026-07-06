@@ -235,7 +235,6 @@ export default function WorkflowsAdminPage() {
       return;
     }
 
-    // Save version history
     const newVersion: WorkflowVersion = {
       id: `v-${Date.now()}`,
       timestamp: new Date().toISOString(),
@@ -248,7 +247,6 @@ export default function WorkflowsAdminPage() {
     setEditingWorkflow({ ...editingWorkflow, versions: updatedVersions });
 
     // In real app, would save to localStorage/database
-    // Save workflow to storage
     setValidationError(null);
     setSavedMessage(true);
     setTimeout(() => setSavedMessage(false), 2000);

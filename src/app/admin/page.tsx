@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import Link from "next/link";
-import { FileText, BookOpen, ArrowRight, Pencil, Shield, Bookmark, Settings, Sparkles, AlertTriangle } from "lucide-react";
+import { FileText, ArrowRight, Pencil, Shield, Bookmark, Sparkles } from "lucide-react";
 import { bookmarks } from "@/lib/data/bookmarks";
 import { useV2Href, useIsV2 } from "@/lib/hooks/useV2";
 

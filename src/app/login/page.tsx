@@ -94,7 +94,6 @@ export default function LoginPage() {
     ? ROLES.filter((r) => r.value === "staff")
     : ROLES;
 
-  // Get selected staff member
   const selectedStaff = selectedStaffId
     ? DEMO_STAFF.find((s) => s.id === selectedStaffId)
     : undefined;

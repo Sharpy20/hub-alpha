@@ -6,7 +6,7 @@ import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import { useV2Href } from "@/lib/hooks/useV2";
 import Link from "next/link";
-import { Users, ClipboardList, CalendarDays, Info, UserPlus, Filter } from "lucide-react";
+import { CalendarDays, Info, UserPlus } from "lucide-react";
 import { DiaryTask } from "@/lib/types";
 import { KanbanBoard } from "@/components/kanban";
 import {
@@ -15,7 +15,6 @@ import {
   TaskDetailModal,
 } from "@/components/modals";
 import { DEMO_PATIENTS } from "@/lib/data/tasks";
-import { getStaffByWard } from "@/lib/data/staff";
 
 export default function MyTasksPage() {
   const link = useV2Href();
@@ -30,22 +29,12 @@ export default function MyTasksPage() {
   // My Patients toggle
   const [showMyPatients, setShowMyPatients] = useState(false);
 
-  // Lead/Manager staff filter
-  const [selectedStaffFilter, setSelectedStaffFilter] = useState<string[]>([]);
-  const [showStaffFilterDropdown, setShowStaffFilterDropdown] = useState(false);
-
-  // Check if user is lead or manager
-  const isLeadOrManager = user?.role === "lead" || user?.role === "manager";
-
   // Get patients where current user is ward professional
   const myPatientIds = showMyPatients && user
     ? DEMO_PATIENTS
         .filter(p => p.wardProfessional === user.name && p.ward === activeWard)
         .map(p => p.id)
     : [];
-
-  // Get staff for filter
-  const wardStaffList = isLeadOrManager ? getStaffByWard(activeWard) : [];
 
   // Handle task updates from Kanban - use shared context
   const handleUpdateTask = (taskId: string, updates: Partial<DiaryTask>) => {
@@ -71,12 +60,10 @@ export default function MyTasksPage() {
     toggleComplete(taskId, user?.name || "Unknown");
   };
 
-  // Handle task click to open detail modal
   const handleTaskClick = (task: DiaryTask) => {
     setSelectedTask(task);
   };
 
-  // Get discharged patient IDs
   const dischargedPatientIds = DEMO_PATIENTS
     .filter(p => p.status === "discharged")
     .map(p => p.id);

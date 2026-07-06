@@ -67,7 +67,11 @@ const LEGAL_STATUSES: LegalStatus[] = [
   "section_5_2",                          // 5% Doctor's Holding Power
 ];
 
-// Patient statuses distribution
+// Patient statuses distribution. NOTE: with only 5 patients per ward the
+// round-robin (i % 10) never reaches the non-active slots, so every generated
+// patient currently ends up "active". To see pending_discharge / on_leave /
+// discharged patients in the demo, either grow PATIENT_NAMES past 7 per ward
+// or reorder this list - Mike's call.
 const PATIENT_STATUSES: PatientStatus[] = [
   "active", "active", "active", "active", "active", "active", "active", // 70% active
   "pending_discharge", // 10%
@@ -107,7 +111,7 @@ const generateAdmissionTime = (index: number): string => {
   return `${hours}:${mins}`;
 };
 
-// Generate all patients for all wards (20 per ward = 100 total)
+// Generate all patients for all wards (currently 5 per ward = 25 total, driven by PATIENT_NAMES)
 const generateAllPatients = (): Patient[] => {
   const patients: Patient[] = [];
   let idCounter = 1;
@@ -162,7 +166,7 @@ const generateAllPatients = (): Patient[] => {
   return patients;
 };
 
-// All patients across all wards (100 total: 20 × 5 wards)
+// All patients across all wards (currently 25 total: 5 per ward x 5 wards)
 export const DEMO_PATIENTS: Patient[] = generateAllPatients();
 
 // Assurance Dashboard base URL (FOCUS internal)
@@ -245,7 +249,7 @@ const WARD_TASK_TEMPLATES: Array<{
   },
 ];
 
-// Generate ward tasks - 6 per ward (includes audit tasks)
+// Generate ward tasks - currently 1 recurring task per ward (kept light for a cleaner demo)
 const generateWardTasks = (ward: string, startId: number): WardTask[] => {
   const staff = WARD_STAFF[ward];
   const tasks: WardTask[] = [];
@@ -306,7 +310,15 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
 };
 
 // Patient task templates for variety
-const PATIENT_TASK_TEMPLATES = [
+const PATIENT_TASK_TEMPLATES: {
+  title: string;
+  description: string;
+  category: PatientTask["category"];
+  priority: PatientTask["priority"];
+  linkedReferralId?: string;
+  linkedGuideId?: string;
+  repeatIntervalDays?: number;
+}[] = [
   { title: "IMHA Referral", description: "Refer to advocacy service", category: "referral" as const, priority: "important" as const, linkedReferralId: "imha-advocacy" },
   { title: "Call family", description: "Update family about care plan", category: "family_contact" as const, priority: "routine" as const },
   { title: "Dietitian Referral", description: "Refer for nutritional assessment", category: "referral" as const, priority: "routine" as const, linkedReferralId: "dietitian" },
@@ -372,7 +384,7 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
       createdBy: staff[(i + 3) % staff.length], // Different creator
       ...(template.linkedReferralId && { linkedReferralId: template.linkedReferralId }),
       ...(template.linkedGuideId && { linkedGuideId: template.linkedGuideId }),
-      ...((template as any).repeatIntervalDays && { repeatIntervalDays: (template as any).repeatIntervalDays }),
+      ...(template.repeatIntervalDays && { repeatIntervalDays: template.repeatIntervalDays }),
       ...(slot.claim && { claimedBy: staffMember, claimedAt: todayStr }),
     });
   }
@@ -470,7 +482,8 @@ const generateAppointments = (ward: string, startId: number): Appointment[] => {
   return appointments;
 };
 
-// Generate all ward tasks (12 per ward × 5 wards = 60 total, includes audit tasks)
+// Generate all ward tasks (currently 1 per ward = 5 total; the startId stride of
+// 12 just leaves id gaps, which is harmless)
 const generateAllWardTasks = (): WardTask[] => {
   const tasks: WardTask[] = [];
   let startId = 1;
@@ -483,7 +496,8 @@ const generateAllWardTasks = (): WardTask[] => {
   return tasks;
 };
 
-// Generate all patient tasks (~18 per ward × 5 wards = ~90 total, excludes discharged patients)
+// Generate all patient tasks (up to 8 per ward but capped by patient count, so
+// currently 5 per ward = 25 total; excludes discharged patients)
 const generateAllPatientTasks = (): PatientTask[] => {
   const tasks: PatientTask[] = [];
   let startId = 1;
@@ -496,7 +510,7 @@ const generateAllPatientTasks = (): PatientTask[] => {
   return tasks;
 };
 
-// Generate all appointments (7 per ward × 5 wards = 35 total)
+// Generate all appointments (4 per ward x 5 wards = 20 total)
 const generateAllAppointments = (): Appointment[] => {
   const appointments: Appointment[] = [];
   let startId = 1;

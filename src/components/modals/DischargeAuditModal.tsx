@@ -36,10 +36,6 @@ export function DischargeAuditModal({
   const [confirmed, setConfirmed] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const handleCloseAfterConfirm = () => {
-    onClose();
-  };
-
   // Early returns BEFORE any conditional renders that need data
   if (!isOpen || !patient) return null;
 

@@ -57,7 +57,6 @@ export default function AdminBookmarksPage() {
     }
   }, [user, router]);
 
-  // Load from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("wardhub_bookmarks");
     if (saved) {
@@ -69,7 +68,6 @@ export default function AdminBookmarksPage() {
     }
   }, []);
 
-  // Save to localStorage
   const saveBookmarks = (newBookmarks: BookmarkType[]) => {
     setBookmarks(newBookmarks);
     localStorage.setItem("wardhub_bookmarks", JSON.stringify(newBookmarks));

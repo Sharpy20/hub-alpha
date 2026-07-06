@@ -1,4 +1,4 @@
-// Mental Health Understanding Guides - metadata for the 28 patient-facing guides
+// Mental Health Understanding Guides - metadata for the 29 patient-facing guides
 // Source: MH_Guides_Poster.html (Named Nurse Tools)
 
 export interface PatientGuide {

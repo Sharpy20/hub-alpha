@@ -63,7 +63,6 @@ function timeAgo(date: string): string {
   return new Date(date).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-// Get sub-category label
 function getSubCategoryLabel(categoryId: string, subCategoryId: string | null): string | null {
   if (!subCategoryId) return null;
   const subCategories = FEEDBACK_SUB_CATEGORIES[categoryId];
@@ -175,7 +174,6 @@ function NewPostModal({
   const [category, setCategory] = useState<FeedbackCategory>(initialCategory || "general");
   const [subCategory, setSubCategory] = useState<string | null>(initialSubCategory || null);
 
-  // Get sub-categories for the selected category
   const subCategories = FEEDBACK_SUB_CATEGORIES[category] || [];
   const hasSubCategories = subCategories.length > 0;
 
@@ -309,8 +307,6 @@ function PostCard({
   userVotes,
   onVote,
   onComment,
-  username,
-  userId,
 }: {
   post: FeedbackPost;
   comments: FeedbackComment[];
@@ -479,7 +475,6 @@ function FeedbackContent() {
   const [comments, setComments] = useState<FeedbackComment[]>([]);
   const [userVotes, setUserVotes] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [username, setUsernameState] = useState("");
   const [userId, setUserIdState] = useState("");
@@ -611,7 +606,6 @@ function FeedbackContent() {
     return post.category === filterCategory;
   });
 
-  // Check if user needs to set username
   const needsUsername = !username;
 
   // v1 (limited build): no central storage for staff identity, so the
@@ -774,19 +768,6 @@ function FeedbackContent() {
           </span>
         </div>
 
-        {/* Error state */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700">
-            {error}
-            <button
-              onClick={loadFromStorage}
-              className="ml-2 text-red-800 underline hover:no-underline"
-            >
-              Retry
-            </button>
-          </div>
-        )}
-
         {/* Loading state */}
         {loading && (
           <div className="text-center py-12">
@@ -796,7 +777,7 @@ function FeedbackContent() {
         )}
 
         {/* Posts list */}
-        {!loading && !error && (
+        {!loading && (
           <div className="space-y-4">
             {filteredPosts.length === 0 ? (
               <div className="text-center py-12 bg-gray-50 rounded-xl">

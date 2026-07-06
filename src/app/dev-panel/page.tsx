@@ -27,7 +27,6 @@ import {
   ArrowRight,
   Printer,
   HelpCircle,
-  Download
 } from "lucide-react";
 
 // Dev panel password removed for demo – open access
@@ -77,6 +76,27 @@ export default function DevPanelPage() {
   );
 }
 
+function SchemaStatusBadge({ status }: { status: SchemaConfig["schemaStatus"] }) {
+  const statusColors = {
+    LIVE: "bg-nhs-green text-white",
+    DRAFT: "bg-nhs-warm-yellow text-nhs-black",
+    UNKNOWN: "bg-nhs-mid-grey text-white"
+  };
+  const statusIcons = {
+    LIVE: CheckCircle,
+    DRAFT: FileWarning,
+    UNKNOWN: Clock
+  };
+  const Icon = statusIcons[status];
+
+  return (
+    <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium ${statusColors[status]}`}>
+      <Icon className="w-3 h-3" />
+      Schema: {status}
+    </div>
+  );
+}
+
 function DevPanelContent() {
   const searchParams = useSearchParams();
   const sectionParam = searchParams.get("section");
@@ -90,28 +110,6 @@ function DevPanelContent() {
       setActiveSection(sectionParam);
     }
   }, [sectionParam]);
-
-  // Schema status badge
-  const SchemaStatusBadge = () => {
-    const statusColors = {
-      LIVE: "bg-nhs-green text-white",
-      DRAFT: "bg-nhs-warm-yellow text-nhs-black",
-      UNKNOWN: "bg-nhs-mid-grey text-white"
-    };
-    const statusIcons = {
-      LIVE: CheckCircle,
-      DRAFT: FileWarning,
-      UNKNOWN: Clock
-    };
-    const Icon = statusIcons[schemaConfig.schemaStatus];
-
-    return (
-      <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-medium ${statusColors[schemaConfig.schemaStatus]}`}>
-        <Icon className="w-3 h-3" />
-        Schema: {schemaConfig.schemaStatus}
-      </div>
-    );
-  };
 
   return (
     <MainLayout>
@@ -140,7 +138,7 @@ function DevPanelContent() {
             <Card className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-medium text-nhs-dark-grey">Schema Status</span>
-                <SchemaStatusBadge />
+                <SchemaStatusBadge status={schemaConfig.schemaStatus} />
               </div>
               <p className="text-xs text-nhs-mid-grey">
                 Last updated: {new Date(schemaConfig.lastUpdatedAt).toLocaleDateString()}

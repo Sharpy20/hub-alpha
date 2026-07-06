@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { DiaryTask } from "@/lib/types";
 import { KanbanColumn } from "./KanbanColumn";
 import { toLocalDateStr } from "@/lib/utils/date";
@@ -13,8 +12,6 @@ interface KanbanBoardProps {
 }
 
 export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick }: KanbanBoardProps) {
-  const [draggingTask, setDraggingTask] = useState<DiaryTask | null>(null);
-
   // Filter tasks claimed by current user
   const myTasks = tasks.filter((t) => t.claimedBy === currentUserName);
 
@@ -30,7 +27,6 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
 
   const handleDragStart = (e: React.DragEvent, task: DiaryTask) => {
     e.dataTransfer.setData("taskId", task.id);
-    setDraggingTask(task);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -38,25 +34,19 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   };
 
   const handleDropToday = (taskId: string) => {
-    // Move to "Not Started" (pending status)
     onUpdateTask(taskId, { status: "pending" });
-    setDraggingTask(null);
   };
 
   const handleDropInProgress = (taskId: string) => {
-    // Move to "In Progress"
     onUpdateTask(taskId, { status: "in_progress" });
-    setDraggingTask(null);
   };
 
   const handleDropCompleted = (taskId: string) => {
-    // Move to "Completed"
     onUpdateTask(taskId, {
       status: "completed",
       completedAt: toLocalDateStr(),
       completedBy: currentUserName,
     });
-    setDraggingTask(null);
   };
 
   const handleUnclaim = (taskId: string) => {

@@ -56,7 +56,6 @@ export function WardSettingsProvider({ children }: { children: ReactNode }) {
   const [personalBookmarks, setPersonalBookmarks] = useState<PersonalBookmark[]>([]);
   const [pendingRecommendations, setPendingRecommendations] = useState<BookmarkRecommendation[]>([]);
 
-  // Load settings from localStorage on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem(WARD_SETTINGS_KEY);
@@ -84,7 +83,6 @@ export function WardSettingsProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save settings to localStorage when they change
   useEffect(() => {
     if (Object.keys(settings).length > 0) {
       localStorage.setItem(WARD_SETTINGS_KEY, JSON.stringify(settings));

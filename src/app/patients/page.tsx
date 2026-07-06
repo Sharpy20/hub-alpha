@@ -41,7 +41,7 @@ import {
   ALERTS_POOL,
 } from "@/lib/data/tasks";
 import { getWardProfessionalCandidates } from "@/lib/data/staff";
-import { Patient, DiaryTask, PatientStatus, LegalStatus, PatientEntryMode, FieldVisibility } from "@/lib/types";
+import { Patient, DiaryTask, PatientStatus, LegalStatus, FieldVisibility } from "@/lib/types";
 
 const LEGAL_STATUS_CONFIG: Record<LegalStatus, { label: string; color: string; bgColor: string }> = {
   informal: { label: "Informal (Voluntary)", color: "text-green-700", bgColor: "bg-green-100" },
@@ -108,7 +108,6 @@ export default function PatientsPage() {
   const wardName = activeWard.charAt(0).toUpperCase() + activeWard.slice(1);
   const wpCandidates = getWardProfessionalCandidates(wardName);
 
-  // Add patient form state
   const [newPatientName, setNewPatientName] = useState("");
   const [newPatientRoom, setNewPatientRoom] = useState("");
   const [newPatientBed, setNewPatientBed] = useState("");
@@ -196,14 +195,12 @@ export default function PatientsPage() {
   });
 
   const handleTransfer = (patientId: string, newWard: string, transferTasks: boolean) => {
-    // Update patient's ward
     setPatients((prev) =>
       prev.map((p) =>
         p.id === patientId ? { ...p, ward: newWard } : p
       )
     );
 
-    // Update tasks if transferring
     if (transferTasks) {
       setTasks((prev) =>
         prev.map((t) =>
@@ -370,12 +367,10 @@ export default function PatientsPage() {
     );
   };
 
-  const openEditAlertsModal = (patient: Patient) => {
-    setSelectedPatient(patient);
-    setEditingPatientAlerts(patient.alerts || []);
-    setIsEditAlertsModalOpen(true);
-  };
-
+  // NOTE: nothing currently opens the edit-alerts modal - the patient-card alerts
+  // trigger was removed in Session 12. The modal below is kept so it can be
+  // re-wired; an opener needs to set selectedPatient + editingPatientAlerts
+  // before setIsEditAlertsModalOpen(true).
   const handleSaveAlerts = () => {
     if (!selectedPatient) return;
     setPatients((prev) =>

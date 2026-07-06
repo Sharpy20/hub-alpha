@@ -13,7 +13,6 @@ import { sanitizeExternalUrl } from "@/lib/utils/url";
 import { useApp } from "@/app/providers";
 import { Lock, ExternalLink, Link2, Filter, Star, Check, X, Shield, Plus, Pencil, Trash2, Send, User, Search } from "lucide-react";
 
-// Check if icon is an emoji
 function isEmoji(str: string): boolean {
   return /^[\u{1F000}-\u{1FFFF}]|^[\u{2600}-\u{26FF}]|^[\u{2700}-\u{27BF}]/u.test(str);
 }
@@ -637,7 +636,6 @@ function PersonalBookmarkModal({
 // Recommend for Everyone Modal
 function RecommendModal({
   bookmark,
-  userName,
   onSubmit,
   onClose,
 }: {

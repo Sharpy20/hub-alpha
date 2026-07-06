@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, ArrowRight, Check, AlertTriangle, Hand, User } from "lucide-react";
+import { X, ArrowRight, Check, AlertTriangle, Hand } from "lucide-react";
 import { Patient, DiaryTask } from "@/lib/types";
 import { WARDS } from "@/lib/data/staff";
 import { toasts } from "@/lib/utils/toast";
@@ -48,6 +48,9 @@ export function PatientTransferModal({
       });
       setTaskOptions(initialOptions);
     }
+    // incompleteTasks is derived from patientTasks each render; depending on the
+    // source prop avoids re-running on every render for an unstable array identity
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patientTasks]);
 
   if (!isOpen || !patient) return null;

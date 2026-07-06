@@ -396,7 +396,6 @@ export default function ReportsPage() {
     dayOfWeek: 1,
   });
 
-  // Get patients based on scope
   const reportPatients = useMemo(() => {
     if (scope === "all_wards") {
       return DEMO_PATIENTS.filter(p => p.status !== "discharged");
@@ -407,12 +406,10 @@ export default function ReportsPage() {
     }
   }, [scope, selectedWard, selectedPatients]);
 
-  // Get all active patients for selection
   const allActivePatients = useMemo(() => {
     return DEMO_PATIENTS.filter(p => p.status !== "discharged");
   }, []);
 
-  // Toggle patient selection
   const togglePatientSelection = (patientId: string) => {
     setSelectedPatients((prev) =>
       prev.includes(patientId)

@@ -32,9 +32,12 @@ export function useModalA11y(
   onClose: () => void,
   enabled: boolean = true
 ) {
-  // Keep the latest onClose without re-binding listeners every render
+  // Keep the latest onClose without re-binding listeners every render.
+  // Updated in an effect (not during render) per the react-hooks/refs rule.
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  });
 
   useEffect(() => {
     if (!enabled) return;

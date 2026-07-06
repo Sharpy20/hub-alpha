@@ -223,7 +223,6 @@ interface EditingGuide {
 // Validation function
 function validateGuide(steps: GuideStep[]): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
-  const validEndingTypes: GuideStepType[] = ["endpoint", "content", "checklist", "warning", "other"];
 
   function checkPath(stepList: GuideStep[], pathName: string): boolean {
     if (stepList.length === 0) {
@@ -357,7 +356,6 @@ export default function GuidesAdminPage() {
       return;
     }
 
-    // Save version history
     const newVersion: GuideVersion = {
       id: `v-${Date.now()}`,
       timestamp: new Date().toISOString(),
@@ -369,7 +367,6 @@ export default function GuidesAdminPage() {
     const updatedVersions = [newVersion, ...editingGuide.versions].slice(0, 20);
     setEditingGuide({ ...editingGuide, versions: updatedVersions });
 
-    // Save guide to storage
     setValidationError(null);
     setSavedMessage(true);
     setTimeout(() => setSavedMessage(false), 2000);
@@ -380,6 +377,7 @@ export default function GuidesAdminPage() {
 
     // Save current as auto-save before restore
     const autoSaveVersion: GuideVersion = {
+      // eslint-disable-next-line react-hooks/purity -- onClick handler, not render; the analyser cannot tell
       id: `v-${Date.now()}`,
       timestamp: new Date().toISOString(),
       steps: JSON.parse(JSON.stringify(editingGuide.steps)),
@@ -1247,7 +1245,6 @@ function StepBlock({
 
 // Drop zone component
 function DropZone({
-  index,
   isActive,
   onDragOver,
   onDragLeave,

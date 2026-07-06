@@ -5,7 +5,7 @@ import { MainLayout } from "@/components/layout";
 import { Card } from "@/components/ui";
 import { useReferralLog } from "@/app/referral-log-provider";
 import { useApp } from "@/app/providers";
-import { ReferralLog, ReferralLogStatus } from "@/lib/types";
+import { ReferralLogStatus } from "@/lib/types";
 import {
   ClipboardList,
   Clock,

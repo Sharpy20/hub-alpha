@@ -12,16 +12,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Plus,
-  Eye,
-  EyeOff,
   CalendarDays,
   Check,
   Clock,
   ChevronDown,
-  ChevronUp,
-  Users,
-  UserSquare2,
-  ClipboardList,
   Hand,
   Repeat,
   X,
@@ -29,7 +23,6 @@ import {
   Trash2,
   Maximize2,
   Minimize2,
-  ArrowLeft,
   Filter,
   Sun,
   Moon,
@@ -45,7 +38,6 @@ import {
   SHIFT_CONFIG,
   TASK_CATEGORY_CONFIG,
   PRIORITY_CONFIG,
-  Patient,
 } from "@/lib/types";
 import { getActivePatientsByWard, DEMO_PATIENTS } from "@/lib/data/tasks";
 import { getStaffByWard } from "@/lib/data/staff";
@@ -652,9 +644,10 @@ function CollapsibleSection({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  // Hook must run before the early return (rules-of-hooks)
+  const { styleTheme } = useApp();
   if (count === 0) return null;
 
-  const { styleTheme } = useApp();
   const isFantastical = styleTheme === "fluent";
   const isNotion = styleTheme === "oneui";
   // NHS default reads from a CSS var so dark mode can lift it to an
@@ -1054,7 +1047,7 @@ function AddTaskModal({
       onAdd({
         ...baseTask,
         type: "patient",
-        category: category as any,
+        category: category as PatientTask["category"],
         patientName: patientName || undefined,
         linkedReferralId: category === "referral" ? (linkedReferral || undefined) : undefined,
         linkedGuideId: category !== "referral" ? (linkedGuide || undefined) : undefined,
@@ -1825,17 +1818,7 @@ function RepeatWardTasksModal({
   // Filter only recurring team tasks
   const recurringTasks = tasks.filter((t) => t.isRecurring);
 
-  // Days of the week
-  const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const DAY_ABBREVS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  // Get tasks for a specific day (defensive array check)
-  const getTasksForDay = (dayIndex: number): WardTask[] => {
-    return recurringTasks.filter((t) => {
-      const days = Array.isArray(t.recurringDays) ? t.recurringDays : [];
-      return days.includes(dayIndex);
-    });
-  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
@@ -1993,7 +1976,6 @@ function ExpandedDayView({
   const [showAppointments, setShowAppointments] = useState(true);
 
   const todayDate = formatDate(new Date());
-  const isPastDay = isPast(date) && date !== todayDate;
   const isToday = date === todayDate;
 
   // Filter tasks based on settings

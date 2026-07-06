@@ -105,6 +105,16 @@ export default function UnifiedGuidePage() {
   const [linkedPatient, setLinkedPatient] = useState<Patient | null>(null);
   const [showFireworks, setShowFireworks] = useState(false);
   const [copied, setCopied] = useState(false);
+  // Randomised once per mount (lazy initialiser) so re-renders don't reshuffle
+  // the confetti mid-fall
+  const [confettiPieces] = useState(() =>
+    Array.from({ length: 30 }, (_, i) => ({
+      left: `${Math.random() * 100}%`,
+      color: ["#DA291C", "#005EB8", "#007F3B", "#FFB81C", "#330072", "#AE2573"][i % 6],
+      animation: `confetti-fall ${1.5 + Math.random() * 2}s ease-in forwards`,
+      delay: `${Math.random() * 0.5}s`,
+    }))
+  );
 
   // Referral-specific state
   const [criteriaConfirmed, setCriteriaConfirmed] = useState(false);
@@ -787,8 +797,8 @@ export default function UnifiedGuidePage() {
               </div>
             </div>
             <div className="absolute inset-0 overflow-hidden">
-              {Array.from({ length: 30 }).map((_, i) => (
-                <div key={i} className="absolute w-3 h-3 rounded-full" style={{ left: `${Math.random() * 100}%`, top: `-5%`, backgroundColor: ["#DA291C", "#005EB8", "#007F3B", "#FFB81C", "#330072", "#AE2573"][i % 6], animation: `confetti-fall ${1.5 + Math.random() * 2}s ease-in forwards`, animationDelay: `${Math.random() * 0.5}s` }} />
+              {confettiPieces.map((piece, i) => (
+                <div key={i} className="absolute w-3 h-3 rounded-full" style={{ left: piece.left, top: `-5%`, backgroundColor: piece.color, animation: piece.animation, animationDelay: piece.delay }} />
               ))}
             </div>
           </div>

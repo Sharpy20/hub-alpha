@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { MainLayout } from "@/components/layout";
-import { useApp } from "@/app/providers";
 import { useIsV2 } from "@/lib/hooks/useV2";
 import {
   HelpCircle,
@@ -15,12 +14,9 @@ import {
   Bookmark,
   FileText,
   BookOpen,
-  Settings,
   User,
   CheckCircle2,
   MousePointer,
-  Smartphone,
-  Monitor,
   Star,
   ArrowRight,
   Play,
@@ -402,7 +398,6 @@ const guideSections: GuideSection[] = [
 ];
 
 export default function IntroGuidePage() {
-  const { user } = useApp();
   const isV2 = useIsV2();
   // In v2 we drop the diary/jobs/profile-ward sections and rewrite the
   // navigation tips so nothing mentions features that aren't there.

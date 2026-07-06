@@ -20,7 +20,6 @@ const STORAGE_KEY = "wardhub-referral-logs";
 export function ReferralLogProvider({ children }: { children: ReactNode }) {
   const [referralLogs, setReferralLogs] = useState<ReferralLog[]>([]);
 
-  // Load from localStorage on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -32,7 +31,6 @@ export function ReferralLogProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Save to localStorage when logs change
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(referralLogs));
   }, [referralLogs]);

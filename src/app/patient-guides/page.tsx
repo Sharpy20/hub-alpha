@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { MainLayout } from "@/components/layout";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Printer, ClipboardList, Check, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Printer, ClipboardList, Check } from "lucide-react";
 import { PATIENT_GUIDES } from "@/lib/data/patient-guides";
 import { useV2Href } from "@/lib/hooks/useV2";
 

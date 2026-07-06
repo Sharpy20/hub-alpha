@@ -26,7 +26,6 @@ import {
   RoomConfig,
   DischargeChecklistItem,
   AutoAssignRule,
-  TaskCategoryConfig,
   UserRole,
   DEFAULT_WARD_SETTINGS,
 } from "@/lib/types";
@@ -153,7 +152,6 @@ export default function WardSettingsPage() {
     toast.info("Settings reset to defaults (save to apply)");
   };
 
-  // Render tab content
   const renderTabContent = () => {
     switch (activeTab) {
       case "patients":

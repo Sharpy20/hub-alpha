@@ -41,6 +41,21 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+// Privacy strip, shown on every screen
+function PrivacyStrip() {
+  return (
+    <div className="flex items-start gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-800">
+      <ShieldOff className="mt-0.5 h-5 w-5 flex-shrink-0" />
+      <p className="text-sm">
+        <span className="font-semibold">Just for you.</span> This is a bit of fun to
+        keep your knowledge fresh. Nothing you do here is saved, scored on a record,
+        or seen by anyone else - no logins, no tracking, no results sent anywhere.
+        Get one wrong? Nobody will ever know but you.
+      </p>
+    </div>
+  );
+}
+
 export default function QuizPage() {
   const [mode, setMode] = useState<Mode>("setup");
   const [category, setCategory] = useState<string>("all");
@@ -101,19 +116,6 @@ export default function QuizPage() {
     setAnswered(false);
     setCorrectCount(0);
   };
-
-  // ---- Privacy strip (shown on every screen) ------------------------------
-  const PrivacyStrip = () => (
-    <div className="flex items-start gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-emerald-800">
-      <ShieldOff className="mt-0.5 h-5 w-5 flex-shrink-0" />
-      <p className="text-sm">
-        <span className="font-semibold">Just for you.</span> This is a bit of fun to
-        keep your knowledge fresh. Nothing you do here is saved, scored on a record,
-        or seen by anyone else - no logins, no tracking, no results sent anywhere.
-        Get one wrong? Nobody will ever know but you.
-      </p>
-    </div>
-  );
 
   // =========================================================================
   // SETUP

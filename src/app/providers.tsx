@@ -71,6 +71,18 @@ export function Providers({ children }: { children: ReactNode }) {
   const [colorMode, setColorModeState] = useState<ColorMode>("light");
   const [isDark, setIsDark] = useState(false);
 
+  // Declared before the mount effect below, which calls it (react-hooks/immutability)
+  const applyColorMode = (mode: ColorMode) => {
+    let dark = false;
+    if (mode === "dark") {
+      dark = true;
+    } else if (mode === "system") {
+      dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    setIsDark(dark);
+    document.documentElement.classList.toggle("dark", dark);
+  };
+
   useEffect(() => {
     const savedUser = localStorage.getItem("wardhub_user") || localStorage.getItem("inpatient_hub_user");
     if (savedUser) {
@@ -136,17 +148,6 @@ export function Providers({ children }: { children: ReactNode }) {
     setStyleThemeState(theme);
     localStorage.setItem("wardhub_style_theme", theme);
     document.documentElement.setAttribute("data-theme", theme);
-  };
-
-  const applyColorMode = (mode: ColorMode) => {
-    let dark = false;
-    if (mode === "dark") {
-      dark = true;
-    } else if (mode === "system") {
-      dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    setIsDark(dark);
-    document.documentElement.classList.toggle("dark", dark);
   };
 
   const setColorMode = (mode: ColorMode) => {

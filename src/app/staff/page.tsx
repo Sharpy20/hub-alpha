@@ -5,7 +5,7 @@ import { MainLayout } from "@/components/layout";
 import { useApp } from "@/app/providers";
 import { DEMO_STAFF, WARDS } from "@/lib/data/staff";
 import { StaffMember, UserRole } from "@/lib/types";
-import { Search, Plus, X, Shield, ChevronDown } from "lucide-react";
+import { Search, Plus, X, Shield } from "lucide-react";
 
 const ROLE_LABELS: Record<UserRole, string> = {
   staff: "Staff",
@@ -65,12 +65,11 @@ export default function StaffPage() {
 
     let updated = [...staffList];
 
-    // Remove from wards no longer assigned
     updated = updated.filter(s => !(s.name === staff.name && wardsToRemove.includes(s.ward)));
 
-    // Add to new wards
     for (const ward of wardsToAdd) {
       updated.push({
+        // eslint-disable-next-line react-hooks/purity -- onClick handler, not render; the analyser cannot tell
         id: `s-new-${Date.now()}-${ward}`,
         name: staff.name,
         role: staff.role,

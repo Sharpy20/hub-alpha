@@ -8,7 +8,7 @@ import {
   NexusBadgeMockup,
   KanbanMockup,
 } from "./TourVisuals";
-import { X, ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
+import { X, ArrowRight, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";

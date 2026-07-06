@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, ChevronRight, Clock, Plus } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 import {
   DiaryTask,
   WardTask,

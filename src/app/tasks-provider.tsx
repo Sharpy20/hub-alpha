@@ -58,7 +58,6 @@ export function TasksProvider({ children }: { children: ReactNode }) {
       return prev.map((t) => {
         if (t.id !== taskId) return t;
 
-        // Toggle claim
         if (t.claimedBy === userName) {
           // Unclaim if we own it
           return {

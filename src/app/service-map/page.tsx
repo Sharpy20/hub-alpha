@@ -118,7 +118,6 @@ export default function ServiceMapPage() {
     const onWheel = (e: WheelEvent) => { e.preventDefault(); const p = toSvg(e.clientX, e.clientY); zoomAt(e.deltaY > 0 ? 1.12 : 0.89, p.x, p.y); };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Re-fit when the cluster filter changes (layout changes).

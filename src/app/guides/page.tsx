@@ -48,10 +48,8 @@ export default function GuidesPage() {
       .concat(ALL_GUIDES.filter((g) => !seen.has(g.id)));
   })();
 
-  // Get all categories
   const allCategories = [...new Set(orderedGuides.map((g) => g.category))];
 
-  // Filter by category
   const categoryFiltered = selectedCategory === "all"
     ? orderedGuides
     : orderedGuides.filter((g) => g.category === selectedCategory);
@@ -61,7 +59,6 @@ export default function GuidesPage() {
     ? categoryFiltered
     : categoryFiltered.filter((g) => guideType(g.id) === selectedType);
 
-  // Filter by search
   const filteredGuides = searchQuery.trim()
     ? typeFiltered.filter((g) => {
         const q = searchQuery.toLowerCase();

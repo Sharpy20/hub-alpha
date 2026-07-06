@@ -15,16 +15,26 @@
 
 export type Area = "city" | "county" | "out";
 
+export type Gender = "unspecified" | "female" | "male" | "nonbinary";
+
 export interface Facts {
   area: Area;
   age: number;
+  gender: Gender;
   diagnoses: string[];
   substance: "none" | "using" | "recovery";
   housing: "settled" | "at-risk" | "homeless";
   pip: "none" | "applied" | "awarded";
   risk: "low" | "elevated" | "acute";
-  flags: string[]; // veteran, carer, domestic-abuse, dependent-children, bereaved, gambling
+  flags: string[]; // veteran, carer, domestic-abuse, dependent-children, bereaved, gambling, lgbtq, isolated
 }
+
+export const GENDER_OPTIONS: { v: Gender; label: string }[] = [
+  { v: "unspecified", label: "Any" },
+  { v: "female", label: "Female" },
+  { v: "male", label: "Male" },
+  { v: "nonbinary", label: "Non-binary" },
+];
 
 export const DIAGNOSIS_OPTIONS = [
   "Depression / anxiety", "Psychosis", "Bipolar", "Personality disorder",
@@ -40,6 +50,8 @@ export const FLAG_OPTIONS = [
   { v: "perinatal", label: "Pregnant / <24m postpartum" },
   { v: "bereaved", label: "Recently bereaved" },
   { v: "gambling", label: "Gambling concern" },
+  { v: "lgbtq", label: "LGBT+" },
+  { v: "isolated", label: "Socially isolated / lonely" },
 ];
 
 export const AREA_LABEL: Record<Area, string> = {
@@ -47,7 +59,7 @@ export const AREA_LABEL: Record<Area, string> = {
 };
 
 export const EMPTY_FACTS: Facts = {
-  area: "county", age: 40, diagnoses: [], substance: "none",
+  area: "county", age: 40, gender: "unspecified", diagnoses: [], substance: "none",
   housing: "settled", pip: "none", risk: "low", flags: [],
 };
 
@@ -163,6 +175,7 @@ export const SERVICES: Service[] = [
   // ============ Condition Charities ============
   { id: "mind", name: "Mind (national)", cluster: "condition", areas: NAT, include: [{ label: "Any mental health need", test: anyDx }], exclude: [], contact: "0300 123 3393" },
   { id: "derbyshire-mind", name: "Derbyshire Mind", cluster: "condition", parent: "mind", areas: CC, include: [{ label: "Any mental health need", test: anyDx }], exclude: [], contact: "01332 623732", note: "Local Mind (Derby + county) - groups, peer support, drop-ins." },
+  { id: "mind-befriending", name: "Derbyshire Mind befriending & enablement", cluster: "condition", parent: "derbyshire-mind", areas: CC, include: [{ label: "Socially isolated / lonely", test: (f) => flag(f, "isolated") }, { label: "Mental health need", test: anyDx }], exclude: [], contact: "01332 623732 / derbyshiremind.org.uk", note: "Enablement work: regular 1:1 befriending and practical support to rebuild confidence and reconnect with the community after a rough patch or admission. To verify: current capacity + referral route." },
   { id: "rethink", name: "Rethink Mental Illness", cluster: "condition", areas: NAT, include: [{ label: "Severe mental illness, or a carer", test: (f) => severe(f) || flag(f, "carer") }], exclude: [], contact: "0808 801 0525" },
   { id: "rethink-derby", name: "Rethink Derby recovery & peer support", cluster: "condition", parent: "rethink", areas: ["city"], include: [{ label: "Severe mental illness, or a carer", test: (f) => severe(f) || flag(f, "carer") }], exclude: [], contact: "01773 734989" },
   { id: "anxiety-uk", name: "Anxiety UK", cluster: "condition", areas: NAT, include: [{ label: "Anxiety difficulty", test: (f) => dx(f, "Depression / anxiety") }], exclude: [], contact: "03444 775 774" },
@@ -177,7 +190,7 @@ export const SERVICES: Service[] = [
 
   // ============ Life Events & Relationships ============
   { id: "refuge", name: "Refuge / National DA Helpline", cluster: "life", areas: NAT, include: [{ label: "Domestic abuse concern", test: (f) => flag(f, "domestic-abuse") }], exclude: [], contact: "0808 2000 247 (24/7)" },
-  { id: "mens-advice", name: "Men's Advice Line", cluster: "life", parent: "refuge", areas: NAT, include: [{ label: "Domestic abuse (male victim)", test: (f) => flag(f, "domestic-abuse") }], exclude: [], contact: "0808 801 0327" },
+  { id: "mens-advice", name: "Men's Advice Line", cluster: "life", parent: "refuge", areas: NAT, include: [{ label: "Domestic abuse concern", test: (f) => flag(f, "domestic-abuse") }, { label: "Male victim", test: (f) => f.gender === "male" }], exclude: [], contact: "0808 801 0327" },
   { id: "galop", name: "Galop (LGBT+ DA)", cluster: "life", parent: "refuge", areas: NAT, include: [{ label: "Domestic abuse (LGBT+)", test: (f) => flag(f, "domestic-abuse") }], exclude: [], contact: "0800 999 5428" },
   { id: "elm", name: "Derbyshire DA Helpline (Elm Foundation)", cluster: "life", parent: "refuge", areas: CC, include: [{ label: "Domestic abuse in Derbyshire", test: (f) => flag(f, "domestic-abuse") }], exclude: [], contact: "08000 198 668 (24/7)", note: "Local front door - routes to refuge, outreach, advocacy." },
   { id: "sv2", name: "SV2 (Sexual Violence, Derbyshire)", cluster: "life", areas: CC, include: [], exclude: [], contact: "01773 746115", note: "Supporting victims of sexual violence, all ages/genders." },
@@ -186,10 +199,15 @@ export const SERVICES: Service[] = [
   { id: "cruse", name: "Cruse Bereavement", cluster: "life", areas: NAT, include: [{ label: "Recently bereaved", test: (f) => flag(f, "bereaved") }], exclude: [], contact: "0808 808 1677" },
   { id: "sobs", name: "SOBS (Bereaved by Suicide)", cluster: "life", parent: "cruse", areas: NAT, include: [{ label: "Recently bereaved", test: (f) => flag(f, "bereaved") }], exclude: [], contact: "0300 111 5065" },
   { id: "derbys-bereavement", name: "Derbyshire Bereavement Hub", cluster: "life", parent: "cruse", areas: ["county"], include: [{ label: "Recently bereaved", test: (f) => flag(f, "bereaved") }], exclude: [], contact: "derbyshirebereavementhub.co.uk" },
-  { id: "silverline", name: "Silver Line (older people)", cluster: "life", areas: NAT, include: [{ label: "Aged 55+", test: (f) => f.age >= 55 }], exclude: [], contact: "0800 4 70 80 90 (24/7)" },
+  { id: "silverline", name: "Silver Line (older people)", cluster: "life", areas: NAT, include: [{ label: "Aged 55+", test: (f) => f.age >= 55 }], exclude: [], contact: "0800 4 70 80 90 (24/7)", note: "Friendship line for older people - especially those feeling lonely or isolated." },
+  { id: "re-engage", name: "Re-engage (75+ social groups)", cluster: "life", parent: "silverline", areas: NAT, include: [{ label: "Aged 75+", test: (f) => f.age >= 75 }, { label: "Socially isolated / lonely", test: (f) => flag(f, "isolated") }], exclude: [], contact: "0800 716543 / reengage.org.uk", note: "Free monthly tea parties and call companions for isolated older people." },
   { id: "age-uk", name: "Age UK Derby & Derbyshire", cluster: "life", areas: CC, include: [{ label: "Older adult (roughly 50+)", test: (f) => f.age >= 50 }], exclude: [], contact: "01773 768240", note: "Covers both Derby City and Derbyshire county.", catchmentNote: "By home address (Derby City + Derbyshire)." },
   { id: "carers-derbyshire", name: "Carers in Derbyshire", cluster: "life", areas: ["county"], include: [{ label: "Is a carer", test: (f) => flag(f, "carer") }], exclude: [], contact: "01773 833 833", note: "County carers - assessments, advice, peer groups (not Derby City)." },
   { id: "carers-direct", name: "NHS Carers Direct", cluster: "life", parent: "carers-derbyshire", areas: NAT, include: [{ label: "Is a carer", test: (f) => flag(f, "carer") }], exclude: [], contact: "0300 123 1053" },
+  { id: "derbyshire-lgbt", name: "Derbyshire LGBT+", cluster: "life", areas: CC, include: [{ label: "LGBT+ (support around identity, sexuality or gender)", test: (f) => flag(f, "lgbtq") }], exclude: [], contact: "01332 207704 / derbyshirelgbt.org.uk", note: "Local LGBT+ charity - 1:1 support, groups and advocacy across Derby and Derbyshire. To verify: current referral route.", catchmentNote: "By home address (Derby City + Derbyshire)." },
+  { id: "switchboard-lgbt", name: "Switchboard LGBT+ Helpline", cluster: "life", parent: "derbyshire-lgbt", areas: NAT, include: [{ label: "LGBT+ (support around identity, sexuality or gender)", test: (f) => flag(f, "lgbtq") }], exclude: [], contact: "0800 0119 100 (10am-10pm) / switchboard.lgbt", note: "National listening service run by LGBT+ volunteers - phone, chat and email." },
+  { id: "andys-man-club", name: "Andy's Man Club", cluster: "life", areas: NAT, include: [{ label: "Man aged 18+", test: (f) => f.gender === "male" && f.age >= 18 }], exclude: [], contact: "andysmanclub.co.uk - Mondays 7pm, free, no referral", note: "Peer-support talking groups for men, including Derby and Chesterfield groups. Just turn up." },
+  { id: "womens-work", name: "Women's Work Derbyshire", cluster: "life", areas: CC, include: [{ label: "Woman aged 18+", test: (f) => f.gender === "female" && f.age >= 18 }], exclude: [], contact: "womens-work.org.uk", note: "Derby-based charity supporting vulnerable women - outreach, groups, 1:1. To verify: referral route + current contact number." },
 
   // ============ Children, YP & Family ============
   { id: "camhs", name: "CAMHS (Derbyshire/Derby)", cluster: "cyp", areas: CC, include: [{ label: "Under 18", test: (f) => f.age < 18 }, { label: "Mental health need", test: anyDx }], exclude: [], contact: "SPOA 0300 790 0264; crisis 01332 623700", note: "Children & young people's MH service (referral via a professional)." },
@@ -255,8 +273,8 @@ export function evaluate(svc: Service, f: Facts): Evaluation {
 }
 
 export const SAMPLE_PATIENTS: { name: string; blurb: string; facts: Facts }[] = [
-  { name: "Jordan, 34 (County)", blurb: "Psychosis + trauma, using substances, housing at risk, elevated risk.", facts: { area: "county", age: 34, diagnoses: ["Psychosis", "PTSD / trauma"], substance: "using", housing: "at-risk", pip: "none", risk: "elevated", flags: [] } },
-  { name: "Pat, 71 (City)", blurb: "Depression, settled, veteran + carer, recently bereaved, PIP awarded.", facts: { area: "city", age: 71, diagnoses: ["Depression / anxiety"], substance: "none", housing: "settled", pip: "awarded", risk: "low", flags: ["veteran", "carer", "bereaved"] } },
-  { name: "Sam, 19 (City)", blurb: "Depression/anxiety, elevated risk, no other needs.", facts: { area: "city", age: 19, diagnoses: ["Depression / anxiety"], substance: "none", housing: "settled", pip: "none", risk: "elevated", flags: [] } },
-  { name: "Chris, 48 (County)", blurb: "Domestic abuse, gambling debt, no diagnosis recorded.", facts: { area: "county", age: 48, diagnoses: [], substance: "none", housing: "at-risk", pip: "applied", risk: "elevated", flags: ["domestic-abuse", "gambling"] } },
+  { name: "Jordan, 34 (County)", blurb: "Psychosis + trauma, using substances, housing at risk, elevated risk.", facts: { area: "county", age: 34, gender: "male", diagnoses: ["Psychosis", "PTSD / trauma"], substance: "using", housing: "at-risk", pip: "none", risk: "elevated", flags: [] } },
+  { name: "Pat, 71 (City)", blurb: "Depression, veteran + carer, recently bereaved, socially isolated, PIP awarded.", facts: { area: "city", age: 71, gender: "female", diagnoses: ["Depression / anxiety"], substance: "none", housing: "settled", pip: "awarded", risk: "low", flags: ["veteran", "carer", "bereaved", "isolated"] } },
+  { name: "Sam, 19 (City)", blurb: "Depression/anxiety, elevated risk, LGBT+.", facts: { area: "city", age: 19, gender: "nonbinary", diagnoses: ["Depression / anxiety"], substance: "none", housing: "settled", pip: "none", risk: "elevated", flags: ["lgbtq"] } },
+  { name: "Chris, 48 (County)", blurb: "Domestic abuse, gambling debt, no diagnosis recorded.", facts: { area: "county", age: 48, gender: "female", diagnoses: [], substance: "none", housing: "at-risk", pip: "applied", risk: "elevated", flags: ["domestic-abuse", "gambling"] } },
 ];

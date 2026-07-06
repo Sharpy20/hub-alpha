@@ -12,10 +12,10 @@ import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
 import {
   SERVICES, CLUSTERS, evaluate, AREA_LABEL, DIAGNOSIS_OPTIONS, FLAG_OPTIONS,
-  EMPTY_FACTS, SAMPLE_PATIENTS,
-  type Facts, type Area, type Evaluation,
+  GENDER_OPTIONS, EMPTY_FACTS, SAMPLE_PATIENTS,
+  type Facts, type Area, type Gender, type Evaluation,
 } from "@/lib/data/service-map";
-import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
+import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2, List, Map as MapIcon, ChevronDown } from "lucide-react";
 
 const CX = 550, CY = 500;
 const BANDS = [175, 300, 400];
@@ -41,6 +41,8 @@ function lerp(t: number) {
   return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
 }
 const EVERYONE_COLOR = "#0d9488"; // teal - open to anyone in catchment, no eligibility criteria
+// Directory list sort: things the person can actually use first
+const STATE_ORDER: Record<Effective, number> = { everyone: 0, open: 0, partial: 1, unknown: 2, blocked: 3, cutoff: 4 };
 const EFF_META: Record<Effective, { label: string; badge: string; fill: string; border: string }> = {
   open: { label: "Open (meets criteria)", badge: "bg-green-100 text-green-800", fill: "#dcfce7", border: "#16a34a" },
   everyone: { label: "Open to everyone", badge: "bg-teal-100 text-teal-800", fill: "#ccfbf1", border: EVERYONE_COLOR },
@@ -87,6 +89,8 @@ export default function ServiceMapPage() {
   const [facts, setFacts] = useState<Facts>({ ...EMPTY_FACTS });
   const [selected, setSelected] = useState<string | null>(null);
   const [clusterFilter, setClusterFilter] = useState<string>("all");
+  // Directory list is the default - the map is a visual extra behind a toggle.
+  const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [search, setSearch] = useState("");
   const searchLc = search.trim().toLowerCase();
 
@@ -223,8 +227,8 @@ export default function ServiceMapPage() {
         <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3 text-sm text-amber-800">
           <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
           <span>
-            <strong>Prototype v2.</strong> Services are grouped into <strong>type clusters</strong> and branch off each other where you reach one via another
-            (e.g. Trent PTS via Talking Therapies). A branch <strong>cuts off</strong> if its parent closes. Set the profile on the left; scroll to zoom and drag to pan; filter to one cluster to see it clearly.
+            <strong>Prototype v3.</strong> Set the profile on the left and the directory shows which services are open to that person, grouped by type with the usable ones first.
+            Click a service for its criteria and contact. The <strong>Map</strong> toggle shows the same thing as a visual - services branch off each other where you reach one via another, and a branch cuts off if its parent closes.
             <strong> Area means where the person LIVES</strong>, not where the service is based - most Derbyshire services set catchment by home address or registered GP (shown per service).
             Criteria are being researched from each service&apos;s own site and are still <strong>to be clinically verified</strong>.
           </span>
@@ -242,7 +246,7 @@ export default function ServiceMapPage() {
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-[320px_1fr] gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
           {/* profile */}
           <div className="space-y-3">
             <div className="bg-white rounded-2xl border border-gray-200 p-4 space-y-3">
@@ -275,6 +279,10 @@ export default function ServiceMapPage() {
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-gray-500">Age</span>
                   <input type="number" min={0} max={110} value={facts.age} onChange={(e) => set("age", Number(e.target.value))} aria-label="Age" className="w-20 text-sm text-gray-900 bg-white border border-gray-200 rounded-lg px-2 py-1" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-gray-500 mb-1">Gender</p>
+                  <Seg value={facts.gender} onChange={(v) => set("gender", v as Gender)} options={GENDER_OPTIONS} />
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-gray-500 mb-1">Risk</p>
@@ -333,14 +341,27 @@ export default function ServiceMapPage() {
             </div>
           </div>
 
-          {/* map */}
+          {/* directory list + map */}
           <div className="space-y-3">
-            <div className="relative">
-              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search services by name..." aria-label="Search services"
-                className="w-full text-sm border border-gray-200 rounded-lg pl-9 pr-3 py-2 focus:ring-2 focus:ring-nhs-blue focus:border-nhs-blue" />
-              {searchLc && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-600">{visServices.filter((s) => s.name.toLowerCase().includes(searchLc)).length} on map</span>}
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search services by name..." aria-label="Search services"
+                  className="w-full text-sm border border-gray-200 rounded-lg pl-9 pr-3 py-2 focus:ring-2 focus:ring-nhs-blue focus:border-nhs-blue" />
+                {searchLc && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-600">{visServices.filter((s) => s.name.toLowerCase().includes(searchLc)).length} match</span>}
+              </div>
+              <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
+                <button onClick={() => setViewMode("list")} aria-pressed={viewMode === "list"}
+                  className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold transition-colors ${viewMode === "list" ? "bg-nhs-blue text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}>
+                  <List className="w-4 h-4" /> List
+                </button>
+                <button onClick={() => setViewMode("map")} aria-pressed={viewMode === "map"}
+                  className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold transition-colors ${viewMode === "map" ? "bg-nhs-blue text-white" : "bg-white text-gray-600 hover:bg-gray-50"}`}>
+                  <MapIcon className="w-4 h-4" /> Map
+                </button>
+              </div>
             </div>
+            {viewMode === "map" && (
             <div className="relative bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-gray-200 p-2">
               {/* Zoom controls */}
               <div className="absolute top-3 right-3 z-10 flex flex-col gap-1">
@@ -409,6 +430,7 @@ export default function ServiceMapPage() {
                 })}
               </svg>
             </div>
+            )}
 
             {/* legend = show/hide toggles */}
             <div className="flex flex-wrap items-center gap-1.5">
@@ -435,8 +457,70 @@ export default function ServiceMapPage() {
               )}
             </div>
 
-            {/* selected detail */}
-            {selSvc && selEv && selEff ? (
+            {/* directory list, grouped by cluster, eligible first */}
+            {viewMode === "list" && (
+              <div className="space-y-4">
+                {visClusters.map((cl) => {
+                  const rows = SERVICES.filter((s) => s.cluster === cl.id)
+                    .filter((s) => !hiddenStates.has(effective(s.id)))
+                    .filter((s) => !searchLc || s.name.toLowerCase().includes(searchLc))
+                    .sort((a, b) => STATE_ORDER[effective(a.id)] - STATE_ORDER[effective(b.id)] || a.name.localeCompare(b.name));
+                  if (!rows.length) return null;
+                  return (
+                    <section key={cl.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+                      <h3 className="flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-white" style={{ background: cl.color }}>
+                        {cl.label} <span className="text-xs font-semibold opacity-80">({rows.length})</span>
+                      </h3>
+                      <div className="divide-y divide-gray-100">
+                        {rows.map((s) => {
+                          const eff = effective(s.id);
+                          const ev = evals[s.id];
+                          const open = selected === s.id;
+                          const via = s.parent ? SERVICES.find((p) => p.id === s.parent)?.name : null;
+                          return (
+                            <div key={s.id}>
+                              <button onClick={() => setSelected(open ? null : s.id)} aria-expanded={open}
+                                className="w-full text-left px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                                <span className="flex items-start justify-between gap-3">
+                                  <span className="min-w-0">
+                                    <span className="flex items-center gap-2 flex-wrap">
+                                      <span className="text-sm font-semibold text-gray-800">{s.name}</span>
+                                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${EFF_META[eff].badge}`}>{EFF_META[eff].label}</span>
+                                    </span>
+                                    <span className="block text-xs text-gray-500 mt-0.5 truncate">
+                                      {s.include.length ? s.include.map((c) => c.label).join(" · ") : "Open to anyone in catchment"}
+                                    </span>
+                                  </span>
+                                  <span className="flex items-center gap-2 flex-shrink-0 text-xs text-gray-500 pt-0.5">
+                                    <span className="hidden sm:inline">{s.areas.length === 3 ? "National" : s.areas.map((a) => AREA_LABEL[a]).join(", ")}</span>
+                                    <ChevronDown className={`w-4 h-4 transition-transform ${open ? "rotate-180" : ""}`} />
+                                  </span>
+                                </span>
+                              </button>
+                              {open && (
+                                <div className="px-4 pb-3 pt-1 text-sm space-y-1.5 bg-gray-50/70">
+                                  {via && <p className="text-xs text-gray-500">Reached via {via}.</p>}
+                                  {s.note && <p className="text-xs text-gray-600">{s.note}</p>}
+                                  {s.catchmentNote && <p className="flex items-start gap-1.5 text-xs text-gray-600"><MapPin className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" /> Catchment: {s.catchmentNote}</p>}
+                                  {s.contact && <p className="flex items-start gap-1.5 font-medium text-gray-700"><Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-nhs-blue" /> {s.contact}</p>}
+                                  {eff === "cutoff" && <p className="flex items-start gap-1.5 text-gray-500"><Ban className="w-4 h-4 mt-0.5 flex-shrink-0" /> Cut off - you reach this via {via}, which is currently closed.</p>}
+                                  {ev.blockedReason && <p className="flex items-start gap-1.5 text-red-700"><XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {ev.blockedReason}</p>}
+                                  {ev.met.map((c) => <p key={c} className="flex items-start gap-1.5 text-green-700"><CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" /> {c}</p>)}
+                                  {ev.unmet.map((c) => <p key={c} className="flex items-start gap-1.5 text-gray-500"><CircleDashed className="w-4 h-4 mt-0.5 flex-shrink-0" /> {c}</p>)}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* selected detail (map view) */}
+            {viewMode === "map" && (selSvc && selEv && selEff ? (
               <div className="bg-white rounded-2xl border border-gray-200 p-4">
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <h3 className="font-bold text-gray-800">{selSvc.name}</h3>
@@ -458,7 +542,7 @@ export default function ServiceMapPage() {
               </div>
             ) : (
               <p className="diary-muted text-sm text-center py-2">Click a service to see its criteria and why it is open, closed or cut off.</p>
-            )}
+            ))}
           </div>
         </div>
 

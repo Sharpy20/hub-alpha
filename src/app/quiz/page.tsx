@@ -62,18 +62,26 @@ export default function QuizPage() {
   const [length, setLength] = useState<LengthFilter>(10);
   const [bank, setBank] = useState<QuizBank | null>(null);
 
-  // Round state
+  // Round state. An "endless" round is the default landing experience: every
+  // question, shuffled, reshuffled when exhausted - you stop when you stop.
   const [round, setRound] = useState<QuizQuestion[]>([]);
+  const [endless, setEndless] = useState(true);
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
+  const [answeredCount, setAnsweredCount] = useState(0);
 
-  // Fetch the question bank as a lazy chunk on mount (see note above)
+  // Fetch the question bank as a lazy chunk on mount (see note above), then
+  // drop straight into a mixed endless round - no setup screen in the way.
   useEffect(() => {
     let alive = true;
     import("@/lib/data/quiz").then((m) => {
-      if (alive) setBank(m);
+      if (!alive) return;
+      setBank(m);
+      setRound(shuffle(m.QUIZ_QUESTIONS));
+      setEndless(true);
+      setMode("playing");
     });
     return () => { alive = false; };
   }, []);
@@ -94,10 +102,24 @@ export default function QuizPage() {
     const pool = shuffle(available);
     const take = length === "all" ? pool.length : Math.min(length, pool.length);
     setRound(pool.slice(0, take));
+    setEndless(false);
     setIndex(0);
     setSelected(null);
     setAnswered(false);
     setCorrectCount(0);
+    setAnsweredCount(0);
+    setMode("playing");
+  };
+
+  const startEndless = () => {
+    if (!bank) return;
+    setRound(shuffle(bank.QUIZ_QUESTIONS));
+    setEndless(true);
+    setIndex(0);
+    setSelected(null);
+    setAnswered(false);
+    setCorrectCount(0);
+    setAnsweredCount(0);
     setMode("playing");
   };
 
@@ -105,11 +127,20 @@ export default function QuizPage() {
     if (answered) return;
     setSelected(i);
     setAnswered(true);
+    setAnsweredCount((c) => c + 1);
     if (i === round[index].correctIndex) setCorrectCount((c) => c + 1);
   };
 
   const next = () => {
     if (index + 1 >= round.length) {
+      if (endless) {
+        // Ran the whole bank - reshuffle and keep going
+        setRound(shuffle(round));
+        setIndex(0);
+        setSelected(null);
+        setAnswered(false);
+        return;
+      }
       setMode("done");
       return;
     }
@@ -125,6 +156,7 @@ export default function QuizPage() {
     setSelected(null);
     setAnswered(false);
     setCorrectCount(0);
+    setAnsweredCount(0);
   };
 
   // =========================================================================
@@ -138,9 +170,13 @@ export default function QuizPage() {
             <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-purple-700 shadow-md">
               <Brain className="h-7 w-7 text-white" />
             </div>
-            <h1 className="text-3xl font-black text-foreground">Quiz</h1>
+            <h1 className="text-3xl font-black text-foreground">Customise your quiz</h1>
             <p className="mt-1 diary-muted">
-              A quick, no-pressure knowledge refresher for ward staff.
+              Pick a topic, difficulty and length - or{" "}
+              <button onClick={startEndless} className="font-semibold text-purple-700 underline-offset-2 hover:underline">
+                jump back into the mixed quiz
+              </button>
+              .
             </p>
           </div>
 
@@ -264,7 +300,7 @@ export default function QuizPage() {
   // DONE
   // =========================================================================
   if (mode === "done") {
-    const total = round.length;
+    const total = endless ? answeredCount : round.length;
     const pct = total ? Math.round((correctCount / total) * 100) : 0;
     const msg =
       pct >= 80
@@ -289,16 +325,16 @@ export default function QuizPage() {
           <PrivacyStrip />
           <div className="flex flex-wrap justify-center gap-3">
             <button
-              onClick={startRound}
+              onClick={endless ? startEndless : startRound}
               className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3 font-bold text-white shadow-md transition-all hover:scale-105"
             >
-              <RotateCcw className="h-5 w-5" /> Same topic again
+              <RotateCcw className="h-5 w-5" /> {endless ? "Another mixed round" : "Same topic again"}
             </button>
             <button
               onClick={restart}
               className="inline-flex items-center gap-2 rounded-xl bg-gray-100 px-6 py-3 font-bold text-gray-700 transition-colors hover:bg-gray-200"
             >
-              <BookOpen className="h-5 w-5" /> Pick a new topic
+              <BookOpen className="h-5 w-5" /> Customise quiz
             </button>
           </div>
         </div>
@@ -318,18 +354,29 @@ export default function QuizPage() {
         {/* Progress */}
         <div className="flex items-center justify-between text-sm">
           <span className="font-semibold diary-muted">
-            Question {index + 1} of {round.length}
+            {endless
+              ? `Question ${answered ? answeredCount : answeredCount + 1} · Score ${correctCount}/${answeredCount}`
+              : `Question ${index + 1} of ${round.length}`}
           </span>
-          <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${DIFF_STYLE[q.difficulty]}`}>
-            {q.difficulty}
+          <span className="flex items-center gap-2">
+            {endless && (
+              <span className="rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-bold text-purple-700">
+                Mixed · unlimited
+              </span>
+            )}
+            <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${DIFF_STYLE[q.difficulty]}`}>
+              {q.difficulty}
+            </span>
           </span>
         </div>
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-purple-700 transition-all"
-            style={{ width: `${((index + (answered ? 1 : 0)) / round.length) * 100}%` }}
-          />
-        </div>
+        {!endless && (
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 to-purple-700 transition-all"
+              style={{ width: `${((index + (answered ? 1 : 0)) / round.length) * 100}%` }}
+            />
+          </div>
+        )}
 
         <div className="rounded-2xl border border-gray-200 bg-white p-6">
           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-purple-600">
@@ -406,11 +453,31 @@ export default function QuizPage() {
               onClick={next}
               className="inline-flex items-center gap-2 rounded-xl bg-purple-600 px-6 py-3 font-bold text-white shadow-md transition-all hover:scale-105"
             >
-              {index + 1 >= round.length ? "See results" : "Next question"}
+              {!endless && index + 1 >= round.length ? "See results" : "Next question"}
               <ArrowRight className="h-5 w-5" />
             </button>
           </div>
         )}
+
+        {/* Customise / finish */}
+        <div className="flex flex-wrap justify-center gap-3 border-t border-gray-100 pt-4">
+          <button
+            onClick={restart}
+            className="inline-flex items-center gap-2 rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-200"
+          >
+            <BookOpen className="h-4 w-4" /> Customise quiz
+          </button>
+          {endless && answeredCount > 0 && (
+            <button
+              onClick={() => setMode("done")}
+              className="inline-flex items-center gap-2 rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-200"
+            >
+              <CheckCircle2 className="h-4 w-4" /> Finish and see score
+            </button>
+          )}
+        </div>
+
+        <PrivacyStrip />
       </div>
     </MainLayout>
   );

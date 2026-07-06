@@ -495,7 +495,7 @@ export default function UnifiedGuidePage() {
                   <StepIcon className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <Badge className={`bg-gradient-to-r ${STEP_GRADIENTS[rStep.type]} text-white border-0`}>{rStep.type.toUpperCase()}</Badge>
+                  <Badge className={`bg-gradient-to-r ${STEP_GRADIENTS[rStep.type]} text-white border-0`}>{rStep.type === "casenote" ? "CASE NOTE" : rStep.type.toUpperCase()}</Badge>
                   <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-1">{rStep.title}</h2>
                 </div>
               </div>

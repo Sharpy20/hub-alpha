@@ -251,29 +251,16 @@ const WARD_TASK_TEMPLATES: Array<{
 
 // Generate ward tasks - currently 1 recurring task per ward (kept light for a cleaner demo)
 const generateWardTasks = (ward: string, startId: number): WardTask[] => {
-  const staff = WARD_STAFF[ward];
   const tasks: WardTask[] = [];
   let id = startId;
 
   // Generate 1 recurring ward task (kept light for a cleaner demo)
   for (let i = 0; i < 1; i++) {
     const template = WARD_TASK_TEMPLATES[i % WARD_TASK_TEMPLATES.length];
-    const staffMember = staff[i % staff.length];
 
-    // Determine status: first 3 completed, next 3 in_progress/claimed, rest pending
-    let status: "pending" | "in_progress" | "completed" | "overdue" = "pending";
-    let claimedBy: string | undefined;
-    let claimedAt: string | undefined;
-    let completedBy: string | undefined;
-    let completedAt: string | undefined;
-
-    if (i === 0) {
-      // First is completed today; the rest stay pending/unclaimed
-      status = "completed";
-      completedBy = staffMember;
-      completedAt = todayStr;
-    }
-    // Rest are pending (unclaimed)
+    // The single generated task (the fridge temperature check) stays pending and
+    // UNCLAIMED so a fresh demo always has a team task to claim - the demo
+    // script's Team Diary stop relies on it (docs/nhs-ready/10b-demo-script.md).
 
     // Build assurance dashboard URL for audit tasks
     const assuranceDashboardUrl = template.isAuditTask && template.auditType
@@ -285,7 +272,7 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
       type: "ward",
       title: template.title,
       description: template.description,
-      status,
+      status: "pending",
       priority: template.priority,
       shift: template.shift,
       dueDate: todayStr,
@@ -295,8 +282,6 @@ const generateWardTasks = (ward: string, startId: number): WardTask[] => {
       ward,
       createdAt: todayStr,
       createdBy: "System",
-      ...(claimedBy && { claimedBy, claimedAt }),
-      ...(completedBy && { completedBy, completedAt }),
       // Audit task fields
       ...(template.isAuditTask && { isAuditTask: true }),
       ...(template.auditType && { auditType: template.auditType }),

@@ -27,10 +27,21 @@ updates their row: status (done / partial / blocked), date, and a one-line resul
 | # | Prompt | Status | Date | Result |
 |---|--------|--------|------|--------|
 | 9 | Executive deck | done | 5 Jul | 09-wardHub-exec-deck.pptx: 14 slides, 5 real screenshots (2800px), speaker notes in Mike voice on every slide, NHS Identity styling. Story: 3am problem, what it is (real counts), traffic-light governance, no-data-leaves slide, homework-already-written slide, GBP 0 cost, three asks, roadmap. Visual QA pass fixed 5 defects; opens cleanly in PowerPoint. |
-| 10 | One-pager and demo script | done | 6 Jul | 10a-one-pager.docx (verified single A4 page via Word render) + 10b-demo-script.md (8-stop path click-verified against the running app; live /about + /guides confirmed deployed). NOT committed - Mike to review first. |
+| 10 | One-pager and demo script | done | 6 Jul | 10a-one-pager.docx (verified single A4 page via Word render) + 10b-demo-script.md (8-stop path click-verified against the running app; live /about + /guides confirmed deployed). Committed and pushed. |
 | 11 | In-product governance page | done | 5 Jul | /about live: what it is, data position (every claim cross-checked vs the audit), LIVE traffic-light counts computed from approval-status (1 green / 47 amber / 16 red of 64 - matches the index exactly), what the demo is not. Linked from footer + More menu (desktop and mobile). Dark-mode readable. |
-| 12 | Dress rehearsal | not started | | |
+| 12 | Dress rehearsal | done | 6 Jul | Demo path walked click-by-click; two demo-path fixes applied (CASENOTE badge now reads "CASE NOTE"; the fridge check is always unclaimed so the diary claim moment cannot fail) plus quiz "1 question" pluralisation. 12-known-limitations.md written. Live site spot-checked. |
 
-## Notes between sessions
+## The night before - read this once
 
-(Anything a later session needs to know that doesn't fit a report goes here.)
+The pack is complete: all 13 prompts done across 4-6 Jul. Everything lives in
+docs/nhs-ready/ - the audit trail (01, 04, 05, 06, 07, 08a-d), the governance drafts for
+the trust (03a DPIA, 03b hazard log, 03c data flows), and the pitch kit (09 deck,
+10a one-pager, 10b demo script, 12 known limitations). The app itself is in the best
+state it has been: privacy copy matches the code, no data leaves the device and the CSP
+enforces it, fonts self-hosted, lint zero, WCAG clean on all main pages, bundles ~40%
+lighter, and /about answers the IG questions inside the product with live traffic-light
+counts. Rehearse from 10b, keep 12 beside you for the hard questions, leave 10a on the
+table. Two decisions are still yours alone: F1 (approve the git history rewrite that
+purges the old 110 MB trust-docs dump from GitHub - until then treat the private repo as
+containing it) and F2 (the footer's trust-name wording). Say the word in any session and
+F1 gets executed with you watching.

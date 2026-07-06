@@ -15,7 +15,7 @@ import {
   GENDER_OPTIONS, EMPTY_FACTS, SAMPLE_PATIENTS,
   type Facts, type Area, type Gender, type Evaluation,
 } from "@/lib/data/service-map";
-import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2, List, Map as MapIcon, ChevronDown, Printer } from "lucide-react";
+import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2, List, Map as MapIcon, ChevronDown, Printer, GripVertical } from "lucide-react";
 
 const CX = 550, CY = 500;
 const BANDS = [175, 300, 400];
@@ -98,6 +98,35 @@ export default function ServiceMapPage() {
   // Directory list is the default - the map is a visual extra behind a toggle.
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [search, setSearch] = useState("");
+
+  // Collapsible cluster sections + drag-to-reorder (order persists per browser,
+  // self-heals if the cluster list changes - same pattern as wardhub_guide_order).
+  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
+  const [clusterOrder, setClusterOrder] = useState<string[]>(() => CLUSTERS.map((c) => c.id));
+  const dragCluster = useRef<string | null>(null);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("wardhub_servicemap_cluster_order");
+      if (!saved) return;
+      const ids: string[] = JSON.parse(saved);
+      const valid = ids.filter((id) => CLUSTERS.some((c) => c.id === id));
+      const missing = CLUSTERS.map((c) => c.id).filter((id) => !valid.includes(id));
+      if (valid.length) setClusterOrder([...valid, ...missing]);
+    } catch { /* corrupt value - keep the default order */ }
+  }, []);
+  const toggleCollapsed = (id: string) =>
+    setCollapsed((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+  const dropOnCluster = (targetId: string) => {
+    const from = dragCluster.current;
+    dragCluster.current = null;
+    if (!from || from === targetId) return;
+    setClusterOrder((order) => {
+      const next = order.filter((id) => id !== from);
+      next.splice(next.indexOf(targetId), 0, from);
+      localStorage.setItem("wardhub_servicemap_cluster_order", JSON.stringify(next));
+      return next;
+    });
+  };
   const searchLc = search.trim().toLowerCase();
 
   // Zoom + pan (drives the SVG viewBox)
@@ -185,8 +214,9 @@ export default function ServiceMapPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [evals, reach]);
 
-  // layout for the visible clusters
-  const visClusters = clusterFilter === "all" ? CLUSTERS : CLUSTERS.filter((c) => c.id === clusterFilter);
+  // layout for the visible clusters (in the user's saved order)
+  const orderedClusters = [...CLUSTERS].sort((a, b) => clusterOrder.indexOf(a.id) - clusterOrder.indexOf(b.id));
+  const visClusters = clusterFilter === "all" ? orderedClusters : orderedClusters.filter((c) => c.id === clusterFilter);
   const pos = useMemo(() => {
     const pos: Record<string, { x: number; y: number; depth: number }> = {};
     const N = visClusters.length;
@@ -520,11 +550,24 @@ export default function ServiceMapPage() {
                     .filter((s) => !searchLc || s.name.toLowerCase().includes(searchLc))
                     .sort((a, b) => STATE_ORDER[effective(a.id)] - STATE_ORDER[effective(b.id)] || a.name.localeCompare(b.name));
                   if (!rows.length) return null;
+                  // Searching auto-expands so a collapsed section can't hide matches.
+                  const isCollapsed = collapsed.has(cl.id) && !searchLc;
                   return (
-                    <section key={cl.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                      <h3 className="flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-white" style={{ background: cl.color }}>
-                        {cl.label} <span className="text-xs font-semibold opacity-80">({rows.length})</span>
-                      </h3>
+                    <section key={cl.id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden"
+                      onDragOver={(e) => { if (dragCluster.current) e.preventDefault(); }}
+                      onDrop={() => dropOnCluster(cl.id)}>
+                      <div className="flex items-center text-white" style={{ background: cl.color }}>
+                        <span draggable onDragStart={() => { dragCluster.current = cl.id; }}
+                          title="Drag to reorder sections" className="pl-2.5 py-2.5 cursor-grab active:cursor-grabbing opacity-70 hover:opacity-100">
+                          <GripVertical className="w-4 h-4" />
+                        </span>
+                        <button onClick={() => toggleCollapsed(cl.id)} aria-expanded={!isCollapsed}
+                          className="flex-1 flex items-center justify-between gap-2 pl-1.5 pr-4 py-2.5 text-left text-sm font-bold">
+                          <span>{cl.label} <span className="text-xs font-semibold opacity-80">({rows.length})</span></span>
+                          <ChevronDown className={`w-4 h-4 transition-transform ${isCollapsed ? "-rotate-90" : ""}`} />
+                        </button>
+                      </div>
+                      {!isCollapsed && (
                       <div className="divide-y divide-gray-100">
                         {rows.map((s) => {
                           const eff = effective(s.id);
@@ -567,6 +610,7 @@ export default function ServiceMapPage() {
                           );
                         })}
                       </div>
+                      )}
                     </section>
                   );
                 })}

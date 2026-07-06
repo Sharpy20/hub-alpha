@@ -9,7 +9,7 @@ import { FocusLinks } from "@/components/guides/FocusLinks";
 import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
-import { ADMISSION_CHECKLIST } from "@/lib/data/guides";
+import { ADMISSION_CHECKLIST } from "@/lib/data/guides/admission";
 import { DEMO_PATIENTS } from "@/lib/data/tasks";
 import {
   ADMISSION_ITEMS, loadTracker, saveTracker, seedPatient,

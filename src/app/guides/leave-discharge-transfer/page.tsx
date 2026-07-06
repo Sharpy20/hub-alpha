@@ -14,7 +14,7 @@ import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
 import { FocusLinks } from "@/components/guides/FocusLinks";
-import { LDT_SECTIONS, LDT_PATHWAYS, type LdtPathway } from "@/lib/data/guides";
+import { LDT_SECTIONS, LDT_PATHWAYS, type LdtPathway } from "@/lib/data/guides/leave-discharge";
 import {
   ArrowLeft, Printer, RotateCcw, ChevronDown, ChevronRight, Flag, Info, AlertTriangle, BookOpen,
 } from "lucide-react";

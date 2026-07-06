@@ -17,6 +17,16 @@ import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 // build demonstrably clean even when the page source is downloaded.
 const TodayWidget = dynamic(
   () => import("@/components/diary/TodayWidget").then((m) => m.TodayWidget),
+  {
+    // Same-shape placeholder so the sections below the widget don't jump
+    // when the lazy chunk arrives (perceived-speed: no layout shift).
+    loading: () => (
+      <div
+        className="h-56 rounded-xl border border-nhs-pale-grey bg-white animate-pulse"
+        aria-hidden="true"
+      />
+    ),
+  }
 );
 
 const QUICK_ACTIONS = [

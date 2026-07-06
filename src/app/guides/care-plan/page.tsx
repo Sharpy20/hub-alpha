@@ -10,7 +10,7 @@ import { Patient } from "@/lib/types";
 import {
   CAREPLAN_SECTIONS, CAREPLAN_PRINCIPLES, CAREPLAN_TEACHING, CAREPLAN_EXAMPLE,
   type CareSection,
-} from "@/lib/data/guides";
+} from "@/lib/data/guides/careplan";
 import { useV2Href } from "@/lib/hooks/useV2";
 import {
   ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info,

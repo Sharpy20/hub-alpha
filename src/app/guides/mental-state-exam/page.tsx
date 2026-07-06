@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb } from "@/components/ui";
-import { MSE_DOMAINS } from "@/lib/data/guides";
+import { MSE_DOMAINS } from "@/lib/data/guides/mse";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { PatientLink } from "@/components/guides/PatientLink";

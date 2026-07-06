@@ -11,7 +11,7 @@ import {
 } from "@/lib/types";
 import { getActivePatientsByWard } from "@/lib/data/tasks";
 import { toLocalDateStr } from "@/lib/utils/date";
-import { GuideSelect } from "@/components/ui";
+import { GuideSelect } from "@/components/ui/GuideSelect";
 
 interface Row {
   title: string;

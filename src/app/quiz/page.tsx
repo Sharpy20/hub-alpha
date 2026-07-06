@@ -1,15 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MainLayout } from "@/components/layout";
-import {
-  QUIZ_QUESTIONS,
-  QUIZ_CATEGORIES,
-  QUIZ_DIFFICULTIES,
-  quizCountByCategory,
-  type QuizQuestion,
-  type QuizDifficulty,
-} from "@/lib/data/quiz";
+import type { QuizQuestion, QuizDifficulty } from "@/lib/data/quiz";
+
+// PERFORMANCE: the question bank (364 questions, ~300 kB of JSON) is
+// dynamic-imported on mount instead of bundled into the route, so /quiz's
+// first load ships only the page shell. The bank arrives as its own chunk a
+// moment later; the setup screen shows a brief loading state.
+type QuizBank = typeof import("@/lib/data/quiz");
 import {
   Brain,
   CheckCircle2,
@@ -61,6 +60,7 @@ export default function QuizPage() {
   const [category, setCategory] = useState<string>("all");
   const [difficulty, setDifficulty] = useState<DifficultyFilter>("all");
   const [length, setLength] = useState<LengthFilter>(10);
+  const [bank, setBank] = useState<QuizBank | null>(null);
 
   // Round state
   const [round, setRound] = useState<QuizQuestion[]>([]);
@@ -69,16 +69,26 @@ export default function QuizPage() {
   const [answered, setAnswered] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
 
-  const counts = useMemo(() => quizCountByCategory(), []);
+  // Fetch the question bank as a lazy chunk on mount (see note above)
+  useEffect(() => {
+    let alive = true;
+    import("@/lib/data/quiz").then((m) => {
+      if (alive) setBank(m);
+    });
+    return () => { alive = false; };
+  }, []);
+
+  const counts = useMemo(() => (bank ? bank.quizCountByCategory() : {}), [bank]);
 
   // How many questions match the current filters (for the Start button label).
   const available = useMemo(() => {
-    return QUIZ_QUESTIONS.filter(
+    if (!bank) return [];
+    return bank.QUIZ_QUESTIONS.filter(
       (q) =>
         (category === "all" || q.category === category) &&
         (difficulty === "all" || q.difficulty === difficulty)
     );
-  }, [category, difficulty]);
+  }, [bank, category, difficulty]);
 
   const startRound = () => {
     const pool = shuffle(available);
@@ -136,6 +146,14 @@ export default function QuizPage() {
 
           <PrivacyStrip />
 
+          {!bank ? (
+            <p className="py-10 text-center text-sm text-gray-500" role="status">
+              Loading the question bank&hellip;
+            </p>
+          ) : (
+          <>
+
+
           {/* Topic */}
           <section className="rounded-2xl border border-gray-200 bg-white p-5">
             <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-gray-500">
@@ -151,9 +169,9 @@ export default function QuizPage() {
                 }`}
               >
                 <p className="font-semibold text-gray-900">Mixed - a bit of everything</p>
-                <p className="text-xs text-gray-500">{QUIZ_QUESTIONS.length} questions</p>
+                <p className="text-xs text-gray-500">{bank.QUIZ_QUESTIONS.length} questions</p>
               </button>
-              {QUIZ_CATEGORIES.map((c) => (
+              {bank.QUIZ_CATEGORIES.map((c) => (
                 <button
                   key={c}
                   onClick={() => setCategory(c)}
@@ -177,7 +195,7 @@ export default function QuizPage() {
                 Difficulty
               </h2>
               <div className="flex flex-wrap gap-2">
-                {(["all", ...QUIZ_DIFFICULTIES] as DifficultyFilter[]).map((d) => (
+                {(["all", ...bank.QUIZ_DIFFICULTIES] as DifficultyFilter[]).map((d) => (
                   <button
                     key={d}
                     onClick={() => setDifficulty(d)}
@@ -233,6 +251,8 @@ export default function QuizPage() {
               </p>
             )}
           </div>
+          </>
+          )}
         </div>
       </MainLayout>
     );

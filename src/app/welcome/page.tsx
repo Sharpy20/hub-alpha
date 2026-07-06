@@ -39,7 +39,7 @@ import {
 import {
   RIGHTS_ITEMS, NEED_ITEMS, LAUNCH_FORMS, SAFEGUARDING_DUTY,
 } from "@/lib/data/welcome/admission";
-import { FORMULATION_SECTIONS, RMP_SECTIONS } from "@/lib/data/guides";
+import { FORMULATION_SECTIONS, RMP_SECTIONS } from "@/lib/data/guides/risk";
 import {
   SectionEditor, buildFormulation, buildOneRmp, formulationSectionForRisk,
   rmpSectionForRisk, buildContent, naturalList, cap, ensureStop,

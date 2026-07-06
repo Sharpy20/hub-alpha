@@ -15,7 +15,7 @@ import {
   FORMULATION_SECTIONS, RMP_SECTIONS, MANDATORY_MDT_LINE,
   RMP_RISK_CHIPS, FORMULATION_RISK_CHIPS,
   type RiskSection, type RiskChipGroup, type RmpSectionId, type FormulationSectionId,
-} from "@/lib/data/guides";
+} from "@/lib/data/guides/risk";
 import {
   ChevronDown, ChevronRight, Info, Sparkles, AlertTriangle, Plus, X,
 } from "lucide-react";

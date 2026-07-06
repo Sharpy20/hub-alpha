@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
 import { Patient } from "@/lib/types";
-import { PatientPickerModal } from "@/components/modals";
+import { PatientPickerModal } from "@/components/modals/PatientPickerModal";
 import { useIsV2 } from "@/lib/hooks/useV2";
 
 // "Link to Patient" block, styled to sit at the bottom of a guide's gradient

@@ -7,7 +7,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
-import { PatientPickerModal } from "@/components/modals";
+import { PatientPickerModal } from "@/components/modals/PatientPickerModal";
 import { Patient } from "@/lib/types";
 import Link from "next/link";
 import { useState, useEffect } from "react";

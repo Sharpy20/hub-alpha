@@ -3,14 +3,23 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, FileText, Link2, ExternalLink, Lock, CornerDownLeft } from "lucide-react";
-import { ALL_GUIDES, guideType } from "@/lib/data/guides/catalog";
-import { bookmarks } from "@/lib/data/bookmarks";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { useModalA11y } from "@/lib/hooks/useModalA11y";
 
 type Result =
   | { kind: "guide"; id: string; title: string; sub: string; icon: string; type: string; path: string }
   | { kind: "link"; id: string; title: string; sub: string; icon: string; url: string; focus: boolean };
+
+// PERFORMANCE: the search index (guide catalog + every bookmark, which drags
+// in the referral-workflows data behind guideType) used to be imported at
+// module scope. The header renders on every page, so ~120 kB of data shipped
+// in every route's first load. It is now dynamic-imported the first time the
+// palette opens - the header button and Ctrl+K stay instant.
+type SearchIndex = {
+  guides: (typeof import("@/lib/data/guides/catalog"))["ALL_GUIDES"];
+  guideType: (typeof import("@/lib/data/guides/catalog"))["guideType"];
+  links: (typeof import("@/lib/data/bookmarks"))["bookmarks"];
+};
 
 // Rank a match: 2 = title starts with query, 1 = title contains, 0 = other field
 function score(query: string, title: string, extra: string): number {
@@ -28,8 +37,24 @@ export function GlobalSearch() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
+  const [index, setIndex] = useState<SearchIndex | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  // Load the search index the first time the palette opens
+  useEffect(() => {
+    if (!open || index) return;
+    let alive = true;
+    Promise.all([
+      import("@/lib/data/guides/catalog"),
+      import("@/lib/data/bookmarks"),
+    ]).then(([catalog, links]) => {
+      if (alive) {
+        setIndex({ guides: catalog.ALL_GUIDES, guideType: catalog.guideType, links: links.bookmarks });
+      }
+    });
+    return () => { alive = false; };
+  }, [open, index]);
 
   // Focus trap + Escape + focus return while the palette is open
   useModalA11y(panelRef, () => setOpen(false), open);
@@ -57,19 +82,19 @@ export function GlobalSearch() {
 
   const results = useMemo<Result[]>(() => {
     const q = query.trim();
-    if (q.length < 2) return [];
+    if (q.length < 2 || !index) return [];
 
-    const guides = ALL_GUIDES
+    const guides = index.guides
       .map((g) => ({ g, s: score(q, g.title, `${g.description} ${g.category}`) }))
       .filter((r) => r.s >= 0)
       .sort((a, b) => b.s - a.s)
       .slice(0, 8)
       .map<Result>(({ g }) => ({
         kind: "guide", id: g.id, title: g.title, sub: g.category,
-        icon: g.icon, type: guideType(g.id), path: g.viewerPath,
+        icon: g.icon, type: index.guideType(g.id), path: g.viewerPath,
       }));
 
-    const links = bookmarks
+    const links = index.links
       .map((b) => ({ b, s: score(q, b.title, `${b.description || ""} ${b.category} ${b.phone || ""}`) }))
       .filter((r) => r.s >= 0)
       .sort((a, b) => b.s - a.s)
@@ -80,7 +105,7 @@ export function GlobalSearch() {
       }));
 
     return [...guides, ...links];
-  }, [query]);
+  }, [query, index]);
 
   useEffect(() => { setActive(0); }, [query]);
 
@@ -152,6 +177,10 @@ export function GlobalSearch() {
               {query.trim().length < 2 ? (
                 <p className="px-4 py-8 text-center text-sm text-gray-500">
                   Type to search across every guide and link.
+                </p>
+              ) : !index ? (
+                <p className="px-4 py-8 text-center text-sm text-gray-500">
+                  Loading&hellip;
                 </p>
               ) : results.length === 0 ? (
                 <p className="px-4 py-8 text-center text-sm text-gray-500">

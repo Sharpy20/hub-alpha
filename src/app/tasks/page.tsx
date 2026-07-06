@@ -47,7 +47,8 @@ import {
   TaskDetailModal,
   BulkPatientTasksModal,
 } from "@/components/modals";
-import { ConfirmDialog, GuideSelect } from "@/components/ui";
+import { ConfirmDialog } from "@/components/ui";
+import { GuideSelect } from "@/components/ui/GuideSelect";
 
 // Helper functions – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {

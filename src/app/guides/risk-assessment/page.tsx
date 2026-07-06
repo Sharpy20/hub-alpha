@@ -28,7 +28,7 @@ import {
   FORMULATION_SECTIONS, RMP_SECTIONS,
   RISK_TEACHING, RISK_EXAMPLES,
   type RiskSection,
-} from "@/lib/data/guides";
+} from "@/lib/data/guides/risk";
 import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS,
 } from "@/lib/data/welcome/risk-screen";

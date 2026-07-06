@@ -7,7 +7,7 @@ import { Breadcrumb } from "@/components/ui";
 import {
   MHA_PATHWAYS, MHA_SCRUTINY, MHA_RECTIFY_NOTE,
   type MhaForm, type MhaPathway,
-} from "@/lib/data/guides";
+} from "@/lib/data/guides/admission";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
 import { PatientLink } from "@/components/guides/PatientLink";

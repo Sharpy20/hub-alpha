@@ -42,6 +42,11 @@ export function Footer() {
                   GDPR &amp; Privacy
                 </Link>
               </li>
+              <li>
+                <Link href={link("/about")} className="hover:text-white transition-colors">
+                  About &amp; Governance
+                </Link>
+              </li>
             </ul>
           </div>
 

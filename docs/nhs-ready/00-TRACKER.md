@@ -28,7 +28,7 @@ updates their row: status (done / partial / blocked), date, and a one-line resul
 |---|--------|--------|------|--------|
 | 9 | Executive deck | not started | | |
 | 10 | One-pager and demo script | not started | | |
-| 11 | In-product governance page | not started | | |
+| 11 | In-product governance page | done | 5 Jul | /about live: what it is, data position (every claim cross-checked vs the audit), LIVE traffic-light counts computed from approval-status (1 green / 47 amber / 16 red of 64 - matches the index exactly), what the demo is not. Linked from footer + More menu (desktop and mobile). Dark-mode readable. |
 | 12 | Dress rehearsal | not started | | |
 
 ## Notes between sessions

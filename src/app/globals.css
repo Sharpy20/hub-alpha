@@ -320,6 +320,15 @@
   color: rgba(255, 255, 255, 0.88);
 }
 
+/* Dark mode: the shared Card is hardcoded bg-white, which leaves the flipped
+   nhs-* text unreadable (site-wide issue, snag 192b). Scope the fix to the
+   About page so its governance copy stays legible; the card surface follows
+   --nhs-white (#1e2533 in dark) like the rest of the theme. */
+.dark .about-page .bg-white {
+  background-color: var(--nhs-white);
+  border-color: #374151;
+}
+
 /* Apply theme to diary page */
 .theme-page {
   background-color: var(--theme-page-bg);

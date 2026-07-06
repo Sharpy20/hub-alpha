@@ -15,7 +15,7 @@ import {
   GENDER_OPTIONS, EMPTY_FACTS, SAMPLE_PATIENTS,
   type Facts, type Area, type Gender, type Evaluation,
 } from "@/lib/data/service-map";
-import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2, List, Map as MapIcon, ChevronDown } from "lucide-react";
+import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2, List, Map as MapIcon, ChevronDown, Printer } from "lucide-react";
 
 const CX = 550, CY = 500;
 const BANDS = [175, 300, 400];
@@ -43,6 +43,12 @@ function lerp(t: number) {
 const EVERYONE_COLOR = "#0d9488"; // teal - open to anyone in catchment, no eligibility criteria
 // Directory list sort: things the person can actually use first
 const STATE_ORDER: Record<Effective, number> = { everyone: 0, open: 0, partial: 1, unknown: 2, blocked: 3, cutoff: 4 };
+
+// Patient leaflet: strip researcher notes ("To verify: ...") - they are for us, not the patient.
+const leafletNote = (note?: string) => {
+  if (!note) return "";
+  return note.split(/To verify\b/i)[0].replace(/[\s-]+$/, "").trim();
+};
 const EFF_META: Record<Effective, { label: string; badge: string; fill: string; border: string }> = {
   open: { label: "Open (meets criteria)", badge: "bg-green-100 text-green-800", fill: "#dcfce7", border: "#16a34a" },
   everyone: { label: "Open to everyone", badge: "bg-teal-100 text-teal-800", fill: "#ccfbf1", border: EVERYONE_COLOR },
@@ -213,6 +219,19 @@ export default function ServiceMapPage() {
   }, [visClusters]);
 
   const visServices = SERVICES.filter((s) => pos[s.id]);
+
+  // Patient leaflet shortlist: fully open services only (no partial/maybe), and ONLY
+  // those with a public contact - a service with no printed contact is a referral
+  // route for staff, not something to hand to a patient. Grouped in cluster order.
+  const leaflet = CLUSTERS.map((cl) => ({
+    cluster: cl,
+    services: SERVICES.filter((s) => {
+      const eff = effective(s.id);
+      return s.cluster === cl.id && (eff === "open" || eff === "everyone") && !!s.contact;
+    }),
+  })).filter((g) => g.services.length > 0);
+  const leafletCount = leaflet.reduce((n, g) => n + g.services.length, 0);
+  const printedOn = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
   const selSvc = SERVICES.find((s) => s.id === selected) || null;
   const selEv = selSvc ? evals[selSvc.id] : null;
   const selEff = selSvc ? effective(selSvc.id) : null;
@@ -221,7 +240,36 @@ export default function ServiceMapPage() {
 
   return (
     <MainLayout>
-      <div className="space-y-4">
+      {/* Print-only take-home leaflet: eligible services with PUBLIC contacts only.
+          Deliberately prints NO profile details - just the services and numbers. */}
+      <div className="hidden print:block">
+        <h1 className="text-2xl font-black">Support services for you</h1>
+        <p className="text-sm mt-1">
+          Services picked with you on the ward. You can contact these yourself unless the note says a referral is needed.
+        </p>
+        <div className="border-2 border-black rounded-lg p-3 my-3 text-sm font-bold">
+          In an emergency call 999. For urgent mental health help, call NHS 111 and choose option 2 (24 hours a day).
+        </div>
+        {leaflet.map((g) => (
+          <section key={g.cluster.id}>
+            <h2 className="text-base font-bold border-b border-black mt-4 mb-1.5 pb-0.5">{g.cluster.label}</h2>
+            {g.services.map((s) => (
+              <div key={s.id} className="mb-2" style={{ breakInside: "avoid" }}>
+                <p className="text-sm font-bold">{s.name}</p>
+                <p className="text-sm">{s.contact}</p>
+                {leafletNote(s.note) && <p className="text-xs">{leafletNote(s.note)}</p>}
+              </div>
+            ))}
+          </section>
+        ))}
+        <p className="text-xs mt-5" suppressHydrationWarning>
+          Printed on {printedOn}. Numbers were correct when printed. This is a signposting list, not a referral -
+          each service decides who it can help. More services may be open to you with a referral: ask the ward team.
+          Prepared with wardHub.
+        </p>
+      </div>
+
+      <div className="space-y-4 print:hidden">
         <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Service map (prototype)" }]} />
 
         <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl p-3 text-sm text-amber-800">
@@ -360,6 +408,12 @@ export default function ServiceMapPage() {
                   <MapIcon className="w-4 h-4" /> Map
                 </button>
               </div>
+              <button onClick={() => window.print()} disabled={leafletCount === 0}
+                title="Print a take-home list of the services this person can use (public contacts only)"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 bg-white text-xs font-semibold text-gray-600 hover:border-nhs-blue hover:text-nhs-blue transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                <Printer className="w-4 h-4" /> Print for the patient
+                <span className="text-[10px] font-bold rounded-full bg-nhs-blue text-white px-1.5 py-0.5">{leafletCount}</span>
+              </button>
             </div>
             {viewMode === "map" && (
             <div className="relative bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-gray-200 p-2">

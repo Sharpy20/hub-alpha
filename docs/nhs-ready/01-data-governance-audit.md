@@ -116,7 +116,7 @@ and no .env, key or credential was ever committed.
 
 ### Needs Mike's decision (not applied by Prompt 2)
 
-- **F1. History rewrite + force push** to purge the docs dump (finding 1), ideally also
+- **F1. DONE 6 Jul 2026** (git filter-repo + force push; repo 117 MB to 4.4 MB; final tree verified byte-identical; nhs.net author emails mapped to noreply; DafttvLive message scrubbed; both dump folders gone from all history). Residuals: GitHub may serve old commits by SHA until its own gc runs (support ticket purges sooner); any OTHER clone of hub-alpha must be deleted and re-cloned; the pre-rewrite backup bundle at E:Hubackup-hub-alpha-pre-rewrite-06Jul2026.bundle contains the old history INCLUDING the dump - keep it local, delete when confident. Original finding: **History rewrite + force push** to purge the docs dump (finding 1), ideally also
   removing the focus-data-collection files from history, mapping the 10 nhs.net-authored
   commits to the noreply address, and scrubbing the DafttvLive commit message. This is
   destructive (force push, anyone's old clones diverge) so it is Mike's call. After the

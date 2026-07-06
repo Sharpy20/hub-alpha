@@ -41,7 +41,4 @@ state it has been: privacy copy matches the code, no data leaves the device and 
 enforces it, fonts self-hosted, lint zero, WCAG clean on all main pages, bundles ~40%
 lighter, and /about answers the IG questions inside the product with live traffic-light
 counts. Rehearse from 10b, keep 12 beside you for the hard questions, leave 10a on the
-table. Two decisions are still yours alone: F1 (approve the git history rewrite that
-purges the old 110 MB trust-docs dump from GitHub - until then treat the private repo as
-containing it) and F2 (the footer's trust-name wording). Say the word in any session and
-F1 gets executed with you watching.
+table. F1 is DONE (6 Jul: history rewritten and force-pushed, repo 117 MB to 4.4 MB, code byte-identical; delete any old clones on other machines). One decision left: F2, the footer's trust-name wording.

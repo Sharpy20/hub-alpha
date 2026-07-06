@@ -24,8 +24,9 @@
   that as a go-live blocker, not a nice-to-have.
 - Not connected to SystmOne or any clinical system. The copy-to-clipboard case note is
   the bridge, by design, until an integration is approved.
-- The private GitHub repository's history still contains an early upload of raw trust
-  documents; the fix (a history rewrite) is prepared and waiting on my go-ahead.
+- RESOLVED 6 Jul: the repository history has been rewritten and force-pushed - the early
+  upload of raw trust documents is gone from GitHub (old clones elsewhere must be
+  deleted and re-cloned).
 
 ## Product
 

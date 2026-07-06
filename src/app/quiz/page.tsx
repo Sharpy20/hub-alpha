@@ -182,7 +182,7 @@ export default function QuizPage() {
                   }`}
                 >
                   <p className="font-semibold text-gray-900">{c}</p>
-                  <p className="text-xs text-gray-500">{counts[c]} questions</p>
+                  <p className="text-xs text-gray-500">{counts[c]} {counts[c] === 1 ? "question" : "questions"}</p>
                 </button>
               ))}
             </div>
@@ -242,7 +242,9 @@ export default function QuizPage() {
               <Sparkles className="h-5 w-5" />
               Start
               <span className="text-sm font-normal opacity-90">
-                ({length === "all" ? available.length : Math.min(length, available.length)} questions)
+                ({(length === "all" ? available.length : Math.min(length, available.length)) === 1
+                  ? "1 question"
+                  : `${length === "all" ? available.length : Math.min(length, available.length)} questions`})
               </span>
             </button>
             {available.length === 0 && (

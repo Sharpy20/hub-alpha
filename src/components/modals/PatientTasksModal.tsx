@@ -49,6 +49,11 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick
   const pendingCount = tasks.filter((t) => t.status === "pending" || t.status === "in_progress").length;
   const completedCount = tasks.filter((t) => t.status === "completed").length;
 
+  // Barriers to discharge = flagged tasks that are not yet done
+  const dischargeBlockers = tasks.filter(
+    (t) => t.blocksDischarge && t.status !== "completed" && t.status !== "cancelled"
+  );
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Tasks for ${patient.name}`}>
       <div className="space-y-6">
@@ -67,6 +72,25 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick
             <p className="text-xs text-green-600 font-medium">Completed</p>
           </div>
         </div>
+
+        {/* Barriers to discharge */}
+        {dischargeBlockers.length > 0 && (
+          <div className="rounded-lg border-2 border-amber-300 bg-amber-50 p-3">
+            <p className="flex items-center gap-2 text-sm font-semibold text-amber-800">
+              <span>🚧</span>
+              {dischargeBlockers.length} {dischargeBlockers.length === 1 ? "task is" : "tasks are"} a barrier to discharge
+            </p>
+            <ul className="mt-2 space-y-1">
+              {dischargeBlockers.map((t) => (
+                <li key={t.id} className="text-xs text-amber-800 flex items-center gap-1">
+                  <span className="text-amber-500">•</span>
+                  {t.title}
+                  {t.claimedBy && <span className="text-amber-600">({t.claimedBy})</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {onAddTasks && (
           <button
@@ -119,7 +143,14 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900">{task.title}</p>
+                          <p className="font-medium text-gray-900">
+                            {task.title}
+                            {task.blocksDischarge && (
+                              <span className="ml-2 inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800 align-middle">
+                                🚧 Blocks discharge
+                              </span>
+                            )}
+                          </p>
                           {task.type === "patient" && task.category && (
                             <p className="text-xs text-gray-500 capitalize mt-0.5">
                               {task.category.replace(/_/g, " ")}
@@ -187,7 +218,14 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900">{appt.title}</p>
+                          <p className="font-medium text-gray-900">
+                            {appt.title}
+                            {appt.blocksDischarge && (
+                              <span className="ml-2 inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800 align-middle">
+                                🚧 Blocks discharge
+                              </span>
+                            )}
+                          </p>
                           {appt.type === "appointment" && (
                             <p className="text-xs text-gray-500 mt-0.5">
                               {appt.location && `${appt.location} • `}

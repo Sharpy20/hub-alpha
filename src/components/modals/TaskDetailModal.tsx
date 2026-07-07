@@ -35,6 +35,7 @@ export function TaskDetailModal({
   const [editedDate, setEditedDate] = useState("");
   const [editedTime, setEditedTime] = useState("");
   const [editedPatientName, setEditedPatientName] = useState("");
+  const [editedBlocksDischarge, setEditedBlocksDischarge] = useState(false);
 
   // Reset edit state when task changes
   useEffect(() => {
@@ -42,6 +43,7 @@ export function TaskDetailModal({
       setEditedTitle(task.title);
       setEditedDescription(task.description || "");
       setEditedPriority(task.priority);
+      setEditedBlocksDischarge(!!task.blocksDischarge);
       // Set date based on task type
       if (task.type === "appointment") {
         setEditedDate(task.appointmentDate);
@@ -115,6 +117,7 @@ export function TaskDetailModal({
       // Add patient name updates
       if (task.type === "patient" || task.type === "appointment") {
         (updates as Partial<typeof task>).patientName = editedPatientName.trim() || undefined;
+        updates.blocksDischarge = editedBlocksDischarge || undefined;
       }
 
       onUpdate(task.id, updates);
@@ -310,6 +313,43 @@ export function TaskDetailModal({
               </p>
             )}
           </div>
+
+          {/* Barrier to discharge - patient tasks and appointments */}
+          {(task.type === "patient" || task.type === "appointment") && (isEditing || task.blocksDischarge) && (
+            <div>
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Discharge</label>
+              {isEditing ? (
+                <button
+                  type="button"
+                  onClick={() => setEditedBlocksDischarge(!editedBlocksDischarge)}
+                  aria-pressed={editedBlocksDischarge}
+                  className={`mt-1 w-full p-2.5 rounded-lg text-left flex items-center justify-between transition-all border ${
+                    editedBlocksDischarge ? "bg-amber-50 border-amber-400" : "bg-white border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="flex items-center gap-2 text-sm">
+                    <span>🚧</span>
+                    <span className={editedBlocksDischarge ? "font-medium text-amber-800" : "text-gray-700"}>
+                      Barrier to discharge
+                    </span>
+                  </span>
+                  <span
+                    className={`w-10 h-5 rounded-full flex items-center px-0.5 transition-colors ${
+                      editedBlocksDischarge ? "bg-amber-500 justify-end" : "bg-gray-300 justify-start"
+                    }`}
+                  >
+                    <span className="w-4 h-4 bg-white rounded-full shadow" />
+                  </span>
+                </button>
+              ) : (
+                <p className="mt-1">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-sm font-medium text-amber-800">
+                    🚧 Barrier to discharge
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Appointment Details */}
           {task.type === "appointment" && task.location && (

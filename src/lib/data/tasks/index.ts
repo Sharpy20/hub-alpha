@@ -303,6 +303,7 @@ const PATIENT_TASK_TEMPLATES: {
   linkedReferralId?: string;
   linkedGuideId?: string;
   repeatIntervalDays?: number;
+  blocksDischarge?: boolean;
 }[] = [
   { title: "IMHA Referral", description: "Refer to advocacy service", category: "referral" as const, priority: "important" as const, linkedReferralId: "imha-advocacy" },
   { title: "Call family", description: "Update family about care plan", category: "family_contact" as const, priority: "routine" as const },
@@ -310,12 +311,12 @@ const PATIENT_TASK_TEMPLATES: {
   { title: "Capacity assessment", description: "Complete capacity to consent assessment", category: "documentation" as const, priority: "urgent" as const, linkedGuideId: "capacity-assessment" },
   { title: "Phone GP surgery", description: "Request medication history", category: "phone_call" as const, priority: "routine" as const },
   { title: "Section 17 leave form", description: "Complete S17 paperwork", category: "documentation" as const, priority: "important" as const, linkedGuideId: "section-17" },
-  { title: "Discharge planning meeting", description: "MDT meeting for discharge", category: "discharge_planning" as const, priority: "important" as const },
+  { title: "Discharge planning meeting", description: "MDT meeting for discharge", category: "discharge_planning" as const, priority: "important" as const, blocksDischarge: true },
   { title: "CPA Review preparation", description: "Prepare documentation for CPA", category: "documentation" as const, priority: "routine" as const },
   { title: "Update risk assessment", description: "Review and update risk assessment", category: "documentation" as const, priority: "important" as const, linkedGuideId: "risk-assessment" },
   { title: "Chase blood results", description: "Follow up on blood test results", category: "phone_call" as const, priority: "routine" as const },
   { title: "Care plan review", description: "Review and update care plan", category: "documentation" as const, priority: "routine" as const },
-  { title: "Social worker referral", description: "Refer for social care assessment", category: "referral" as const, priority: "important" as const },
+  { title: "Social worker referral", description: "Refer for social care assessment", category: "referral" as const, priority: "important" as const, blocksDischarge: true },
   { title: "OT assessment", description: "Arrange occupational therapy assessment", category: "referral" as const, priority: "routine" as const },
   { title: "1:1 nursing notes", description: "Complete 1:1 engagement documentation", category: "documentation" as const, priority: "routine" as const },
   { title: "Medication review", description: "Arrange medication review with doctor", category: "documentation" as const, priority: "important" as const },
@@ -370,7 +371,31 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
       ...(template.linkedReferralId && { linkedReferralId: template.linkedReferralId }),
       ...(template.linkedGuideId && { linkedGuideId: template.linkedGuideId }),
       ...(template.repeatIntervalDays && { repeatIntervalDays: template.repeatIntervalDays }),
+      ...(template.blocksDischarge && { blocksDischarge: true }),
       ...(slot.claim && { claimedBy: staffMember, claimedAt: todayStr }),
+    });
+  }
+
+  // Guarantee one visible barrier-to-discharge task per ward for the demo
+  // (few active patients means the flagged templates above may not be reached).
+  if (wardPatients.length > 0) {
+    const bp = wardPatients[0];
+    tasks.push({
+      id: `pt${id++}`,
+      type: "patient",
+      title: "Housing referral - awaiting placement",
+      description: `Supported accommodation not yet confirmed for ${bp.name}`,
+      status: "pending",
+      priority: "important",
+      category: "discharge_planning",
+      patientId: bp.id,
+      patientName: bp.name,
+      dueDate: tomorrowStr,
+      carryOver: true,
+      ward,
+      createdAt: todayStr,
+      createdBy: staff[0],
+      blocksDischarge: true,
     });
   }
 

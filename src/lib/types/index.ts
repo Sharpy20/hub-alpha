@@ -171,6 +171,10 @@ interface BaseTask {
   // Task claiming fields
   claimedBy?: string;    // Staff name who claimed this task
   claimedAt?: string;    // Timestamp when claimed
+  // Discharge planning: flag a task as a blocker to the patient's discharge so
+  // the MDT can see at a glance what is holding a discharge up. Only surfaced
+  // for patient tasks and appointments (a ward task cannot block a discharge).
+  blocksDischarge?: boolean;
 }
 
 // Ward Task - recurring shift tasks

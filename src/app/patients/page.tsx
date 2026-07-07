@@ -399,6 +399,18 @@ export default function PatientsPage() {
     ).length;
   };
 
+  // Tasks flagged as blocking this patient's discharge that are not yet done
+  const getDischargeBlockerCount = (patientId: string): number => {
+    return tasks.filter(
+      (t) =>
+        (t.type === "patient" || t.type === "appointment") &&
+        t.patientId === patientId &&
+        t.blocksDischarge &&
+        t.status !== "completed" &&
+        t.status !== "cancelled"
+    ).length;
+  };
+
   // Auth gating
   if (!user) {
     return (
@@ -553,6 +565,7 @@ export default function PatientsPage() {
               const statusConfig = PATIENT_STATUS_CONFIG[patient.status];
               const legalConfig = LEGAL_STATUS_CONFIG[patient.legalStatus];
               const outstandingTasks = getOutstandingTaskCount(patient.id);
+              const dischargeBlockers = getDischargeBlockerCount(patient.id);
               const pt = careTracker[patient.id];
               const adm = admissionProgress(pt);
               const showCare = patient.status !== "discharged" && !!pt && !!today;
@@ -607,6 +620,14 @@ export default function PatientsPage() {
                     >
                       {legalConfig.label}
                     </span>
+                    {dischargeBlockers > 0 && (
+                      <span
+                        className="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800"
+                        title={`${dischargeBlockers} task(s) flagged as a barrier to discharge`}
+                      >
+                        🚧 {dischargeBlockers} barrier{dischargeBlockers > 1 ? "s" : ""} to discharge
+                      </span>
+                    )}
                   </div>
 
                   {/* Info */}

@@ -987,6 +987,9 @@ function AddTaskModal({
   const [patientRepeat, setPatientRepeat] = useState(false);
   const [repeatIntervalDays, setRepeatIntervalDays] = useState(7);
 
+  // Discharge planning: does this task block the patient's discharge?
+  const [blocksDischarge, setBlocksDischarge] = useState(false);
+
   // Ward task specific - repeating vs one-off
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurringDays, setRecurringDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]); // Default all days
@@ -1054,6 +1057,7 @@ function AddTaskModal({
         linkedGuideId: category !== "referral" ? (linkedGuide || undefined) : undefined,
         carryOver: true,
         repeatIntervalDays: patientRepeat ? repeatIntervalDays : undefined,
+        blocksDischarge: blocksDischarge || undefined,
       });
     } else if (taskType === "appointment") {
       const timeValue = timeType === "preset"
@@ -1074,6 +1078,7 @@ function AddTaskModal({
         description,
         linkedReferralId: showApptReferral && apptLinkedReferral ? apptLinkedReferral : undefined,
         linkedGuideId: showApptGuide && apptLinkedGuide ? apptLinkedGuide : undefined,
+        blocksDischarge: blocksDischarge || undefined,
       });
     } else {
       // Ward task - use wardTaskDate for one-off, today for recurring
@@ -1691,6 +1696,41 @@ function AddTaskModal({
                 </button>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Barrier to discharge - patient tasks and appointments only */}
+        {(taskType === "patient" || taskType === "appointment") && (
+          <div className="mb-4">
+            <button
+              type="button"
+              onClick={() => setBlocksDischarge(!blocksDischarge)}
+              aria-pressed={blocksDischarge}
+              className={`w-full p-3 rounded-xl text-left flex items-center justify-between transition-all border-2 ${
+                blocksDischarge
+                  ? "bg-amber-50 border-amber-400"
+                  : "bg-white border-gray-200 hover:bg-gray-50"
+              }`}
+            >
+              <span className="flex items-center gap-2 text-sm">
+                <span>🚧</span>
+                <span className={blocksDischarge ? "font-medium text-amber-800" : "text-gray-700"}>
+                  Barrier to discharge
+                </span>
+              </span>
+              <span
+                className={`w-11 h-6 rounded-full flex items-center px-0.5 transition-colors ${
+                  blocksDischarge ? "bg-amber-500 justify-end" : "bg-gray-300 justify-start"
+                }`}
+              >
+                <span className="w-5 h-5 bg-white rounded-full shadow" />
+              </span>
+            </button>
+            {blocksDischarge && (
+              <p className="text-xs text-amber-700 mt-1">
+                Flags this task as holding up the patient&apos;s discharge, so the MDT can see blockers at a glance.
+              </p>
+            )}
           </div>
         )}
 

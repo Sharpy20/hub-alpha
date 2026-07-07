@@ -46,11 +46,26 @@ function legacyTarget(subpath: string): string | null {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Legacy redirect
-  if (pathname === "/password") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
+  // Site-wide password gate for early testing. One shared password, no user
+  // accounts. Verified server-side by /api/auth/verify-password, which sets the
+  // `site_access=granted` cookie. To change or lift the password, edit
+  // SITE_PASSWORD (env) or the fallback in that route. Allow the gate page,
+  // its verify API, and static assets straight through; everything else needs
+  // the cookie.
+  const gateOpen =
+    pathname === "/password" ||
+    pathname === "/api/auth/verify-password" ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/favicon") ||
+    pathname.includes(".");
+
+  if (!gateOpen) {
+    const authCookie = request.cookies.get("site_access");
+    if (!authCookie || authCookie.value !== "granted") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/password";
+      return NextResponse.redirect(url);
+    }
   }
 
   // PARKED: the Welcome admission tool is removed from the live product (the code

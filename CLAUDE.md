@@ -1656,6 +1656,17 @@ Then open http://localhost:3000
 
 **Build Status:** All builds pass, 32/32 tests pass. Pushed to Vercel via Sharpy20.
 
+### 8 July 2026 - Session 35 (Password gate, discharge barriers, reports overhaul)
+**Completed (all pushed, builds clean):**
+- [x] **Site-wide password gate restored** (was removed Session 11). One shared password, no accounts. `src/proxy.ts` redirects to `/password` without the `site_access` cookie; `src/app/password/page.tsx` + `src/app/api/auth/verify-password/route.ts` verify server-side and set a 7-day httpOnly cookie. **Password = `fintralobe`** (`DEFAULT_PASSWORD` in the route; `SITE_PASSWORD` env overrides). Lift the gate by deleting the gate block in proxy.ts.
+- [x] **Barrier-to-discharge task flag** - new `blocksDischarge?: boolean` on `BaseTask` (patient tasks + appointments only). Set via add-task modal toggle, the "Add several" bulk modal (per-row toggle), editable in TaskDetailModal. Surfaces: badge + banner in PatientTasksModal, count badge on patient card, and throughout reports. Demo seeds one blocker per ward.
+- [x] **Patient Progress Reports overhaul** (`src/app/reports/page.tsx`) - was weak for sign-off. Task priority now carries across (coloured dot + row border + legend, both views); barriers surface (per-task badge, per-patient count, headline stat); **Tile / Table view toggle**; table = sortable columns (patient/ward/top priority/total/outstanding/overdue/barriers/progress) with expandable rows + Expand-all/Collapse-all; **filters** (search, priority, status, ward chips, barriers-only, overdue-only) apply to both views; headline stats recompute to the filtered set.
+- [x] **Tumi sponsor email drafted** (not code) - meeting Thu 30 Jul 1:30pm. Name correction (wardHub not WardBoard), demo-only/DPIA-ready framing, Copilot builder + tiered sign-off, discharge barriers, live link + password.
+
+**Open for Mike:** sign off the red guides; IMHA Derby City source of truth (DDA vs One Advocacy Derby). Idea parked: a flat task-level table (one row per task) as a third reports view for audits/rapid reviews.
+
+**Build Status:** All builds pass. Pushed to Vercel via Sharpy20.
+
 ---
 
 *This file is maintained by Claude Code during development sessions.*

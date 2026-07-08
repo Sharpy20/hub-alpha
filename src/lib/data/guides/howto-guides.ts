@@ -591,7 +591,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "exclusions",
         title: "When I must NOT supply (exclusions)",
-        content: `- Under 18\n- No valid consent\n- Declines the training, or won't / can't complete it\n- MDT has reviewed and decided it is not appropriate\n- Known hypersensitivity to naloxone or any component of the pack`,
+        content: `- Under 18\n- Not a DHCFT inpatient\n- No valid consent\n- Declines the training, or won't / can't complete it\n- MDT has reviewed and decided it is not appropriate\n- Known hypersensitivity to naloxone or any component of the pack`,
         tip: "In an opioid-dependent person, naloxone can trigger acute withdrawal - that is expected and is NOT a reason to withhold it in an overdose. Prenoxad does not reverse non-opioid (e.g. benzo or alcohol) respiratory depression.",
       },
       {
@@ -602,7 +602,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "signoff",
         title: "Getting yourself signed off",
-        content: `1. Read the PGD (in the PGD folder in the clinic room / on FOCUS).\n2. Watch "How to administer naloxone (injectable)".\n3. Make sure your ILS / resus + overdose training is current.\n4. Leadership adds you to the ward PGD register; you both sign.\n\nThat is it - you can now supply take-home Prenoxad.`,
+        content: `1. Read the PGD (in the PGD folder in the clinic room / on FOCUS).\n2. Watch "How to administer naloxone (injectable)".\n3. Make sure your ILS / resus + overdose training is current.\n4. Leadership adds you to the ward PGD register; you both sign. Sign-off can come from the manager, deputy, a senior staff member or the bleep holder.\n\nThat is it - you can now supply take-home Prenoxad.\n\nStaying signed off: annual resus + overdose-management update, plus an annual refresher on the product information, the Prenoxad protocol and the PGD requirements.`,
       },
       {
         id: "supply",
@@ -612,13 +612,13 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "train",
         title: "Train the patient (5-10 minutes)",
-        content: `Cover these before you hand the pack over. Do it every time a pack is issued or replaced. Show them the "How to administer naloxone (injectable)" video, demonstrate, check understanding, invite questions.\n\nIf you think someone has overdosed on opioids:\n\n1. Personal safety first.\n2. Call an ambulance (999).\n3. Put them in the recovery position.\n4. Inject Prenoxad into a muscle - thigh or upper arm. Dose: 0.4mg (one mark) every 2-3 minutes, repeat until they are breathing normally, wake up, help arrives, or the syringe is empty.\n5. Stay with them until the ambulance arrives, and hand the used pack safely to the paramedics.`,
+        content: `Cover these before you hand the pack over. Do it every time a pack is issued or replaced. Show them the "How to administer naloxone (injectable)" video, demonstrate, check understanding, invite questions.\n\nIf you think someone has overdosed on opioids:\n\n1. Personal safety first.\n2. Call an ambulance (999).\n3. Put them in the recovery position.\n4. Inject Prenoxad into a muscle - thigh or upper arm. Dose: 0.4mg (one mark) every 2-3 minutes, repeat until they are breathing normally, wake up, help arrives, or the syringe is empty.\n5. Stay with them until the ambulance arrives, and hand the used pack safely to the paramedics.\n\nAlso cover: CPR principles where appropriate, safe storage at home, and safe disposal of used needles.`,
         tip: "Naloxone wears off faster than opioids, so the person can slip back under - that is why the ambulance and staying with them both matter. Keep the pack out of reach of children and pets. Return for a replacement if used, lost or expired, and dispose of needles safely.",
       },
       {
         id: "record",
         title: "Record it on SystmOne",
-        content: `Record:\n\n- The identified risk of future opioid overdose (as agreed by MDT / substance misuse)\n- That valid, informed consent was given\n- Date the DHCFT training was completed, and with which nurse\n- Medication supplied, date, quantity, batch number and expiry\n- Advice given\n- "Supplied via Patient Group Direction (PGD)"\n\nAdd it to the patient's leave and discharge plans too.\n\nA ready-to-paste case note is in the orange box at the end of this guide - copy it and fill in the [brackets].`,
+        content: `Record:\n\n- The identified risk of future opioid overdose (as agreed by MDT / substance misuse)\n- That valid, informed consent was given\n- Date the DHCFT training was completed, and with which nurse\n- Medication supplied, date, quantity, batch number and expiry\n- Advice given\n- "Supplied via Patient Group Direction (PGD)" - record the supply itself on SystmOne ePMA\n\nAdd it to the patient's leave and discharge plans too.\n\nA ready-to-paste case note is in the orange box at the end of this guide - copy it and fill in the [brackets].`,
       },
       {
         id: "legal",

@@ -1219,7 +1219,24 @@ export default function ReportsPage() {
               </div>
             ) : (
               /* Table overview */
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-x-auto">
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
+                <div className="flex justify-end px-3 py-2 border-b border-gray-100 print-hide">
+                  <button
+                    onClick={() => {
+                      const allExpanded = sorted.length > 0 && sorted.every((s) => expandedRows.has(s.patient.id));
+                      setExpandedRows(allExpanded ? new Set() : new Set(sorted.map((s) => s.patient.id)));
+                    }}
+                    className="flex items-center gap-1.5 text-sm font-medium text-violet-600 hover:text-violet-800"
+                  >
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform ${
+                        sorted.length > 0 && sorted.every((s) => expandedRows.has(s.patient.id)) ? "rotate-180" : ""
+                      }`}
+                    />
+                    {sorted.length > 0 && sorted.every((s) => expandedRows.has(s.patient.id)) ? "Collapse all" : "Expand all"}
+                  </button>
+                </div>
+                <div className="overflow-x-auto">
                 <table className="w-full text-sm min-w-[720px]">
                   <thead>
                     <tr className="text-left text-[11px] font-mono uppercase tracking-wider text-gray-400 border-b border-gray-200">
@@ -1256,6 +1273,7 @@ export default function ReportsPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             )}
 

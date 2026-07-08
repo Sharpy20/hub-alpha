@@ -18,9 +18,10 @@ interface Row {
   category: PatientTaskCategory;
   priority: TaskPriority;
   guideId: string;
+  blocksDischarge: boolean;
 }
 
-const emptyRow = (): Row => ({ title: "", category: "referral", priority: "routine", guideId: "" });
+const emptyRow = (): Row => ({ title: "", category: "referral", priority: "routine", guideId: "", blocksDischarge: false });
 
 // Bulk patient-task entry: pick one patient, then add several tasks for them in a
 // table. Shared by the diary Add Task flow ("Add several") and the Patients page.
@@ -91,6 +92,7 @@ export function BulkPatientTasksModal({
         dueDate,
         carryOver: true,
         linkedGuideId: r.guideId || undefined,
+        blocksDischarge: r.blocksDischarge || undefined,
         createdAt: today,
         createdBy: currentUserName || "Current User",
         ...claim,
@@ -229,17 +231,18 @@ export function BulkPatientTasksModal({
             </div>
 
             {/* Column headers (desktop) */}
-            <div className="hidden sm:grid grid-cols-[1fr_140px_120px_160px_36px] gap-2 px-1 mb-1">
+            <div className="hidden sm:grid grid-cols-[1fr_130px_110px_150px_52px_36px] gap-2 px-1 mb-1">
               <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Task</span>
               <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Category</span>
               <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Priority</span>
               <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400">Guide (optional)</span>
+              <span className="text-[11px] font-mono uppercase tracking-wider text-gray-400 text-center" title="Barrier to discharge">🚧</span>
               <span />
             </div>
 
             <div className="space-y-2">
               {rows.map((row, i) => (
-                <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_140px_120px_160px_36px] gap-2 items-center">
+                <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_130px_110px_150px_52px_36px] gap-2 items-center">
                   <input
                     type="text"
                     value={row.title}
@@ -276,6 +279,21 @@ export function BulkPatientTasksModal({
                     placeholder="Link guide..."
                     className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm bg-white focus:border-indigo-500 focus:outline-none"
                   />
+                  <button
+                    type="button"
+                    onClick={() => updateRow(i, { blocksDischarge: !row.blocksDischarge })}
+                    aria-pressed={row.blocksDischarge}
+                    aria-label={`Barrier to discharge for task ${i + 1}`}
+                    title="Barrier to discharge"
+                    className={`justify-self-center sm:justify-self-stretch p-2.5 rounded-lg border-2 text-sm font-medium transition-all flex items-center justify-center gap-1 ${
+                      row.blocksDischarge
+                        ? "bg-amber-50 border-amber-400 text-amber-800"
+                        : "border-gray-200 text-gray-400 hover:bg-gray-50"
+                    }`}
+                  >
+                    <span className="sm:hidden">🚧 Barrier to discharge</span>
+                    <span className="hidden sm:inline">{row.blocksDischarge ? "🚧" : "○"}</span>
+                  </button>
                   <button
                     onClick={() => removeRow(i)}
                     disabled={rows.length <= 1}

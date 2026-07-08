@@ -1670,6 +1670,37 @@ Then open http://localhost:3000
 
 ---
 
+### 8 July 2026 - Session 35b (Risk tool: one RMP per domain) [parallel session]
+Reworked `/guides/risk-assessment` after Mike said it was over-complicated (it built
+a full question set + separate plan for **every ticked sub-domain**). Pushed, build
+clean (commit 75e1f94).
+
+- **One RMP per DOMAIN** now (up to 7), one formulation block per domain. The
+  13-question set attaches at domain level (`capByRisk[dm.id]`), not per sub-domain.
+- **"Requires own RMP" toggle** on each selected sub-domain AND clinical indicator
+  (amber "Separate plans (optional)" box). Off = folds into the domain plan; on =
+  spins its own RMP (formulation stays one-per-domain). New `DomainState.ownRmp[]`;
+  spin-off units keyed `${dm.id}::own::${label}`, reuse the single-risk capture.
+- **Merged, spaced chips:** a domain's ticked sub-domains' chip banks merge into one
+  question set as separate labelled groups (`mergeGroupsForRisks` +
+  `questionSectionForDomain`).
+- **Indicators now reach the deliverables** (they only hit the dead risk-screen block
+  before): `INDICATOR_BACKGROUND` map + `indicatorRoute()` in
+  `src/lib/data/welcome/risk-screen.ts` route **background** indicators -> formulation
+  "history", the rest -> RMP "early warning signs". Folded at generate time
+  (`foldChips`), shown in a blue transparency note (`renderFoldNote`).
+- **Formatting untouched** - reuses `buildOneRmp` (UPPERCASE name between two `====`
+  bars, no "RISK MANAGEMENT PLAN" label). New component-scoped
+  `buildFormulationText`/`buildRmpText`; old module-level `buildCombined*` deleted.
+- **Open for Mike** (`docs/homework-08-Jul-2026.md`): spot-check the
+  `INDICATOR_BACKGROUND` tag map; decide if folded indicators should be editable chips
+  vs the note; still RED, sign off to go green. Browser click-through not done (another
+  chat held the dev port) - verified via clean build + tsc + eslint.
+
+**Build Status:** All builds pass, tsc + eslint clean. Pushed to Vercel via Sharpy20.
+
+---
+
 *This file is maintained by Claude Code during development sessions.*
 
 ## Git & Deployment

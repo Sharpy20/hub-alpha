@@ -49,6 +49,7 @@ import {
 } from "@/components/modals";
 import { ConfirmDialog } from "@/components/ui";
 import { GuideSelect } from "@/components/ui/GuideSelect";
+import { guideLabel } from "@/lib/data/guides/catalog";
 
 // Helper functions – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {
@@ -1030,6 +1031,16 @@ function AddTaskModal({
 
   if (!isOpen) return null;
 
+  // Pick a guide; if the Task Title is still blank, pre-fill it from the guide
+  // name (still editable) as a time saver.
+  const pickGuide = (setter: (id: string) => void) => (id: string) => {
+    setter(id);
+    if (id && !title.trim()) {
+      const label = guideLabel(id);
+      if (label) setTitle(label);
+    }
+  };
+
   const handleSubmit = () => {
     if (!title.trim()) return;
 
@@ -1400,7 +1411,7 @@ function AddTaskModal({
                   <div className="p-3 border-t border-gray-200 bg-gray-50">
                     <GuideSelect
                       value={apptLinkedReferral}
-                      onChange={setApptLinkedReferral}
+                      onChange={pickGuide(setApptLinkedReferral)}
                       suggestFrom={title}
                       placeholder="Select referral..."
                       className="w-full p-2 border border-gray-200 rounded-lg text-sm focus:border-indigo-500 focus:outline-none"
@@ -1429,7 +1440,7 @@ function AddTaskModal({
                   <div className="p-3 border-t border-gray-200 bg-gray-50">
                     <GuideSelect
                       value={apptLinkedGuide}
-                      onChange={setApptLinkedGuide}
+                      onChange={pickGuide(setApptLinkedGuide)}
                       suggestFrom={title}
                       placeholder="Select guide..."
                       className="w-full p-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-500 focus:outline-none"
@@ -1742,7 +1753,7 @@ function AddTaskModal({
             </label>
             <GuideSelect
               value={linkedReferral}
-              onChange={setLinkedReferral}
+              onChange={pickGuide(setLinkedReferral)}
               suggestFrom={title}
               className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
             />
@@ -1757,7 +1768,7 @@ function AddTaskModal({
             </label>
             <GuideSelect
               value={linkedGuide}
-              onChange={setLinkedGuide}
+              onChange={pickGuide(setLinkedGuide)}
               suggestFrom={title}
               className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
             />

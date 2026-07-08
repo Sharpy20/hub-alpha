@@ -29,6 +29,12 @@ export function guideType(id: string): string {
   return GUIDE_TYPE[id] || (WORKFLOWS[id] ? "Step-by-step" : "How-to");
 }
 
+// A guide's display title from its id (empty string if unknown). Used to
+// pre-fill a task's title from the guide it links to.
+export function guideLabel(id: string): string {
+  return ALL_GUIDES.find((g) => g.id === id)?.title || "";
+}
+
 // All guides grouped by category - this order drives the page (when no custom
 // editor order is saved). Categories render in first-seen order.
 export const ALL_GUIDES: GuideItem[] = [

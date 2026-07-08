@@ -12,6 +12,7 @@ import {
 import { getActivePatientsByWard } from "@/lib/data/tasks";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { GuideSelect } from "@/components/ui/GuideSelect";
+import { guideLabel } from "@/lib/data/guides/catalog";
 
 interface Row {
   title: string;
@@ -274,7 +275,13 @@ export function BulkPatientTasksModal({
                   </select>
                   <GuideSelect
                     value={row.guideId}
-                    onChange={(id) => updateRow(i, { guideId: id })}
+                    onChange={(id) =>
+                      updateRow(i, {
+                        guideId: id,
+                        // Pre-fill a blank task title from the guide name (still editable)
+                        ...(id && !row.title.trim() ? { title: guideLabel(id) } : {}),
+                      })
+                    }
                     suggestFrom={row.title}
                     placeholder="Link guide..."
                     className="w-full p-2.5 border-2 border-gray-200 rounded-lg text-sm bg-white focus:border-indigo-500 focus:outline-none"

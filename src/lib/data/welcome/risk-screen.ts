@@ -232,6 +232,56 @@ export const CLINICAL_INDICATORS: Record<string, string[]> = {
   ],
 };
 
+// ---- Clinical-indicator routing (formulation vs RMP) -----------------------
+// The risk-assessment tool folds a ticked clinical indicator into the deliverables
+// automatically (nothing is lost). Indicators are a MIXED BAG: some are observable
+// current signs (early-warning material -> the RMP "how does this present"), others
+// are background/predisposing factors (history material -> the Formulation). The
+// sets below list the BACKGROUND indicators per domain; anything not listed defaults
+// to "present" (the RMP). Strings MUST match CLINICAL_INDICATORS exactly.
+//
+// MIKE: this is the spot-check list. To move an indicator, add/remove it from its
+// domain set here (background = goes to Formulation; not listed = goes to the RMP).
+export const INDICATOR_BACKGROUND: Record<string, string[]> = {
+  "self-harm": [
+    "Involvement with Criminal Justice/police", "Major Psychiatric Diagnosis",
+    "Believe no control over life", "Helplessness", "Effected by suicide of a significant other",
+    "Separated/ divorced/ widowed", "Unemployed/ retired", "Significant life events", "Trauma",
+    "Major Physical or life-threatening illness/disability", "Significant and constant pain",
+    "Financial Pressure/ worries",
+  ],
+  "self-neglect": [
+    "Living in inadequate accommodation", "Lacking basic amenities", "Pressure of eviction / repossession",
+    "Lack of positive social contacts", "Experiencing financial difficulties",
+  ],
+  "harm-to-others": [
+    "Male gender, under 35 years", "Known trigger factors", "Previous dangerous impulsive acts",
+    "Involvement in Criminal Justice", "Admission to secure settings",
+    "Denial or minimising of previous dangerous acts", "Person in contact with children and vulnerable people",
+    "Patient is carer and or parent",
+  ],
+  "harm-by-others": [
+    "Carer stress / burnout", "Patient is carer and or parent",
+  ],
+  "children": [
+    "Admission to inpatient setting", "Looked after child (Child in care of local authority)",
+    "Parental/Family/Carer significant psychiatric illness",
+    "Personal History of being a looked after child (child in care of local authority)",
+  ],
+  "environmental": [
+    "Language / communication issues", "Lack of social stimulation / activities",
+    "Shared living space, risk from cohabitee's", "Lack of adaptions", "Dangerous Living environment",
+    "Loss of home or eviction", "Inadequate staffing levels", "Inadequate staffing skill set",
+    "Lack of appropriate equipment /recourses/ care package", "Inappropriate environment",
+  ],
+};
+
+// Where a ticked clinical indicator flows: "formulation" (background) or "present"
+// (RMP early-warning signs, the default).
+export function indicatorRoute(domainId: string, indicator: string): "formulation" | "present" {
+  return (INDICATOR_BACKGROUND[domainId] || []).includes(indicator) ? "formulation" : "present";
+}
+
 // Observation levels (DHCFT Inpatient Therapeutic Observations & Engagement
 // Policy) - patient banner dropdown.
 export const OBS_LEVELS = [

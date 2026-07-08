@@ -27,10 +27,10 @@ import { Breadcrumb } from "@/components/ui";
 import {
   FORMULATION_SECTIONS, RMP_SECTIONS,
   RISK_TEACHING, RISK_EXAMPLES,
-  type RiskSection,
+  type RiskSection, type RiskChipGroup,
 } from "@/lib/data/guides/risk";
 import {
-  RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS,
+  RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, indicatorRoute,
 } from "@/lib/data/welcome/risk-screen";
 import {
   SectionEditor, buildOneRmp, formulationSectionForRisk,
@@ -56,12 +56,13 @@ interface DomainState {
   noEvidence: boolean; risks: string[]; // selected sub-domain labels
   customSubs: string[];                 // nurse-named extra sub-domains for this domain
   customIndicators: string[];           // nurse-named extra clinical indicators
+  ownRmp: string[];                     // sub-domains / indicators flagged "Requires own RMP"
   currentExamples: DatedExample[];
   historicalExamples: DatedExample[];
 }
 const emptyDomain = (): DomainState => ({
   indicators: "", indicatorList: [], safety: "", current: "", historical: "",
-  noEvidence: false, risks: [], customSubs: [], customIndicators: [], currentExamples: [], historicalExamples: [],
+  noEvidence: false, risks: [], customSubs: [], customIndicators: [], ownRmp: [], currentExamples: [], historicalExamples: [],
 });
 
 interface RiskRef { key: string; label: string; chipRisk: string }
@@ -108,6 +109,41 @@ function questionSectionFor(q: UnifiedQuestion, risk: string): RiskSection {
   else src = rmpSectionForRisk(R_SECTION(q.chip.id), risk);
   return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups: src.groups, examples: q.examples };
 }
+
+// Merge the chip banks of several ticked sub-domains into ONE domain question set
+// (decision 2 - merged, but each risk's chips kept as separate labelled groups).
+// The generic base groups are included once when any contributor has no tailored
+// chips; tailored groups are labelled with the sub-domain when there's more than one.
+function mergeGroupsForRisks(kind: "f" | "r", sectionId: string, chipRisks: { label: string; risk: string }[]): RiskChipGroup[] {
+  const base = kind === "f" ? F_SECTION(sectionId) : R_SECTION(sectionId);
+  const specifics: { label: string; groups: RiskChipGroup[] }[] = [];
+  const seen = new Set<string>();
+  let anyBaseOnly = false;
+  for (const { label, risk } of chipRisks) {
+    if (!risk || seen.has(risk)) { if (!risk) anyBaseOnly = true; continue; }
+    seen.add(risk);
+    const resolved = kind === "f" ? formulationSectionForRisk(base, risk) : rmpSectionForRisk(base, risk);
+    if (resolved === base) anyBaseOnly = true;             // no tailored chips for this risk
+    else specifics.push({ label, groups: resolved.groups });
+  }
+  const out: RiskChipGroup[] = [];
+  if (anyBaseOnly || !specifics.length) out.push(...base.groups);
+  const multi = specifics.length > 1;
+  for (const s of specifics) for (const g of s.groups) {
+    out.push(multi ? { label: g.label ? `${s.label} - ${g.label}` : s.label, words: g.words } : g);
+  }
+  return out;
+}
+
+// One domain-level question's display section, chips merged across its ticked
+// sub-domains. Generic questions keep their generic chips.
+function questionSectionForDomain(q: UnifiedQuestion, chipRisks: { label: string; risk: string }[]): RiskSection {
+  let groups: RiskChipGroup[];
+  if (q.chip.doc === "generic") groups = F_SECTION(q.chip.id).groups;
+  else if (!chipRisks.length) groups = (q.chip.doc === "f" ? F_SECTION(q.chip.id) : R_SECTION(q.chip.id)).groups;
+  else groups = mergeGroupsForRisks(q.chip.doc, q.chip.id, chipRisks);
+  return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups, examples: q.examples };
+}
 // Split one risk's unified answers into formulation-section and RMP-section states.
 function deriveForm(cap: AllState | undefined): AllState {
   const out: AllState = {};
@@ -121,42 +157,9 @@ function deriveRmp(cap: AllState | undefined): AllState {
   out["what"] = cap?.["q_seen"] || EMPTY;
   return out;
 }
-// ONE formulation covering all risks (SystmOne has a single formulation field),
-// with each risk as a sub-heading. Kept as one block so the nurse copies once.
-// (The RMPs stay separate per risk - trust rule.)
-// ONE formulation covering all risks. Each risk in double == bars (obvious where
-// it goes, so no "RISK FORMULATION" title), followed by the answers as flowing
-// prose - NOT the per-section headers (that read too much like the RMP).
-function buildCombinedFormulation(risks: RiskRef[], caps: Record<string, AllState>, patientName?: string): string {
-  const perRisk: string[] = [];
-  for (const r of risks) {
-    const secs = deriveForm(caps[r.key]);
-    const bodies = FORMULATION_SECTIONS.map((sec) => buildContent(secs[sec.id])).filter(Boolean);
-    if (!bodies.length) continue;
-    // Flowing prose, but grouped ~3 sentences per paragraph with a blank line
-    // between - readable, not one dense block, not a break after every section.
-    const paras: string[] = [];
-    for (let i = 0; i < bodies.length; i += 3) paras.push(bodies.slice(i, i + 3).join(" "));
-    perRisk.push([TXT_BAR, r.label, TXT_BAR, paras.join("\n\n")].join("\n"));
-  }
-  if (!perRisk.length) return "";
-  const head = patientName ? `Patient: ${patientName}\n\n` : "";
-  return head + perRisk.join("\n\n");
-}
-
-// ONE management-plan document - every plan (each headed by its sub-domain name
-// in == bars), in S1 domain order. Patient name once at the top.
-function buildCombinedRmp(risks: RiskRef[], caps: Record<string, AllState>, patientName?: string): string {
-  const plans: string[] = [];
-  for (const dm of RISK_DOMAINS) {
-    for (const r of risks.filter((x) => x.key.startsWith(`${dm.id}::`))) {
-      plans.push(buildOneRmp(r.key, deriveRmp(caps[r.key]), r.label));
-    }
-  }
-  if (!plans.length) return "";
-  const head = patientName ? `Patient: ${patientName}\n\n` : "";
-  return head + plans.join("\n\n");
-}
+// The combined formulation + RMP documents are built inside the component now
+// (buildFormulationText / buildRmpText) because they fold in the domain's ticked
+// clinical indicators and honour the per-item "Requires own RMP" toggles.
 const answered = (st?: SecState) => !!st && (st.chips.length > 0 || st.text.trim() !== "" || st.na || (st.examples || []).some((e) => e.text.trim()));
 
 const TXT_BAR = "========================================";
@@ -392,10 +395,23 @@ export default function RiskAssessmentPage() {
   const toggleSub = (domainId: string, label: string) => {
     const d = getDomain(domainId);
     const has = d.risks.includes(label);
-    setDomain(domainId, { ...d, noEvidence: false, risks: has ? d.risks.filter((r) => r !== label) : [...d.risks, label] });
-    if (!has) setOpenRisks((s) => new Set(s).add(`${domainId}::${label}`));
+    setDomain(domainId, {
+      ...d, noEvidence: false,
+      risks: has ? d.risks.filter((r) => r !== label) : [...d.risks, label],
+      ownRmp: has ? d.ownRmp.filter((x) => x !== label) : d.ownRmp, // dropping a sub-domain drops its own-plan flag
+    });
+    if (!has) setOpenRisks((s) => new Set(s).add(domainId)); // open the domain question set
   };
   const toggleOpenRisk = (key: string) => setOpenRisks((s) => { const n = new Set(s); if (n.has(key)) n.delete(key); else n.add(key); return n; });
+
+  // "Requires own RMP" - flag a selected sub-domain or clinical indicator so it
+  // spins off its OWN management plan (formulation stays one-per-domain).
+  const toggleOwnRmp = (domainId: string, label: string) => {
+    const d = getDomain(domainId);
+    const has = d.ownRmp.includes(label);
+    setDomain(domainId, { ...d, ownRmp: has ? d.ownRmp.filter((x) => x !== label) : [...d.ownRmp, label] });
+    if (!has) setOpenRisks((s) => new Set(s).add(`${domainId}::own::${label}`));
+  };
 
   // Add a nurse-named sub-domain to a domain: it becomes a selected risk with its
   // own (generic-chip) question set. Deduped against existing subs.
@@ -405,11 +421,11 @@ export default function RiskAssessmentPage() {
     const d = getDomain(domainId);
     if (d.customSubs.includes(name) || d.risks.includes(name)) return;
     setDomain(domainId, { ...d, noEvidence: false, customSubs: [...d.customSubs, name], risks: [...d.risks, name] });
-    setOpenRisks((s) => new Set(s).add(`${domainId}::${name}`));
+    setOpenRisks((s) => new Set(s).add(domainId));
   };
   const removeCustomSub = (domainId: string, name: string) => {
     const d = getDomain(domainId);
-    setDomain(domainId, { ...d, customSubs: d.customSubs.filter((x) => x !== name), risks: d.risks.filter((x) => x !== name) });
+    setDomain(domainId, { ...d, customSubs: d.customSubs.filter((x) => x !== name), risks: d.risks.filter((x) => x !== name), ownRmp: d.ownRmp.filter((x) => x !== name) });
   };
 
   // Add a nurse-named clinical indicator (added to the domain's chip set + selected).
@@ -422,7 +438,7 @@ export default function RiskAssessmentPage() {
   };
   const removeCustomIndicator = (domainId: string, name: string) => {
     const d = getDomain(domainId);
-    setDomain(domainId, { ...d, customIndicators: d.customIndicators.filter((x) => x !== name), indicatorList: d.indicatorList.filter((x) => x !== name) });
+    setDomain(domainId, { ...d, customIndicators: d.customIndicators.filter((x) => x !== name), indicatorList: d.indicatorList.filter((x) => x !== name), ownRmp: d.ownRmp.filter((x) => x !== name) });
   };
 
   const reset = () => {
@@ -456,15 +472,17 @@ export default function RiskAssessmentPage() {
   }, [domains]);
 
   const overallSummary = useMemo(() => {
-    if (!allRisks.length) return "";
-    const lines: string[] = [`Risks identified on screening: ${naturalList(allRisks.map((r) => r.label))}.`];
-    for (const r of allRisks) {
-      const present = buildContent(capByRisk[r.key]?.["q_seen"]);
-      const judge = buildContent(capByRisk[r.key]?.["q_judgement"]);
+    const pds = RISK_DOMAINS.filter((dm) => { const d = getDomain(dm.id); return isEngaged(d) && !d.noEvidence; });
+    if (!pds.length) return "";
+    const subs = pds.flatMap((dm) => getDomain(dm.id).risks);
+    const lines: string[] = subs.length ? [`Risks identified on screening: ${naturalList(subs)}.`] : [];
+    for (const dm of pds) {
+      const present = buildContent(capByRisk[dm.id]?.["q_seen"]);
+      const judge = buildContent(capByRisk[dm.id]?.["q_judgement"]);
       const bits = [present, judge].filter((x) => x && x !== "Not yet established.");
-      if (bits.length) lines.push(`${cap(r.label)}: ${ensureStop(bits.join(" "))}`);
+      if (bits.length) lines.push(`${cap(dm.short)}: ${ensureStop(bits.join(" "))}`);
     }
-    const inds = [...new Set(RISK_DOMAINS.flatMap((dm) => getDomain(dm.id).indicatorList))];
+    const inds = [...new Set(pds.flatMap((dm) => getDomain(dm.id).indicatorList))];
     if (inds.length) lines.push(`Clinical indicators noted: ${naturalList(inds)}.`);
     return lines.join(" ");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -488,6 +506,88 @@ export default function RiskAssessmentPage() {
   };
 
   const engagedDomains = RISK_DOMAINS.filter((dm) => isEngaged(getDomain(dm.id)));
+  // Domains that get a plan: engaged, and not signed off "no evidence".
+  const planDomains = engagedDomains.filter((dm) => !getDomain(dm.id).noEvidence);
+
+  // The ticked sub-domains that feed the DOMAIN plan (i.e. not spun off to their
+  // own RMP), mapped to their chip bank and deduped by risk.
+  const domainChipRisks = (dm: typeof RISK_DOMAINS[number]): { label: string; risk: string }[] => {
+    const st = getDomain(dm.id);
+    const out: { label: string; risk: string }[] = [];
+    const seen = new Set<string>();
+    for (const label of st.risks) {
+      if (st.ownRmp.includes(label)) continue;               // has its own plan
+      const risk = SUBTYPE_RISK[`${dm.id}::${label}`] || "";
+      if (!risk || seen.has(risk)) continue;
+      seen.add(risk);
+      out.push({ label, risk });
+    }
+    return out;
+  };
+  // Fallback chip bank for a spun-off clinical indicator (which has no mapping of
+  // its own) - use the domain's first mapped sub-domain.
+  const domainDefaultRisk = (dm: typeof RISK_DOMAINS[number]): string => {
+    for (const label of getDomain(dm.id).risks) {
+      const r = SUBTYPE_RISK[`${dm.id}::${label}`];
+      if (r) return r;
+    }
+    return "";
+  };
+  // Ticked indicators (not spun off) routed to a given destination.
+  const routedIndicators = (dm: typeof RISK_DOMAINS[number], route: "present" | "formulation"): string[] => {
+    const st = getDomain(dm.id);
+    return (st.indicatorList || []).filter((ind) => !st.ownRmp.includes(ind) && indicatorRoute(dm.id, ind) === route);
+  };
+  // Sub-domains / indicators the nurse flagged for their own separate RMP.
+  const spinUnitsFor = (dm: typeof RISK_DOMAINS[number]): RiskRef[] =>
+    getDomain(dm.id).ownRmp.map((label) => ({
+      key: `${dm.id}::own::${label}`,
+      label,
+      chipRisk: SUBTYPE_RISK[`${dm.id}::${label}`] || domainDefaultRisk(dm) || "",
+    }));
+
+  // Merge extra chip words into a section state (used to fold indicators in).
+  const foldChips = (sec: SecState | undefined, extra: string[]): SecState => {
+    const base = sec || EMPTY;
+    if (!extra.length) return base;
+    const chips = [...base.chips];
+    for (const w of extra) if (!chips.includes(w)) chips.push(w);
+    return { ...base, na: false, chips };
+  };
+
+  // ONE formulation, one block per domain (each in == bars, then flowing prose).
+  // Background clinical indicators fold into the "history" (predisposing) section.
+  const buildFormulationText = (): string => {
+    const perDomain: string[] = [];
+    for (const dm of planDomains) {
+      const secs = deriveForm(capByRisk[dm.id]);
+      secs["predisposing"] = foldChips(secs["predisposing"], routedIndicators(dm, "formulation"));
+      const bodies = FORMULATION_SECTIONS.map((sec) => buildContent(secs[sec.id])).filter(Boolean);
+      if (!bodies.length) continue;
+      const paras: string[] = [];
+      for (let i = 0; i < bodies.length; i += 3) paras.push(bodies.slice(i, i + 3).join(" "));
+      perDomain.push([TXT_BAR, dm.title, TXT_BAR, paras.join("\n\n")].join("\n"));
+    }
+    if (!perDomain.length) return "";
+    const head = patientName ? `Patient: ${patientName}\n\n` : "";
+    return head + perDomain.join("\n\n");
+  };
+
+  // ONE management-plan document: the domain plan first, then any spun-off plans,
+  // in S1 domain order. Presentation indicators fold into the domain plan's
+  // "how does this present". Format reuses buildOneRmp (== bars, unchanged).
+  const buildRmpText = (): string => {
+    const plans: string[] = [];
+    for (const dm of planDomains) {
+      const secs = deriveRmp(capByRisk[dm.id]);
+      secs["present"] = foldChips(secs["present"], routedIndicators(dm, "present"));
+      plans.push(buildOneRmp("", secs, dm.title));            // one plan per domain, titled by the domain
+      for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label));
+    }
+    if (!plans.length) return "";
+    const head = patientName ? `Patient: ${patientName}\n\n` : "";
+    return head + plans.join("\n\n");
+  };
 
   const fullScreenText = useMemo(() => {
     if (!engagedDomains.length && q8 === "") return "";
@@ -555,6 +655,53 @@ export default function RiskAssessmentPage() {
             </p>
             {UNIFIED_QUESTIONS.map((q) => (
               <SectionEditor key={q.id} section={questionSectionFor(q, r.chipRisk)} state={cGet(r.key, q.id)} onChange={(n) => cSet(r.key, q.id, n)} />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // A small transparency note: which flagged clinical indicators fold where.
+  const renderFoldNote = (dm: typeof RISK_DOMAINS[number]) => {
+    const pres = routedIndicators(dm, "present");
+    const bg = routedIndicators(dm, "formulation");
+    if (!pres.length && !bg.length) return null;
+    return (
+      <div className="rounded-lg border border-sky-200 bg-sky-50/60 p-2.5 text-xs text-sky-800 space-y-1">
+        <p className="flex items-center gap-1.5 font-semibold"><Info className="w-3.5 h-3.5 flex-shrink-0" /> Flagged clinical indicators are folded in automatically:</p>
+        {pres.length > 0 && <p><strong>Into the plan (early warning signs):</strong> {naturalList(pres)}.</p>}
+        {bg.length > 0 && <p><strong>Into the formulation (background):</strong> {naturalList(bg)}.</p>}
+        <p className="text-sky-700/80">Untick an indicator, or give it its own plan, to change where it lands.</p>
+      </div>
+    );
+  };
+
+  // The ONE question set for a whole domain - chips merged across its ticked
+  // sub-domains. Plain render function (not a nested component) to keep focus.
+  const renderDomainCapture = (dm: typeof RISK_DOMAINS[number]) => {
+    const key = dm.id;
+    const chipRisks = domainChipRisks(dm);
+    const open = openRisks.has(key);
+    const done = UNIFIED_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[key]?.[q.id]) ? 1 : 0), 0);
+    return (
+      <div key={key} className="rounded-xl border border-rose-200 bg-white">
+        <button
+          onClick={() => toggleOpenRisk(key)}
+          className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${open ? "bg-rose-600 text-white shadow-sm" : "bg-rose-50 text-rose-900 hover:bg-rose-100"}`}
+        >
+          <span className="font-bold text-sm flex-1">{dm.short} - whole-domain plan</span>
+          <span className={`text-[10px] ${open ? "text-rose-100" : "text-rose-600"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
+          {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-rose-400" />}
+        </button>
+        {open && (
+          <div className="p-3 space-y-2">
+            <p className="text-xs text-gray-500">
+              Answer these for the domain as a whole - it builds this domain&apos;s formulation and its single management plan.
+              The headings are added when you generate.
+            </p>
+            {UNIFIED_QUESTIONS.map((q) => (
+              <SectionEditor key={q.id} section={questionSectionForDomain(q, chipRisks)} state={cGet(key, q.id)} onChange={(n) => cSet(key, q.id, n)} />
             ))}
           </div>
         )}
@@ -662,10 +809,42 @@ export default function RiskAssessmentPage() {
           </div>
         )}
 
-        {st.risks.length > 0 && (
+        {/* "Requires own RMP" - selected sub-domains + indicators fold into the one
+            domain plan by default; tick any that need their OWN separate plan. */}
+        {!st.noEvidence && (st.risks.length > 0 || st.indicatorList.length > 0) && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-3 space-y-2">
+            <p className="text-[11px] font-mono uppercase tracking-wider text-amber-700">Separate plans (optional)</p>
+            <p className="text-xs text-gray-600">
+              Everything folds into this domain&apos;s <strong>single</strong> risk management plan. Tick anything that needs its <strong>own</strong> separate plan.
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {[...st.risks, ...st.indicatorList].map((label) => {
+                const on = st.ownRmp.includes(label);
+                return (
+                  <button key={label} onClick={() => toggleOwnRmp(dm.id, label)} aria-pressed={on}
+                    className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs border transition-all text-left ${on ? "bg-amber-600 border-amber-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-amber-300 hover:bg-amber-50"}`}>
+                    {on ? <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" /> : <Plus className="w-3.5 h-3.5 flex-shrink-0" />}{label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* The ONE domain question set. */}
+        {!st.noEvidence && (st.risks.length > 0 || st.indicatorList.length > 0 || st.current.trim() !== "" || st.historical.trim() !== "") && (
           <div className="space-y-2">
-            <p className="text-[11px] font-mono uppercase tracking-wider text-rose-700">Answer the questions for each risk</p>
-            {st.risks.map((label) => renderRiskCapture({ key: `${dm.id}::${label}`, label, chipRisk: SUBTYPE_RISK[`${dm.id}::${label}`] || "" }))}
+            <p className="text-[11px] font-mono uppercase tracking-wider text-rose-700">Answer the questions for this domain</p>
+            {renderFoldNote(dm)}
+            {renderDomainCapture(dm)}
+          </div>
+        )}
+
+        {/* Any spun-off separate plans get their own question set. */}
+        {spinUnitsFor(dm).length > 0 && (
+          <div className="space-y-2">
+            <p className="text-[11px] font-mono uppercase tracking-wider text-amber-700">Separate plans - answer each on its own</p>
+            {spinUnitsFor(dm).map((u) => renderRiskCapture(u))}
           </div>
         )}
       </div>
@@ -694,7 +873,7 @@ export default function RiskAssessmentPage() {
               <div>
                 <h1 className="text-3xl font-bold">Risk Screen, Formulation & Management Plan</h1>
                 <p className="text-white/80 mt-1">
-                  Work through the risk screen one area at a time. Answer the questions for each risk - it builds all three documents to copy across.
+                  Work through the risk screen one area at a time. Answer the questions for each domain - it builds all three documents to copy across.
                 </p>
               </div>
             </div>
@@ -728,7 +907,7 @@ export default function RiskAssessmentPage() {
                 <div className="grid sm:grid-cols-3 gap-2">
                   {[
                     { n: 1, icon: ShieldAlert, title: "Screen with the patient", body: "Work the seven SystmOne risk domains together, ticking what applies." },
-                    { n: 2, icon: ListChecks, title: "Answer the questions", body: "For each risk identified, answer a short set of plain questions in the patient's words." },
+                    { n: 2, icon: ListChecks, title: "Answer the questions", body: "For each domain, answer a short set of plain questions in the patient's words." },
                     { n: 3, icon: Sparkles, title: "Generate", body: "One click turns your answers into three documents to copy across." },
                   ].map((s) => (
                     <div key={s.n} className="rounded-lg bg-white border border-rose-100 p-3">
@@ -862,7 +1041,7 @@ export default function RiskAssessmentPage() {
                 This whole section is the SystmOne risk screen for this domain - fill it in on S1 as you go. Tick the
                 sub-domains and clinical indicators on SystmOne (or tick &quot;no evidence&quot; and move on), then type the
                 two narratives below and use their green <strong>Copy into S1</strong> boxes to paste each one across.
-                After that, answer the questions for each risk - that builds the formulation and management plan.
+                After that, answer the questions for the domain - that builds the formulation and management plan. Tick a sub-domain or indicator as &quot;requires own RMP&quot; only if it needs a separate plan.
               </p>
               {renderDomain(currentDomain!)}
             </>
@@ -961,18 +1140,18 @@ export default function RiskAssessmentPage() {
 
             {tab === "formulation" && (
               <div className="space-y-3">
-                {allRisks.length === 0 && <p className="text-sm text-gray-600 text-center py-4">Identify at least one risk to build a formulation.</p>}
-                <p className="text-xs text-gray-500">One formulation covering all risks - each risk in its own == block, then written up as prose. Copy it into the single SystmOne formulation field.</p>
-                <CopyField id="form-all" label="Formulation" text={buildCombinedFormulation(allRisks, capByRisk, patientName)} done={copied.has("form-all")} onToggle={toggleCopied} />
+                {!planDomains.length && <p className="text-sm text-gray-600 text-center py-4">Identify at least one risk to build a formulation.</p>}
+                <p className="text-xs text-gray-500">One formulation, one block per domain (in == bars), then written up as prose. Copy it into the single SystmOne formulation field.</p>
+                <CopyField id="form-all" label="Formulation" text={buildFormulationText()} done={copied.has("form-all")} onToggle={toggleCopied} />
                 {finalSummary && <CopyField id="form-summary" label="Overall formulation summary" text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />}
               </div>
             )}
 
             {tab === "rmp" && (
               <div className="space-y-3">
-                {allRisks.length === 0 && <p className="text-sm text-gray-600 text-center py-4">Identify at least one risk to build a management plan.</p>}
-                <p className="text-xs text-gray-500">Every management plan in one block, in domain order (a separate plan per risk, per trust guidance).</p>
-                <CopyField id="rmp-all" label="Management plans (all risks)" text={buildCombinedRmp(allRisks, capByRisk, patientName)} done={copied.has("rmp-all")} onToggle={toggleCopied} />
+                {!planDomains.length && <p className="text-sm text-gray-600 text-center py-4">Identify at least one risk to build a management plan.</p>}
+                <p className="text-xs text-gray-500">One plan per domain, in domain order. Anything you flagged &quot;requires own RMP&quot; follows its domain as a separate plan.</p>
+                <CopyField id="rmp-all" label="Management plans" text={buildRmpText()} done={copied.has("rmp-all")} onToggle={toggleCopied} />
               </div>
             )}
           </div>

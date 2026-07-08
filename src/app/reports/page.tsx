@@ -10,7 +10,7 @@ import {
   getTasksForPatient,
   getPatientsByWard,
 } from "@/lib/data/tasks";
-import { WARDS, Patient, DiaryTask } from "@/lib/types";
+import { WARDS, Patient, DiaryTask, TaskPriority, PRIORITY_CONFIG } from "@/lib/types";
 import { CareReviewRollup } from "@/components/reports/CareReviewRollup";
 import {
   FileText,
@@ -23,12 +23,75 @@ import {
   Mail,
   MessageSquare,
   ChevronUp,
+  ChevronDown,
   CheckCircle2,
   Home,
   User,
   ListTodo,
   Zap,
+  LayoutGrid,
+  Table as TableIcon,
+  Search,
+  ArrowUpDown,
+  X,
 } from "lucide-react";
+
+// Priority ranking + colours, shared by tiles and table so priority is visible
+// everywhere in a report (Mike: priority colour was not carrying across).
+const PRIORITY_RANK: Record<TaskPriority, number> = { urgent: 3, important: 2, routine: 1 };
+const PRIORITY_DOT: Record<TaskPriority, string> = {
+  urgent: "bg-red-500",
+  important: "bg-amber-500",
+  routine: "bg-emerald-400",
+};
+const PRIORITY_ROW: Record<TaskPriority, string> = {
+  urgent: "bg-red-50 border-red-200",
+  important: "bg-amber-50 border-amber-200",
+  routine: "bg-slate-50 border-slate-200",
+};
+
+// Due date from any task type
+const taskDueDate = (task: DiaryTask): string =>
+  task.type === "appointment" ? task.appointmentDate : task.dueDate;
+
+const isOutstanding = (t: DiaryTask) => t.status !== "completed" && t.status !== "cancelled";
+
+interface PatientSummary {
+  patient: Patient;
+  tasks: DiaryTask[];
+  total: number;
+  completed: number;
+  outstanding: number;
+  overdue: number;
+  inProgress: number;
+  barriers: number;
+  topPriority: TaskPriority | null;
+}
+
+function buildSummary(patient: Patient, tasks: DiaryTask[]): PatientSummary {
+  const completed = tasks.filter((t) => t.status === "completed").length;
+  const outstandingTasks = tasks.filter(isOutstanding);
+  const overdue = tasks.filter((t) => t.status === "overdue").length;
+  const inProgress = tasks.filter((t) => t.status === "in_progress").length;
+  const barriers = outstandingTasks.filter((t) => t.blocksDischarge).length;
+  let topPriority: TaskPriority | null = null;
+  for (const t of outstandingTasks) {
+    if (!topPriority || PRIORITY_RANK[t.priority] > PRIORITY_RANK[topPriority]) {
+      topPriority = t.priority;
+    }
+  }
+  return {
+    patient,
+    tasks,
+    total: tasks.length,
+    completed,
+    outstanding: outstandingTasks.length,
+    overdue,
+    inProgress,
+    barriers,
+    topPriority,
+  };
+}
 
 // Report scope options
 type ReportScope = "all_wards" | "single_ward" | "selected_patients";
@@ -55,36 +118,31 @@ const getWardDataName = (wardId: string): string => {
 
 // Patient Report Card Component - Minimal PII version (ward + name only)
 const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryTask[] }) => {
-  // Task statistics
-  const taskStats = useMemo(() => {
-    const completed = tasks.filter(t => t.status === "completed").length;
-    const outstanding = tasks.filter(t => t.status !== "completed").length;
-    return { completed, outstanding, total: tasks.length };
-  }, [tasks]);
+  const s = useMemo(() => buildSummary(patient, tasks), [patient, tasks]);
 
-  // Helper to get due date from any task type
-  const getTaskDueDate = (task: DiaryTask): string => {
-    if (task.type === "appointment") return task.appointmentDate;
-    return task.dueDate;
-  };
-
-  // Sort tasks: outstanding first (by due date), then completed
+  // Sort tasks: outstanding first (highest priority, then due date), then completed
   const sortedTasks = useMemo(() => {
     const outstandingTasks = tasks
-      .filter(t => t.status !== "completed")
-      .sort((a, b) => new Date(getTaskDueDate(a) || "").getTime() - new Date(getTaskDueDate(b) || "").getTime());
+      .filter(isOutstanding)
+      .sort((a, b) => {
+        const p = PRIORITY_RANK[b.priority] - PRIORITY_RANK[a.priority];
+        if (p !== 0) return p;
+        return new Date(taskDueDate(a) || "").getTime() - new Date(taskDueDate(b) || "").getTime();
+      });
     const completedTasks = tasks
-      .filter(t => t.status === "completed")
+      .filter((t) => t.status === "completed")
       .sort((a, b) => new Date(b.completedAt || "").getTime() - new Date(a.completedAt || "").getTime());
     return [...outstandingTasks, ...completedTasks];
   }, [tasks]);
 
   // Status color based on outstanding tasks
-  const statusColor = taskStats.outstanding > 3
+  const statusColor = s.barriers > 0
     ? "from-amber-500 to-orange-600"
-    : taskStats.outstanding > 0
+    : s.outstanding > 3
       ? "from-blue-500 to-indigo-600"
-      : "from-emerald-500 to-green-600";
+      : s.outstanding > 0
+        ? "from-blue-500 to-indigo-600"
+        : "from-emerald-500 to-green-600";
 
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow print-patient-card">
@@ -94,33 +152,44 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
           <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center print-hide">
             <User className="w-6 h-6" />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <h3 className="text-xl font-bold">{patient.name}</h3>
             <p className="text-white/80 text-sm">{patient.ward} Ward</p>
           </div>
+          {s.barriers > 0 && (
+            <span className="flex-shrink-0 bg-white/25 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap">
+              🚧 {s.barriers} barrier{s.barriers > 1 ? "s" : ""}
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Quick Stats Row - Simplified */}
-      <div className="grid grid-cols-3 gap-2 p-4 bg-gray-50 border-b border-gray-100 print-stats-row">
+      {/* Quick Stats Row */}
+      <div className="grid grid-cols-4 gap-2 p-4 bg-gray-50 border-b border-gray-100 print-stats-row">
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 text-gray-600">
             <ListTodo className="w-4 h-4 print-hide" />
-            <span className="text-xl font-bold">{taskStats.total}</span>
+            <span className="text-xl font-bold">{s.total}</span>
           </div>
           <p className="text-xs text-gray-500">Total</p>
         </div>
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 text-amber-600">
             <Clock className="w-4 h-4 print-hide" />
-            <span className="text-xl font-bold">{taskStats.outstanding}</span>
+            <span className="text-xl font-bold">{s.outstanding}</span>
           </div>
           <p className="text-xs text-gray-500">Outstanding</p>
         </div>
         <div className="text-center">
+          <div className="flex items-center justify-center gap-1 text-red-600">
+            <span className="text-xl font-bold">{s.overdue}</span>
+          </div>
+          <p className="text-xs text-gray-500">Overdue</p>
+        </div>
+        <div className="text-center">
           <div className="flex items-center justify-center gap-1 text-emerald-600">
             <CheckCircle2 className="w-4 h-4 print-hide" />
-            <span className="text-xl font-bold">{taskStats.completed}</span>
+            <span className="text-xl font-bold">{s.completed}</span>
           </div>
           <p className="text-xs text-gray-500">Done</p>
         </div>
@@ -130,34 +199,46 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
       <div className="p-4 print-task-list">
         <div className="space-y-2">
           {sortedTasks.length > 0 ? (
-            sortedTasks.map((task) => (
-              <div
-                key={task.id}
-                className={`flex items-center gap-3 p-3 rounded-lg border print-task-item ${
-                  task.status === "completed"
-                    ? "bg-emerald-50 border-emerald-100"
-                    : "bg-amber-50 border-amber-100"
-                }`}
-              >
-                {task.status === "completed" ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 print-hide" />
-                ) : (
-                  <Clock className="w-5 h-5 text-amber-500 flex-shrink-0 print-hide" />
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 print-truncate">
-                    {task.status === "completed" ? "✓ " : "○ "}{task.title}
-                  </p>
-                  <p className="text-xs text-gray-600 mt-0.5">
-                    {task.status === "completed" ? (
-                      <>Done: {task.completedBy || "Unknown"}</>
-                    ) : (
-                      <>Due: {getTaskDueDate(task) ? new Date(getTaskDueDate(task)).toLocaleDateString("en-GB") : "No date"}</>
-                    )}
-                  </p>
+            sortedTasks.map((task) => {
+              const done = task.status === "completed";
+              return (
+                <div
+                  key={task.id}
+                  className={`flex items-center gap-3 p-3 rounded-lg border print-task-item ${
+                    done ? "bg-emerald-50 border-emerald-100" : PRIORITY_ROW[task.priority]
+                  }`}
+                >
+                  {done ? (
+                    <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 print-hide" />
+                  ) : (
+                    <span
+                      className={`w-3 h-3 rounded-full flex-shrink-0 ${PRIORITY_DOT[task.priority]}`}
+                      title={`${PRIORITY_CONFIG[task.priority].label} priority`}
+                    />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-800 print-truncate">
+                      {done ? "✓ " : "○ "}{task.title}
+                      {!done && task.blocksDischarge && (
+                        <span className="ml-1.5 inline-flex items-center rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800 align-middle">
+                          🚧 blocks discharge
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-xs text-gray-600 mt-0.5">
+                      {done ? (
+                        <>Done: {task.completedBy || "Unknown"}</>
+                      ) : (
+                        <>
+                          {PRIORITY_CONFIG[task.priority].label} · Due:{" "}
+                          {taskDueDate(task) ? new Date(taskDueDate(task)).toLocaleDateString("en-GB") : "No date"}
+                        </>
+                      )}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <p className="text-sm text-gray-500 text-center py-4">No tasks recorded</p>
           )}
@@ -165,26 +246,122 @@ const PatientReportCard = ({ patient, tasks }: { patient: Patient; tasks: DiaryT
 
         {/* Status Summary */}
         <div className={`mt-4 p-3 rounded-xl print-summary ${
-          taskStats.outstanding > 3
+          s.outstanding > 3
             ? "bg-amber-50 border border-amber-100"
-            : taskStats.outstanding > 0
+            : s.outstanding > 0
               ? "bg-blue-50 border border-blue-100"
               : "bg-emerald-50 border border-emerald-100"
         }`}>
           <p className={`text-sm font-medium ${
-            taskStats.outstanding > 3
+            s.outstanding > 3
               ? "text-amber-700"
-              : taskStats.outstanding > 0
+              : s.outstanding > 0
                 ? "text-blue-700"
                 : "text-emerald-700"
           }`}>
-            {taskStats.outstanding > 0
-              ? `${taskStats.outstanding} task${taskStats.outstanding > 1 ? "s" : ""} outstanding`
+            {s.outstanding > 0
+              ? `${s.outstanding} task${s.outstanding > 1 ? "s" : ""} outstanding${s.barriers > 0 ? ` · ${s.barriers} blocking discharge` : ""}`
               : "All tasks completed"}
           </p>
         </div>
       </div>
     </div>
+  );
+};
+
+// Sortable column keys for the table overview
+type SortKey = "name" | "ward" | "priority" | "total" | "outstanding" | "overdue" | "barriers" | "completed";
+
+// Table overview row - patient summary, expandable to the task list
+const PatientTableRow = ({
+  summary,
+  expanded,
+  onToggle,
+}: {
+  summary: PatientSummary;
+  expanded: boolean;
+  onToggle: () => void;
+}) => {
+  const s = summary;
+  const pct = s.total > 0 ? Math.round((s.completed / s.total) * 100) : 0;
+  const sortedTasks = useMemo(() => {
+    const out = s.tasks.filter(isOutstanding).sort((a, b) => PRIORITY_RANK[b.priority] - PRIORITY_RANK[a.priority]);
+    const done = s.tasks.filter((t) => t.status === "completed");
+    return [...out, ...done];
+  }, [s.tasks]);
+
+  return (
+    <>
+      <tr className="border-b border-gray-100 hover:bg-violet-50/40">
+        <td className="py-2.5 px-3">
+          <button onClick={onToggle} className="flex items-center gap-2 text-left" aria-expanded={expanded}>
+            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform print-hide ${expanded ? "rotate-180" : ""}`} />
+            <span className="font-semibold text-gray-900">{s.patient.name}</span>
+          </button>
+        </td>
+        <td className="py-2.5 px-3 text-gray-600">{s.patient.ward}</td>
+        <td className="py-2.5 px-3">
+          {s.topPriority ? (
+            <span className="inline-flex items-center gap-1.5">
+              <span className={`w-2.5 h-2.5 rounded-full ${PRIORITY_DOT[s.topPriority]}`} />
+              <span className="text-gray-700">{PRIORITY_CONFIG[s.topPriority].label}</span>
+            </span>
+          ) : (
+            <span className="text-gray-400">-</span>
+          )}
+        </td>
+        <td className="py-2.5 px-3 text-center text-gray-700">{s.total}</td>
+        <td className="py-2.5 px-3 text-center font-medium text-amber-700">{s.outstanding}</td>
+        <td className="py-2.5 px-3 text-center font-medium text-red-600">{s.overdue || <span className="text-gray-300">0</span>}</td>
+        <td className="py-2.5 px-3 text-center">
+          {s.barriers > 0 ? (
+            <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
+              🚧 {s.barriers}
+            </span>
+          ) : (
+            <span className="text-gray-300">0</span>
+          )}
+        </td>
+        <td className="py-2.5 px-3">
+          <div className="flex items-center gap-2 min-w-[90px]">
+            <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${pct}%` }} />
+            </div>
+            <span className="text-xs text-gray-500 w-9 text-right">{pct}%</span>
+          </div>
+        </td>
+      </tr>
+      {expanded && (
+        <tr className="bg-gray-50/60">
+          <td colSpan={8} className="px-3 pb-3 pt-1">
+            <div className="space-y-1.5">
+              {sortedTasks.length === 0 && <p className="text-sm text-gray-400 py-1">No tasks recorded</p>}
+              {sortedTasks.map((task) => {
+                const done = task.status === "completed";
+                return (
+                  <div key={task.id} className="flex items-center gap-2 text-sm">
+                    {done ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    ) : (
+                      <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${PRIORITY_DOT[task.priority]}`} />
+                    )}
+                    <span className={done ? "text-gray-500 line-through" : "text-gray-800"}>{task.title}</span>
+                    {!done && task.blocksDischarge && (
+                      <span className="inline-flex items-center rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800">
+                        🚧 blocks discharge
+                      </span>
+                    )}
+                    <span className="text-xs text-gray-400 ml-auto">
+                      {done ? (task.completedBy || "done") : taskDueDate(task) ? new Date(taskDueDate(task)).toLocaleDateString("en-GB") : ""}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   );
 };
 
@@ -409,6 +586,106 @@ export default function ReportsPage() {
   const allActivePatients = useMemo(() => {
     return DEMO_PATIENTS.filter(p => p.status !== "discharged");
   }, []);
+
+  // View + filters for the generated report (tiles vs table overview)
+  const [viewMode, setViewMode] = useState<"tiles" | "table">("tiles");
+  const [search, setSearch] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState<"all" | TaskPriority>("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "outstanding" | "done">("all");
+  const [barriersOnly, setBarriersOnly] = useState(false);
+  const [overdueOnly, setOverdueOnly] = useState(false);
+  const [wardFilter, setWardFilter] = useState<string[]>([]); // empty = all wards in scope
+  const [sortKey, setSortKey] = useState<SortKey>("outstanding");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+
+  // Build a summary for every patient in the report scope
+  const summaries = useMemo(
+    () => reportPatients.map((p) => buildSummary(p, getTasksForPatient(p.id, tasks))),
+    [reportPatients, tasks]
+  );
+
+  // Wards present in this report (for the ward chips)
+  const scopeWards = useMemo(() => {
+    const set = new Set(summaries.map((s) => s.patient.ward));
+    return WARDS.filter((w) => set.has(getWardDataName(w.id)));
+  }, [summaries]);
+
+  // Apply filters
+  const filtered = useMemo(() => {
+    return summaries.filter((s) => {
+      if (search && !s.patient.name.toLowerCase().includes(search.toLowerCase())) return false;
+      if (wardFilter.length > 0 && !wardFilter.includes(s.patient.ward.toLowerCase())) return false;
+      if (barriersOnly && s.barriers === 0) return false;
+      if (overdueOnly && s.overdue === 0) return false;
+      if (statusFilter === "outstanding" && s.outstanding === 0) return false;
+      if (statusFilter === "done" && s.outstanding > 0) return false;
+      if (priorityFilter !== "all" && !s.tasks.some((t) => isOutstanding(t) && t.priority === priorityFilter)) return false;
+      return true;
+    });
+  }, [summaries, search, wardFilter, barriersOnly, overdueOnly, statusFilter, priorityFilter]);
+
+  // Sort (used by both views; tiles follow the same order)
+  const sorted = useMemo(() => {
+    const dir = sortDir === "asc" ? 1 : -1;
+    const val = (s: PatientSummary): number | string => {
+      switch (sortKey) {
+        case "name": return s.patient.name.toLowerCase();
+        case "ward": return s.patient.ward.toLowerCase();
+        case "priority": return s.topPriority ? PRIORITY_RANK[s.topPriority] : 0;
+        case "total": return s.total;
+        case "outstanding": return s.outstanding;
+        case "overdue": return s.overdue;
+        case "barriers": return s.barriers;
+        case "completed": return s.completed;
+      }
+    };
+    return [...filtered].sort((a, b) => {
+      const av = val(a); const bv = val(b);
+      if (typeof av === "string" && typeof bv === "string") return av.localeCompare(bv) * dir;
+      return ((av as number) - (bv as number)) * dir;
+    });
+  }, [filtered, sortKey, sortDir]);
+
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir(key === "name" || key === "ward" ? "asc" : "desc");
+    }
+  };
+
+  const toggleRow = (id: string) =>
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+
+  const activeFilterCount =
+    (search ? 1 : 0) + wardFilter.length + (barriersOnly ? 1 : 0) + (overdueOnly ? 1 : 0) +
+    (statusFilter !== "all" ? 1 : 0) + (priorityFilter !== "all" ? 1 : 0);
+
+  const clearFilters = () => {
+    setSearch(""); setWardFilter([]); setBarriersOnly(false); setOverdueOnly(false);
+    setStatusFilter("all"); setPriorityFilter("all");
+  };
+
+  // Roll-up stats reflect what is shown (after filters)
+  const rollup = useMemo(() => {
+    return filtered.reduce(
+      (acc, s) => {
+        acc.completed += s.completed;
+        acc.inProgress += s.inProgress;
+        acc.pending += s.tasks.filter((t) => t.status === "pending").length;
+        acc.overdue += s.overdue;
+        acc.barriers += s.barriers;
+        return acc;
+      },
+      { completed: 0, inProgress: 0, pending: 0, overdue: 0, barriers: 0 }
+    );
+  }, [filtered]);
 
   const togglePatientSelection = (patientId: string) => {
     setSelectedPatients((prev) =>
@@ -768,53 +1045,219 @@ export default function ReportsPage() {
                       ? `${WARDS.find(w => w.id === selectedWard)?.name || selectedWard}`
                       : "Selected Patients"}
                   </p>
-                  <p className="text-white/70">{reportPatients.length} patients</p>
+                  <p className="text-white/70">
+                    {filtered.length}{filtered.length !== reportPatients.length ? ` of ${reportPatients.length}` : ""} patients
+                  </p>
                 </div>
               </div>
 
-              {/* Summary Stats */}
-              <div className="grid grid-cols-4 gap-4 mt-6">
-                {(() => {
-                  const allTasks = reportPatients.flatMap(p => getTasksForPatient(p.id, tasks));
-                  const completed = allTasks.filter(t => t.status === "completed").length;
-                  const pending = allTasks.filter(t => t.status === "pending").length;
-                  const inProgress = allTasks.filter(t => t.status === "in_progress").length;
-                  const overdue = allTasks.filter(t => t.status === "overdue").length;
-
-                  return (
-                    <>
-                      <div className="bg-white/10 rounded-xl p-3 text-center">
-                        <p className="text-3xl font-bold">{completed}</p>
-                        <p className="text-white/70 text-sm">Completed</p>
-                      </div>
-                      <div className="bg-white/10 rounded-xl p-3 text-center">
-                        <p className="text-3xl font-bold">{inProgress}</p>
-                        <p className="text-white/70 text-sm">In Progress</p>
-                      </div>
-                      <div className="bg-white/10 rounded-xl p-3 text-center">
-                        <p className="text-3xl font-bold">{pending}</p>
-                        <p className="text-white/70 text-sm">Pending</p>
-                      </div>
-                      <div className="bg-white/10 rounded-xl p-3 text-center">
-                        <p className="text-3xl font-bold text-red-400">{overdue}</p>
-                        <p className="text-white/70 text-sm">Overdue</p>
-                      </div>
-                    </>
-                  );
-                })()}
+              {/* Summary Stats (reflect current filters) */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-6">
+                <div className="bg-white/10 rounded-xl p-3 text-center">
+                  <p className="text-3xl font-bold">{rollup.completed}</p>
+                  <p className="text-white/70 text-sm">Completed</p>
+                </div>
+                <div className="bg-white/10 rounded-xl p-3 text-center">
+                  <p className="text-3xl font-bold">{rollup.inProgress}</p>
+                  <p className="text-white/70 text-sm">In Progress</p>
+                </div>
+                <div className="bg-white/10 rounded-xl p-3 text-center">
+                  <p className="text-3xl font-bold">{rollup.pending}</p>
+                  <p className="text-white/70 text-sm">Pending</p>
+                </div>
+                <div className="bg-white/10 rounded-xl p-3 text-center">
+                  <p className="text-3xl font-bold text-red-400">{rollup.overdue}</p>
+                  <p className="text-white/70 text-sm">Overdue</p>
+                </div>
+                <div className="bg-white/10 rounded-xl p-3 text-center">
+                  <p className="text-3xl font-bold text-amber-300">🚧 {rollup.barriers}</p>
+                  <p className="text-white/70 text-sm">Barriers to discharge</p>
+                </div>
               </div>
             </div>
 
-            {/* Patient Cards Grid */}
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 print:grid-cols-2">
-              {reportPatients.map((patient) => (
-                <PatientReportCard
-                  key={patient.id}
-                  patient={patient}
-                  tasks={getTasksForPatient(patient.id, tasks)}
-                />
-              ))}
+            {/* Toolbar: view toggle + filters (hidden on print) */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-3 print-hide">
+              <div className="flex flex-wrap items-center gap-3">
+                {/* View toggle */}
+                <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
+                  <button
+                    onClick={() => setViewMode("tiles")}
+                    className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors ${
+                      viewMode === "tiles" ? "bg-violet-600 text-white" : "bg-white text-gray-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    <LayoutGrid className="w-4 h-4" /> Tiles
+                  </button>
+                  <button
+                    onClick={() => setViewMode("table")}
+                    className={`flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors ${
+                      viewMode === "table" ? "bg-violet-600 text-white" : "bg-white text-gray-600 hover:bg-gray-50"
+                    }`}
+                  >
+                    <TableIcon className="w-4 h-4" /> Table
+                  </button>
+                </div>
+
+                {/* Search */}
+                <div className="relative flex-1 min-w-[180px]">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search patient..."
+                    aria-label="Search patient"
+                    className="w-full pl-9 pr-3 py-2 border-2 border-gray-200 rounded-lg text-sm focus:border-violet-500 focus:outline-none"
+                  />
+                </div>
+
+                {/* Priority filter */}
+                <select
+                  value={priorityFilter}
+                  onChange={(e) => setPriorityFilter(e.target.value as "all" | TaskPriority)}
+                  aria-label="Filter by priority"
+                  className="px-3 py-2 border-2 border-gray-200 rounded-lg text-sm bg-white focus:border-violet-500 focus:outline-none"
+                >
+                  <option value="all">Any priority</option>
+                  <option value="urgent">🔴 Urgent</option>
+                  <option value="important">🟡 Important</option>
+                  <option value="routine">🟢 Routine</option>
+                </select>
+
+                {/* Status filter */}
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as "all" | "outstanding" | "done")}
+                  aria-label="Filter by status"
+                  className="px-3 py-2 border-2 border-gray-200 rounded-lg text-sm bg-white focus:border-violet-500 focus:outline-none"
+                >
+                  <option value="all">All patients</option>
+                  <option value="outstanding">Has outstanding</option>
+                  <option value="done">All done</option>
+                </select>
+
+                {/* Toggles */}
+                <button
+                  onClick={() => setBarriersOnly((v) => !v)}
+                  aria-pressed={barriersOnly}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+                    barriersOnly ? "bg-amber-50 border-amber-400 text-amber-800" : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  🚧 Barriers only
+                </button>
+                <button
+                  onClick={() => setOverdueOnly((v) => !v)}
+                  aria-pressed={overdueOnly}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+                    overdueOnly ? "bg-red-50 border-red-400 text-red-700" : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  Overdue only
+                </button>
+
+                {activeFilterCount > 0 && (
+                  <button
+                    onClick={clearFilters}
+                    className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-800"
+                  >
+                    <X className="w-4 h-4" /> Clear ({activeFilterCount})
+                  </button>
+                )}
+              </div>
+
+              {/* Ward chips (only when the report spans more than one ward) */}
+              {scopeWards.length > 1 && (
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Ward</span>
+                  {scopeWards.map((w) => {
+                    const on = wardFilter.includes(w.id);
+                    return (
+                      <button
+                        key={w.id}
+                        onClick={() => setWardFilter((prev) => (on ? prev.filter((x) => x !== w.id) : [...prev, w.id]))}
+                        className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+                          on ? "bg-violet-600 text-white border-violet-600" : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        {w.name.replace(" Ward", "")}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Priority legend */}
+              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 pt-1">
+                <span className="font-medium text-gray-400 uppercase tracking-wider">Priority</span>
+                {(["urgent", "important", "routine"] as TaskPriority[]).map((p) => (
+                  <span key={p} className="flex items-center gap-1.5">
+                    <span className={`w-2.5 h-2.5 rounded-full ${PRIORITY_DOT[p]}`} />
+                    {PRIORITY_CONFIG[p].label}
+                  </span>
+                ))}
+                <span className="flex items-center gap-1">🚧 Barrier to discharge</span>
+              </div>
             </div>
+
+            {filtered.length === 0 ? (
+              <div className="bg-white rounded-xl border border-gray-100 p-10 text-center text-gray-500">
+                No patients match the current filters.
+                {activeFilterCount > 0 && (
+                  <button onClick={clearFilters} className="ml-2 text-violet-600 font-medium hover:underline">
+                    Clear filters
+                  </button>
+                )}
+              </div>
+            ) : viewMode === "tiles" ? (
+              /* Patient Cards Grid */
+              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 print:grid-cols-2">
+                {sorted.map((s) => (
+                  <PatientReportCard key={s.patient.id} patient={s.patient} tasks={s.tasks} />
+                ))}
+              </div>
+            ) : (
+              /* Table overview */
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-x-auto">
+                <table className="w-full text-sm min-w-[720px]">
+                  <thead>
+                    <tr className="text-left text-[11px] font-mono uppercase tracking-wider text-gray-400 border-b border-gray-200">
+                      {([
+                        { key: "name", label: "Patient", align: "left" },
+                        { key: "ward", label: "Ward", align: "left" },
+                        { key: "priority", label: "Top priority", align: "left" },
+                        { key: "total", label: "Total", align: "center" },
+                        { key: "outstanding", label: "Outstanding", align: "center" },
+                        { key: "overdue", label: "Overdue", align: "center" },
+                        { key: "barriers", label: "Barriers", align: "center" },
+                        { key: "completed", label: "Progress", align: "left" },
+                      ] as { key: SortKey; label: string; align: string }[]).map((col) => (
+                        <th key={col.key} className={`py-2.5 px-3 ${col.align === "center" ? "text-center" : "text-left"}`}>
+                          <button
+                            onClick={() => toggleSort(col.key)}
+                            className={`inline-flex items-center gap-1 hover:text-gray-700 ${sortKey === col.key ? "text-violet-600" : ""}`}
+                          >
+                            {col.label}
+                            <ArrowUpDown className="w-3 h-3" />
+                          </button>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sorted.map((s) => (
+                      <PatientTableRow
+                        key={s.patient.id}
+                        summary={s}
+                        expanded={expandedRows.has(s.patient.id)}
+                        onToggle={() => toggleRow(s.patient.id)}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
             {/* Report Footer */}
             <div className="text-center text-sm text-gray-500 py-4 print:py-2">

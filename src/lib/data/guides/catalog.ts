@@ -14,7 +14,7 @@ export interface GuideItem {
 // read-through "How-to"; referral workflows are "Step-by-step"; a few are
 // fill-and-copy "Builder"s, tick-list "Checklist"s, or "Tips" thinking guides.
 export const GUIDE_TYPE: Record<string, string> = {
-  "care-plan": "Builder", "risk-assessment": "Builder", "mental-state-exam": "Builder", "abc-chart": "Builder",
+  "care-plan": "Builder", "risk-assessment": "Builder", "mental-state-exam": "Builder",
   "mha-checker": "Checklist", "admission-checklist": "Checklist", "leave-discharge-transfer": "Checklist", "fridge-temps": "Checklist",
   "seclusion-support-plan": "Tips", "debrief": "Tips", "safety-plan": "Tips", "restraint-monitoring": "Tips", "observation-engagement": "Tips",
 };

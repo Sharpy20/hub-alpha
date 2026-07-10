@@ -86,6 +86,11 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] **Discharge-barrier flag on tasks (Optica-inspired, Mike 4 Jul)** - let staff mark a patient task "is this a discharge barrier? yes/no". Surfaces barriers clearly. STRATEGIC: this is the bridge that makes wardHub the ward-level capture layer feeding discharge-flow tools (e.g. Optica) upward - positions wardHub as complementary, not a rival. Full-build feature.
 - [ ] **Read-only MDT / external task view (Optica-inspired, Mike 4 Jul)** - give the wider MDT read-only visibility of a patient's tasks, and (with consent) external partners like social care/family - potentially via links to the patient's existing MS Teams MDT workspace (reuses infra, avoids building an auth layer). Full-build/PII; consent + lawful basis required (real PII sharing).
 - Strategic context for both: [[optica-governance-insight]] - the Optica demo showed the org WILL accept data-outside-S1 + external access when it is governance-wrapped (DCB0129, data-controller, DPIA). wardHub's approval path is the wrapper, not "store no data".
+- [ ] **Tasks: replace Delete with "Mark in error" (Mike, 10 Jul)** - remove the option to
+  delete a task entirely; instead a task can be marked "in error" (kept, flagged, excluded
+  from active views/counts). Audit-friendly: nothing silently disappears from the record.
+  Touches TaskDetailModal, diary/kanban actions, reports (exclude in-error), and needs an
+  `inError`/`markedInErrorBy` field on BaseTask. Full-build feature.
 
 ### Full E:\Hub source sweep (4 Jul) - gap check vs the 66 guides
 Cross-referenced every .docx/.pdf/.pptx across E:\Hub against the current guide catalogue. **Coverage is strong** - almost every clinical topic already has a guide, is tracked in Section A (referral form-wiring / new-guide-needed: autism, CAMHS, ECT, perinatal, day-services, DLT), or is a parked build (Red Folders, DST). Psychoeducation docs (PD types, Window of Tolerance, Abandonment) are already covered by the 23 patient-guides. **Genuine gaps found (source in hand, no guide):**
@@ -97,6 +102,30 @@ Cross-referenced every .docx/.pdf/.pptx across E:\Hub against the current guide 
 - Excluded (Mike's standing flag): **MAPPA** (`MAPPA_Policy...2025.docx`) - forensic-adjacent, parked/do-not-surface. Not guide material: AI policy, CQC leaflet, business-case/demo/dev-panel docs, DCB0129 clinical-safety docs, `from trust other example projects`.
 
 ---
+
+## J. Copilot agents - work-side queue (Mike, 10 Jul 2026)
+All done AT WORK in M365 Copilot / Teams, not in this repo. Context: [[focus-download-and-copilot-agents]] has the agent inventory + the Policy Checker retest that gates item 1.
+
+1. [ ] **Build the remaining agent(s)** - AFTER the Policy Checker retest confirms agents can
+   read the 472-policy Trust Policy Library. The un-built one's paste-ready instructions are in
+   `docs/nhs-ready/11-content-ownership-map.md`. Also still owed from that session: point the
+   Content Auditor's Knowledge at the library, delete the duplicate Directory Curator draft,
+   ditch the old Dec "Policy Navigator".
+2. [ ] **Guide Builder safety net** - add to the agent's instructions: when the source document
+   is data-heavy (long policy, many sections, lots of tables), the agent should ASK before
+   writing - something like "This source is data heavy. Would you like a standard guide
+   (5-9 short steps), a more comprehensive one, or both?" Pairs with the planned Template C
+   "Explainer / Learning guide" addition to `E:\Hub\Copilot-Guide-Builder-Kit.md` (longer
+   bodies, worked examples, glossary/FAQ steps, case note optional).
+3. [ ] **Teams: "Meet the agents" section** - once the agents are settled, add a page/section to
+   the wardHub MS Teams group explaining what each agent is and does, with the FULL instruction
+   prompts so anyone can copy and build their own. Write for someone who has never heard of a
+   Copilot agent: what an agent is, where Agent Builder lives (Teams > Copilot > Agent Builder,
+   or m365.cloud.microsoft - NOT the Teams-embedded chat), every settings toggle (e.g. "Search
+   all websites" on/off), what knowledge source each agent needs pointing at (e.g. the Trust
+   Policy Library URL) and how to attach it, plus what to expect on first run (fresh-source
+   ingestion lag). Source material: `E:\Hub\Copilot-Guide-Builder-Kit.md` +
+   `docs/nhs-ready/11-content-ownership-map.md`.
 
 ## MIKE'S HOMEWORK DUMP (4 Jul 2026 - captured, organised into A-E below)
 Full verbatim capture + per-guide notes + source-doc inventory: **`docs/homework-04-Jul-2026-dump.md`**.

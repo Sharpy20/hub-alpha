@@ -96,11 +96,11 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] **Discharge-barrier flag on tasks (Optica-inspired, Mike 4 Jul)** - let staff mark a patient task "is this a discharge barrier? yes/no". Surfaces barriers clearly. STRATEGIC: this is the bridge that makes wardHub the ward-level capture layer feeding discharge-flow tools (e.g. Optica) upward - positions wardHub as complementary, not a rival. Full-build feature.
 - [ ] **Read-only MDT / external task view (Optica-inspired, Mike 4 Jul)** - give the wider MDT read-only visibility of a patient's tasks, and (with consent) external partners like social care/family - potentially via links to the patient's existing MS Teams MDT workspace (reuses infra, avoids building an auth layer). Full-build/PII; consent + lawful basis required (real PII sharing).
 - Strategic context for both: [[optica-governance-insight]] - the Optica demo showed the org WILL accept data-outside-S1 + external access when it is governance-wrapped (DCB0129, data-controller, DPIA). wardHub's approval path is the wrapper, not "store no data".
-- [ ] **Tasks: replace Delete with "Mark in error" (Mike, 10 Jul)** - remove the option to
-  delete a task entirely; instead a task can be marked "in error" (kept, flagged, excluded
-  from active views/counts). Audit-friendly: nothing silently disappears from the record.
-  Touches TaskDetailModal, diary/kanban actions, reports (exclude in-error), and needs an
-  `inError`/`markedInErrorBy` field on BaseTask. Full-build feature.
+- [x] **Tasks: replace Delete with "Mark in error" (Mike, 10 Jul) - DONE same day (commit 06bec8a).**
+  `inError`/`markedInErrorBy`/`markedInErrorAt` on BaseTask; provider's `tasks` excludes in-error
+  (every view/count skips them automatically) + `allTasks` for audit; two-tap "Mark in error"
+  button in TaskDetailModal; repeating-task Delete now marks in error; Reports page gained a
+  collapsible "Tasks marked in error" audit section with one-click Restore. Verified end-to-end.
 
 ### Full E:\Hub source sweep (4 Jul) - gap check vs the 66 guides
 Cross-referenced every .docx/.pdf/.pptx across E:\Hub against the current guide catalogue. **Coverage is strong** - almost every clinical topic already has a guide, is tracked in Section A (referral form-wiring / new-guide-needed: autism, CAMHS, ECT, perinatal, day-services, DLT), or is a parked build (Red Folders, DST). Psychoeducation docs (PD types, Window of Tolerance, Abandonment) are already covered by the 23 patient-guides. **Genuine gaps found (source in hand, no guide):**

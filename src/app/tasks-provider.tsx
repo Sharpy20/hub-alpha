@@ -1,18 +1,24 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 import { DiaryTask } from "@/lib/types";
 import { ALL_DEMO_TASKS } from "@/lib/data/tasks";
 import { toLocalDateStr } from "@/lib/utils/date";
 
 interface TasksContextType {
+  // Tasks marked in error are excluded here, so every consumer's lists and
+  // counts skip them automatically. Use allTasks for audit views (Reports).
   tasks: DiaryTask[];
+  allTasks: DiaryTask[];
   setTasks: React.Dispatch<React.SetStateAction<DiaryTask[]>>;
   updateTask: (taskId: string, updates: Partial<DiaryTask>) => void;
   claimTask: (taskId: string, userName: string, steal?: boolean) => void;
   toggleComplete: (taskId: string, userName: string) => void;
   addTask: (task: DiaryTask) => void;
+  // Tasks are never deleted - marking in error keeps the record for audit.
+  markInError: (taskId: string, userName: string) => void;
+  restoreFromError: (taskId: string) => void;
 }
 
 const TasksContext = createContext<TasksContextType | null>(null);
@@ -118,15 +124,52 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     toast.success(`Added "${task.title}"`, { icon: "➕" });
   }, []);
 
+  const markInError = useCallback((taskId: string, userName: string) => {
+    const today = toLocalDateStr();
+    setTasks((prev) => {
+      const task = prev.find((t) => t.id === taskId);
+      if (!task) return prev;
+      setTimeout(() => {
+        toast.info(`Marked "${task.title}" in error - removed from active views. Restore it from Reports.`);
+      }, 0);
+      return prev.map((t) =>
+        t.id === taskId
+          ? { ...t, inError: true, markedInErrorBy: userName, markedInErrorAt: today }
+          : t
+      );
+    });
+  }, []);
+
+  const restoreFromError = useCallback((taskId: string) => {
+    setTasks((prev) => {
+      const task = prev.find((t) => t.id === taskId);
+      if (!task) return prev;
+      setTimeout(() => {
+        toast.success(`Restored "${task.title}" to active views`);
+      }, 0);
+      return prev.map((t) =>
+        t.id === taskId
+          ? { ...t, inError: undefined, markedInErrorBy: undefined, markedInErrorAt: undefined }
+          : t
+      );
+    });
+  }, []);
+
+  // Everything reading `tasks` skips marked-in-error records automatically.
+  const visibleTasks = useMemo(() => tasks.filter((t) => !t.inError), [tasks]);
+
   return (
     <TasksContext.Provider
       value={{
-        tasks,
+        tasks: visibleTasks,
+        allTasks: tasks,
         setTasks,
         updateTask,
         claimTask,
         toggleComplete,
         addTask,
+        markInError,
+        restoreFromError,
       }}
     >
       {children}

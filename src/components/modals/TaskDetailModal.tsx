@@ -6,6 +6,7 @@ import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import { DiaryTask, SHIFT_CONFIG, TASK_CATEGORY_CONFIG, PRIORITY_CONFIG } from "@/lib/types";
 import Link from "next/link";
 import { toasts, showInfo } from "@/lib/utils/toast";
+import { useTasks } from "@/app/tasks-provider";
 
 interface TaskDetailModalProps {
   isOpen: boolean;
@@ -28,7 +29,11 @@ export function TaskDetailModal({
   onToggleComplete,
   onUpdate,
 }: TaskDetailModalProps) {
+  const { markInError } = useTasks();
   const [isEditing, setIsEditing] = useState(false);
+  // Two-tap confirm for "Mark in error" - tasks are never deleted, this flags
+  // a wrongly-entered task and drops it from active views (restorable in Reports).
+  const [confirmingError, setConfirmingError] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedDescription, setEditedDescription] = useState("");
   const [editedPriority, setEditedPriority] = useState<"routine" | "important" | "urgent">("routine");
@@ -55,6 +60,7 @@ export function TaskDetailModal({
       // Set patient name
       setEditedPatientName((task.type === "patient" || task.type === "appointment") ? (task.patientName || "") : "");
       setIsEditing(false);
+      setConfirmingError(false);
     }
   }, [task]);
 
@@ -504,6 +510,30 @@ export function TaskDetailModal({
                   Take Over
                 </button>
               )}
+
+              {/* Mark in error - the audit-friendly "delete": the task is kept
+                  on the record but flagged and removed from every active view.
+                  Two taps to confirm; restore lives on the Reports page. */}
+              <button
+                onClick={() => {
+                  if (!confirmingError) {
+                    setConfirmingError(true);
+                    return;
+                  }
+                  markInError(task.id, currentUserName);
+                  onClose();
+                }}
+                onBlur={() => setConfirmingError(false)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                  confirmingError
+                    ? "bg-red-600 text-white hover:bg-red-700"
+                    : "border border-red-200 text-red-600 hover:bg-red-50"
+                }`}
+                title="Entered by mistake? Mark it in error - it is kept for audit but leaves all active views"
+              >
+                <AlertTriangle className="w-4 h-4" />
+                {confirmingError ? "Tap again to confirm" : "Mark in error"}
+              </button>
 
               {/* Complete/Reopen button */}
               <button

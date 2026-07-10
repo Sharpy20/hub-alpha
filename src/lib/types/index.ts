@@ -175,6 +175,11 @@ interface BaseTask {
   // the MDT can see at a glance what is holding a discharge up. Only surfaced
   // for patient tasks and appointments (a ward task cannot block a discharge).
   blocksDischarge?: boolean;
+  // Marked-in-error tasks stay on the record for audit but drop out of every
+  // active view and count (tasks are never deleted). Restore from Reports.
+  inError?: boolean;
+  markedInErrorBy?: string;
+  markedInErrorAt?: string;
 }
 
 // Ward Task - recurring shift tasks

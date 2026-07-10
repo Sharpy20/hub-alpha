@@ -34,6 +34,8 @@ import {
   Search,
   ArrowUpDown,
   X,
+  AlertTriangle,
+  RotateCcw,
 } from "lucide-react";
 
 // Priority ranking + colours, shared by tiles and table so priority is visible
@@ -555,7 +557,9 @@ const DeliveryConfigModal = ({
 
 export default function ReportsPage() {
   const { activeWard } = useApp();
-  const { tasks } = useTasks();
+  const { tasks, allTasks, restoreFromError } = useTasks();
+  const [showInError, setShowInError] = useState(false);
+  const inErrorTasks = allTasks.filter((t) => t.inError);
   const isMaxPlus = true;
 
   // State
@@ -1287,6 +1291,48 @@ export default function ReportsPage() {
               </p>
             </div>
           </>
+        )}
+
+        {/* Marked-in-error audit trail - tasks are never deleted; wrongly
+            entered ones are flagged and land here, restorable in one click.
+            Sits outside the report block so it is always visible. */}
+        {inErrorTasks.length > 0 && (
+          <div className="bg-white rounded-xl border border-red-200 overflow-hidden print:hidden mt-6">
+            <button
+              onClick={() => setShowInError(!showInError)}
+              className="w-full px-4 py-3 flex items-center justify-between bg-red-50 hover:bg-red-100 transition-colors"
+            >
+              <span className="flex items-center gap-2 font-semibold text-red-800">
+                <AlertTriangle className="w-4 h-4" />
+                Tasks marked in error ({inErrorTasks.length})
+              </span>
+              {showInError ? <ChevronUp className="w-4 h-4 text-red-600" /> : <ChevronDown className="w-4 h-4 text-red-600" />}
+            </button>
+            {showInError && (
+              <div className="divide-y divide-gray-100">
+                <p className="px-4 py-2 text-xs text-gray-500">
+                  Tasks are never deleted. These were marked as entered in error and are excluded from every view and count. Restore one if it was flagged by mistake.
+                </p>
+                {inErrorTasks.map((t) => (
+                  <div key={t.id} className="px-4 py-2.5 flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium text-gray-800 truncate">{t.title}</p>
+                      <p className="text-xs text-gray-500">
+                        {t.type === "appointment" ? "Appointment" : t.type === "patient" ? "Patient task" : "Ward task"} · {t.ward} · marked by {t.markedInErrorBy || "unknown"} on {t.markedInErrorAt || "unknown date"}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => restoreFromError(t.id)}
+                      className="shrink-0 px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors flex items-center gap-1.5"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      Restore
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         )}
       </div>
 

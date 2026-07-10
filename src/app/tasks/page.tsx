@@ -1948,8 +1948,8 @@ function RepeatWardTasksModal({
                           <button
                             onClick={() => onDeleteTask(task.id)}
                             className="p-2 hover:bg-red-100 rounded-lg transition-colors"
-                            title="Delete task"
-                            aria-label="Delete task"
+                            title="Mark in error (kept for audit, removed from future dates)"
+                            aria-label="Mark task in error"
                           >
                             <Trash2 className="w-4 h-4 text-red-500" />
                           </button>
@@ -2389,7 +2389,7 @@ function TasksPageInner() {
   const isMyDiaryMode = searchParams.get("view") === "my-diary";
   const link = useV2Href();
   const { user, activeWard } = useApp();
-  const { tasks, setTasks, claimTask, toggleComplete, updateTask, addTask } = useTasks();
+  const { tasks, setTasks, claimTask, toggleComplete, updateTask, addTask, markInError } = useTasks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const columnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -2578,14 +2578,15 @@ function TasksPageInner() {
     setShowRepeatTasksModal(false);
   };
 
-  // Handle deleting a repeat task
+  // Repeating tasks are never deleted - marking in error keeps the record for
+  // audit while removing it from all future dates and counts (restore in Reports).
   const handleDeleteRepeatTask = (taskId: string) => {
     setDeleteConfirm({ isOpen: true, taskId });
   };
 
   const confirmDeleteRepeatTask = () => {
     if (deleteConfirm.taskId) {
-      setTasks((prev) => prev.filter((t) => t.id !== deleteConfirm.taskId));
+      markInError(deleteConfirm.taskId, user?.name || "Unknown");
     }
     setDeleteConfirm({ isOpen: false, taskId: null });
   };
@@ -3094,13 +3095,13 @@ function TasksPageInner() {
         />
       )}
 
-      {/* Delete Confirmation Dialog */}
+      {/* Mark-in-error Confirmation Dialog (tasks are never deleted) */}
       <ConfirmDialog
         isOpen={deleteConfirm.isOpen}
-        title="Delete Repeating Task?"
-        message="This will permanently remove this repeating task from all future dates. This action cannot be undone."
+        title="Mark Repeating Task In Error?"
+        message="This removes the task from all future dates and counts. The record is kept for audit and can be restored from the Reports page."
         variant="danger"
-        confirmLabel="Delete"
+        confirmLabel="Mark in error"
         cancelLabel="Cancel"
         onConfirm={confirmDeleteRepeatTask}
         onCancel={() => setDeleteConfirm({ isOpen: false, taskId: null })}

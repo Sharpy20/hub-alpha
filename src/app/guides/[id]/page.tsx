@@ -74,6 +74,13 @@ export default function UnifiedGuidePage() {
 
   const guideId = params.id as string;
 
+  // Legacy ids: the separate payslip and roster guides merged into the
+  // combined pay-roster guide (10 Jul 2026) - old links redirect there.
+  const legacyTarget = ({ payslip: "pay-roster", roster: "pay-roster" } as Record<string, string>)[guideId];
+  useEffect(() => {
+    if (legacyTarget) router.replace(link(`/guides/${legacyTarget}`));
+  }, [legacyTarget, router, link]);
+
   // Determine guide type
   const isReferral = !!WORKFLOWS[guideId];
   const workflow: WorkflowData = isReferral ? (WORKFLOWS[guideId] || DEFAULT_WORKFLOW) : DEFAULT_WORKFLOW;

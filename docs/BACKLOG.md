@@ -54,6 +54,16 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] **Postcode / GP-surgery lookup (Mike, 4 Jul)** - some teams allocate by **GP surgery location**, others by **home address**; build a checker that takes a postcode (and/or GP surgery) and tells you: Derby **City vs County**, which **AMHP team** to call, which **CMHT**, and the **S117 responsible authority**. Build it into the "which services are accessible" tool (this service map / town-map). **Data now fully in hand** (Part 1 of `_CONTACTS-INVENTORY.md`): every CMHT's complete GP-surgery list + numbers, the Derby City Team B/C split, and the city/county AMHP + social-care split. KEY RULE captured: CMHTs route by **registered GP surgery**; AMHP + social care route by **home address** (city vs county); S117 by authority-of-residence-when-sectioned. GP-surgery -> CMHT is a clean static table; city/county needs a postcode -> local-authority resolver (static boundary table for demo, or postcode API live - Rule: check before sending anything out).
 
 ## C. Guides - review + edits (from homework, condensed - see homework-remaining doc for detail)
+- [ ] **Update live payslip guide + hidden roster guide with the verified AfC facts (10 Jul)** -
+  mirror what the offline printables in `E:\Hub\printable-guides\` now have: the Band 5 rate
+  windows table (nights 20:00-06:00 + all Sat = +30%; all Sun + public holidays = +60%, not
+  stacked; lower bands higher), a new "whole-shift rule" step (TCS Handbook Section 2 England
+  para 2.11 - more than half a weekday shift in 20:00-06:00 = whole shift enhanced, verified
+  real + current), why one night shift feeds two payslip lines (midnight split), enhancements
+  pay ~a month in arrears, "AfC Absence" = average-enhancements top-up on leave (S13.9), and
+  overtime basics (1.5x / 2x public holidays, bands 1-7, part-time plain time to 37.5h, TOIL
+  3-month rule). Fictional figures ONLY. Roster guide is hidden (catalog line commented) but
+  update its data anyway so it is current whenever it returns.
 - [ ] Review-only sign-offs: ~47 amber guides for Mike to read + colour (green needs dept sign-off).
 - [~] Items needing Mike's docs/photos: **MOSTLY SUPPLIED 4 Jul** in `docs 1\` - see Sections F-I. Still blocked: MHA office email; social-care secure-email name; restraint holds images (Mike to photograph).
 - [ ] mh-talking-points: reorder/group + add alternative grounding/distraction techniques (needs Mike's steer on grouping).

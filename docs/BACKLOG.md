@@ -54,7 +54,7 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] **Postcode / GP-surgery lookup (Mike, 4 Jul)** - some teams allocate by **GP surgery location**, others by **home address**; build a checker that takes a postcode (and/or GP surgery) and tells you: Derby **City vs County**, which **AMHP team** to call, which **CMHT**, and the **S117 responsible authority**. Build it into the "which services are accessible" tool (this service map / town-map). **Data now fully in hand** (Part 1 of `_CONTACTS-INVENTORY.md`): every CMHT's complete GP-surgery list + numbers, the Derby City Team B/C split, and the city/county AMHP + social-care split. KEY RULE captured: CMHTs route by **registered GP surgery**; AMHP + social care route by **home address** (city vs county); S117 by authority-of-residence-when-sectioned. GP-surgery -> CMHT is a clean static table; city/county needs a postcode -> local-authority resolver (static boundary table for demo, or postcode API live - Rule: check before sending anything out).
 
 ## C. Guides - review + edits (from homework, condensed - see homework-remaining doc for detail)
-- [ ] **Update live payslip guide + hidden roster guide with the verified AfC facts (10 Jul)** -
+- [x] **Update live payslip guide + hidden roster guide with the verified AfC facts (10 Jul)** - DONE same day (commit e8a7833): payslip guide now 15 steps incl. para 2.11 whole-shift rule; roster guide data updated while hidden. Spec below kept for reference. -
   mirror what the offline printables in `E:\Hub\printable-guides\` now have: the Band 5 rate
   windows table (nights 20:00-06:00 + all Sat = +30%; all Sun + public holidays = +60%, not
   stacked; lower bands higher), a new "whole-shift rule" step (TCS Handbook Section 2 England
@@ -116,26 +116,23 @@ Cross-referenced every .docx/.pdf/.pptx across E:\Hub against the current guide 
 ## J. Copilot agents - work-side queue (Mike, 10 Jul 2026)
 All done AT WORK in M365 Copilot / Teams, not in this repo. Context: [[focus-download-and-copilot-agents]] has the agent inventory + the Policy Checker retest that gates item 1.
 
-1. [ ] **Build the remaining agent(s)** - AFTER the Policy Checker retest confirms agents can
-   read the 472-policy Trust Policy Library. The un-built one's paste-ready instructions are in
-   `docs/nhs-ready/11-content-ownership-map.md`. Also still owed from that session: point the
-   Content Auditor's Knowledge at the library, delete the duplicate Directory Curator draft,
-   ditch the old Dec "Policy Navigator".
-2. [ ] **Guide Builder safety net** - add to the agent's instructions: when the source document
-   is data-heavy (long policy, many sections, lots of tables), the agent should ASK before
-   writing - something like "This source is data heavy. Would you like a standard guide
-   (5-9 short steps), a more comprehensive one, or both?" Pairs with the planned Template C
-   "Explainer / Learning guide" addition to `E:\Hub\Copilot-Guide-Builder-Kit.md` (longer
-   bodies, worked examples, glossary/FAQ steps, case note optional).
-3. [ ] **Teams: "Meet the agents" section** - once the agents are settled, add a page/section to
-   the wardHub MS Teams group explaining what each agent is and does, with the FULL instruction
-   prompts so anyone can copy and build their own. Write for someone who has never heard of a
-   Copilot agent: what an agent is, where Agent Builder lives (Teams > Copilot > Agent Builder,
-   or m365.cloud.microsoft - NOT the Teams-embedded chat), every settings toggle (e.g. "Search
-   all websites" on/off), what knowledge source each agent needs pointing at (e.g. the Trust
-   Policy Library URL) and how to attach it, plus what to expect on first run (fresh-source
-   ingestion lag). Source material: `E:\Hub\Copilot-Guide-Builder-Kit.md` +
-   `docs/nhs-ready/11-content-ownership-map.md`.
+1. [x] **DONE 10 Jul (Claude via Mike's browser):** Policy Checker RETEST PASSED (2 questions,
+   verbatim quotes + citations from the Trust Policy Library - the 9 Jul zero-results were
+   ingestion lag as suspected). Content Auditor Knowledge pointed at the library and updated.
+   Duplicate "wardHub Directory Curator" draft DELETED. Old Dec "Policy Navigator" DELETED.
+   All 6 agents published and settled - no SharePoint-native fallback agent needed.
+   NOTE for Mike: wH Quiz Writer shows "Pending changes" in Agent Builder (an unfinished edit
+   of yours?) - open it and Update or discard.
+2. [x] **DONE 10 Jul:** Guide Builder safety net + TEMPLATE C (Explainer / Learning guide) added
+   to the LIVE agent instructions and published; same text added to
+   `E:\Hub\Copilot-Guide-Builder-Kit.md` so the take-to-work kit matches.
+3. [x] **DONE 10 Jul:** "Meet the wardHub AI agents" page PUBLISHED on the wardHub SharePoint
+   site: `https://nhs.sharepoint.com/sites/msteams_af07eb/SitePages/Meet-the-wardHub-AI-agents.aspx`
+   - what an agent is, where Agent Builder lives, 8-step build walkthrough, every toggle,
+   knowledge sources, ingestion-lag warning, and FULL verbatim instructions for all 6 agents.
+   Source of truth kept in repo: `docs/nhs-ready/12-meet-the-agents.md`.
+   STILL FOR MIKE: pin the page as a tab in a Teams channel if wanted (page is on the site,
+   not yet a tab), and give it a skim before pointing stakeholders at it.
 
 ## MIKE'S HOMEWORK DUMP (4 Jul 2026 - captured, organised into A-E below)
 Full verbatim capture + per-guide notes + source-doc inventory: **`docs/homework-04-Jul-2026-dump.md`**.

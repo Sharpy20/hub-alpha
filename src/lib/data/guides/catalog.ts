@@ -115,5 +115,9 @@ export const ALL_GUIDES: GuideItem[] = [
   // Learning & Development
   { id: "student-placement", title: "Student Nurse Placement Guide", description: "Welcome, first-day setup, ward routine and what's expected on a mental health inpatient placement", icon: "🎓", gradient: "from-blue-500 to-indigo-700", category: "Learning & Development", viewerPath: "/guides/student-placement" },
   { id: "payslip", title: "Understanding Your NHS Payslip", description: "How to read your ESR payslip, why enhancements look so strange, and a five-minute payday check", icon: "🧾", gradient: "from-green-600 to-emerald-800", category: "Learning & Development", viewerPath: "/guides/payslip" },
-  { id: "roster", title: "Roster Survival Guide", description: "How hours balances and TOIL work, what the roster is really used for, and the checks that stop pay and leave problems", icon: "📅", gradient: "from-indigo-500 to-violet-700", category: "Learning & Development", viewerPath: "/guides/roster" },
+  // HIDDEN for now (10 Jul 2026, Mike's call): the roster guide exists as an
+  // offline printable handout instead. Guide data + route still work - to bring
+  // it back on the site, uncomment this line and restore the payslip guide's
+  // `related` link to it in howto-guides.ts.
+  // { id: "roster", title: "Roster Survival Guide", description: "How hours balances and TOIL work, what the roster is really used for, and the checks that stop pay and leave problems", icon: "📅", gradient: "from-indigo-500 to-violet-700", category: "Learning & Development", viewerPath: "/guides/roster" },
 ];

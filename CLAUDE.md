@@ -1683,6 +1683,12 @@ Two new staff-life guides in Learning & Development, both red pending Mike's sig
   sickness explained in plain outcome terms, glossary added, jargon removed.
 - Both cross-link via `related`. Registered in GUIDE_CONFIG + GUIDES (howto-guides.ts),
   catalog.ts ALL_GUIDES, approval-status.ts (red).
+- **UPDATE (same day): roster guide HIDDEN from the site** (Mike's call) - catalog.ts entry
+  commented out + payslip's `related` link removed (restore both to bring it back; guide data
+  and /guides/roster route are intact but unlisted). Both guides also built as **offline
+  printable standalone handouts** (self-contained HTML, A4 print CSS, NHS-styled):
+  `E:\Hub\printable-guides\payslip-survival-guide.html` + `roster-survival-guide.html` -
+  deliberately OUTSIDE the repo so the roster one cannot deploy.
 
 ### 8 July 2026 - Session 35b (Risk tool: one RMP per domain) [parallel session]
 Reworked `/guides/risk-assessment` after Mike said it was over-complicated (it built

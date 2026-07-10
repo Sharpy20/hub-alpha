@@ -86,9 +86,8 @@ export const GUIDES: Record<string, GuideData> = {
     id: "payslip",
     title: "Understanding Your NHS Payslip",
     description: "How to read your ESR payslip, why enhancements look so strange, and a five-minute check to run every payday",
-    related: [
-      { label: "Roster Survival Guide", guideId: "roster" },
-    ],
+    // The roster guide is hidden from the site for now (printable handout only) -
+    // when it comes back, restore: related: [{ label: "Roster Survival Guide", guideId: "roster" }],
     steps: [
       {
         id: "why-check",

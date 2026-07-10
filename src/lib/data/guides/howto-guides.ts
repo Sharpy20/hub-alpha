@@ -17,6 +17,9 @@ export interface GuideData {
   // Optional custom case-note template for the end-of-guide orange copy box.
   // [DATE] is auto-filled; other [PLACEHOLDERS] are left for the nurse to edit.
   caseNote?: string;
+  // Set true to hide the case-note box entirely - for staff-life guides (payslip,
+  // roster) that will never be recorded against a patient.
+  noCaseNote?: boolean;
   // Other in-app guides worth linking to from this one (internal /guides links).
   related?: { label: string; guideId: string }[];
   // Printable / downloadable blank forms (public HTML in /public, e.g. a blank
@@ -86,6 +89,7 @@ export const GUIDES: Record<string, GuideData> = {
     id: "payslip",
     title: "Understanding Your NHS Payslip",
     description: "How to read your ESR payslip, why enhancements look so strange, and a five-minute check to run every payday",
+    noCaseNote: true,
     // The roster guide is hidden from the site for now (printable handout only) -
     // when it comes back, restore: related: [{ label: "Roster Survival Guide", guideId: "roster" }],
     steps: [
@@ -163,6 +167,7 @@ export const GUIDES: Record<string, GuideData> = {
     id: "roster",
     title: "Roster Survival Guide",
     description: "What the roster actually does, how hours balances and TOIL work, and the checks that stop pay and leave problems before they start",
+    noCaseNote: true,
     related: [
       { label: "Understanding Your NHS Payslip", guideId: "payslip" },
     ],

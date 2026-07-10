@@ -836,7 +836,9 @@ export default function UnifiedGuidePage() {
         {/* How-to: Completion actions (last step) */}
         {!isReferral && isComplete && (
           <div className="space-y-4">
-            {/* Case note copy */}
+            {/* Case note copy - suppressed for staff-life guides that are never
+                recorded against a patient (guide.noCaseNote) */}
+            {!guide.noCaseNote && (
             <div className="bg-white rounded-xl border-2 border-amber-200 overflow-hidden">
               <div className="bg-gradient-to-r from-amber-50 to-yellow-50 px-6 py-3 border-b border-amber-200">
                 <h3 className="font-bold text-gray-800 flex items-center gap-2"><Clipboard className="w-5 h-5 text-amber-600" /> Case Note Entry</h3>
@@ -854,6 +856,7 @@ export default function UnifiedGuidePage() {
                 </Button>
               </div>
             </div>
+            )}
 
             {/* Ward diary task - mark today's linked task complete (full build only) */}
             {!isV2 && linkedWardTask && (

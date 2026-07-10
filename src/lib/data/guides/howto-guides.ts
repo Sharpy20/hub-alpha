@@ -114,7 +114,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "enhancements",
         title: "Enhancements - the bit everyone finds confusing",
-        content: `Nights, weekends and bank holidays attract enhancements - for example around 30% for nights and Saturdays and 60% for Sundays and bank holidays (exact rates depend on your band, so check your own terms).\n\nHere is the catch: the payslip does NOT show a higher hourly rate.\n\nWhat staff expect to see: "£20 an hour plus 30% = £26 an hour."\nWhat ESR actually does: it converts the percentage into extra paid HOURS, then pays all of them at your normal rate.\n\nThe money works out the same. It just looks completely different on paper, and that difference causes more payslip queries than anything else.`,
+        content: `Unsocial hours enhancements under Agenda for Change. For Band 5, the national rates are:\n\n- Weekday nights (20:00 to 06:00) - time plus 30%\n- All Saturday hours (midnight to midnight) - time plus 30%\n- All Sunday hours (midnight to midnight) - time plus 60%\n- All public holiday hours (midnight to midnight) - time plus 60%\n\nLower bands get higher percentages (Band 2: 41% and 83%; Band 3: 35% and 69%). Bank holiday hours get the 60% rate on its own - enhancements are not stacked on top of each other.\n\nHere is the catch: the payslip does NOT show a higher hourly rate.\n\nWhat staff expect to see: "£20 an hour plus 30% = £26 an hour."\nWhat ESR actually does: it converts the percentage into extra paid HOURS, then pays all of them at your normal rate.\n\nThe money works out the same. It just looks completely different on paper, and that difference causes more payslip queries than anything else.`,
         tip: "Say it to yourself: enhancements do not boost your rate, they boost your hours.",
       },
       {
@@ -126,7 +126,18 @@ export const GUIDES: Record<string, GuideData> = {
         id: "self-check",
         title: "The self-check: PAID/DUE x RATE = AMOUNT",
         content: `Real payslips are messier than round numbers, but the same check always works. Take any enhancement line and multiply PAID/DUE by RATE - it should match AMOUNT to within a penny or two of rounding.\n\nExample with realistic numbers: 45.50 night hours at 30% gives 13.65 in PAID/DUE. Then 13.65 x £20.00 = £273.00 in AMOUNT. It matches, so the line is calculated correctly.\n\nTwo different problems, two different fixes:\n- The multiplication does not match the AMOUNT: that is a genuine calculation query for Payroll.\n- The multiplication matches but the HOURS look wrong: check your worked shifts against the roster first - the calculation is fine, the input might not be.`,
-        tip: "Shifts submitted late often pay a month behind. Check last month's roster before reporting hours as missing.",
+        tip: "Enhancements are usually paid a month in arrears - this month's payslip often carries last month's shifts. Check the right month's roster before reporting hours as missing.",
+      },
+      {
+        id: "whole-shift-rule",
+        title: "The whole-shift rule - the ward myth that is actually true",
+        content: `You may have heard "if most of your shift is at night, the whole shift gets the night rate". That is not folklore - it is paragraph 2.11 of Section 2 (England) of the NHS Terms and Conditions Handbook:\n\n"Where a continuous night shift or evening shift on a weekday (other than a public holiday) includes hours outside the period of 8 pm to 6 am, the enhancements... should be applied to the whole shift if more than half of the time falls between 8 pm and 6 am."\n\nIn plain English, for a WEEKDAY shift:\n- More than half of the shift falls between 20:00 and 06:00 - the WHOLE shift is enhanced, including the hours outside the window.\n- Half or less falls in the window - only the hours inside the window are enhanced.\n\nTwo examples:\n- Night shift 20:45 to 07:45 (10.5 paid hours): about 9 hours fall inside 20:00-06:00, well over half. All 10.5 hours are paid at the night rate, including 06:00-07:45.\n- Long day 07:30 to 20:30: only 30 minutes falls after 20:00, much less than half. Only 20:00-20:30 is enhanced; the rest is plain time.\n\nSaturdays, Sundays and public holidays do not need this rule - every hour of those days is enhanced anyway.`,
+        tip: "Night workers: your total enhanced hours for the month should equal your total worked hours - no plain-time slice at the start or end of a qualifying night shift. If a chunk shows as unenhanced, query it.",
+      },
+      {
+        id: "two-lines",
+        title: "Why one shift can feed two payslip lines",
+        content: `Enhancement lines are split by day type, and days change at midnight. So a single night shift often lands on two lines:\n\n- Friday night - hours before midnight go to Night Duty EN, hours after midnight go to Saturday EN\n- Saturday night - before midnight to Saturday EN, after midnight to Sunday EN\n- Sunday night - before midnight to Sunday EN, after midnight to Night Duty EN\n\nThis is why the hours on each enhancement line rarely match "number of shifts x shift length" line by line - but the TOTAL across all the enhancement lines should still add up to your enhanced hours for the month.`,
       },
       {
         id: "deductions",
@@ -141,6 +152,11 @@ export const GUIDES: Record<string, GuideData> = {
         tip: "Take-home dropped and you cannot see why? Compare the pension percentage on this payslip with last month's before ringing Payroll.",
       },
       {
+        id: "overtime-leave",
+        title: "Overtime, extra hours and annual leave pay",
+        content: `Overtime basics:\n- Overtime (beyond full-time hours) is paid at time and a half, and double time on public holidays. Bands 8a to 9 are not eligible for overtime payments.\n- Part-time staff get plain time for extra hours (plus any unsocial hours enhancement that applies) until they go over 37.5 hours in the week - the overtime premium only starts past that point.\n- Time off in lieu can be taken instead of overtime pay - and if it cannot be taken within three months, it must be paid at the overtime rate.\n\nAnnual leave pay includes your enhancements:\nPay during annual leave is calculated on what you would have received had you been at work - so it includes an average of your usual enhancements, not just basic pay. On many payslips this top-up shows as an "AfC Absence" line. If you work a lot of nights and weekends, that line doing its job is why your pay does not crash in a month with leave in it.`,
+      },
+      {
         id: "ytd",
         title: "Year to date - the section everyone skips",
         content: `The year-to-date block shows running totals since 6 April: gross pay, taxable pay, tax paid, pensionable pay, pension contributions.\n\nWhat it is actually for:\n- Spotting errors building up across the year rather than in one month\n- Confirming arrears or back pay really landed\n- Checking whether tax has self-corrected (it often does over a couple of months - the YTD figures show whether it actually has)\n- Comparing against your P60 in April`,
@@ -148,12 +164,12 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "glossary",
         title: "Common payslip lines - quick glossary",
-        content: `- Basic Pay - your contracted salary for the month\n- Night Duty EN / Saturday EN / Sunday EN / Bank Holiday ENH - enhancements, shown as extra paid hours at your normal rate\n- OT / Overtime - extra hours beyond your contract\n- Arrears - backdated pay or a correction from an earlier month\n- AfC Absence - an Agenda for Change absence-related adjustment (local use varies - ask Payroll if a line is unclear)\n- HCAS - high cost area supplement (London and fringe areas)\n- PAYE - income tax\n- NI - National Insurance\n- NHS Pension x% - your pension contribution at your current tier\n- Net Pay - what reaches your bank`,
+        content: `- Basic Pay - your contracted salary for the month\n- Night Duty EN / Saturday EN / Sunday EN / Bank Holiday ENH - enhancements, shown as extra paid hours at your normal rate\n- OT / Overtime - extra hours beyond your contract\n- Arrears - backdated pay or a correction from an earlier month\n- AfC Absence - usually the average-enhancements top-up that keeps leave and absence days paid at your normal level (local use can vary - ask Payroll if unclear)\n- HCAS - high cost area supplement (London and fringe areas)\n- PAYE - income tax\n- NI - National Insurance\n- NHS Pension x% - your pension contribution at your current tier\n- Net Pay - what reaches your bank`,
       },
       {
         id: "monthly-check",
         title: "The five-minute monthly check",
-        content: `Run this every payday:\n\n1. Top section right? Job title, contracted hours, tax code, assignment number.\n2. Basic Pay matches your band and hours (annual salary divided by 12).\n3. Enhancement hours match the shifts you actually worked - nights, weekends, bank holidays.\n4. On any line that looks odd: PAID/DUE x RATE = AMOUNT.\n5. Pension percentage is the same as last month, or the change is explainable.\n6. Net pay roughly makes sense against last month.\n\nIf all six pass, your payslip is almost certainly right.`,
+        content: `Run this every payday:\n\n1. Top section right? Job title, contracted hours, tax code, assignment number.\n2. Basic Pay matches your band and hours (annual salary divided by 12).\n3. Enhancement hours match the shifts you actually worked - nights, weekends, bank holidays (right month - remember the arrears lag).\n4. On any line that looks odd: PAID/DUE x RATE = AMOUNT.\n5. Night workers: whole-shift rule applied? Enhanced hours should cover whole qualifying shifts, not stop at 06:00.\n6. Pension percentage is the same as last month, or the change is explainable.\n7. Net pay roughly makes sense against last month.\n\nIf all seven pass, your payslip is almost certainly right.`,
       },
       {
         id: "something-wrong",
@@ -195,6 +211,12 @@ export const GUIDES: Record<string, GuideData> = {
         content: `The usual reasons:\n\n- Shifts were amended after publication\n- Additional hours were worked\n- Annual leave was added or changed\n- Sickness was recorded\n- Bank or overtime shifts were added\n- Your contracted hours changed\n\nContract changes are the tricky one. Roster weeks run Sunday to Saturday, so if your new hours start part-way through a week (say, a Wednesday), that split week may need a manual check. If your balance looks odd right after a contract change, that is almost certainly why - ask your manager or roster lead to walk through it.`,
       },
       {
+        id: "roster-to-payslip",
+        title: "How your shifts become payslip lines",
+        content: `Three things worth knowing before you ever compare the roster to a payslip:\n\n- Enhancements usually pay a month in arrears. This month's payslip often carries last month's shifts, so compare against the right month's roster.\n- Days change at midnight, so one night shift can feed two payslip lines. A Friday night puts its pre-midnight hours on the Night line and its post-midnight hours on the Saturday line. The per-line hours look odd; the total still adds up.\n- The whole-shift rule (weekdays): if more than half of a weekday shift falls between 20:00 and 06:00, the WHOLE shift attracts the night enhancement - including the early-morning tail after 06:00. That is national Agenda for Change terms (Section 2 para 2.11), not ward folklore.`,
+        tip: "The Understanding Your NHS Payslip guide covers the enhancement rates, worked examples and the line-by-line self-check.",
+      },
+      {
         id: "loop-habit",
         title: "Loop - the roster in your pocket",
         content: `Loop shows your roster, leave balances and hours balance, lets you request leave, and lists available bank shifts so you can pick them up without ringing round wards.\n\nThe real value is not the app - it is the habit. Five minutes a week:\n\n- Shifts correct for the next fortnight?\n- Leave balance accurate?\n- Sickness recorded properly?\n- Hours balance makes sense?\n\nAnything off, raise it that week while it is easy to trace.`,
@@ -224,7 +246,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "glossary",
         title: "Quick glossary",
-        content: `- TOIL - Time Off In Lieu: time the Trust owes you for hours worked over contract\n- Contracted (substantive) hours - the hours your permanent contract says you work\n- Hours balance / net hours - the running difference between contracted and rostered hours\n- Bank shift - an extra shift worked on top of your contract, paid separately\n- WTD - Working Time Directive: the safe-working law behind the 48-hour rule and rest rules\n- Roster week - runs Sunday to Saturday\n- Loop - the app for viewing your roster, leave and hours on your phone`,
+        content: `- TOIL - Time Off In Lieu: time the Trust owes you for hours worked over contract\n- Contracted (substantive) hours - the hours your permanent contract says you work\n- Hours balance / net hours - the running difference between contracted and rostered hours\n- Bank shift - an extra shift worked on top of your contract, paid separately\n- WTD - Working Time Directive: the safe-working law behind the 48-hour rule and rest rules\n- Roster week - runs Sunday to Saturday\n- Unsocial hours window - weekdays 20:00 to 06:00, plus all of Saturday, Sunday and public holidays: the times that attract pay enhancements\n- Loop - the app for viewing your roster, leave and hours on your phone`,
       },
       {
         id: "monthly-check",

@@ -114,13 +114,13 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "enhancements",
         title: "Enhancements - the bit everyone finds confusing",
-        content: `Unsocial hours enhancements under Agenda for Change. For Band 5, the national rates are:\n\n- Weekday nights (20:00 to 06:00) - time plus 30%\n- All Saturday hours (midnight to midnight) - time plus 30%\n- All Sunday hours (midnight to midnight) - time plus 60%\n- All public holiday hours (midnight to midnight) - time plus 60%\n\nLower bands get higher percentages (Band 2: 41% and 83%; Band 3: 35% and 69%). Bank holiday hours get the 60% rate on its own - enhancements are not stacked on top of each other.\n\nHere is the catch: the payslip does NOT show a higher hourly rate.\n\nWhat staff expect to see: "£20 an hour plus 30% = £26 an hour."\nWhat ESR actually does: it converts the percentage into extra paid HOURS, then pays all of them at your normal rate.\n\nThe money works out the same. It just looks completely different on paper, and that difference causes more payslip queries than anything else.`,
+        content: `Unsocial hours enhancements under Agenda for Change. The percentage depends on your band:\n\n- Weekday nights (20:00 to 06:00) and all Saturday hours: Band 2 = time plus 41%, Band 3 = time plus 35%, Bands 4 to 9 = time plus 30%\n- All Sunday and public holiday hours (midnight to midnight): Band 2 = time plus 83%, Band 3 = time plus 69%, Bands 4 to 9 = time plus 60%\n\nSo a Band 3 HCA gets 35% and 69%; a Band 5 nurse gets 30% and 60%. Bank holiday hours get their rate on its own - enhancements are not stacked on top of each other.\n\nThe formula: hours worked x enhancement rate = extra paid hours.\n\nHere is the catch: the payslip does NOT show a higher hourly rate.\n\nWhat staff expect to see: "£20 an hour plus 30% = £26 an hour."\nWhat ESR actually does: it converts the percentage into extra paid HOURS, then pays all of them at your normal rate.\n\nThe money works out the same. It just looks completely different on paper, and that difference causes more payslip queries than anything else.`,
         tip: "Say it to yourself: enhancements do not boost your rate, they boost your hours.",
       },
       {
         id: "worked-example",
         title: "Worked example with easy numbers",
-        content: `Say you work 10 night hours, the night enhancement is 30%, and your normal rate is £20:\n\n- 30% of 10 hours = 3 extra hours\n- 3 hours x £20 = £60 enhancement pay\n\nOn the payslip that line reads something like:\n\n- WKD/EARNED: 10.00 (the hours you actually worked)\n- PAID/DUE: 3.00 (the extra hours the percentage turned into)\n- RATE: £20.0000 (your normal rate - unchanged)\n- AMOUNT: £60.00\n\nThe rate never moved. The hours grew. That is the whole trick.`,
+        content: `Say you work 10 night hours, the night enhancement is 30%, and your normal rate is £20:\n\n- 30% of 10 hours = 3 extra hours\n- 3 hours x £20 = £60 enhancement pay\n\nOn the payslip that line reads something like:\n\n- WKD/EARNED: 10.00 (the hours you actually worked)\n- PAID/DUE: 3.00 (the extra hours the percentage turned into)\n- RATE: £20.0000 (your normal rate - unchanged)\n- AMOUNT: £60.00\n\nThe rate never moved. The hours grew. That is the whole trick.\n\nWork it out for yourself with the formula: 10 hours x 0.30 = 3 extra hours. At Band 3 the same shift gives 10 x 0.35 = 3.5 extra hours.`,
       },
       {
         id: "self-check",
@@ -174,7 +174,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "something-wrong",
         title: "If something looks wrong",
-        content: `Before you contact Payroll, write down:\n\n- The pay date\n- Your assignment number\n- The exact payslip line name (for example "Night Duty EN")\n- The four figures on that line: WKD/EARNED, PAID/DUE, RATE, AMOUNT\n- Why you think it is wrong\n\nA vague query gets a slow answer. An exact line with figures gets checked quickly.`,
+        content: `Before you contact Payroll, write down:\n\n- The pay date\n- Your assignment number\n- The exact payslip line name (for example "Night Duty EN")\n- The four figures on that line: WKD/EARNED, PAID/DUE, RATE, AMOUNT\n- Why you think it is wrong\n\nA vague query gets a slow answer. An exact line with figures gets checked quickly.\n\nErrors cut both ways: if you have been OVERPAID, the trust is within its rights to ask for that money back. Caught in month one the correction is small; left for six months, you are paying back six months' worth. The earlier it is raised, the easier it is on you.`,
         tip: "Raise it in the same pay period if you can - same-month corrections are the easiest kind.",
       },
     ],
@@ -211,6 +211,12 @@ export const GUIDES: Record<string, GuideData> = {
         content: `The usual reasons:\n\n- Shifts were amended after publication\n- Additional hours were worked\n- Annual leave was added or changed\n- Sickness was recorded\n- Bank or overtime shifts were added\n- Your contracted hours changed\n\nContract changes are the tricky one. Roster weeks run Sunday to Saturday, so if your new hours start part-way through a week (say, a Wednesday), that split week may need a manual check. If your balance looks odd right after a contract change, that is almost certainly why - ask your manager or roster lead to walk through it.`,
       },
       {
+        id: "owe-hours",
+        title: "Why do I owe hours when I am always at work?",
+        content: `A question staff ask a lot - and the answer is that additional paid hours, overtime shifts and bank shifts do NOT count towards your contracted hours, because those shifts are paid separately. So you can be working extra shifts and still owe contracted hours if your rostered hours have not been completed.\n\n- Check your hours balance regularly\n- Review your roster each week\n- Remember: bank and overtime shifts do not reduce owed contracted hours\n\nBeing busy at work does not always mean your contracted hours balance is correct - a quick check avoids surprises later.\n\nAnd do not take TOIL for granted either: a balance can change after the event if a shift was input wrong and gets corrected later. If you have already taken TOIL that turns out to be a roster error, you can be asked to work the time back. Query anything odd BEFORE using the time, not after.`,
+        tip: "Speak to your manager early if the balance does not look right - early queries are easy ones.",
+      },
+      {
         id: "roster-to-payslip",
         title: "How your shifts become payslip lines",
         content: `Three things worth knowing before you ever compare the roster to a payslip:\n\n- Enhancements usually pay a month in arrears. This month's payslip often carries last month's shifts, so compare against the right month's roster.\n- Days change at midnight, so one night shift can feed two payslip lines. A Friday night puts its pre-midnight hours on the Night line and its post-midnight hours on the Saturday line. The per-line hours look odd; the total still adds up.\n- The whole-shift rule (weekdays): if more than half of a weekday shift falls between 20:00 and 06:00, the WHOLE shift attracts the night enhancement - including the early-morning tail after 06:00. That is national Agenda for Change terms (Section 2 para 2.11), not ward folklore.`,
@@ -219,7 +225,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "loop-habit",
         title: "Loop - the roster in your pocket",
-        content: `Loop shows your roster, leave balances and hours balance, lets you request leave, and lists available bank shifts so you can pick them up without ringing round wards.\n\nThe real value is not the app - it is the habit. Five minutes a week:\n\n- Shifts correct for the next fortnight?\n- Leave balance accurate?\n- Sickness recorded properly?\n- Hours balance makes sense?\n\nAnything off, raise it that week while it is easy to trace.`,
+        content: `Loop shows your roster, leave balances and hours balance, lets you request leave, and lists available bank shifts so you can pick them up without ringing round wards.\n\nThe real value is not the app - it is the habit. Five minutes a week:\n\n- Shifts correct for the next fortnight?\n- LAST fortnight recorded right? (Shifts can be amended after the event if they were input wrong)\n- Leave balance accurate?\n- Sickness recorded properly?\n- Hours balance makes sense?\n\nAnything off, raise it that week while it is easy to trace.`,
       },
       {
         id: "sickness",
@@ -230,7 +236,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "leave-public-holidays",
         title: "Leave and public holidays",
-        content: `If you are off sick on a public holiday, you do not lose the day. It should be added back to your leave balance to take another time - that is what "adjusted in line with NHS Terms and Conditions" actually means. It can take a month or two to show, so do not panic if the balance has not moved yet.\n\nCheck your leave entitlement after any of these:\n\n- Long-term sickness\n- Sickness on a public holiday\n- A contract change\n- Carried-over leave\n- Service milestones (5 and 10 years bring extra entitlement)\n- Any manual amendment`,
+        content: `If you are off sick on a public holiday, you still receive sickness absence pay in line with NHS terms and conditions. But you do NOT build up public holiday hours for that day - so if public holiday entitlement forms part of your annual leave allowance, those hours come off your balance.\n\nExample: full-time with more than 10 years' service might be 247 hours annual leave plus 60 hours public holiday (307 total). Off sick on two bank holidays, the public holiday entitlement drops from 60 to 45 hours. Sickness pay itself is not affected - only the public holiday hours.\n\nCheck your leave entitlement after any of these:\n\n- Long-term sickness\n- Sickness on a public holiday\n- A contract change\n- Carried-over leave\n- Service milestones (5 and 10 years bring extra entitlement)\n- Any manual amendment`,
         tip: "If the entitlement calculation does not make sense, ask your manager to walk you through it - small adjustments are easy to miss.",
       },
       {
@@ -241,7 +247,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "48-hour-rule",
         title: "The 48-hour rule, made easy",
-        content: `The law limits working time to an average of 48 hours a week - averaged over a rolling 17-week period. One heavy week is not a breach on its own. You can choose to sign an opt-out if you want to work more; that is voluntary and entirely your choice.\n\nHow the averaging works (using 4 weeks to keep the maths simple - the real review period is 17 weeks):\n\n- Week 1: 55 hours\n- Week 2: 40 hours\n- Week 3: 34 hours\n- Week 4: 37.5 hours\n\nTotal 166.5 hours, divided by 4 = an average of 41.6 hours a week. Under 48, so no concern - even though week 1 on its own looked heavy.`,
+        content: `The law limits working time to an average of 48 hours a week over a rolling 17-week period. One heavy week is not a breach on its own. You can sign a voluntary opt-out if you want to work more than 48 hours in a given week - but the trust still monitors the rolling 17-week average for everyone, opt-out or not, because it is a fatigue and safe-working measure as much as a legal one.\n\nHow the averaging works (using 4 weeks to keep the maths simple - the real review period is 17 weeks):\n\n- Week 1: 55 hours\n- Week 2: 40 hours\n- Week 3: 34 hours\n- Week 4: 37.5 hours\n\nTotal 166.5 hours, divided by 4 = an average of 41.6 hours a week. Under 48, so no concern - even though week 1 on its own looked heavy.`,
       },
       {
         id: "glossary",
@@ -251,7 +257,7 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "monthly-check",
         title: "Your five-minute monthly check",
-        content: `Once a month, confirm:\n\n1. Shifts match what you actually worked\n2. Swaps and moves to other wards are recorded\n3. Leave balance is right\n4. Sickness dates are right\n5. Hours balance makes sense - and is heading towards 0:00\n6. Anything odd has been raised with your manager or roster lead\n\nMost roster problems are found by staff doing this check, not by the system flagging them.`,
+        content: `Once a month, confirm:\n\n1. Shifts match what you actually worked\n2. LAST month recorded right? Shifts can be amended after the event if input wrong\n3. Swaps and moves to other wards are recorded\n4. Leave balance is right\n5. Sickness dates are right\n6. Hours balance makes sense - and is heading towards 0:00\n7. Anything odd has been raised with your manager or roster lead\n\nMost roster problems are found by staff doing this check, not by the system flagging them.`,
         tip: "Write down the exact date and shift before raising a query - specific questions get quick answers.",
       },
     ],

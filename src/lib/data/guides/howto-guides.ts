@@ -70,6 +70,8 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   "student-placement": { icon: "🎓", gradient: "from-blue-500 to-indigo-700", category: "Learning & Development" },
   "no-smoking": { icon: "🚭", gradient: "from-red-600 to-orange-700", category: "Restrictive Practice" },
   "informal-patient-contract": { icon: "🤝", gradient: "from-sky-500 to-blue-700", category: "Nurse Tools" },
+  payslip: { icon: "🧾", gradient: "from-green-600 to-emerald-800", category: "Learning & Development" },
+  roster: { icon: "📅", gradient: "from-indigo-500 to-violet-700", category: "Learning & Development" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -80,6 +82,154 @@ export const GUIDE_WAGOLLS: Record<string, { label: string; url: string }[]> = {
 };
 
 export const GUIDES: Record<string, GuideData> = {
+  payslip: {
+    id: "payslip",
+    title: "Understanding Your NHS Payslip",
+    description: "How to read your ESR payslip, why enhancements look so strange, and a five-minute check to run every payday",
+    related: [
+      { label: "Roster Survival Guide", guideId: "roster" },
+    ],
+    steps: [
+      {
+        id: "why-check",
+        title: "Why check your payslip at all",
+        content: `Most pay problems are spotted by staff, not by Payroll. Five minutes after payday catches errors while they are still one month old and easy to fix.\n\nThe golden rule: if something does not look right, ask early. Waiting means figures get harder to unpick, and a small error can quietly repeat itself every month for the rest of the tax year.\n\nAll figures in this guide are examples with made-up round numbers. Rates, tax thresholds and pension bands change (usually each April), so always go by your own payslip and contract.`,
+        tip: "Check within a few days of payday, while the month's shifts are still fresh in your mind.",
+      },
+      {
+        id: "layout",
+        title: "Know the layout - five sections, top to bottom",
+        content: `Nearly every NHS payslip follows the same pattern:\n\n1. Your details - name, assignment number, job title, pay band, contracted hours, tax code, NI number.\n2. Pay and allowances - Basic Pay, plus a separate line for each enhancement, overtime and arrears payment.\n3. Deductions - tax, National Insurance, pension, and anything else taken off.\n4. Year to date - running totals since April.\n5. Net pay - what actually reaches your bank.\n\nIf the top section is wrong (hours, band, tax code), everything below it will be wrong too, so start there.`,
+        tip: "Your assignment number is the reference Payroll works from - quote it in every query.",
+      },
+      {
+        id: "basic-pay",
+        title: "Basic Pay - the anchor line",
+        content: `Basic Pay is your contracted annual salary divided by 12, before any enhancements or deductions. Everything else on the payslip is built on top of it.\n\nCheck it first. If your band, pay point or contracted hours changed recently, this is the line where it shows up - and where mistakes creep in.`,
+        tip: "Annual salary divided by 12. If that sum does not match the Basic Pay line, stop and query it before looking at anything else.",
+      },
+      {
+        id: "enhancements",
+        title: "Enhancements - the bit everyone finds confusing",
+        content: `Nights, weekends and bank holidays attract enhancements - for example around 30% for nights and Saturdays and 60% for Sundays and bank holidays (exact rates depend on your band, so check your own terms).\n\nHere is the catch: the payslip does NOT show a higher hourly rate.\n\nWhat staff expect to see: "£20 an hour plus 30% = £26 an hour."\nWhat ESR actually does: it converts the percentage into extra paid HOURS, then pays all of them at your normal rate.\n\nThe money works out the same. It just looks completely different on paper, and that difference causes more payslip queries than anything else.`,
+        tip: "Say it to yourself: enhancements do not boost your rate, they boost your hours.",
+      },
+      {
+        id: "worked-example",
+        title: "Worked example with easy numbers",
+        content: `Say you work 10 night hours, the night enhancement is 30%, and your normal rate is £20:\n\n- 30% of 10 hours = 3 extra hours\n- 3 hours x £20 = £60 enhancement pay\n\nOn the payslip that line reads something like:\n\n- WKD/EARNED: 10.00 (the hours you actually worked)\n- PAID/DUE: 3.00 (the extra hours the percentage turned into)\n- RATE: £20.0000 (your normal rate - unchanged)\n- AMOUNT: £60.00\n\nThe rate never moved. The hours grew. That is the whole trick.`,
+      },
+      {
+        id: "self-check",
+        title: "The self-check: PAID/DUE x RATE = AMOUNT",
+        content: `Real payslips are messier than round numbers, but the same check always works. Take any enhancement line and multiply PAID/DUE by RATE - it should match AMOUNT to within a penny or two of rounding.\n\nExample with realistic numbers: 45.50 night hours at 30% gives 13.65 in PAID/DUE. Then 13.65 x £20.00 = £273.00 in AMOUNT. It matches, so the line is calculated correctly.\n\nTwo different problems, two different fixes:\n- The multiplication does not match the AMOUNT: that is a genuine calculation query for Payroll.\n- The multiplication matches but the HOURS look wrong: check your worked shifts against the roster first - the calculation is fine, the input might not be.`,
+        tip: "Shifts submitted late often pay a month behind. Check last month's roster before reporting hours as missing.",
+      },
+      {
+        id: "deductions",
+        title: "Deductions - why net pay is lower than you expect",
+        content: `Gross pay is what you earned. Net pay is what lands in the bank. In between:\n\n- NHS Pension - taken off BEFORE tax is calculated, so it costs you less than the figure suggests\n- PAYE (income tax) - driven by your tax code\n- National Insurance\n- Student loan, union subs and salary sacrifice schemes, where they apply\n\nGross pay minus deductions = net pay. That is the whole equation.`,
+        tip: "Because pension comes off before tax is worked out, you get the tax relief automatically - no claiming needed.",
+      },
+      {
+        id: "pension",
+        title: "Pension - why the deduction changes on its own",
+        content: `NHS Pension contributions are tiered: your percentage depends on which pensionable pay band you fall into, and the bands are reviewed each April.\n\nA pay rise, a jump in enhancement earnings, or an April band review can all move you into a higher tier - so the pension line can grow even though nothing has gone wrong. A bigger deduction is not automatically an error.`,
+        tip: "Take-home dropped and you cannot see why? Compare the pension percentage on this payslip with last month's before ringing Payroll.",
+      },
+      {
+        id: "ytd",
+        title: "Year to date - the section everyone skips",
+        content: `The year-to-date block shows running totals since 6 April: gross pay, taxable pay, tax paid, pensionable pay, pension contributions.\n\nWhat it is actually for:\n- Spotting errors building up across the year rather than in one month\n- Confirming arrears or back pay really landed\n- Checking whether tax has self-corrected (it often does over a couple of months - the YTD figures show whether it actually has)\n- Comparing against your P60 in April`,
+      },
+      {
+        id: "glossary",
+        title: "Common payslip lines - quick glossary",
+        content: `- Basic Pay - your contracted salary for the month\n- Night Duty EN / Saturday EN / Sunday EN / Bank Holiday ENH - enhancements, shown as extra paid hours at your normal rate\n- OT / Overtime - extra hours beyond your contract\n- Arrears - backdated pay or a correction from an earlier month\n- AfC Absence - an Agenda for Change absence-related adjustment (local use varies - ask Payroll if a line is unclear)\n- HCAS - high cost area supplement (London and fringe areas)\n- PAYE - income tax\n- NI - National Insurance\n- NHS Pension x% - your pension contribution at your current tier\n- Net Pay - what reaches your bank`,
+      },
+      {
+        id: "monthly-check",
+        title: "The five-minute monthly check",
+        content: `Run this every payday:\n\n1. Top section right? Job title, contracted hours, tax code, assignment number.\n2. Basic Pay matches your band and hours (annual salary divided by 12).\n3. Enhancement hours match the shifts you actually worked - nights, weekends, bank holidays.\n4. On any line that looks odd: PAID/DUE x RATE = AMOUNT.\n5. Pension percentage is the same as last month, or the change is explainable.\n6. Net pay roughly makes sense against last month.\n\nIf all six pass, your payslip is almost certainly right.`,
+      },
+      {
+        id: "something-wrong",
+        title: "If something looks wrong",
+        content: `Before you contact Payroll, write down:\n\n- The pay date\n- Your assignment number\n- The exact payslip line name (for example "Night Duty EN")\n- The four figures on that line: WKD/EARNED, PAID/DUE, RATE, AMOUNT\n- Why you think it is wrong\n\nA vague query gets a slow answer. An exact line with figures gets checked quickly.`,
+        tip: "Raise it in the same pay period if you can - same-month corrections are the easiest kind.",
+      },
+    ],
+  },
+  roster: {
+    id: "roster",
+    title: "Roster Survival Guide",
+    description: "What the roster actually does, how hours balances and TOIL work, and the checks that stop pay and leave problems before they start",
+    related: [
+      { label: "Understanding Your NHS Payslip", guideId: "payslip" },
+    ],
+    steps: [
+      {
+        id: "golden-rule",
+        title: "The golden rule",
+        content: `If something does not look right, ask. Roster issues are easiest to fix early.\n\nDo not wait for:\n- Payday - by then the error has already reached your pay\n- The end of the leave year - balances get much harder to unpick\n- Several months down the line - small errors grow into big ones\n\nA few minutes checking your roster each month prevents most problems, and the sooner something is raised, the easier it is to put right.`,
+      },
+      {
+        id: "more-than-timetable",
+        title: "The roster is more than a timetable",
+        content: `The roster feeds almost everything about your working life:\n\n- Pay - your shifts drive what you are paid, including night and weekend enhancements\n- Leave - your annual leave balance lives here\n- Sickness - absence is recorded against it\n- Hours - your running balance of hours worked vs contracted\n- Staffing - it is the factual record of who was on shift\n\nThat last one matters more than people realise. If an incident happens and someone asks "was the ward fully staffed that night?", the roster is the evidence. If shifts, swaps or moves to other wards were never recorded, the picture is incomplete.`,
+        tip: "If a shift changed on the day - a swap, a move to another ward, extra hours - make sure the change actually got recorded.",
+      },
+      {
+        id: "hours-balance",
+        title: "Your hours balance - a running account",
+        content: `One bit of jargon first: TOIL means Time Off In Lieu - time the Trust owes you back because you worked over your contracted hours.\n\nYour hours balance changes as shifts are worked, leave is taken and sickness is recorded. The plus and minus signs trip everyone up, because minus is the good one for you. Plainly:\n\n- MINUS (for example -7:30): you have worked MORE than your contracted hours. The Trust owes you time back - that is TOIL.\n- PLUS (for example +7:30): you have worked LESS than your contracted hours. You owe hours to the Trust.\n- 0:00 is the target - contracted and rostered hours in line.`,
+        tip: "If you owe hours, agree with your manager how to work them back before booking extra paid shifts on top.",
+      },
+      {
+        id: "balance-changes",
+        title: "Why did my balance change?",
+        content: `The usual reasons:\n\n- Shifts were amended after publication\n- Additional hours were worked\n- Annual leave was added or changed\n- Sickness was recorded\n- Bank or overtime shifts were added\n- Your contracted hours changed\n\nContract changes are the tricky one. Roster weeks run Sunday to Saturday, so if your new hours start part-way through a week (say, a Wednesday), that split week may need a manual check. If your balance looks odd right after a contract change, that is almost certainly why - ask your manager or roster lead to walk through it.`,
+      },
+      {
+        id: "loop-habit",
+        title: "Loop - the roster in your pocket",
+        content: `Loop shows your roster, leave balances and hours balance, lets you request leave, and lists available bank shifts so you can pick them up without ringing round wards.\n\nThe real value is not the app - it is the habit. Five minutes a week:\n\n- Shifts correct for the next fortnight?\n- Leave balance accurate?\n- Sickness recorded properly?\n- Hours balance makes sense?\n\nAnything off, raise it that week while it is easy to trace.`,
+      },
+      {
+        id: "sickness",
+        title: "Sickness - what happens to your hours",
+        content: `Short sickness (under 7 days): recorded against the shifts you were due to work, so the roster shows which duties were missed.\n\nLonger sickness (7 days or more): your contracted hours are usually maintained instead. That stops TOIL or owed hours silently building up while you are off.\n\nWhen you come back, check five things: your future shifts, your hours balance, your leave balance, the recorded sickness dates, and your return-to-work date.`,
+        tip: "The focus after sickness is recovery. Extra paid shifts straight after an absence should not normally happen unless agreed as appropriate.",
+      },
+      {
+        id: "leave-public-holidays",
+        title: "Leave and public holidays",
+        content: `If you are off sick on a public holiday, you do not lose the day. It should be added back to your leave balance to take another time - that is what "adjusted in line with NHS Terms and Conditions" actually means. It can take a month or two to show, so do not panic if the balance has not moved yet.\n\nCheck your leave entitlement after any of these:\n\n- Long-term sickness\n- Sickness on a public holiday\n- A contract change\n- Carried-over leave\n- Service milestones (5 and 10 years bring extra entitlement)\n- Any manual amendment`,
+        tip: "If the entitlement calculation does not make sense, ask your manager to walk you through it - small adjustments are easy to miss.",
+      },
+      {
+        id: "rest-rules",
+        title: "Rest rules and safe working",
+        content: `Roster rules exist to reduce fatigue, not to catch you out:\n\n- Minimum 11 hours rest between shifts. Finish at 20:00 and the earliest safe start next day is 07:00.\n- Regular days off - typically at least one a week, or two together over a fortnight.\n- Limits on long runs of consecutive shifts.\n\nA roster warning is usually a wellbeing prompt. It means the pattern should be looked at - it does not mean you are in trouble.`,
+      },
+      {
+        id: "48-hour-rule",
+        title: "The 48-hour rule, made easy",
+        content: `The law limits working time to an average of 48 hours a week - averaged over a rolling 17-week period. One heavy week is not a breach on its own. You can choose to sign an opt-out if you want to work more; that is voluntary and entirely your choice.\n\nHow the averaging works (using 4 weeks to keep the maths simple - the real review period is 17 weeks):\n\n- Week 1: 55 hours\n- Week 2: 40 hours\n- Week 3: 34 hours\n- Week 4: 37.5 hours\n\nTotal 166.5 hours, divided by 4 = an average of 41.6 hours a week. Under 48, so no concern - even though week 1 on its own looked heavy.`,
+      },
+      {
+        id: "glossary",
+        title: "Quick glossary",
+        content: `- TOIL - Time Off In Lieu: time the Trust owes you for hours worked over contract\n- Contracted (substantive) hours - the hours your permanent contract says you work\n- Hours balance / net hours - the running difference between contracted and rostered hours\n- Bank shift - an extra shift worked on top of your contract, paid separately\n- WTD - Working Time Directive: the safe-working law behind the 48-hour rule and rest rules\n- Roster week - runs Sunday to Saturday\n- Loop - the app for viewing your roster, leave and hours on your phone`,
+      },
+      {
+        id: "monthly-check",
+        title: "Your five-minute monthly check",
+        content: `Once a month, confirm:\n\n1. Shifts match what you actually worked\n2. Swaps and moves to other wards are recorded\n3. Leave balance is right\n4. Sickness dates are right\n5. Hours balance makes sense - and is heading towards 0:00\n6. Anything odd has been raised with your manager or roster lead\n\nMost roster problems are found by staff doing this check, not by the system flagging them.`,
+        tip: "Write down the exact date and shift before raising a query - specific questions get quick answers.",
+      },
+    ],
+  },
   "no-smoking": {
     id: "no-smoking",
     title: "Smoke-Free Ward - Your Legal Duty",

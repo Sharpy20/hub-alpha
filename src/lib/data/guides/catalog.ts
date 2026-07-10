@@ -114,4 +114,6 @@ export const ALL_GUIDES: GuideItem[] = [
   { id: "ctr-dsp", title: "CTR / DSP Review", description: "Care Treatment Review for ASD/LD patients (mandatory)", icon: "📋", gradient: "from-lime-600 to-lime-800", category: "Specialist Pathways", viewerPath: "/guides/ctr-dsp" },
   // Learning & Development
   { id: "student-placement", title: "Student Nurse Placement Guide", description: "Welcome, first-day setup, ward routine and what's expected on a mental health inpatient placement", icon: "🎓", gradient: "from-blue-500 to-indigo-700", category: "Learning & Development", viewerPath: "/guides/student-placement" },
+  { id: "payslip", title: "Understanding Your NHS Payslip", description: "How to read your ESR payslip, why enhancements look so strange, and a five-minute payday check", icon: "🧾", gradient: "from-green-600 to-emerald-800", category: "Learning & Development", viewerPath: "/guides/payslip" },
+  { id: "roster", title: "Roster Survival Guide", description: "How hours balances and TOIL work, what the roster is really used for, and the checks that stop pay and leave problems", icon: "📅", gradient: "from-indigo-500 to-violet-700", category: "Learning & Development", viewerPath: "/guides/roster" },
 ];

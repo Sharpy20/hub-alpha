@@ -1670,6 +1670,20 @@ Then open http://localhost:3000
 
 ---
 
+### 10 July 2026 - Session 36 (Payslip + Roster guides)
+Two new staff-life guides in Learning & Development, both red pending Mike's sign-off:
+- [x] **Understanding Your NHS Payslip** (`/guides/payslip`, 12 steps) - ESR layout, Basic Pay,
+  the enhancements-as-extra-hours explanation (PAID/DUE x RATE = AMOUNT self-check), deductions,
+  tiered pension, YTD, glossary, 5-minute monthly check, how to raise a query. **Fictional round
+  numbers only** - Mike's real payslip figures deliberately kept out.
+- [x] **Roster Survival Guide** (`/guides/roster`, 11 steps) - built from the Roster Survival
+  Guide booklet PLUS Mike's feedback list: TOIL defined at first use, hours-balance sign
+  convention spelled plainly (minus = Trust owes YOU), Loop pages merged into one weekly-habit
+  step, WTD 4-week example labelled as simplified (real period 17 weeks), public-holiday
+  sickness explained in plain outcome terms, glossary added, jargon removed.
+- Both cross-link via `related`. Registered in GUIDE_CONFIG + GUIDES (howto-guides.ts),
+  catalog.ts ALL_GUIDES, approval-status.ts (red).
+
 ### 8 July 2026 - Session 35b (Risk tool: one RMP per domain) [parallel session]
 Reworked `/guides/risk-assessment` after Mike said it was over-complicated (it built
 a full question set + separate plan for **every ticked sub-domain**). Pushed, build

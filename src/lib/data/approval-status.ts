@@ -48,6 +48,8 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "student-placement": "red",        // new 4 Jul from the Student Information Pack - generic/demo-safe, awaiting Mike's review
   "no-smoking": "red",               // new 4 Jul from the smoking staff-legal-warning doc
   "informal-patient-contract": "red", // new 4 Jul from the Gatekeeping + Informal Admission SystmOne guides
+  payslip: "red",                    // new 10 Jul from the payslip explainer work - fictional figures only, awaiting Mike's review
+  roster: "red",                     // new 10 Jul from the Roster Survival Guide booklet + Mike's feedback list
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

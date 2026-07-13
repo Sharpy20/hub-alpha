@@ -1670,6 +1670,28 @@ Then open http://localhost:3000
 
 ---
 
+### 13 July 2026 - Session 37 (Pay-roster split, band picker, rest rules)
+Picked up from a claude.ai chat session (AfC facts verified there against NHS Employers).
+Pushed (commit b6668b1), build clean, verified in browser.
+- [x] **pay-roster guide split into THREE** (Mike: one 26-step guide was too much):
+  `/guides/payslip` (17 steps), `/guides/roster` (11 steps), NEW `/guides/leave-absence`
+  (9 steps - annual leave entitlement, Tess's corrected public-holiday sickness rule,
+  carers/bereavement/phased-return draft, 11-hour rest rule, late-then-early trap, 48-hour
+  rule). Old /guides/pay-roster redirects to payslip (LEGACY map). All three RED.
+- [x] **AfC band picker built** (`src/components/guides/PayBandPicker.tsx`) - Mike told Tess
+  this existed; now it does. Pick band (2-8a) + step -> hourly rate, enhancement rates,
+  worked examples recalculate live. 1 April 2026 England scales (top Band 5 = £39,043 ->
+  £19.9672/hr, matches Mike's real payslip to the penny). New `widget?: "pay-band-picker"`
+  field on GuideStep renders it in the viewer. Salaries hard-coded - UPDATE EACH APRIL.
+- [x] **11-hour rest rule verified + built in** (WTR 1998 reg 10 + AfC Section 27.17):
+  finish 21:30 -> back 07:00 = 9.5h rest = breach (earliest compliant 08:30); compensatory
+  rest exception is narrow; daily rest CANNOT be opted out of (unlike the 48h week).
+- [x] **One-page printable rest-rules handout**: `E:\Hub\printable-guides\rest-rules-one-pager.html`
+  (single side of A4, NHS-styled, outside the repo).
+- [ ] **Open (see BACKLOG Section C):** Mike sign off the 3 red guides; confirm Trust
+  absence figures ([confirm] markers) via Copilot Policy Checker; tell Tess the picker is
+  real now; settle the 48h opt-out legal reading with her; printables not yet split.
+
 ### 10 July 2026 - Session 36 (Payslip + Roster guides)
 Two new staff-life guides in Learning & Development, both red pending Mike's sign-off:
 - [x] **Understanding Your NHS Payslip** (`/guides/payslip`, 12 steps) - ESR layout, Basic Pay,

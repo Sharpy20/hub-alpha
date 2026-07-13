@@ -64,6 +64,7 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
   overtime basics (1.5x / 2x public holidays, bands 1-7, part-time plain time to 37.5h, TOIL
   3-month rule). Fictional figures ONLY. Roster guide is hidden (catalog line commented) but
   update its data anyway so it is current whenever it returns.
+- [ ] **Pay/roster split follow-ups (13 Jul):** pay-roster split into 3 live guides (payslip 17 steps + band picker / roster 11 / leave-absence 9, all RED). Outstanding: (a) Mike sign off all three; (b) confirm Trust absence figures for the leave-absence "[confirm]" markers via Copilot Policy Checker (carers leave, bereavement days, phased-return pay); (c) tell Tess the band picker is now actually built (he told her it existed on 10 Jul); (d) 48h opt-out legal reading still to settle with Tess (guide keeps her safe wording); (e) offline printables in `E:\Hub\printable-guides\` do NOT yet carry the new leave-absence/rest content - new `rest-rules-one-pager.html` covers rest only; (f) band picker salaries hard-coded to 1 Apr 2026 scales - update each April (`PayBandPicker.tsx`).
 - [ ] Review-only sign-offs: ~47 amber guides for Mike to read + colour (green needs dept sign-off).
 - [~] Items needing Mike's docs/photos: **MOSTLY SUPPLIED 4 Jul** in `docs 1\` - see Sections F-I. Still blocked: MHA office email; social-care secure-email name; restraint holds images (Mike to photograph).
 - [ ] mh-talking-points: reorder/group + add alternative grounding/distraction techniques (needs Mike's steer on grouping).

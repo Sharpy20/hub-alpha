@@ -29,6 +29,7 @@ import {
 import { PayBandPicker } from "@/components/guides/PayBandPicker";
 import { PayFaqAccordion } from "@/components/guides/PayFaqAccordion";
 import { ShiftChecker } from "@/components/guides/ShiftChecker";
+import { PayslipDecoder } from "@/components/guides/PayslipDecoder";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 import { toLocalDateStr } from "@/lib/utils/date";
 
@@ -777,6 +778,7 @@ export default function UnifiedGuidePage() {
               </div>
               {hStep.widget === "pay-band-picker" && <PayBandPicker />}
               {hStep.widget === "shift-checker" && <ShiftChecker />}
+              {hStep.widget === "payslip-decoder" && <PayslipDecoder />}
               {hStep.widget === "pay-faq" && (
                 <PayFaqAccordion topic={guideId === "payslip" ? "payslip" : guideId === "roster" ? "roster" : "leave"} />
               )}

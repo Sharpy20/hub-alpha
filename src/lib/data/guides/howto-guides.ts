@@ -13,7 +13,8 @@ export interface GuideStep {
   //             current guide's topic.
   // "shift-checker" = enter a shift, see the enhancement split, whole-shift
   //                   rule, pay estimate and 11-hour rest verdict.
-  widget?: "pay-band-picker" | "pay-faq" | "shift-checker";
+  // "payslip-decoder" = the clickable fictional payslip (payslip guide).
+  widget?: "pay-band-picker" | "pay-faq" | "shift-checker" | "payslip-decoder";
 }
 
 export interface GuideData {
@@ -132,6 +133,14 @@ export const GUIDES: Record<string, GuideData> = {
         tldr: "Five sections - and if the top one is wrong, everything below it is wrong too.",
         content: `Nearly every NHS payslip follows the same pattern:\n\n1. Your details - name, assignment number, job title, pay band, contracted hours, tax code, NI number.\n2. Pay and allowances - Basic Pay, plus a separate line for each enhancement, overtime and arrears payment.\n3. Deductions - tax, National Insurance, pension, and anything else taken off.\n4. Year to date - running totals since April.\n5. Net pay - what actually reaches your bank.\n\nIf the top section is wrong (hours, band, tax code), everything below it will be wrong too, so start there.`,
         tip: "Your assignment number is the reference Payroll works from - quote it in every query.",
+      },
+      {
+        id: "decoder",
+        title: "Decode a payslip line by line",
+        tldr: "Tap each line of a real-looking payslip to see what it means.",
+        content: `Here is a whole payslip for a made-up Band 5 nurse. Tap any line and it tells you what that line is - and because the figures all add up, you can follow the self-checks (PAID x RATE = AMOUNT, and Gross minus Deductions = Net) as you go.\n\nWork down it in order the first time - the top section drives everything below it.`,
+        widget: "payslip-decoder",
+        tip: "Then dig your own payslip out and find the same lines on it - they will be in the same order.",
       },
       {
         id: "basic-pay",

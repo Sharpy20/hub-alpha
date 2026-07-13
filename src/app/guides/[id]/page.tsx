@@ -27,6 +27,7 @@ import {
   type GuideData,
 } from "@/lib/data/guides/howto-guides";
 import { PayBandPicker } from "@/components/guides/PayBandPicker";
+import { PayFaqAccordion } from "@/components/guides/PayFaqAccordion";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 import { toLocalDateStr } from "@/lib/utils/date";
 
@@ -727,6 +728,9 @@ export default function UnifiedGuidePage() {
                 ))}
               </div>
               {hStep.widget === "pay-band-picker" && <PayBandPicker />}
+              {hStep.widget === "pay-faq" && (
+                <PayFaqAccordion topic={guideId === "payslip" ? "payslip" : guideId === "roster" ? "roster" : "leave"} />
+              )}
               {hStep.tip && (
                 <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">
                   <div className="flex gap-3">

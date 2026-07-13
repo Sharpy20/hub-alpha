@@ -100,12 +100,19 @@ export function PayBandPicker() {
         <Calculator className="w-5 h-5 text-emerald-700" />
         <h3 className="font-bold text-emerald-900">Your band, your numbers</h3>
       </div>
-      <p className="text-sm text-emerald-800 mb-4">
+      <p className="text-sm text-emerald-800 mb-3">
         Pick your band and pay step and the examples below recalculate with your rates.
         Full-time figures, England, effective {EFFECTIVE_FROM} - part-time staff have the
-        same hourly rate, so everything except the monthly basic still applies. Always go
-        by your own payslip and contract.
+        same hourly rate, so everything except the monthly basic still applies.
       </p>
+      <div className="flex items-start gap-2 px-3 py-2.5 mb-4 bg-red-50 border border-red-200 rounded-lg text-xs text-red-900">
+        <span className="font-bold flex-shrink-0" aria-hidden="true">!</span>
+        <p>
+          <strong>Payroll and HR do not use this calculator.</strong> It was built in good
+          faith from published NHS pay data, but do not rely on these figures - check them
+          against your own payslip and contract, and speak to Payroll about anything that matters.
+        </p>
+      </div>
 
       <div className="flex flex-wrap gap-2 mb-3" role="group" aria-label="Choose your pay band">
         {PAY_BANDS.map((b, i) => (
@@ -158,6 +165,59 @@ export function PayBandPicker() {
             </div>
           </div>
 
+          <div className="bg-white rounded-xl p-4 border border-emerald-100 overflow-x-auto">
+            <p className="font-bold text-gray-900 text-sm mb-2">Your rates at a glance - what an hour is worth</p>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[11px] uppercase tracking-wide text-gray-500">
+                  <th className="py-1 pr-3 font-semibold">When you work it</th>
+                  <th className="py-1 pr-3 font-semibold">Worth per hour</th>
+                  <th className="py-1 font-semibold">How it shows on the payslip</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-700">
+                <tr className="border-t border-gray-100">
+                  <td className="py-1.5 pr-3">Weekday, 06:00 to 20:00 (plain time)</td>
+                  <td className="py-1.5 pr-3 font-bold">{gbp(hourly)}</td>
+                  <td className="py-1.5 text-gray-500">Basic Pay</td>
+                </tr>
+                <tr className="border-t border-gray-100">
+                  <td className="py-1.5 pr-3">Weekday night (20:00 to 06:00) or Saturday</td>
+                  <td className="py-1.5 pr-3 font-bold">{gbp(hourly * (1 + band.night))}</td>
+                  <td className="py-1.5 text-gray-500">Basic + {Math.round(band.night * 100)}% as extra PAID/DUE hours</td>
+                </tr>
+                <tr className="border-t border-gray-100">
+                  <td className="py-1.5 pr-3">Sunday or bank holiday</td>
+                  <td className="py-1.5 pr-3 font-bold">{gbp(hourly * (1 + band.sunday))}</td>
+                  <td className="py-1.5 text-gray-500">Basic + {Math.round(band.sunday * 100)}% as extra PAID/DUE hours</td>
+                </tr>
+                {band.overtimeEligible && (
+                  <>
+                    <tr className="border-t border-gray-100">
+                      <td className="py-1.5 pr-3">Overtime (beyond 37.5 hrs that week)</td>
+                      <td className="py-1.5 pr-3 font-bold">{gbp(hourly * 1.5)}</td>
+                      <td className="py-1.5 text-gray-500">Time and a half</td>
+                    </tr>
+                    <tr className="border-t border-gray-100">
+                      <td className="py-1.5 pr-3">Overtime on a public holiday</td>
+                      <td className="py-1.5 pr-3 font-bold">{gbp(hourly * 2)}</td>
+                      <td className="py-1.5 text-gray-500">Double time</td>
+                    </tr>
+                  </>
+                )}
+                <tr className="border-t border-gray-100">
+                  <td className="py-1.5 pr-3">Bank shift</td>
+                  <td className="py-1.5 pr-3 font-bold">{gbp(hourly)}+</td>
+                  <td className="py-1.5 text-gray-500">Band rate + unsocial enhancement for when it falls - not overtime rates</td>
+                </tr>
+              </tbody>
+            </table>
+            <p className="text-[11px] text-gray-500 mt-2">
+              "Worth per hour" is the effective value - the payslip never shows a boosted rate,
+              it shows extra paid hours at {gbp(hourly, 4)}.
+            </p>
+          </div>
+
           <div className="bg-white rounded-xl p-4 border border-emerald-100">
             <p className="font-bold text-gray-900 text-sm mb-2">Worked example: 10 night hours at your rate</p>
             <div className="text-sm text-gray-700 space-y-1">
@@ -173,12 +233,7 @@ export function PayBandPicker() {
               On any enhancement line: PAID/DUE x {gbp(hourly, 4)} should match AMOUNT to within a
               penny or two. If it does not, that line is worth a query.
             </p>
-            {band.overtimeEligible ? (
-              <p className="text-sm text-gray-500 mt-2">
-                Overtime at your band: time and a half = {gbp(hourly * 1.5, 4)}/hr, double time on
-                public holidays = {gbp(hourly * 2, 4)}/hr (once you are over 37.5 hours that week).
-              </p>
-            ) : (
+            {!band.overtimeEligible && (
               <p className="text-sm text-gray-500 mt-2">Bands 8a to 9 are not eligible for overtime payments.</p>
             )}
           </div>

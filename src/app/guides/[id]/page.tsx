@@ -454,6 +454,15 @@ export default function UnifiedGuidePage() {
           </div>
         )}
 
+        {/* Development disclaimer - shown on every guide. DELETE THIS BLOCK AT LAUNCH. */}
+        <div className="flex items-start gap-2.5 px-4 py-3 bg-amber-50 border border-amber-300 rounded-xl text-sm text-amber-900">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-600" aria-hidden="true" />
+          <p>
+            <strong>wardHub is still in development.</strong> Guides are still being built and
+            confirmed - treat everything as draft until this notice disappears at launch.
+          </p>
+        </div>
+
         {/* Step navigation pills/grid */}
         <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-4">
           <div className={isReferral ? "grid grid-cols-2 md:grid-cols-3 gap-2" : "flex flex-wrap gap-2"}>

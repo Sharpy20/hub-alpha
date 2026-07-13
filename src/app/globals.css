@@ -545,6 +545,53 @@ footer a:hover {
   }
 
   /* ============================================
+     FULL-COLOUR GUIDE PRINT
+     Class selectors + !important beat the universal
+     "background:white; color:black" reset on specificity,
+     so these keep their colour when printed.
+     ============================================ */
+  .print-full-colour .pc-card {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .print-full-colour .pc-head {
+    background: #005EB8 !important;
+    padding: 6px 10px;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .print-full-colour .pc-head,
+  .print-full-colour .pc-head * {
+    color: #ffffff !important;
+  }
+  .print-full-colour .pc-body { padding: 8px 10px; }
+  .print-full-colour .pc-tldr {
+    background: #eef2ff !important;
+    border-left: 4px solid #6366f1 !important;
+    color: #312e81 !important;
+    padding: 5px 8px;
+    margin-bottom: 6px;
+    border-radius: 0 4px 4px 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .print-full-colour .pc-tip {
+    background: #fffbeb !important;
+    border-left: 4px solid #f59e0b !important;
+    color: #78350f !important;
+    padding: 5px 8px;
+    margin-top: 6px;
+    border-radius: 0 4px 4px 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ============================================
      REPORT-SPECIFIC PRINT STYLES
      Optimized for patient progress reports
      ============================================ */

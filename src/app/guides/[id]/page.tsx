@@ -145,6 +145,29 @@ export default function UnifiedGuidePage() {
     });
   };
 
+  // Print options: Simple (plain, ink-friendly), Full (colour, closer to the
+  // screen), or a chosen set of sections. printMode defaults to "simple" so a
+  // plain browser Ctrl+P still gives the clean version.
+  const [printMenuOpen, setPrintMenuOpen] = useState(false);
+  const [printMode, setPrintMode] = useState<"simple" | "full">("simple");
+  const [printSteps, setPrintSteps] = useState<Set<string> | null>(null);
+  const [showPrintPicker, setShowPrintPicker] = useState(false);
+  const [pickerSel, setPickerSel] = useState<Set<string>>(new Set());
+
+  const runPrint = (mode: "simple" | "full", steps: Set<string> | null) => {
+    setPrintMode(mode);
+    setPrintSteps(steps);
+    setPrintMenuOpen(false);
+    setShowPrintPicker(false);
+    // Let React paint the chosen print layout before the dialog opens.
+    setTimeout(() => window.print(), 80);
+  };
+
+  // The steps available to print, normalised across guide + referral types.
+  const printableSteps: { id: string; title: string; content: string; tldr?: string; tip?: string }[] =
+    isReferral ? workflow.steps.map((s) => ({ id: s.id, title: s.title, content: s.content })) : guide.steps;
+  const inPrint = (id: string) => printSteps === null || printSteps.has(id);
+
   // Shared state
   const [currentStep, setCurrentStep] = useState(0);
   const [showPatientPicker, setShowPatientPicker] = useState(false);
@@ -343,43 +366,70 @@ export default function UnifiedGuidePage() {
       {/* Print-only full guide. Renders EVERY step from the same GUIDES / WORKFLOWS
           data the interactive view uses, so any future edit to a guide automatically
           flows through to its printout - there is no separate copy to keep in sync. */}
-      <div className="hidden print:block text-black">
-        <h1 className="text-2xl font-bold">{title}</h1>
-        <p className="text-sm text-gray-700 mb-1">{description}</p>
-        <p className="text-[10px] uppercase tracking-wide text-gray-500 mb-4">
-          wardHub{!isReferral ? ` - ${config.category}` : " - Referral workflow"} - printed reference, verify against the live guide
-        </p>
+      <div className={`hidden print:block text-black ${printMode === "full" ? "print-full-colour" : ""}`}>
+        {printMode === "full" ? (
+          <>
+            <div className="pc-card">
+              <div className="pc-head"><span style={{ fontSize: "17px", fontWeight: 800 }}>{title}</span></div>
+              <div className="pc-body">
+                <p style={{ fontSize: "12px", margin: 0 }}>{description}</p>
+                <p style={{ fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", marginTop: "4px" }}>
+                  wardHub{!isReferral ? ` - ${config.category}` : " - Referral workflow"}{printSteps ? " - selected sections" : ""} - printed reference, verify against the live guide
+                </p>
+              </div>
+            </div>
+            {printableSteps.map((s, i) => inPrint(s.id) && (
+              <div key={s.id} className="pc-card">
+                <div className="pc-head"><span style={{ fontSize: "13px", fontWeight: 700 }}>{i + 1}. {s.title}</span></div>
+                <div className="pc-body">
+                  {s.tldr && <div className="pc-tldr" style={{ fontSize: "11px" }}><strong>In a hurry:</strong> {s.tldr}</div>}
+                  <div style={{ fontSize: "12px", whiteSpace: "pre-wrap", lineHeight: 1.4 }}>{s.content.replace(/\[#\d+\]/g, "")}</div>
+                  {s.tip && <div className="pc-tip" style={{ fontSize: "11px" }}><strong>Tip:</strong> {s.tip}</div>}
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold">{title}</h1>
+            <p className="text-sm text-gray-700 mb-1">{description}</p>
+            <p className="text-[10px] uppercase tracking-wide text-gray-500 mb-4">
+              wardHub{!isReferral ? ` - ${config.category}` : " - Referral workflow"}{printSteps ? " - selected sections" : ""} - printed reference, verify against the live guide
+            </p>
 
-        {!isReferral && guide.steps.map((s, i) => (
-          <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
-            <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
-            <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content)}</div>
-            {s.tip && <p className="text-sm italic text-gray-600 mt-1">Tip: {s.tip}</p>}
-          </section>
-        ))}
+            {!isReferral && guide.steps.map((s, i) => inPrint(s.id) && (
+              <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
+                <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
+                <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content.replace(/\[#\d+\]/g, ""))}</div>
+                {s.tip && <p className="text-sm italic text-gray-600 mt-1">Tip: {s.tip}</p>}
+              </section>
+            ))}
 
-        {isReferral && workflow.steps.map((s, i) => {
-          const links = s.forms ? [...s.forms.blank, ...s.forms.wagoll, ...s.forms.otherGuides].filter((f) => f.url && f.url !== "#") : [];
-          return (
-            <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
-              <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
-              <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content)}</div>
-              {links.length > 0 && (
-                <ul className="text-sm list-disc ml-5 mt-1">
-                  {links.map((f) => <li key={f.label}>{f.label}: {f.url}</li>)}
-                </ul>
-              )}
-              {s.methods && s.methods.length > 0 && (
-                <ul className="text-sm list-disc ml-5 mt-1">
-                  {s.methods.map((m) => <li key={m.label + m.value}>{m.label}: {m.value}</li>)}
-                </ul>
-              )}
-              {s.clipboardText && (
-                <pre className="text-sm whitespace-pre-wrap bg-gray-50 border border-gray-200 rounded p-2 mt-1">{s.clipboardText}</pre>
-              )}
-            </section>
-          );
-        })}
+            {isReferral && workflow.steps.map((s, i) => {
+              if (!inPrint(s.id)) return null;
+              const links = s.forms ? [...s.forms.blank, ...s.forms.wagoll, ...s.forms.otherGuides].filter((f) => f.url && f.url !== "#") : [];
+              return (
+                <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
+                  <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
+                  <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content)}</div>
+                  {links.length > 0 && (
+                    <ul className="text-sm list-disc ml-5 mt-1">
+                      {links.map((f) => <li key={f.label}>{f.label}: {f.url}</li>)}
+                    </ul>
+                  )}
+                  {s.methods && s.methods.length > 0 && (
+                    <ul className="text-sm list-disc ml-5 mt-1">
+                      {s.methods.map((m) => <li key={m.label + m.value}>{m.label}: {m.value}</li>)}
+                    </ul>
+                  )}
+                  {s.clipboardText && (
+                    <pre className="text-sm whitespace-pre-wrap bg-gray-50 border border-gray-200 rounded p-2 mt-1">{s.clipboardText}</pre>
+                  )}
+                </section>
+              );
+            })}
+          </>
+        )}
 
         {!isReferral && guide.caseNote && (
           <section className="mt-4" style={{ breakInside: "avoid" }}>
@@ -403,6 +453,40 @@ export default function UnifiedGuidePage() {
         )}
       </div>
 
+      {/* Personalised print - pick the sections to include */}
+      {showPrintPicker && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4 print:hidden" role="dialog" aria-modal="true" aria-label="Choose sections to print" onClick={() => setShowPrintPicker(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="p-5 border-b border-gray-100">
+              <h3 className="font-bold text-gray-900">Personalised print</h3>
+              <p className="text-sm text-gray-500 mt-0.5">Tick the sections that apply to you. We have pre-ticked the ones you have already opened - the printout keeps them in order and adds a splash of colour.</p>
+            </div>
+            <div className="p-5 overflow-y-auto flex-1 space-y-1">
+              <div className="flex gap-2 mb-2">
+                <button onClick={() => setPickerSel(new Set(printableSteps.map((s) => s.id)))} className="text-xs font-medium text-nhs-blue hover:underline">Select all</button>
+                <span className="text-gray-300">|</span>
+                <button onClick={() => setPickerSel(new Set())} className="text-xs font-medium text-nhs-blue hover:underline">Clear</button>
+              </div>
+              {printableSteps.map((s, i) => (
+                <label key={s.id} className="flex items-start gap-2.5 px-2 py-1.5 rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <input type="checkbox" checked={pickerSel.has(s.id)} onChange={(e) => {
+                    setPickerSel((prev) => { const n = new Set(prev); if (e.target.checked) n.add(s.id); else n.delete(s.id); return n; });
+                  }} className="mt-0.5 w-4 h-4 rounded border-gray-300 text-nhs-blue focus:ring-nhs-blue" />
+                  <span className="text-sm text-gray-700"><span className="text-gray-400">{i + 1}.</span> {s.title}</span>
+                </label>
+              ))}
+            </div>
+            <div className="p-4 border-t border-gray-100 flex justify-end gap-2">
+              <button onClick={() => setShowPrintPicker(false)} className="px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+              <button onClick={() => pickerSel.size > 0 && runPrint("full", new Set(pickerSel))} disabled={pickerSel.size === 0}
+                className="px-4 py-2 text-sm font-semibold text-white bg-nhs-blue hover:bg-nhs-dark-blue rounded-lg disabled:opacity-40 disabled:cursor-not-allowed">
+                Print {pickerSel.size} section{pickerSel.size === 1 ? "" : "s"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-6 print:hidden">
         <Breadcrumb items={[
           { label: "Guides", href: link("/guides") },
@@ -417,13 +501,44 @@ export default function UnifiedGuidePage() {
               <span className="font-medium">Back to Guides</span>
             </button>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => window.print()}
-                aria-label="Print this guide"
-                className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors print:hidden"
-              >
-                <Printer className="w-4 h-4" /> Print
-              </button>
+              <div className="relative print:hidden">
+                <button
+                  onClick={() => setPrintMenuOpen((o) => !o)}
+                  aria-haspopup="true"
+                  aria-expanded={printMenuOpen}
+                  aria-label="Print this guide"
+                  className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors"
+                >
+                  <Printer className="w-4 h-4" /> Print
+                </button>
+                {printMenuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setPrintMenuOpen(false)} aria-hidden="true" />
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 z-50 overflow-hidden text-left">
+                      <button onClick={() => runPrint("simple", null)} className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-100">
+                        <span className="block font-semibold text-gray-800 text-sm">Simple print</span>
+                        <span className="block text-xs text-gray-500">Plain text, easy on ink</span>
+                      </button>
+                      <button onClick={() => runPrint("full", null)} className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-100">
+                        <span className="block font-semibold text-gray-800 text-sm">Full colour</span>
+                        <span className="block text-xs text-gray-500">Styled like the screen</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          const done = printableSteps.filter((s) => completedSteps.includes(s.id)).map((s) => s.id);
+                          setPickerSel(new Set(done.length ? done : printableSteps.map((s) => s.id)));
+                          setPrintMenuOpen(false);
+                          setShowPrintPicker(true);
+                        }}
+                        className="w-full text-left px-4 py-3 hover:bg-gray-50"
+                      >
+                        <span className="block font-semibold text-gray-800 text-sm">Personalised</span>
+                        <span className="block text-xs text-gray-500">Pick the sections that apply to you</span>
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
               {canEdit && (
                 <Link href={link("/admin/workflows")} className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline">
                   <Pencil className="w-4 h-4" /> Edit

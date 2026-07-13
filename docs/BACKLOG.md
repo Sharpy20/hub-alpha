@@ -134,6 +134,13 @@ All done AT WORK in M365 Copilot / Teams, not in this repo. Context: [[focus-dow
    Source of truth kept in repo: `docs/nhs-ready/12-meet-the-agents.md`.
    STILL FOR MIKE: pin the page as a tab in a Teams channel if wanted (page is on the site,
    not yet a tab), and give it a skim before pointing stakeholders at it.
+4. [ ] **Upload Special_Leave_Policy.docx to the SharePoint Trust Policy Library (Mike, at work).**
+   Missed in the big FOCUS auto-download; Mike found it 13 Jul and saved it to
+   `E:\Hub\Policy dump not for git hub\Special_Leave_Policy.docx` (v7, issued 10 Jul 2024,
+   review 31 Jul 2027). Until it is in the library, the Policy Checker / Content Auditor
+   agents cannot see it. Its figures are ALREADY baked into `/guides/leave-absence`
+   (bereavement 5 days paid, end-of-life 6 weeks, domestic 10 days, carers 1 week unpaid) -
+   after upload, ask the Policy Checker to verify that step as a test.
 
 ## MIKE'S HOMEWORK DUMP (4 Jul 2026 - captured, organised into A-E below)
 Full verbatim capture + per-guide notes + source-doc inventory: **`docs/homework-04-Jul-2026-dump.md`**.

@@ -405,8 +405,9 @@ export default function UnifiedGuidePage() {
             </div>
           </div>
 
-          {/* Patient link - hidden in v2 (PII-free) */}
-          {!isV2 && (
+          {/* Patient link - hidden in v2 (PII-free) and on staff-life guides
+              (guide.noCaseNote) that are never recorded against a patient */}
+          {!isV2 && !guide.noCaseNote && (
             <div className="mt-4 pt-4 border-t border-white/20">
               {linkedPatient ? (
                 <div className="flex items-center justify-between bg-white/20 rounded-xl p-3">
@@ -896,8 +897,9 @@ export default function UnifiedGuidePage() {
               </div>
             )}
 
-            {/* Follow-up task - hidden in v2 (no job diary) */}
-            {!isV2 && (
+            {/* Follow-up task - hidden in v2 (no job diary) and on staff-life
+                guides (noCaseNote): the follow-up is a patient task */}
+            {!isV2 && !guide.noCaseNote && (
               <div className="bg-white rounded-xl border-2 border-indigo-200 overflow-hidden">
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 border-b border-indigo-200">
                   <h3 className="font-bold text-gray-800 flex items-center gap-2"><Calendar className="w-5 h-5 text-indigo-600" /> Follow-up Task</h3>

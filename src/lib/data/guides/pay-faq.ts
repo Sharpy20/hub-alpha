@@ -63,8 +63,8 @@ export const PAY_FAQ: PayFaqItem[] = [
     topics: ["leave", "roster"],
   },
   {
-    q: "Can I agree to less than 11 hours' rest if I want the shifts?",
-    a: "No. Unlike the 48-hour average week, daily rest cannot be opted out of. Short rest is only lawful for genuine service needs, with compensatory rest given back afterwards.",
+    q: "Is a late-then-early turnaround (under 11 hours' rest) allowed?",
+    a: "On a ward, yes. The 11-hour rest rule has a recognised exception for hospitals and continuity-of-care services, so shorter turnarounds are lawful when the service needs them - the safeguard is equivalent compensatory rest given back wherever possible, not the shift being banned. It is not an individual opt-out like the 48-hour week; it is built into how wards are allowed to roster. Worth raising only if tight turnarounds are relentless with no recovery.",
     topics: ["leave", "roster"],
   },
   {

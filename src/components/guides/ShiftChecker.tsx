@@ -241,19 +241,20 @@ export function ShiftChecker() {
 
           {/* Rest check */}
           {rest && (
-            <div className={`rounded-xl p-4 border ${rest.ok ? "bg-emerald-50 border-emerald-200" : "bg-red-50 border-red-200"}`}>
+            <div className={`rounded-xl p-4 border ${rest.ok ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"}`}>
               {rest.ok ? (
                 <p className="flex items-start gap-2 text-sm text-emerald-900">
                   <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-emerald-600" />
-                  <span><strong>{fmtHours(rest.gap)} rest before the next shift</strong> - meets the 11-hour minimum.</span>
+                  <span><strong>{fmtHours(rest.gap)} rest before the next shift</strong> - clears the 11-hour general rule.</span>
                 </p>
               ) : (
-                <p className="flex items-start gap-2 text-sm text-red-900">
-                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-600" />
+                <p className="flex items-start gap-2 text-sm text-amber-900">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-600" />
                   <span>
-                    <strong>Only {fmtHours(rest.gap)} rest - below the 11-hour legal minimum.</strong>{" "}
-                    The earliest compliant start after this shift is {fmtClock(rest.earliest)}. Daily rest
-                    cannot be opted out of - as a routine pattern this needs raising with the roster lead.
+                    <strong>{fmtHours(rest.gap)} rest before the next shift - under the full 11 hours.</strong>{" "}
+                    On a ward this is allowed: hospitals are a recognised exception to the daily rest rule,
+                    with compensatory rest as the safeguard. A full 11 hours would mean a {fmtClock(rest.earliest)} start.
+                    Worth mentioning to your roster lead only if tight turnarounds like this are relentless with no recovery.
                   </span>
                 </p>
               )}

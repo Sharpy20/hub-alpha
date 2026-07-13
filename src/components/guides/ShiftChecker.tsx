@@ -157,9 +157,11 @@ export function ShiftChecker() {
           <select value={breakMins} onChange={(e) => setBreakMins(Number(e.target.value))}
             className="mt-0.5 w-full px-2 py-1.5 border border-indigo-200 rounded-lg text-sm bg-white">
             <option value={0}>None</option>
-            <option value={30}>30 minutes</option>
-            <option value={45}>45 minutes</option>
-            <option value={60}>1 hour</option>
+            {Array.from({ length: 24 }, (_, i) => (i + 1) * 5).map((m) => {
+              const h = Math.floor(m / 60), mm = m % 60;
+              const label = m < 60 ? `${m} minutes` : mm === 0 ? `${h} hour${h > 1 ? "s" : ""}` : `${h}h ${mm}m`;
+              return <option key={m} value={m}>{label}</option>;
+            })}
           </select>
         </label>
         <label className="block">

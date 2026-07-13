@@ -1,169 +1,197 @@
 "use client";
 
 import { useState } from "react";
-import { Check, MousePointerClick } from "lucide-react";
+import { Check, MousePointerClick, Info } from "lucide-react";
 
 // A fictional but internally-consistent NHS (ESR-style) payslip used to teach
 // the layout. Figures reconcile on the two checks a nurse could actually do:
-// each enhancement line PAID x RATE = AMOUNT, and Gross - Deductions = Net.
-// STATIC on purpose - not wired to the band picker, so the slip stays
-// self-consistent. All names and numbers are made up.
+// each enhancement line PAID x RATE = AMOUNT, and Total Payments - Total
+// Deductions = Net Pay. STATIC on purpose - not wired to the band picker, so
+// the slip stays self-consistent. All names and numbers are made up.
 //
 // Band 5 top of scale: £39,043 / 12 = £3,253.58 basic; rate £39,043 / 1955.357
 // = £19.9672. Night +30% (12.00 paid hrs), Saturday +30% (3.30), Sunday +60%
-// (6.60). Gross £3,690.86. Pension/tax/NI illustrative. Net £2,732.01.
+// (6.60). Total payments £3,690.86; deductions £958.85; net £2,732.01.
 
-interface Row {
-  id: string;
-  label: string;
-  value: string;
-  // Enhancement lines show the four ESR columns instead of a single value.
-  cols?: { wkd: string; paid: string; rate: string; amount: string };
-  explain: string;
-  strong?: boolean;
-}
+interface Info { id: string; explain: string; }
 
-interface Section {
-  title: string;
-  rows: Row[];
-}
+interface Detail extends Info { label: string; value: string; }
+interface Payment extends Info { label: string; wkd?: string; paid?: string; rate?: string; amount: string; total?: boolean; }
+interface Deduction extends Info { label: string; amount: string; total?: boolean; }
+interface Ytd extends Info { label: string; value: string; }
 
-const SECTIONS: Section[] = [
-  {
-    title: "1. Your details",
-    rows: [
-      { id: "assignment", label: "Assignment no.", value: "12345678", explain: "The reference Payroll works from - not your payroll number for logging in, the one that identifies this specific post. Quote it in every query." },
-      { id: "post", label: "Job title / Band", value: "Staff Nurse - Band 5 (top)", explain: "Your role and pay point. If the band or step is wrong here, every pay figure below it will be wrong too - so check this first." },
-      { id: "hours", label: "Standard hours", value: "37.5 / week", explain: "Your contracted weekly hours. A part-time post would show fewer, and the basic pay would scale down to match." },
-      { id: "taxcode", label: "Tax code", value: "1257L", explain: "Tells Payroll how much you can earn before tax. A wrong tax CODE will not fix itself - contact HMRC, not Payroll." },
-    ],
-  },
-  {
-    title: "2. Pay and allowances",
-    rows: [
-      { id: "basic", label: "Basic Pay", value: "£3,253.58", explain: "Your annual salary (£39,043) divided by 12. Everything else on the slip is built on top of this - if it is wrong, stop and query it before looking at anything else." },
-      { id: "night", label: "Night Duty ENH", value: "", cols: { wkd: "40.00", paid: "12.00", rate: "19.9672", amount: "£239.61" }, explain: "Weekday nights at +30%, shown as 12 extra paid HOURS (not a higher rate). Self-check: 12.00 x £19.9672 = £239.61. WKD is the hours you worked; PAID is what the 30% turned into." },
-      { id: "sat", label: "Saturday ENH", value: "", cols: { wkd: "11.00", paid: "3.30", rate: "19.9672", amount: "£65.89" }, explain: "All Saturday hours at +30%. 11.00 x 30% = 3.30 extra paid hours. Check: 3.30 x £19.9672 = £65.89." },
-      { id: "sun", label: "Sunday ENH", value: "", cols: { wkd: "11.00", paid: "6.60", rate: "19.9672", amount: "£131.78" }, explain: "Sundays and bank holidays at +60% - double the night/Saturday rate. 11.00 x 60% = 6.60 extra hours. Check: 6.60 x £19.9672 = £131.78." },
-      { id: "gross", label: "Gross Pay", value: "£3,690.86", strong: true, explain: "Everything you earned this month before anything is taken off. The four lines above add up to this: 3,253.58 + 239.61 + 65.89 + 131.78 = £3,690.86." },
-    ],
-  },
-  {
-    title: "3. Deductions",
-    rows: [
-      { id: "pension", label: "NHS Pension (9.8%)", value: "£318.85", explain: "Taken off BEFORE tax is worked out, so you get the tax relief automatically. The percentage is tiered by earnings and reviewed each April - a bigger figure is not automatically an error." },
-      { id: "paye", label: "PAYE Tax", value: "£430.00", explain: "Income tax, driven by your tax code (1257L above). If it looks too high it often self-corrects over a month or two - the year-to-date block shows whether it has." },
-      { id: "ni", label: "National Insurance", value: "£210.00", explain: "Your National Insurance contribution. Illustrative figure here - the real one depends on the current NI thresholds." },
-      { id: "totded", label: "Total Deductions", value: "£958.85", strong: true, explain: "Everything taken off this month: 318.85 + 430.00 + 210.00 = £958.85." },
-    ],
-  },
-  {
-    title: "4. Year to date",
-    rows: [
-      { id: "ytd", label: "YTD gross / tax / pension", value: "£14,763 / £1,720 / £1,275", explain: "Running totals since 6 April. Useful for spotting an error building across the year rather than in one month, confirming arrears landed, and checking tax has self-corrected. Compare against your P60 in April." },
-    ],
-  },
-  {
-    title: "5. Net pay",
-    rows: [
-      { id: "net", label: "NET PAY", value: "£2,732.01", strong: true, explain: "What actually lands in your bank. Gross £3,690.86 minus deductions £958.85 = £2,732.01. That is the whole equation." },
-    ],
-  },
+const DETAILS: Detail[] = [
+  { id: "name", label: "Employee", value: "Sam Taylor", explain: "The name on the post. A fictional nurse - this whole payslip is made up." },
+  { id: "assignment", label: "Assignment no.", value: "12345678", explain: "The reference Payroll works from - the one that identifies this specific post. Quote it in every query." },
+  { id: "post", label: "Position", value: "Staff Nurse", explain: "Your job title. Should match the role you actually do." },
+  { id: "band", label: "Band / point", value: "Band 5 - top", explain: "Your pay band and the point within it. If this is wrong, every pay figure below it will be wrong too - check it first." },
+  { id: "hours", label: "Std hours", value: "37.50", explain: "Your contracted weekly hours. Part-time would show fewer, and Basic Pay would scale down to match." },
+  { id: "salary", label: "Annual salary", value: "£39,043", explain: "Your full-time yearly salary. Divide by 12 to get the Basic Pay figure below." },
+  { id: "taxcode", label: "Tax code", value: "1257L", explain: "Tells Payroll how much you can earn before tax. A wrong tax CODE will not fix itself - contact HMRC, not Payroll." },
+  { id: "ni", label: "NI number", value: "AB 12 34 56 C", explain: "Your National Insurance number - how HMRC and the pension scheme track your contributions." },
 ];
 
-const ALL_IDS = SECTIONS.flatMap((s) => s.rows.map((r) => r.id));
+const PAYMENTS: Payment[] = [
+  { id: "basic", label: "Basic Pay", wkd: "162.50", amount: "3,253.58", explain: "Your annual salary (£39,043) divided by 12. Everything else on the slip builds on this - if it is wrong, stop and query it before looking at anything else. The 162.50 is your standard monthly hours." },
+  { id: "night", label: "Night Duty ENH", wkd: "40.00", paid: "12.00", rate: "19.9672", amount: "239.61", explain: "Weekday nights at +30%, shown as 12 extra paid HOURS (not a higher rate). Self-check: 12.00 x £19.9672 = £239.61. WkD is the hours you worked; Paid is what the 30% turned into." },
+  { id: "sat", label: "Saturday ENH", wkd: "11.00", paid: "3.30", rate: "19.9672", amount: "65.89", explain: "All Saturday hours at +30%. 11.00 x 30% = 3.30 extra paid hours. Check: 3.30 x £19.9672 = £65.89." },
+  { id: "sun", label: "Sunday ENH", wkd: "11.00", paid: "6.60", rate: "19.9672", amount: "131.78", explain: "Sundays and bank holidays at +60% - double the night/Saturday rate. 11.00 x 60% = 6.60 extra hours. Check: 6.60 x £19.9672 = £131.78." },
+  { id: "totpay", label: "Total Payments", amount: "3,690.86", total: true, explain: "Everything you earned this month before anything is taken off (your gross pay). The four lines above add up to this: 3,253.58 + 239.61 + 65.89 + 131.78 = £3,690.86." },
+];
+
+const DEDUCTIONS: Deduction[] = [
+  { id: "pension", label: "NHS Pension 9.8%", amount: "318.85", explain: "Taken off BEFORE tax is worked out, so you get the tax relief automatically. The percentage is tiered by earnings and reviewed each April - a bigger figure is not automatically an error." },
+  { id: "paye", label: "PAYE Tax", amount: "430.00", explain: "Income tax, driven by your tax code (1257L above). If it looks too high it often self-corrects over a month or two - the YTD box shows whether it has." },
+  { id: "nic", label: "National Insurance", amount: "210.00", explain: "Your National Insurance contribution. Illustrative figure here - the real one depends on the current NI thresholds." },
+  { id: "totded", label: "Total Deductions", amount: "958.85", total: true, explain: "Everything taken off this month: 318.85 + 430.00 + 210.00 = £958.85." },
+];
+
+const YTD: Ytd[] = [
+  { id: "ytd-gross", label: "Gross pay", value: "14,763.44", explain: "Total earned since 6 April - useful for spotting errors building across the year rather than one month." },
+  { id: "ytd-tax", label: "Tax paid", value: "1,720.00", explain: "Total tax since April. Watch this to check a high tax month has self-corrected." },
+  { id: "ytd-pen", label: "Pension", value: "1,275.40", explain: "Your pension contributions so far this year." },
+  { id: "ytd-nic", label: "NI", value: "840.00", explain: "Your National Insurance so far this year. Compare all four against your P60 in April." },
+];
+
+const NET = { id: "net", label: "NET PAY", value: "2,732.01", explain: "What actually lands in your bank. Total Payments £3,690.86 minus Total Deductions £958.85 = £2,732.01. That is the whole equation." };
+
+const ALL: Info[] = [...DETAILS, ...PAYMENTS, ...DEDUCTIONS, ...YTD, NET];
+const findInfo = (id: string) => ALL.find((r) => r.id === id);
 
 export function PayslipDecoder() {
-  const [open, setOpen] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [visited, setVisited] = useState<Set<string>>(new Set());
 
-  const clickRow = (id: string) => {
-    setOpen((cur) => (cur === id ? null : id));
+  const pick = (id: string) => {
+    setSelected(id);
     setVisited((v) => (v.has(id) ? v : new Set(v).add(id)));
   };
 
   const done = visited.size;
-  const total = ALL_IDS.length;
+  const total = ALL.length;
+  const sel = selected ? findInfo(selected) : null;
+  const selLabel = sel && "label" in sel ? (sel as { label: string }).label : "";
+
+  // Shared classes for a clickable payslip cell.
+  const cell = (id: string, extra = "") =>
+    `text-left transition-colors cursor-pointer ${selected === id ? "bg-nhs-blue/10 ring-1 ring-nhs-blue" : visited.has(id) ? "bg-emerald-50" : "hover:bg-slate-100"} ${extra}`;
 
   return (
-    <div className="mt-6 rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-slate-50 to-emerald-50 p-5">
+    <div className="mt-6 rounded-2xl border-2 border-slate-200 bg-slate-50 p-5">
       <div className="flex items-center gap-2 mb-1">
-        <MousePointerClick className="w-5 h-5 text-emerald-700" />
-        <h3 className="font-bold text-emerald-900">Payslip decoder</h3>
+        <MousePointerClick className="w-5 h-5 text-nhs-blue" />
+        <h3 className="font-bold text-slate-900">Payslip decoder</h3>
       </div>
-      <p className="text-sm text-emerald-800 mb-3">
-        A made-up payslip for a Band 5 nurse. Tap any line to find out what it means - the
-        figures all reconcile, so you can follow the self-checks as you go.
+      <p className="text-sm text-slate-600 mb-3">
+        A made-up payslip for a Band 5 nurse, laid out like a real one. Tap any box to find
+        out what it means - the figures all reconcile, so you can follow the self-checks.
       </p>
 
       <div className="flex items-center gap-3 mb-3">
-        <div className="flex-1 h-2 bg-emerald-100 rounded-full overflow-hidden">
+        <div className="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
           <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: `${(done / total) * 100}%` }} />
         </div>
-        <span className="text-xs font-semibold text-emerald-800 whitespace-nowrap">{done} of {total} decoded</span>
+        <span className="text-xs font-semibold text-slate-600 whitespace-nowrap">{done} of {total} decoded</span>
       </div>
 
-      {/* Payslip card */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden font-mono text-sm">
-        <div className="bg-slate-800 text-white px-4 py-2.5 flex items-center justify-between">
-          <span className="font-bold tracking-wide">PAYSLIP</span>
-          <span className="text-xs text-slate-300">Sam Taylor &bull; July 2026 &bull; fictional</span>
-        </div>
-
-        {SECTIONS.map((section) => (
-          <div key={section.title}>
-            <p className="px-4 pt-3 pb-1 text-[11px] uppercase tracking-wide text-slate-400 font-semibold">{section.title}</p>
-            {section.rows.map((row) => {
-              const isOpen = open === row.id;
-              const seen = visited.has(row.id);
-              return (
-                <div key={row.id} className="border-t border-slate-100 first:border-t-0">
-                  <button
-                    onClick={() => clickRow(row.id)}
-                    aria-expanded={isOpen}
-                    className={`w-full text-left px-4 py-2.5 flex items-center gap-3 transition-colors ${isOpen ? "bg-emerald-50" : "hover:bg-slate-50"}`}
-                  >
-                    <span className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center ${seen ? "bg-emerald-500" : "border border-slate-300"}`}>
-                      {seen && <Check className="w-3 h-3 text-white" />}
-                    </span>
-                    <span className={`flex-1 ${row.strong ? "font-bold text-slate-900" : "text-slate-700"}`}>{row.label}</span>
-                    {row.cols ? (
-                      <span className="text-right text-xs text-slate-600 tabular-nums hidden sm:block">
-                        <span className="inline-block w-14">{row.cols.paid}</span>
-                        <span className="inline-block w-16">{row.cols.rate}</span>
-                        <span className="inline-block w-16 font-semibold text-slate-800">{row.cols.amount}</span>
-                      </span>
-                    ) : (
-                      <span className={`text-right tabular-nums ${row.strong ? "font-bold text-slate-900" : "text-slate-700"}`}>{row.value}</span>
-                    )}
-                  </button>
-                  {row.cols && (
-                    <div className="px-4 pb-1 -mt-1 flex justify-end gap-3 text-[10px] uppercase tracking-wide text-slate-400 sm:hidden">
-                      <span>Paid {row.cols.paid}</span>
-                      <span>Rate {row.cols.rate}</span>
-                      <span className="font-semibold text-slate-600">{row.cols.amount}</span>
-                    </div>
-                  )}
-                  {isOpen && (
-                    <div className="px-4 pb-3 pt-1 text-sm font-sans text-slate-600 leading-relaxed bg-emerald-50/50">
-                      {row.cols && (
-                        <p className="text-[11px] uppercase tracking-wide text-slate-400 mb-1">
-                          WKD {row.cols.wkd} &bull; PAID/DUE {row.cols.paid} &bull; RATE £{row.cols.rate} &bull; AMOUNT {row.cols.amount}
-                        </p>
-                      )}
-                      <p>{row.explain}</p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+      {/* Payslip - ESR style */}
+      <div className="overflow-x-auto">
+        <div className="min-w-[320px] bg-white border border-slate-300 rounded-lg overflow-hidden text-slate-800 shadow-sm">
+          {/* Masthead */}
+          <div className="bg-slate-800 text-white px-3 py-2 flex items-center justify-between">
+            <span className="font-bold tracking-wide text-sm">PAYSLIP</span>
+            <span className="text-[11px] text-slate-300">Example NHS Foundation Trust &bull; Pay date 25 Jul 2026 &bull; Month 04</span>
           </div>
-        ))}
+
+          {/* Employee details grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-slate-200">
+            {DETAILS.map((d) => (
+              <button key={d.id} onClick={() => pick(d.id)} aria-pressed={selected === d.id}
+                className={cell(d.id, "px-3 py-2 border-r border-b border-slate-100")}>
+                <span className="block text-[10px] uppercase tracking-wide text-slate-400">{d.label}</span>
+                <span className="block text-sm font-semibold tabular-nums">{d.value}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Payments + deductions */}
+          <div className="grid md:grid-cols-2 md:divide-x divide-slate-200">
+            {/* Payments */}
+            <div>
+              <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-2 px-3 py-1.5 bg-slate-100 text-[10px] uppercase tracking-wide text-slate-500 font-semibold">
+                <span>Payments</span><span className="text-right">WkD</span><span className="text-right">Paid</span><span className="text-right">Amount</span>
+              </div>
+              {PAYMENTS.map((p) => (
+                <button key={p.id} onClick={() => pick(p.id)} aria-pressed={selected === p.id}
+                  className={cell(p.id, `w-full grid grid-cols-[1fr_auto_auto_auto] gap-x-2 px-3 py-1.5 text-sm border-t border-slate-100 tabular-nums ${p.total ? "font-bold bg-slate-50" : ""}`)}>
+                  <span className="text-left flex items-center gap-1">
+                    {visited.has(p.id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{p.label}
+                  </span>
+                  <span className="text-right text-slate-500 w-12">{p.wkd ?? ""}</span>
+                  <span className="text-right text-slate-500 w-12">{p.paid ?? ""}</span>
+                  <span className="text-right w-20">£{p.amount}</span>
+                </button>
+              ))}
+            </div>
+            {/* Deductions */}
+            <div>
+              <div className="grid grid-cols-[1fr_auto] gap-x-2 px-3 py-1.5 bg-slate-100 text-[10px] uppercase tracking-wide text-slate-500 font-semibold">
+                <span>Deductions</span><span className="text-right">Amount</span>
+              </div>
+              {DEDUCTIONS.map((d) => (
+                <button key={d.id} onClick={() => pick(d.id)} aria-pressed={selected === d.id}
+                  className={cell(d.id, `w-full grid grid-cols-[1fr_auto] gap-x-2 px-3 py-1.5 text-sm border-t border-slate-100 tabular-nums ${d.total ? "font-bold bg-slate-50" : ""}`)}>
+                  <span className="text-left flex items-center gap-1">
+                    {visited.has(d.id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{d.label}
+                  </span>
+                  <span className="text-right w-20">£{d.amount}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Year to date strip */}
+          <div className="border-t border-slate-200">
+            <div className="px-3 py-1.5 bg-slate-100 text-[10px] uppercase tracking-wide text-slate-500 font-semibold">Year to date (since 6 April)</div>
+            <div className="grid grid-cols-2 sm:grid-cols-4">
+              {YTD.map((y) => (
+                <button key={y.id} onClick={() => pick(y.id)} aria-pressed={selected === y.id}
+                  className={cell(y.id, "px-3 py-2 border-r border-t border-slate-100")}>
+                  <span className="block text-[10px] uppercase tracking-wide text-slate-400">{y.label}</span>
+                  <span className="block text-sm font-semibold tabular-nums">£{y.value}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Net pay bar */}
+          <button onClick={() => pick(NET.id)} aria-pressed={selected === NET.id}
+            className={`w-full flex items-center justify-between px-3 py-3 border-t-2 border-slate-300 transition-colors ${selected === NET.id ? "bg-nhs-blue/10 ring-1 ring-nhs-blue" : visited.has(NET.id) ? "bg-emerald-50" : "bg-slate-800 hover:bg-slate-700"}`}>
+            <span className={`font-bold tracking-wide flex items-center gap-1.5 ${selected === NET.id || visited.has(NET.id) ? "text-slate-900" : "text-white"}`}>
+              {visited.has(NET.id) && <Check className="w-4 h-4 text-emerald-500" />}NET PAY
+            </span>
+            <span className={`font-bold text-lg tabular-nums ${selected === NET.id || visited.has(NET.id) ? "text-slate-900" : "text-white"}`}>£{NET.value}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Explanation panel */}
+      <div className="mt-3 rounded-xl border border-nhs-blue/30 bg-nhs-blue/5 p-4 min-h-[76px]">
+        {sel ? (
+          <>
+            <p className="font-bold text-nhs-dark-blue text-sm mb-1">{selLabel}</p>
+            <p className="text-sm text-slate-700 leading-relaxed">{sel.explain}</p>
+          </>
+        ) : (
+          <p className="flex items-center gap-2 text-sm text-slate-500 italic">
+            <Info className="w-4 h-4 flex-shrink-0" /> Tap any box on the payslip above to see what it means.
+          </p>
+        )}
       </div>
 
       {done === total && (
         <p className="mt-3 text-sm font-semibold text-emerald-800 flex items-center gap-2">
-          <Check className="w-4 h-4" /> Whole payslip decoded. Now the self-check on your own: PAID/DUE x RATE = AMOUNT on every enhancement line.
+          <Check className="w-4 h-4" /> Whole payslip decoded. Now try the same on your own: PAID x RATE = AMOUNT on every enhancement line.
         </p>
       )}
       <p className="mt-3 text-[11px] text-slate-500">

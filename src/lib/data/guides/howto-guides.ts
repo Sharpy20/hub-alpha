@@ -4,6 +4,8 @@ export interface GuideStep {
   id: string;
   title: string;
   content: string;
+  // One-line "in a hurry" summary shown in a banner above the step content.
+  tldr?: string;
   tip?: string;
   // Optional interactive widget rendered below the step content in the viewer.
   // "pay-band-picker" = the AfC band/step salary picker (payslip guide).
@@ -32,6 +34,10 @@ export interface GuideData {
   // Printable / downloadable blank forms (public HTML in /public, e.g. a blank
   // form the nurse prints). Rendered as a "Printable forms" section.
   downloads?: { label: string; url: string }[];
+  // Numbered sources for the "Show references" toggle. Inline [#n] tokens in
+  // step content and tips render as superscript reference markers when the
+  // toggle is on (they are stripped when it is off, the default).
+  sources?: { n: number; label: string; url?: string }[];
 }
 
 export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; category: string }> = {
@@ -101,6 +107,14 @@ export const GUIDES: Record<string, GuideData> = {
     title: "Understanding Your NHS Payslip",
     description: "Where the money in your bank comes from - the payslip layout, enhancements as extra hours, the whole-shift rule, deductions and the payday self-check",
     noCaseNote: true,
+    sources: [
+      { n: 1, label: "NHS Terms and Conditions of Service Handbook (Agenda for Change), Section 2 - unsocial hours, England", url: "https://www.nhsemployers.org/publications/tchandbook" },
+      { n: 2, label: "NHS Employers - Unsocial hours payments (rates and the whole-shift rule)", url: "https://www.nhsemployers.org/articles/unsocial-hours-payments" },
+      { n: 3, label: "NHS Terms and Conditions Handbook, Section 3 - overtime payments", url: "https://www.nhsemployers.org/publications/tchandbook" },
+      { n: 4, label: "NHS Terms and Conditions Handbook, Section 13 - annual leave (13.9: pay during leave includes enhancements)", url: "https://www.nhsemployers.org/publications/tchandbook" },
+      { n: 5, label: "NHS Employers - Agenda for Change pay scales 2026/27, England (effective 1 April 2026)", url: "https://www.nhsemployers.org/articles/pay-scales-202627" },
+      { n: 6, label: "NHS Pension Scheme - tiered member contribution rates (reviewed each April)" },
+    ],
     related: [
       { label: "Roster Survival Guide", guideId: "roster" },
       { label: "Leave, Absence & Rest Rules", guideId: "leave-absence" },
@@ -109,53 +123,62 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "golden-rule",
         title: "The golden rule",
+        tldr: "Query pay problems the month they happen - overpayments get clawed back, so early is cheap.",
         content: `If something does not look right, ask. Pay issues are easiest to fix early - and errors cut both ways: if you have been OVERPAID, the Trust is within its rights to ask for that money back, so the earlier it is spotted the smaller the correction.\n\nFive minutes with your payslip every payday prevents most problems.\n\nAll figures in this guide are examples with made-up round numbers - or your own band's rates once you use the picker on the "Your numbers" step. Rates, tax thresholds and pension bands change (usually each April), so always go by your own payslip and contract.`,
       },
       {
         id: "layout",
         title: "The payslip layout - five sections, top to bottom",
+        tldr: "Five sections - and if the top one is wrong, everything below it is wrong too.",
         content: `Nearly every NHS payslip follows the same pattern:\n\n1. Your details - name, assignment number, job title, pay band, contracted hours, tax code, NI number.\n2. Pay and allowances - Basic Pay, plus a separate line for each enhancement, overtime and arrears payment.\n3. Deductions - tax, National Insurance, pension, and anything else taken off.\n4. Year to date - running totals since April.\n5. Net pay - what actually reaches your bank.\n\nIf the top section is wrong (hours, band, tax code), everything below it will be wrong too, so start there.`,
         tip: "Your assignment number is the reference Payroll works from - quote it in every query.",
       },
       {
         id: "basic-pay",
         title: "Basic Pay - the anchor line",
+        tldr: "Basic Pay = annual salary divided by 12. Check it first.",
         content: `Basic Pay is your contracted annual salary divided by 12, before any enhancements or deductions. Everything else on the payslip is built on top of it.\n\nCheck it first. If your band, pay point or contracted hours changed recently, this is the line where it shows up - and where mistakes creep in.`,
         tip: "Annual salary divided by 12. If that sum does not match the Basic Pay line, stop and query it before looking at anything else.",
       },
       {
         id: "enhancements",
         title: "Enhancements - the bit everyone finds confusing",
-        content: `Unsocial hours enhancements under Agenda for Change. The percentage depends on your band:\n\n- Weekday nights (20:00 to 06:00) and all Saturday hours: Band 2 = time plus 41%, Band 3 = time plus 35%, Bands 4 to 9 = time plus 30%\n- All Sunday and public holiday hours (midnight to midnight): Band 2 = time plus 83%, Band 3 = time plus 69%, Bands 4 to 9 = time plus 60%\n\nSo a Band 3 HCA gets 35% and 69%; a Band 5 nurse gets 30% and 60%. Bank holiday hours get their rate on its own - enhancements are not stacked on top of each other.\n\nThe formula: hours worked x enhancement rate = extra paid hours.\n\nHere is the catch: the payslip does NOT show a higher hourly rate.\n\nWhat staff expect to see: "£20 an hour plus 30% = £26 an hour."\nWhat ESR actually does: it converts the percentage into extra paid HOURS, then pays all of them at your normal rate.\n\nThe money works out the same. It just looks completely different on paper, and that difference causes more payslip queries than anything else.`,
+        tldr: "Enhancements do not boost your RATE - they add extra paid HOURS.",
+        content: `Unsocial hours enhancements under Agenda for Change. The percentage depends on your band:\n\n- Weekday nights (20:00 to 06:00) and all Saturday hours: Band 2 = time plus 41%, Band 3 = time plus 35%, Bands 4 to 9 = time plus 30%\n- All Sunday and public holiday hours (midnight to midnight): Band 2 = time plus 83%, Band 3 = time plus 69%, Bands 4 to 9 = time plus 60%[#1]\n\nSo a Band 3 HCA gets 35% and 69%; a Band 5 nurse gets 30% and 60%. Bank holiday hours get their rate on its own - enhancements are not stacked on top of each other.\n\nThe formula: hours worked x enhancement rate = extra paid hours.\n\nHere is the catch: the payslip does NOT show a higher hourly rate.\n\nWhat staff expect to see: "£20 an hour plus 30% = £26 an hour."\nWhat ESR actually does: it converts the percentage into extra paid HOURS, then pays all of them at your normal rate.[#2]\n\nThe money works out the same. It just looks completely different on paper, and that difference causes more payslip queries than anything else.`,
         tip: "Say it to yourself: enhancements do not boost your rate, they boost your hours.",
       },
       {
         id: "your-numbers",
         title: "Your numbers - pick your band",
-        content: `Everything so far used easy round numbers. This step uses YOURS.\n\nPick your band and pay step below and the guide works out your hourly rate, your enhancement rates and a worked example with your actual figures. The selection is only remembered on this device - nothing is sent anywhere.`,
+        tldr: "Pick your band once and the examples use your real rates.",
+        content: `Everything so far used easy round numbers. This step uses YOURS.\n\nPick your band and pay step below and the guide works out your hourly rate, your enhancement rates and a worked example with your actual figures. The selection is only remembered on this device - nothing is sent anywhere.[#5]`,
         widget: "pay-band-picker",
         tip: "Your exact hourly rate is printed on your payslip as RATE - compare it with the figure here. If they differ, your pay step may have changed (or be wrong).",
       },
       {
         id: "worked-example",
         title: "Worked example with easy numbers",
+        tldr: "10 night hours at 30% = 3 extra paid hours in the PAID/DUE column.",
         content: `Say you work 10 night hours, the night enhancement is 30%, and your normal rate is £20:\n\n- 30% of 10 hours = 3 extra hours\n- 3 hours x £20 = £60 enhancement pay\n\nOn the payslip that line reads something like:\n\n- WKD/EARNED: 10.00 (the hours you actually worked)\n- PAID/DUE: 3.00 (the extra hours the percentage turned into)\n- RATE: £20.0000 (your normal rate - unchanged)\n- AMOUNT: £60.00\n\nThe rate never moved. The hours grew. That is the whole trick.\n\nWork it out for yourself with the formula: 10 hours x 0.30 = 3 extra hours. At Band 3 the same shift gives 10 x 0.35 = 3.5 extra hours.`,
       },
       {
         id: "self-check",
         title: "The self-check: PAID/DUE x RATE = AMOUNT",
+        tldr: "PAID/DUE x RATE should equal AMOUNT on every enhancement line.",
         content: `Real payslips are messier than round numbers, but the same check always works. Take any enhancement line and multiply PAID/DUE by RATE - it should match AMOUNT to within a penny or two of rounding.\n\nExample with realistic numbers: 45.50 night hours at 30% gives 13.65 in PAID/DUE. Then 13.65 x £20.00 = £273.00 in AMOUNT. It matches, so the line is calculated correctly.\n\nTwo different problems, two different fixes:\n- The multiplication does not match the AMOUNT: that is a genuine calculation query for Payroll.\n- The multiplication matches but the HOURS look wrong: check your worked shifts against the roster first - the calculation is fine, the input might not be.`,
         tip: "Enhancements are usually paid a month in arrears - this month's payslip often carries last month's shifts. Check the right month's roster before reporting hours as missing.",
       },
       {
         id: "whole-shift-rule",
         title: "The whole-shift rule - the ward myth that is actually true",
-        content: `You may have heard "if most of your shift is at night, the whole shift gets the night rate". That is not folklore - it is paragraph 2.11 of Section 2 (England) of the NHS Terms and Conditions Handbook:\n\n"Where a continuous night shift or evening shift on a weekday (other than a public holiday) includes hours outside the period of 8 pm to 6 am, the enhancements... should be applied to the whole shift if more than half of the time falls between 8 pm and 6 am."\n\nIn plain English, for a WEEKDAY shift:\n- More than half of the shift falls between 20:00 and 06:00 - the WHOLE shift is enhanced, including the hours outside the window.\n- Half or less falls in the window - only the hours inside the window are enhanced.\n\nTwo examples:\n- Night shift 20:45 to 07:45 (10.5 paid hours): about 9 hours fall inside 20:00-06:00, well over half. All 10.5 hours are paid at the night rate, including 06:00-07:45.\n- Long day 07:30 to 20:30: only 30 minutes falls after 20:00, much less than half. Only 20:00-20:30 is enhanced; the rest is plain time.\n\nSaturdays, Sundays and public holidays do not need this rule - every hour of those days is enhanced anyway.`,
+        tldr: "More than half a weekday shift after 8pm? The WHOLE shift is enhanced.",
+        content: `You may have heard "if most of your shift is at night, the whole shift gets the night rate". That is not folklore - it is paragraph 2.11 of Section 2 (England) of the NHS Terms and Conditions Handbook:\n\n"Where a continuous night shift or evening shift on a weekday (other than a public holiday) includes hours outside the period of 8 pm to 6 am, the enhancements... should be applied to the whole shift if more than half of the time falls between 8 pm and 6 am."[#1][#2]\n\nIn plain English, for a WEEKDAY shift:\n- More than half of the shift falls between 20:00 and 06:00 - the WHOLE shift is enhanced, including the hours outside the window.\n- Half or less falls in the window - only the hours inside the window are enhanced.\n\nTwo examples:\n- Night shift 20:45 to 07:45 (10.5 paid hours): about 9 hours fall inside 20:00-06:00, well over half. All 10.5 hours are paid at the night rate, including 06:00-07:45.\n- Long day 07:30 to 20:30: only 30 minutes falls after 20:00, much less than half. Only 20:00-20:30 is enhanced; the rest is plain time.\n\nSaturdays, Sundays and public holidays do not need this rule - every hour of those days is enhanced anyway.`,
         tip: "Night workers: your total enhanced hours for the month should equal your total worked hours - no plain-time slice at the start or end of a qualifying night shift. If a chunk shows as unenhanced, query it.",
       },
       {
         id: "shift-checker",
         title: "Try it - check one of your shifts",
+        tldr: "Type in a real shift and let the tool do the last four steps for you.",
         content: `Everything the last few steps explained, in one tool. Put in a real shift from your roster and it shows the enhancement split, whether the whole-shift rule fires, a rough pay figure at your band - and, if you add your next start time, whether the gap between shifts is legal.`,
         widget: "shift-checker",
         tip: "Try your own worst case: a late finish followed by an early start, or the night shift you were not sure got fully enhanced.",
@@ -163,56 +186,66 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "two-lines",
         title: "Why one shift can feed two payslip lines",
+        tldr: "Days change at midnight, so one night shift often lands on two payslip lines.",
         content: `Enhancement lines are split by day type, and days change at midnight. So a single night shift often lands on two lines:\n\n- Friday night - hours before midnight go to Night Duty EN, hours after midnight go to Saturday EN\n- Saturday night - before midnight to Saturday EN, after midnight to Sunday EN\n- Sunday night - before midnight to Sunday EN, after midnight to Night Duty EN\n\nThis is why the hours on each enhancement line rarely match "number of shifts x shift length" line by line - but the TOTAL across all the enhancement lines should still add up to your enhanced hours for the month.`,
       },
       {
         id: "deductions",
         title: "Deductions - why net pay is lower than you expect",
+        tldr: "Gross pay minus pension, tax, NI and the rest = net pay.",
         content: `Gross pay is what you earned. Net pay is what lands in the bank. In between:\n\n- NHS Pension - taken off BEFORE tax is calculated, so it costs you less than the figure suggests\n- PAYE (income tax) - driven by your tax code\n- National Insurance\n- Student loan, union subs and salary sacrifice schemes, where they apply\n\nGross pay minus deductions = net pay. That is the whole equation.`,
         tip: "Because pension comes off before tax is worked out, you get the tax relief automatically - no claiming needed.",
       },
       {
         id: "pension",
         title: "Pension - why the deduction changes on its own",
-        content: `NHS Pension contributions are tiered: your percentage depends on which pensionable pay band you fall into, and the bands are reviewed each April.\n\nA pay rise, a jump in enhancement earnings, or an April band review can all move you into a higher tier - so the pension line can grow even though nothing has gone wrong. A bigger deduction is not automatically an error.`,
+        tldr: "Pension is tiered - a bigger deduction is not automatically an error.",
+        content: `NHS Pension contributions are tiered: your percentage depends on which pensionable pay band you fall into, and the bands are reviewed each April.[#6]\n\nA pay rise, a jump in enhancement earnings, or an April band review can all move you into a higher tier - so the pension line can grow even though nothing has gone wrong. A bigger deduction is not automatically an error.`,
         tip: "Take-home dropped and you cannot see why? Compare the pension percentage on this payslip with last month's before ringing Payroll.",
       },
       {
         id: "overtime-leave",
         title: "Overtime, extra hours and annual leave pay",
-        content: `Overtime basics:\n- Overtime (beyond full-time hours) is paid at time and a half, and double time on public holidays. Bands 8a to 9 are not eligible for overtime payments.\n- Part-time staff get plain time for extra hours (plus any unsocial hours enhancement that applies) until they go over 37.5 hours in the week - the overtime premium only starts past that point.\n- Time off in lieu can be taken instead of overtime pay - and if it cannot be taken within three months, it must be paid at the overtime rate.\n\nAnnual leave pay includes your enhancements:\nPay during annual leave is calculated on what you would have received had you been at work - so it includes an average of your usual enhancements, not just basic pay. On many payslips this top-up shows as an "AfC Absence" line. If you work a lot of nights and weekends, that line doing its job is why your pay does not crash in a month with leave in it.`,
+        tldr: "Overtime is time and a half (double on public holidays); leave pay includes your usual enhancements.",
+        content: `Overtime basics:\n- Overtime (beyond full-time hours) is paid at time and a half, and double time on public holidays. Bands 8a to 9 are not eligible for overtime payments.[#3]\n- Part-time staff get plain time for extra hours (plus any unsocial hours enhancement that applies) until they go over 37.5 hours in the week - the overtime premium only starts past that point.\n- Time off in lieu can be taken instead of overtime pay - and if it cannot be taken within three months, it must be paid at the overtime rate.\n\nAnnual leave pay includes your enhancements:\nPay during annual leave is calculated on what you would have received had you been at work - so it includes an average of your usual enhancements, not just basic pay.[#4] On many payslips this top-up shows as an "AfC Absence" line. If you work a lot of nights and weekends, that line doing its job is why your pay does not crash in a month with leave in it.`,
       },
       {
         id: "four-ways",
         title: "Plain, enhanced, overtime or bank - know which shift you are working",
-        content: `An hour of work can be paid four different ways, and mixing them up causes no end of payslip confusion:\n\n1. Contracted (plain) hours - your rostered hours at your basic rate, paid through Basic Pay.\n2. Unsocial hours enhancements - the SAME contracted hours when they fall at night, on a weekend or on a bank holiday. Not extra work - extra pay for when the work happens.\n3. Overtime - hours BEYOND full time (37.5 a week) agreed as overtime: time and a half, double on public holidays, bands up to 7 only. Part-timers get plain time until they pass 37.5 hours.\n4. Bank shifts - extra shifts picked up through the staff bank, which is a SEPARATE registration. Paid separately from your contracted pay, at the band rate for the shift plus any unsocial enhancement for when it falls - NOT at overtime rates. Booked through Loop.\n\nThe two things about bank shifts people learn the hard way:\n\n- They do NOT count toward your contracted hours - you can work bank shifts all month and still owe hours on the roster (the Roster guide explains why)\n- They DO count toward your working time - the 48-hour average and the 11-hour rest rule look at ALL your NHS work, bank included\n\nExact bank arrangements (rates, when it pays, pension treatment) are set by the Trust bank - check with the bank team when you register.`,
+        tldr: "Plain, enhanced, overtime or bank - same hour, four different price tags.",
+        content: `An hour of work can be paid four different ways, and mixing them up causes no end of payslip confusion:\n\n1. Contracted (plain) hours - your rostered hours at your basic rate, paid through Basic Pay.\n2. Unsocial hours enhancements - the SAME contracted hours when they fall at night, on a weekend or on a bank holiday. Not extra work - extra pay for when the work happens.\n3. Overtime - hours BEYOND full time (37.5 a week) agreed as overtime: time and a half, double on public holidays, bands up to 7 only.[#3] Part-timers get plain time until they pass 37.5 hours.\n4. Bank shifts - extra shifts picked up through the staff bank, which is a SEPARATE registration. Paid separately from your contracted pay, at the band rate for the shift plus any unsocial enhancement for when it falls - NOT at overtime rates. Booked through Loop.\n\nThe two things about bank shifts people learn the hard way:\n\n- They do NOT count toward your contracted hours - you can work bank shifts all month and still owe hours on the roster (the Roster guide explains why)\n- They DO count toward your working time - the 48-hour average and the 11-hour rest rule look at ALL your NHS work, bank included\n\nExact bank arrangements (rates, when it pays, pension treatment) are set by the Trust bank - check with the bank team when you register.`,
         tip: "Same Saturday, different price tags: a Saturday BANK shift pays band rate plus the Saturday enhancement; Saturday OVERTIME pays time and a half. Know which one you agreed to before you work it.",
       },
       {
         id: "ytd",
         title: "Year to date - the section everyone skips",
+        tldr: "The year-to-date block shows whether errors are building up or fixing themselves.",
         content: `The year-to-date block shows running totals since 6 April: gross pay, taxable pay, tax paid, pensionable pay, pension contributions.\n\nWhat it is actually for:\n- Spotting errors building up across the year rather than in one month\n- Confirming arrears or back pay really landed\n- Checking whether tax has self-corrected (it often does over a couple of months - the YTD figures show whether it actually has)\n- Comparing against your P60 in April`,
       },
       {
         id: "glossary",
         title: "Quick glossary",
+        tldr: "The payslip's jargon, translated.",
         content: `- Basic Pay - your contracted salary for the month (annual divided by 12)\n- Night Duty EN / Saturday EN / Sunday EN / Bank Holiday ENH - enhancements, shown as extra paid hours at your normal rate\n- WKD/EARNED - the hours you actually worked on that line\n- PAID/DUE - the extra paid hours the enhancement percentage turned into\n- RATE - your normal hourly rate (never boosted by enhancements)\n- Arrears - backdated pay or a correction from an earlier month\n- AfC Absence - usually the average-enhancements top-up that keeps leave and absence days paid at your normal level\n- HCAS - high cost area supplement (London and fringe areas)\n- PAYE / NI - income tax / National Insurance\n- NHS Pension x% - your pension contribution at your current tier\n- Net Pay - what reaches your bank\n- Assignment number - the reference Payroll works from; quote it in every query`,
       },
       {
         id: "payday-check",
         title: "The five-minute payday check",
+        tldr: "Five minutes every payday: top section, Basic Pay, hours, the self-check, pension, net.",
         content: `Every payday:\n\n1. Top section right? Job title, contracted hours, tax code, assignment number.\n2. Basic Pay matches your band and hours (annual salary divided by 12).\n3. Enhancement hours match the shifts you actually worked (right month - remember the arrears lag).\n4. On any line that looks odd: PAID/DUE x RATE = AMOUNT.\n5. Night workers: whole-shift rule applied? Enhanced hours should cover whole qualifying shifts, not stop at 06:00.\n6. Pension percentage is the same as last month, or the change is explainable.\n7. Net pay roughly makes sense against last month.\n\nMost problems are found by staff doing these checks, not by the system flagging them.`,
         tip: "Write down the exact payslip line and figures before raising a query - specific questions get quick answers.",
       },
       {
         id: "something-wrong",
         title: "If something looks wrong",
+        tldr: "Give Payroll the exact line and its four figures - and report overpayments too.",
         content: `Before you contact Payroll, write down:\n\n- The pay date\n- Your assignment number\n- The exact payslip line name (for example "Night Duty EN")\n- The four figures on that line: WKD/EARNED, PAID/DUE, RATE, AMOUNT\n- Why you think it is wrong\n\nA vague query gets a slow answer. An exact line with figures gets checked quickly.\n\nErrors cut both ways: if you have been OVERPAID, the Trust is within its rights to ask for that money back. Caught in month one the correction is small; left for six months, you are paying back six months' worth. The earlier it is raised, the easier it is on you.`,
         tip: "Raise it in the same pay period if you can - same-month corrections are the easiest kind.",
       },
       {
         id: "faq",
         title: "Common questions",
+        tldr: "The questions everyone asks - one tap each.",
         content: `Tap a question to open the answer. Questions that touch more than one guide appear in each - the note under an answer shows where else it lives.`,
         widget: "pay-faq",
       },
@@ -223,6 +256,13 @@ export const GUIDES: Record<string, GuideData> = {
     title: "Roster Survival Guide",
     description: "Your shifts, your hours balance, TOIL and the weekly Loop habit - and how the roster feeds your pay",
     noCaseNote: true,
+    sources: [
+      { n: 1, label: "NHS Terms and Conditions Handbook, Section 27 - working time and rest", url: "https://www.nhsemployers.org/publications/tchandbook" },
+      { n: 2, label: "Working Time Regulations 1998", url: "https://www.legislation.gov.uk/uksi/1998/1833/contents" },
+      { n: 3, label: "NHS England - e-rostering good practice guidance (nursing and midwifery)" },
+      { n: 4, label: "NHS TCS Handbook Section 2 + NHS Employers unsocial hours payments (rates, arrears, whole-shift rule)", url: "https://www.nhsemployers.org/articles/unsocial-hours-payments" },
+      { n: 5, label: "DHcFT Health and Attendance Policy and FAQs (FOCUS - trust login needed)" },
+    ],
     related: [
       { label: "Understanding Your NHS Payslip", guideId: "payslip" },
       { label: "Leave, Absence & Rest Rules", guideId: "leave-absence" },
@@ -231,62 +271,73 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "golden-rule",
         title: "The golden rule",
+        tldr: "Roster errors are easiest to fix the week they happen - do not wait for payday.",
         content: `If something does not look right, ask. Roster issues are easiest to fix early.\n\nDo not wait for:\n- Payday - by then a roster error has already reached your pay\n- The end of the leave year - balances get much harder to unpick\n- Several months down the line - small errors grow into big ones\n\nFive minutes checking your roster each week prevents most problems, and the sooner something is raised, the easier it is to put right.`,
       },
       {
         id: "more-than-timetable",
         title: "The roster is more than a timetable",
+        tldr: "The roster drives your pay, leave, hours and the staffing record - keep it accurate.",
         content: `The roster feeds almost everything about your working life:\n\n- Pay - your shifts drive what you are paid, including night and weekend enhancements\n- Leave - your annual leave balance lives here\n- Sickness - absence is recorded against it\n- Hours - your running balance of hours worked vs contracted\n- Staffing - it is the factual record of who was on shift\n\nThat last one matters more than people realise. If an incident happens and someone asks "was the ward fully staffed that night?", the roster is the evidence. If shifts, swaps or moves to other wards were never recorded, the picture is incomplete.`,
         tip: "If a shift changed on the day - a swap, a move to another ward, extra hours - make sure the change actually got recorded.",
       },
       {
         id: "hours-balance",
         title: "Your hours balance - a running account",
+        tldr: "MINUS means the Trust owes YOU time (TOIL); PLUS means you owe hours.",
         content: `One bit of jargon first: TOIL means Time Off In Lieu - time the Trust owes you back because you worked over your contracted hours.\n\nYour hours balance changes as shifts are worked, leave is taken and sickness is recorded. The plus and minus signs trip everyone up, because minus is the good one for you. Plainly:\n\n- MINUS (for example -7:30): you have worked MORE than your contracted hours. The Trust owes you time back - that is TOIL.\n- PLUS (for example +7:30): you have worked LESS than your contracted hours. You owe hours to the Trust.\n- 0:00 is the target - contracted and rostered hours in line.`,
         tip: "If you owe hours, agree with your manager how to work them back before booking extra paid shifts on top.",
       },
       {
         id: "balance-changes",
         title: "Why did my balance change?",
+        tldr: "Balances move with amendments, leave, sickness, bank shifts and contract changes.",
         content: `The usual reasons:\n\n- Shifts were amended after publication\n- Additional hours were worked\n- Annual leave was added or changed\n- Sickness was recorded\n- Bank or overtime shifts were added\n- Your contracted hours changed\n\nContract changes are the tricky one. Roster weeks run Sunday to Saturday, so if your new hours start part-way through a week (say, a Wednesday), that split week may need a manual check. If your balance looks odd right after a contract change, that is almost certainly why - ask your manager or roster lead to walk through it.`,
       },
       {
         id: "owe-hours",
         title: "Why do I owe hours when I am always at work?",
+        tldr: "Bank and overtime shifts never reduce owed contracted hours.",
         content: `A question staff ask a lot - and the answer is that additional paid hours, overtime shifts and bank shifts do NOT count towards your contracted hours, because those shifts are paid separately. So you can be working extra shifts and still owe contracted hours if your rostered hours have not been completed.\n\n- Check your hours balance regularly\n- Review your roster each week\n- Remember: bank and overtime shifts do not reduce owed contracted hours\n\nBeing busy at work does not always mean your contracted hours balance is correct - a quick check avoids surprises later.\n\nAnd do not take TOIL for granted either: a balance can change after the event if a shift was input wrong and gets corrected later. If you have already taken TOIL that turns out to be a roster error, you can be asked to work the time back. Query anything odd BEFORE using the time, not after.`,
         tip: "Speak to your manager early if the balance does not look right - early queries are easy ones.",
       },
       {
         id: "loop-habit",
         title: "Loop - the roster in your pocket",
+        tldr: "Five minutes in Loop each week - checking backwards as well as forwards.",
         content: `Loop shows your roster, leave balances and hours balance, lets you request leave, and lists available bank shifts so you can pick them up without ringing round wards.\n\nThe real value is not the app - it is the habit. Five minutes a week:\n\n- Shifts correct for the next fortnight?\n- LAST fortnight recorded right? (Shifts can be amended after the event if they were input wrong)\n- Leave balance accurate?\n- Sickness recorded properly?\n- Hours balance makes sense?\n\nAnything off, raise it that week while it is easy to trace.`,
       },
       {
         id: "sickness",
         title: "Sickness - what happens to your hours",
-        content: `Short sickness (under 7 days): recorded against the shifts you were due to work, so the roster shows which duties were missed.\n\nLonger sickness (7 days or more): your contracted hours are usually maintained instead. That stops TOIL or owed hours silently building up while you are off.\n\nWhen you come back, check five things: your future shifts, your hours balance, your leave balance, the recorded sickness dates, and your return-to-work date.`,
+        tldr: "Short sickness is recorded against shifts; long sickness maintains your hours.",
+        content: `Short sickness (under 7 days): recorded against the shifts you were due to work, so the roster shows which duties were missed.\n\nLonger sickness (7 days or more): your contracted hours are usually maintained instead.[#5] That stops TOIL or owed hours silently building up while you are off.\n\nWhen you come back, check five things: your future shifts, your hours balance, your leave balance, the recorded sickness dates, and your return-to-work date.`,
         tip: "The focus after sickness is recovery. Extra paid shifts straight after an absence should not normally happen unless agreed as appropriate.",
       },
       {
         id: "roster-to-payslip",
         title: "The bridge - from roster to payslip",
-        content: `Three things worth knowing before you ever compare the roster to a payslip:\n\n- Enhancements usually pay a month in arrears. This month's payslip often carries last month's shifts, so compare against the right month's roster.\n- Days change at midnight, so one night shift can feed two payslip lines. A Friday night puts its pre-midnight hours on the Night line and its post-midnight hours on the Saturday line. The per-line hours look odd; the total still adds up.\n- The whole-shift rule (weekdays): if more than half of a weekday shift falls between 20:00 and 06:00, the WHOLE shift attracts the night enhancement - including the early-morning tail after 06:00. That is national Agenda for Change terms (Section 2 para 2.11), not ward folklore.`,
+        tldr: "Enhancements pay a month behind, split at midnight, and follow the whole-shift rule.",
+        content: `Three things worth knowing before you ever compare the roster to a payslip:\n\n- Enhancements usually pay a month in arrears. This month's payslip often carries last month's shifts, so compare against the right month's roster.\n- Days change at midnight, so one night shift can feed two payslip lines. A Friday night puts its pre-midnight hours on the Night line and its post-midnight hours on the Saturday line. The per-line hours look odd; the total still adds up.\n- The whole-shift rule (weekdays): if more than half of a weekday shift falls between 20:00 and 06:00, the WHOLE shift attracts the night enhancement - including the early-morning tail after 06:00. That is national Agenda for Change terms (Section 2 para 2.11), not ward folklore.[#4]`,
         tip: "The rates, worked examples and the line-by-line self-check are all in the payslip guide - linked below the steps.",
       },
       {
         id: "weekly-check",
         title: "The five-minute weekly check",
+        tldr: "Six checks, five minutes - most problems are caught by staff, not systems.",
         content: `1. Shifts match what you actually worked\n2. LAST fortnight recorded right? Shifts can be amended after the event if input wrong\n3. Swaps and moves to other wards are recorded\n4. Leave balance is right\n5. Sickness dates are right\n6. Hours balance makes sense - and is heading towards 0:00\n\nMost problems are found by staff doing these checks, not by the system flagging them.`,
         tip: "Write down the exact date and shift before raising a query - specific questions get quick answers.",
       },
       {
         id: "glossary",
         title: "Quick glossary",
+        tldr: "The roster's jargon, translated.",
         content: `- TOIL - Time Off In Lieu: time the Trust owes you for hours worked over contract\n- Contracted (substantive) hours - the hours your permanent contract says you work\n- Hours balance / net hours - the running difference between contracted and rostered hours\n- Bank shift - an extra shift worked on top of your contract, paid separately\n- WTD - Working Time Directive: the safe-working law behind the 48-hour rule and rest rules\n- Roster week - runs Sunday to Saturday\n- Unsocial hours window - weekdays 20:00 to 06:00, plus all of Saturday, Sunday and public holidays: the times that attract pay enhancements\n- Loop - the app for viewing your roster, leave and hours on your phone`,
       },
       {
         id: "faq",
         title: "Common questions",
+        tldr: "The questions everyone asks - one tap each.",
         content: `Tap a question to open the answer. Questions that touch more than one guide appear in each - the note under an answer shows where else it lives.`,
         widget: "pay-faq",
       },
@@ -297,6 +348,16 @@ export const GUIDES: Record<string, GuideData> = {
     title: "Leave, Absence & Rest Rules",
     description: "Annual leave, public holidays and sickness, carers and bereavement leave, phased returns - and the rest rules that protect you between shifts",
     noCaseNote: true,
+    sources: [
+      { n: 1, label: "NHS Terms and Conditions Handbook (Agenda for Change) - Sections 13 (annual leave), 14 (sickness), 23 (child bereavement) and 27 (rest)", url: "https://www.nhsemployers.org/publications/tchandbook" },
+      { n: 2, label: "NHS Employers - public holidays and TOIL guidance (Section 14.9: no additional day off if sick on a statutory holiday)" },
+      { n: 3, label: "Working Time Regulations 1998", url: "https://www.legislation.gov.uk/uksi/1998/1833/contents" },
+      { n: 4, label: "NHS England - e-rostering good practice guidance (nursing and midwifery)" },
+      { n: 5, label: "RCN advice - working time, rest breaks, on-call and night work", url: "https://www.rcn.org.uk/Get-Help/RCN-advice/working-time-rest-breaks-on-call-and-night-work" },
+      { n: 6, label: "DHcFT Special Leave Policy v7, issued 10 July 2024 with interim reviews to September 2025 (FOCUS - trust login needed)" },
+      { n: 7, label: "DHcFT Health and Attendance Policy and FAQs (FOCUS - trust login needed)" },
+      { n: 8, label: "Carer's Leave Act 2023" },
+    ],
     related: [
       { label: "Roster Survival Guide", guideId: "roster" },
       { label: "Understanding Your NHS Payslip", guideId: "payslip" },
@@ -305,58 +366,68 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "what-this-covers",
         title: "What this guide covers",
+        tldr: "Leave, sick pay, special leave and rest rules - with the trust-policy bits marked.",
         content: `Annual leave, public holidays, sick pay, carers and bereavement leave, phased returns - and the rest rules that protect you between shifts.\n\nTwo ground rules up front:\n\n- Entitlements here are the national NHS Terms and Conditions (Agenda for Change) baseline. Where the Trust's own policy sets the exact detail, the guide says so - check the policy on FOCUS or ask your manager for the local figures.\n- If a balance or a rota pattern does not look right, raise it early. Leave and rest problems are far easier to fix before the leave year ends or the pattern becomes routine.`,
       },
       {
         id: "entitlement",
         title: "Annual leave - what you are owed",
-        content: `NHS annual leave under Agenda for Change grows with your length of NHS service:\n\n- On appointment: 27 days plus 8 public holidays\n- After 5 years' service: 29 days plus 8 public holidays\n- After 10 years' service: 33 days plus 8 public holidays\n\nFor rostered staff this is usually converted into HOURS (a full-time year at 10+ years' service works out around 247 hours of annual leave plus 60 hours of public holiday entitlement). Working in hours is fairer for people on long shifts - a 12.5-hour shift costs 12.5 hours of leave, not "a day".\n\nCheck your leave entitlement after any of these:\n\n- Long-term sickness\n- Sickness on a public holiday\n- A contract change\n- Carried-over leave\n- Service milestones (5 and 10 years bring extra entitlement)\n- Any manual amendment`,
+        tldr: "27, 29 or 33 days plus bank holidays, by length of service - usually counted in hours.",
+        content: `NHS annual leave under Agenda for Change grows with your length of NHS service:\n\n- On appointment: 27 days plus 8 public holidays\n- After 5 years' service: 29 days plus 8 public holidays\n- After 10 years' service: 33 days plus 8 public holidays[#1]\n\nFor rostered staff this is usually converted into HOURS (a full-time year at 10+ years' service works out around 247 hours of annual leave plus 60 hours of public holiday entitlement). Working in hours is fairer for people on long shifts - a 12.5-hour shift costs 12.5 hours of leave, not "a day".\n\nCheck your leave entitlement after any of these:\n\n- Long-term sickness\n- Sickness on a public holiday\n- A contract change\n- Carried-over leave\n- Service milestones (5 and 10 years bring extra entitlement)\n- Any manual amendment`,
         tip: "If the entitlement calculation does not make sense, ask your manager to walk you through it - small adjustments are easy to miss.",
       },
       {
         id: "public-holidays-sickness",
         title: "Sick on a public holiday - what actually happens",
-        content: `If you are off sick on a public holiday, you still receive sickness absence pay in line with NHS terms and conditions. But you do NOT build up public holiday hours for that day - so if public holiday entitlement forms part of your annual leave allowance, those hours come off your balance.\n\nExample: full-time with more than 10 years' service might be 247 hours annual leave plus 60 hours public holiday (307 total). Off sick on two bank holidays, the public holiday entitlement drops from 60 to 45 hours. Sickness pay itself is not affected - only the public holiday hours.\n\nIt is worth checking your leave balance in Loop after any sickness that includes a bank holiday, so you understand how it has affected your overall entitlement.\n\n(One footnote: your ordinary annual leave still accrues during sickness, and the legal minimum of 5.6 weeks always accrues - NHS entitlement sits well above that floor, so in practice only the public holiday hours are affected.)`,
+        tldr: "Sick on a bank holiday: pay unaffected, but the public holiday hours come off.",
+        content: `If you are off sick on a public holiday, you still receive sickness absence pay in line with NHS terms and conditions. But you do NOT build up public holiday hours for that day - so if public holiday entitlement forms part of your annual leave allowance, those hours come off your balance.[#2]\n\nExample: full-time with more than 10 years' service might be 247 hours annual leave plus 60 hours public holiday (307 total). Off sick on two bank holidays, the public holiday entitlement drops from 60 to 45 hours. Sickness pay itself is not affected - only the public holiday hours.\n\nIt is worth checking your leave balance in Loop after any sickness that includes a bank holiday, so you understand how it has affected your overall entitlement.\n\n(One footnote: your ordinary annual leave still accrues during sickness, and the legal minimum of 5.6 weeks always accrues - NHS entitlement sits well above that floor, so in practice only the public holiday hours are affected.)`,
         tip: "Being off sick on a bank holiday does not affect your sickness pay - but it can quietly shrink your leave balance. Check it.",
       },
       {
         id: "sick-pay",
         title: "Sick pay - how much, for how long",
-        content: `NHS sick pay grows with your length of service (national terms Section 14, mirrored in the Trust's Health and Attendance FAQs):\n\n- During your 1st year: 1 month full pay, then 2 months half pay\n- 2nd year: 2 months full, 2 months half\n- 3rd year: 4 months full, 4 months half\n- 4th and 5th years: 5 months full, 5 months half\n- After 5 years: 6 months full, 6 months half\n\nThe entitlement is calculated on a ROLLING 12 months - it looks back at all your sickness over the previous year, not each absence on its own. Lots of short episodes eat into the same allowance as one long one.\n\nThe practical rules:\n\n- Self-certify for up to 7 days; after that you need a GP fit note\n- Long-term sickness = over 4 weeks\n- Sick while ON annual leave? With your manager's agreement the leave can be reclaimed and taken later (fit note needed if it was more than 7 days)\n- Routine GP and dental appointments are in your own time - arrange a shift change or work the time back. A DEPENDANT'S hospital appointment is different: that can come under the 10 days of paid domestic leave (next step).`,
+        tldr: "Sick pay runs from 1+2 months in year one to 6+6 after five years, on a rolling year.",
+        content: `NHS sick pay grows with your length of service (national terms Section 14, mirrored in the Trust's Health and Attendance FAQs):\n\n- During your 1st year: 1 month full pay, then 2 months half pay\n- 2nd year: 2 months full, 2 months half\n- 3rd year: 4 months full, 4 months half\n- 4th and 5th years: 5 months full, 5 months half\n- After 5 years: 6 months full, 6 months half[#1]\n\nThe entitlement is calculated on a ROLLING 12 months - it looks back at all your sickness over the previous year, not each absence on its own.[#7] Lots of short episodes eat into the same allowance as one long one.\n\nThe practical rules:\n\n- Self-certify for up to 7 days; after that you need a GP fit note\n- Long-term sickness = over 4 weeks\n- Sick while ON annual leave? With your manager's agreement the leave can be reclaimed and taken later (fit note needed if it was more than 7 days)\n- Routine GP and dental appointments are in your own time - arrange a shift change or work the time back. A DEPENDANT'S hospital appointment is different: that can come under the 10 days of paid domestic leave (next step).`,
         tip: "If a long absence is coming (planned surgery, say), it is worth knowing where you sit on the scale before it starts - ask HR for your current entitlement.",
       },
       {
         id: "planned-absences",
         title: "Bereavement, carers leave and other special leave",
-        content: `Life happens, and the Trust's Special Leave Policy provides for it - and is more generous than most people expect. The headline entitlements (all agreed with your manager first, then recorded through the Absence Manager App):\n\nBereavement leave: FIVE DAYS PAID leave on the death of a relative or someone you had a close personal relationship with. In some circumstances up to two weeks paid - for example funeral delays or travel to attend one. Child bereavement is separate and stronger: two weeks' paid leave under national terms (Section 23) - see the Pregnancy and Baby Loss Guidance.\n\nCompassionate leave for end-of-life care: up to SIX WEEKS PAID leave to care for a dependant (spouse, partner, child, grandchild or parent) nearing the end of their life. It can be taken as consecutive days, single days or partial days, and your job is protected.\n\nDomestic leave (emergencies): up to 10 DAYS PAID (pro rata) in a rolling 12 months for emergencies and unforeseen needs - a child ill at school, a dependant's hospital appointment, a care arrangement falling through. A pet emergency or pet bereavement can use 2 to 5 of those days.\n\nCarer leave: ON TOP of domestic leave, one week UNPAID every 12 months (pro rata) if you care for someone with a long-term care need. Half days, full days or a whole week - notice runs on a sliding scale from 3 days' notice (for up to a day) to 10 days' notice (for a full week).\n\nUnpaid parental leave: 18 weeks unpaid per child up to their 18th birthday, capped at 4 weeks per child per year, normally taken in whole weeks with 21 days' notice.\n\nVolunteering: one day paid leave in a rolling 12 months for a local community group or charity, with written proof.\n\nAlso in the policy: jury service and court-witness leave (paid); public positions such as magistrate (up to 10 days paid a year); Reserve or Cadet Forces duties (up to 3 weeks paid); up to 15 days job-protected leave if an immediate family member is called to active duty; paid interview leave if your post is at risk of redundancy; and disability leave - a separate category from sick leave, arranged case by case with Employee Relations.\n\nPhased return after long-term sickness sits under a different policy (Health and Attendance): a gradual return is arranged with your manager and Occupational Health - agree in writing how the reduced hours are paid before you start back.\n\nTwo cautions: entitlements are pro rata if you are part time, and leave taken beyond your entitlement can be treated as a counter-fraud matter - so track what you have used.`,
+        tldr: "Bereavement 5 days paid, end-of-life care up to 6 weeks, emergencies 10 days, carers 1 week unpaid.",
+        content: `Life happens, and the Trust's Special Leave Policy provides for it - and is more generous than most people expect.[#6] The headline entitlements (all agreed with your manager first, then recorded through the Absence Manager App):\n\nBereavement leave: FIVE DAYS PAID leave on the death of a relative or someone you had a close personal relationship with. In some circumstances up to two weeks paid - for example funeral delays or travel to attend one. Child bereavement is separate and stronger: two weeks' paid leave under national terms (Section 23)[#1] - see the Pregnancy and Baby Loss Guidance.\n\nCompassionate leave for end-of-life care: up to SIX WEEKS PAID leave to care for a dependant (spouse, partner, child, grandchild or parent) nearing the end of their life. It can be taken as consecutive days, single days or partial days, and your job is protected.\n\nDomestic leave (emergencies): up to 10 DAYS PAID (pro rata) in a rolling 12 months for emergencies and unforeseen needs - a child ill at school, a dependant's hospital appointment, a care arrangement falling through. A pet emergency or pet bereavement can use 2 to 5 of those days.\n\nCarer leave: ON TOP of domestic leave, one week UNPAID every 12 months (pro rata) if you care for someone with a long-term care need.[#8] Half days, full days or a whole week - notice runs on a sliding scale from 3 days' notice (for up to a day) to 10 days' notice (for a full week).\n\nUnpaid parental leave: 18 weeks unpaid per child up to their 18th birthday, capped at 4 weeks per child per year, normally taken in whole weeks with 21 days' notice.\n\nVolunteering: one day paid leave in a rolling 12 months for a local community group or charity, with written proof.\n\nAlso in the policy: jury service and court-witness leave (paid); public positions such as magistrate (up to 10 days paid a year); Reserve or Cadet Forces duties (up to 3 weeks paid); up to 15 days job-protected leave if an immediate family member is called to active duty; paid interview leave if your post is at risk of redundancy; and disability leave - a separate category from sick leave, arranged case by case with Employee Relations.\n\nPhased return after long-term sickness sits under a different policy (Health and Attendance): a gradual return is arranged with your manager and Occupational Health - agree in writing how the reduced hours are paid before you start back.\n\nTwo cautions: entitlements are pro rata if you are part time, and leave taken beyond your entitlement can be treated as a counter-fraud matter - so track what you have used.`,
         tip: "Figures from the Trust Special Leave Policy (v7, reviewed Sept 2025). Policies change - the FOCUS copy is always the live version, and jury service, military and disability leave have their own sections in it.",
       },
       {
         id: "rest-11-hour",
         title: "The 11-hour rest rule",
-        content: `You are entitled to 11 consecutive hours of rest in each 24-hour period. That is the law (Working Time Regulations 1998), and the NHS terms and conditions say the same (Section 27): employees should normally have a rest period of not less than 11 hours in each 24-hour period.\n\nWhat that means in rota terms:\n\n- Finish at 20:00 - the earliest compliant start next day is 07:00 (exactly 11 hours)\n- Finish at 21:30 - the earliest compliant start is 08:30. Coming back at 07:00 gives only 9.5 hours' rest, which breaches the rule\n\nRest means time OFF DUTY. Travel to and from work does not extend it - finish at 21:30 with a 40-minute drive home and your actual rest is shorter still.\n\nSeveral more limits sit alongside it in national e-rostering good practice:\n\n- No more than 72 hours worked in any 7 days\n- No more than 5 consecutive long shifts (over 10 hours), and no more than 7 consecutive shifts of any length\n- At least 48 hours' rest after a run of 4 or more night shifts\n- A 35-hour block of uninterrupted rest each week (or the equivalent over a fortnight)\n\nAnd one thing many people do not realise: unlike the 48-hour week, you CANNOT opt out of daily rest. Staff sometimes offer to "just come in anyway" - willingness does not make the pattern compliant.`,
+        tldr: "11 hours' rest between shifts is the law - and you cannot opt out of it.",
+        content: `You are entitled to 11 consecutive hours of rest in each 24-hour period. That is the law (Working Time Regulations 1998), and the NHS terms and conditions say the same (Section 27): employees should normally have a rest period of not less than 11 hours in each 24-hour period.[#3][#1]\n\nWhat that means in rota terms:\n\n- Finish at 20:00 - the earliest compliant start next day is 07:00 (exactly 11 hours)\n- Finish at 21:30 - the earliest compliant start is 08:30. Coming back at 07:00 gives only 9.5 hours' rest, which breaches the rule\n\nRest means time OFF DUTY. Travel to and from work does not extend it - finish at 21:30 with a 40-minute drive home and your actual rest is shorter still.\n\nSeveral more limits sit alongside it in national e-rostering good practice:\n\n- No more than 72 hours worked in any 7 days\n- No more than 5 consecutive long shifts (over 10 hours), and no more than 7 consecutive shifts of any length\n- At least 48 hours' rest after a run of 4 or more night shifts\n- A 35-hour block of uninterrupted rest each week (or the equivalent over a fortnight)[#4]\n\nAnd one thing many people do not realise: unlike the 48-hour week, you CANNOT opt out of daily rest. Staff sometimes offer to "just come in anyway" - willingness does not make the pattern compliant.`,
         tip: "A roster warning about rest is a wellbeing prompt, not a telling-off. It means the pattern should be looked at.",
       },
       {
         id: "late-early-trap",
         title: "The late-then-early trap",
-        content: `The most common breach on wards is the late shift followed by an early: finish at 21:30, back for 07:00. It feels normal because it is common - but 9.5 hours between shifts is below the legal minimum, and if it is happening to you regularly the roster needs looking at.\n\nThere IS a legal exception, and it is narrower than people think. Daily rest can be interrupted for shift changeovers or genuine service needs, but only if you get COMPENSATORY REST - the missed rest (1.5 hours in this example) given back as soon as possible afterwards. The exception is meant for exceptional circumstances, not a routine rostering pattern. A rota that schedules late-then-early week in, week out, with no compensatory rest, is non-compliant.\n\nWhat to do if this is your pattern:\n\n1. Check your own roster - count the hours between each finish time and the next start\n2. Raise it with the roster lead or e-rostering team (the rostering system can flag sub-11-hour gaps automatically)\n3. If nothing changes, put it in writing - Datix if fatigue is creating a safety risk, and your union rep can take it up as a working time issue\n\nThis is not about being awkward. Fatigue is a patient safety issue as much as a staff one - it is exactly what these rules exist to prevent.`,
+        tldr: "Finish 21:30, back at 07:00 = 9.5 hours = a breach, unless the rest is repaid.",
+        content: `The most common breach on wards is the late shift followed by an early: finish at 21:30, back for 07:00. It feels normal because it is common - but 9.5 hours between shifts is below the legal minimum, and if it is happening to you regularly the roster needs looking at.\n\nThere IS a legal exception, and it is narrower than people think. Daily rest can be interrupted for shift changeovers or genuine service needs, but only if you get COMPENSATORY REST - the missed rest (1.5 hours in this example) given back as soon as possible afterwards. The exception is meant for exceptional circumstances, not a routine rostering pattern. A rota that schedules late-then-early week in, week out, with no compensatory rest, is non-compliant.\n\nWhat to do if this is your pattern:\n\n1. Check your own roster - count the hours between each finish time and the next start\n2. Raise it with the roster lead or e-rostering team (the rostering system can flag sub-11-hour gaps automatically)\n3. If nothing changes, put it in writing - Datix if fatigue is creating a safety risk, and your union rep can take it up as a working time issue[#5]\n\nThis is not about being awkward. Fatigue is a patient safety issue as much as a staff one - it is exactly what these rules exist to prevent.`,
         tip: "Check your own pattern in seconds: the shift checker in the payslip guide takes a finish time and your next start time and tells you whether the gap is legal.",
       },
       {
         id: "48-hour-rule",
         title: "The 48-hour rule, made easy",
-        content: `The law limits working time to an AVERAGE of 48 hours a week, measured over a rolling 17-week reference period. There is no separate single-week cap - one heavy week is not a breach on its own, no paperwork needed.\n\nHow the averaging works (using 4 weeks to keep the maths simple - the real review period is 17 weeks):\n\n- Week 1: 55 hours\n- Week 2: 40 hours\n- Week 3: 34 hours\n- Week 4: 37.5 hours\n\nTotal 166.5 hours, divided by 4 = an average of 41.6 hours a week. Under 48, so no concern - even though week 1 on its own looked heavy.\n\nThe opt-out, straightened out (the wording trips everyone up, including official emails):\n\n- What you CAN opt out of: the 48-hour AVERAGE itself. The opt-out is voluntary, in writing, and you can cancel it later.\n- What you can NEVER opt out of: the rest rules - 11 hours' daily rest, weekly rest and breaks apply to everyone, opt-out or not.\n- Opt-out or not, keep an eye on your own hours - fatigue is a safe-working issue, not just a legal one, and all your NHS work (bank included) counts toward the average.`,
+        tldr: "48 hours is an AVERAGE over 17 weeks - the opt-out covers the average, never your rest.",
+        content: `The law limits working time to an AVERAGE of 48 hours a week, measured over a rolling 17-week reference period.[#3] There is no separate single-week cap - one heavy week is not a breach on its own, no paperwork needed.\n\nHow the averaging works (using 4 weeks to keep the maths simple - the real review period is 17 weeks):\n\n- Week 1: 55 hours\n- Week 2: 40 hours\n- Week 3: 34 hours\n- Week 4: 37.5 hours\n\nTotal 166.5 hours, divided by 4 = an average of 41.6 hours a week. Under 48, so no concern - even though week 1 on its own looked heavy.\n\nThe opt-out, straightened out (the wording trips everyone up, including official emails):\n\n- What you CAN opt out of: the 48-hour AVERAGE itself. The opt-out is voluntary, in writing, and you can cancel it later.\n- What you can NEVER opt out of: the rest rules - 11 hours' daily rest, weekly rest and breaks apply to everyone, opt-out or not.\n- Opt-out or not, keep an eye on your own hours - fatigue is a safe-working issue, not just a legal one, and all your NHS work (bank included) counts toward the average.`,
       },
       {
         id: "raising-it",
         title: "If something looks wrong",
+        tldr: "Exact dates and figures get answers - vague queries do not.",
         content: `For LEAVE queries, before you contact your manager or Payroll write down:\n\n- Your entitlement at the start of the leave year (from Loop)\n- The balance you can see now\n- The specific dates you think are wrong (sickness dates, bank holidays, amendments)\n\nFor REST and rota-pattern concerns:\n\n- The exact dates and shift times, and the gap between them\n- How often the pattern happens\n- Whether compensatory rest was given\n\nRaise it with your manager or roster lead first - most issues are input errors, fixed in minutes. If a pattern keeps repeating, escalate in writing.\n\nA vague query gets a slow answer. Exact dates and figures get checked quickly.`,
         tip: "Raise leave-balance queries well before the end of the leave year - carried-over problems are much harder to unpick.",
       },
       {
         id: "faq",
         title: "Common questions",
+        tldr: "The questions everyone asks - one tap each.",
         content: `Tap a question to open the answer. Questions that touch more than one guide appear in each - the note under an answer shows where else it lives.`,
         widget: "pay-faq",
       },

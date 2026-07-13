@@ -38,6 +38,28 @@ const STEP_ICONS: Record<string, typeof CheckCircle> = {
   forms: FileText, submission: Send, casenote: Clipboard, reminder: Calendar, gdpr: Shield,
 };
 
+// Guide text can carry inline [#n] reference tokens pointing at the guide's
+// numbered sources. With the "Show references" toggle on they render as
+// superscript markers linking to the References panel; off (the default)
+// they are stripped so the text reads clean.
+function renderGuideText(text: string, showRefs: boolean) {
+  const parts = text.split(/(\[#\d+\])/g);
+  return parts.map((part, i) => {
+    const m = part.match(/^\[#(\d+)\]$/);
+    if (m) {
+      if (!showRefs) return null;
+      return (
+        <sup key={i}>
+          <a href="#guide-references" className="text-nhs-blue font-bold text-[0.7em] hover:text-nhs-dark-blue no-underline" aria-label={`Reference ${m[1]}`}>
+            {m[1]}
+          </a>
+        </sup>
+      );
+    }
+    return <span key={i}>{renderWithLinks(part)}</span>;
+  });
+}
+
 // Turn bare URLs in guide step text into clickable links (trailing punctuation
 // like a full stop or bracket is kept out of the link).
 function renderWithLinks(text: string) {
@@ -109,6 +131,18 @@ export default function UnifiedGuidePage() {
         ((t.isRecurring && Array.isArray(t.recurringDays) && t.recurringDays.includes(dow)) || t.dueDate === today)
     );
   })();
+
+  // "Show references" toggle - off by default, remembered per device.
+  const [showRefs, setShowRefs] = useState(false);
+  useEffect(() => {
+    try { setShowRefs(localStorage.getItem("wardhub_show_refs") === "1"); } catch { /* private mode */ }
+  }, []);
+  const toggleRefs = () => {
+    setShowRefs((v) => {
+      try { localStorage.setItem("wardhub_show_refs", v ? "0" : "1"); } catch { /* private mode */ }
+      return !v;
+    });
+  };
 
   // Shared state
   const [currentStep, setCurrentStep] = useState(0);
@@ -498,7 +532,15 @@ export default function UnifiedGuidePage() {
               ))
             )}
           </div>
-          <div className="flex justify-end mt-2">
+          <div className={`flex ${!isReferral && guide?.sources ? "justify-between" : "justify-end"} mt-2`}>
+            {!isReferral && guide?.sources && (
+              <button onClick={toggleRefs} aria-pressed={showRefs}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                  showRefs ? "bg-nhs-blue text-white" : "text-nhs-blue hover:bg-blue-50"
+                }`}>
+                <BookOpen className="w-3.5 h-3.5" /> {showRefs ? "Hide references" : "Show references"}
+              </button>
+            )}
             <Link href={link(`/feedback?category=${isReferral ? "referrals" : "guides"}&sub=${guideId}&title=${encodeURIComponent("Problem with: " + title)}`)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
               <AlertCircle className="w-3.5 h-3.5" /> Report a problem
@@ -723,9 +765,14 @@ export default function UnifiedGuidePage() {
                 </div>
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900">{hStep.title}</h2>
               </div>
+              {hStep.tldr && (
+                <div className="mb-5 px-4 py-2.5 bg-indigo-50 border-l-4 border-indigo-400 rounded-r-lg text-sm text-indigo-900">
+                  <strong>In a hurry:</strong> {hStep.tldr}
+                </div>
+              )}
               <div className="prose prose-gray max-w-none">
                 {hStep.content.split("\n").map((line, i) => (
-                  <p key={i} className={`${line.startsWith("- ") ? "ml-4" : ""} ${line === "" ? "h-2" : "mb-2"} text-gray-700 leading-relaxed`}>{renderWithLinks(line)}</p>
+                  <p key={i} className={`${line.startsWith("- ") ? "ml-4" : ""} ${line === "" ? "h-2" : "mb-2"} text-gray-700 leading-relaxed`}>{renderGuideText(line, showRefs)}</p>
                 ))}
               </div>
               {hStep.widget === "pay-band-picker" && <PayBandPicker />}
@@ -738,7 +785,7 @@ export default function UnifiedGuidePage() {
                   <div className="flex gap-3">
                     <Lightbulb className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                     <div className="text-sm text-amber-900 leading-relaxed">
-                      {hStep.tip.split("\n").map((line, i) => (<p key={i} className="mb-1">{line}</p>))}
+                      {hStep.tip.split("\n").map((line, i) => (<p key={i} className="mb-1">{renderGuideText(line, showRefs)}</p>))}
                     </div>
                   </div>
                 </div>
@@ -746,6 +793,26 @@ export default function UnifiedGuidePage() {
             </div>
           </div>
         ) : null}
+
+        {/* References panel - only when the toggle is on */}
+        {!isReferral && guide?.sources && showRefs && (
+          <div id="guide-references" className="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+            <h3 className="font-bold text-slate-800 text-sm mb-1">References</h3>
+            <p className="text-xs text-slate-500 mb-3">The numbered markers in the text point here. National terms are the source of truth for pay; trust policies live on FOCUS.</p>
+            <ol className="space-y-1.5 text-sm text-slate-600">
+              {guide.sources.map((s) => (
+                <li key={s.n} className="flex gap-2">
+                  <span className="font-bold text-slate-400 flex-shrink-0">{s.n}.</span>
+                  {s.url ? (
+                    <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-nhs-blue hover:text-nhs-dark-blue break-words">{s.label}</a>
+                  ) : (
+                    <span>{s.label}</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
 
         {/* SystmOne FOCUS how-to links for this guide */}
         {!isReferral && guide?.focus && guide.focus.length > 0 && (

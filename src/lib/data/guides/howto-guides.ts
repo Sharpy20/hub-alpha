@@ -9,7 +9,9 @@ export interface GuideStep {
   // "pay-band-picker" = the AfC band/step salary picker (payslip guide).
   // "pay-faq" = the shared tagged FAQ accordion (pay-faq.ts) filtered to the
   //             current guide's topic.
-  widget?: "pay-band-picker" | "pay-faq";
+  // "shift-checker" = enter a shift, see the enhancement split, whole-shift
+  //                   rule, pay estimate and 11-hour rest verdict.
+  widget?: "pay-band-picker" | "pay-faq" | "shift-checker";
 }
 
 export interface GuideData {
@@ -150,6 +152,13 @@ export const GUIDES: Record<string, GuideData> = {
         title: "The whole-shift rule - the ward myth that is actually true",
         content: `You may have heard "if most of your shift is at night, the whole shift gets the night rate". That is not folklore - it is paragraph 2.11 of Section 2 (England) of the NHS Terms and Conditions Handbook:\n\n"Where a continuous night shift or evening shift on a weekday (other than a public holiday) includes hours outside the period of 8 pm to 6 am, the enhancements... should be applied to the whole shift if more than half of the time falls between 8 pm and 6 am."\n\nIn plain English, for a WEEKDAY shift:\n- More than half of the shift falls between 20:00 and 06:00 - the WHOLE shift is enhanced, including the hours outside the window.\n- Half or less falls in the window - only the hours inside the window are enhanced.\n\nTwo examples:\n- Night shift 20:45 to 07:45 (10.5 paid hours): about 9 hours fall inside 20:00-06:00, well over half. All 10.5 hours are paid at the night rate, including 06:00-07:45.\n- Long day 07:30 to 20:30: only 30 minutes falls after 20:00, much less than half. Only 20:00-20:30 is enhanced; the rest is plain time.\n\nSaturdays, Sundays and public holidays do not need this rule - every hour of those days is enhanced anyway.`,
         tip: "Night workers: your total enhanced hours for the month should equal your total worked hours - no plain-time slice at the start or end of a qualifying night shift. If a chunk shows as unenhanced, query it.",
+      },
+      {
+        id: "shift-checker",
+        title: "Try it - check one of your shifts",
+        content: `Everything the last few steps explained, in one tool. Put in a real shift from your roster and it shows the enhancement split, whether the whole-shift rule fires, a rough pay figure at your band - and, if you add your next start time, whether the gap between shifts is legal.`,
+        widget: "shift-checker",
+        tip: "Try your own worst case: a late finish followed by an early start, or the night shift you were not sure got fully enhanced.",
       },
       {
         id: "two-lines",
@@ -332,6 +341,7 @@ export const GUIDES: Record<string, GuideData> = {
         id: "late-early-trap",
         title: "The late-then-early trap",
         content: `The most common breach on wards is the late shift followed by an early: finish at 21:30, back for 07:00. It feels normal because it is common - but 9.5 hours between shifts is below the legal minimum, and if it is happening to you regularly the roster needs looking at.\n\nThere IS a legal exception, and it is narrower than people think. Daily rest can be interrupted for shift changeovers or genuine service needs, but only if you get COMPENSATORY REST - the missed rest (1.5 hours in this example) given back as soon as possible afterwards. The exception is meant for exceptional circumstances, not a routine rostering pattern. A rota that schedules late-then-early week in, week out, with no compensatory rest, is non-compliant.\n\nWhat to do if this is your pattern:\n\n1. Check your own roster - count the hours between each finish time and the next start\n2. Raise it with the roster lead or e-rostering team (the rostering system can flag sub-11-hour gaps automatically)\n3. If nothing changes, put it in writing - Datix if fatigue is creating a safety risk, and your union rep can take it up as a working time issue\n\nThis is not about being awkward. Fatigue is a patient safety issue as much as a staff one - it is exactly what these rules exist to prevent.`,
+        tip: "Check your own pattern in seconds: the shift checker in the payslip guide takes a finish time and your next start time and tells you whether the gap is legal.",
       },
       {
         id: "48-hour-rule",

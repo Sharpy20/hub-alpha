@@ -1,95 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Calculator } from "lucide-react";
-
-// NHS Agenda for Change pay scales, England, effective 1 April 2026.
-// Source: NHS Employers pay scales 2026/27. Scales change every April -
-// update the figures (and EFFECTIVE_FROM) when the new pay circular lands.
-// Hourly rate uses the ESR divisor: 37.5 hrs x 52.143 weeks = 1955.36 hrs/year.
-const EFFECTIVE_FROM = "1 April 2026";
-const HOURS_PER_YEAR = 1955.357;
-
-interface PayStep {
-  label: string;
-  annual: number;
-}
-
-interface PayBand {
-  band: string;
-  // Unsocial hours enhancement rates (AfC Section 2, England):
-  // night = weekday nights 20:00-06:00 + all Saturday; sunday = all Sunday + public holidays.
-  night: number;
-  sunday: number;
-  overtimeEligible: boolean;
-  steps: PayStep[];
-}
-
-const PAY_BANDS: PayBand[] = [
-  { band: "2", night: 0.41, sunday: 0.83, overtimeEligible: true, steps: [
-    { label: "All steps (single pay point)", annual: 25272 },
-  ]},
-  { band: "3", night: 0.35, sunday: 0.69, overtimeEligible: true, steps: [
-    { label: "Entry (first 2 years)", annual: 25760 },
-    { label: "Top (2+ years)", annual: 27476 },
-  ]},
-  { band: "4", night: 0.30, sunday: 0.60, overtimeEligible: true, steps: [
-    { label: "Entry (first 3 years)", annual: 28392 },
-    { label: "Top (3+ years)", annual: 31157 },
-  ]},
-  { band: "5", night: 0.30, sunday: 0.60, overtimeEligible: true, steps: [
-    { label: "Entry (first 2 years)", annual: 32073 },
-    { label: "Intermediate (2-4 years)", annual: 34592 },
-    { label: "Top (4+ years)", annual: 39043 },
-  ]},
-  { band: "6", night: 0.30, sunday: 0.60, overtimeEligible: true, steps: [
-    { label: "Entry (first 2 years)", annual: 39959 },
-    { label: "Intermediate (2-5 years)", annual: 42170 },
-    { label: "Top (5+ years)", annual: 48117 },
-  ]},
-  { band: "7", night: 0.30, sunday: 0.60, overtimeEligible: true, steps: [
-    { label: "Entry (first 2 years)", annual: 49387 },
-    { label: "Intermediate (2-5 years)", annual: 51932 },
-    { label: "Top (5+ years)", annual: 56515 },
-  ]},
-  { band: "8a", night: 0.30, sunday: 0.60, overtimeEligible: false, steps: [
-    { label: "Entry (first 2 years)", annual: 57528 },
-    { label: "Intermediate (2-5 years)", annual: 60417 },
-    { label: "Top (5+ years)", annual: 64750 },
-  ]},
-];
-
-const STORAGE_KEY = "wardhub_pay_band";
-
-const gbp = (n: number, dp = 2) =>
-  n.toLocaleString("en-GB", { style: "currency", currency: "GBP", minimumFractionDigits: dp, maximumFractionDigits: dp });
+import { PAY_BANDS, EFFECTIVE_FROM, HOURS_PER_YEAR, gbp } from "@/lib/data/guides/pay-scales";
+import { usePayBand } from "@/lib/hooks/usePayBand";
 
 export function PayBandPicker() {
-  const [bandIdx, setBandIdx] = useState<number | null>(null);
-  const [stepIdx, setStepIdx] = useState(0);
-
-  // Remember the selection per device so revisits (and other steps) keep it.
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const { b, s } = JSON.parse(saved);
-        if (typeof b === "number" && PAY_BANDS[b] && typeof s === "number" && PAY_BANDS[b].steps[s]) {
-          setBandIdx(b);
-          setStepIdx(s);
-        }
-      }
-    } catch { /* corrupt value - start fresh */ }
-  }, []);
-
-  const select = (b: number, s: number) => {
-    setBandIdx(b);
-    setStepIdx(s);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ b, s })); } catch { /* private mode */ }
-  };
-
-  const band = bandIdx !== null ? PAY_BANDS[bandIdx] : null;
-  const step = band ? band.steps[Math.min(stepIdx, band.steps.length - 1)] : null;
+  const { bandIdx, stepIdx, band, step, select } = usePayBand();
   const hourly = step ? step.annual / HOURS_PER_YEAR : 0;
   const nightExtraHours = band ? 10 * band.night : 0;
   const sundayExtraHours = band ? 10 * band.sunday : 0;

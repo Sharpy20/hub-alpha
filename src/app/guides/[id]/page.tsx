@@ -780,7 +780,7 @@ export default function UnifiedGuidePage() {
               {hStep.widget === "shift-checker" && <ShiftChecker />}
               {hStep.widget === "payslip-decoder" && <PayslipDecoder />}
               {hStep.widget === "pay-faq" && (
-                <PayFaqAccordion topic={guideId === "payslip" ? "payslip" : guideId === "roster" ? "roster" : "leave"} />
+                <PayFaqAccordion topic={guideId === "pay-roster-faq" ? "all" : guideId === "payslip" ? "payslip" : guideId === "roster" ? "roster" : "leave"} />
               )}
               {hStep.tip && (
                 <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">

@@ -90,6 +90,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   payslip: { icon: "💷", gradient: "from-emerald-600 to-teal-800", category: "Learning & Development" },
   roster: { icon: "📅", gradient: "from-teal-600 to-cyan-800", category: "Learning & Development" },
   "leave-absence": { icon: "🛌", gradient: "from-indigo-600 to-blue-800", category: "Learning & Development" },
+  "pay-roster-faq": { icon: "❓", gradient: "from-slate-600 to-slate-800", category: "Learning & Development" },
 };
 
 // WAGOLL links for guides that have completed examples
@@ -119,6 +120,7 @@ export const GUIDES: Record<string, GuideData> = {
     related: [
       { label: "Roster Survival Guide", guideId: "roster" },
       { label: "Leave, Absence & Rest Rules", guideId: "leave-absence" },
+      { label: "Pay & Roster FAQ and Jargon Buster", guideId: "pay-roster-faq" },
     ],
     steps: [
       {
@@ -166,15 +168,9 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "worked-example",
-        title: "Worked example with easy numbers",
-        tldr: "10 night hours at 30% = 3 extra paid hours in the PAID/DUE column.",
-        content: `Say you work 10 night hours, the night enhancement is 30%, and your normal rate is £20:\n\n- 30% of 10 hours = 3 extra hours\n- 3 hours x £20 = £60 enhancement pay\n\nOn the payslip that line reads something like:\n\n- WKD/EARNED: 10.00 (the hours you actually worked)\n- PAID/DUE: 3.00 (the extra hours the percentage turned into)\n- RATE: £20.0000 (your normal rate - unchanged)\n- AMOUNT: £60.00\n\nThe rate never moved. The hours grew. That is the whole trick.\n\nWork it out for yourself with the formula: 10 hours x 0.30 = 3 extra hours. At Band 3 the same shift gives 10 x 0.35 = 3.5 extra hours.`,
-      },
-      {
-        id: "self-check",
-        title: "The self-check: PAID/DUE x RATE = AMOUNT",
-        tldr: "PAID/DUE x RATE should equal AMOUNT on every enhancement line.",
-        content: `Real payslips are messier than round numbers, but the same check always works. Take any enhancement line and multiply PAID/DUE by RATE - it should match AMOUNT to within a penny or two of rounding.\n\nExample with realistic numbers: 45.50 night hours at 30% gives 13.65 in PAID/DUE. Then 13.65 x £20.00 = £273.00 in AMOUNT. It matches, so the line is calculated correctly.\n\nTwo different problems, two different fixes:\n- The multiplication does not match the AMOUNT: that is a genuine calculation query for Payroll.\n- The multiplication matches but the HOURS look wrong: check your worked shifts against the roster first - the calculation is fine, the input might not be.`,
+        title: "Worked example and the self-check",
+        tldr: "PAID/DUE x RATE = AMOUNT - the check that works on every enhancement line.",
+        content: `Say you work 10 night hours, the night enhancement is 30%, and your normal rate is £20:\n\n- 30% of 10 hours = 3 extra hours\n- 3 hours x £20 = £60 enhancement pay\n\nOn the payslip that line reads something like:\n\n- WKD/EARNED: 10.00 (the hours you actually worked)\n- PAID/DUE: 3.00 (the extra hours the percentage turned into)\n- RATE: £20.0000 (your normal rate - unchanged)\n- AMOUNT: £60.00\n\nThe rate never moved. The hours grew. That is the whole trick.\n\nThe self-check: PAID/DUE x RATE = AMOUNT.\nReal payslips are messier than round numbers, but the same check always works. Take any enhancement line and multiply PAID/DUE by RATE - it should match AMOUNT to within a penny or two of rounding. Realistic example: 45.50 night hours at 30% gives 13.65 in PAID/DUE, and 13.65 x £20.00 = £273.00 in AMOUNT.\n\nTwo different problems, two different fixes:\n- The multiplication does not match the AMOUNT: that is a genuine calculation query for Payroll.\n- The multiplication matches but the HOURS look wrong: check your worked shifts against the roster first - the calculation is fine, the input might not be.`,
         tip: "Enhancements are usually paid a month in arrears - this month's payslip often carries last month's shifts. Check the right month's roster before reporting hours as missing.",
       },
       {
@@ -232,12 +228,6 @@ export const GUIDES: Record<string, GuideData> = {
         content: `The year-to-date block shows running totals since 6 April: gross pay, taxable pay, tax paid, pensionable pay, pension contributions.\n\nWhat it is actually for:\n- Spotting errors building up across the year rather than in one month\n- Confirming arrears or back pay really landed\n- Checking whether tax has self-corrected (it often does over a couple of months - the YTD figures show whether it actually has)\n- Comparing against your P60 in April`,
       },
       {
-        id: "glossary",
-        title: "Quick glossary",
-        tldr: "The payslip's jargon, translated.",
-        content: `- Basic Pay - your contracted salary for the month (annual divided by 12)\n- Night Duty EN / Saturday EN / Sunday EN / Bank Holiday ENH - enhancements, shown as extra paid hours at your normal rate\n- WKD/EARNED - the hours you actually worked on that line\n- PAID/DUE - the extra paid hours the enhancement percentage turned into\n- RATE - your normal hourly rate (never boosted by enhancements)\n- Arrears - backdated pay or a correction from an earlier month\n- AfC Absence - usually the average-enhancements top-up that keeps leave and absence days paid at your normal level\n- HCAS - high cost area supplement (London and fringe areas)\n- PAYE / NI - income tax / National Insurance\n- NHS Pension x% - your pension contribution at your current tier\n- Net Pay - what reaches your bank\n- Assignment number - the reference Payroll works from; quote it in every query`,
-      },
-      {
         id: "payday-check",
         title: "The five-minute payday check",
         tldr: "Five minutes every payday: top section, Basic Pay, hours, the self-check, pension, net.",
@@ -248,15 +238,8 @@ export const GUIDES: Record<string, GuideData> = {
         id: "something-wrong",
         title: "If something looks wrong",
         tldr: "Give Payroll the exact line and its four figures - and report overpayments too.",
-        content: `Before you contact Payroll, write down:\n\n- The pay date\n- Your assignment number\n- The exact payslip line name (for example "Night Duty EN")\n- The four figures on that line: WKD/EARNED, PAID/DUE, RATE, AMOUNT\n- Why you think it is wrong\n\nA vague query gets a slow answer. An exact line with figures gets checked quickly.\n\nErrors cut both ways: if you have been OVERPAID, the Trust is within its rights to ask for that money back. Caught in month one the correction is small; left for six months, you are paying back six months' worth. The earlier it is raised, the easier it is on you.`,
+        content: `Before you contact Payroll, write down:\n\n- The pay date\n- Your assignment number\n- The exact payslip line name (for example "Night Duty EN")\n- The four figures on that line: WKD/EARNED, PAID/DUE, RATE, AMOUNT\n- Why you think it is wrong\n\nA vague query gets a slow answer. An exact line with figures gets checked quickly.\n\nErrors cut both ways: if you have been OVERPAID, the Trust is within its rights to ask for that money back. Caught in month one the correction is small; left for six months, you are paying back six months' worth. The earlier it is raised, the easier it is on you.\n\nStuck on a term, or have a question this guide did not answer? The Pay & Roster FAQ and Jargon Buster (linked below) collects the common questions and translates every payslip and roster word in one place.`,
         tip: "Raise it in the same pay period if you can - same-month corrections are the easiest kind.",
-      },
-      {
-        id: "faq",
-        title: "Common questions",
-        tldr: "The questions everyone asks - one tap each.",
-        content: `Tap a question to open the answer. Questions that touch more than one guide appear in each - the note under an answer shows where else it lives.`,
-        widget: "pay-faq",
       },
     ],
   },
@@ -275,6 +258,7 @@ export const GUIDES: Record<string, GuideData> = {
     related: [
       { label: "Understanding Your NHS Payslip", guideId: "payslip" },
       { label: "Leave, Absence & Rest Rules", guideId: "leave-absence" },
+      { label: "Pay & Roster FAQ and Jargon Buster", guideId: "pay-roster-faq" },
     ],
     steps: [
       {
@@ -337,19 +321,6 @@ export const GUIDES: Record<string, GuideData> = {
         content: `1. Shifts match what you actually worked\n2. LAST fortnight recorded right? Shifts can be amended after the event if input wrong\n3. Swaps and moves to other wards are recorded\n4. Leave balance is right\n5. Sickness dates are right\n6. Hours balance makes sense - and is heading towards 0:00\n\nMost problems are found by staff doing these checks, not by the system flagging them.`,
         tip: "Write down the exact date and shift before raising a query - specific questions get quick answers.",
       },
-      {
-        id: "glossary",
-        title: "Quick glossary",
-        tldr: "The roster's jargon, translated.",
-        content: `- TOIL - Time Off In Lieu: time the Trust owes you for hours worked over contract\n- Contracted (substantive) hours - the hours your permanent contract says you work\n- Hours balance / net hours - the running difference between contracted and rostered hours\n- Bank shift - an extra shift worked on top of your contract, paid separately\n- WTD - Working Time Directive: the safe-working law behind the 48-hour rule and rest rules\n- Roster week - runs Sunday to Saturday\n- Unsocial hours window - weekdays 20:00 to 06:00, plus all of Saturday, Sunday and public holidays: the times that attract pay enhancements\n- Loop - the app for viewing your roster, leave and hours on your phone`,
-      },
-      {
-        id: "faq",
-        title: "Common questions",
-        tldr: "The questions everyone asks - one tap each.",
-        content: `Tap a question to open the answer. Questions that touch more than one guide appear in each - the note under an answer shows where else it lives.`,
-        widget: "pay-faq",
-      },
     ],
   },
   "leave-absence": {
@@ -370,6 +341,7 @@ export const GUIDES: Record<string, GuideData> = {
     related: [
       { label: "Roster Survival Guide", guideId: "roster" },
       { label: "Understanding Your NHS Payslip", guideId: "payslip" },
+      { label: "Pay & Roster FAQ and Jargon Buster", guideId: "pay-roster-faq" },
     ],
     steps: [
       {
@@ -433,12 +405,31 @@ export const GUIDES: Record<string, GuideData> = {
         content: `For LEAVE queries, before you contact your manager or Payroll write down:\n\n- Your entitlement at the start of the leave year (from Loop)\n- The balance you can see now\n- The specific dates you think are wrong (sickness dates, bank holidays, amendments)\n\nFor REST and rota-pattern concerns:\n\n- The exact dates and shift times, and the gap between them\n- How often the pattern happens\n- Whether compensatory rest was given\n\nRaise it with your manager or roster lead first - most issues are input errors, fixed in minutes. If a pattern keeps repeating, escalate in writing.\n\nA vague query gets a slow answer. Exact dates and figures get checked quickly.`,
         tip: "Raise leave-balance queries well before the end of the leave year - carried-over problems are much harder to unpick.",
       },
+    ],
+  },
+  "pay-roster-faq": {
+    id: "pay-roster-faq",
+    title: "Pay & Roster FAQ and Jargon Buster",
+    description: "The questions staff ask most about pay, rostering and leave - plus every payslip and roster word translated, all in one place",
+    noCaseNote: true,
+    related: [
+      { label: "Understanding Your NHS Payslip", guideId: "payslip" },
+      { label: "Roster Survival Guide", guideId: "roster" },
+      { label: "Leave, Absence & Rest Rules", guideId: "leave-absence" },
+    ],
+    steps: [
       {
         id: "faq",
         title: "Common questions",
-        tldr: "The questions everyone asks - one tap each.",
-        content: `Tap a question to open the answer. Questions that touch more than one guide appear in each - the note under an answer shows where else it lives.`,
+        tldr: "Tap a question to open the answer.",
+        content: `Every question from the payslip, roster and leave guides, gathered in one place. Tap any question to open the answer.`,
         widget: "pay-faq",
+      },
+      {
+        id: "jargon",
+        title: "Jargon buster - every pay and roster word",
+        tldr: "Payslip and roster words, all translated in one list.",
+        content: `PAYSLIP words\n- Basic Pay - your contracted salary for the month (annual divided by 12)\n- Night Duty EN / Saturday EN / Sunday EN / Bank Holiday ENH - enhancements, shown as extra paid hours at your normal rate\n- WKD/EARNED - the hours you actually worked on that line\n- PAID/DUE - the extra paid hours the enhancement percentage turned into\n- RATE - your normal hourly rate (never boosted by enhancements)\n- Arrears - backdated pay or a correction from an earlier month\n- AfC Absence - usually the average-enhancements top-up that keeps leave and absence days paid at your normal level\n- HCAS - high cost area supplement (London and fringe areas)\n- PAYE / NI - income tax / National Insurance\n- NHS Pension x% - your pension contribution at your current tier\n- Taxable Pay - your pay after pension is taken off; the figure your tax is worked out on\n- Net Pay - what reaches your bank\n- Assignment number - the reference Payroll works from; quote it in every query\n\nROSTER words\n- TOIL - Time Off In Lieu: time the Trust owes you for hours worked over contract\n- Contracted (substantive) hours - the hours your permanent contract says you work\n- Hours balance / net hours - the running difference between contracted and rostered hours\n- Bank shift - an extra shift worked on top of your contract, paid separately\n- Overtime - hours beyond full time agreed as overtime, paid at time and a half\n- WTD - Working Time Directive: the safe-working law behind the 48-hour rule and rest rules\n- Roster week - runs Sunday to Saturday\n- Unsocial hours window - weekdays 20:00 to 06:00, plus all of Saturday, Sunday and public holidays: the times that attract pay enhancements\n- Loop - the app for viewing your roster, leave and hours on your phone`,
       },
     ],
   },

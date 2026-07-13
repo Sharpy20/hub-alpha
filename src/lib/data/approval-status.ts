@@ -51,6 +51,7 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "payslip": "red",                  // 13 Jul: pay-roster split back into three; Tess (payroll) reviewed the pay content but Mike has not signed off
   "roster": "red",                   // 13 Jul: split from pay-roster; Tess reviewed
   "leave-absence": "red",            // 13 Jul: new - absences section drafted from national baseline, trust-policy figures still to confirm
+  "pay-roster-faq": "red",           // 14 Jul: new - FAQ + jargon pulled out of the 3 pay guides
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

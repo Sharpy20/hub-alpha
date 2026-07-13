@@ -26,6 +26,7 @@ import {
   GUIDES, DEFAULT_GUIDE, GUIDE_CONFIG, GUIDE_WAGOLLS,
   type GuideData,
 } from "@/lib/data/guides/howto-guides";
+import { PayBandPicker } from "@/components/guides/PayBandPicker";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 import { toLocalDateStr } from "@/lib/utils/date";
 
@@ -74,9 +75,10 @@ export default function UnifiedGuidePage() {
 
   const guideId = params.id as string;
 
-  // Legacy ids: the separate payslip and roster guides merged into the
-  // combined pay-roster guide (10 Jul 2026) - old links redirect there.
-  const legacyTarget = ({ payslip: "pay-roster", roster: "pay-roster" } as Record<string, string>)[guideId];
+  // Legacy ids: the combined pay-roster guide split back into three guides
+  // (13 Jul 2026) - old /guides/pay-roster links land on the payslip guide,
+  // which cross-links the roster and leave-absence halves.
+  const legacyTarget = ({ "pay-roster": "payslip" } as Record<string, string>)[guideId];
   useEffect(() => {
     if (legacyTarget) router.replace(link(`/guides/${legacyTarget}`));
   }, [legacyTarget, router, link]);
@@ -714,6 +716,7 @@ export default function UnifiedGuidePage() {
                   <p key={i} className={`${line.startsWith("- ") ? "ml-4" : ""} ${line === "" ? "h-2" : "mb-2"} text-gray-700 leading-relaxed`}>{renderWithLinks(line)}</p>
                 ))}
               </div>
+              {hStep.widget === "pay-band-picker" && <PayBandPicker />}
               {hStep.tip && (
                 <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">
                   <div className="flex gap-3">

@@ -48,7 +48,9 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "student-placement": "red",        // new 4 Jul from the Student Information Pack - generic/demo-safe, awaiting Mike's review
   "no-smoking": "red",               // new 4 Jul from the smoking staff-legal-warning doc
   "informal-patient-contract": "red", // new 4 Jul from the Gatekeeping + Informal Admission SystmOne guides
-  "pay-roster": "red",               // 10 Jul: payslip + roster guides merged into one; Tess (payroll) reviewed the content but Mike has not signed off
+  "payslip": "red",                  // 13 Jul: pay-roster split back into three; Tess (payroll) reviewed the pay content but Mike has not signed off
+  "roster": "red",                   // 13 Jul: split from pay-roster; Tess reviewed
+  "leave-absence": "red",            // 13 Jul: new - absences section drafted from national baseline, trust-policy figures still to confirm
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

@@ -114,7 +114,9 @@ export const ALL_GUIDES: GuideItem[] = [
   { id: "ctr-dsp", title: "CTR / DSP Review", description: "Care Treatment Review for ASD/LD patients (mandatory)", icon: "📋", gradient: "from-lime-600 to-lime-800", category: "Specialist Pathways", viewerPath: "/guides/ctr-dsp" },
   // Learning & Development
   { id: "student-placement", title: "Student Nurse Placement Guide", description: "Welcome, first-day setup, ward routine and what's expected on a mental health inpatient placement", icon: "🎓", gradient: "from-blue-500 to-indigo-700", category: "Learning & Development", viewerPath: "/guides/student-placement" },
-  // Merged 10 Jul 2026: the separate payslip + roster guides became this one
-  // combined guide (old /guides/payslip and /guides/roster URLs redirect here).
-  { id: "pay-roster", title: "Pay & Roster Survival Guide", description: "Your shifts, hours and leave - and how they turn into the money in your bank. Roster and payslip in one guide", icon: "💷", gradient: "from-emerald-600 to-teal-800", category: "Learning & Development", viewerPath: "/guides/pay-roster" },
+  // Split 13 Jul 2026: the combined pay-roster guide became three guides
+  // (old /guides/pay-roster URLs redirect to the payslip guide).
+  { id: "payslip", title: "Understanding Your NHS Payslip", description: "The payslip layout, enhancements as extra hours, the whole-shift rule, deductions and the payday self-check - with a band picker for your own numbers", icon: "💷", gradient: "from-emerald-600 to-teal-800", category: "Learning & Development", viewerPath: "/guides/payslip" },
+  { id: "roster", title: "Roster Survival Guide", description: "Your shifts, your hours balance, TOIL and the weekly Loop habit - and how the roster feeds your pay", icon: "📅", gradient: "from-teal-600 to-cyan-800", category: "Learning & Development", viewerPath: "/guides/roster" },
+  { id: "leave-absence", title: "Leave, Absence & Rest Rules", description: "Annual leave, public holidays and sickness, carers and bereavement leave, phased returns - and the rest rules between shifts", icon: "🛌", gradient: "from-indigo-600 to-blue-800", category: "Learning & Development", viewerPath: "/guides/leave-absence" },
 ];

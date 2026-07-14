@@ -15,6 +15,7 @@ import {
   ADMISSION_ITEMS, loadTracker, saveTracker, seedPatient,
 } from "@/lib/data/care-review";
 import { toLocalDateStr } from "@/lib/utils/date";
+import { printChecklist } from "@/lib/utils/printDoc";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { ArrowLeft, Check, Printer, RotateCcw, ClipboardList, Info } from "lucide-react";
 
@@ -157,7 +158,21 @@ export default function AdmissionChecklistPage() {
               Reset
             </button>
             <button
-              onClick={() => window.print()}
+              onClick={() => printChecklist({
+                title: patient ? `Admission Checklist - ${patient.name}` : "Admission Checklist",
+                patientName: patient?.name,
+                progress: `${doneCount} of ${total} done`,
+                groups: ADMISSION_CHECKLIST.map((g) => ({
+                  title: g.title,
+                  icon: g.icon,
+                  items: g.items.map((it) => ({
+                    text: it.text,
+                    done: !!checked[it.id],
+                    note: it.note,
+                    sub: it.subItems?.map((s, si) => ({ text: s, done: !!checked[`${it.id}-s${si}`] })),
+                  })),
+                })),
+              })}
               className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
             >
               <Printer className="w-4 h-4" />

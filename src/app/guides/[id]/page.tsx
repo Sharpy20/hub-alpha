@@ -30,6 +30,8 @@ import { PayBandPicker } from "@/components/guides/PayBandPicker";
 import { PayFaqAccordion } from "@/components/guides/PayFaqAccordion";
 import { ShiftChecker } from "@/components/guides/ShiftChecker";
 import { PayslipDecoder } from "@/components/guides/PayslipDecoder";
+import { usePayBand } from "@/lib/hooks/usePayBand";
+import { HOURS_PER_YEAR, EFFECTIVE_FROM, gbp } from "@/lib/data/guides/pay-scales";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 import { toLocalDateStr } from "@/lib/utils/date";
 
@@ -167,6 +169,36 @@ export default function UnifiedGuidePage() {
   const printableSteps: { id: string; title: string; content: string; tldr?: string; tip?: string }[] =
     isReferral ? workflow.steps.map((s) => ({ id: s.id, title: s.title, content: s.content })) : guide.steps;
   const inPrint = (id: string) => printSteps === null || printSteps.has(id);
+
+  // Personalised print: the payslip guide carries the user's saved band, so its
+  // printout can show their own rates instead of the generic examples.
+  const { band: myBand, step: myStep } = usePayBand();
+  const showMyBand = guideId === "payslip" && myBand && myStep;
+  const myHourly = myStep ? myStep.annual / HOURS_PER_YEAR : 0;
+  const myNight = myBand ? Math.round(myBand.night * 100) : 0;
+  const mySunday = myBand ? Math.round(myBand.sunday * 100) : 0;
+  const myBandBox = showMyBand ? (
+    printMode === "full" ? (
+      <div className="pc-card">
+        <div className="pc-head"><span style={{ fontSize: "13px", fontWeight: 700 }}>Your figures - Band {myBand!.band}, {myStep!.label}</span></div>
+        <div className="pc-body" style={{ fontSize: "12px", lineHeight: 1.4 }}>
+          <p style={{ margin: "0 0 3px" }}>Hourly rate (the RATE on your payslip): <strong>{gbp(myHourly, 4)}</strong>. Basic pay a month: <strong>{gbp(myStep!.annual / 12)}</strong>.</p>
+          <p style={{ margin: "0 0 3px" }}>Your enhancement rates: nights &amp; Saturdays <strong>+{myNight}%</strong>; Sundays &amp; bank holidays <strong>+{mySunday}%</strong>.</p>
+          <p style={{ margin: 0 }}>10 night hours = {(10 * myBand!.night).toFixed(2)} extra paid hours = <strong>{gbp(10 * myBand!.night * myHourly)}</strong> on top of {gbp(10 * myHourly)} basic.</p>
+          <p style={{ fontSize: "9px", color: "#64748b", marginTop: "3px" }}>Rates as at {EFFECTIVE_FROM}. Estimate - check your own payslip.</p>
+        </div>
+      </div>
+    ) : (
+      <section className="mb-4" style={{ breakInside: "avoid" }}>
+        <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">Your figures - Band {myBand!.band}, {myStep!.label}</h2>
+        <div className="text-sm leading-snug">
+          <p>Hourly rate: {gbp(myHourly, 4)}. Basic pay a month: {gbp(myStep!.annual / 12)}.</p>
+          <p>Enhancements: nights &amp; Saturdays +{myNight}%; Sundays &amp; bank holidays +{mySunday}%.</p>
+          <p>10 night hours = {(10 * myBand!.night).toFixed(2)} extra paid hours = {gbp(10 * myBand!.night * myHourly)} on top of {gbp(10 * myHourly)} basic. Rates as at {EFFECTIVE_FROM}.</p>
+        </div>
+      </section>
+    )
+  ) : null;
 
   // Shared state
   const [currentStep, setCurrentStep] = useState(0);
@@ -378,6 +410,7 @@ export default function UnifiedGuidePage() {
                 </p>
               </div>
             </div>
+            {myBandBox}
             {printableSteps.map((s, i) => inPrint(s.id) && (
               <div key={s.id} className="pc-card">
                 <div className="pc-head"><span style={{ fontSize: "13px", fontWeight: 700 }}>{i + 1}. {s.title}</span></div>
@@ -397,6 +430,7 @@ export default function UnifiedGuidePage() {
               wardHub{!isReferral ? ` - ${config.category}` : " - Referral workflow"}{printSteps ? " - selected sections" : ""} - printed reference, verify against the live guide
             </p>
 
+            {myBandBox}
             {!isReferral && guide.steps.map((s, i) => inPrint(s.id) && (
               <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
                 <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
@@ -458,7 +492,7 @@ export default function UnifiedGuidePage() {
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4 print:hidden" role="dialog" aria-modal="true" aria-label="Choose sections to print" onClick={() => setShowPrintPicker(false)}>
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="p-5 border-b border-gray-100">
-              <h3 className="font-bold text-gray-900">Personalised print</h3>
+              <h3 className="font-bold text-gray-900">Choose sections to print</h3>
               <p className="text-sm text-gray-500 mt-0.5">Tick the sections that apply to you. We have pre-ticked the ones you have already opened - the printout keeps them in order and adds a splash of colour.</p>
             </div>
             <div className="p-5 overflow-y-auto flex-1 space-y-1">
@@ -521,7 +555,7 @@ export default function UnifiedGuidePage() {
                       </button>
                       <button onClick={() => runPrint("full", null)} className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-100">
                         <span className="block font-semibold text-gray-800 text-sm">Full colour</span>
-                        <span className="block text-xs text-gray-500">Styled like the screen</span>
+                        <span className="block text-xs text-gray-500">Styled like the screen{showMyBand ? ", with your band's figures" : ""}</span>
                       </button>
                       <button
                         onClick={() => {
@@ -532,8 +566,8 @@ export default function UnifiedGuidePage() {
                         }}
                         className="w-full text-left px-4 py-3 hover:bg-gray-50"
                       >
-                        <span className="block font-semibold text-gray-800 text-sm">Personalised</span>
-                        <span className="block text-xs text-gray-500">Pick the sections that apply to you</span>
+                        <span className="block font-semibold text-gray-800 text-sm">Choose sections</span>
+                        <span className="block text-xs text-gray-500">Pick which parts to print</span>
                       </button>
                     </div>
                   </>

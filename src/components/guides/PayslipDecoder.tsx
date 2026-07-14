@@ -14,7 +14,7 @@ import { Check, MousePointerClick, Info } from "lucide-react";
 // Taxable pay = gross - pension = £3,329.16. Deductions £1,001.70. Net £2,689.16.
 
 const EXPLAIN: Record<string, string> = {
-  assignment: "Assignment Number - the first digits of your employee number, identifying this specific post. A second post shows as -2, -3 etc. Quote it in every pay query.",
+  assignment: "Assignment Number - identifies this specific post. Your main post has no suffix (there is no -1); a second employment with the Trust - usually a bank contract - shows as -2. Quote it in every pay query.",
   jobtitle: "Your job title - it should match the role you actually do.",
   payscale: "Payscale Description - the band and pay point you are paid on. If this is wrong, the pay figures below will be wrong too, so check it first.",
   stdhrs: "Standard Hours - your contracted hours a week. Part-time shows fewer, and the pay scales down to match.",

@@ -201,36 +201,36 @@ export function ShiftChecker() {
 
           {/* Pay estimate */}
           <div className="bg-white rounded-xl p-4 border border-indigo-100">
-            {band && step ? (
-              <>
-                <p className="font-bold text-gray-900 text-sm mb-1">Rough pay at Band {band.band}, {step.label.toLowerCase()}</p>
-                <div className="text-sm text-gray-700 space-y-1">
-                  <p>{fmtHours(result.paidMins)} basic at {gbp(hourly, 4)} = <strong>{gbp(basicPay)}</strong></p>
-                  {(extraNightHrs > 0 || extraSundayHrs > 0) && (
-                    <p>Enhancements: {(extraNightHrs + extraSundayHrs).toFixed(2)} extra paid hours = <strong>{gbp(enhancementPay)}</strong></p>
-                  )}
-                  <p className="font-bold text-indigo-900">Shift total (before tax and deductions): {gbp(basicPay + enhancementPay)}</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <p className="font-bold text-gray-900 text-sm mb-2">Pick your band to see the money</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {PAY_BANDS.map((b, i) => (
-                    <button key={b.band} onClick={() => select(i, 0)}
-                      className="px-3 py-1.5 rounded-lg text-xs font-bold border bg-white text-indigo-800 border-indigo-200 hover:border-indigo-400">
-                      Band {b.band}
-                    </button>
-                  ))}
-                </div>
-              </>
+            <p className="font-bold text-gray-900 text-sm mb-1">
+              {band && step ? `Rough pay at Band ${band.band}, ${step.label.toLowerCase()}` : "Pick your band to see the money"}
+            </p>
+            {band && step && (
+              <div className="text-sm text-gray-700 space-y-1 mb-3">
+                <p>{fmtHours(result.paidMins)} basic at {gbp(hourly, 4)} = <strong>{gbp(basicPay)}</strong></p>
+                {(extraNightHrs > 0 || extraSundayHrs > 0) && (
+                  <p>Enhancements: {(extraNightHrs + extraSundayHrs).toFixed(2)} extra paid hours = <strong>{gbp(enhancementPay)}</strong></p>
+                )}
+                <p className="font-bold text-indigo-900">Shift total (before tax and deductions): {gbp(basicPay + enhancementPay)}</p>
+              </div>
             )}
+            {/* Change band (any time) */}
+            <div className="flex flex-wrap gap-1.5" role="group" aria-label="Choose your band">
+              {PAY_BANDS.map((b, i) => (
+                <button key={b.band} onClick={() => select(i, 0)} aria-pressed={bandIdx === i}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                    bandIdx === i ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-indigo-800 border-indigo-200 hover:border-indigo-400"
+                  }`}>
+                  Band {b.band}
+                </button>
+              ))}
+            </div>
+            {/* Change increment within the band */}
             {band && band.steps.length > 1 && (
-              <div className="flex flex-wrap gap-1.5 mt-2">
+              <div className="flex flex-wrap gap-1.5 mt-2" role="group" aria-label="Choose your pay step">
                 {band.steps.map((s, i) => (
-                  <button key={s.label} onClick={() => select(bandIdx as number, i)}
+                  <button key={s.label} onClick={() => select(bandIdx as number, i)} aria-pressed={stepIdx === i}
                     className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all ${
-                      stepIdx === i ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-indigo-800 border-indigo-200 hover:border-indigo-400"
+                      stepIdx === i ? "bg-teal-600 text-white border-teal-600" : "bg-white text-teal-800 border-teal-200 hover:border-teal-400"
                     }`}>
                     {s.label}
                   </button>

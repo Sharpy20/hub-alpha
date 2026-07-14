@@ -12,9 +12,10 @@ import {
   type CareSection,
 } from "@/lib/data/guides/careplan";
 import { useV2Href } from "@/lib/hooks/useV2";
+import { printClinicalDoc } from "@/lib/utils/printDoc";
 import {
   ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info,
-  Lightbulb, GraduationCap, Sparkles, Quote, ShieldAlert,
+  Lightbulb, GraduationCap, Sparkles, Quote, ShieldAlert, Printer,
 } from "lucide-react";
 
 interface CareState { quote: string; text: string; chips: string[]; na: boolean }
@@ -284,14 +285,23 @@ export default function CarePlanPage() {
         <div className="rounded-2xl bg-slate-900 text-slate-100 overflow-hidden shadow-lg">
           <div className="flex items-center justify-between px-4 pt-3 pb-2">
             <span className="text-[11px] font-mono uppercase tracking-widest text-slate-400">Your care plan</span>
-            <button
-              onClick={copy}
-              disabled={!output}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-600 text-white hover:bg-green-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-              {copied ? "Copied" : "Copy"}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={copy}
+                disabled={!output}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-green-600 text-white hover:bg-green-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? "Copied" : "Copy"}
+              </button>
+              <button
+                onClick={() => printClinicalDoc({ title: patient ? `My Care Plan - ${patient.name}` : "My Care Plan", sections: [{ text: output }] })}
+                disabled={!output}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-700 text-slate-200 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <Printer className="w-3.5 h-3.5" /> Print
+              </button>
+            </div>
           </div>
           <div className="px-4 pb-4">
             <div tabIndex={0} role="region" aria-label="Assembled output preview" className={`rounded-lg bg-slate-800 px-3.5 py-3 text-sm leading-relaxed whitespace-pre-wrap min-h-[64px] max-h-80 overflow-y-auto ${output ? "text-slate-100" : "text-slate-500 italic"}`}>

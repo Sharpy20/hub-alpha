@@ -43,10 +43,11 @@ import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
 import { loadTracker, saveTracker, seedPatient } from "@/lib/data/care-review";
 import { toLocalDateStr } from "@/lib/utils/date";
+import { printClinicalDoc } from "@/lib/utils/printDoc";
 import {
   ArrowLeft, ArrowRight, Copy, Check, CheckCircle2, RotateCcw, ChevronDown,
   ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
-  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star,
+  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star, Printer,
 } from "lucide-react";
 
 type YN = "" | "yes" | "no";
@@ -1116,8 +1117,20 @@ export default function RiskAssessmentPage() {
         {/* Outputs */}
         {generated && (
           <div id="risk-output" className="rounded-2xl border-2 border-rose-300 bg-gradient-to-br from-rose-50 to-white p-4 space-y-4 scroll-mt-20">
-            <div className="flex items-center gap-2"><ClipboardCheck className="w-5 h-5 text-rose-600" /><h2 className="font-bold text-gray-800 flex-1">Copy into SystmOne</h2></div>
-            <p className="text-xs text-gray-500">Tick each block as you paste it across, so you know what&apos;s done.</p>
+            <div className="flex items-center gap-2">
+              <ClipboardCheck className="w-5 h-5 text-rose-600" /><h2 className="font-bold text-gray-800 flex-1">Copy into SystmOne</h2>
+              <button
+                onClick={() => printClinicalDoc({ title: patient ? `Risk Assessment - ${patient.name}` : "Risk Assessment", sections: [
+                  { heading: "Risk screen summary", text: fullScreenText },
+                  { heading: "Formulation", text: buildFormulationText() },
+                  { heading: "Management plans (RMP)", text: buildRmpText() },
+                ] })}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-600 text-white hover:bg-rose-500 transition-colors"
+              >
+                <Printer className="w-3.5 h-3.5" /> Print all
+              </button>
+            </div>
+            <p className="text-xs text-gray-500">Tick each block as you paste it across, so you know what&apos;s done. Or use <strong>Print all</strong> to print the screen, formulation and plans together.</p>
             <div className="inline-flex bg-rose-100 rounded-full p-1 flex-wrap">
               {([{ k: "screen", label: "Risk Screen" }, { k: "formulation", label: "Formulation" }, { k: "rmp", label: "Management Plan" }] as const).map((t) => (
                 <button key={t.k} onClick={() => setTab(t.k)} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${tab === t.k ? "bg-rose-600 text-white shadow" : "text-rose-700 hover:bg-white/60"}`}>{t.label}</button>

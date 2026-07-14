@@ -7,10 +7,11 @@ import { Breadcrumb } from "@/components/ui";
 import { MSE_DOMAINS } from "@/lib/data/guides/mse";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { toLocalDateStr } from "@/lib/utils/date";
+import { printClinicalDoc } from "@/lib/utils/printDoc";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
 import {
-  ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info, Lightbulb,
+  ArrowLeft, Copy, Check, RotateCcw, ChevronDown, ChevronRight, Info, Lightbulb, Printer,
 } from "lucide-react";
 
 // "a, b and c"
@@ -153,6 +154,13 @@ export default function MseBuilderPage() {
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copied ? "Copied" : "Copy"}
+              </button>
+              <button
+                onClick={() => printClinicalDoc({ title: patient ? `Mental State Examination - ${patient.name}` : "Mental State Examination", sections: [{ text: output }] })}
+                disabled={!output}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold bg-slate-700 text-slate-200 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                <Printer className="w-4 h-4" /> Print
               </button>
               <button
                 onClick={reset}

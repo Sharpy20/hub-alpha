@@ -269,6 +269,12 @@ export function Header() {
                             <div><p className="font-semibold text-gray-900">Progress Reports</p><p className="text-xs text-gray-500 mt-0.5">Generate patient progress audits</p></div>
                           </Link>
                         )}
+                        {!isV2 && (
+                          <Link href={link("/overview")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                            <div className="w-10 h-10 bg-gradient-to-br from-fuchsia-500 to-violet-600 rounded-lg flex items-center justify-center flex-shrink-0"><Building2 className="w-5 h-5 text-white" /></div>
+                            <div><p className="font-semibold text-gray-900">Trust Overview</p><p className="text-xs text-gray-500 mt-0.5">Discharge barriers across every ward</p></div>
+                          </Link>
+                        )}
                         {canAccessAdmin && (
                           <Link href={link("/admin")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors">
                             <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-5 h-5 text-white" /></div>
@@ -576,6 +582,12 @@ export function Header() {
                     <Link href={link("/reports")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                       <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><BarChart3 className="w-4 h-4 text-white" /></div>
                       <div><p className="font-semibold text-gray-900 text-sm">Progress Reports</p><p className="text-xs text-gray-500">Generate patient audits</p></div>
+                    </Link>
+                  )}
+                  {!isV2 && (
+                    <Link href={link("/overview")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                      <div className="w-8 h-8 bg-gradient-to-br from-fuchsia-500 to-violet-600 rounded-lg flex items-center justify-center flex-shrink-0"><Building2 className="w-4 h-4 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900 text-sm">Trust Overview</p><p className="text-xs text-gray-500">Barriers across every ward</p></div>
                     </Link>
                   )}
                   {canAccessAdmin && (

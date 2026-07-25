@@ -155,4 +155,13 @@ Verified correct with no clash: S4 (72h; forms A10/A9 + A11 → H3; 24h "seen wi
 
 ---
 
+## Addendum - 25 July 2026
+
+### D5 - DCC S117 flowchart conflates the discharge planning meeting with the S117 aftercare meeting (RESOLVED in app)
+
+- **Source:** `E:\Hub\temp\CARE ACT AND S117 REFERRAL PROCESS NEW.pptx` (Derby City Council MH Social Care, supplied 26 Feb 2026) states: *"S117 meetings MUST be conducted even if patient was admitted on S2, informal or S3."*
+- **Problem:** the statutory s117 duty only arises from s3/37/45A/47/48 - Section 2 and informal patients are not entitled to S117 aftercare and do not get a S117 aftercare meeting. Mike's clarification (25 Jul 2026): the flowchart line conflates two different meetings - every patient gets a **discharge planning meeting** (which for S117 patients can be combined with the S117 aftercare meeting), but the S117 aftercare meeting itself is S117-entitled patients only.
+- **App fix (25 Jul 2026):** the s117-meeting and social-care guides in `referral-workflows.ts` now spell out the two-meetings distinction; the old "MUST take place regardless of section" wording is gone. A code comment guards against re-importing the PowerPoint wording.
+- **To raise with DCC (optional):** the flowchart wording could mislead wards into requesting S117 meetings for non-S117 patients.
+
 *All findings are drawn directly from the quoted source extracts; nothing is inferred beyond the text. File:line references point to the extracts in `E:\Hub\tmp-mha\` and the app source under `E:\Hub\inpatient-hub\src\`.*

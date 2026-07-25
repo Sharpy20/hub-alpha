@@ -89,6 +89,7 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [PARK] Service "town map" -> full patient-profile integration (see B).
 
 ## E. Side quests / smaller
+- [ ] **Guide freshness vs source policy (Mike, 25 Jul - EXPLORE, no action yet)** - flag a guide when the policy it was written from is due for renewal, or better, detect that the policy has been UPDATED since the guide was written and request a review. Ideas to explore when we pick this up: store `sourcePolicyName` + `policyVersion`/`policyReviewDate` + `guideWrittenDate` per guide (could live alongside the approval-status map); compare against the 472-policy SharePoint Trust Policy Library (Copilot Policy Checker / Content Auditor agents could do the periodic check since Claude can't reach the tenant); surface as a badge on the guide tile ("source policy updated - review needed") and/or auto-flip the traffic-light status back to amber. Pairs naturally with the contacts directory's `lastReviewed` idea (Section D).
 - [x] **Print on guides** (4 Jul eve, commits 7c4f9c1 + be77d18) - Print button on every how-to guide, referral workflow and thinking-guide, rendering all steps/sections from the SAME data so future edits flow through. Reusable `downloads` field + printable blank forms (police capacity, ABC chart). Builders (risk/care-plan) skipped - they already copy out.
 - [ ] Quiz: add "report an issue" per question (feeds feedback board).
 - [ ] Printable guide "clue cards" (title + 1 line, 4/A4, per group) for physical re-grouping.
@@ -142,6 +143,87 @@ All done AT WORK in M365 Copilot / Teams, not in this repo. Context: [[focus-dow
    agents cannot see it. Its figures are ALREADY baked into `/guides/leave-absence`
    (bereavement 5 days paid, end-of-life 6 weeks, domestic 10 days, carers 1 week unpaid) -
    after upload, ask the Policy Checker to verify that step as a test.
+
+## K. Repo clean + publish pipeline + SharePoint handover readiness (DEADLINE: meeting Thu 30 Jul, 1:30pm)
+Agreed 21 Jul (extended same evening). Goal: all raw trust material out of GitHub and onto
+SharePoint, the guide publish pipeline LIVE and demonstrable, repo ready to hand to the
+data team the moment traction lands - "no waiting on Mike".
+
+### The three-stage model (Mike's framing, confirmed)
+1. **Current** - Claude did the heavy lifting and saw everything; guides are demo-safe by
+   discipline (Rule 4), not by architecture.
+2. **Presentation (target for 30 Jul)** - mimic full production: SharePoint = authoring
+   home, Supabase = stand-in for the trust's own datastore, pipeline live. No placeholders
+   on screen, nothing sensitive actually leaked.
+3. **Production** - up to the trust: their hosting, their auth, their database (or a direct
+   SharePoint/Graph wire once IT grants an app registration).
+
+### Architecture decisions (21 Jul)
+- **SharePoint cannot serve the public site directly** - needs an Azure AD app registration
+  + trust IT admin consent = a Production-stage decision. Same applies to upgrading the
+  site gate to NHS auth. Neither can/should happen by the 30th.
+- **Pipeline = SharePoint (authoring) -> Mike presses publish -> Supabase (site datastore)
+  -> site renders server-side.** Repo holds ONLY scaffold/fetch code, zero guide content.
+  Supabase write keys live in Vercel env settings, never in the repo or Claude's workspace.
+  **The pipeline IS the privacy boundary** - internal-only content may only enter guides
+  once it exists (until then Rule 4 holds).
+- **Scope control:** the 66 existing guides STAY static (migrate later, on a schedule).
+  Pipeline goes live for NEW guides; demo it end-to-end with 1-3 guides.
+- **Fictional-detail rule (NOT cosmetic - load-bearing):** until trust auth + approval,
+  anything published through the pipeline uses realistic-but-FICTIONAL internal details
+  (e.g. a plausible fake nhs.net inbox). Keeps "no placeholders" AND "nothing leaked" both
+  true, and keeps the Supabase governance answer bulletproof.
+- **Supabase region:** verify the project is pinned to a UK/EU region (AWS London
+  available); note it for the "where does the data live?" question.
+
+### The "who gave you permission for policy info in Supabase?" answer (add to dev panel Q&A pack)
+Supabase holds only: (1) derived publishable guide content - the same classification
+already on the gated public site via Vercel/GitHub; (2) fictional demo data; (3) nothing
+else. No policy documents, no PII, no internal contacts - policies stay on FOCUS/SharePoint,
+Copilot reads them inside the tenant, only publishable output crosses out. Judo answer:
+"No one - the demo is deliberately built so nothing in it needs permission. Real internal
+detail and real patient data only enter when the trust approves hosting, signs the DPIA
+and takes data-controller ownership. Getting through that gate properly is exactly what
+I'm here to ask for." (Optica lesson: the wrapper before the data.) This collapses the
+moment ONE genuinely internal item is actually in there - hence the fictional-detail rule.
+
+### Claude-side (run early week of 21 Jul - Mike's SharePoint upload must land ~Mon 27/Tue 28 to beat ingestion lag)
+- [ ] Audit: manifest every tracked trust-sourced file (docs/ dumps, public/ blank forms
+      with exact trust wording - police capacity form, ABC chart - flagged for Mike's
+      keep-or-pull call) AND every real internal number in code comments (Rule-4 pattern:
+      real values sit in comments beside "Hidden in demo mode").
+- [ ] Guide manuscript export script: dump every guide's content from the TS data to one
+      markdown per guide (~66 files) -> folder for Mike to upload = the SharePoint
+      "wardHub Guide Manuscripts" library, the canonical authoring home going forward.
+- [ ] Purge: delete/gitignore the manifest files; strip real-number comments (values
+      already preserved in E:\Hub\temp\...\_CONTACTS-INVENTORY.md, outside repo).
+- [ ] History verify: F1 rewrite (6 Jul) already purged the FOCUS dumps - check nothing
+      trust-sourced was committed since; targeted rewrite if needed (bundle playbook exists).
+- [ ] **BUILD: mini publish pipeline** (1-2 sessions) - guide content JSON schema; server-side
+      fetch + render path in the guide viewer for pipeline guides (static guides untouched);
+      publish mechanism for Mike (gated publish form or Supabase dashboard paste); seed with
+      1-3 new guides carrying fictional internal detail. Keys via Vercel env only.
+- [ ] Add the Supabase permission Q&A to the dev panel stakeholder Q&A pack.
+- [ ] Verify/report the Supabase project region.
+
+### Mike-side (at work, by ~Tue 28 to beat ingestion lag)
+- [ ] Upload manuscript folder + remaining source docs to SharePoint.
+- [ ] Point Guide Builder + Policy Checker at the new manuscripts library.
+- [ ] Rehearse demo end-to-end: policy -> Guide Builder draft -> SharePoint -> publish ->
+      appears on live site (never touched GitHub/Claude) -> site editor -> traffic-light
+      sign-off. Line to use: "Pipeline is live; back catalogue migrates on a schedule."
+
+Related (parked for a quiet day, agreed 21 Jul - do NOT build yet):
+- [ ] **Remotion explainer video** (~90s, for the 30 Jul meeting) - storyboard agreed:
+      (1) Claude builds the empty scaffold, sees no patient data / trust docs, replaceable
+      by any tool; (2) inside the Trust M365 boundary, Copilot agents read Policy Library /
+      SOPs / partner forms -> draft guide slots into a shelf -> edited in the site editor ->
+      traffic-light red-to-green sign-off; (3) all entered data stays inside the trust
+      boundary (demo: Supabase; live: Trust infra), copy-out to SystmOne, NO arrow ever
+      back out to Claude/any AI; (4) close: "AI builds the shelves. The Trust writes the
+      books, checks them, and keeps them." Text-on-screen, no voiceover, NHS tokens,
+      1080p mp4 played offline. Project lives at E:\Hub\wardhub-video (NOT in this repo).
+      Frame as "the model at full build", not "running today".
 
 ## MIKE'S HOMEWORK DUMP (4 Jul 2026 - captured, organised into A-E below)
 Full verbatim capture + per-guide notes + source-doc inventory: **`docs/homework-04-Jul-2026-dump.md`**.

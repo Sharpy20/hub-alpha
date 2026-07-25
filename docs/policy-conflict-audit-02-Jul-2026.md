@@ -157,11 +157,12 @@ Verified correct with no clash: S4 (72h; forms A10/A9 + A11 → H3; 24h "seen wi
 
 ## Addendum - 25 July 2026
 
-### D5 - DCC S117 flowchart conflates the discharge planning meeting with the S117 aftercare meeting (RESOLVED in app)
+### D5 - DCC S117 flowchart: misleading "even if admitted on S2, informal or S3" line (RESOLVED in app)
 
 - **Source:** `E:\Hub\temp\CARE ACT AND S117 REFERRAL PROCESS NEW.pptx` (Derby City Council MH Social Care, supplied 26 Feb 2026) states: *"S117 meetings MUST be conducted even if patient was admitted on S2, informal or S3."*
-- **Problem:** the statutory s117 duty only arises from s3/37/45A/47/48 - Section 2 and informal patients are not entitled to S117 aftercare and do not get a S117 aftercare meeting. Mike's clarification (25 Jul 2026): the flowchart line conflates two different meetings - every patient gets a **discharge planning meeting** (which for S117 patients can be combined with the S117 aftercare meeting), but the S117 aftercare meeting itself is S117-entitled patients only.
-- **App fix (25 Jul 2026):** the s117-meeting and social-care guides in `referral-workflows.ts` now spell out the two-meetings distinction; the old "MUST take place regardless of section" wording is gone. A code comment guards against re-importing the PowerPoint wording.
-- **To raise with DCC (optional):** the flowchart wording could mislead wards into requesting S117 meetings for non-S117 patients.
+- **Intended meaning (Mike's reading, 25 Jul 2026, agreed):** the line sits AFTER the flowchart's START gate ("Is the patient under section 3? Or have they been on a S3 in this or previous admission?"), so it means: for a patient who already holds S117 entitlement from a previous Section 3, do not skip the S117 meeting just because the CURRENT admission is informal or S2 - S117 status survives readmission and only ends when the ICB and Local Authority jointly end it. Legally sound.
+- **Problem:** read in isolation (the flowchart is printed and displayed on wards), the line implies EVERY S2/informal patient gets a S117 aftercare meeting - they do not; only patients with a qualifying section (s3/37/45A/47/48) in this or any previous admission. It also conflates the S117 aftercare meeting with the discharge planning meeting every patient gets. The app briefly imported the wrong reading verbatim ("MUST take place regardless of section", Feb 2026 - Jul 2026).
+- **App fix (25 Jul 2026, two passes):** the s117-meeting and social-care guides in `referral-workflows.ts` now spell out both halves - the two-meetings distinction, AND that S117 entitlement can come from a previous admission and survives informal/S2 readmission. A code comment above the criteria step explains the flowchart line so it doesn't get re-imported either way.
+- **To raise with DCC (optional):** suggest rewording the poster line, e.g. "A patient with existing S117 status still needs their S117 meeting even if this admission was informal or under S2."
 
 *All findings are drawn directly from the quoted source extracts; nothing is inferred beyond the text. File:line references point to the extracts in `E:\Hub\tmp-mha\` and the app source under `E:\Hub\inpatient-hub\src\`.*

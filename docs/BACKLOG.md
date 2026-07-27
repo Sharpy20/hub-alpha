@@ -630,6 +630,81 @@ before starting: it is referenced in about a dozen places.
 
 ---
 
+## N. Session 41 job list (Mike, 27 Jul 2026 - evening)
+
+Mike's list for the session, merged with the outstanding items it overlaps. Status as at the
+end of the session.
+
+### Overview (was "the big issue")
+- [x] **Rebuilt** - see Section M item 5 above for the full write-up. Renamed to Overview, first
+      in the More menu, Progress Reports retired, roll-up dropped, scope defaults to the user's
+      ward, review stamps, inline job actions, clickable counters.
+- [x] **Follow-up niggles (same session):** standing Barriers-only YES/NO switch on the tile
+      counter row and in the expanded table row (was only a banner once filtered, so you could
+      not tell which state you were in); acting on a job no longer makes it vanish from under
+      you (`useStickyActions` pins anything you touch, and a cleared barrier stays visible with
+      a "barrier cleared" tick); clicking a job opens the full `TaskDetailModal`, same as the diary.
+
+### Site-wide
+- [x] **Copy-to-clipboard on every phone number and email address.** New `CopyChip` +
+      `ContactText`/`renderWithContacts` in `src/components/ui/`. Done by DETECTION, not by
+      tagging contacts in the data, so guides written later or edited in the site editor get it
+      for free. Covers how-to step content and tips, referral step content, referral submission
+      methods, `/links` bookmark phones and service-map contacts. Detected contacts also become
+      `tel:` / `mailto:` links. Detection is strict (UK 10-11 digit starting 0, or 116 123);
+      audited across all of `src/lib/data` - **87 distinct real numbers, zero false positives**
+      from dates, doses, policy or section numbers. Side benefit: referral step content now runs
+      through the same renderer, so bare URLs are clickable there too (wanted in Section C for
+      the domestic abuse guide).
+
+### Guides
+- [x] **Case-note copy confirmation.** Both case-note boxes (referral casenote step and the
+      how-to completion card) now change state on copy - amber to emerald, a "Copied" badge on
+      the box, header text changes to "Copied - paste it into the patient's notes", `aria-live`
+      for screen readers. The box is what you are about to paste, so that is where the
+      confirmation belongs; the button alone was not enough.
+- [x] **"+ Add follow-up task" now opens the real Add Task screen, pre-filled.** It used to
+      silently create a task 7 days out that you never saw and could not change (Mike: "doesn't
+      visually do anything on the screen"). **`AddTaskModal` was extracted out of
+      `src/app/tasks/page.tsx` (~900 lines) into `src/components/modals/AddTaskModal.tsx`** so
+      the diary and the guides share ONE Add Task screen rather than growing a second one. New
+      optional `prefill` prop (`AddTaskPrefill`) carries what the guide already knows: linked
+      patient, "Follow up: <guide title>", category, linked guide, date +7 days. Everything stays
+      editable before saving. If no patient is linked yet, the patient picker asks first and then
+      hands straight over. Confirmation line on save. Diary Add Task verified unchanged.
+      - Note: `formatDate` in `tasks/page.tsx` was a duplicate of `toLocalDateStr`; the extracted
+        file uses the shared util.
+- [ ] **Guide question answers must reach the case note (AUDIT, not started).** Review every
+      guide that asks the user a question with answer options and confirm the chosen answer flows
+      into the end-of-guide clipboard text. Some already do (area city/county, consent, S117
+      status - snags 92-95). Report findings before editing. Overlaps Section C "capacity
+      assessment guide - make interactive" (choices should alter the case-note output).
+- [ ] **Break up text-heavy guides with progressive disclosure (not started).** Pattern Mike set:
+      **S117 Aftercare & Funding - the basics** - truncate each paragraph under its header until
+      clicked, and for "who qualifies" add an optional **"Does my patient qualify?"** pop-up that
+      walks the deciding criteria. Overlaps Section C (`domestic-abuse-guide` text density).
+- [ ] **Sweep all guides for the same opportunity (not started)** - especially "meets criteria"
+      sections. Report before bulk editing.
+- [ ] **Update the guide-building agents (not started)** - `docs/copilot-guide-builder-kit.md`
+      plus the LIVE agent instructions in M365 Agent Builder (Mike-side, see Section J), so new
+      guides use collapsible sections and criteria pop-ups by default instead of long prose.
+
+### After the above
+- [ ] **Guide walkthrough with Mike, approving one by one** - each currently in development or
+      awaiting approval; Mike moves each past development. This is the big Section C item
+      ("~47 amber guides for Mike to read + colour").
+
+### For a later date (Mike, 27 Jul - not this session)
+- [ ] **Guide-building agents must READ and EDIT existing guides, preserving site-editor
+      changes.** Guides may have been altered in the wardHub guide editor by people with editor
+      rights; an agent regenerating a guide must not clobber those edits. Relates directly to
+      Section L item 4 (CONFIRM mode for guide content) and to the publish-pipeline question in
+      Section K - if SharePoint becomes the authoring home, "who owns the current text" needs
+      answering before an agent can safely rewrite a guide.
+- [ ] **Review the guide editor with Mike.**
+
+---
+
 ## MIKE'S HOMEWORK DUMP (4 Jul 2026 - captured, organised into A-E below)
 Full verbatim capture + per-guide notes + source-doc inventory: **`docs/homework-04-Jul-2026-dump.md`**.
 Source files on disk (outside repo): `E:\Hub\temp\dump july\` (doc, 6 screenshots, 2 HoNOS videos, `docs 1\` set).

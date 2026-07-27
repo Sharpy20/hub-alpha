@@ -8,7 +8,8 @@ import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { PatientPickerModal } from "@/components/modals/PatientPickerModal";
-import { Patient } from "@/lib/types";
+import { AddTaskModal, type AddTaskPrefill } from "@/components/modals";
+import { Patient, DiaryTask } from "@/lib/types";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useReferralLog } from "@/app/referral-log-provider";
@@ -227,6 +228,13 @@ export default function UnifiedGuidePage() {
   const [referralLogged, setReferralLogged] = useState(false);
   const [pendingFollowUp, setPendingFollowUp] = useState(false);
 
+  // Follow-up task. Used to silently create a task 7 days out that you never
+  // saw and could not change (Mike, 27 Jul: "doesn't visually do anything on
+  // the screen"). Now it opens the real Add Task screen, pre-filled with what
+  // the guide already knows, and you save it yourself.
+  const [showAddFollowUp, setShowAddFollowUp] = useState(false);
+  const [followUpAdded, setFollowUpAdded] = useState(false);
+
   // How-to specific state
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
 
@@ -257,27 +265,11 @@ export default function UnifiedGuidePage() {
       carryOver: true,
       ...(isReferral ? { linkedReferralId: guideId } : { linkedGuideId: guideId }),
     });
-    if (pendingFollowUp && isReferral) {
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + 7);
-      addTask({
-        id: `task-followup-${Date.now()}`,
-        type: "patient",
-        title: `Follow up: ${title}`,
-        category: "referral",
-        patientName: patient.name,
-        ward: patient.ward,
-        priority: "routine",
-        status: "pending",
-        dueDate: toLocalDateStr(futureDate),
-        createdAt: today,
-        createdBy: user?.name || "Unknown",
-        carryOver: true,
-        linkedReferralId: guideId,
-      });
+    // The follow-up was waiting on "who is this for?" - now we know, open the
+    // Add Task screen pre-filled rather than creating one behind their back.
+    if (pendingFollowUp) {
       setPendingFollowUp(false);
-      setShowFireworks(true);
-      setTimeout(() => setShowFireworks(false), 3000);
+      setShowAddFollowUp(true);
     }
   };
 
@@ -337,6 +329,33 @@ export default function UnifiedGuidePage() {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  // A follow-up needs a patient. If the guide has one linked, go straight to
+  // the Add Task screen; if not, ask who it is for first (the picker then
+  // re-enters here via handlePatientSelect).
+  const openFollowUp = () => {
+    if (linkedPatient) {
+      setShowAddFollowUp(true);
+    } else {
+      setPendingFollowUp(true);
+      setShowPatientPicker(true);
+    }
+  };
+
+  // What the guide already knows, handed to the Add Task screen as a starting
+  // point. Everything stays editable before saving.
+  const followUpPrefill: AddTaskPrefill = {
+    taskType: "patient",
+    title: `Follow up: ${title}`,
+    patientName: linkedPatient?.name,
+    category: isReferral ? "referral" : "other",
+    linkedGuide: guideId,
+    date: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() + 7);
+      return toLocalDateStr(d);
+    })(),
   };
 
   const isComplete = currentStep === totalSteps - 1;
@@ -875,7 +894,24 @@ export default function UnifiedGuidePage() {
               {/* Case note */}
               {rStep.type === "casenote" && (rStep.clipboardText || rStep.isDynamic) && (
                 <div className="space-y-4">
-                  <div className="p-5 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl font-mono text-base leading-relaxed border-2 border-amber-200">{generateCaseNote()}</div>
+                  {/* The box itself changes state on copy, not just the button -
+                      the text is what you are about to paste, so that is where
+                      the confirmation needs to land (Mike, 27 Jul). */}
+                  <div
+                    aria-live="polite"
+                    className={`relative p-5 rounded-xl font-mono text-base leading-relaxed border-2 transition-colors duration-200 ${
+                      copied
+                        ? "bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-400"
+                        : "bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200"
+                    }`}
+                  >
+                    {copied && (
+                      <span className="absolute -top-3 right-4 inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white shadow-sm">
+                        <Check className="w-3.5 h-3.5" /> Copied
+                      </span>
+                    )}
+                    {generateCaseNote()}
+                  </div>
                   <Button onClick={() => handleCopy(generateCaseNote())} className={`w-full py-4 text-lg ${copied ? "bg-green-600 hover:bg-green-700" : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"}`}>
                     {copied ? <><Check className="w-5 h-5 mr-2" /> Copied to Clipboard!</> : <><Copy className="w-5 h-5 mr-2" /> Copy to Clipboard</>}
                   </Button>
@@ -892,16 +928,17 @@ export default function UnifiedGuidePage() {
                       <p className="text-sm text-gray-500 italic">Set a reminder in your team's job diary or task tracker.</p>
                     ) : (
                       <>
-                        <button onClick={() => {
-                          if (linkedPatient) {
-                            const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
-                            addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "referral", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: toLocalDateStr(futureDate), createdAt: toLocalDateStr(), createdBy: user?.name || "Unknown", carryOver: true, linkedReferralId: guideId });
-                            setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
-                          } else { setPendingFollowUp(true); setShowPatientPicker(true); }
-                        }} className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
+                        <button onClick={openFollowUp} className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
                           <Calendar className="w-4 h-4" /> + Add Follow-up Task
                         </button>
-                        {showFireworks && !isComplete && <p className="text-green-600 text-sm font-medium mt-2">Follow-up task added to diary!</p>}
+                        {followUpAdded && (
+                          <p className="text-green-600 text-sm font-medium mt-2 flex items-center gap-1.5">
+                            <Check className="w-4 h-4" /> Follow-up task added to the diary.
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-400 mt-2">
+                          Opens the Add Task screen{linkedPatient ? `, already filled in for ${linkedPatient.name}` : ""} so you can adjust it before saving.
+                        </p>
                       </>
                     )}
                   </div>
@@ -1097,13 +1134,29 @@ export default function UnifiedGuidePage() {
             {/* Case note copy - suppressed for staff-life guides that are never
                 recorded against a patient (guide.noCaseNote) */}
             {!guide.noCaseNote && (
-            <div className="bg-white rounded-xl border-2 border-amber-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 px-6 py-3 border-b border-amber-200">
-                <h3 className="font-bold text-gray-800 flex items-center gap-2"><Clipboard className="w-5 h-5 text-amber-600" /> Case Note Entry</h3>
-                <p className="text-sm text-gray-500 mt-0.5">Copy to the patient's notes</p>
+            <div className={`bg-white rounded-xl border-2 overflow-hidden transition-colors duration-200 ${copied ? "border-emerald-400" : "border-amber-200"}`}>
+              <div className={`px-6 py-3 border-b transition-colors duration-200 ${copied ? "bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-200" : "bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200"}`}>
+                <h3 className="font-bold text-gray-800 flex items-center gap-2">
+                  {copied ? <Check className="w-5 h-5 text-emerald-600" /> : <Clipboard className="w-5 h-5 text-amber-600" />}
+                  Case Note Entry
+                </h3>
+                <p className="text-sm text-gray-500 mt-0.5">{copied ? "Copied - paste it into the patient's notes" : "Copy to the patient's notes"}</p>
               </div>
               <div className="p-6">
-                <div className="p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl font-mono text-sm leading-relaxed border border-amber-200 whitespace-pre-wrap">
+                {/* The text block itself confirms the copy, not just the button */}
+                <div
+                  aria-live="polite"
+                  className={`relative p-4 rounded-xl font-mono text-sm leading-relaxed border whitespace-pre-wrap transition-colors duration-200 ${
+                    copied
+                      ? "bg-gradient-to-r from-emerald-50 to-green-50 border-emerald-400"
+                      : "bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200"
+                  }`}
+                >
+                  {copied && (
+                    <span className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white shadow-sm">
+                      <Check className="w-3.5 h-3.5" /> Copied
+                    </span>
+                  )}
                   {(linkedPatient ? `Patient: ${linkedPatient.name}. ` : "") + (guide.caseNote ? guide.caseNote.replace(/\[DATE\]/g, todayDate).replace(/\[NURSE\]/g, caseNoteBy || "[NURSE]") : `${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`)}
                 </div>
                 <Button onClick={() => {
@@ -1145,19 +1198,17 @@ export default function UnifiedGuidePage() {
                 </div>
                 <div className="p-6">
                   <p className="text-gray-600 text-sm mb-4">e.g. &ldquo;Chase outcome in 7 days&rdquo; or &ldquo;Revisit assessment in 14 days&rdquo;</p>
-                  <button onClick={() => {
-                    if (linkedPatient) {
-                      const futureDate = new Date(); futureDate.setDate(futureDate.getDate() + 7);
-                      addTask({ id: `task-followup-${Date.now()}`, type: "patient", title: `Follow up: ${title}`, category: "other", patientName: linkedPatient.name, ward: linkedPatient.ward, priority: "routine", status: "pending", dueDate: toLocalDateStr(futureDate), createdAt: toLocalDateStr(), createdBy: user?.name || "Unknown", carryOver: true, linkedGuideId: guideId });
-                      setShowFireworks(true); setTimeout(() => setShowFireworks(false), 3000);
-                    } else {
-                      setPendingFollowUp(true); setShowPatientPicker(true);
-                    }
-                  }} className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
-                    <Calendar className="w-4 h-4" /> + Add Follow-up Task (7 days)
+                  <button onClick={openFollowUp} className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm">
+                    <Calendar className="w-4 h-4" /> + Add Follow-up Task
                   </button>
-                  {showFireworks && !isReferral && <p className="text-green-600 text-sm font-medium mt-3">Follow-up task added to diary!</p>}
-                  <p className="text-xs text-gray-400 mt-2">Optional - skip if not needed.</p>
+                  {followUpAdded && (
+                    <p className="text-green-600 text-sm font-medium mt-3 flex items-center gap-1.5">
+                      <Check className="w-4 h-4" /> Follow-up task added to the diary.
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-400 mt-2">
+                    Opens the Add Task screen{linkedPatient ? `, already filled in for ${linkedPatient.name}` : ""} so you can change the wording and date before saving. Optional - skip if not needed.
+                  </p>
                 </div>
               </div>
             )}
@@ -1225,7 +1276,30 @@ export default function UnifiedGuidePage() {
       </div>
 
       {!isV2 && (
+        <>
         <PatientPickerModal isOpen={showPatientPicker} onClose={() => setShowPatientPicker(false)} onSelect={handlePatientSelect} title={title} type={isReferral ? "referral" : "guide"} />
+
+        {/* Follow-up task: the real Add Task screen, pre-filled from the guide */}
+        <AddTaskModal
+          isOpen={showAddFollowUp}
+          onClose={() => setShowAddFollowUp(false)}
+          activeWard={linkedPatient?.ward || activeWard}
+          currentUserName={user?.name}
+          defaultDate={followUpPrefill.date}
+          prefill={followUpPrefill}
+          onAdd={(task) => {
+            addTask({
+              ...task,
+              id: task.id || `task-followup-${Date.now()}`,
+              createdAt: task.createdAt || toLocalDateStr(),
+              createdBy: task.createdBy || user?.name || "Unknown",
+            } as DiaryTask);
+            setShowAddFollowUp(false);
+            setFollowUpAdded(true);
+            setTimeout(() => setFollowUpAdded(false), 5000);
+          }}
+        />
+        </>
       )}
     </MainLayout>
   );

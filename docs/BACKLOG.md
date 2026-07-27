@@ -94,7 +94,16 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
       (1) drop the `parent` on those six so they sit on their own; (2) keep the visual link but stop
       cutting a child off when the child's own `areas` already cover the current area; (3) split the
       field into `parent` (true dependency) and `near` (layout only) - the honest fix, and it pairs
-      naturally with the category-first rework above. **Mike's call - it changes what the map claims.**
+      naturally with the category-first rework above.
+      **DECIDED (Mike, 27 Jul): option 3 - split `parent` and `near`.** Only a true dependency cuts a
+      child off; `near` is layout only and never gates access. The six above become `near`, since you
+      do not need a Duty to Refer to phone Shelter. Do it in the same pass as the category-first
+      layout - they touch the same code.
+- [ ] **Re-centre the map on a node (Mike, 27 Jul).** Click a service (or its category) to make it
+      the centre and push the rest out of the way, so one branch can be read without the other 100
+      nodes competing. Plus a **Recentre button** back to the hub view. Pairs with the category-first
+      layout: the category becomes a natural first-level focus target, so the journey is
+      hub -> category -> service without ever losing your place.
 - [ ] Sweep other FOCUS sections for more services/links (Mike logged in; only did /clinical/referrals).
 - [PARK] Real vs demo: criteria stay illustrative until the full research/sign-off pass.
 - [ ] **Postcode / GP-surgery lookup (Mike, 4 Jul)** - some teams allocate by **GP surgery location**, others by **home address**; build a checker that takes a postcode (and/or GP surgery) and tells you: Derby **City vs County**, which **AMHP team** to call, which **CMHT**, and the **S117 responsible authority**. Build it into the "which services are accessible" tool (this service map / town-map). **Data now fully in hand** (Part 1 of `_CONTACTS-INVENTORY.md`): every CMHT's complete GP-surgery list + numbers, the Derby City Team B/C split, and the city/county AMHP + social-care split. KEY RULE captured: CMHTs route by **registered GP surgery**; AMHP + social care route by **home address** (city vs county); S117 by authority-of-residence-when-sectioned. GP-surgery -> CMHT is a clean static table; city/county needs a postcode -> local-authority resolver (static boundary table for demo, or postcode API live - Rule: check before sending anything out).

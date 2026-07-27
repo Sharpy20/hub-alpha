@@ -95,25 +95,28 @@ export const SECTION_OPTIONS = [
 ];
 
 // S117 status options. Deliberately NOT the SECTION_OPTIONS list: entitlement
-// turns on whether a qualifying section was ever held, so "previously on S3" has
-// to be sayable. A patient readmitted informally or on S2 who still holds S117
-// keeps the entitlement, and still needs the aftercare meeting.
+// turns on whether a qualifying section was ever HELD, not on what the patient
+// is on right now. Two cases the plain MHA picker cannot express, and both are
+// common at the point someone plans a discharge:
+//   - detained under S3 earlier in THIS admission, since rescinded, now informal
+//   - detained under S3 in an EARLIER admission (entitlement survives readmission)
+// Both still carry S117 and both still need the aftercare meeting.
 export const S117_OPTIONS = [
   {
     value: "current",
-    label: "On Section 3 now",
-    description: "Currently detained under S3 (or S37, S47/49, S45A)",
+    label: "Detained under Section 3 during this admission",
+    description: "At any point this admission - it counts even if they are informal now",
     entitled: true,
   },
   {
     value: "previous",
-    label: "Previously on Section 3",
-    description: "This admission or any earlier one - entitlement survives readmission",
+    label: "Detained under Section 3 in a previous admission",
+    description: "Any earlier admission, however long ago - entitlement survives readmission",
     entitled: true,
   },
   {
     value: "none",
-    label: "No qualifying section",
+    label: "No qualifying section, ever",
     description: "Never held S3 or an equivalent - standard Care Act route",
     entitled: false,
   },
@@ -713,7 +716,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "S117 Aftercare & Funding – the basics",
         progressive: true,
         walk: S117_QUALIFY_WALK,
-        content: "Section 117 of the Mental Health Act places a joint duty on the ICB (health) and the Local Authority (social care) to provide free aftercare on discharge. Read this first so you understand what is being planned – and who pays for it.\n\nWho qualifies:\n• The s117 duty arises for patients discharged from Section 3, 37, 45A, 47 or 48 (including their restricted forms, e.g. 37/41, 47/49).\n• It does not arise from Section 2 or an informal admission alone – but it SURVIVES readmission. A patient with S117 from an earlier Section 3 who comes back informally or under Section 2 still holds S117 aftercare rights, and still needs a S117 meeting before discharge.\n• A patient with no qualifying section in any admission just gets the normal discharge planning meeting – no S117 duty applies.\n\nWhat it means:\n• Aftercare that meets a need arising from the mental disorder AND reduces the risk of re-admission must be provided free of charge – the patient cannot be charged for it.\n• It is jointly funded and commissioned by the ICB and the Local Authority. Which body pays for which part – or how the cost is split – is usually where funding gets argued out.\n• Ordinary residence decides which Local Authority is responsible, normally the area the patient lived in when they were detained under Section 3. Check this early (the MHA Office can confirm).\n• The duty continues until BOTH the ICB and the Local Authority agree the person no longer needs aftercare. It cannot be ended by one body alone, and not simply because the patient has been discharged.\n\nHow the funding split is decided (DST):\n• Where NHS Continuing Healthcare (CHC) may apply, or to agree the health/social split, a Decision Support Tool (DST) is completed across care domains: behaviour, cognition, psychological/emotional needs, communication, mobility, nutrition, continence, skin, breathing, drug therapies/medication, altered states of consciousness, and other significant needs.\n• These domains overlap heavily with the nursing needs/placement assessment and with a tribunal nursing report – the same evidence supports all three.\n\nNurse tip:\n• The funding argument (and any placement or tribunal report) is built on nursing documentation. Record the level and frequency of support a patient needs, not just the diagnosis – that is what evidences the domains.",
+        content: "Section 117 of the Mental Health Act places a joint duty on the ICB (health) and the Local Authority (social care) to provide free aftercare on discharge. Read this first so you understand what is being planned – and who pays for it.\n\nWho qualifies:\n• The s117 duty arises for patients discharged from Section 3, 37, 45A, 47 or 48 (including their restricted forms, e.g. 37/41, 47/49).\n• What matters is whether a qualifying section was ever HELD, not what the patient is on today. If the Section 3 was rescinded partway through this admission and they are informal now, the duty still applies – and that is often exactly the position when discharge is being planned.\n• It does not arise from Section 2 or an admission that was informal throughout – but it SURVIVES readmission. A patient with S117 from an earlier Section 3 who comes back informally or under Section 2 still holds S117 aftercare rights, and still needs a S117 meeting before discharge.\n• A patient with no qualifying section in any admission just gets the normal discharge planning meeting – no S117 duty applies.\n\nWhat it means:\n• Aftercare that meets a need arising from the mental disorder AND reduces the risk of re-admission must be provided free of charge – the patient cannot be charged for it.\n• It is jointly funded and commissioned by the ICB and the Local Authority. Which body pays for which part – or how the cost is split – is usually where funding gets argued out.\n• Ordinary residence decides which Local Authority is responsible, normally the area the patient lived in when they were detained under Section 3. Check this early (the MHA Office can confirm).\n• The duty continues until BOTH the ICB and the Local Authority agree the person no longer needs aftercare. It cannot be ended by one body alone, and not simply because the patient has been discharged.\n\nHow the funding split is decided (DST):\n• Where NHS Continuing Healthcare (CHC) may apply, or to agree the health/social split, a Decision Support Tool (DST) is completed across care domains: behaviour, cognition, psychological/emotional needs, communication, mobility, nutrition, continence, skin, breathing, drug therapies/medication, altered states of consciousness, and other significant needs.\n• These domains overlap heavily with the nursing needs/placement assessment and with a tribunal nursing report – the same evidence supports all three.\n\nNurse tip:\n• The funding argument (and any placement or tribunal report) is built on nursing documentation. Record the level and frequency of support a patient needs, not just the diagnosis – that is what evidences the domains.",
       },
       {
         id: "criteria",

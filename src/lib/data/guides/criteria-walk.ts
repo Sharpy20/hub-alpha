@@ -70,9 +70,15 @@ export const S117_QUALIFY_WALK: CriteriaWalk = {
   questions: [
     {
       id: "current",
-      question: "Is the patient on Section 3 in THIS admission?",
+      // NOT "is the patient on Section 3 now" (Mike, 27 Jul). Entitlement is
+      // triggered by having BEEN detained, not by being detained at the moment
+      // you ask. A patient whose Section 3 was rescinded and who is now informal
+      // still holds S117 - and that is often exactly the state they are in at
+      // the point someone is planning the discharge.
+      question:
+        "Has the patient been detained under Section 3 at ANY point during this admission?",
       help:
-        "Section 37, 45A, 47 or 48 count too, including the restricted forms 37/41 and 47/49. Section 2, Section 4 and the holding powers 5(2) and 5(4) do NOT create the duty on their own, and neither does an informal admission.",
+        "It counts even if the section has since been rescinded and they are informal now - that is common by the time discharge is being planned. Section 37, 45A, 47 or 48 count too, including the restricted forms 37/41 and 47/49. Section 2, Section 4 and the holding powers 5(2) and 5(4) do NOT create the duty on their own, and neither does an admission that was informal throughout.",
       answers: [
         { label: "Yes", outcome: "qualifies-current" },
         { label: "No", next: "previous" },
@@ -81,7 +87,7 @@ export const S117_QUALIFY_WALK: CriteriaWalk = {
     },
     {
       id: "previous",
-      question: "Was the patient on Section 3 in a PREVIOUS admission?",
+      question: "Was the patient detained under Section 3 in a PREVIOUS admission?",
       help:
         "Any earlier admission counts, however long ago. S117 entitlement survives readmission - it only ends when the ICB and the Local Authority jointly agree it should.",
       answers: [
@@ -98,7 +104,7 @@ export const S117_QUALIFY_WALK: CriteriaWalk = {
       short: "S117 applies",
       title: "S117 aftercare applies",
       detail:
-        "The current section creates the duty. Aftercare that meets a need arising from the mental disorder and reduces the risk of readmission must be provided free of charge.",
+        "Being detained under a qualifying section during this admission creates the duty - it does not matter whether the section is still in force now. Aftercare that meets a need arising from the mental disorder and reduces the risk of readmission must be provided free of charge.",
       actions: [
         "Book a S117 aftercare meeting before discharge - at least 7 days' notice to Mental Health Social Care.",
         "This is separate from the discharge planning meeting, though the two are often held together.",

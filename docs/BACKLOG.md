@@ -348,6 +348,20 @@ is the PII leak; **make a new task** loses the barrier's age. Every route lies, 
 - **Take over stays silent.** The person losing it is not notified. The history line is the record.
 - **Patient tasks + appointments only** for this work. Team/ward shift tasks are a separate
   question - see "Open" below.
+- **Drop the `in_progress` status entirely** (27 Jul). It only ever meant "I claimed this and
+  dragged it to a column" - self-declared, no use to anyone else, and wiped at handover anyway.
+  The hand-back states replace it and say far more. Two things now cover everything it did:
+  *claimed by someone* = they are on it right now, do not duplicate; *handed back with a state*
+  = someone has been on it and left it in a known condition. The badge on the card is the hint
+  that this is not a brand new job.
+- **"Chase" is the waiting subset only, not the umbrella.** It means one thing - waiting on
+  someone, needs a nudge - and does not describe a half-filled form or a job blocked on a
+  consultant decision. Right word for the action button and the waiting badge, wrong word as a
+  collective noun. No umbrella name needed: the card shows the actual state, which is more
+  specific than any collective noun.
+- **My Jobs kanban columns become To do / Waiting / Done** (was Not Started / In Progress /
+  Completed). Your own "in progress" column was never information anyone needed; splitting out
+  what you are waiting on declutters the list and shows what to chase.
 
 ### 1. Hand-back sheet (the core build)
 Split today's Drop into two actions: **Drop** (claimed by mistake, silent, as now) and
@@ -402,6 +416,10 @@ what / structured reason. Small timeline in the task detail modal. The events al
 (see `tasks-provider.tsx`), they are simply not kept. Also makes Reopen non-lossy - it
 currently wipes `completedBy`/`completedAt` outright.
 
+**Hand-back count on the card** (27 Jul, cheap once history exists). A job handed back four
+times is going round in circles - exactly the failure in Tess's "no answer, try again tomorrow"
+example. Surfacing "4th time round" on the card makes it visible in ward round, and it demos well.
+
 ### 5. `/overview` becomes the one place (Mike's call)
 Merge `/reports` into `/overview` and retire the reports page as a separate thing. Reports
 already has the right bones (patient rows expandable to jobs, filters, sort, priority colours,
@@ -441,6 +459,34 @@ a job in the waiting state. Its three free-text fields die with it, which is wha
 structured-only rule true across the whole product.
 Types to remove or repurpose: `ReferralLog`, `ReferralChase`, `ReferralLogStatus`.
 
+### 7. Demo data top-up for `/overview` (DO FIRST - independent of everything above)
+Wanted for the **Thu 30 Jul** sponsor demo. Standalone: touches only the generator in
+`src/lib/data/tasks/index.ts`, so it can ship on its own without any of Section M being built.
+
+**Current state (why it looks thin):** two of the ~20 `PATIENT_TASK_TEMPLATES` carry
+`blocksDischarge` ("Discharge planning meeting", "Social worker referral") and may or may not be
+reached, plus `generatePatientTasks` guarantees exactly one extra barrier per ward, dated
+tomorrow with `createdAt` = today. Result: five wards showing near-identical small numbers, all
+created today. Flat and young, the least interesting version of that screen.
+
+**What to change:**
+1. **Make the wards uneven.** One ward clearly worst, e.g. Dickinson 9 / Keats 7 / Shelley 4 /
+   Wordsworth 3 / Byron 2. "Dickinson 9, Byron 2" prompts the question you want asked in the
+   room; five wards on 2 each prompts nothing. Exact spread is one line to change.
+2. **Use real blockers, not just "discharge planning meeting".** Housing referral, placement
+   search, funding panel / CHC decision, social care assessment, transport, care home
+   assessment. These are what actually holds discharges up and they land with a sponsor audience.
+3. **Spread across more patients** (target roughly 12-15 of the 100 blocked) so the
+   blocked-patient count means something rather than tracking the barrier count.
+4. **Date them 3-14 days out**, so they populate `/overview` without filling today's diary
+   (Mike's constraint). Deliberately make **two or three overdue** so that column is not zero.
+5. **Vary `createdAt`** back a few weeks on the older ones, so age is available to the screen
+   later without regenerating anything.
+
+**Limit to be aware of:** `/overview` can only show what is built. Today that is barrier count,
+blocked-patient count and overdue per ward. The waiting ages ("waiting on housing, 11 days")
+need the Section M work, so if none of that ships by Thursday the data cannot show it.
+
 ### Bugs this exposes (fix as part of the build)
 - **Drop does not touch status** (`tasks-provider.tsx` claimTask): a dropped job keeps
   `in_progress`, so an unclaimed job can sit in the pool displaying as in progress.
@@ -450,14 +496,21 @@ Types to remove or repurpose: `ReferralLog`, `ReferralChase`, `ReferralLogStatus
   `ALL_DEMO_TASKS`, so the diary resets on every refresh. The retiring chase log was the only
   work record that survived a reload. Decide persistence before any of this is demo-able.
 
+Note: dropping `in_progress` (see Decisions locked) dissolves the first two rather than fixing
+them - but only if the kanban, `TodayWidget`, `PatientTasksModal`, `StaffTasksModal`, `/reports`
+and the demo generator are all migrated off the status at the same time. Grep `in_progress`
+before starting: it is referenced in about a dozen places.
+
 ### Open
 - [ ] **Team/ward shift tasks: what happens when one is not completed that shift?** Mike thinks
   something was already built. There is a `carryOver` flag on `WardTask` and a per-category
   carry-over setting in ward settings, so a mechanism exists - check whether it actually works.
   Separate session.
 - [ ] Confirm the exact stamp wording ("current state of play" vs the draft above).
-- [ ] Sponsor demo is Thu 30 Jul. This is a multi-session build. Decide the smallest slice that
-  demos: probably the rapid-review screen with a few actions live.
+- [ ] Sponsor demo is Thu 30 Jul. This is a multi-session build. **Before Thursday, do section 7
+  (demo data) only** - it is standalone and it is the one thing that visibly improves the demo.
+  Everything else here is post-meeting work. If there is time beyond that, the smallest useful
+  slice is the rapid-review screen with a few actions live.
 - [ ] Follow-up line to Tess once agreed - the generated case note answers her original ask
   better than the reply already sent.
 

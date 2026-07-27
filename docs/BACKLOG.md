@@ -71,7 +71,10 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] Tighten remaining criteria from FOCUS (CAMHS pathways, condition charities, etc.) - best-effort now, "verify".
 - [ ] Decide real home: a button on the patient profile ("what's open to this person"), pulling approved dated facts instead of manual toggles (full-build/PII feature).
 - [ ] Refinement idea: a child off an "unknown" (not just "closed") parent still shows open - consider inheriting parent state.
-- [ ] **Map view is too cluttered - branch through the CATEGORY first (Mike, 27 Jul).** Right now
+- [x] **DONE 27 Jul - map rebuilt category-first with focus-on-node.** Hub shows the 12 categories
+      only (service count + how many open), click to drop into a category, click a service with its own
+      branch to recentre again, breadcrumb buttons back out. `parent`/`near` split shipped with it, which
+      fixed the seven unreachable-service cases. Original note: Right now
       every service radiates off the hub, so 115 nodes compete for the same ring. Make the first
       node out from the hub the **category** (the same 12 cluster labels the list uses), then branch
       the services off their category node. Same data, one more level of hierarchy; the existing
@@ -683,7 +686,9 @@ end of the session.
       not tell which state you were in); acting on a job no longer makes it vanish from under
       you (`useStickyActions` pins anything you touch, and a cleared barrier stays visible with
       a "barrier cleared" tick); clicking a job opens the full `TaskDetailModal`, same as the diary.
-- [ ] **Barriers-only filter should drive the per-patient toggles (Mike, 27 Jul - not started).**
+- [x] **Barriers-only filter drives the per-patient toggles. DONE 27 Jul.** Page-level Barriers-only
+      (and Waiting-only) now sets every patient tile to the same lens via a `pageLens` prop; each tile
+      stays individually overridable afterwards. Original note:
       Turning the page-level Barriers-only filter ON should also switch ON the barriers-only toggle
       on each patient, rather than leaving the two controls out of step. Currently the page filter
       and the per-patient switches are independent, so you can be filtered to barriers at the top

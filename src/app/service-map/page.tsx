@@ -550,13 +550,18 @@ export default function ServiceMapPage() {
                   const svs = SERVICES.filter((s) => s.cluster === cl.id);
                   const openCount = svs.filter((s) => { const e = effective(s.id); return e === "open" || e === "everyone"; }).length;
                   const lines = wrap(cl.label, 16);
-                  // Stub spokes fanning out behind each category - you cannot read
-                  // anything from them, and that is the point: they show there is
-                  // more here and invite the click (Mike, 27 Jul).
+                  // Stub spokes fanning out behind each category. The COUNT is how
+                  // many services in there currently match, so the tree visibly
+                  // grows as you work through the profile questions - answering
+                  // one and watching a category sprout is the progress feedback
+                  // (Mike, 27 Jul). With no matches yet, two faint ghosts still
+                  // say "there is something behind this, open it".
                   const outward = Math.atan2(cp.y - CY, cp.x - CX);
-                  const stubCount = Math.min(5, svs.length);
+                  const matched = openCount > 0;
+                  const stubCount = matched ? Math.min(8, openCount) : Math.min(2, svs.length);
+                  // Fan wider as it fills so the spokes never crowd each other.
+                  const spread = Math.min(1.5, 0.45 + stubCount * 0.14);
                   const stubs = Array.from({ length: stubCount }, (_, k) => {
-                    const spread = 1.15;
                     const a = outward + (stubCount === 1 ? 0 : -spread / 2 + (k * spread) / (stubCount - 1));
                     const len = 34 + (k % 2) * 14;
                     return {
@@ -569,15 +574,28 @@ export default function ServiceMapPage() {
                       style={{ cursor: "pointer" }} tabIndex={0} role="button"
                       aria-label={`${cl.label}: ${svs.length} services, ${openCount} open. Open this category.`}
                       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goTo(cl.id); } }}>
-                      <line x1={CX} y1={CY} x2={cp.x} y2={cp.y} stroke={cl.color} strokeWidth={openCount ? 4 : 2} opacity={openCount ? 0.75 : 0.3} strokeLinecap="round" />
-                      {/* behind the node, so it reads as "this opens up" */}
+                      {/* Line, ring and stubs share one colour so the whole
+                          branch lights up together the moment something in it
+                          matches - the connection reads as one thing, not three
+                          (Mike, 27 Jul). Only the label keeps the category
+                          colour, so identity survives. */}
+                      <line x1={CX} y1={CY} x2={cp.x} y2={cp.y} stroke={matched ? "#16a34a" : cl.color}
+                        strokeWidth={matched ? 4 : 2} opacity={matched ? 0.85 : 0.3} strokeLinecap="round"
+                        style={{ transition: "stroke 0.35s, stroke-width 0.35s, opacity 0.35s" }} />
+                      {/* Behind the node, so it reads as "this opens up". Matched
+                          spokes go green like every other open path on the map,
+                          so growth and colour say the same thing. */}
                       {stubs.map((st, k) => (
-                        <g key={k} opacity={0.3}>
-                          <line x1={st.x1} y1={st.y1} x2={st.x2} y2={st.y2} stroke={cl.color} strokeWidth={2} strokeLinecap="round" />
-                          <circle cx={st.x2} cy={st.y2} r={7} fill="#fff" stroke={cl.color} strokeWidth={2} />
+                        <g key={k} opacity={matched ? 0.8 : 0.22} style={{ transition: "opacity 0.35s" }}>
+                          <line x1={st.x1} y1={st.y1} x2={st.x2} y2={st.y2}
+                            stroke={matched ? "#16a34a" : cl.color} strokeWidth={matched ? 2.5 : 2} strokeLinecap="round" />
+                          <circle cx={st.x2} cy={st.y2} r={matched ? 8 : 6} fill={matched ? "#dcfce7" : "#fff"}
+                            stroke={matched ? "#16a34a" : cl.color} strokeWidth={2} />
                         </g>
                       ))}
-                      <circle cx={cp.x} cy={cp.y} r={62} fill="#fff" stroke={cl.color} strokeWidth={3} />
+                      <circle cx={cp.x} cy={cp.y} r={62} fill={matched ? "#f0fdf4" : "#fff"}
+                        stroke={matched ? "#16a34a" : cl.color} strokeWidth={matched ? 4 : 3}
+                        style={{ transition: "stroke 0.35s, stroke-width 0.35s, fill 0.35s" }} />
                       <text textAnchor="middle" fontSize="11.5" fontWeight="700" fill={cl.color} pointerEvents="none">
                         {lines.map((ln, i) => <tspan key={i} x={cp.x} y={cp.y - 10 + i * 13}>{ln}</tspan>)}
                       </text>

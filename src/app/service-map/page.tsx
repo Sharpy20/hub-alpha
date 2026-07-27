@@ -332,7 +332,20 @@ export default function ServiceMapPage() {
   const selEv = selSvc ? evals[selSvc.id] : null;
   const selEff = selSvc ? effective(selSvc.id) : null;
   const parentName = selSvc?.parent ? SERVICES.find((s) => s.id === selSvc.parent)?.name : null;
-  const nodeR = (depth: number) => (clusterFilter === "all" ? [26, 20, 16] : [32, 25, 20])[Math.min(depth, 2)];
+  // Node size adapts to how crowded the ring actually is, rather than being a
+  // fixed size chosen for the old everything-at-once layout. A focused category
+  // usually holds a handful of services, so they can be big and readable; only a
+  // packed one shrinks, and then only as far as the arc requires (Mike, 27 Jul:
+  // "quite small and hard to read").
+  // Count EVERY node in the focused view, not just the ones on the inner ring:
+  // the layout spreads leaves around the full circle, so a branchy category is
+  // just as crowded as a flat one with the same number of services. Sizing off
+  // the root count alone let a 19-service category draw 46px nodes and overlap.
+  const ringLeaves = visServices.length || 1;
+  const arcPerNode = (2 * Math.PI * FOCUS_BANDS[0]) / ringLeaves;
+  const focusR = Math.max(20, Math.min(46, arcPerNode * 0.42));
+  const nodeR = (depth: number) =>
+    focus ? [focusR, focusR * 0.8, focusR * 0.66][Math.min(depth, 2)] : [26, 20, 16][Math.min(depth, 2)];
 
   return (
     <MainLayout>
@@ -665,7 +678,9 @@ export default function ServiceMapPage() {
                   const r = nodeR(p.depth);
                   const isSel = selected === s.id;
                   const hit = !searchLc || s.name.toLowerCase().includes(searchLc);
-                  const lines = wrap(s.name, clusterFilter === "all" ? 15 : 18);
+                  // Label scales with the node, and wraps wider when there is room.
+                  const fontPx = focus ? Math.max(9, Math.min(12.5, r * 0.32)) : 8.5;
+                  const lines = wrap(s.name, focus ? (r > 34 ? 16 : 13) : 15);
                   return (
                     <g key={s.id} onClick={() => {
                         if (draggedRef.current) { draggedRef.current = false; return; }
@@ -680,8 +695,8 @@ export default function ServiceMapPage() {
                       <circle cx={p.x} cy={p.y} r={r} fill={meta.fill} stroke={meta.border} strokeWidth={isSel ? 4 : 2.5} style={{ transition: "fill 0.35s, stroke 0.35s" }} />
                       {eff === "blocked" && <line x1={p.x - r * 0.6} y1={p.y - r * 0.6} x2={p.x + r * 0.6} y2={p.y + r * 0.6} stroke="#dc2626" strokeWidth={2.5} />}
                       {(eff === "open" || eff === "everyone") && <text x={p.x} y={p.y - r - 3} textAnchor="middle" fontSize="13">{"✅"}</text>}
-                      <text textAnchor="middle" fontSize={clusterFilter === "all" ? 8.5 : 10} fontWeight="600" className="fill-gray-700" pointerEvents="none">
-                        {lines.map((ln, i) => <tspan key={i} x={p.x} y={p.y + (lines.length === 1 ? 3 : i === 0 ? -2 : 9)}>{ln}</tspan>)}
+                      <text textAnchor="middle" fontSize={fontPx} fontWeight="600" className="fill-gray-700" pointerEvents="none">
+                        {lines.map((ln, i) => <tspan key={i} x={p.x} y={p.y + (lines.length === 1 ? fontPx * 0.35 : i === 0 ? -fontPx * 0.2 : fontPx * 1.0)}>{ln}</tspan>)}
                       </text>
                     </g>
                   );

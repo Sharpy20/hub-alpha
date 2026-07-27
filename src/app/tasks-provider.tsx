@@ -216,11 +216,11 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
         return prev.map((t) => {
           if (t.id !== taskId) return t;
+          // Destination decides WHO holds it, the date decides WHEN it comes
+          // back. A waiting job carries a chase date whoever holds it, so any
+          // date that was set moves the job - not just the "later day" option.
           const dateField = t.type === "appointment" ? "appointmentDate" : "dueDate";
-          const reschedule =
-            handback.destination === "scheduled" && handback.chaseDate
-              ? { [dateField]: handback.chaseDate }
-              : {};
+          const reschedule = handback.chaseDate ? { [dateField]: handback.chaseDate } : {};
           return withEvent(
             {
               ...t,

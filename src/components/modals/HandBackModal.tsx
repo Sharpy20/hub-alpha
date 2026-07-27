@@ -31,6 +31,40 @@ const addDays = (n: number) => {
   return toLocalDateStr(d);
 };
 
+/** An answered question, folded down to one line with a way back in. */
+function AnsweredRow({
+  step,
+  question,
+  answer,
+  onChange,
+  tone = "gray",
+}: {
+  step: number | null;
+  question: string;
+  answer: string;
+  onChange: () => void;
+  tone?: "gray" | "sky";
+}) {
+  return (
+    <button
+      onClick={onChange}
+      className={`w-full flex items-center gap-2 rounded-lg border px-3 py-2 text-left transition-colors ${
+        tone === "sky"
+          ? "border-sky-200 bg-sky-50 hover:bg-sky-100"
+          : "border-gray-200 bg-gray-50 hover:bg-gray-100"
+      }`}
+    >
+      <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+      <span className="text-xs text-gray-500 flex-shrink-0">
+        {step !== null && `${step}. `}
+        {question}
+      </span>
+      <span className="font-bold text-gray-900 text-sm truncate">{answer}</span>
+      <span className="ml-auto text-xs font-semibold text-indigo-600 flex-shrink-0">Change</span>
+    </button>
+  );
+}
+
 export function HandBackModal({
   isOpen,
   onClose,
@@ -55,6 +89,10 @@ export function HandBackModal({
   const [waitingOn, setWaitingOn] = useState<string>("");
   const [chaseDate, setChaseDate] = useState<string>(addDays(2));
   const [copied, setCopied] = useState(false);
+  // Answered questions collapse to a one-line summary so the sheet does not
+  // grow into a scrolling wall - especially with the waiting-on picker and the
+  // case note both open (Mike, 27 Jul). Tap a collapsed row to change it.
+  const [reopened, setReopened] = useState<number | null>(null);
 
   const isWaiting = state === "waiting";
   // Waiting needs no machinery of its own: it is a reason plus a date, reusing
@@ -88,7 +126,11 @@ export function HandBackModal({
     setWaitingOn("");
     setChaseDate(addDays(2));
     setCopied(false);
+    setReopened(null);
   };
+
+  // A step shows collapsed once answered, unless the user tapped it to change.
+  const collapsed = (step: number, answered: boolean) => answered && reopened !== step;
 
   const close = () => {
     reset();
@@ -119,7 +161,15 @@ export function HandBackModal({
 
   return (
     <Modal isOpen={isOpen} onClose={close} title="Hand this job back" size="lg">
-      <div className="space-y-5">
+      {/* Collapsing answered steps keeps this short, but on a laptop with the
+          waiting picker open it can still run long - so it scrolls rather than
+          pushing the confirm button off screen. */}
+      <div
+        className="space-y-5 max-h-[65vh] overflow-y-auto pr-1"
+        tabIndex={0}
+        role="group"
+        aria-label="Hand-back questions"
+      >
         <div>
           <p className="font-semibold text-gray-900">{taskTitle}</p>
           {patientName && <p className="text-sm text-gray-500">{patientName}</p>}
@@ -131,37 +181,55 @@ export function HandBackModal({
         </div>
 
         {/* 1. What state is it in? */}
-        <div>
-          <p className="font-bold text-gray-800 mb-2">
-            <span className="text-gray-400 mr-1.5">1.</span>What state is it in?
-          </p>
-          <div className="space-y-2">
-            {HANDBACK_STATES.map((s) => (
-              <button
-                key={s.value}
-                onClick={() => setState(s.value)}
-                className={`w-full text-left rounded-xl border-2 px-4 py-2.5 transition-all ${
-                  state === s.value
-                    ? "border-indigo-500 bg-indigo-50"
-                    : "border-gray-200 bg-white hover:border-indigo-300"
-                }`}
-              >
-                <span className="block font-bold text-gray-900 text-sm">{s.label}</span>
-                <span className="block text-xs text-gray-500">{s.hint}</span>
-              </button>
-            ))}
+        {collapsed(1, !!state) ? (
+          <AnsweredRow
+            step={1}
+            question="What state is it in?"
+            answer={HANDBACK_STATES.find((s) => s.value === state)?.label || ""}
+            onChange={() => setReopened(1)}
+          />
+        ) : (
+          <div>
+            <p className="font-bold text-gray-800 mb-2">
+              <span className="text-gray-400 mr-1.5">1.</span>What state is it in?
+            </p>
+            <div className="space-y-2">
+              {HANDBACK_STATES.map((s) => (
+                <button
+                  key={s.value}
+                  onClick={() => { setState(s.value); setReopened(null); }}
+                  className={`w-full text-left rounded-xl border-2 px-4 py-2.5 transition-all ${
+                    state === s.value
+                      ? "border-indigo-500 bg-indigo-50"
+                      : "border-gray-200 bg-white hover:border-indigo-300"
+                  }`}
+                >
+                  <span className="block font-bold text-gray-900 text-sm">{s.label}</span>
+                  <span className="block text-xs text-gray-500">{s.hint}</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Waiting on who - only when it applies */}
-        {isWaiting && (
+        {isWaiting && collapsed(15, !!waitingOn) && (
+          <AnsweredRow
+            step={null}
+            question="Waiting on"
+            answer={waitingOn}
+            onChange={() => setReopened(15)}
+            tone="sky"
+          />
+        )}
+        {isWaiting && !collapsed(15, !!waitingOn) && (
           <div className="rounded-xl border-2 border-sky-200 bg-sky-50 p-4">
             <p className="font-bold text-sky-900 mb-2">Who are you waiting on?</p>
             <div className="flex flex-wrap gap-2 mb-3">
               {WAITING_ON_PINNED.map((w) => (
                 <button
                   key={w}
-                  onClick={() => setWaitingOn(w)}
+                  onClick={() => { setWaitingOn(w); setReopened(null); }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold border-2 transition-colors ${
                     waitingOn === w
                       ? "border-sky-500 bg-sky-500 text-white"
@@ -174,7 +242,7 @@ export function HandBackModal({
             </div>
             <select
               value={waitingOn}
-              onChange={(e) => setWaitingOn(e.target.value)}
+              onChange={(e) => { setWaitingOn(e.target.value); setReopened(null); }}
               aria-label="Who are you waiting on"
               className="w-full rounded-lg border-2 border-sky-200 bg-white px-3 py-2 text-sm"
             >
@@ -198,37 +266,56 @@ export function HandBackModal({
         )}
 
         {/* 2. What's next? */}
-        <div>
-          <p className="font-bold text-gray-800 mb-2">
-            <span className="text-gray-400 mr-1.5">2.</span>What&apos;s next?
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {HANDBACK_NEXT.map((n) => (
-              <button
-                key={n.value}
-                onClick={() => setNext(n.value)}
-                className={`px-3.5 py-2 rounded-lg text-sm font-semibold border-2 transition-colors ${
-                  next === n.value
-                    ? "border-indigo-500 bg-indigo-500 text-white"
-                    : "border-gray-200 bg-white text-gray-700 hover:border-indigo-300"
-                }`}
-              >
-                {n.label}
-              </button>
-            ))}
+        {collapsed(2, !!next) ? (
+          <AnsweredRow
+            step={2}
+            question="What's next?"
+            answer={HANDBACK_NEXT.find((n) => n.value === next)?.label || ""}
+            onChange={() => setReopened(2)}
+          />
+        ) : (
+          <div>
+            <p className="font-bold text-gray-800 mb-2">
+              <span className="text-gray-400 mr-1.5">2.</span>What&apos;s next?
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {HANDBACK_NEXT.map((n) => (
+                <button
+                  key={n.value}
+                  onClick={() => { setNext(n.value); setReopened(null); }}
+                  className={`px-3.5 py-2 rounded-lg text-sm font-semibold border-2 transition-colors ${
+                    next === n.value
+                      ? "border-indigo-500 bg-indigo-500 text-white"
+                      : "border-gray-200 bg-white text-gray-700 hover:border-indigo-300"
+                  }`}
+                >
+                  {n.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* 3. Where does it go? */}
+        {/* 3. Where does it go? Stays open when a date is still needed. */}
+        {collapsed(3, !!destination) && !needsDate ? (
+          <AnsweredRow
+            step={3}
+            question="Where does it go?"
+            answer={HANDBACK_DESTINATIONS.find((d) => d.value === destination)?.label || ""}
+            onChange={() => setReopened(3)}
+          />
+        ) : (
         <div>
           <p className="font-bold text-gray-800 mb-2">
             <span className="text-gray-400 mr-1.5">3.</span>Where does it go?
           </p>
           <div className="space-y-2">
-            {HANDBACK_DESTINATIONS.map((d) => (
+            {/* Waiting already carries a chase date, so "on a later day" would
+                just restate it - the only real question left is who holds it. */}
+            {HANDBACK_DESTINATIONS.filter((d) => !(isWaiting && d.value === "scheduled")).map((d) => (
               <button
                 key={d.value}
-                onClick={() => setDestination(d.value)}
+                onClick={() => { setDestination(d.value); setReopened(null); }}
                 className={`w-full text-left rounded-xl border-2 px-4 py-2.5 transition-all ${
                   destination === d.value
                     ? "border-indigo-500 bg-indigo-50"
@@ -245,6 +332,11 @@ export function HandBackModal({
               <label className="block text-sm font-semibold text-gray-700 mb-1">
                 {isWaiting ? "Chase it on" : "Bring it back on"}
               </label>
+              <p className="text-xs text-gray-500 mb-1.5">
+                {destination === "keep"
+                  ? "It stays yours and reappears in your list that day."
+                  : "It goes back to the ward and reappears in the diary that day."}
+              </p>
               <input
                 type="date"
                 value={chaseDate}
@@ -255,6 +347,7 @@ export function HandBackModal({
             </div>
           )}
         </div>
+        )}
 
         {/* The case note the answers generate. Nobody typed a word of it. */}
         {draft && (
@@ -279,26 +372,28 @@ export function HandBackModal({
           </div>
         )}
 
-        <div className="flex items-center gap-2 border-t border-gray-100 pt-3">
-          <button
-            onClick={close}
-            className="px-4 py-2 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={confirm}
-            disabled={!ready}
-            className={`ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
-              ready
-                ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
-            }`}
-          >
-            Hand it back
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
+      </div>
+
+      {/* Outside the scroll area so the confirm button is always reachable. */}
+      <div className="flex items-center gap-2 border-t border-gray-100 pt-3 mt-3">
+        <button
+          onClick={close}
+          className="px-4 py-2 rounded-lg text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={confirm}
+          disabled={!ready}
+          className={`ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
+            ready
+              ? "bg-indigo-600 text-white hover:bg-indigo-700"
+              : "bg-gray-200 text-gray-400 cursor-not-allowed"
+          }`}
+        >
+          Hand it back
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
     </Modal>
   );

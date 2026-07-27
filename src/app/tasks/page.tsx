@@ -2179,10 +2179,13 @@ function TasksPageInner() {
         ward={activeWard}
       />
 
+      {/* Read the task back out of the live list rather than the snapshot taken
+          when it was clicked - claiming or handing back from inside the modal
+          used to leave it showing the old state until you closed and reopened. */}
       <TaskDetailModal
         isOpen={!!selectedTask}
         onClose={() => setSelectedTask(null)}
-        task={selectedTask}
+        task={selectedTask ? tasks.find((t) => t.id === selectedTask.id) ?? selectedTask : null}
         currentUserName={user?.name || "Unknown"}
         onClaim={handleClaim}
         onSteal={handleSteal}

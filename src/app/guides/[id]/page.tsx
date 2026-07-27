@@ -17,13 +17,15 @@ import { useTour } from "@/app/tour-provider";
 import {
   CheckCircle, FileText, Eye, BookOpen, Send, Clipboard, ClipboardList,
   Calendar, Shield, ArrowLeft, ArrowRight, Check, Copy, Download,
-  ExternalLink, Phone, Mail, Pencil, UserPlus, AlertCircle, Lightbulb, Info, Printer,
+  ExternalLink, Phone, Mail, Pencil, UserPlus, AlertCircle, Lightbulb, Info, Printer, Undo2,
 } from "lucide-react";
 import {
   WORKFLOWS, DEFAULT_WORKFLOW, STEP_GRADIENTS, SECTION_OPTIONS, S117_OPTIONS, AREA_OPTIONS,
   type WorkflowData, type WorkflowStep,
 } from "@/lib/data/guides/referral-workflows";
 import { ProgressiveContent } from "@/components/guides/ProgressiveContent";
+import { HandBackModal } from "@/components/modals/HandBackModal";
+import { HandbackBadge } from "@/components/tasks/HandbackBadge";
 import { CriteriaWalker } from "@/components/guides/CriteriaWalker";
 import {
   GUIDES, DEFAULT_GUIDE, GUIDE_CONFIG, GUIDE_WAGOLLS,
@@ -93,7 +95,7 @@ export default function UnifiedGuidePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, activeWard } = useApp();
-  const { addTask, tasks, toggleComplete } = useTasks();
+  const { addTask, tasks, toggleComplete, handBackTask, claimTask } = useTasks();
   const { addReferralLog } = useReferralLog();
   const { canEdit } = useCanEdit();
   const { isTourActive, setIsInLiveWalkthrough, setCurrentSection, setCurrentSlide } = useTour();
@@ -209,6 +211,26 @@ export default function UnifiedGuidePage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [showPatientPicker, setShowPatientPicker] = useState(false);
   const [linkedPatient, setLinkedPatient] = useState<Patient | null>(null);
+
+  // The patient job this guide is being worked through for, if there is one.
+  // This is the second door onto the hand-back sheet (BACKLOG Section M): you
+  // get to the end of a guide, it is not finished, and "mark complete" would be
+  // a lie - so offer "not finished" right where the decision is made.
+  const linkedPatientTask = (() => {
+    if (!linkedPatient) return undefined;
+    return tasks.find(
+      (t) =>
+        (t.type === "patient" || t.type === "appointment") &&
+        t.status !== "completed" &&
+        t.patientId === linkedPatient.id &&
+        (isReferral ? t.linkedReferralId === guideId : t.linkedGuideId === guideId)
+    );
+  })();
+
+  // Whichever job this guide is standing in for - patient job first, since a
+  // patient-linked guide is the case the spec cares about.
+  const linkedJob = linkedPatientTask || linkedWardTask;
+
   const [showFireworks, setShowFireworks] = useState(false);
   const [copied, setCopied] = useState(false);
   // Randomised once per mount (lazy initialiser) so re-renders don't reshuffle
@@ -239,6 +261,7 @@ export default function UnifiedGuidePage() {
   // the screen"). Now it opens the real Add Task screen, pre-filled with what
   // the guide already knows, and you save it yourself.
   const [showAddFollowUp, setShowAddFollowUp] = useState(false);
+  const [showHandBack, setShowHandBack] = useState(false);
   const [followUpAdded, setFollowUpAdded] = useState(false);
 
   // How-to specific state
@@ -1271,20 +1294,55 @@ export default function UnifiedGuidePage() {
             </div>
             )}
 
-            {/* Ward diary task - mark today's linked task complete (full build only) */}
-            {!isV2 && linkedWardTask && (
+            {/* The linked job - mark it done, or say it is not finished and
+                leave a state behind. "Mark complete" on a half-done job lies,
+                and on a discharge barrier it lies expensively. */}
+            {!isV2 && linkedJob && (
               <div className="bg-white rounded-xl border-2 border-teal-200 overflow-hidden">
                 <div className="bg-gradient-to-r from-teal-50 to-emerald-50 px-6 py-3 border-b border-teal-200">
-                  <h3 className="font-bold text-gray-800 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-600" /> Ward diary task</h3>
-                  <p className="text-sm text-gray-500 mt-0.5">This guide is linked to a task in today&apos;s {activeWard} diary</p>
+                  <h3 className="font-bold text-gray-800 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-600" /> {linkedJob.type === "ward" ? "Ward diary task" : "Linked job"}</h3>
+                  <p className="text-sm text-gray-500 mt-0.5">
+                    {linkedJob.type === "ward"
+                      ? `This guide is linked to a task in today's ${activeWard} diary`
+                      : `${linkedJob.title}${linkedJob.patientName ? ` - ${linkedJob.patientName}` : ""}`}
+                  </p>
                 </div>
-                <div className="p-6">
-                  {linkedWardTask.status === "completed" ? (
+                <div className="p-6 space-y-3">
+                  {linkedJob.status === "completed" ? (
                     <p className="flex items-center gap-2 text-sm font-semibold text-emerald-700"><Check className="w-5 h-5" /> Marked complete for today in the {activeWard} diary.</p>
                   ) : (
-                    <Button onClick={() => toggleComplete(linkedWardTask.id, user?.name || "Unknown")} className="w-full py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700">
-                      <CheckCircle className="w-5 h-5 mr-2" /> Mark completed for today
-                    </Button>
+                    <>
+                      {linkedJob.handback && (
+                        <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2">
+                          <HandbackBadge handback={linkedJob.handback} count={linkedJob.handbackCount} size="xs" />
+                        </div>
+                      )}
+                      <Button onClick={() => toggleComplete(linkedJob.id, user?.name || "Unknown")} className="w-full py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700">
+                        <CheckCircle className="w-5 h-5 mr-2" /> {linkedJob.type === "ward" ? "Mark completed for today" : "Mark complete"}
+                      </Button>
+                      {/* Hidden when someone else holds it - it is not yours to
+                          hand back. If it is unclaimed, you have just done the
+                          work on it, so claim it on the way through. */}
+                      {(!linkedJob.claimedBy || linkedJob.claimedBy === user?.name) && (
+                        <>
+                          <button
+                            onClick={() => {
+                              if (!linkedJob.claimedBy) {
+                                claimTask(linkedJob.id, user?.name || "Unknown");
+                              }
+                              setShowHandBack(true);
+                            }}
+                            className="w-full py-2.5 rounded-lg border-2 border-indigo-300 text-indigo-800 font-semibold hover:bg-indigo-50 transition-colors inline-flex items-center justify-center gap-2"
+                          >
+                            <Undo2 className="w-4 h-4" />
+                            Not finished - hand it back
+                          </button>
+                          <p className="text-xs text-gray-500 text-center">
+                            Leaves a state on the job and builds a case note, so the next person is not guessing.
+                          </p>
+                        </>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -1401,6 +1459,19 @@ export default function UnifiedGuidePage() {
             setTimeout(() => setFollowUpAdded(false), 5000);
           }}
         />
+
+        {/* Second door onto the hand-back sheet - same component as the diary */}
+        {linkedJob && (
+          <HandBackModal
+            isOpen={showHandBack}
+            onClose={() => setShowHandBack(false)}
+            task={linkedJob}
+            taskTitle={linkedJob.title}
+            patientName={linkedJob.type === "ward" ? undefined : linkedJob.patientName}
+            staffName={caseNoteBy || user?.name}
+            onConfirm={(handback) => handBackTask(linkedJob.id, user?.name || "Unknown", handback)}
+          />
+        )}
         </>
       )}
     </MainLayout>

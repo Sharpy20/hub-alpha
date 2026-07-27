@@ -31,14 +31,34 @@ export const HANDBACK_NEXT: { value: HandbackNext; label: string }[] = [
   { value: "carry_on", label: "Just carry on" },
 ];
 
+/**
+ * Who ends up holding the job. The original wording ("Schedule for a day") did
+ * not say whether the job came back to you or to the ward, which was the first
+ * thing people asked (Mike, 27 Jul) - so every label now names the owner.
+ *
+ * When the state is "waiting on someone" the chase date always applies, so the
+ * middle option is hidden: it would only repeat what the date already says.
+ */
 export const HANDBACK_DESTINATIONS: {
   value: HandbackDestination;
   label: string;
   hint: string;
 }[] = [
-  { value: "pool", label: "Back into today's jobs", hint: "Anyone on shift can pick it up" },
-  { value: "scheduled", label: "Schedule for a day", hint: "Out of today's list until then" },
-  { value: "keep", label: "Keep it with me", hint: "Stays claimed by you" },
+  {
+    value: "pool",
+    label: "Back to the ward",
+    hint: "Unclaimed - anyone on shift can pick it up",
+  },
+  {
+    value: "scheduled",
+    label: "Back to the ward, on a later day",
+    hint: "Unclaimed, and out of today's list until the day you pick",
+  },
+  {
+    value: "keep",
+    label: "Keep it with me",
+    hint: "Stays claimed by you, nobody else picks it up",
+  },
 ];
 
 /**

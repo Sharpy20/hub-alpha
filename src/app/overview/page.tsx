@@ -34,6 +34,7 @@ import {
   ChevronUp,
   ChevronDown,
   CheckCircle2,
+  Check,
   Home,
   User,
   ListTodo,
@@ -72,7 +73,7 @@ const isOutstanding = (t: DiaryTask) => t.status !== "completed" && t.status !==
 
 // Which counter on a patient tile is being used as a filter. Clicking a counter
 // narrows that patient's job list to just those jobs (Mike, 27 Jul).
-type TaskLens = "all" | "outstanding" | "overdue" | "done" | "barriers";
+type TaskLens = "all" | "outstanding" | "overdue" | "done" | "barriers" | "waiting";
 
 const lensMatches = (lens: TaskLens, t: DiaryTask): boolean => {
   switch (lens) {
@@ -83,6 +84,10 @@ const lensMatches = (lens: TaskLens, t: DiaryTask): boolean => {
     // meeting "that one is now done" is the useful answer; having it vanish the
     // moment you complete it just loses your place (Mike, 27 Jul).
     case "barriers": return !!t.blocksDischarge;
+    // Waiting carries the same weight as a barrier (BACKLOG Section M): these
+    // are the jobs nobody is working on because someone else owes us something,
+    // which is exactly the list a ward round wants to chase.
+    case "waiting": return t.handback?.state === "waiting" && isOutstanding(t);
     default: return true;
   }
 };
@@ -92,6 +97,7 @@ const LENS_LABEL: Record<Exclude<TaskLens, "all">, string> = {
   overdue: "overdue",
   done: "completed",
   barriers: "blocking discharge",
+  waiting: "waiting on someone",
 };
 
 interface PatientSummary {
@@ -102,6 +108,7 @@ interface PatientSummary {
   outstanding: number;
   overdue: number;
   barriers: number;
+  waiting: number;
   topPriority: TaskPriority | null;
 }
 
@@ -110,6 +117,7 @@ function buildSummary(patient: Patient, tasks: DiaryTask[]): PatientSummary {
   const outstandingTasks = tasks.filter(isOutstanding);
   const overdue = tasks.filter((t) => t.status === "overdue").length;
   const barriers = outstandingTasks.filter((t) => t.blocksDischarge).length;
+  const waiting = outstandingTasks.filter((t) => t.handback?.state === "waiting").length;
   let topPriority: TaskPriority | null = null;
   for (const t of outstandingTasks) {
     if (!topPriority || PRIORITY_RANK[t.priority] > PRIORITY_RANK[topPriority]) {
@@ -124,6 +132,7 @@ function buildSummary(patient: Patient, tasks: DiaryTask[]): PatientSummary {
     outstanding: outstandingTasks.length,
     overdue,
     barriers,
+    waiting,
     topPriority,
   };
 }
@@ -172,6 +181,47 @@ function useStickyActions(actions: JobActions): [StickyCtl, JobActions] {
 
   return [ctl, wrapped];
 }
+
+// Completed jobs drop into a plain list at the foot of the tile. They used to
+// stay in the main list turned green, which fought the red/amber/green priority
+// language - green had to mean "routine" and "done" at the same time (Mike,
+// 27 Jul). Title only: who completed it is in the job detail, and it is not
+// what anyone is scanning for.
+const DoneList = ({
+  tasks,
+  onOpen,
+}: {
+  tasks: DiaryTask[];
+  onOpen: (task: DiaryTask) => void;
+}) => {
+  if (tasks.length === 0) return null;
+  return (
+    <div className="mt-3 rounded-xl border border-gray-200 bg-gray-50/70 print-task-list">
+      <p className="px-3 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+        Done ({tasks.length})
+      </p>
+      <ul className="px-3 pb-2 space-y-0.5">
+        {tasks.map((t) => (
+          <li key={t.id}>
+            <button
+              onClick={() => onOpen(t)}
+              className="w-full text-left text-sm text-gray-500 hover:text-violet-700 flex items-baseline gap-1.5 py-0.5"
+              title="Open the full job details"
+            >
+              <Check className="w-3.5 h-3.5 flex-shrink-0 text-gray-400 self-center print-hide" />
+              <span className="line-through decoration-gray-300 truncate">{t.title}</span>
+              {t.blocksDischarge && (
+                <span className="flex-shrink-0 text-[10px] font-semibold text-gray-500">
+                  barrier cleared
+                </span>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 // ---------------------------------------------------------------------------
 // Job row - the actionable unit. Outstanding jobs offer Complete and the
@@ -429,40 +479,48 @@ const CounterButton = ({
   </button>
 );
 
-// Standing Y/N switch for the barriers filter. Deliberately a persistent
-// control rather than a banner that only appears when filtered - from a glance
-// at the tile you can always tell which state you are in (Mike, 27 Jul).
-const BarriersSwitch = ({
+// Standing Y/N switch for a filter. Deliberately a persistent control rather
+// than a banner that only appears when filtered - from a glance at the tile you
+// can always tell which state you are in (Mike, 27 Jul). Used for Barriers and
+// for Waiting, which carries the same weight (BACKLOG Section M).
+const SWITCH_TONES = {
+  amber: { on: "bg-amber-100 border-amber-400 text-amber-900", pill: "bg-amber-500 text-white" },
+  sky: { on: "bg-sky-100 border-sky-400 text-sky-900", pill: "bg-sky-500 text-white" },
+} as const;
+
+const FilterSwitch = ({
   on,
   count,
   onToggle,
+  line1,
+  line2,
+  title,
+  tone = "amber",
 }: {
   on: boolean;
   count: number;
   onToggle: () => void;
+  line1: string;
+  line2: string;
+  title: string;
+  tone?: keyof typeof SWITCH_TONES;
 }) => (
   <button
     onClick={onToggle}
     aria-pressed={on}
-    title={
-      on
-        ? "Showing only jobs flagged as blocking discharge - tap for all jobs"
-        : "Show only jobs flagged as blocking discharge"
-    }
+    title={title}
     className={`print-hide flex flex-col items-center justify-center rounded-lg border-2 px-2.5 transition-colors ${
-      on
-        ? "bg-amber-100 border-amber-400 text-amber-900"
-        : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+      on ? SWITCH_TONES[tone].on : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
     }`}
   >
     <span className="text-[10px] font-semibold uppercase tracking-wide leading-tight text-center">
-      Barriers
+      {line1}
       <br />
-      only
+      {line2}
     </span>
     <span
       className={`mt-1 rounded-full px-2 py-0.5 text-xs font-bold ${
-        on ? "bg-amber-500 text-white" : "bg-gray-200 text-gray-600"
+        on ? SWITCH_TONES[tone].pill : "bg-gray-200 text-gray-600"
       }`}
     >
       {on ? "YES" : "NO"}
@@ -542,6 +600,11 @@ const PatientReviewCard = ({
               🚧 {s.barriers} barrier{s.barriers > 1 ? "s" : ""}
             </span>
           )}
+          {s.waiting > 0 && (
+            <span className="flex-shrink-0 bg-white/25 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap">
+              ⏳ {s.waiting} waiting
+            </span>
+          )}
         </div>
       </div>
 
@@ -586,11 +649,34 @@ const PatientReviewCard = ({
           />
         </div>
 
-        <BarriersSwitch
-          on={lens === "barriers"}
-          count={s.barriers}
-          onToggle={() => toggleLens("barriers")}
-        />
+        <div className="flex gap-1.5">
+          <FilterSwitch
+            on={lens === "barriers"}
+            count={s.barriers}
+            onToggle={() => toggleLens("barriers")}
+            line1="Barriers"
+            line2="only"
+            tone="amber"
+            title={
+              lens === "barriers"
+                ? "Showing only jobs flagged as blocking discharge - tap for all jobs"
+                : "Show only jobs flagged as blocking discharge"
+            }
+          />
+          <FilterSwitch
+            on={lens === "waiting"}
+            count={s.waiting}
+            onToggle={() => toggleLens("waiting")}
+            line1="Waiting"
+            line2="only"
+            tone="sky"
+            title={
+              lens === "waiting"
+                ? "Showing only jobs waiting on someone else - tap for all jobs"
+                : "Show only jobs waiting on someone else"
+            }
+          />
+        </div>
       </div>
 
       {/* Review stamps */}
@@ -609,12 +695,12 @@ const PatientReviewCard = ({
         {lens !== "all" && (
           <div
             className={`mb-2 flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 print-hide ${
-              lens === "barriers" ? "bg-amber-50" : "bg-violet-50"
+              lens === "barriers" ? "bg-amber-50" : lens === "waiting" ? "bg-sky-50" : "bg-violet-50"
             }`}
           >
             <span
               className={`text-xs font-medium ${
-                lens === "barriers" ? "text-amber-900" : "text-violet-800"
+                lens === "barriers" ? "text-amber-900" : lens === "waiting" ? "text-sky-900" : "text-violet-800"
               }`}
             >
               Showing {LENS_LABEL[lens]} only ({sortedTasks.length})
@@ -624,6 +710,8 @@ const PatientReviewCard = ({
               className={`text-xs font-medium inline-flex items-center gap-1 ${
                 lens === "barriers"
                   ? "text-amber-700 hover:text-amber-900"
+                  : lens === "waiting"
+                  ? "text-sky-700 hover:text-sky-900"
                   : "text-violet-600 hover:text-violet-800"
               }`}
             >
@@ -634,15 +722,25 @@ const PatientReviewCard = ({
 
         <div className="space-y-2">
           {sortedTasks.length > 0 ? (
-            sortedTasks.map((task) => (
-              <JobRow key={task.id} task={task} actions={actions} onOpen={onOpenTask} />
-            ))
+            sortedTasks
+              .filter((t) => t.status !== "completed")
+              .map((task) => (
+                <JobRow key={task.id} task={task} actions={actions} onOpen={onOpenTask} />
+              ))
           ) : (
             <p className="text-sm text-gray-500 text-center py-4">
               {lens === "all" ? "No jobs recorded" : `No ${LENS_LABEL[lens]} jobs`}
             </p>
           )}
+          {sortedTasks.length > 0 && sortedTasks.every((t) => t.status === "completed") && (
+            <p className="text-sm text-gray-500 text-center py-4">Nothing outstanding</p>
+          )}
         </div>
+
+        <DoneList
+          tasks={sortedTasks.filter((t) => t.status === "completed")}
+          onOpen={onOpenTask}
+        />
 
         <div
           className={`mt-3 p-3 rounded-xl print-summary ${
@@ -711,10 +809,48 @@ const BarriersSwitchInline = ({
   </button>
 );
 
+// Same switch for the waiting lens. Waiting carries the same weight as a
+// barrier, so it gets the same standing control (BACKLOG Section M).
+const WaitingSwitchInline = ({
+  on,
+  count,
+  onToggle,
+}: {
+  on: boolean;
+  count: number;
+  onToggle: () => void;
+}) => (
+  <button
+    onClick={onToggle}
+    aria-pressed={on}
+    title={
+      on
+        ? "Showing only jobs waiting on someone else - tap for all jobs"
+        : "Show only jobs waiting on someone else"
+    }
+    className={`inline-flex items-center gap-1.5 rounded-lg border-2 px-2.5 py-1 text-xs font-medium transition-colors ${
+      on
+        ? "bg-sky-100 border-sky-400 text-sky-900"
+        : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+    }`}
+  >
+    <Clock className="w-3.5 h-3.5" />
+    Waiting only
+    <span
+      className={`rounded-full px-1.5 py-0.5 font-bold ${
+        on ? "bg-sky-500 text-white" : "bg-gray-200 text-gray-600"
+      }`}
+    >
+      {on ? "YES" : "NO"}
+    </span>
+    <span className="text-gray-400">({count} open)</span>
+  </button>
+);
+
 // ---------------------------------------------------------------------------
 // Table view
 // ---------------------------------------------------------------------------
-type SortKey = "name" | "ward" | "priority" | "total" | "outstanding" | "overdue" | "barriers" | "completed" | "reviewed";
+type SortKey = "name" | "ward" | "priority" | "total" | "outstanding" | "overdue" | "barriers" | "waiting" | "completed" | "reviewed";
 
 const PatientTableRow = ({
   summary,
@@ -806,6 +942,17 @@ const PatientTableRow = ({
             )}
           </button>
         </td>
+        <td className="py-2.5 px-3 text-center">
+          <button className={countBtn} onClick={() => openWith("waiting")} title="Show jobs waiting on someone only">
+            {s.waiting > 0 ? (
+              <span className="inline-flex items-center rounded-full bg-sky-100 px-2 py-0.5 text-xs font-semibold text-sky-800">
+                ⏳ {s.waiting}
+              </span>
+            ) : (
+              <span className="text-gray-300">0</span>
+            )}
+          </button>
+        </td>
         <td className="py-2.5 px-3">
           <div className="flex items-center gap-2 min-w-[90px]">
             <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -826,7 +973,7 @@ const PatientTableRow = ({
       </tr>
       {expanded && (
         <tr className="bg-gray-50/60">
-          <td colSpan={9} className="px-3 pb-3 pt-1">
+          <td colSpan={10} className="px-3 pb-3 pt-1">
             <div className="mb-2 flex flex-wrap items-center gap-2 print-hide">
               <BarriersSwitchInline
                 on={lens === "barriers"}
@@ -836,7 +983,15 @@ const PatientTableRow = ({
                   setLens((cur) => (cur === "barriers" ? "all" : "barriers"));
                 }}
               />
-              {lens !== "all" && lens !== "barriers" && (
+              <WaitingSwitchInline
+                on={lens === "waiting"}
+                count={s.waiting}
+                onToggle={() => {
+                  sticky.clear();
+                  setLens((cur) => (cur === "waiting" ? "all" : "waiting"));
+                }}
+              />
+              {lens !== "all" && lens !== "barriers" && lens !== "waiting" && (
                 <>
                   <span className="text-xs font-medium text-violet-800 bg-violet-50 rounded px-2 py-1">
                     Showing {LENS_LABEL[lens]} only ({sortedTasks.length})
@@ -856,9 +1011,15 @@ const PatientTableRow = ({
                   {lens === "all" ? "No jobs recorded" : `No ${LENS_LABEL[lens]} jobs`}
                 </p>
               )}
-              {sortedTasks.map((task) => (
-                <JobRow key={task.id} task={task} actions={actions} onOpen={onOpenTask} compact />
-              ))}
+              {sortedTasks
+                .filter((t) => t.status !== "completed")
+                .map((task) => (
+                  <JobRow key={task.id} task={task} actions={actions} onOpen={onOpenTask} compact />
+                ))}
+              <DoneList
+                tasks={sortedTasks.filter((t) => t.status === "completed")}
+                onOpen={onOpenTask}
+              />
             </div>
           </td>
         </tr>
@@ -975,6 +1136,7 @@ export default function OverviewPage() {
   const [priorityFilter, setPriorityFilter] = useState<"all" | TaskPriority>("all");
   const [statusFilter, setStatusFilter] = useState<"all" | "outstanding" | "done">("all");
   const [barriersOnly, setBarriersOnly] = useState(false);
+  const [waitingOnly, setWaitingOnly] = useState(false);
   const [overdueOnly, setOverdueOnly] = useState(false);
   const [unreviewedOnly, setUnreviewedOnly] = useState(false);
   const [wardFilter, setWardFilter] = useState<string[]>([]);
@@ -1006,6 +1168,7 @@ export default function OverviewPage() {
       if (search && !s.patient.name.toLowerCase().includes(search.toLowerCase())) return false;
       if (wardFilter.length > 0 && !wardFilter.includes(s.patient.ward.toLowerCase())) return false;
       if (barriersOnly && s.barriers === 0) return false;
+      if (waitingOnly && s.waiting === 0) return false;
       if (overdueOnly && s.overdue === 0) return false;
       if (unreviewedOnly && reviewedToday(s.patient.id)) return false;
       if (statusFilter === "outstanding" && s.outstanding === 0) return false;
@@ -1022,6 +1185,7 @@ export default function OverviewPage() {
     search,
     wardFilter,
     barriersOnly,
+    waitingOnly,
     overdueOnly,
     unreviewedOnly,
     statusFilter,
@@ -1040,6 +1204,7 @@ export default function OverviewPage() {
         case "outstanding": return s.outstanding;
         case "overdue": return s.overdue;
         case "barriers": return s.barriers;
+        case "waiting": return s.waiting;
         case "completed": return s.completed;
         case "reviewed": return reviewedToday(s.patient.id) ? 1 : 0;
       }
@@ -1073,6 +1238,7 @@ export default function OverviewPage() {
     (search ? 1 : 0) +
     wardFilter.length +
     (barriersOnly ? 1 : 0) +
+    (waitingOnly ? 1 : 0) +
     (overdueOnly ? 1 : 0) +
     (unreviewedOnly ? 1 : 0) +
     (statusFilter !== "all" ? 1 : 0) +
@@ -1095,10 +1261,11 @@ export default function OverviewPage() {
         acc.outstanding += s.outstanding;
         acc.overdue += s.overdue;
         acc.barriers += s.barriers;
+        acc.waiting += s.waiting;
         if (reviewedToday(s.patient.id)) acc.reviewed += 1;
         return acc;
       },
-      { completed: 0, outstanding: 0, overdue: 0, barriers: 0, reviewed: 0 }
+      { completed: 0, outstanding: 0, overdue: 0, barriers: 0, waiting: 0, reviewed: 0 }
     );
   }, [filtered, reviewedToday]);
 
@@ -1158,7 +1325,7 @@ export default function OverviewPage() {
           </div>
 
           {/* Headline numbers for what is currently shown */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mt-5">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-5">
             <div className="bg-white/10 rounded-xl p-3 text-center">
               <p className="text-3xl font-bold">{filtered.length}</p>
               <p className="text-white/70 text-sm">Patients</p>
@@ -1174,6 +1341,10 @@ export default function OverviewPage() {
             <div className="bg-white/10 rounded-xl p-3 text-center">
               <p className="text-3xl font-bold text-amber-300">🚧 {rollup.barriers}</p>
               <p className="text-white/70 text-sm">Barriers to discharge</p>
+            </div>
+            <div className="bg-white/10 rounded-xl p-3 text-center">
+              <p className="text-3xl font-bold text-sky-300">⏳ {rollup.waiting}</p>
+              <p className="text-white/70 text-sm">Waiting on someone</p>
             </div>
             <div className="bg-white/10 rounded-xl p-3 text-center">
               <p className="text-3xl font-bold text-emerald-300">
@@ -1472,6 +1643,17 @@ export default function OverviewPage() {
                   🚧 Barriers only
                 </button>
                 <button
+                  onClick={() => setWaitingOnly((v) => !v)}
+                  aria-pressed={waitingOnly}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
+                    waitingOnly
+                      ? "bg-sky-50 border-sky-400 text-sky-800"
+                      : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  ⏳ Waiting only
+                </button>
+                <button
                   onClick={() => setOverdueOnly((v) => !v)}
                   aria-pressed={overdueOnly}
                   className={`px-3 py-2 rounded-lg text-sm font-medium border-2 transition-colors ${
@@ -1614,6 +1796,7 @@ export default function OverviewPage() {
                             { key: "outstanding", label: "Outstanding", align: "center" },
                             { key: "overdue", label: "Overdue", align: "center" },
                             { key: "barriers", label: "Barriers", align: "center" },
+                            { key: "waiting", label: "Waiting", align: "center" },
                             { key: "completed", label: "Progress", align: "left" },
                             { key: "reviewed", label: "Reviewed", align: "left" },
                           ] as { key: SortKey; label: string; align: string }[]

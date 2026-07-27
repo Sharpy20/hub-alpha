@@ -543,7 +543,9 @@ export function TaskDetailModal({
                   Drop
                 </button>
               )}
-              {!isCompleted && (
+              {/* Only for a job you actually hold - you cannot hand back
+                  something that is already sitting in the pool (Mike, 27 Jul). */}
+              {!isCompleted && isClaimedByMe && (
                 <button
                   onClick={() => setShowHandBack(true)}
                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2"

@@ -12,6 +12,25 @@ Related task docs (roll findings into here over time):
 
 ---
 
+## ✅ DONE 27 Jul 2026 - Trust-policy quiz batch (was NEXT UP)
+The `/quiz` bank was ~95% national guidance. It is now **942 questions across 43 topics, 574 of them
+(61%) mined from 117 distinct Derbyshire Healthcare documents** in `E:\Hub\Policy dump not for git hub\`
+(483 files). 17 `research-trust-*.json` batches, all wired into `src/lib/data/quiz/index.ts` and live.
+Trust topics lead the topic picker. Questions from a document past its own review date show an amber
+"check FOCUS for a newer issue" line after you answer (`reviewFlag` on the question).
+- **Reusable pipeline:** `scratchpad/docx2txt.js` (zero-dep docx extractor - no Python on this box),
+  `scratchpad/TRUST-QUIZ-BRIEF.md` (agent brief - mine LOCAL detail only), `scratchpad/gen-quiz-md.js`
+  (regenerates `docs/quiz-question-bank.md`). Add a batch file, rerun the generator, add an import.
+- **5 questions deliberately omitted** where two trust documents give different answers, plus one
+  overtaken by a system change (the Brigid app now does amend/remove observation levels).
+- **⚠ FOR MIKE:** `E:\Hub\quiz-policy-conflicts.md` (kept OUTSIDE the repo) lists every conflict, stale
+  document and gap found while reading the library - including **no flumazenil / benzodiazepine
+  reversal pathway anywhere in the 5 rapid tranquillisation documents**. Worth raising with pharmacy.
+- **Still to do:** Mike to proofread `docs/quiz-question-bank.md`. No sign-off badge on /quiz yet -
+  decide whether it should carry the traffic-light status like the guides do.
+
+---
+
 ## A. FOCUS form-link wiring (NEW, 4 Jul - high value, don't lose)
 Real FOCUS URLs now captured (temp link map). These fill the long-standing "86 placeholder
 `#` form links" in the referral guides. Wire each as an "On FOCUS (login needed)" chip

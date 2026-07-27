@@ -1,0 +1,549 @@
+[
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "scenario": "A patient asks why their mobile phone charger was taken off them at admission, saying \"it's just the ward rule, isn't it?\"",
+  "question": "Under the trust's Blanket Restrictions Policy, which of these should NOT normally be applied as a blanket restriction across a ward?",
+  "options": [
+   "Ignition sources such as lighters and matches",
+   "Weapons, including knives and firearms",
+   "Access to (or banning) mobile phones and chargers",
+   "Alcohol on trust premises"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy lists access to mobile phones and chargers as something that should not form part of a blanket restriction - any restriction must be individually justified and documented. The other three are authorised trust-wide blanket restrictions.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "question": "On the trust's restricted and prohibited items list for working age adult acute inpatient services, which of these is a banned item that is not allowed on the ward at all?",
+  "options": [
+   "Coat hangers",
+   "Nail clippers",
+   "Aerosols",
+   "Essential oil"
+  ],
+  "correctIndex": 0,
+  "rationale": "Coat hangers appear on the banned/prohibited list alongside plastic bags, tobacco, chewing gum and vapes bought outside the hospital. Nail clippers, aerosols and essential oils are restricted items, allowed after a risk assessment and stored securely.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "question": "The trust's restricted items list covers items that can be accessed but only after a risk assessment and which must be stored in a secure place. Which group of items does the policy give as examples?",
+  "options": [
+   "Illicit drugs, alcohol and New Psychoactive Substances",
+   "Glass items such as mirrors and bottles, scissors, razors, aerosols and metal cans",
+   "Large amounts of money, expensive jewellery and expensive clothing",
+   "Tobacco, chewing gum and vapes purchased outside the hospital"
+  ],
+  "correctIndex": 1,
+  "rationale": "The appendix splits items into banned, restricted and advisory. Restricted items (risk assessed before use, stored securely) include glass items, scissors, nail clippers and files, razors, aerosols, essential oil and metal cans. Money and jewellery sit under advisory, the rest are banned outright.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "A patient's relative wants to bring in cash so the patient can buy things from the shop.",
+  "question": "What does the trust's advisory section of the restricted and prohibited items list say about money on the ward?",
+  "options": [
+   "No more than 20 pounds should be brought or kept on the ward",
+   "No more than 50 pounds should be brought or kept on the ward",
+   "No cash at all is permitted, only a bank card",
+   "There is no advisory limit, money is always held in the ward safe"
+  ],
+  "correctIndex": 0,
+  "rationale": "The advisory part of the list (items advised not to be brought or kept on the ward) names large amounts of money, specified as no more than 20 pounds, along with expensive jewellery, watches, items and clothing.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "question": "Who does the Blanket Restrictions Policy make responsible for keeping a register of the blanket restrictions in place, so their extent is transparent and can be reviewed?",
+  "options": [
+   "The Responsible Clinician",
+   "The Matron",
+   "The Ward Manager",
+   "The Care Group Deputy Operational Manager"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states the Ward Manager should keep a register of blanket restrictions in place so that the extent of any blanket restrictions is transparent and can be regularly reviewed.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "scenario": "The night shift decides a new restriction is needed across the whole ward to keep everyone safe.",
+  "question": "Under the trust policy, how far must the decision to implement a blanket restriction on a ward be escalated as a minimum?",
+  "options": [
+   "Through normal line management arrangements at least to the level of the Ward Manager",
+   "To the Executive Director of Nursing on the same shift",
+   "To the Responsible Clinician only",
+   "No escalation is needed if the restriction lasts under 24 hours"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy says the decision should be escalated through normal line management arrangements at least to the level of the Ward Manager, and that if the Ward Manager judges it needs to go further an exception report can be made to the Care Group Deputy Operational Manager or Matron.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "question": "How often must a Ward Manager ensure blanket restrictions are discussed as part of the ward's clinical routine?",
+  "options": [
+   "Weekly, at the Multidisciplinary Team (MDT) meeting",
+   "Daily, as part of the huddle or handover",
+   "Monthly, at the clinical governance meeting",
+   "Every time a new patient is admitted"
+  ],
+  "correctIndex": 1,
+  "rationale": "The local accountability section requires Ward Managers to ensure blanket restrictions are discussed on a daily basis as part of the ward clinical routine (huddle or handover), with agreed review dates and processes for both ward and individual restrictions.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "A restriction put in place on a ward looks like it will need to stay in place with no end date in sight.",
+  "question": "If a ward-level blanket restriction needs to be in operation for an indefinite period, what does the trust policy require?",
+  "options": [
+   "It is signed off by the nurse in charge and reviewed at the next handover",
+   "It is automatically lawful once entered on Datix",
+   "It is agreed with the Hospital Managers and discussed at the Reducing Restrictive Practice Group for oversight and governance",
+   "It is referred to the Care Quality Commission for approval"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says a restriction over and above those authorised trust-wide should be for the shortest reasonable time, and if it needs to run indefinitely it must be agreed with the Hospital Managers and discussed at the Reducing Restrictive Practice Group. It must then be clearly communicated to service users and visitors.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "A patient on the Carsington Unit asks why the quiet room on the bedroom corridor is locked when the other rooms are not.",
+  "question": "What reason does the trust's Blanket Restrictions Policy give for the quiet rooms on the Carsington Unit and Derwent Unit being locked?",
+  "options": [
+   "The rooms are used for storage overnight",
+   "The rooms are only for patients on enhanced observations",
+   "Their doors are not fitted with a door alarm system, unlike all other doors in that area, so patients access them when escorted by staff",
+   "The rooms are reserved for de-escalation following a physical intervention"
+  ],
+  "correctIndex": 2,
+  "rationale": "A February 2026 amendment added these quiet rooms to the authorised trust-wide list. The rationale given is that unlike every other door in the bedroom corridor these doors have no door alarm system, so they are locked and patients access them when escorted by staff.",
+  "source": "Derbyshire Healthcare - Blanket Restrictions Policy and Procedure",
+  "sourceDate": "Nov 2025, issue 3, review Nov 2028 (minor amendments Feb and Mar 2026)"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "question": "The Locking of Doors on Open Wards policy sets minimum standards for practice. What must every ward area display?",
+  "options": [
+   "Clear information on either side of the ward doors telling patients and visitors how to leave and access the ward",
+   "A laminated copy of the full policy at the nurses' station",
+   "A list of which patients are detained and which are informal",
+   "The name of the nurse holding the door key that shift"
+  ],
+  "correctIndex": 0,
+  "rationale": "The minimum standards require clear information displayed on both sides of the ward doors explaining how patients and visitors can leave and access the ward. An example sign is provided in the policy appendix to print and laminate.",
+  "source": "Derbyshire Healthcare - Locking of Doors on Open Wards All Units Policy and Procedure",
+  "sourceDate": "December 2025, issue 5, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "scenario": "You are admitting an informal patient to a locked acute ward.",
+  "question": "According to the trust policy, what must the information given to an informal patient about access and exit include?",
+  "options": [
+   "A written undertaking not to leave the ward without permission",
+   "Details of how they can discharge themselves from the hospital",
+   "The ward's staffing numbers for that shift",
+   "A copy of the door code so they can leave independently"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy is explicit that information provided to informal patients must include details of how they can discharge themselves from hospital, discussed as part of a conversation about their care planned needs.",
+  "source": "Derbyshire Healthcare - Locking of Doors on Open Wards All Units Policy and Procedure",
+  "sourceDate": "December 2025, issue 5, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "question": "Where does the Locking of Doors policy say the rationale for locking the ward doors should be discussed and reviewed by staff?",
+  "options": [
+   "Only at the annual policy update meeting",
+   "Only in the Multidisciplinary Team (MDT) ward round",
+   "At the monthly team meeting and in the ward newsletter",
+   "At handover, as well as during supervision"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy requires all staff to be clear about the reasons and purpose for locking the doors, with the rationale discussed and reviewed at handover and during supervision, so staff feel confident explaining the clinical reasons to patients.",
+  "source": "Derbyshire Healthcare - Locking of Doors on Open Wards All Units Policy and Procedure",
+  "sourceDate": "December 2025, issue 5, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "question": "Who carries out the annual audit of locked door practice at this trust?",
+  "options": [
+   "The Mental Health Act office",
+   "The Positive and Safe Team",
+   "The Care Quality Commission",
+   "Each ward manager for their own ward"
+  ],
+  "correctIndex": 1,
+  "rationale": "The audit and review section of the policy states that an annual audit of locked door practice will be undertaken by the Positive and Safe Team.",
+  "source": "Derbyshire Healthcare - Locking of Doors on Open Wards All Units Policy and Procedure",
+  "sourceDate": "December 2025, issue 5, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "question": "The Locking of Doors policy names one unit whose access and exit arrangements sit outside the standard trust approach. Which unit, and why?",
+  "options": [
+   "The Radbourne Unit, because it takes emergency admissions",
+   "The Carsington Unit, because of its quiet room arrangements",
+   "The Derwent Unit, because of its dementia care beds",
+   "The Kedleston Unit, because it is a low secure unit governed by NHS England and Ministry of Justice requirements"
+  ],
+  "correctIndex": 3,
+  "rationale": "The external governance section states that the Kedleston Unit is a low secure unit and its access and exit arrangements are governed by the requirements of NHS England and the Ministry of Justice.",
+  "source": "Derbyshire Healthcare - Locking of Doors on Open Wards All Units Policy and Procedure",
+  "sourceDate": "December 2025, issue 5, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "An informal patient with capacity wants to leave the ward. You do not think it is clinically safe, persuasion has not worked, and a doctor has been asked to attend for a section 5(2) assessment.",
+  "question": "What does the trust policy say the nurse should do about the delay in the doctor arriving?",
+  "options": [
+   "Wait for the doctor however long it takes, using persuasion only",
+   "Use common law to hold the patient for up to two hours",
+   "Consider using section 5(4) of the Mental Health Act 1983 if there is a delay of 15 minutes or more",
+   "Call the police to detain the patient under section 136"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that if there is a delay of 15 minutes or more in the doctor coming to do the assessment, the nurse should consider the use of section 5(4). It also warns that section 5 must never be used as a threat to deter a patient from trying to leave.",
+  "source": "Derbyshire Healthcare - Locking of Doors on Open Wards All Units Policy and Procedure",
+  "sourceDate": "December 2025, issue 5, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "A patient subject to a Community Treatment Order (CTO) has been admitted informally, not recalled. They now want to leave and staff are concerned.",
+  "question": "What does the trust policy say about holding this patient?",
+  "options": [
+   "Section 5 holding powers can be used as normal because they are subject to a CTO",
+   "They cannot be held under section 5 while informal, so they would need to be held under common law until the Responsible Clinician completes the CTO3 recall papers",
+   "They can be held for 72 hours by the nurse in charge without any further paperwork",
+   "A Deprivation of Liberty Safeguards (DoLS) urgent authorisation must be granted first"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that a patient admitted informally while still subject to a CTO cannot be made subject to the section 5 holding powers, and would need to be held under common law until the Responsible Clinician completes the CTO3 recall papers. It adds that it may be necessary to lock the ward doors during this time, and this should be explained and documented.",
+  "source": "Derbyshire Healthcare - Locking of Doors on Open Wards All Units Policy and Procedure",
+  "sourceDate": "December 2025, issue 5, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "question": "The trust reviewed the blanket restriction of locking ward entry doors and the front doors of the inpatient units. How often is that decision reviewed under the current policy?",
+  "options": [
+   "As a minimum every three years in line with the policy update, and also discussed as part of weekly inpatient committee meetings",
+   "Every six months by the Mental Health Act Committee only",
+   "Annually by each ward manager",
+   "Only when a complaint about the locked door is received"
+  ],
+  "correctIndex": 0,
+  "rationale": "The version control note records that following review the locked door restriction was agreed to be sustained, will be reviewed as a minimum every three years in line with this policy update, and will also be discussed in line with all blanket restrictions as part of weekly inpatient committee meetings.",
+  "source": "Derbyshire Healthcare - Locking of Doors on Open Wards All Units Policy and Procedure",
+  "sourceDate": "December 2025, issue 5, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "scenario": "A colleague suggests fastening a tray across a chair to stop a patient with dementia getting up and falling.",
+  "question": "What does the trust's Prevention and Management of Violence and Aggression (Use of Force) Policy say about mechanical restraint?",
+  "options": [
+   "It is permitted on older adult wards with a best interest decision",
+   "It is permitted if the Responsible Clinician authorises it in writing",
+   "The use of mechanical restraint is not permitted within the Trust",
+   "It is permitted for up to two hours with hourly nursing review"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states plainly that the use of mechanical restraint is not permitted within the Trust, and gives fastening trays to chairs, tying a patient to an object, facing chairs to walls and hooking clothes over chairs as examples the Trust does not support.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "question": "After every incident of violence and aggression, where must staff create a record?",
+  "options": [
+   "On SystmOne and on Datix, as soon as practicable",
+   "In the ward diary and the handover sheet",
+   "On Datix only, unless someone was injured",
+   "In the patient's paper notes only"
+  ],
+  "correctIndex": 0,
+  "rationale": "The recording and reporting section requires a record to be created as soon as practicable on SystmOne and on Datix after every incident, and says records must be factual, timed, dated and attributable.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "scenario": "Police officers attend the ward on duty to assist staff with a violent incident.",
+  "question": "What does the trust policy say about body-worn cameras in this situation?",
+  "options": [
+   "Staff must ask the officers to switch cameras off to protect confidentiality",
+   "Officers must wear and operate body-worn cameras when reasonably practicable, and staff should inform the patient where practicable and record that a camera was used",
+   "Body-worn cameras are only used if the patient consents in writing",
+   "The ward must download and store the footage in the patient record"
+  ],
+  "correctIndex": 1,
+  "rationale": "The police involvement section states officers are required by law to wear and operate body-worn cameras when reasonably practicable. Staff should inform the patient and others present where practicable, support privacy and dignity, and record that the camera was used. Requests for footage are managed by the police.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "question": "Under the Mental Health Units (Use of Force) Act 2018 a provider must appoint a 'responsible person'. Which post holds that role at this trust?",
+  "options": [
+   "The Chief Executive",
+   "The Associate Director of Physical Health and Quality",
+   "The Local Security Management Specialist (LSMS)",
+   "The Mental Health Act Committee chair"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy names the Associate Director of Physical Health and Quality as the appointed Responsible Person, accountable for publishing and maintaining the policy, patient information, training, and the recording, quality, analysis and governance of use of force data.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "scenario": "A physical intervention is under way with several staff involved.",
+  "question": "What does the trust policy say about the role of one specific team member during the intervention?",
+  "options": [
+   "One member records the timings on a stopwatch for the Datix report",
+   "One member stands outside the room to keep other patients away",
+   "One member is responsible for protecting and supporting the head and neck, leads the team through the intervention, and ensures the airway and breathing are not compromised and vital signs are monitored",
+   "One member must be the patient's named nurse, whatever their training"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that during physical intervention one team member should be responsible for protecting and supporting the head and neck where required, should lead the team through the process, and should ensure the airway and breathing are not compromised and vital signs are monitored.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "question": "In addition to the Datix incident report, what extra record does the trust require for any incident that needed physical intervention?",
+  "options": [
+   "A paper restraint log kept in the ward office",
+   "A post incident physical intervention monitoring form completed via SystmOne",
+   "A safeguarding referral to the local authority",
+   "An entry in the Mental Health Act statutory records"
+  ],
+  "correctIndex": 1,
+  "rationale": "The managers' responsibilities section requires all incidents of violence and aggression to be reported on the electronic incident form (Datix), and states that any incident requiring physical intervention must also have a post incident physical intervention monitoring form completed via SystmOne.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "scenario": "A visitor on the ward produces a knife during an argument.",
+  "question": "What does the trust policy instruct staff to do when threats are made with a weapon?",
+  "options": [
+   "Make no attempt to disarm the person, remove yourself and others, evacuate to a safe area, and call the police using the SBARD tool stating 'Weapons - police assistance is required'",
+   "Attempt to disarm the person using the taught breakaway techniques",
+   "Contain the person in a side room until the on-call manager arrives",
+   "Sound the personal alarm and wait for the response team before evacuating anyone"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy is explicit that no attempt should be made to disarm the individual. The priority is removing yourself and others, keeping the situation contained, evacuating service users, visitors and staff to a safe area, and calling the police using the SBARD communication tool with the phrase 'Weapons - police assistance is required'.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "scenario": "The police bring a patient to the unit. Staff are not sure whether the patient was restrained on the way in.",
+  "question": "What does the trust policy require staff to do?",
+  "options": [
+   "Assume no restraint took place unless the police hand over paperwork saying otherwise",
+   "Ask whether the patient was physically or mechanically restrained, and if so or if unsure commence physical observations, record the discussion in the clinical record and complete a body map",
+   "Record it on Datix only and take observations at the next routine round",
+   "Refuse admission until the police confirm in writing what happened"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires staff to ask whether the patient has been physically or mechanically restrained by the police or external agency. If so, or if staff are unsure, physical observations should commence, the discussion must be recorded in the clinical record and a body map completed. Staff must also establish whether the patient has been searched.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "question": "How does the trust's Positive and Safe training programme run for staff working on inpatient wards?",
+  "options": [
+   "A three day induction, then a half day refresher every two years",
+   "A five day Positive and Safe Teamwork induction on appointment, then a two day update package annually",
+   "A two day induction, then a five day update every three years",
+   "A one day Breakaway package on appointment, repeated annually"
+  ],
+  "correctIndex": 1,
+  "rationale": "The training section sets out a five day Positive and Safe Teamwork induction package when employed on inpatient wards and a two day update package annually after induction. The one day Breakaway package is the annual requirement for community staff and other patient facing staff such as facilities, estates and catering.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "A care hold agreed in a patient's care plan is used to help with personal care. Afterwards a small scratch is noticed on the patient's arm.",
+  "question": "Under the trust's rules on care holds and 'negligible force', what follows?",
+  "options": [
+   "Nothing further is needed because the hold was already in the care plan",
+   "The hold is recorded in the care plan review only, as scratches are not classed as injury",
+   "The intervention can no longer be counted as negligible force and the incident must be documented via Datix",
+   "The care plan must be suspended until a Best Interest Meeting is held"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states force can never be negligible if it causes an injury to a patient or staff member, including scratches, marks or bruising. The same applies if rapid tranquillisation was involved, the patient resisted beyond what was agreed, more staff were used than the care plan specifies, or the patient was left distressed outside their usual pattern. In those cases the incident must go on Datix.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "A patient who cannot comply needs blood taken, and the team is considering holding their arm to do it.",
+  "question": "What does the trust policy require before clinical holding is used?",
+  "options": [
+   "It must be planned, care planned, and a Best Interest Meeting must have taken place beforehand",
+   "It can be used at short notice as long as it is recorded on Datix afterwards",
+   "It only needs the agreement of the two staff carrying it out",
+   "It requires authorisation from the Mental Health Act office"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that all clinical holding interventions are planned interventions and therefore must be care planned, with a Best Interest Meeting having taken place beforehand. Clinical holding is identified as restraint and must be recorded in line with the Mental Health Units (Use of Force) Act 2018, with post-incident review after each intervention.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "A member of staff is assaulted by a patient but does not want to make a formal complaint to the police.",
+  "question": "What does the trust policy require in this situation?",
+  "options": [
+   "The matter is closed and only a Datix entry is needed",
+   "A senior staff member must still report the incident to the police, obtain a police reference number and record it in the incident report",
+   "The decision rests entirely with the member of staff and no police contact should be made",
+   "The Responsible Clinician decides whether to contact the police at the next ward round"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that if the victim does not wish to make a formal complaint, a senior staff member must still report the incident to the police, and that staff must obtain a police reference number and record it in the incident report. The Local Security Management Specialist supports staff with reporting crimes.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Hard",
+  "scenario": "A patient has just been released from a physical intervention.",
+  "question": "What does the trust policy say about recording physical observations after a physical intervention?",
+  "options": [
+   "Observations are only needed if rapid tranquillisation was given",
+   "Observations should be recorded in the nursing narrative note only",
+   "Observations must be documented on the NEWS2 physical observations chart with a NEWS calculated, and the rationale for the level of physical observations taken must also be recorded on SystmOne",
+   "Observations are optional if the patient refuses to cooperate"
+  ],
+  "correctIndex": 2,
+  "rationale": "The post physical intervention section requires observations to be documented on the NEWS2 physical observations chart with a NEWS calculated, and states that the rationale for the level of physical observations taken should also be recorded on SystmOne. If there is any concern about the patient's physical health a doctor must be contacted.",
+  "source": "Derbyshire Healthcare - Prevention and Management of Violence and Aggression (Use of Force) Policy",
+  "sourceDate": "March 2026, issue 3, review March 2029"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "scenario": "A patient is on a ward with fixed meal times, a strict daily routine and little say over day to day decisions.",
+  "question": "How does the trust's Reducing Restrictive Practice Policy describe practices like these?",
+  "options": [
+   "Environmental restraint, which is outside the scope of the policy",
+   "Emotional restraint, including 'soft cultural context' practices that limit individuality, personalisation and choice",
+   "Relational security, which is encouraged as good practice",
+   "Procedural security, which only applies in secure services"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states the Trust recognises 'emotional restraint', which includes 'soft cultural context' practices that limit individuality, personalisation and choice, and names blanket rules such as fixed meal times, a strict routine and a lack of choice over day to day decisions as examples.",
+  "source": "Derbyshire Healthcare - Reducing Restrictive Practice Policy",
+  "sourceDate": "December 2025, issue 3, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "question": "Which of these uses of restrictive practice does the trust's Reducing Restrictive Practice Policy specifically rule out?",
+  "options": [
+   "Using restrictive practice to enforce rules, to punish or coerce, or as a substitute for a lack of resources",
+   "Using restrictive practice after de-escalation has been attempted and failed",
+   "Using restrictive practice that has been planned with the patient in their care plan",
+   "Using restrictive practice carried out by staff trained to do so"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy standards state restrictive practices must not be used in any way that is degrading or abusive, and must not be used to enforce rules, to punish or coerce, or as a substitute for a lack of resources. The other options describe how the policy expects restrictive interventions to be used when they are genuinely necessary.",
+  "source": "Derbyshire Healthcare - Reducing Restrictive Practice Policy",
+  "sourceDate": "December 2025, issue 3, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "question": "What does the Reducing Restrictive Practice Policy expect of local teams and wards that use restrictive practices?",
+  "options": [
+   "That they rely solely on the trust-wide policy, since local variation is not permitted",
+   "That they seek written approval from the Care Quality Commission for each practice",
+   "That they have a local policy, which may sit within their operational policy, outlining their restrictive practices and blanket rules and how they opt for the least restrictive option first",
+   "That they submit a monthly return to the Executive Director of Nursing"
+  ],
+  "correctIndex": 2,
+  "rationale": "The scope section states local teams and wards that use restrictive practices are expected to have a local policy, which may be included in the local operational policy, outlining the restrictive practices and blanket rules they have, the methods used to ensure the least restrictive option comes first, and how they communicate about blanket rules.",
+  "source": "Derbyshire Healthcare - Reducing Restrictive Practice Policy",
+  "sourceDate": "December 2025, issue 3, review December 2028"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Easy",
+  "scenario": "A patient makes a racist remark to a colleague. They are acutely unwell and clearly not in a state to have a conversation about it right now.",
+  "question": "What does the trust's 'It's not okay' guidance say should happen?",
+  "options": [
+   "Let it go, as nothing can be done when someone is unwell",
+   "Document it in the patient record and revisit the behaviour at a later stage when the person is more stable",
+   "Move the colleague to another ward and say nothing to the patient",
+   "Discharge the patient immediately"
+  ],
+  "correctIndex": 1,
+  "rationale": "The guidance aims to increase reporting in the patient record and to revisit examples of discriminatory behaviour at a later stage where it is not possible to address them at the time due to delusional or compromised presentation. It is clear that discriminatory behaviour is not okay and will not be accepted.",
+  "source": "Derbyshire Healthcare - 'It's not okay' guidance on the Trust's approach to discriminatory behaviour",
+  "sourceDate": "Issued October 2020",
+  "reviewFlag": "no review date shown on document"
+ },
+ {
+  "category": "Trust Policy - Restrictive Practice",
+  "difficulty": "Medium",
+  "scenario": "A patient has been repeatedly abusive to staff and the team is considering writing to them about it.",
+  "question": "Under the 'It's not okay' guidance, what must happen with a letter to an individual who has been abusive to a member of staff?",
+  "options": [
+   "It is sent by the ward manager and filed only in the ward office",
+   "It is sent anonymously so the patient cannot identify the staff member",
+   "Its suitability is discussed with the Area Service Manager and/or General Manager, and a copy is kept on the patient record",
+   "It must be approved by the Care Quality Commission before it is sent"
+  ],
+  "correctIndex": 2,
+  "rationale": "The guidance includes a draft letter and says colleagues should discuss the suitability of this approach with their Area Service Manager and/or General Manager, and that the letter should also be kept on the patient record. Particularly complex or exceptional issues can be taken to the Acting Deputy Director of Operations for expert guidance.",
+  "source": "Derbyshire Healthcare - 'It's not okay' guidance on the Trust's approach to discriminatory behaviour",
+  "sourceDate": "Issued October 2020",
+  "reviewFlag": "no review date shown on document"
+ }
+]

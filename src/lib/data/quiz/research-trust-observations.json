@@ -1,0 +1,571 @@
+[
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "question": "The trust's Inpatient Therapeutic Observations and Engagement Policy uses four numbered levels of observation. Which level is the highest and most intensive?",
+  "options": [
+   "Level 4, because the numbers increase with intensity",
+   "Level 1, continuous observation within arm's length",
+   "Level 2, continuous observation within eyesight",
+   "Level 3, intermittent observation within a 15 minute period"
+  ],
+  "correctIndex": 1,
+  "rationale": "The trust numbers its levels downwards: Level 4 is general observation and Level 1, within arm's length, is described in the policy as the highest level of observation.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "scenario": "A newly admitted patient is assessed as presenting no serious risk of harm to self or others.",
+  "question": "Under trust policy, what is the lowest level of observation this patient can be placed on?",
+  "options": [
+   "No observation level is needed if risk is low",
+   "Level 3, intermittent observation",
+   "Level 4, general observation",
+   "Observation levels only apply to detained patients"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that Level 4 general observation is the minimally acceptable level of observation for all inpatients, and the clinical skills workbook confirms all inpatients must be under one of the four levels.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "question": "For a patient on Level 4 general observation, how often does the trust policy say the Nurse in Charge (or delegated person) must visually check their whereabouts?",
+  "options": [
+   "Hourly during the day and half hourly at night",
+   "Half hourly during the day and hourly at night",
+   "Hourly during the day and hourly at night",
+   "Twice per shift, at the start and the end"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy sets a minimum of an hourly visual check during the day and half hourly at night for Level 4, unless something different is specified in the patient's care plan.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A patient is on Level 3 intermittent observation and a colleague sets a phone alarm to check them at exactly 15 minute intervals.",
+  "question": "Why does the trust policy say this is the wrong approach?",
+  "options": [
+   "Checks must be more frequent than every 15 minutes on Level 3",
+   "Only the Nurse in Charge may carry out Level 3 checks",
+   "Checks must be done at varying times within the 15 minute period so a patient at risk cannot predict a guaranteed gap",
+   "Phones are not permitted in clinical areas"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy requires visual observation within a 15 minute period but at varying times within it, so a patient at risk of suicide does not know they have exactly 15 minutes before the next staff contact.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "question": "What does Level 2 observation mean in this trust?",
+  "options": [
+   "The patient is checked randomly within each 15 minute period",
+   "The patient is kept within eyesight at all times, day and night, including toilet and bathing time",
+   "The patient is kept within arm's length at all times",
+   "The patient is checked hourly and must report their whereabouts"
+  ],
+  "correctIndex": 1,
+  "rationale": "Level 2 is 'within eyesight': the patient is kept within sight at all times day and night, and the allocated clinician's total concentration must be on the patient, including time in the toilet, while bathing and when asleep.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "scenario": "A support worker has been on continuous observation with the same patient since the start of the shift.",
+  "question": "For observation levels 1 to 3, what does trust policy say about how long one staff member should stay on observation duty with a patient?",
+  "options": [
+   "Up to 4 hours, with a 30 minute break afterwards",
+   "It should not exceed 2 hours at any one time, with 1 hour considered the norm, followed by a break of at least 1 hour",
+   "There is no time limit as long as the staff member feels able to continue",
+   "A maximum of 90 minutes, followed by a 30 minute break"
+  ],
+  "correctIndex": 1,
+  "rationale": "Section 7.5 says time on observation for levels 1 to 3 should not exceed 2 hours at any one time, 1 hour is the norm, and after 2 hours the clinician should hand over and take a break from observation duties for a minimum of 1 hour.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "scenario": "Because of short staffing, one member of staff ends up doing 3 hours of continuous Level 2 observation without a break.",
+  "question": "What does trust policy require to happen next?",
+  "options": [
+   "Nothing, provided the Nurse in Charge agreed to it beforehand",
+   "It is noted in the patient's care plan only",
+   "The staff member submits a formal grievance",
+   "The variance is reported on a DATIX incident form so that it can be reviewed"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy states that any variance in excess of 2 hours of continual observation should be reported on a DATIX incident form so that it can be reviewed.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "question": "Who does the trust policy say may change observation scheduling on the electronic patient record?",
+  "options": [
+   "Any member of staff who holds a Brigid handheld device",
+   "Only the Responsible Clinician",
+   "Only a registered professional who is aware of the patient's risk management plan and care plan",
+   "Only the ward manager or matron"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that observation scheduling must only be changed by a registered professional who is aware of the patient's risk management plan and care plan.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A patient was placed on Level 2 observation at 8pm last night.",
+  "question": "Under trust policy, when must the first formal senior review of that decision take place?",
+  "options": [
+   "Within 24 hours of commencement, involving senior medical staff and senior nursing staff",
+   "At the next weekly ward round",
+   "Within 72 hours, involving the Head of Nursing",
+   "Within 4 hours, involving the on-call doctor"
+  ],
+  "correctIndex": 0,
+  "rationale": "Section 6.1 requires all patients on Level 1 or 2 observations to be reviewed with the involvement of senior medical staff (Consultant Psychiatrist or nominated deputy) and senior nursing staff within 24 hours of commencement, and then formally every 24 hours.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "scenario": "A patient has now been on Level 1 observation continuously since Monday morning and it is Thursday morning.",
+  "question": "At what point does trust policy require an additional review by a more senior manager, on top of the routine 24 hourly reviews?",
+  "options": [
+   "After 12 hours",
+   "After 48 hours",
+   "After 72 hours",
+   "After 7 days"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that if Level 1 or 2 observations continue for a period of 72 hours, a further review by a senior manager with senior medical or nursing staff from the ward must take place.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "It is a bank holiday Monday and a patient on Level 1 observation is due their 24 hour review, but no consultant is on site.",
+  "question": "What does trust policy allow?",
+  "options": [
+   "The review is deferred until the next working day",
+   "The review can be undertaken by two senior nursing staff, one of whom should be the bleep-holder, and may be done by phone",
+   "The Nurse in Charge documents the level and no review is needed",
+   "Only the on-call consultant can complete it, and they must attend in person"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that at weekends and on bank holidays the review can be undertaken by two senior nursing staff, one of whom should be the bleep-holder, and that this may be undertaken by phone.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "question": "How often must patients on Level 4 general observation be formally reviewed at the Multidisciplinary Team (MDT) meeting?",
+  "options": [
+   "Every 24 hours",
+   "Every 72 hours",
+   "Weekly, with a doctor and a nurse present",
+   "Monthly, or sooner if risk changes"
+  ],
+  "correctIndex": 2,
+  "rationale": "Section 6.3 requires all patients on Level 4 observations to be formally reviewed weekly at the multidisciplinary team meeting with a doctor and a nurse present, with the outcome recorded in the patient's records.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "scenario": "The team agrees at review that a patient can step down from Level 2 to Level 3 observation.",
+  "question": "Under trust policy, who takes the final decision to reduce a Level 1 or 2 observation?",
+  "options": [
+   "Any registered nurse on the shift",
+   "The senior medical and/or senior nursing staff (band 6 or above) accountable for the patient's treatment and care",
+   "The Nurse in Charge of the shift, whatever their band",
+   "The Head of Nursing only"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states the final decision to reduce Level 1 or 2 observations will be taken by the senior medical and/or senior nursing staff (band 6 or above) accountable for the treatment and care of the patient.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "scenario": "The doctor wants to reduce a patient to Level 3 observation, but the nursing team believe Level 2 is still needed. The disagreement is not resolved at the meeting.",
+  "question": "What does trust policy say happens while the disagreement is being resolved?",
+  "options": [
+   "The patient remains on the higher level of observation",
+   "The doctor's decision stands because they prescribe the level",
+   "The level is reduced but reviewed again in 4 hours",
+   "The Nurse in Charge decides on the day"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy is clear that where there are differing views about the level required, the patient remains on the higher level until the matter is resolved, with immediate discussion with the Consultant Psychiatrist and senior nurse and escalation if needed.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A patient subject to a Ministry of Justice restriction order is settled and the night team feel their observation level could be reduced.",
+  "question": "What does trust policy say about changing observation levels for a restricted patient?",
+  "options": [
+   "The Nurse in Charge can both increase and decrease the level as clinically indicated",
+   "The Nurse in Charge can increase the level in response to concerns, but any reduction must be made by the Responsible Clinician in consultation with nursing staff",
+   "Only the Ministry of Justice can approve any change of observation level",
+   "Restricted patients must always remain on Level 2 or above"
+  ],
+  "correctIndex": 1,
+  "rationale": "Section 4.3 states that for patients on a Home Office restriction order the level is determined by the Responsible Clinician; the nurse in charge can increase levels in response to concerns but any reduction needs to be undertaken in consultation with the Responsible Clinician.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "The ward is short staffed and a student nurse offers to take a turn on a patient's arm's length observation.",
+  "question": "What does trust policy say about student nurses and Level 1 observation?",
+  "options": [
+   "Students may undertake Level 1 observation if the Nurse in Charge agrees",
+   "Students may undertake Level 1 observation once they have completed the Clinical Observations Booklet",
+   "Students must not undertake Level 1 observation, although they may shadow as a learning experience",
+   "Students may undertake Level 1 observation only at night"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that student nurses and Allied Health Professional students must not undertake Level 1 observations, although they can observe or shadow as part of their learning experience.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "scenario": "A student nurse in the final months of their course has completed the Clinical Observations Booklet and been assessed as competent.",
+  "question": "Which statement matches trust policy on what that student may now do?",
+  "options": [
+   "They may undertake Level 2 observation, and would not normally exceed 3 hours of observation in any shift",
+   "They may undertake any level of observation including Level 1",
+   "They may only undertake Level 4 observation until they are registered",
+   "They may undertake Level 2 observation and may be allocated for a whole shift if staffing requires it"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy allows students in the last 6 months of their course to undertake Level 2 observations once assessed as competent, and states it would be expected that a student does not exceed 3 hours of any shift on observations, and not at the expense of other learning opportunities.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "On prescribing an increased observation level, the team decide a search of the patient and their belongings is necessary.",
+  "question": "What staffing does trust policy require for that search?",
+  "options": [
+   "One member of staff, with a second waiting outside the room",
+   "Two members of staff, one of whom should be the same gender as the service user",
+   "Two members of staff, at least one of whom must be a registered nurse",
+   "Three members of staff, including the Nurse in Charge"
+  ],
+  "correctIndex": 1,
+  "rationale": "Section 4.7 requires two members of staff to be present for a personal search, one of whom should be the same gender as the service user, and notes searching is a restrictive practice that should not be routine for all patients.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "scenario": "A patient's relative is visiting for the afternoon and offers to sit with them so staff can get on, while the patient is on Level 2 observation.",
+  "question": "What does trust policy say?",
+  "options": [
+   "This is acceptable if the Nurse in Charge stays nearby",
+   "This is acceptable for up to one hour",
+   "It is not appropriate for a patient's carer or relative to carry out levels of observation",
+   "This is acceptable if the relative signs the observation record"
+  ],
+  "correctIndex": 2,
+  "rationale": "Section 7.9 states plainly that it is not appropriate for a patient's carer to carry out levels of observation; observation is a skilled clinical duty allocated by the Nurse in Charge.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "scenario": "A patient on Level 3 intermittent observation has settled in bed, and the night team suggest dropping the checks until morning.",
+  "question": "What does trust policy require?",
+  "options": [
+   "Level 3 observations may be relaxed overnight if the patient is asleep",
+   "Level 3 observations must not automatically be reduced in the evening or at night, and any reduction must follow a documented multidisciplinary discussion including the patient, with the Safety Plan reviewed",
+   "The night co-ordinator can authorise a reduction verbally",
+   "Level 3 observations always become Level 4 between midnight and 7am"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states Level 3 observations must not automatically be reduced in the evening or at night and must only take place following a documented multidisciplinary discussion, including the patient, and a review of the Safety Plan.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "scenario": "It is the start of a late shift.",
+  "question": "Under the trust's observation policy, what is the Nurse in Charge of the outgoing shift responsible for at the beginning of every shift?",
+  "options": [
+   "Emailing a written summary to the ward manager",
+   "Handing the Brigid device to the incoming Nurse in Charge and nothing further",
+   "Giving a verbal handover to the incoming Nurse in Charge identifying that all patients are present and accounting for those absent and their whereabouts",
+   "Completing a full risk assessment on every patient"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy makes this a named responsibility of the outgoing Nurse in Charge, alongside an environmental walk around the ward to check there are no concerns, and it also gives patients the chance to see the incoming Nurse in Charge.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "question": "Beyond checking whereabouts, what does the trust policy expect on every shift for patients on Level 4 general observation?",
+  "options": [
+   "At least one allocated nurse per shift should sit down and talk with their allocated patients and assess their mental state, and record this in the notes",
+   "A full physical health check using the National Early Warning Score (NEWS2)",
+   "A written statement from the patient confirming they feel safe",
+   "A face to face review by the Responsible Clinician"
+  ],
+  "correctIndex": 0,
+  "rationale": "The Level 4 section requires at least one allocated nurse per shift to sit down and talk to their allocated patients and assess mental state, including an evaluation of mood and behaviours associated with risk, recorded in the notes.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "question": "The trust monitors observations from ward to board using SystmOne and the handheld devices. What performance standard does the policy set for the performance and recording of patient observations?",
+  "options": [
+   "Above 75 per cent",
+   "Above 85 per cent",
+   "Above 90 per cent",
+   "100 per cent, with no tolerance"
+  ],
+  "correctIndex": 2,
+  "rationale": "The governance section states that performance and recording of patient observations should remain above 90 per cent, monitored through the Observation Trend Report, alongside quality walkabouts by senior clinical staff.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "scenario": "An agency healthcare assistant arrives on the ward for their first shift and is offered an observation allocation.",
+  "question": "What does trust policy require first?",
+  "options": [
+   "Nothing extra, as agency staff are checked by the agency before they arrive",
+   "They must be inducted to the observation policy and assessed by the Nurse in Charge as having understanding before undertaking observations",
+   "They must have worked at least three shifts on the ward",
+   "They must be signed off by the Matron in person"
+  ],
+  "correctIndex": 1,
+  "rationale": "Section 12.2 states that no temporary bank or agency staff should be involved in undertaking observation until they have been inducted as to the policy and assessed by the Nurse in Charge to have understanding.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A doctor asks to interview a patient in private while that patient is on Level 2 observation.",
+  "question": "What does trust policy require of the staff member currently doing the observation?",
+  "options": [
+   "They should pause the observation record until the interview finishes",
+   "They should stand outside the door and resume when the doctor leaves",
+   "They must make clear to the colleague that the colleague takes full responsibility for maintaining the agreed level, and at the end formally hand the observation back to a staff member allocated by the Nurse in Charge",
+   "They should ask the patient whether they want the observation to continue"
+  ],
+  "correctIndex": 2,
+  "rationale": "Section 9.8 requires the person doing the observation to make it explicit that the requesting colleague takes full responsibility for maintaining the agreed level during the interview, with a formal handover back to a clinician allocated by the Nurse in Charge afterwards.",
+  "source": "Derbyshire Healthcare - Inpatient Therapeutic Observations and Engagement Policy and Procedure",
+  "sourceDate": "February 2025, issue 10, review February 2028"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "question": "The trust's Clinical Skills Workbook for Therapeutic Observation of Patients is aimed at which staff, and who signs it off as complete?",
+  "options": [
+   "Registered nurses only, signed off by the Matron",
+   "Clinical and non-clinical staff with patient contact, signed off by the Sister or Lead Nurse",
+   "Student nurses only, signed off by their university mentor",
+   "Bank and agency staff only, signed off by the temporary staffing team"
+  ],
+  "correctIndex": 1,
+  "rationale": "The workbook is titled for clinical and non-clinical staff with patient contact and applies to all direct care staff in inpatient services; the front cover is signed by the staff member and by the Sister or Lead Nurse signing off completion.",
+  "source": "Derbyshire Healthcare - Clinical Skills Workbook for Therapeutic Observation of Patients",
+  "sourceDate": "November 2024, version 2"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A ward manager wants to log the risk that the ward's ligature audit has identified.",
+  "question": "Which system does the trust's Risk Assessment Policy and Procedure direct staff to for generic and environmental risks like this?",
+  "options": [
+   "The Datix Risk Register module, using the Risk Assessment Form",
+   "The SystmOne Risk Node on the patient record",
+   "A locally held ward spreadsheet reviewed at team meeting",
+   "The incident reporting module only"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy requires all generic, environmental, health and safety, corporate and organisational risks to be recorded, reviewed and escalated using the Datix Risk Register module via the Risk Assessment Form.",
+  "source": "Derbyshire Healthcare - Risk Assessment Policy and Procedure",
+  "sourceDate": "June 2024, issue 12, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A newly qualified nurse assumes the Risk Assessment Policy and the Datix Risk Register are where an individual patient's clinical risk is recorded.",
+  "question": "What does the Risk Assessment Policy actually say?",
+  "options": [
+   "Individual patient clinical risk should be logged on Datix if it is rated high or extreme",
+   "Individual patient clinical risk is covered by this policy for inpatients only",
+   "The Datix risk process must not be used for an individual patient's clinical risk, which is covered by the Safety Needs Assessment and Management of Safety Needs Policy",
+   "Individual patient clinical risk is covered by the Health and Safety at Work Policy"
+  ],
+  "correctIndex": 2,
+  "rationale": "The Risk Assessment Policy states explicitly that the Datix process must not be used for recording an individual patient's clinical risk, and points staff to the Safety Needs Assessment and Management of Safety Needs Policy instead.",
+  "source": "Derbyshire Healthcare - Risk Assessment Policy and Procedure",
+  "sourceDate": "June 2024, issue 12, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "scenario": "A ward risk on the Datix risk register has a residual rating of high.",
+  "question": "Under trust policy, what is the maximum interval before it must be reviewed again?",
+  "options": [
+   "Within 3 months",
+   "Within 6 months",
+   "Within 12 months",
+   "Within 28 days"
+  ],
+  "correctIndex": 0,
+  "rationale": "Section 5.2 sets review intervals by residual rating: very low or low within 12 months, moderate within 6 months, and high or extreme within 3 months, with the next review date no later than the due date of the latest action.",
+  "source": "Derbyshire Healthcare - Risk Assessment Policy and Procedure",
+  "sourceDate": "June 2024, issue 12, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "question": "Which tool does the trust use for ligature risk assessment?",
+  "options": [
+   "The Manchester Tool",
+   "The Care Quality Commission (CQC) Ligature Risk Assessment Tool",
+   "The HCR-20",
+   "The National Early Warning Score (NEWS2) environmental annex"
+  ],
+  "correctIndex": 1,
+  "rationale": "The version control notes record that the Manchester Tool is not being used for ligature risk assessment and that the CQC Ligature Risk Assessment Tool is used instead, with requirements set out in the Ligature Risk Reduction Policy and its linked Standard Operating Procedure (SOP).",
+  "source": "Derbyshire Healthcare - Risk Assessment Policy and Procedure",
+  "sourceDate": "June 2024, issue 12, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "question": "The trust's Safety Planning Standard Operating Procedure (SOP) sets out a three tiered approach on SystmOne. What are the three tiers, in order?",
+  "options": [
+   "Safety Box, Safety Plan, Care Plan",
+   "Risk Screen, Risk Assessment, Safety Plan",
+   "Risk Screen, Safety Plan, Risk Management Plan",
+   "Risk Assessment, Formulation, Crisis Plan"
+  ],
+  "correctIndex": 1,
+  "rationale": "The SOP describes the move away from Safety Planning and Safety Boxes to a three tiered approach of Risk Screen, then Risk Assessment, then Safety Planning, with patient involvement at the centre of all three.",
+  "source": "Derbyshire Healthcare - Standard Operating Procedure: Safety Planning",
+  "sourceDate": "13.11.2020, issue 01, review 13.11.2021",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A patient is admitted overnight and the Risk Screen has not yet been done.",
+  "question": "Under the trust's Safety Planning Standard Operating Procedure (SOP), who can complete the Risk Screening Tool?",
+  "options": [
+   "Only a band 6 or above registered nurse",
+   "Only the Responsible Clinician or an approved clinician",
+   "Any clinician, and it should be completed for all patients at the point of admission",
+   "Only staff who have completed the HCR-20 training"
+  ],
+  "correctIndex": 2,
+  "rationale": "The SOP states any clinician can complete the Risk Screening Tool and it should be completed for all patients at the point of admission, new team co-ordination, care change or where risks change or need reviewing.",
+  "source": "Derbyshire Healthcare - Standard Operating Procedure: Safety Planning",
+  "sourceDate": "13.11.2020, issue 01, review 13.11.2021",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Hard",
+  "scenario": "A patient strongly disagrees with a risk that the team has identified in their risk screen and asks for it to be taken out.",
+  "question": "What does the trust's Safety Planning Standard Operating Procedure (SOP) say should happen?",
+  "options": [
+   "The risk should be removed, as the safety plan must be collaborative",
+   "The patient's views are recorded in their Care Plan; the risk screen, assessment or safety plan should not be altered because of the disagreement unless there are identified reasons to do so",
+   "The risk stays and the patient's view is not recorded, to keep the record objective",
+   "The disagreement is referred to the Complex Risk Panel before anything is recorded"
+  ],
+  "correctIndex": 1,
+  "rationale": "The SOP states that where a patient refuses to engage or disagrees with the identified risks, their views should be clearly explained within their Care Plan, and the risk screen, assessment or safety plan should not be altered because of the disagreement unless there are identified reasons to do so.",
+  "source": "Derbyshire Healthcare - Standard Operating Procedure: Safety Planning",
+  "sourceDate": "13.11.2020, issue 01, review 13.11.2021",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A complex case has been discussed at the trust's Complex Risk Panel and written minutes have come back to the ward.",
+  "question": "Under the Safety Needs policy, where does responsibility sit after that discussion?",
+  "options": [
+   "Responsibility transfers to the panel, who then oversee the case",
+   "Responsibility is shared equally between the panel and the ward until the actions are complete",
+   "Responsibility for the risks and agreed actions remains with the referring clinical team, who must add the panel minutes to the electronic patient record",
+   "Responsibility passes to the Head of Nursing as joint chair of the panel"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that responsibility for the identified risks and needs, and any actions agreed, remains with the referring clinical team and does not sit with panel members, and that the referring team must add the panel's written minutes to the electronic patient record.",
+  "source": "Derbyshire Healthcare - Safety Needs Assessment and Management of Safety Needs Policy",
+  "sourceDate": "June 2024, issue 04, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Easy",
+  "scenario": "A patient is being considered for their first period of Section 17 leave.",
+  "question": "Under the trust's Safety Needs policy, when should their safety needs be reviewed?",
+  "options": [
+   "Only if there has been an incident in the previous week",
+   "Before leave is granted, as this is one of the listed points for review",
+   "Only at the next Care Programme Approach (CPA) review",
+   "Only if the leave is overnight or longer"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy lists points at which safety needs should be reviewed, including first contact with services, at CPA reviews, on admission and discharge, prior to granting leave, on transfer, after major changes or incidents, and when observation levels need reviewing.",
+  "source": "Derbyshire Healthcare - Safety Needs Assessment and Management of Safety Needs Policy",
+  "sourceDate": "June 2024, issue 04, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Observations & Risk",
+  "difficulty": "Medium",
+  "scenario": "A patient is too unwell to take part in risk discussions and has no family involved.",
+  "question": "What does the trust's Safety Needs policy say should happen to the Risk Screen and Safety Plan?",
+  "options": [
+   "They are deferred until the patient is well enough to take part",
+   "A Risk Screen and Safety Plan should still be completed, then revisited with the patient and their carer or family as soon as they are able or willing to take part",
+   "Only a Risk Screen is completed; the Safety Plan waits until discharge planning",
+   "An advocate must complete them on the patient's behalf"
+  ],
+  "correctIndex": 1,
+  "rationale": "The September 2025 amendment to section 3.5 makes explicit that where the service user or carer cannot or will not participate, a Risk Screen and Safety Plan should still be completed and then revisited with them as soon as they are able or willing.",
+  "source": "Derbyshire Healthcare - Safety Needs Assessment and Management of Safety Needs Policy",
+  "sourceDate": "June 2024, issue 04, review June 2027"
+ }
+]

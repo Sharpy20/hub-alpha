@@ -1,0 +1,546 @@
+[
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": "A patient becomes acutely disturbed and the team agree that seclusion is now the only safe option.",
+  "question": "Under the Trust seclusion policy, who may authorise the implementation of seclusion?",
+  "options": [
+   "The nurse in charge, a psychiatrist or an approved clinician",
+   "The bleep holder or the on-call manager",
+   "Any registered nurse on shift",
+   "Only the patient's Responsible Clinician (RC)"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states it must be either the nurse in charge, a psychiatrist or an approved clinician that authorises seclusion, and that person must have seen the patient immediately prior to it commencing.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": null,
+  "question": "How often must nursing reviews take place during an episode of seclusion under Trust policy?",
+  "options": [
+   "At least every hour",
+   "At least twice in every 24 hours",
+   "At least every four hours",
+   "At least every two hours"
+  ],
+  "correctIndex": 3,
+  "rationale": "The Trust policy and the seclusion timetable appendix both set nursing reviews at least every two hours, and they stay two hourly even after the first Multidisciplinary Team (MDT) review.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": "Seclusion commences at 14:00 and the patient's consultant was not involved in the decision.",
+  "question": "By when must the initial medical review take place under Trust policy?",
+  "options": [
+   "Within the first hour of seclusion commencing",
+   "Within two hours of seclusion commencing",
+   "Within four hours of seclusion commencing",
+   "At the next scheduled ward round"
+  ],
+  "correctIndex": 0,
+  "rationale": "Where the consultant was not involved in the decision to seclude, the policy requires a face to face initial medical review within the first hour, recorded on the SystmOne 'Seclusion Review' document.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": "You have been allocated to observe a patient who has just gone into seclusion.",
+  "question": "How often must the observing staff member document the patient's behaviour under Trust policy?",
+  "options": [
+   "Every 5 minutes",
+   "Hourly",
+   "Every 30 minutes",
+   "A minimum of every 15 minutes"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy requires continuous observation with a record made a minimum of every 15 minutes in the 'Seclusion Case Notes' section of SystmOne, including food and fluid intake, respiratory rate and ACVPU on the relevant charts.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": null,
+  "question": "Who normally takes the seclusion co-ordinator role at this Trust?",
+  "options": [
+   "The nurse in charge of the shift, unless the role is allocated to someone else",
+   "The patient's named nurse",
+   "The bleep holder",
+   "The ward manager, who holds the role for the whole episode"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy says the seclusion co-ordinator would be the nurse in charge on shift unless specifically nominated to another member of staff, and the role changes on a shift by shift basis.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": null,
+  "question": "When must the first Multidisciplinary Team (MDT) review of a seclusion episode happen, and how often after that?",
+  "options": [
+   "Within 12 hours, then every 12 hours",
+   "Within 48 hours, then twice weekly",
+   "As soon as possible within 24 hours, then once in every 24 hours",
+   "At the next working day ward round, then weekly"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says the MDT review should take place as soon as possible within 24 hours of seclusion commencing, and then once in every 24 hours.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": null,
+  "question": "Which of these does the Trust policy state for a patient who is in seclusion?",
+  "options": [
+   "They must never be deprived of their clothing and must always be able to see a clock",
+   "Clothing may be removed at the discretion of the nurse in charge",
+   "A clock is only required in designated seclusion suites",
+   "Reading material is prohibited in all cases"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states a patient in seclusion must never be deprived of their clothing, and that they should be able to always have sight of a clock, with access to sensory resources, radio or reading material where clinically appropriate and safe.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": "Seclusion has just commenced on your ward and you are completing the paperwork.",
+  "question": "What level of DATIX does the Trust policy require to be completed when a seclusion episode starts?",
+  "options": [
+   "A Low DATIX",
+   "No DATIX unless there was an injury",
+   "A Major DATIX",
+   "A Moderate DATIX"
+  ],
+  "correctIndex": 3,
+  "rationale": "Under ward level monitoring the policy states that when a seclusion episode is commenced a Moderate DATIX will be completed as soon as possible, documenting which patient has required seclusion and why. Long-term segregation, by contrast, is recorded as Major.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": null,
+  "question": "What does the current Trust policy say about the door hatches on seclusion room doors?",
+  "options": [
+   "They may be used for passing food and drink only",
+   "They may be used by two staff working together",
+   "They may be used for medication administration",
+   "They must not be used, because of their proximity to the door handle"
+  ],
+  "correctIndex": 3,
+  "rationale": "A July 2025 amendment states door hatches must not be used due to their proximity to the door handle, and that each hatch carries a sign reading 'Warning, Hatch not in use'.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": "A patient is about to be placed in seclusion and staff have safely completed a search.",
+  "question": "Where must the search and any property removed be recorded under Trust policy?",
+  "options": [
+   "In the Seclusion Care Pathway, with removed property logged and held in safekeeping on the ward",
+   "In the ward property book only",
+   "In a DATIX report only",
+   "On the whiteboard outside the seclusion room"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy requires the patient to be searched before seclusion starts, recorded within the 'Seclusion Care Pathway', with any property removed logged on that document and placed in safekeeping on the ward.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Easy",
+  "scenario": "You are working through the Section 136 suite grab bag checklist at the start of your shift.",
+  "question": "According to the Trust checklist, when should the oxygen cylinder be replaced?",
+  "options": [
+   "If it is less than half full",
+   "Monthly, regardless of contents",
+   "Only when it is empty",
+   "If it is less than three quarters full"
+  ],
+  "correctIndex": 3,
+  "rationale": "The Section 136 grab bag checklist instructs staff to replace the oxygen cylinder if it is less than three quarters full. The checklist is laid out with a column for each day of the week, so it is a daily check.",
+  "source": "Derbyshire Healthcare - Section 136 Suite Emergency Equipment Grab Bag Checklist",
+  "sourceDate": "V5, 08 April 2025"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "Two hours into a seclusion episode the nursing review is due. You were part of the team that took the decision to seclude.",
+  "question": "What does the Trust policy require of the staff carrying out the nursing review?",
+  "options": [
+   "One registered nurse, who may be anyone on shift",
+   "Two registered nurses, both independent of the ward",
+   "One registered nurse and one healthcare assistant",
+   "Two registered nurses, one of whom was not involved in the decision to seclude"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy states the nursing review must include two registered nurses, one of whom was not involved in the decision to seclude.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "The consultant psychiatrist was present and authorised the seclusion.",
+  "question": "What does the Trust policy require in this situation?",
+  "options": [
+   "A separate initial medical review must still be done by a different doctor within the hour",
+   "The seclusion co-ordinator records the review on the consultant's behalf",
+   "No medical documentation is needed until the 24 hour Multidisciplinary Team (MDT) review",
+   "The consultant must record their assessment as a medical review within the first hour, using the SystmOne 'Seclusion Review' document"
+  ],
+  "correctIndex": 3,
+  "rationale": "Where the consultant was involved in the decision to seclude, their review prior to seclusion constitutes the initial medical review, but they must record it within the first hour on the 'Seclusion Review' document on SystmOne.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": null,
+  "question": "After the initial medical review, how often are medical reviews required until the patient has their first Multidisciplinary Team (MDT) review?",
+  "options": [
+   "Every two hours",
+   "Twice in 24 hours",
+   "Every six hours",
+   "Every four hours"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy requires four hourly medical reviews after the initial medical review until the first MDT review. Only after that initial MDT review do medical reviews drop to at least twice in every 24 hours.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "A patient has been in seclusion since 22:00 and the 24 hour Multidisciplinary Team (MDT) review falls in the night.",
+  "question": "Who must the out of hours MDT review consist of under Trust policy?",
+  "options": [
+   "Two registered nurses and the seclusion co-ordinator",
+   "The bleep holder alone",
+   "A nursing member of the leadership team or the bleep holder, and the on-call consultant or nominated deputy",
+   "The ward manager and the patient's Responsible Clinician (RC)"
+  ],
+  "correctIndex": 2,
+  "rationale": "Out of hours the policy requires the MDT review to consist of a nursing member of the leadership team, or the bleep holder, together with the on-call consultant or their nominated deputy.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "No designated seclusion room is available, so a patient meeting the criteria for seclusion is secluded in a quiet room.",
+  "question": "Who must be notified under Trust policy?",
+  "options": [
+   "The Matron, the Area Service Manager and the Head of Nursing",
+   "The bleep holder only",
+   "The Care Quality Commission within 24 hours",
+   "The Executive Director of Nursing only"
+  ],
+  "correctIndex": 0,
+  "rationale": "For seclusion outside a designated seclusion room, the policy requires the Matron, Area Service Manager and Head of Nursing to be notified, the use of a non-designated room to be clearly documented on the DATIX, and the full seclusion pathway to be followed.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "At a two hourly nursing review the patient is calm and settled and the nurses feel seclusion could safely end.",
+  "question": "Can that nursing review end the seclusion under Trust policy?",
+  "options": [
+   "No, only a Multidisciplinary Team (MDT) or independent review can end seclusion",
+   "Yes, but only if the patient has been secluded for less than four hours",
+   "Yes, following a discussion with the Responsible Clinician (RC) or duty doctor, in person or by telephone",
+   "No, nursing reviews can only recommend a reduction in restrictions"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy lists a nurses review as one of the four routes to ending seclusion, provided there has been a discussion with the Responsible Clinician or duty doctor, which can be in person or on the telephone.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "As part of a graded plan, the seclusion door is opened for a planned period so the patient can use the secure courtyard.",
+  "question": "What does the Trust policy say about this?",
+  "options": [
+   "It ends the seclusion episode and a new episode must be opened on return",
+   "It does not constitute an end to seclusion",
+   "It converts the episode to long-term segregation",
+   "It pauses the review clock until the patient returns"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy notes explicitly that opening the door for planned periods, for example access to the secure courtyard, does not constitute an end to seclusion. This kind of flexibility is described as a way of evaluating the patient under less restriction without terminating the episode.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "The ward is short staffed and a student nurse on placement offers to sit on the seclusion observation.",
+  "question": "How does the Trust policy define who can carry out seclusion observations?",
+  "options": [
+   "Any member of the nursing team, including students under supervision",
+   "Registered nurses only",
+   "A suitably skilled professional who has completed the observation skills booklet and is compliant on the Electronic Staff Record (ESR); student nurses and student Allied Health Professionals cannot do it",
+   "Any staff member who has completed Positive and Safe training"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy defines a suitably skilled professional as someone who has completed the observation skills booklet and is compliant on ESR, and states that student nurses and student AHPs cannot undertake observations.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "A four hourly medical review was missed overnight because no doctor was available.",
+  "question": "What does the Trust policy require when a seclusion review is not completed as set out in the process?",
+  "options": [
+   "Nothing, provided the next review happens on time",
+   "The rationale must be documented in the Electronic Patient Record (EPR) and a DATIX completed",
+   "The seclusion episode must be ended immediately",
+   "The seclusion co-ordinator must inform the Care Quality Commission"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states at the start of the review section that if any reviews are not completed as per the process, the rationale must be documented in EPR and a DATIX completed. It also requires a DATIX by the seclusion co-ordinator if a doctor does not arrive for the initial medical review.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "A Multidisciplinary Team (MDT) is considering whether a patient with a sustained risk of harm to others should be placed on long-term segregation (LTS).",
+  "question": "What does the Trust policy say about providing LTS at this Trust?",
+  "options": [
+   "Every inpatient unit has an LTS suite available",
+   "LTS can be started by the ward Multidisciplinary Team alone if the risk is sustained",
+   "The Trust does not have the clinical environment for LTS, so it may only be considered in extenuating circumstances and only after written confirmation from the Director of Nursing, AHPs and Patient Experience",
+   "LTS is prohibited outright at this Trust with no exceptions"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states DHCFT does not have the clinical environment necessary to care for people in LTS, that it should only be considered in extenuating circumstances, and that it can only be instigated following written confirmation from the Director of Nursing, AHPs and Patient Experience.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "Long-term segregation (LTS) has just been agreed for a patient.",
+  "question": "Who is responsible for the LTS care plan and within what timeframe must it be completed?",
+  "options": [
+   "The Responsible Clinician (RC), within 72 hours",
+   "The ward manager, within 24 hours of LTS commencing",
+   "The named nurse, by the end of the first week",
+   "The Head of Nursing, within 48 hours"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy makes the ward manager responsible for ensuring an LTS care plan is completed within 24 hours of LTS commencing, focused on what needs to be achieved for LTS to be terminated.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": "An informal patient becomes acutely disturbed and, as a last resort, has to be secluded to prevent harm to others.",
+  "question": "What does the Trust policy require in this situation?",
+  "options": [
+   "An assessment for an emergency application for detention under the Mental Health Act must be undertaken immediately",
+   "Seclusion can continue as normal because the patient consented to go into the room",
+   "The patient must be discharged from the ward",
+   "The seclusion pathway does not apply to informal patients"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that if seclusion becomes necessary for an informal patient as a last resort, an assessment for an emergency application for detention under the Act should be undertaken immediately. The full seclusion pathway and safeguards still apply.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Medium",
+  "scenario": null,
+  "question": "Under the Trust's seclusion monitoring arrangements, who is responsible for ensuring the seclusion suite is fit for use daily?",
+  "options": [
+   "The ward manager",
+   "The bleep holder",
+   "The Positive and Safe team",
+   "The estates department"
+  ],
+  "correctIndex": 1,
+  "rationale": "The ward level monitoring section states that the bleep holder will ensure the seclusion suite is fit for use daily, and that the suite is checked a minimum of once per day and cleaned and made ready as soon as possible after an episode ends.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "The eight hour independent review is being arranged.",
+  "question": "Who must make up the independent Multidisciplinary Team (MDT) review under Trust policy?",
+  "options": [
+   "Any three members of the ward team not on duty at the time of the incident",
+   "The Responsible Clinician (RC), the ward manager and the seclusion co-ordinator",
+   "A Matron, a Head of Nursing and a commissioner representative",
+   "An approved clinician or consultant psychiatrist (or nominated deputy), a nurse, and an Independent Mental Health Advocate (IMHA) where the patient has one, none of whom were involved in the decision to seclude"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy specifies the independent review membership as an approved clinician or consultant psychiatrist (or nominated deputy), a nurse, and an IMHA in cases where the patient has one, all of whom must not have been involved in the initial decision to seclude.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "A seclusion episode has now run beyond seven days.",
+  "question": "What does Trust policy require for prolonged seclusion of over seven days?",
+  "options": [
+   "A risk strategy meeting organised by the Responsible Clinician (RC) or nominated deputy, followed by a weekly independent Multidisciplinary Team (MDT) review",
+   "Automatic conversion to long-term segregation",
+   "A referral to the Care Quality Commission",
+   "Daily independent reviews until seclusion ends"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that in the event of prolonged seclusion over 7 days a risk strategy meeting should be organised by the RC or their nominated deputy, after which an independent MDT reviews the patient once a week to identify ways to reduce restrictions or end seclusion.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "It is 03:00, a four hourly medical review is due and the patient is asleep. The doctor and seclusion co-ordinator agree it would not be appropriate to wake them.",
+  "question": "The policy allows the doctor's attendance to be replaced by a telephone call with the seclusion co-ordinator. What limit does it place on this?",
+  "options": [
+   "It can only be used once during the whole episode",
+   "No more than two consecutive four hourly medical reviews may be undertaken in this way",
+   "It can be used for any review overnight without limit",
+   "It is only permitted at weekends and on bank holidays"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy permits a telephone call with the seclusion co-ordinator to replace the doctor's attendance for a night time four hourly medical review when the patient is asleep, recorded on the SystmOne 'Seclusion Review' document, but no more than two consecutive reviews may be done this way.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "A patient is being managed under the long-term segregation (LTS) pathway.",
+  "question": "Which set of reviews matches the Trust policy for LTS?",
+  "options": [
+   "Two hourly nursing reviews, four hourly medical reviews and a weekly Multidisciplinary Team (MDT) review",
+   "Hourly documentation by observing staff, an approved clinician review every 24 hours, a weekly MDT review including an Independent Mental Health Advocate (IMHA) or Independent Mental Capacity Advocate (IMCA) if the patient has one, and four weekly reviews by a professional not involved with the case",
+   "Daily approved clinician review and a monthly MDT review only",
+   "15 minute observation records and a fortnightly independent review"
+  ],
+  "correctIndex": 1,
+  "rationale": "The LTS section sets out hourly documentation of the patient's condition by observing staff, physical health monitoring as per care plan, an approved clinician review every 24 hours, a weekly MDT review including an IMHA or IMCA if the patient has one, and four weekly reviews by a professional not involved with the case.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "Long-term segregation (LTS) for a patient has now continued for more than three months.",
+  "question": "What additional review does Trust policy require, and who arranges it?",
+  "options": [
+   "A Care Quality Commission inspection, arranged by the Trust board",
+   "An extra internal Multidisciplinary Team (MDT) review, arranged by the Responsible Clinician (RC)",
+   "External three monthly reviews arranged by the ward manager, including a professional from outside the Trust, an Independent Mental Health Advocate (IMHA) where possible and a commissioner where appropriate",
+   "A second opinion appointed doctor visit, arranged by the Mental Health Act office"
+  ],
+  "correctIndex": 2,
+  "rationale": "Where LTS continues for more than 3 months the policy requires external three monthly reviews to be arranged by the ward manager, including a professional from outside the Trust, an IMHA where possible and a commissioner where appropriate.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": null,
+  "question": "How must long-term segregation (LTS) be recorded on DATIX under Trust policy?",
+  "options": [
+   "As a Moderate incident, the same as seclusion",
+   "As a Major incident, categorised as a restrictive practice",
+   "As a Low incident for information only",
+   "It is not recorded on DATIX, only in the Electronic Patient Record"
+  ],
+  "correctIndex": 1,
+  "rationale": "The LTS record keeping section states the practice must be recorded via DATIX as Major and as a Restrictive Practice. This is a step up from the Moderate DATIX required at the start of a seclusion episode.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "A patient in seclusion at the Radbourne Unit needs intramuscular lorazepam.",
+  "question": "How does the June 2025 Trust procedure say this is managed?",
+  "options": [
+   "It is kept in the ambient cupboard in the seclusion suite with the other emergency medication",
+   "It is collected from the on-site pharmacy by the bleep holder",
+   "Because it needs refrigeration, it is prepared on the patient's ward and transported to the seclusion suite in a green EVO bag provided by Pharmacy",
+   "It is not permitted in seclusion, so an oral alternative must be used"
+  ],
+  "correctIndex": 2,
+  "rationale": "The June 2025 procedure explains that intramuscular lorazepam needs refrigeration, so it is prepared on the patient's ward and transported to the seclusion suite in a green EVO bag provided by Pharmacy. Other stock injectables and emergency medicines sit in an ambient cupboard in the seclusion suite accessed by a key safe.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "For a second time, the team judge it is not safe to enter the seclusion room to carry out a review.",
+  "question": "What does Trust policy require next?",
+  "options": [
+   "Escalate to the bleep holder, who determines the further escalation route such as the Area Service Manager or on-call manager, and consider completing a DATIX",
+   "Skip the review and record it as not required",
+   "End the seclusion immediately",
+   "Wait until the next scheduled review and try again"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy says reviews should be carried out in the seclusion room where safe and therapeutic, and if it is deemed not safe to enter on more than one occasion the team must escalate to the bleep holder, who determines the further escalation route, with a DATIX also to be considered.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "The team are considering tear-proof clothing for a patient in seclusion with a very high risk of using shredded clothing to self-harm.",
+  "question": "What does the Trust policy require before this is used, and where is it recorded?",
+  "options": [
+   "The nurse in charge can decide, recorded in the case notes",
+   "An individualised Multidisciplinary Team (MDT) risk assessment, with the use recorded in the 'Seclusion Support Plan'",
+   "Approval from the Head of Nursing, recorded on DATIX",
+   "It is a standard precaution for all patients in seclusion so no separate assessment is needed"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires an individualised risk assessment by the MDT before tear-proof clothing is used, records that use in the 'Seclusion Support Plan', and states it must never be a first line response, never substitute for enhanced observation, and never be a blanket rule within a service.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ },
+ {
+  "category": "Trust Policy - Seclusion & Segregation",
+  "difficulty": "Hard",
+  "scenario": "The first 24 hour Multidisciplinary Team (MDT) review has taken place and seclusion is continuing.",
+  "question": "What is the medical review requirement from that point onwards under Trust policy?",
+  "options": [
+   "Medical reviews continue every four hours",
+   "Medical reviews are only required if the nursing team request one",
+   "Medical reviews must take place at least twice in every 24 hours",
+   "Medical reviews reduce to once every 24 hours alongside the MDT review"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states medical reviews must take place at least twice every 24 hours after the initial MDT review, while nursing reviews stay two hourly and MDT reviews continue at least once every 24 hours.",
+  "source": "Derbyshire Healthcare - Seclusion and Long-Term Segregation, Psychiatric Emergency Policy and Procedure",
+  "sourceDate": "Nov 2024, issue 9, review Nov 2027 (version control amended 18 Apr 2026)"
+ }
+]

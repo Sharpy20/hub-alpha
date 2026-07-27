@@ -1,0 +1,539 @@
+[
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "scenario": "A patient subject to a Community Treatment Order has been recalled and has just walked onto your ward.",
+  "question": "Under the trust's Community Treatment Order (CTO) policy, which form must the nurse in charge complete when a recalled patient arrives on the ward?",
+  "options": [
+   "Form CTO3",
+   "Form CTO4",
+   "Form CTO5",
+   "Form CTO12"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that when the patient arrives on the ward the nurse in charge must complete Form CTO4, which is then sent with a copy of the CTO3 to the Mental Health Act Office. CTO3 is the recall notice completed by the Responsible Clinician and CTO5 is the revocation form.",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "question": "A patient recalled under a Community Treatment Order (CTO) can be held for up to 72 hours. Under trust policy, what starts that 72-hour clock?",
+  "options": [
+   "The time the Responsible Clinician signed the CTO3 recall notice",
+   "The time the recall notice was served on the patient",
+   "The time recorded by ward staff on Form CTO4",
+   "Midnight following the patient's arrival"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy is explicit that the 72-hour period of recall begins from the time recorded on the CTO4, which is the time the patient arrived at hospital. This same time and date is then asked for on the CTO5 if the CTO is revoked.",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "A Community Treatment Order recall notice cannot be handed to the patient, so a member of the care team delivers it by hand to their usual address at noon on a Saturday.",
+  "question": "Under the trust's Community Treatment Order (CTO) policy, when is that recall notice deemed to have been served?",
+  "options": [
+   "Immediately, as it reached the address",
+   "Just after midnight at the start of the following day, even though it is a weekend",
+   "At noon on the next working day, so Monday",
+   "On the second working day after delivery"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that a notice delivered by hand to the patient's usual or last known address is deemed served at the start of the following day, so a notice delivered at noon is served immediately after midnight even if it is a weekend or bank holiday. This matters because the patient is only AWOL from the point the notice is deemed served.",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "A recall notice names one hospital, but by the time a bed is found it is on a different unit.",
+  "question": "What does the trust's Community Treatment Order (CTO) policy require in this situation?",
+  "options": [
+   "The recall stands and the Mental Health Act Office is told retrospectively",
+   "A new Form CTO3 must be completed naming the hospital the patient is actually returned to",
+   "Form CTO6 is completed to authorise the change of hospital",
+   "Verbal agreement with the bed flow co-ordinator is sufficient"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that if a bed is identified in any hospital other than the one named on the recall notice a new CTO3 must be completed, because recall will be unlawful if the hospital on the notice is not the one the patient is returned to, leaving no authority for conveyance or detention.",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "A recalled patient remains too unwell to return home and the team is considering revoking the Community Treatment Order.",
+  "question": "By when must the assessment be done and Form CTO5 completed, according to trust policy?",
+  "options": [
+   "Within 24 hours of the patient arriving",
+   "During the 72-hour recall period",
+   "Within 7 days of admission",
+   "Before the next multidisciplinary team (MDT) meeting"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states the patient must be assessed and the CTO5 revoke form completed during the 72-hour recall period, and that if more than 72 hours have passed since recall the CTO cannot be revoked. Revocation also needs the agreement of an Approved Mental Health Professional (AMHP).",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "A patient is about to be discharged from your ward onto a Community Treatment Order.",
+  "question": "What does the trust policy expect ward staff to make sure happens around review by the Community Responsible Clinician (RC)?",
+  "options": [
+   "The patient is seen by the Community RC before discharge, or an outpatient appointment is booked within one month of discharge onto the CTO",
+   "The patient is seen by the Community RC within 72 hours of discharge",
+   "An outpatient appointment is booked within three months of discharge",
+   "The care co-ordinator visits within 7 days and the RC reviews at the next renewal"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy places this duty on ward staff so that the Community RC can review treatment and either complete a CTO12 or request a Second Opinion Appointed Doctor (SOAD) from the Care Quality Commission. Section 132A rights must also be explained and the completed form sent to the Mental Health Act Office within one month of discharge.",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "question": "Under the trust's Community Treatment Order (CTO) policy, how must the Responsible Clinician (RC) examine the patient when renewing a CTO?",
+  "options": [
+   "By video call where the patient is well known to the team",
+   "Face to face, with no exceptions",
+   "By telephone if the care co-ordinator has seen the patient recently",
+   "Face to face only where the Approved Mental Health Professional (AMHP) asks for it"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that CTO renewals must be conducted face to face and that there are no exceptions to this, following the case law Derbyshire Healthcare v Secretary of State for Health and Social Care. The RC must examine the patient and decide whether the criteria for extension are met.",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "question": "A Responsible Clinician (RC) wants to alter or suspend the conditions of a Community Treatment Order (CTO). Which trust form is used?",
+  "options": [
+   "Form CTO1",
+   "Form CTO2",
+   "Form CTO7",
+   "Form CTO12"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says the RC may alter or suspend the conditions by completing Form CTO2, which is returned to the Mental Health Act Office, who then write to the patient with the changes and a copy of the form. CTO1 makes the order and CTO7 extends it.",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "A Community Treatment Order is due to expire and a managers review hearing will be needed.",
+  "question": "How far ahead of the section expiry date should the completed CTO7 plus the medical and social circumstances reports reach the Mental Health Act Administrator (MHAA)?",
+  "options": [
+   "At least 1 week before",
+   "At least 2 weeks before",
+   "At least 4 weeks before",
+   "At least 8 weeks before"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says a managers review hearing should be held before the section expiry date, so the completed CTO7 and reports should be received by the MHAA at least 4 weeks beforehand. The Mental Health Act Office also notifies the RC of the two-month expiry date.",
+  "source": "Derbyshire Healthcare - Community Treatment Order Policy MHA 1983",
+  "sourceDate": "June 2024, issue 06, review June 2027"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "scenario": "A detained patient on your ward is entitled to section 117 aftercare and discharge is being planned.",
+  "question": "Under the joint section 117 policy, who arranges the aftercare planning meeting?",
+  "options": [
+   "The Integrated Care Board",
+   "Ward staff",
+   "The patient's solicitor",
+   "The Mental Health Act Office"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states plainly that this meeting will be arranged by ward staff, and that thought must be given to how the person can best be supported to take part, for example easy read material, extra preparation time or advocacy.",
+  "source": "Derbyshire Healthcare - Section 117 (after-care policy): Joint Policy, Procedure and Practice Guidance for After-care under s.117 Mental Health Act 1983",
+  "sourceDate": "Jan 2026, issue 7, review Dec 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "question": "Under the joint section 117 policy, how far before the expected discharge date should the pre-discharge planning meeting be held as a minimum?",
+  "options": [
+   "1 week",
+   "2 weeks",
+   "4 weeks",
+   "6 weeks"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy sets a minimum of 4 weeks before the expected discharge date, and sooner if the plan is likely to involve aftercare elements that will take longer than four weeks to finalise. The meeting must be clearly recorded as a section 117 pre-discharge meeting.",
+  "source": "Derbyshire Healthcare - Section 117 (after-care policy): Joint Policy, Procedure and Practice Guidance for After-care under s.117 Mental Health Act 1983",
+  "sourceDate": "Jan 2026, issue 7, review Dec 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "You are checking the invite list for a section 117 aftercare planning meeting.",
+  "question": "Which of these does the joint section 117 policy list as a must-attend at that meeting?",
+  "options": [
+   "The Ward Named Nurse",
+   "The Mental Health Act Administrator",
+   "The patient's GP",
+   "The ward manager"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy's must-attend list is the person entitled to aftercare and/or their carer or representative, the Responsible Clinician, a representative from Social Care, the Ward Named Nurse, and community named professionals as appropriate. An Independent Mental Health Advocate (IMHA) should be invited, and if an IMHA is not used the reasons must be documented in the case notes.",
+  "source": "Derbyshire Healthcare - Section 117 (after-care policy): Joint Policy, Procedure and Practice Guidance for After-care under s.117 Mental Health Act 1983",
+  "sourceDate": "Jan 2026, issue 7, review Dec 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "The section 117 aftercare planning meeting has finished and the plan has been agreed.",
+  "question": "Under the joint policy, who completes and circulates the care plan, and within what time?",
+  "options": [
+   "The Ward Named Nurse, within 5 working days",
+   "The Care Co-ordinator, within 10 working days of the meeting",
+   "The Responsible Clinician, within 14 days",
+   "Social Care, before the patient leaves the ward"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy makes the Care Co-ordinator responsible for completion and circulation of the care plan within 10 working days of the meeting. A copy of the Discharge Care Plan must then be attached by the social worker to the 'Form A' Agreement of Section 117 Entitlement.",
+  "source": "Derbyshire Healthcare - Section 117 (after-care policy): Joint Policy, Procedure and Practice Guidance for After-care under s.117 Mental Health Act 1983",
+  "sourceDate": "Jan 2026, issue 7, review Dec 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "A patient has just been placed on section 3 on your ward.",
+  "question": "Under the joint section 117 policy, who adds the marker to the electronic patient record showing the person is now section 117 entitled?",
+  "options": [
+   "The Mental Health Act Administrator",
+   "The Approved Mental Health Professional who made the application",
+   "The named nurse for an inpatient, or the care co-ordinator for a community patient",
+   "The Integrated Care Board's continuing care team"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says the appropriate healthcare professional, usually the named nurse if an inpatient or the care co-ordinator if a community patient, adds a marker to the electronic patient record that the person is now section 117 entitled. Local Authority systems separately record the legal status using the Advanced Mental Health Professional monitoring form.",
+  "source": "Derbyshire Healthcare - Section 117 (after-care policy): Joint Policy, Procedure and Practice Guidance for After-care under s.117 Mental Health Act 1983",
+  "sourceDate": "Jan 2026, issue 7, review Dec 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "scenario": "A review has concluded that a person no longer needs section 117 aftercare.",
+  "question": "Under the joint policy, what must happen for entitlement to be validly ended?",
+  "options": [
+   "The Responsible Clinician records the decision in the electronic patient record",
+   "Form B, discharge from section 117, is completed and signed by representatives of both Health and Social Services",
+   "The care co-ordinator writes to the person and closes the case",
+   "The Integrated Care Board authorises the end of funding"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires the decision to be taken at a review and recorded on Form B, signed by representatives of Health and Social Services, with copies to the Mental Health Act Manager at the relevant Trust and the Finance Manager at the relevant Local Authority. Ending entitlement is a joint decision and no single agency can make it alone.",
+  "source": "Derbyshire Healthcare - Section 117 (after-care policy): Joint Policy, Procedure and Practice Guidance for After-care under s.117 Mental Health Act 1983",
+  "sourceDate": "Jan 2026, issue 7, review Dec 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "scenario": "A Mental Health Tribunal has been listed for a detained patient on your ward.",
+  "question": "Under trust policy, who should write the nursing report?",
+  "options": [
+   "The ward manager, as the accountable person",
+   "The Mental Health Act Administrator",
+   "The named nurse, or a nurse with good knowledge of the patient",
+   "The Responsible Clinician, with a nursing countersignature"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says the nursing report describes the patient's presentation on the ward and should be produced by the named nurse or a nurse with good knowledge of the patient. It is required for inpatients only.",
+  "source": "Derbyshire Healthcare - Mental Health Tribunal Policy and Procedures",
+  "sourceDate": "September 2025, issue 04, review September 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "question": "Under the trust Mental Health Tribunal policy, within what period of the date of application must tribunal reports be submitted to the Mental Health Act Administrator (MHAA)?",
+  "options": [
+   "Within 1 week",
+   "Within 3 weeks",
+   "Within 6 weeks",
+   "By 14 days before the hearing"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy places a statutory duty on the Trust to provide the hospital statement, medical, social circumstances and nursing reports, and these must reach the MHAA within 3 weeks of the date of application so they can be sent on to the tribunal office in time. If reports are late the tribunal can issue an Order, and then a summons or a fine.",
+  "source": "Derbyshire Healthcare - Mental Health Tribunal Policy and Procedures",
+  "sourceDate": "September 2025, issue 04, review September 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "A section 2 tribunal hearing is listed for Monday morning.",
+  "question": "Under trust policy, when must the reports be in?",
+  "options": [
+   "By 16:00 on the Wednesday before, as section 2 reports go to the tribunal 48 hours before the hearing",
+   "Three weeks before the hearing, as for all other sections",
+   "By close of play on the Friday before",
+   "On the morning of the hearing"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy gives this exact worked example: section 2 reports must be submitted to the tribunal 48 hours before the hearing, so for a Monday morning hearing they are required by 16:00 on the Wednesday. Section 2 reports go to the dedicated section 2 email address on receipt.",
+  "source": "Derbyshire Healthcare - Mental Health Tribunal Policy and Procedures",
+  "sourceDate": "September 2025, issue 04, review September 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "You are chasing the reports for a tribunal and want to know who is producing what.",
+  "question": "Under trust policy, who produces the social circumstances report?",
+  "options": [
+   "The Mental Health Act team",
+   "The Responsible Clinician",
+   "The Care Co-ordinator, Community Psychiatric Nurse (CPN) or social worker",
+   "The named nurse"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy splits the reports as follows: the Mental Health Act team produce Part A, the factual statement; the Responsible Clinician produces the clinical report; the Care Co-ordinator, CPN or social worker produces the social circumstances report; and the named nurse produces the nursing report for inpatients.",
+  "source": "Derbyshire Healthcare - Mental Health Tribunal Policy and Procedures",
+  "sourceDate": "September 2025, issue 04, review September 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "A face to face tribunal is being held on the ward tomorrow.",
+  "question": "As well as submitting them to the tribunal, what does trust policy say should be available on the day?",
+  "options": [
+   "2 copies of the reports",
+   "3 copies of the reports",
+   "4 copies of the reports",
+   "One copy for the judge only"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says that for face to face hearings, 4 copies of the reports should be available on the day in addition to submitting them to the tribunal. For video hearings the tribunal office distributes them to the panel members.",
+  "source": "Derbyshire Healthcare - Mental Health Tribunal Policy and Procedures",
+  "sourceDate": "September 2025, issue 04, review September 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "A patient with a tribunal listed says they would rather attend in person than by video.",
+  "question": "Under trust policy, whose job is it to pass that preference on, and by when for a case other than section 2?",
+  "options": [
+   "The solicitor, at any point before the hearing",
+   "The ward where the patient is residing, telling the Mental Health Act team, with the tribunal wanting to know 14 days before the hearing",
+   "The Responsible Clinician, on the HQ1 form",
+   "The Mental Health Act Administrator, 72 hours before the hearing"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy makes it the responsibility of the ward where the patient is residing, or the clinical team if the patient is in the community, to tell the Mental Health Act team the patient's preference. For cases other than section 2 the tribunal wants to know 14 days before the hearing; for section 2 it is 72 hours. Where a patient has no preference the default is video.",
+  "source": "Derbyshire Healthcare - Mental Health Tribunal Policy and Procedures",
+  "sourceDate": "September 2025, issue 04, review September 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "scenario": "A student on placement asks you who will be sitting on the tribunal panel.",
+  "question": "According to trust policy, who makes up the three-person Mental Health Tribunal panel?",
+  "options": [
+   "A judge, a tribunal doctor independent of the Trust, and a lay person with specialist knowledge of mental health",
+   "A judge, the patient's Responsible Clinician, and an Independent Mental Health Advocate",
+   "Three Associate Hospital Managers",
+   "A judge, a solicitor and a social worker"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy describes the panel as a judge who chairs the hearing, a tribunal doctor who is independent from the Trust, and a lay person with specialist knowledge of mental health. It also notes that the burden is on those arguing for continued detention to prove their case, not on the patient to disprove it.",
+  "source": "Derbyshire Healthcare - Mental Health Tribunal Policy and Procedures",
+  "sourceDate": "September 2025, issue 04, review September 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "The tribunal has finished and the patient wants to know the outcome in writing.",
+  "question": "What does trust policy say happens after the hearing?",
+  "options": [
+   "A written decision is handed out on the day and the nurse in charge explains it",
+   "A brief verbal decision is given on the day, with the written decision following about 7 days later",
+   "The decision is issued in writing within 24 hours by the Mental Health Act Office",
+   "The decision is given in writing only, about 28 days later"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says a brief verbal decision should be given on the day, followed in writing approximately 7 days after the tribunal. The Mental Health Act Administrator uploads the decision onto the electronic patient record, and the solicitor is responsible for explaining the decision and the right to appeal to the patient.",
+  "source": "Derbyshire Healthcare - Mental Health Tribunal Policy and Procedures",
+  "sourceDate": "September 2025, issue 04, review September 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "scenario": "A detained patient has left the ward without leave and is believed to be at a relative's house, where staff have been refused entry.",
+  "question": "Under the joint section 135 policy, who should apply for the section 135(2) warrant?",
+  "options": [
+   "The police, on the ward's behalf",
+   "The patient's Ward Manager or a nominated deputy, the Responsible Clinician, or the Care Co-ordinator",
+   "The Mental Health Act Office",
+   "Any registered nurse on duty"
+  ],
+  "correctIndex": 1,
+  "rationale": "Trust policy requires that wherever practicable the application is made by the patient's Ward Manager (or a nominated deputy), the Responsible Clinician or the Care Co-ordinator, and that the applicant knows the patient's circumstances well enough to answer the magistrate's questions. The policy also notes that Derbyshire Constabulary will not apply for section 135 warrants.",
+  "source": "Derbyshire Healthcare - Joint Policy for the Operation of Section 135 Mental Health Act 1983",
+  "sourceDate": "September 2023, issue 03, review September 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "question": "Under the joint section 135 policy, how long is a section 135(2) warrant valid for?",
+  "options": [
+   "7 days from issue",
+   "14 days from issue",
+   "28 days, including the date it was signed and issued by the magistrate",
+   "Until the patient is returned, with no fixed limit"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states the warrant is valid for 28 days including the date on which it was signed and issued by the magistrate, but that it should still be executed as a matter of urgency. It may only be served once, at the address specified on it.",
+  "source": "Derbyshire Healthcare - Joint Policy for the Operation of Section 135 Mental Health Act 1983",
+  "sourceDate": "September 2023, issue 03, review September 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "The multidisciplinary team has agreed a section 135(2) warrant is needed and you have been nominated to co-ordinate it.",
+  "question": "Under the joint section 135 policy, how is the hearing slot arranged?",
+  "options": [
+   "By telephoning the local magistrates' court on the day",
+   "By booking an appointment using the web-based Team Up calendar, and a fee is payable",
+   "By emailing the Mental Health Act Office, who book it for you",
+   "By attending the court in person to request a slot"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy directs applicants to book an appointment using the web-based Team Up calendar and notes that a fee is payable. Before applying, the co-ordinator must liaise with the police to request their assistance in executing the warrant, and paperwork goes to the court's secure email address.",
+  "source": "Derbyshire Healthcare - Joint Policy for the Operation of Section 135 Mental Health Act 1983",
+  "sourceDate": "September 2023, issue 03, review September 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "A section 135(2) warrant has just been executed and the patient has been returned to the ward.",
+  "question": "Under the joint section 135 policy, where must copies of the warrant end up?",
+  "options": [
+   "With the police only",
+   "With the occupier of the premises (or left at the address if empty), with the police, and in the electronic patient record",
+   "In the paper ward file and with the Mental Health Act Office",
+   "With the magistrates' court and the Responsible Clinician"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires staff accompanying the police to ensure a copy is given to the occupier of the premises, which may be the patient, or left at the address if empty; a copy is retained by the police; and a copy is retained in the electronic patient record.",
+  "source": "Derbyshire Healthcare - Joint Policy for the Operation of Section 135 Mental Health Act 1983",
+  "sourceDate": "September 2023, issue 03, review September 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "The patient returns to the ward voluntarily before the section 135(2) warrant is used, so it is never executed.",
+  "question": "What does the joint section 135 policy require you to do with the unused warrant?",
+  "options": [
+   "Shred it once the patient is back on the ward",
+   "File it in the ward's Mental Health Act folder in case it is needed again",
+   "Return it to the issuing Court by secure email with an explanatory covering letter, and scan a copy of both onto the electronic patient record",
+   "Send it to the Mental Health Act Office, who will return it to the court"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says that if the decision is taken not to execute the warrant, or it cannot be executed while valid, the applicant must return it to the issuing Court with an explanatory covering letter using their secure email address, and a copy of the un-executed warrant and covering letter must be scanned onto the patient's electronic patient record.",
+  "source": "Derbyshire Healthcare - Joint Policy for the Operation of Section 135 Mental Health Act 1983",
+  "sourceDate": "September 2023, issue 03, review September 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "Out of hours, the consultant on call decides a detained patient needs urgent treatment under section 62 and gives the instruction over the phone.",
+  "question": "Under the trust urgent treatment policy, what must nursing staff do?",
+  "options": [
+   "Wait until the section 62 form is signed in person before giving the treatment",
+   "Record the instruction clearly on the MHA Section 62 Verbal Instruction form and in the electronic patient record, then administer the treatment",
+   "Record it in the nursing notes only and ask the Responsible Clinician to write it up at the next ward round",
+   "Ask the on-call manager to authorise it in writing first"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says that where the decision is made out of hours by the consultant on call by verbal instruction, nursing staff should clearly document this on the verbal instruction form and in the electronic patient record, and treatment should then be administered. Once signed by the Responsible Clinician or Approved Clinician the form goes to the Mental Health Act team, and the section 62 form can be completed the next working day.",
+  "source": "Derbyshire Healthcare - Mental Health Act 1983 Urgent Treatment Policy and Procedures",
+  "sourceDate": "December 2025, issue 04, review December 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "question": "Under the trust urgent treatment policy, who must be told about every single use of the urgent treatment provisions, and how?",
+  "options": [
+   "The ward manager, by handover",
+   "The Care Quality Commission, by incident report",
+   "The Mental Health Act Administration team, by completion of the urgent treatment form",
+   "The Medical Director, by email"
+  ],
+  "correctIndex": 2,
+  "rationale": "Hospital Managers must monitor use of urgent treatment so it is not used inappropriately or excessively, and the policy delegates this to the Mental Health Act Administration team, who must be informed of every use by completion of the urgent treatment form. The team then uploads the completed form to the electronic patient record.",
+  "source": "Derbyshire Healthcare - Mental Health Act 1983 Urgent Treatment Policy and Procedures",
+  "sourceDate": "December 2025, issue 04, review December 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "scenario": "You are asked to give a treatment under section 62 but the paperwork is not in place.",
+  "question": "What does the trust urgent treatment policy expect of clinical staff?",
+  "options": [
+   "Give the treatment and sort out the paperwork afterwards",
+   "Be satisfied the relevant documentation is in place before administering, seek advice from your line manager if in doubt, and Datix report any breaches",
+   "Refuse and wait for the Second Opinion Appointed Doctor (SOAD)",
+   "Ask the patient to consent in writing instead"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says that before administering any treatment prescribed under section 62 or section 64, clinical staff must be satisfied the relevant documentation is in place and should seek advice from their line manager if there is any doubt. Any breaches should be Datix reported in line with Trust policy.",
+  "source": "Derbyshire Healthcare - Mental Health Act 1983 Urgent Treatment Policy and Procedures",
+  "sourceDate": "December 2025, issue 04, review December 2028"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Medium",
+  "scenario": "A patient already detained on your ward needs to move to another hospital.",
+  "question": "Under the trust conveyance protocol, who is responsible for arranging the transport?",
+  "options": [
+   "The Approved Mental Health Professional (AMHP)",
+   "The nurse in charge of the ward",
+   "The Responsible Clinician",
+   "The bed flow co-ordinator"
+  ],
+  "correctIndex": 1,
+  "rationale": "The protocol splits this clearly: where the transfer involves a service receiver who is already detained, the nurse in charge of the ward arranges transport. Where the person is being newly detained, for example moving from a medical ward to a psychiatric ward, the AMHP is responsible for arranging conveyance.",
+  "source": "Derbyshire Healthcare - Protocol and Policy for Conveyance of Service Receivers subject to the Mental Health Act (1983)",
+  "sourceDate": "interim review, all-agency review date December 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Easy",
+  "scenario": "A patient who has been sedated needs to be conveyed to hospital.",
+  "question": "What does the trust conveyance protocol require?",
+  "options": [
+   "Transport in an ambulance, not a police vehicle, accompanied by a nurse or doctor experienced in managing such patients",
+   "Transport in a police vehicle with an ambulance following behind",
+   "Transport by taxi with two staff escorts",
+   "Transport in whichever vehicle arrives first, with a police escort"
+  ],
+  "correctIndex": 0,
+  "rationale": "The protocol is explicit that a sedated person must be transported in an ambulance and not a police vehicle, and must be accompanied by a nurse or doctor experienced in the management of such patients. Responsibility for arranging this rests with the assessing doctor, and police may support the conveyance if needed.",
+  "source": "Derbyshire Healthcare - Protocol and Policy for Conveyance of Service Receivers subject to the Mental Health Act (1983)",
+  "sourceDate": "interim review, all-agency review date December 2026"
+ },
+ {
+  "category": "Trust Policy - CTO, S117 & Tribunals",
+  "difficulty": "Hard",
+  "scenario": "A detained patient has not returned from section 17 leave and an ambulance is needed to bring them back.",
+  "question": "Under the trust conveyance protocol, what must the Responsible Clinician (RC) or delegated staff arrange?",
+  "options": [
+   "A verbal handover to the ambulance crew on arrival",
+   "Written authority to convey, scanned and emailed to ambulance control, along with the name of the authorising RC",
+   "A copy of the section 17 leave form faxed to ambulance control",
+   "Nothing extra, as the detention papers are sufficient authority"
+  ],
+  "correctIndex": 1,
+  "rationale": "The protocol requires the RC or delegated staff to arrange for ambulance control to be sent written authority to convey, scanned and emailed, and to be given the name of the authorising RC. An emergency ambulance should only be used where there is a clear clinical need, otherwise it falls under patient transport service protocols.",
+  "source": "Derbyshire Healthcare - Protocol and Policy for Conveyance of Service Receivers subject to the Mental Health Act (1983)",
+  "sourceDate": "interim review, all-agency review date December 2026"
+ }
+]

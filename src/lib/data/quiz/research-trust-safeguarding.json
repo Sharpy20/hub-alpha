@@ -1,0 +1,501 @@
+[
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "scenario": "You need to raise a safeguarding adults concern about a patient on the ward and are looking for the referral form.",
+  "question": "Under the trust's Safeguarding Adults Policy and Procedure, where does the trust tell staff the links to safeguarding adults referral forms are held?",
+  "options": [
+   "In the paper policy folder in the ward office only",
+   "They are only issued by the local authority once you have phoned them",
+   "On SystmOne, the Electronic Patient Record (EPR), which holds Safeguarding as a discrete Unit containing the relevant policy links",
+   "They are emailed out monthly by Learning and Development"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that links to Safeguarding Adults referral forms are available on the SystmOne EPR, and that SystmOne has Safeguarding as a discrete Unit holding all relevant policy links including MAPPA, MARAC and Prevent.",
+  "source": "Derbyshire Healthcare - Safeguarding Adults Policy and Procedure",
+  "sourceDate": "May 2024, issue 7, review May 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "A patient discloses recent financial abuse by a relative. The concern meets the safeguarding adults criteria.",
+  "question": "On the trust's Safeguarding Adults Pathway for recent abuse, what timescale is given for making the referral and for putting a care plan or safety plan in place?",
+  "options": [
+   "Same day",
+   "Within five working days",
+   "Within 24 to 48 hours",
+   "At the next Multidisciplinary Team (MDT) meeting"
+  ],
+  "correctIndex": 0,
+  "rationale": "The trust's Safeguarding Adults Pathway (Recent Abuse) marks both the referral and the care plan / safety plan as same day actions.",
+  "source": "Derbyshire Healthcare - Safeguarding Adults Policy and Procedure",
+  "sourceDate": "May 2024, issue 7, review May 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "question": "The trust's Safeguarding Adults policy lists situations where an untoward incident form (Datix) must be completed as well as the safeguarding referral. Which of these is one of the listed examples?",
+  "options": [
+   "Any referral where the person has given their consent",
+   "Any referral routed to Derby City rather than Derbyshire County",
+   "A referral about a patient's partner where no incident has actually occurred",
+   "Alleged or actual abuse or mistreatment by anyone employed by the Trust, or working for the Trust in any role such as a contractor"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy's incident reporting section lists abuse by anyone employed by or working for the Trust as requiring a Datix alongside the referral, and adds that where the referral relates to a third party such as a partner or family member and no incident has occurred, a Datix may not be required.",
+  "source": "Derbyshire Healthcare - Safeguarding Adults Policy and Procedure",
+  "sourceDate": "May 2024, issue 7, review May 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "You have discussed a concern with your team leader but you are both still unsure whether it meets the safeguarding threshold.",
+  "question": "According to the trust's Safeguarding Adults Pathway, who should you seek advice from at that point?",
+  "options": [
+   "The Multi-Agency Safeguarding Hub (MASH) for Derby City or social care for the county, or the Heads of Nursing / Safeguarding Lead",
+   "The Care Quality Commission",
+   "The patient's GP, who will decide whether to refer",
+   "The Trust's Learning and Development department"
+  ],
+  "correctIndex": 0,
+  "rationale": "The 'Alert' box on the trust's pathway says that if you are still unsure you should seek advice via MASH (city) or social care, or from the Heads of Nursing / Safeguarding Lead.",
+  "source": "Derbyshire Healthcare - Safeguarding Adults Policy and Procedure",
+  "sourceDate": "May 2024, issue 7, review May 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "question": "Which multi-agency risk process does the trust's Safeguarding Adults policy name specifically for Derbyshire county, alongside the safeguarding referral route?",
+  "options": [
+   "Multi-Agency Risk Assessment Conference (MARAC)",
+   "Multi Agency Public Protection Arrangements (MAPPA)",
+   "Multiagency Adult Risk Management (MARM)",
+   "The Channel panel"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy names Multiagency Adult Risk Management (MARM) as the Derbyshire process, linked from the Derbyshire Safeguarding Adults Board, in addition to the safeguarding referral routes for city and county.",
+  "source": "Derbyshire Healthcare - Safeguarding Adults Policy and Procedure",
+  "sourceDate": "May 2024, issue 7, review May 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "question": "The trust's Safeguarding Standard Operating Procedure (SOP) for SystmOne describes two ways to open the Children and Adults Safeguarding Concerns template. What are they?",
+  "options": [
+   "Via the Launch Pad (Safeguarding Concerns), or by right clicking the safeguarding node on the tree",
+   "Via the discharge summary or the handover sheet",
+   "By emailing the safeguarding team or completing a paper form",
+   "Only through the Datix incident reporting system"
+  ],
+  "correctIndex": 0,
+  "rationale": "The SOP sets out both routes: select the patient and click Launch Pad then Safeguarding Concerns, or select the patient and right click Children and Adults Safeguarding Concerns on the tree.",
+  "source": "Derbyshire Healthcare - Safeguarding Standard Operating Procedure (SystmOne)",
+  "sourceDate": "Issue 01, no issue or review date recorded on the document"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "You have completed the Children and Adults Safeguarding Concerns template on SystmOne and clicked save.",
+  "question": "What does the trust's Safeguarding Standard Operating Procedure (SOP) say you must do next?",
+  "options": [
+   "Set the entry to private so that only you can see it",
+   "Add the ward manager as a co-author of the entry",
+   "Complete the Event Details box and make sure you click Safeguarding Relevant, then confirm the warning box that appears",
+   "Select the local authority as the recipient of the entry"
+  ],
+  "correctIndex": 2,
+  "rationale": "The SOP is explicit that after saving you complete the Event Details box and ensure you click Safeguarding Relevant, then agree to the warning box that pops up.",
+  "source": "Derbyshire Healthcare - Safeguarding Standard Operating Procedure (SystmOne)",
+  "sourceDate": "Issue 01, no issue or review date recorded on the document"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "A note you wrote yesterday turns out to be safeguarding relevant, but it was not flagged at the time.",
+  "question": "What does the trust's Safeguarding Standard Operating Procedure (SOP) say about this?",
+  "options": [
+   "The entry must be deleted and rewritten from scratch",
+   "Nothing can be changed once an entry has been saved",
+   "Only the safeguarding team can amend an entry after saving",
+   "An entry can be retrospectively marked as Safeguarding Relevant, by right clicking it in the tabbed journal and confirming"
+  ],
+  "correctIndex": 3,
+  "rationale": "The SOP says any entry relating to safeguarding should be saved as Safeguarding Relevant, and that an entry can be retrospectively marked as Safeguarding Relevant from the tabbed journal by right clicking it.",
+  "source": "Derbyshire Healthcare - Safeguarding Standard Operating Procedure (SystmOne)",
+  "sourceDate": "Issue 01, no issue or review date recorded on the document"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "question": "Which situation does the trust's Safeguarding Children Procedures give as an example where an untoward incident form (Datix) must be completed as well as the safeguarding referral?",
+  "options": [
+   "All incidents where a child has sustained a significant unexplained or suspicious injury",
+   "Any concern raised about a child's school attendance",
+   "Any occasion where a child visits an adult inpatient ward",
+   "Any referral where the family have given their consent"
+  ],
+  "correctIndex": 0,
+  "rationale": "The trust's incident reporting section lists unexpected or suspicious child deaths, significant unexplained or suspicious injuries, all incidents involving a member of Trust staff, incidents relating to treatment or interventions, risk of FGM, slavery or honour based violence, and organisational abuse.",
+  "source": "Derbyshire Healthcare - Safeguarding Children Procedures",
+  "sourceDate": "May 2024, issue 2, Trust routine 3 yearly review"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "question": "How does the trust expect staff to use the Derby and Derbyshire safeguarding children procedures?",
+  "options": [
+   "Print a copy at the start of the year and keep it in the ward folder",
+   "Use the web-enabled procedures on the day required rather than printing and saving them, because they are updated regularly",
+   "Rely on the printed version handed out at Trust induction",
+   "Ask the ward manager to confirm the current wording each time"
+  ],
+  "correctIndex": 1,
+  "rationale": "The procedures are the Derby and Derbyshire Safeguarding Children Partnership's web-enabled procedures, updated by the partnership as guidance changes, and the document strongly recommends using them for the day required rather than printing and saving, as they go out of date quickly. Staff are also asked to register for Tri-x alerts.",
+  "source": "Derbyshire Healthcare - Safeguarding Children Procedures",
+  "sourceDate": "May 2024, issue 2, Trust routine 3 yearly review"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "question": "Which role holds the post of Trust Prevent Lead at this trust?",
+  "options": [
+   "The Medical Director",
+   "The Head of Nursing for Adult Acute Inpatient Services",
+   "The Chief Executive",
+   "The Assistant Director for Safeguarding Adults"
+  ],
+  "correctIndex": 3,
+  "rationale": "The trust's Prevent policy names the Assistant Director for Safeguarding Adults as the Trust Prevent Lead, working alongside the Trust Safer Care Co-ordinator (Prevent Co-ordinator) and the Assistant Director for Safeguarding Children.",
+  "source": "Derbyshire Healthcare - Safeguarding Individuals Vulnerable to Extremism (Contest, Prevent and Channel) Policy and Procedure",
+  "sourceDate": "January 2024, issue 5, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "scenario": "It is 11pm and you identify what you believe is an immediate threat relating to radicalisation.",
+  "question": "What does the trust's Prevent policy tell you to do out of hours?",
+  "options": [
+   "Complete a Datix and leave it for the safeguarding team to pick up on Monday",
+   "Email the police Prevent Team and wait for a reply",
+   "Contact the First On-Call Manager and quote 'Channel', passing on all relevant information so they can raise the alert with Derbyshire Constabulary",
+   "Contact the local authority out of hours social care duty team"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says that out of hours staff should contact the First On-Call Manager and quote 'Channel'. The On Call Manager is then able to contact the relevant people at Derbyshire Constabulary, so all relevant information must be passed to them.",
+  "source": "Derbyshire Healthcare - Safeguarding Individuals Vulnerable to Extremism (Contest, Prevent and Channel) Policy and Procedure",
+  "sourceDate": "January 2024, issue 5, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "question": "What does the trust's Prevent policy say happens after a referral is discussed at Channel Panel?",
+  "options": [
+   "The referring nurse records the outcome in the ward diary",
+   "The panel meets monthly, and the Trust Prevent Lead makes an entry on the Electronic Patient Record (EPR) summarising the discussion, within the Safeguarding Unit on SystmOne",
+   "No record is made, because Channel information cannot be held in health records",
+   "The panel meets weekly and emails the outcome directly to the ward"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that referrals are discussed at Channel Panel, which meets monthly, and that following the meeting the Trust Prevent Lead makes an EPR entry summarising the main points within the Safeguarding Unit on SystmOne. The panel decides whether the person meets the threshold for adoption to Channel.",
+  "source": "Derbyshire Healthcare - Safeguarding Individuals Vulnerable to Extremism (Contest, Prevent and Channel) Policy and Procedure",
+  "sourceDate": "January 2024, issue 5, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "question": "Which two Prevent training packages does the trust's policy name as provided through Learning and Development?",
+  "options": [
+   "Prevent Level 1 and Prevent Level 2",
+   "Safeguarding Level 3 and Safeguarding Level 4",
+   "Contest Foundation and Channel Awareness",
+   "Basic Prevent Awareness Training (BPAT) and Workshop to Raise Awareness of Prevent (WRAP)"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy requires line managers to ensure staff attend the appropriate BPAT (Basic Prevent Awareness Training) and WRAP (Workshop to Raise Awareness of Prevent) training provided by the Trust's Learning and Development department. Non-clinical staff undertake Prevent e-learning, and all new staff receive Prevent information in the safeguarding presentation at Trust induction.",
+  "source": "Derbyshire Healthcare - Safeguarding Individuals Vulnerable to Extremism (Contest, Prevent and Channel) Policy and Procedure",
+  "sourceDate": "January 2024, issue 5, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "scenario": "A detained patient managed under Multi Agency Public Protection Arrangements (MAPPA) is being considered for their first period of unescorted leave.",
+  "question": "What does the trust's MAPPA policy require at this point?",
+  "options": [
+   "A MAPPA I notification form completed or updated before first unescorted leave, and again after the first Care Programme Approach (CPA) or Care and Treatment Plan (CTP) meeting where discharge or release is discussed",
+   "Nothing until the point of discharge",
+   "A notification only if the patient is detained under section 37/41",
+   "A routine notification every three months regardless of leave status"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy requires a MAPPA I form before first unescorted leave and after the first CPA or CTP meeting where discharge is discussed. It is also required before first escorted leave where there is a high risk of abscond, very high risk of harm or significant public interest, and before extended leave of absence. It goes to the MAPPA Co-ordinator for the local area and for the patient's home area.",
+  "source": "Derbyshire Healthcare - Multi Agency Public Protection Panel (MAPPA) Policy and Procedure",
+  "sourceDate": "May 2025, issue 4, review March 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "question": "Before referring a case for Multi Agency Public Protection Arrangements (MAPPA) level 2 or 3 management, what does the trust's policy recommend?",
+  "options": [
+   "Complete the MAPPA A referral form and let the ward manager decide",
+   "Complete a MAPPA Q screening form to check the case meets the threshold, and hold a discussion with the Assistant Director for Safeguarding Adults before the referral is made",
+   "Complete a MAPPA I form and discuss it with the responsible clinician",
+   "Raise a Datix and let the on call manager decide"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy recommends the MAPPA Q form for screening or thresholding a case, and a discussion with the Assistant Director for Safeguarding Adults before a referral is made. The Derbyshire MAPPA Unit then uses the National MAPPA Referral Form (MAPPA A).",
+  "source": "Derbyshire Healthcare - Multi Agency Public Protection Panel (MAPPA) Policy and Procedure",
+  "sourceDate": "May 2025, issue 4, review March 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "You have attended a Multi Agency Public Protection Arrangements (MAPPA) meeting about a patient and have been given the meeting paperwork.",
+  "question": "What does the trust's MAPPA policy say about that paperwork and the clinical record?",
+  "options": [
+   "The MAPPA minutes must be scanned into the patient's record in full",
+   "MAPPA documents are restricted and should not be uploaded to clinical records, but a summary of the risks, the discussion and the actions should be entered into the clinical record after the meeting",
+   "Nothing about MAPPA may be recorded in the clinical record at all",
+   "A clinical record must be opened for every person discussed at MAPPA"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says MAPPA documents are restricted and should not be uploaded to clinical records, while a summary of risks, discussion and actions should be entered after the meeting. It also states that if the person discussed does not already have a clinical record, there is no need to open one.",
+  "source": "Derbyshire Healthcare - Multi Agency Public Protection Panel (MAPPA) Policy and Procedure",
+  "sourceDate": "May 2025, issue 4, review March 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "scenario": "A restricted patient fails to return from a period of permitted leave.",
+  "question": "Under the trust's MAPPA policy, who is responsible for informing the police, and when?",
+  "options": [
+   "The responsible clinician, on the next working day",
+   "The MAPPA Co-ordinator, once the ward has notified them",
+   "Nobody until the patient has been missing for 24 hours",
+   "The nurse in charge, immediately, passing the information to the local police force and including details of any known victims who may be at risk"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy places this duty on the nurse in charge for any restricted patient who escapes, absconds while on escorted leave, or fails to return from permitted leave, and says the information must be passed immediately to the local police force with information about any known victims at risk.",
+  "source": "Derbyshire Healthcare - Multi Agency Public Protection Panel (MAPPA) Policy and Procedure",
+  "sourceDate": "May 2025, issue 4, review March 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "question": "Under the trust's MAPPA policy, what should staff do when they identify an immediate threat?",
+  "options": [
+   "Record it in the notes and raise it at the next Multidisciplinary Team (MDT) meeting",
+   "Contact Derbyshire Constabulary and complete a Datix incident report, contacting the On Call Manager out of hours for support and advice",
+   "Contact the MAPPA Co-ordinator and take no further action",
+   "Contact the Trust Caldicott Guardian for a decision"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Immediate Threats section of the policy directs staff to contact Derbyshire Constabulary and complete a Datix incident report, with the On Call Manager contacted out of hours for support and advice.",
+  "source": "Derbyshire Healthcare - Multi Agency Public Protection Panel (MAPPA) Policy and Procedure",
+  "sourceDate": "May 2025, issue 4, review March 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "scenario": "An allegation of sexually inappropriate behaviour is made against a member of staff.",
+  "question": "What does the trust's Sexual Safety and Personal Boundaries policy require?",
+  "options": [
+   "A local management investigation first, with the police involved only if the allegation is substantiated",
+   "A Datix only, since staff conduct is handled entirely by People Services",
+   "The incident must be reported to the Police and a safeguarding referral made, and the matter is investigated under the PIPOT and LADO processes and professional standards",
+   "The matter should be worked through in the staff member's clinical supervision"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that all sexual safety incidents involving allegations against staff should be reported to the Police and a safeguarding referral made, and that any breach or potential breach of sexual boundaries between staff and a person using services will be investigated under the PIPOT (Person in a Position of Trust) and LADO processes, with the Police notified.",
+  "source": "Derbyshire Healthcare - Sexual Safety and Personal Boundaries Policy and Procedure",
+  "sourceDate": "June 2024, issue 2, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "scenario": "You are writing up a sexual safety incident in the clinical record and on Datix.",
+  "question": "Which term does the trust's Sexual Safety and Personal Boundaries policy tell staff to use for the person the allegation is about?",
+  "options": [
+   "Suspect",
+   "Person alleged to have caused harm",
+   "Perpetrator",
+   "Offender"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy's definition of 'allegation' sets out the presumption of innocence and states that when recording a sexual safety incident in clinical records or Datix, staff must use the terminology 'person alleged to have caused harm'.",
+  "source": "Derbyshire Healthcare - Sexual Safety and Personal Boundaries Policy and Procedure",
+  "sourceDate": "June 2024, issue 2, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "A patient discloses that they have just been sexually assaulted by another patient on the ward.",
+  "question": "Which set of immediate actions matches the trust's Sexual Safety and Personal Boundaries policy?",
+  "options": [
+   "Wait until the Multidisciplinary Team (MDT) ward round the next morning before taking any action",
+   "Ask both patients to write statements before contacting anyone else",
+   "Take immediate action to protect the person from further harm and establish the facts, prioritise any medical treatment needed, preserve evidence for forensic purposes as advised by the Police, obtain any CCTV footage available, and report via Datix",
+   "Move the patient to a different ward and hand the matter over at the next shift change"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy requires immediate action to protect the adult at risk and establish the facts, says medical treatment must be prioritised, that evidence must be preserved for forensic purposes as requested or advised by the Police, that CCTV should be obtained if available, and that the incident is reported via Datix with all actions documented in the clinical record.",
+  "source": "Derbyshire Healthcare - Sexual Safety and Personal Boundaries Policy and Procedure",
+  "sourceDate": "June 2024, issue 2, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "question": "Following a sexual safety incident, who does the trust's policy say should be involved in the safeguarding meeting that is held?",
+  "options": [
+   "The ward manager and the patient's named nurse only",
+   "The manager, Heads of Nursing and the Assistant Director of Safeguarding Adults, or Safeguarding Children if a child is involved, with consideration given to whether the matter sits within the PIPOT or LADO process",
+   "The Trust Board, who will decide what reporting is needed",
+   "The Police alone, who decide who else needs to attend"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says a safeguarding meeting should be held involving the manager, Heads of Nursing and the Assistant Director of Safeguarding Adults (or Safeguarding Children if child related), that consideration will be given to whether it sits within PIPOT or LADO, and that actions from that meeting must be followed up including any reporting not already done.",
+  "source": "Derbyshire Healthcare - Sexual Safety and Personal Boundaries Policy and Procedure",
+  "sourceDate": "June 2024, issue 2, review June 2027"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "scenario": "A newly admitted patient asks whether their eight year old daughter can come and visit.",
+  "question": "Which trust form must the Multidisciplinary Team (MDT) complete following the initial assessment to record the decision about the visit?",
+  "options": [
+   "The Children Visiting Mental Health Inpatient Areas Approval form, available on Focus under Approved Forms",
+   "A Datix incident report",
+   "The Section 17 leave form",
+   "The Family Feedback form for Children"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy requires the Children Visiting Mental Health Inpatient Areas Approval form to be completed by the MDT following the initial assessment, and retained on the ward so that it can be picked up in the audit undertaken by the Heads of Nursing and Safeguarding Children Service.",
+  "source": "Derbyshire Healthcare - Child Visiting to Mental Health Inpatient, Residential Areas and Community Policy and Procedure",
+  "sourceDate": "June 2025, issue 04, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "You have been allocated to supervise and observe a child's visit to their parent.",
+  "question": "What record does the trust's child visiting policy require you to complete?",
+  "options": [
+   "A verbal handover to the nurse in charge only",
+   "A Datix for every child visit",
+   "The Observation of a visit by a child with a relative in a mental health inpatient or residential area form, which is then entered into the patient's clinical records",
+   "No record is needed unless something goes wrong"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy requires appropriate and sensitive supervision so that the interaction between parent or carer and child can be observed, with the observation form (available on Focus under Approved Forms) completed by the observing staff member and entered into the patient's clinical records, and any concerns discussed at the MDT or with the Trust Safeguarding Children Service.",
+  "source": "Derbyshire Healthcare - Child Visiting to Mental Health Inpatient, Residential Areas and Community Policy and Procedure",
+  "sourceDate": "June 2025, issue 04, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "question": "Where does the trust's child visiting policy say visits by children should take place?",
+  "options": [
+   "On the ward, in the patient's own bedroom",
+   "Outside of the ward, in an environment separate from other patients and appropriate to the child's needs, the only exception being The Beeches perinatal unit where children under 12 months may be admitted with their mother",
+   "In the ward dining room, during protected mealtimes",
+   "Wherever the accompanying responsible adult prefers"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that because of the potential for distress and aggression in a ward environment, visits with children need to take place outside of the ward and in an area separate from other patients, and names The Beeches (Perinatal Unit) as the exception where children under 12 months may be admitted with their mother. All inpatient services should provide or have access to a family friendly room.",
+  "source": "Derbyshire Healthcare - Child Visiting to Mental Health Inpatient, Residential Areas and Community Policy and Procedure",
+  "sourceDate": "June 2025, issue 04, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "A patient is admitted overnight and it is not yet known whether they have children.",
+  "question": "By when does the trust's child visiting policy say information about children and family relationships must be collected, and by whom?",
+  "options": [
+   "Within the first week, by the named nurse",
+   "At the first Care Programme Approach (CPA) review, by the care coordinator",
+   "Only if the patient raises it themselves",
+   "On admission, or at the earliest opportunity within 24 hours, by the admitting nurse and doctor, as part of the initial care plan"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy states that on admission, or at the earliest opportunity within 24 hours, the admitting nurse and doctor must ensure information is collected about children and family relationships as part of the initial care plan. For informal admissions the admitting nurse also establishes who may visit and who holds parental responsibility.",
+  "source": "Derbyshire Healthcare - Child Visiting to Mental Health Inpatient, Residential Areas and Community Policy and Procedure",
+  "sourceDate": "June 2025, issue 04, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "scenario": "The clinical team conclude that a child's visit would not be in that child's best interests.",
+  "question": "Under the trust's child visiting policy, who makes that decision and how must it be recorded?",
+  "options": [
+   "The responsible clinician alone, recorded in the ward diary",
+   "The Trust Safeguarding Unit, recorded on Datix",
+   "The multidisciplinary team, on the Decision To Refuse Child Visit Form, with the decision given in writing as well as verbally. In exceptional circumstances the nurse in charge of the ward may make the decision and must discuss it with the MDT at the first available opportunity",
+   "Children's Social Care, who issue a written direction to the ward"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says decisions to refuse visits will only be taken exceptionally, must be given in writing as well as verbally, must be supported by clear evidence from risk assessment and recorded on the Decision To Refuse Child Visit Form. The decision sits with the MDT, with the nurse in charge able to make it in exceptional circumstances and discuss it with the MDT at the first opportunity.",
+  "source": "Derbyshire Healthcare - Child Visiting to Mental Health Inpatient, Residential Areas and Community Policy and Procedure",
+  "sourceDate": "June 2025, issue 04, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "scenario": "An incident occurs on the unit during a child's visit.",
+  "question": "What escalation does the trust's child visiting policy set out?",
+  "options": [
+   "Tell the ward manager the following morning",
+   "Inform Children's Social Care and take no other action",
+   "Inform the visiting adult's GP",
+   "Notify the nurse in charge immediately and take any immediate action needed for the child's safety. The nurse in charge then informs the Bleep-holder or Night Co-ordinator, the Heads of Nursing and the Trust Safeguarding Children Service, and a Datix is completed"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy's inpatient incident management guidance requires immediate notification of the nurse in charge, who informs the Bleep-holder or Night Co-ordinator, Heads of Nursing and the Trust Safeguarding Children Service. The Bleep-holder informs the Service Line Manager, or the on call manager out of hours, and a Datix must be completed for any incident involving children during a visit.",
+  "source": "Derbyshire Healthcare - Child Visiting to Mental Health Inpatient, Residential Areas and Community Policy and Procedure",
+  "sourceDate": "June 2025, issue 04, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Easy",
+  "scenario": "A practitioner has just started in a service covered by the trust's safeguarding children supervision arrangements.",
+  "question": "When does the policy say they should first be seen by a Safeguarding Children Named Nurse?",
+  "options": [
+   "At their first annual appraisal",
+   "As part of their induction, within one month of coming into post, to discuss their safeguarding children supervision and training needs",
+   "Only once they have a case they want to discuss",
+   "Within six months of starting in post"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that all Health Visitors, School Nurses, Nursery Nurses, Community Nurses, Children in Care Nurses, Specialist Nurses and CAMHS workers employed by the Trust should be seen by a Safeguarding Children Named Nurse as part of their induction within one month of coming into post.",
+  "source": "Derbyshire Healthcare - Safeguarding Children Supervision Policy and Procedure",
+  "sourceDate": "Oct 2023, issue 1, review Oct 2026"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Hard",
+  "question": "What minimum frequency does the trust's Safeguarding Children Supervision policy set for 1:1 safeguarding children supervision?",
+  "options": [
+   "Annually for everyone",
+   "Monthly for everyone",
+   "On request only, with no minimum stated",
+   "A needs-led basis every 3 to 6 months, with a minimum of 3 monthly for newly qualified staff and for team leaders or managers who hold safeguarding children supervision responsibilities"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy sets 1:1 supervision on a needs-led basis every 3 to 6 months, or sooner, with a minimum of 3 monthly for newly qualified staff and the same minimum for team leaders and managers with safeguarding children supervision responsibilities. The supervision agreement repeats the minimum of 3 to 6 monthly.",
+  "source": "Derbyshire Healthcare - Safeguarding Children Supervision Policy and Procedure",
+  "sourceDate": "Oct 2023, issue 1, review Oct 2026"
+ },
+ {
+  "category": "Trust Policy - Safeguarding (local process)",
+  "difficulty": "Medium",
+  "scenario": "You have just finished a safeguarding children supervision session in which two cases were discussed.",
+  "question": "What does the trust's supervision agreement say about recording it?",
+  "options": [
+   "The supervisor records everything and the supervisee records nothing",
+   "Records are kept only in the supervision file and never go into the child's record",
+   "The supervisee records the case discussion and action plan in the child's electronic patient record, and activity data is entered onto electronic records within two working days of the activity taking place",
+   "Recording is optional where no actions were agreed"
+  ],
+  "correctIndex": 2,
+  "rationale": "The supervision agreement requires the supervisee to record the case discussion including the action plan in the child's EPR, to task the supervisor to review it if recorded after the session, and states that activity data must be entered onto electronic records within two working days. The supervisor separately records the discussion in the supervisee's file.",
+  "source": "Derbyshire Healthcare - Safeguarding Children Supervision Policy and Procedure",
+  "sourceDate": "Oct 2023, issue 1, review Oct 2026"
+ }
+]

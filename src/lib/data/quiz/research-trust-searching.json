@@ -1,0 +1,634 @@
+[
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A newly recruited healthcare assistant asks whether they are allowed to help search a patient.",
+  "question": "Under the trust's searching policy, which staff may lawfully undertake searches of patients and visitors in inpatient settings?",
+  "options": [
+   "Any registered nurse, regardless of what training they have completed",
+   "NHS staff who have completed the trust approved Positive and Safe (P&S) training",
+   "Only staff who hold a Local Security Management Specialist (LSMS) qualification",
+   "Any member of staff on shift, provided the nurse in charge agrees"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that within inpatient settings, NHS staff who have completed the trust approved Positive and Safe training can undertake lawful searches of both patients and visitors, provided the action is proportionate and justifiable to the assessed risk.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Easy",
+  "question": "What is the minimum staffing requirement for a non-intimate person search under the trust's searching policy?",
+  "options": [
+   "One member of staff of the same gender as the patient",
+   "Two members of staff, both of whom must be registered nurses",
+   "A minimum of two clinical staff, one of whom must be a registered nurse and one of the same gender as the patient",
+   "Three members of staff, including the nurse in charge of the ward"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy requires a minimum of two clinical staff for a non-intimate person search, one of whom must be a registered nurse and one of the same gender as the patient.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "Staff strongly suspect a patient has concealed items under their clothing and feel that only a full removal of clothing will find them.",
+  "question": "What does the trust's searching policy say about strip searches?",
+  "options": [
+   "They may be carried out by two trust staff of the same gender as the patient",
+   "Under no circumstances should a strip search be undertaken solely by trust staff - the police MUST be contacted so they may decide how to proceed",
+   "They may be authorised by the nurse in charge if the risk is judged immediate",
+   "They may be carried out by trust staff once the Responsible Clinician has given written consent"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy is explicit that under no circumstances should a strip search be undertaken solely by trust staff; where one is felt appropriate the police must be contacted, and any dispute is escalated to the clinical matron or on-call manager.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A detained patient refuses consent to a personal search that staff believe is necessary.",
+  "question": "According to the trust's searching policy, what is the first step when a detained patient refuses consent or lacks capacity to consent to a search?",
+  "options": [
+   "Proceed immediately with a search using physical intervention",
+   "Contact the police to conduct the search instead",
+   "Contact their Responsible Clinician (or failing that another senior clinician who knows the case) without delay, so any clinical objection to searching by force may be raised",
+   "Wait for the next Multidisciplinary Team (MDT) meeting to make the decision"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says the Responsible Clinician, or failing that another senior clinician with knowledge of the case, should be contacted without delay so any clinical objection can be raised, while the patient is kept separated and under close observation and told what is happening and why.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "An informal patient who has been assessed as having capacity refuses to be searched or to hand over items, and staff still have concerns.",
+  "question": "What does the trust's searching policy say should happen next?",
+  "options": [
+   "The consultant in charge of the patient's care is contacted and a Multidisciplinary Team (MDT) meeting is convened to discuss the possibility of discharge and removal from the ward environment",
+   "The search goes ahead anyway because informal patients have no right to refuse",
+   "The patient is automatically placed under Section 5(2) of the Mental Health Act",
+   "The nurse in charge alone decides whether to search without consent"
+  ],
+  "correctIndex": 0,
+  "rationale": "For an informal patient with capacity who refuses, the policy directs staff to contact the consultant in charge and convene an MDT meeting to discuss possible discharge and removal from the ward, with appropriate use of the Mental Health Act considered where applicable.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "question": "The trust's searching policy warns staff about a specific limitation of the handheld metal detectors used during searches. What is it?",
+  "options": [
+   "They cannot be used on patients who have metal implants",
+   "They will not pick up hypodermic needles",
+   "They must not be used on detained patients",
+   "They only work when the patient is standing still"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy specifically warns that the metal detector will not pick up hypodermic needles, and adds that detectors must only be used in addition to a physical search because they find metallic objects only, not non-metallic weapons or drugs.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "You are the nurse accountable for a search that has just been completed on an early shift.",
+  "question": "By when must the documentation actions for that search be completed under the trust's searching policy?",
+  "options": [
+   "Within 24 hours of the search",
+   "Before the next Multidisciplinary Team (MDT) meeting",
+   "As soon as possible after the search and before the end of your period of duty",
+   "Within 72 hours, in line with the incident reporting timescale"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states the nurse accountable for the search must complete a Datix incident form, complete the search record for the clinical notes and make an electronic patient record entry as soon as possible after the search and before the end of their period of duty.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A patient's belongings are removed during a search.",
+  "question": "Under the trust's searching policy, what must the patient be told and given?",
+  "options": [
+   "Nothing, as the items are no longer their property once removed",
+   "Only a verbal explanation, recorded in the ward diary",
+   "A written apology and a copy of the search policy",
+   "Why the items were removed, a receipt for them, where they will be stored and when they will be returned, all recorded in the electronic patient record"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy requires that where belongings are removed during a search the patient is told why, given a receipt, told where the items will be stored and when they will be returned, and that this is recorded in the electronic patient record.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A bottle of vodka is found in a patient's room during a search.",
+  "question": "How does the trust's searching policy say alcohol found during a search should be disposed of?",
+  "options": [
+   "Poured down the sink by two staff members, with the patient present if they wish, and the disposal documented in the clinical record",
+   "Locked in the ward safe and returned to the patient on discharge",
+   "Handed to the Local Security Management Specialist for disposal",
+   "Sent to the pharmacy department for destruction"
+  ],
+  "correctIndex": 0,
+  "rationale": "The removal of items table in the policy states alcohol is disposed of by two staff members, with the patient present if they wish, poured down the sink, and the disposal documented in the clinical record.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A small quantity of a substance suspected to be an illegal drug is found during a room search.",
+  "question": "What does the trust's searching policy say must happen to suspected illegal drugs found on the ward?",
+  "options": [
+   "They are flushed away immediately by two staff and a Datix completed",
+   "They are bagged and kept in the nurses' office until the ward round",
+   "They are never returned to the patient, stored in a controlled drugs (CD) cabinet, the Chief Pharmacist is notified, an incident form is completed and police are contacted if the quantity is suspect",
+   "They are handed straight to the visiting relative to remove from the premises"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy's removal of items table states suspected illegal drugs are never returned, are stored in a CD cabinet, the Chief Pharmacist is notified, an incident form is completed, and the police are contacted if the quantity is suspect.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A bladed item is found during a search of a communal area.",
+  "question": "What does the trust's searching policy say is provided in each clinical area for securing bladed weapons?",
+  "options": [
+   "A sealed evidence envelope kept in the drug trolley",
+   "Bladed weapons tubes, with the Health and Safety department contacted for collection",
+   "A yellow sharps bin, emptied by the domestic team",
+   "A lockable knife box held by the ward manager"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states bladed weapons tubes are available in each clinical area for the safe securing of such items, that the Health and Safety department is contacted for collection, and that additional tubes can be obtained from the Health and Safety and Risk department.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "Two staff are about to search a patient's bedroom.",
+  "question": "How does the trust's searching policy say the two staff should move through the room?",
+  "options": [
+   "They should split the room in half and each search their own side to save time",
+   "One should search while the other waits outside the door",
+   "The lead staff member searches and the second follows behind, searching the exact same area, so that nothing is missed",
+   "They should search only the areas the patient points out"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states the leading staff member commences the search with the second following and searching the exact same area, so staff follow each other around the room rather than searching separate areas, and the registered nurse leads the room search.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A ward is considering introducing regular unannounced searches as a deterrent.",
+  "question": "Under the trust's searching policy, what can random or pro-active searches cover, and who monitors how often they happen?",
+  "options": [
+   "Only the internal and external environment owned or occupied by the trust, not personal possessions or body searches, with frequency decided locally and monitored by Service Line Managers or Divisional Nurses",
+   "Everything including patients' possessions and person, with frequency set nationally by NHS England",
+   "Only bedrooms and lockers, with frequency agreed by the Responsible Clinician",
+   "Only visitors' bags, with frequency monitored by the Local Security Management Specialist"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy limits random and pro-active searching to the internal and external environment, that is trust owned or occupied property including corridors, toilets, bathrooms, sleeping areas, storerooms and lounges, and excludes personal possessions and body searches; frequency is decided locally and monitored by Service Line Managers or Divisional Nurses.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Easy",
+  "question": "How does the trust's searching policy define a body search?",
+  "options": [
+   "A search requiring the removal of all clothing in a private room",
+   "A search of the patient's person and clothing by a minimum of two staff, with no removal of clothing except outer wear such as a coat or jacket, plus headwear and footwear",
+   "A visual inspection only, with no physical contact permitted",
+   "A search carried out by the police at the request of the nurse in charge"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy defines a body search as a minimum of two staff searching the person and clothing, with no removal of clothing except outer wear such as a coat or jacket, plus headwear and footwear; removing all or most clothing would be a strip search.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A visitor is suspected of bringing drugs onto the ward and refuses to allow their bag or person to be searched.",
+  "question": "What does the trust's searching policy say staff should do?",
+  "options": [
+   "Allow the visit to go ahead but supervise it closely",
+   "Call the police and detain the visitor until they arrive",
+   "Search the bag anyway, since the visitor is on trust property",
+   "Deny them access to the ward and ask them to leave, explaining the reasons, submit a Datix, and inform the patient they had come to visit why access was refused"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy says a visitor who refuses to have their baggage and person searched is denied access to the ward and asked to leave with the reasons explained, a Datix is submitted, the patient is told why the visitor was refused access, and the matron or senior nurse and the patient's senior medical staff are informed.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "The nursing team believes a search by force is necessary, but the consultant objects on clinical grounds.",
+  "question": "How does the trust's searching policy say this disagreement should be resolved?",
+  "options": [
+   "The consultant's decision is final and no further escalation is possible",
+   "The matter is referred to the Medical Director, or the On Call Director, for an immediate decision, with the patient kept under observation while this is resolved",
+   "The nurse in charge may proceed once two registered nurses agree",
+   "The matter is deferred to the next Multidisciplinary Team (MDT) meeting"
+  ],
+  "correctIndex": 1,
+  "rationale": "Appendix 1 of the policy states that if the consultant objects on clinical grounds and staff still want to proceed, the matter is referred to the Medical Director or On Call Director for an immediate decision, and the patient is kept under observation and isolated if needed while this is resolved.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "question": "Where is search training delivered from within the trust, according to the searching policy?",
+  "options": [
+   "By the Local Security Management Specialist at ward induction",
+   "By an external security contractor once a year",
+   "By the Positive and Safe Team, as part of the 5 day induction and refresher training",
+   "By the Health and Safety and Risk department during statutory and mandatory training"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that search training is delivered by the Positive and Safe Team as part of the 5 day induction and refresher training, because of the heightened risks associated with inpatient facilities.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A search has just been completed on a patient who withheld their consent throughout.",
+  "question": "What does the trust's searching policy require in addition to the usual documentation?",
+  "options": [
+   "A safeguarding referral to the local authority",
+   "A post-incident review, which should follow every search undertaken where consent has been withheld",
+   "An automatic referral to the Care Quality Commission",
+   "A formal apology letter to the patient from the ward manager"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that where a patient physically resists a personal search, physical intervention should normally only proceed on the basis of a multidisciplinary assessment unless urgently required, and that a post-incident review should follow every search undertaken where consent has been withheld.",
+  "source": "Derbyshire Healthcare - Searching of Service Users: Room, Possessions, Lockers, Personal Property and Ward Area Policy and Procedure",
+  "sourceDate": "July 2025, issue 7, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Easy",
+  "question": "Which of these is listed as a PROHIBITED item on the trust's restricted and prohibited items list for working age adult acute inpatient services?",
+  "options": [
+   "A wet razor",
+   "A pair of scissors",
+   "Plastic carrier bags",
+   "A phone charger of standard size"
+  ],
+  "correctIndex": 2,
+  "rationale": "Plastic carrier bags appear in the prohibited list alongside items such as wire coat hangers, glass and ceramic items and extension leads. Wet razors, scissors and standard size chargers are on the controlled list, meaning they can be accessed with risk assessment and secure storage.",
+  "source": "Derbyshire Healthcare - Restricted and Prohibited Items List for Working Age Adult Acute Inpatient Services",
+  "sourceDate": "no issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A patient asks whether they can bring their games console and its controller onto the ward.",
+  "question": "How does the trust's restricted and prohibited items list treat electricals such as extension leads, ethernet cables and console controllers, and USB pen drives?",
+  "options": [
+   "Prohibited, meaning they should not be accessible throughout the admission",
+   "Controlled, so they can be issued from a locked cupboard on request",
+   "Advisory only, so the patient may keep them at their own risk",
+   "Permitted provided they have been tested by the estates department"
+  ],
+  "correctIndex": 0,
+  "rationale": "The list places electricals such as extension leads, ethernet cables and console controllers, along with USB pen drives or other devices that can store electronic data, in the prohibited category, so they are not to be accessible throughout an admission.",
+  "source": "Derbyshire Healthcare - Restricted and Prohibited Items List for Working Age Adult Acute Inpatient Services",
+  "sourceDate": "no issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A patient wants to keep a deodorant in their room.",
+  "question": "What does the trust's restricted and prohibited items list say about deodorants and aerosols?",
+  "options": [
+   "All deodorants are prohibited on acute inpatient wards",
+   "They are controlled items, but a roll on can be held by the patient",
+   "They are advisory items only, so the ward takes no responsibility for them",
+   "They may be held by the patient in any form provided a risk assessment is recorded"
+  ],
+  "correctIndex": 1,
+  "rationale": "Deodorants and aerosols are on the controlled list, meaning they are risk assessed at the time of request and stored securely, but the list specifically notes that a roll on can be held by the patient.",
+  "source": "Derbyshire Healthcare - Restricted and Prohibited Items List for Working Age Adult Acute Inpatient Services",
+  "sourceDate": "no issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A patient arrives on the ward with a large sum of cash in their bag.",
+  "question": "What does the trust's restricted and prohibited items list advise about cash?",
+  "options": [
+   "All cash must be surrendered to the ward safe on admission",
+   "Cash is a controlled item and must be issued in small amounts by staff",
+   "Cash is prohibited on acute inpatient wards",
+   "Large amounts of cash are an advisory item, with the suggestion that anything over 20 pounds is held in the patient's bank and withdrawn as required"
+  ],
+  "correctIndex": 3,
+  "rationale": "Large amounts of cash sit in the advisory category alongside jewellery, expensive watches and sentimental items, with the list suggesting that amounts over 20 pounds are held in the patient's bank and withdrawn as required, and noting the ward cannot be held responsible for advisory items.",
+  "source": "Derbyshire Healthcare - Restricted and Prohibited Items List for Working Age Adult Acute Inpatient Services",
+  "sourceDate": "no issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A patient is admitted carrying an item that appears on the prohibited list.",
+  "question": "What does the trust's restricted and prohibited items list say should happen to prohibited items a patient arrives with?",
+  "options": [
+   "Assess whether it is appropriate to lock them away securely and return them on discharge, or whether they need to be returned to family and carers to take home",
+   "Dispose of them immediately and record the disposal on Datix",
+   "Hand them to the Local Security Management Specialist in all cases",
+   "Store them in the patient's bedside locker with a signed disclaimer"
+  ],
+  "correctIndex": 0,
+  "rationale": "The list states that if an individual arrives with prohibited items, staff should assess whether it is appropriate for them to be securely locked away and returned on discharge, or whether they need to go home with family and carers.",
+  "source": "Derbyshire Healthcare - Restricted and Prohibited Items List for Working Age Adult Acute Inpatient Services",
+  "sourceDate": "no issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "The team decides during a weekday afternoon that a patient's mobile phone needs to be removed.",
+  "question": "Under the trust's mobile and camera phones policy, whose agreement must the documented plan of care include?",
+  "options": [
+   "Any two registered nurses on duty at the time",
+   "The nurse in charge and the ward manager",
+   "A Multidisciplinary Team (MDT) plan including at least one of the patient's Responsible Clinician or nominated deputy, the matron, or the area service manager",
+   "The Local Security Management Specialist and the Head of Patient Safety"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy requires any removal of a mobile phone to be part of a documented plan of care agreed by a multidisciplinary team including at least one of the Responsible Clinician or nominated deputy, the matron, or the area service manager, within working hours.",
+  "source": "Derbyshire Healthcare - Mobile and Camera Phones in Inpatient and Community Clinic Areas Policy and Procedure",
+  "sourceDate": "March 2024, issue 7, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A phone needs to be removed from a patient at 10pm on a night shift.",
+  "question": "What does the trust's mobile and camera phones policy allow out of hours, and how often must the decision then be reviewed?",
+  "options": [
+   "No phone can be removed outside 09.00 to 17.00 under any circumstances",
+   "A bleep holder can make the decision, it must be reviewed by the Multidisciplinary Team (MDT) as soon as practicable, and the decision must be reviewed regularly with a minimum of daily",
+   "The nurse in charge can decide, with review at the next weekly ward round",
+   "Two registered nurses can decide, with review within 72 hours"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that outside usual working hours of 09.00 to 17.00 a bleep holder can make the decision to remove a mobile phone, that it must be reviewed as part of an MDT meeting as soon as is practically possible, and that any decision to remove a phone must be regularly reviewed with a minimum of daily.",
+  "source": "Derbyshire Healthcare - Mobile and Camera Phones in Inpatient and Community Clinic Areas Policy and Procedure",
+  "sourceDate": "March 2024, issue 7, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A patient hands in a mobile phone charger they have brought from home and asks to use it on the ward.",
+  "question": "What does the trust's mobile and camera phones policy require before that charger can be used?",
+  "options": [
+   "Nothing, provided the patient uses it only in their own bedroom",
+   "A visual check by the nurse in charge and an entry in the property sheet",
+   "The charger must be handed to staff for checking by an electrician from the Estates department before use, and is kept by staff because chargers are a ligature risk",
+   "The charger must be replaced with a ward charger and the patient's own charger destroyed"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that where a phone cannot be charged off site, the charger must be handed to staff for checking by an electrician from the Estates department before use, that chargers constitute a ligature risk, and that they should be kept by staff and used in a secure environment to which service users do not have unsupervised access.",
+  "source": "Derbyshire Healthcare - Mobile and Camera Phones in Inpatient and Community Clinic Areas Policy and Procedure",
+  "sourceDate": "March 2024, issue 7, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A patient is seen taking photographs of other patients in the ward lounge and refuses to delete them when asked.",
+  "question": "What does the trust's mobile and camera phones policy say staff should do?",
+  "options": [
+   "Trust staff will retrieve the phone and delete the images, complete an incident form, and remove the phone to safe storage until it is reviewed at the next clinical meeting",
+   "Leave the images in place and raise it at the next ward round",
+   "Report the patient to the police before any other action",
+   "Ask the patient's relatives to persuade them to delete the images"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy says service users found to be using the video, photography or recording facility are asked to delete the images, and if they refuse staff will retrieve the phone and delete them; an incident form must be completed and the phone removed to safe storage until reviewed at the next clinical meeting.",
+  "source": "Derbyshire Healthcare - Mobile and Camera Phones in Inpatient and Community Clinic Areas Policy and Procedure",
+  "sourceDate": "March 2024, issue 7, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A visitor is filming in the ward corridor and refuses to delete the footage when challenged.",
+  "question": "What does the trust's mobile and camera phones policy say about visitors who refuse to delete images?",
+  "options": [
+   "Staff may confiscate the visitor's phone and delete the footage themselves",
+   "The situation must be escalated to senior management who decide whether it requires reporting to the police, and the visitor may be asked to leave the clinical area with the Multidisciplinary Team (MDT) able to refuse further visits",
+   "The visitor should be asked to sign a confidentiality agreement instead",
+   "Nothing can be done, as visitors are not bound by trust policy"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says visitors must delete images in the presence of staff, and if they refuse the situation is escalated to senior management who decide whether to report it to the police; the visitor will be asked to leave the clinical area and the MDT may decide to refuse entry to further visits.",
+  "source": "Derbyshire Healthcare - Mobile and Camera Phones in Inpatient and Community Clinic Areas Policy and Procedure",
+  "sourceDate": "March 2024, issue 7, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A patient refuses to hand over their phone after a decision has been made that it must be removed.",
+  "question": "Under the trust's mobile and camera phones policy, who must be contacted and what must be considered?",
+  "options": [
+   "The nurse in charge alone, who decides whether to search the patient",
+   "The Local Security Management Specialist, who decides whether to involve the police",
+   "The area service manager or nominated deputy and the Responsible Clinician or nominated deputy, who decide whether the person should be discharged for refusing to comply with trust policy",
+   "The on-call pharmacist, who decides whether the phone can be stored securely"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that if the service user refuses to hand over the phone, the area service manager or nominated deputy and the Responsible Clinician or nominated deputy must be contacted and a decision taken about whether the person should be discharged for refusing to comply with trust policy, with detention under the Mental Health Act considered if discharge is not clinically appropriate.",
+  "source": "Derbyshire Healthcare - Mobile and Camera Phones in Inpatient and Community Clinic Areas Policy and Procedure",
+  "sourceDate": "March 2024, issue 7, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Easy",
+  "question": "What does the trust's mobile and camera phones policy say about staff carrying their own mobile phones in clinical areas?",
+  "options": [
+   "Staff may carry and use their phones freely as long as they are on silent",
+   "Staff must restrict personal use to emergency and urgent issues in designated areas only, and must not carry phones around clinical areas while on duty unless agreed with their line manager",
+   "Staff phones must be left in a locker at the start of every shift with no exceptions",
+   "Staff may carry phones but only for taking clinical photographs"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states staff must restrict their personal use of mobile phones to emergency and urgent issues, only in designated areas, and must not carry their phones around within clinical areas while on duty unless this has been agreed with their line manager.",
+  "source": "Derbyshire Healthcare - Mobile and Camera Phones in Inpatient and Community Clinic Areas Policy and Procedure",
+  "sourceDate": "March 2024, issue 7, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A parcel arrives on the ward addressed to a patient.",
+  "question": "What does the trust's Standard Operating Procedure (SOP) on managing deliveries say staff should do first?",
+  "options": [
+   "Open the parcel before telling the patient it has arrived",
+   "Return the parcel to the sender unless it was agreed in advance",
+   "Record the receipt of the parcel and promptly inform the patient that it has arrived",
+   "Hold the parcel until the next ward round for a Multidisciplinary Team (MDT) decision"
+  ],
+  "correctIndex": 2,
+  "rationale": "The deliveries SOP states that on initial receipt staff should record the receipt of any parcel or delivery for a patient and promptly inform the patient of its arrival, before asking whether they consent to open it in the presence of staff.",
+  "source": "Derbyshire Healthcare - Managing Deliveries to Inpatient Mental Health Wards at Derbyshire Healthcare NHS Foundation Trust SOP",
+  "sourceDate": "April 2025, issue 1, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A patient declines to open their parcel in front of staff, and there is no specific concern about its contents.",
+  "question": "What does the trust's deliveries Standard Operating Procedure (SOP) say happens next?",
+  "options": [
+   "The parcel is handed to the patient, unless there is a justified and lawful reason to intervene",
+   "The parcel is opened by two staff members without the patient present",
+   "The parcel is held in the ward office until the patient agrees to open it with staff",
+   "The parcel is returned to the sender and the patient informed"
+  ],
+  "correctIndex": 0,
+  "rationale": "The SOP states that if a patient refuses to open the parcel in the presence of staff, the parcel should be handed to them unless there is a justified and lawful reason to intervene, reflecting the Article 8 right to correspondence and private life.",
+  "source": "Derbyshire Healthcare - Managing Deliveries to Inpatient Mental Health Wards at Derbyshire Healthcare NHS Foundation Trust SOP",
+  "sourceDate": "April 2025, issue 1, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A patient asks whether they are allowed to order things online to be delivered to the ward.",
+  "question": "What is the trust's stated position on deliveries in its Standard Operating Procedure (SOP)?",
+  "options": [
+   "Deliveries are banned on all inpatient mental health wards",
+   "Deliveries are allowed only for detained patients",
+   "Deliveries must be approved in advance by the Responsible Clinician",
+   "The trust prefers patients refrain from having items delivered, but patients are not prohibited from receiving deliveries, and some items are expressly prohibited"
+  ],
+  "correctIndex": 3,
+  "rationale": "The SOP gives staff wording to use with patients, stating the trust prefers they refrain from having items delivered for reasons of safety, security and a therapeutic environment, but that they are not prohibited from receiving deliveries, and that some items are expressly prohibited.",
+  "source": "Derbyshire Healthcare - Managing Deliveries to Inpatient Mental Health Wards at Derbyshire Healthcare NHS Foundation Trust SOP",
+  "sourceDate": "April 2025, issue 1, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "A patient asks for a disposable razor at the start of an early shift.",
+  "question": "What does the trust's Standard Operating Procedure (SOP) on the use of sharps and razors require before a razor is allocated?",
+  "options": [
+   "A check of the patient's historical risk factors alone",
+   "Written consent from the patient's Responsible Clinician",
+   "A Mental State Examination assessing current mental state and risk factors, which determines whether the razor is supervised, unsupervised or not provided",
+   "A Datix incident form recording the request"
+  ],
+  "correctIndex": 2,
+  "rationale": "The SOP requires a Mental State Examination of current mental state and risk factors before allocating a razor, noting that known historical risk factors can aid the assessment but should not by themselves be the final determining factor, and that this assessment decides whether use is supervised, unsupervised or not appropriate.",
+  "source": "Derbyshire Healthcare - Use of Sharps (Razors) on Acute Inpatient Wards and the Beeches Unit Standard Operating Procedure",
+  "sourceDate": "version 2, ratified by Working Age Adult COAT; no issue or review date shown"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A patient has needed supervised razor use for several weeks.",
+  "question": "How often does the trust's sharps and razors Standard Operating Procedure (SOP) say the care plan for ongoing supervised razor use must be reviewed?",
+  "options": [
+   "Weekly, or sooner as required",
+   "Daily, at every handover",
+   "Monthly, at the Multidisciplinary Team (MDT) meeting",
+   "Only when the patient's observation level changes"
+  ],
+  "correctIndex": 0,
+  "rationale": "The SOP states that where supervision is required for a considerable amount of time this must be clearly documented in the care plan and reviewed weekly or sooner as required, with risk assessments updated to reflect any changing risks.",
+  "source": "Derbyshire Healthcare - Use of Sharps (Razors) on Acute Inpatient Wards and the Beeches Unit Standard Operating Procedure",
+  "sourceDate": "version 2, ratified by Working Age Adult COAT; no issue or review date shown"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "question": "Under the trust's sharps and razors Standard Operating Procedure (SOP), what must staff use when handing out razors, and who oversees returns?",
+  "options": [
+   "A note in the patient's daily record, with the nurse in charge checking at the end of the week",
+   "The allocation sheet in Appendix 1 of the SOP, with a staff member assigned each shift to monitor allocation and check all razors have been handed in and signed back in",
+   "The ward diary, with the ward manager auditing monthly",
+   "The property book only, with no separate signing in and out record"
+  ],
+  "correctIndex": 1,
+  "rationale": "The SOP states that staff handing out sharps or razors must use the allocation sheet in Appendix 1 and that all razors allocated must be logged, and that a member of staff is assigned each shift, via the shift planner, to monitor allocation and check all razors are handed in and signed back in.",
+  "source": "Derbyshire Healthcare - Use of Sharps (Razors) on Acute Inpatient Wards and the Beeches Unit Standard Operating Procedure",
+  "sourceDate": "version 2, ratified by Working Age Adult COAT; no issue or review date shown"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Easy",
+  "scenario": "A patient does not return a razor at the end of the agreed time period.",
+  "question": "What does the trust's sharps and razors Standard Operating Procedure (SOP) say must happen?",
+  "options": [
+   "Wait until the end of the shift and record it on the allocation sheet",
+   "Complete a Datix form and hand over to the next shift",
+   "The Nurse in Charge (NiC) must be informed immediately, and the NiC will determine if a search is required",
+   "Replace the razor and note the loss in the patient's property book"
+  ],
+  "correctIndex": 2,
+  "rationale": "The SOP states that if a patient fails to return the razor, the razor is tampered with, or the razor is missing, the Nurse in Charge must be informed immediately and will determine whether a search is required under the trust's searching policy.",
+  "source": "Derbyshire Healthcare - Use of Sharps (Razors) on Acute Inpatient Wards and the Beeches Unit Standard Operating Procedure",
+  "sourceDate": "version 2, ratified by Working Age Adult COAT; no issue or review date shown"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Hard",
+  "scenario": "A patient buys their own electric razor to use during their admission.",
+  "question": "What does the trust's sharps and razors Standard Operating Procedure (SOP) require for personal electric razors?",
+  "options": [
+   "They must meet electrical safety guidelines including testing and tagging by the trust, be returned to staff for storage labelled with the patient's name, must not be shared with other patients, and must be charged in the designated areas provided on the ward",
+   "They may be kept and charged freely in the patient's bedroom with no restrictions",
+   "They are prohibited on acute inpatient wards and must be sent home",
+   "They may be shared between patients provided the head is cleaned between uses"
+  ],
+  "correctIndex": 0,
+  "rationale": "The SOP requires personal electric razors to meet electrical safety guidelines including testing and tagging by the trust, to be returned to staff for storage clearly labelled with the patient's name, never to be shared with other patients because of cross infection risk, and to be charged in the designated areas provided on the ward.",
+  "source": "Derbyshire Healthcare - Use of Sharps (Razors) on Acute Inpatient Wards and the Beeches Unit Standard Operating Procedure",
+  "sourceDate": "version 2, ratified by Working Age Adult COAT; no issue or review date shown"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Easy",
+  "question": "According to the trust's Standard Operating Procedure (SOP) on searches of a person, where must every search of a person be recorded?",
+  "options": [
+   "In the ward handover book only",
+   "On SystmOne, the trust's electronic patient record",
+   "On a paper search form kept in the ward office",
+   "On Datix only, with no clinical record entry needed"
+  ],
+  "correctIndex": 1,
+  "rationale": "The SOP states that any search of a person will need to be recorded onto SystmOne, and that the process for searching a person is the same for all inpatient units in the trust so that regular, cover and bank staff all follow the same steps.",
+  "source": "Derbyshire Healthcare - Searches of a Person SOP",
+  "sourceDate": "issue 1, no issue or review date shown"
+ },
+ {
+  "category": "Trust Policy - Searching & Ward Security",
+  "difficulty": "Medium",
+  "scenario": "You are taking in a patient's watch and wallet for safe keeping on admission.",
+  "question": "Under the trust's personal possessions Standard Operating Procedure (SOP), where on SystmOne is this recorded, and what must be entered?",
+  "options": [
+   "Under Clinical Notes, recording the item only",
+   "Under Risk Assessment, recording the item and its estimated value",
+   "Under Patient Possessions in the Administrative tree, recording the item and the location it will be placed in",
+   "Under Care Plans, recording the item and the date it will be returned"
+  ],
+  "correctIndex": 2,
+  "rationale": "The SOP directs staff to retrieve the patient from ward view, select Patient Possessions from the Administrative tree, record the possession, type in the item and the location it will be placed in, and save; returning an item is done by right clicking it and selecting return possession, which records the date and time returned.",
+  "source": "Derbyshire Healthcare - Personal Possessions and Processes SOP",
+  "sourceDate": "issue 1, no issue or review date shown"
+ }
+]

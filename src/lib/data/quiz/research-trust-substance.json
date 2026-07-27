@@ -1,0 +1,563 @@
+[
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "scenario": "A patient is admitted overnight and tells you they drink heavily most days.",
+  "question": "Which validated screening tool does the trust guideline name for screening all patients for alcohol misuse on admission?",
+  "options": [
+   "The Severity of Alcohol Dependence Questionnaire (SADQ)",
+   "AUDIT-C",
+   "The Clinical Institute Withdrawal Assessment (CIWA)",
+   "The Fagerstrom Test for Nicotine Dependence (FTND)"
+  ],
+  "correctIndex": 1,
+  "rationale": "The trust guideline states that all patients admitted to a psychiatric setting should be screened for alcohol misuse using a validated screening tool such as AUDIT-C or FAST, and lists AUDIT-C screening on admission under what is expected of nurses. SADQ and CIWA come later, to assess dependence severity and monitor withdrawal.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "question": "AUDIT-C gives a total score out of 12. According to the trust alcohol withdrawal guideline, which total suggests potential alcohol dependence?",
+  "options": [
+   "A score of 5 or more",
+   "A score of 8 or more",
+   "A score of 11 or 12",
+   "Any score above 0"
+  ],
+  "correctIndex": 2,
+  "rationale": "The guideline says AUDIT-C gives a total out of 12, that a score of 11 or 12 suggests potential alcohol dependence, and that a score of 5 or more indicates alcohol excess. The two thresholds are easy to mix up.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "A patient is on a reducing chlordiazepoxide regime and the lunchtime dose is due.",
+  "question": "Under the trust guideline, what must nursing staff do before administering each dose?",
+  "options": [
+   "Repeat the Severity of Alcohol Dependence Questionnaire (SADQ)",
+   "Take a breath alcohol reading with the alcoholmeter",
+   "Undertake monitoring of withdrawal signs using the Clinical Institute Withdrawal Assessment (CIWA)",
+   "Ask the doctor to review the patient in person"
+  ],
+  "correctIndex": 2,
+  "rationale": "The nursing expectations in the guideline state that staff must undertake monitoring of withdrawal signs before administering each dose, using CIWA. SADQ is used once at baseline to assess severity of dependence and guide the regimen.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "question": "For a patient being treated for acute alcohol withdrawal, what does the trust guideline set as the minimum frequency of medical review?",
+  "options": [
+   "Daily",
+   "Every 48 hours",
+   "Twice weekly",
+   "Only if the Clinical Institute Withdrawal Assessment (CIWA) score rises"
+  ],
+  "correctIndex": 0,
+  "rationale": "The guideline lists 'ensure daily medical review as a minimum' among the nursing expectations, and requires doctors to review withdrawal symptoms daily and adjust the titration regimen and when-required prescription accordingly.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "An alcohol dependent patient arrives on the ward at 2am and is still visibly intoxicated. Detoxification is being planned.",
+  "question": "What does the trust guideline say about the timing of prophylactic parenteral thiamine?",
+  "options": [
+   "It should be withheld until the patient is no longer intoxicated",
+   "It should be given as soon as practicable, within 12 hours of admission, irrespective of whether the patient is still intoxicated",
+   "It should be started once the Clinical Institute Withdrawal Assessment (CIWA) score reaches a moderate level",
+   "It should be given within 72 hours of admission once bloods are back"
+  ],
+  "correctIndex": 1,
+  "rationale": "The guideline states that all patients commenced on alcohol detoxification should be prophylactically treated with parenteral thiamine as soon as practicable, within 12 hours of admission, irrespective of whether the patient is still intoxicated, because of the high risk of Wernicke's encephalopathy.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "question": "What prophylactic thiamine regimen for Wernicke's encephalopathy does the trust flowchart specify for a patient starting alcohol detoxification?",
+  "options": [
+   "100mg thiamine orally three times a day for 5 days",
+   "250mg thiamine intramuscularly daily for 3 days",
+   "500mg thiamine intravenously three times a day for 2 days",
+   "300mg thiamine intramuscularly as a single dose"
+  ],
+  "correctIndex": 1,
+  "rationale": "The trust flowchart and thiamine section both specify 250mg thiamine intramuscularly daily for 3 days as prophylactic treatment, with the first dose given as soon as practical. Intravenous thiamine is reserved for presumed or diagnosed Wernicke's encephalopathy, which requires urgent transfer to an acute setting.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "A patient has completed three days of intramuscular thiamine and is eating and drinking normally.",
+  "question": "According to the trust guideline, what happens next with thiamine?",
+  "options": [
+   "Thiamine is stopped once the intramuscular course is finished",
+   "Oral thiamine 50mg four times daily is started and, following successful withdrawal, continued for six weeks",
+   "Oral thiamine 100mg once daily is started and continued for two weeks",
+   "Vitamin B compound strong is substituted for thiamine"
+  ],
+  "correctIndex": 1,
+  "rationale": "The guideline states that if the patient can manage oral therapy after three days of intramuscular thiamine, oral thiamine should be started at 50mg four times daily, and that following successful alcohol withdrawal thiamine should be continued for six weeks before being reviewed for discontinuation.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "question": "What does the trust alcohol withdrawal guideline say about Vitamin B compound and Vitamin B compound strong?",
+  "options": [
+   "They are the first line choice for thiamine replacement on the ward",
+   "They may be used where intramuscular thiamine is refused",
+   "They are not recommended and should not be prescribed",
+   "They should be prescribed alongside thiamine for the first six weeks"
+  ],
+  "correctIndex": 2,
+  "rationale": "The guideline is explicit that these preparations are not recommended and should not be prescribed, referring to the Derbyshire Joint Area Prescribing Committee (JAPC) position statement.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "A patient starting a chlordiazepoxide regime is already prescribed a regular benzodiazepine.",
+  "question": "How does the trust guideline say chlordiazepoxide should be prescribed in this situation?",
+  "options": [
+   "The existing benzodiazepine should be stopped first and replaced by chlordiazepoxide",
+   "Chlordiazepoxide should be prescribed 'on top' of any benzodiazepines the patient is already taking",
+   "The existing benzodiazepine dose should be halved and chlordiazepoxide added",
+   "Chlordiazepoxide should not be used at all if a benzodiazepine is already prescribed"
+  ],
+  "correctIndex": 1,
+  "rationale": "The guideline states directly that chlordiazepoxide should be prescribed 'on top' of any benzodiazepines the patient is already taking. Existing benzodiazepine use is one of the individual risk factors prescribers are told to take into account.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "A patient on day 3 of a chlordiazepoxide reduction is being discharged, and also asks for leave over the weekend.",
+  "question": "What does the trust guideline require regarding the withdrawal benzodiazepine?",
+  "options": [
+   "The remaining regime should be dispensed as a take home supply to complete at home",
+   "The regime should be converted to a when-required prescription for the patient to self-manage",
+   "Benzodiazepines for withdrawal should not be continued on leave or discharge, and the variable and when-required doses should be stopped",
+   "The general practitioner should be asked to continue and extend the regime in the community"
+  ],
+  "correctIndex": 2,
+  "rationale": "The trust flowchart carries the instruction 'do not continue benzodiazepines for withdrawal on leave or discharge', and the text states that if the patient is discharged before completion of the regimen the benzodiazepine variable and when-required doses used for managing withdrawal should be stopped.",
+  "source": "Derbyshire Healthcare - Alcohol Withdrawal in Inpatient Psychiatric Settings: Management of Acute Withdrawal Clinical Guideline and Policy",
+  "sourceDate": "March 2026, issue 07, review November 2027"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "question": "On the trust's Severity of Alcohol Dependence Questionnaire (SADQ) form, which score range is labelled as severe dependence?",
+  "options": [
+   "4 to 19",
+   "20 to 30",
+   "31 to 44",
+   "45 and above"
+  ],
+  "correctIndex": 2,
+  "rationale": "The trust SADQ form scores 0 to 3 as no dependence, 4 to 19 mild, 20 to 30 moderate, 31 to 44 severe and 45 or more very severe. The withdrawal guideline's suggested regimens are built on the same bands, with the moderate regimen for SADQ 20 to 30 and the severe regimen for SADQ 31 to 44.",
+  "source": "Derbyshire Healthcare - Severity of Alcohol Dependence Questionnaire (SADQ)",
+  "sourceDate": "Issue 01, adopted by the Medicines Management Committee August 2017"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "You are completing the Clinical Institute Withdrawal Assessment - Alcohol (CIWA-A) form with a patient.",
+  "question": "Most CIWA-A items are rated 0 to 7. Which item on the trust form is rated on a different scale?",
+  "options": [
+   "Orientation and clouding of sensorium, rated 0 to 4",
+   "Paroxysmal sweats, rated 0 to 10",
+   "Tremor, rated 0 to 3",
+   "Headache, rated 0 to 5"
+  ],
+  "correctIndex": 0,
+  "rationale": "On the trust CIWA-A scoring guidelines every item is rated 0 to 7 except orientation and clouding of sensorium, which is rated on a 0 to 4 scale. Getting this wrong inflates the total score.",
+  "source": "Derbyshire Healthcare - Clinical Institute Withdrawal Assessment - Alcohol (CIWA-A)",
+  "sourceDate": "Issue 01, adopted by the Medicines Management Committee August 2017"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "A newly admitted patient discloses regular use of alcohol and street drugs.",
+  "question": "Which assessment documentation does the trust Intoxication Management Policy name for the more in-depth substance use assessment?",
+  "options": [
+   "The AUDIT-C form on the SystmOne launchpad",
+   "The SUFARI assessment documentation and guidance within the SystmOne electronic patient record",
+   "The Severity of Alcohol Dependence Questionnaire (SADQ) on paper",
+   "The Fagerstrom Test for Nicotine Dependence (FTND)"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that all individuals admitted to an inpatient unit will be asked about alcohol and substance use and, if indicated, a more in-depth assessment made, using the SUFARI assessment documentation and guidance within the SystmOne electronic patient record.",
+  "source": "Derbyshire Healthcare - Intoxication Management Policy and Procedure",
+  "sourceDate": "April 2023, issue 3, review February 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "scenario": "A patient arrives for admission smelling strongly of alcohol and a colleague suggests turning them away until they are sober.",
+  "question": "What does the trust Intoxication Management Policy say about this?",
+  "options": [
+   "A decision not to admit must not be based on the use of alcohol or illicit drugs; the decision to admit is based on the overall clinical assessment",
+   "Admission must be deferred until a breath alcohol reading of zero is obtained",
+   "Admission can be refused if the patient is intoxicated with alcohol but not if intoxicated with drugs",
+   "Admission should be delayed for four hours and then reconsidered"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states plainly that a decision not to admit must not be based on the use of alcohol or illicit drugs, and that the decision to admit will be based on the clinical assessment of the overall presenting clinical picture.",
+  "source": "Derbyshire Healthcare - Intoxication Management Policy and Procedure",
+  "sourceDate": "April 2023, issue 3, review February 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "A patient returns to the ward having been drinking and agrees to use the alcoholmeter.",
+  "question": "How long does the trust policy say should have elapsed since the last drink before using the alcoholmeter?",
+  "options": [
+   "At least 5 minutes",
+   "At least 20 minutes",
+   "At least 60 minutes",
+   "There is no waiting period"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires a period of at least twenty minutes since the patient's last drink before using the alcoholmeter, because residual alcohol in the mouth can give a falsely high reading.",
+  "source": "Derbyshire Healthcare - Intoxication Management Policy and Procedure",
+  "sourceDate": "April 2023, issue 3, review February 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "question": "Once alcoholmeter monitoring has started, how often does the trust policy say it should be repeated and when can it stop?",
+  "options": [
+   "Every 15 minutes until the reading is zero",
+   "Every 30 minutes until two consecutive readings have shown a reduction",
+   "Hourly until the reading falls below the drink driving level",
+   "Once on arrival and once again at handover"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states the alcoholmeter should be administered every 30 minutes until such time as two consecutive readings have shown a reduction. It also warns the reading confirms alcohol is present, not the level of intoxication.",
+  "source": "Derbyshire Healthcare - Intoxication Management Policy and Procedure",
+  "sourceDate": "April 2023, issue 3, review February 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "An intoxicated patient has settled in their room and physical observations are being planned.",
+  "question": "What is the minimum monitoring frequency set out in the trust Intoxication Management Policy?",
+  "options": [
+   "Hourly throughout, then four hourly overnight",
+   "Continuous within eyesight observation until the patient is fully sober",
+   "Half hourly initially, then hourly until clinical judgement confirms the level of intoxication has reduced to safe levels",
+   "Two hourly, increasing only if the National Early Warning Score (NEWS2) rises"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy says monitoring requirements are informed by the individual's presenting condition but as a minimum must be carried out half hourly initially and then hourly, until clinical judgement, aided by the alcoholmeter where alcohol is involved, confirms intoxication has reduced to safe levels.",
+  "source": "Derbyshire Healthcare - Intoxication Management Policy and Procedure",
+  "sourceDate": "April 2023, issue 3, review February 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "You are monitoring an intoxicated patient using the National Early Warning Score (NEWS2). They only respond when you speak loudly to them.",
+  "question": "What does the trust policy require at this point?",
+  "options": [
+   "Continue hourly monitoring and reassess at the next round",
+   "Medical assistance must be sought",
+   "Record the score and inform the nurse in charge at handover",
+   "Allow the patient to sleep and recheck in two hours"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy uses the AVPU scale within NEWS2 and states that if a patient registers V needing a loud voice, or P when only responding to pain, then medical assistance must be sought. A patient registering U is a medical emergency.",
+  "source": "Derbyshire Healthcare - Intoxication Management Policy and Procedure",
+  "sourceDate": "April 2023, issue 3, review February 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "scenario": "An intoxicated patient's regular evening antipsychotic is due.",
+  "question": "What does the trust Intoxication Management Policy say about prescribed medication while a patient is intoxicated?",
+  "options": [
+   "Give the dose as normal but observe more closely afterwards",
+   "Give half the prescribed dose",
+   "Omit prescribed medication until the next dose or until the patient is not intoxicated, unless there are potential contraindications for doing so",
+   "Omit all medication for the following 24 hours"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that if the patient is intoxicated with illicit drugs or alcohol then prescribed medication should be omitted until the next dose or until the patient is not intoxicated, unless there are potential contraindications, and that medical or on-call pharmacy advice can be sought.",
+  "source": "Derbyshire Healthcare - Intoxication Management Policy and Procedure",
+  "sourceDate": "April 2023, issue 3, review February 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "A patient who had previously agreed with the team not to use alcohol or drugs during admission returns to the ward intoxicated.",
+  "question": "What does the trust policy require in addition to completing an incident form?",
+  "options": [
+   "A multidisciplinary review must be held within the next 24 hours to decide future management plans",
+   "The patient must be reviewed at the next scheduled ward round",
+   "A safeguarding referral must be made within 72 hours",
+   "The consultant must be contacted immediately at home"
+  ],
+  "correctIndex": 0,
+  "rationale": "The documentation and post-incident section states that where a prior agreement had been made with the service user about not using alcohol or illicit drugs as an inpatient, a multidisciplinary review must be held within the next 24 hours to decide future management plans.",
+  "source": "Derbyshire Healthcare - Intoxication Management Policy and Procedure",
+  "sourceDate": "April 2023, issue 3, review February 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "scenario": "A patient is known to both mental health services and a substance misuse service.",
+  "question": "What does the trust co-occurring disorders policy say about using either problem as a reason to exclude someone from services?",
+  "options": [
+   "Substance misuse can be a reason to exclude from specialist mental health services if it is the dominant problem",
+   "Neither a mental health diagnosis nor substance misuse will be criteria for exclusion from specialist or generic mental health services",
+   "Patients must be abstinent before mental health services will accept a referral",
+   "Only patients open to the Community Mental Health Team can be accepted"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that neither mental health diagnosis nor substance misuse will be criteria for exclusion from the trust's specialist or generic mental health services. This is the local expression of the 'no wrong door' principle it references.",
+  "source": "Derbyshire Healthcare - Management of People with Co-occurring Disorders or Co-occurring Mental Health and Substance Misuse Issues Policy and Procedure",
+  "sourceDate": "Nov 2023, issue 6, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "Someone with both mental health and drug problems first presents to the substance misuse service, and there is uncertainty about who should pick the case up.",
+  "question": "What does the trust co-occurring disorders policy say should happen?",
+  "options": [
+   "The case is passed straight to mental health services because they always lead",
+   "The service the client is first in contact with holds the case until a full assessment has been completed, after which the lead agency is agreed and a letter sent to the referrer",
+   "Both services open the case and work in parallel with separate care plans",
+   "The case is held by whichever service has capacity that week"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states it is the responsibility of the service the client is first in contact with to hold the case until a full assessment has been completed, after which there should be agreement on the lead agency with clear roles and responsibilities on a treatment plan, and a letter sent to the referrer.",
+  "source": "Derbyshire Healthcare - Management of People with Co-occurring Disorders or Co-occurring Mental Health and Substance Misuse Issues Policy and Procedure",
+  "sourceDate": "Nov 2023, issue 6, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "An inpatient has a severe and enduring mental illness alongside problematic alcohol use.",
+  "question": "Under the trust co-occurring disorders policy, who holds responsibility for managing this case?",
+  "options": [
+   "The substance misuse service, with mental health services advising",
+   "The mental health service, assisted by staff from substance misuse services if required",
+   "Whichever service the patient prefers",
+   "Primary care, with both specialist services offering advice"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that where there is severe mental illness with problematic substance misuse, management is the responsibility of the mental health service assisted by substance misuse staff if required. The reverse applies where the presenting problem is substance use and mental health difficulties are minimal, when a substance misuse worker case manages with access to a named mental health worker.",
+  "source": "Derbyshire Healthcare - Management of People with Co-occurring Disorders or Co-occurring Mental Health and Substance Misuse Issues Policy and Procedure",
+  "sourceDate": "Nov 2023, issue 6, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "question": "Who does the trust co-occurring disorders policy say must complete co-occurring mental health and substance misuse (COMHAD) training?",
+  "options": [
+   "Only registered nurses working in substance misuse services",
+   "Only medical staff and care coordinators",
+   "All clinical staff, including registered and support staff, and administrative staff where they have face to face contact with service users",
+   "Staff who request it as part of their personal development plan"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy makes COMHAD training mandatory for all clinical staff including registered and support staff, and administrative staff where they have face to face contact with service users, so the workforce is competent and confident in working with people who have a co-existing diagnosis.",
+  "source": "Derbyshire Healthcare - Management of People with Co-occurring Disorders or Co-occurring Mental Health and Substance Misuse Issues Policy and Procedure",
+  "sourceDate": "Nov 2023, issue 6, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "A patient is admitted with cigarettes, a lighter and a pouch of tobacco.",
+  "question": "What does the trust Smoke Free Sites Policy say should happen to these items?",
+  "options": [
+   "They should be collected on arrival and handed to a family member or trusted friend within 48 hours, or otherwise disposed of",
+   "They should be placed in the patient's property store and returned on discharge",
+   "They should be kept in the clinic room and returned for use during Section 17 leave",
+   "The patient may keep them provided they agree not to smoke on site"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that tobacco products, cigarettes, lighters and matches should be collected on arrival and handed to a family member or trusted friend within 48 hours or alternatively disposed of, and that tobacco products are not to be stored and returned during a patient's stay.",
+  "source": "Derbyshire Healthcare - Smoke Free Sites Policy",
+  "sourceDate": "May 2025, issue 1, review January 2028"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "scenario": "A detained patient asks for escorted Section 17 leave so they can have a cigarette off site.",
+  "question": "What does the trust Smoke Free Sites Policy say?",
+  "options": [
+   "Escorted leave for smoking is acceptable if it prevents an incident",
+   "Leave for smoking can be granted once daily at the nurse in charge's discretion",
+   "Staff on inpatient wards should not facilitate or accompany patients off site to smoke, and this includes using Section 17 leave to facilitate smoking",
+   "Leave for smoking is a decision for the responsible clinician alone"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that staff working on inpatient wards should not facilitate or accompany patients off site to smoke, explicitly including the use of Section 17 leave to facilitate smoking, and that staff should never permit smoking as a way to manage behaviour or reduce incidents.",
+  "source": "Derbyshire Healthcare - Smoke Free Sites Policy",
+  "sourceDate": "May 2025, issue 1, review January 2028"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "A patient asks whether they can use their trust vape in the day area.",
+  "question": "What does the trust Smoke Free Sites Policy say about where patients can vape?",
+  "options": [
+   "Vaping is permitted anywhere on trust premises, indoors and outdoors",
+   "Vaping is permitted in outdoor areas across trust premises, and decisions about indoor use are made locally by each ward or service",
+   "Vaping is only permitted in designated smoking shelters",
+   "Vaping indoors is permitted trust wide but banned outdoors near entrances"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says vaping is permitted in outdoor areas across trust premises, and that decisions around indoor use are made locally by each ward or service, balancing patient choice with safety, comfort and clinical needs.",
+  "source": "Derbyshire Healthcare - Smoke Free Sites Policy",
+  "sourceDate": "May 2025, issue 1, review January 2028"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "scenario": "A visitor is found smoking in the ward garden.",
+  "question": "How does the trust Smoke Free Sites Policy say breaches should be recorded?",
+  "options": [
+   "In the ward daily report book only",
+   "Using the trust's Datix reporting system",
+   "By email to the Health Protection Unit",
+   "On the patient's SystmOne record only"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that where a breach of the smoke free policy occurs it should be recorded using the trust's Datix reporting system, and that staff, patients and visitors involved should all be approached with understanding and professionalism.",
+  "source": "Derbyshire Healthcare - Smoke Free Sites Policy",
+  "sourceDate": "May 2025, issue 1, review January 2028"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "scenario": "A patient asks if they can use the vape their partner brought in from home.",
+  "question": "What does the Trust Approved Vape Standard Operating Procedure say?",
+  "options": [
+   "Personal vapes are allowed if they are checked by staff first",
+   "Personal vapes are allowed but must be stored in the clinic room between uses",
+   "Only trust approved vape devices are to be used by service users within inpatient settings",
+   "Personal disposable vapes are allowed but rechargeable devices are not"
+  ],
+  "correctIndex": 2,
+  "rationale": "Both the Smoke Free Sites Policy and the vape Standard Operating Procedure state that only trust approved vape devices are to be used by service users within inpatient settings, to ensure safety, prevent fire alarm activations and keep a consistent approach to care. The trust device is a pod style Totally Wicked Switz Pro.",
+  "source": "Derbyshire Healthcare - Trust Approved Vape Standard Operating Procedure",
+  "sourceDate": "No issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Easy",
+  "scenario": "A smoker is admitted at the weekend and accepts the offer of a trust vape.",
+  "question": "What should they be issued with, and what happens to it at discharge?",
+  "options": [
+   "One battery and one pack of prefilled pods, with the battery kept by the patient throughout admission and taken home on discharge",
+   "One battery and one pack of pods, both returned to the clinic room on discharge",
+   "A week's supply of pods only, with the battery loaned from ward stock",
+   "Two batteries and two packs of pods, all of which stay on the ward"
+  ],
+  "correctIndex": 0,
+  "rationale": "The Standard Operating Procedure says patients who accept the offer should be given one battery and one pack of prefilled pods (two pods per pack) at the earliest opportunity after admission, and that the battery is kept by the patient throughout their admission and can be taken home on discharge.",
+  "source": "Derbyshire Healthcare - Trust Approved Vape Standard Operating Procedure",
+  "sourceDate": "No issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "You are checking the ward's vape supply at the start of a shift.",
+  "question": "What stock level does the Trust Approved Vape Standard Operating Procedure say each ward holds, and where can patients buy more pods?",
+  "options": [
+   "A stock of five batteries and five packets of pods in the ward office, with more pods sold on the ward",
+   "A stock of two batteries and two packets of pods in the clinic room, with further pods purchased on site rather than on the ward",
+   "No ward stock at all, with every device ordered individually from pharmacy",
+   "A stock of one battery per bed in the clinic room, with pods issued free on request"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Standard Operating Procedure describes a stock of two batteries and two packets of pods stored in the clinic room on each ward, replenished by the named on-site team for that unit once depleted. It states clearly that pods are not available to purchase on the ward, and patients buy further pods at the designated on-site outlet.",
+  "source": "Derbyshire Healthcare - Trust Approved Vape Standard Operating Procedure",
+  "sourceDate": "No issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "A patient admitted five days ago has not yet been spoken to about smoking.",
+  "question": "What timescale does the Inpatient Smoking Cessation Service Standard Operating Procedure set for the offer of stop smoking support?",
+  "options": [
+   "Within 24 hours of admission",
+   "Within 7 days of admission, as an opt out offer",
+   "Within 28 days of admission",
+   "At the first care programme approach review"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Standard Operating Procedure states that all inpatients are to be given an opt out offer of stop smoking support within 7 days of admission, and are to be visited at least once by a tobacco dependency advisor. Patients may opt out at any time, but those who do not are kept in regular contact until discharge or completion of treatment.",
+  "source": "Derbyshire Healthcare - Inpatient Smoking Cessation Service Standard Operating Procedure",
+  "sourceDate": "No issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Hard",
+  "scenario": "It is 3am and a newly admitted smoker is agitated and asking for nicotine replacement. No prescription is in place yet.",
+  "question": "Which nicotine replacement therapy (NRT) products can nursing staff issue via the trust Homely Remedies Protocol?",
+  "options": [
+   "Any NRT product held in the clinic room",
+   "16 hour nicotine patches (25mg and 15mg) and lozenges (4mg and 2mg)",
+   "Inhalators (15mg) and nicotine mouthspray (1mg) only",
+   "24 hour nicotine patches (21mg and 14mg) only"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Standard Operating Procedure lists 16 hour nicotine patches in 25mg and 15mg strengths and lozenges in 4mg and 2mg strengths as the products nursing staff can issue via the Homely Remedies Protocol. After that initial issue, further supplies should be issued on prescription, with the tobacco dependency advisor liaising with ward staff to get one in place.",
+  "source": "Derbyshire Healthcare - Inpatient Smoking Cessation Service Standard Operating Procedure",
+  "sourceDate": "No issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "A patient on the ward stops smoking after admission.",
+  "question": "Which medicines does the trust smoking cessation Standard Operating Procedure name as affected by a change in smoking status, meaning prescribers must be told?",
+  "options": [
+   "Lithium, sodium valproate, sertraline and diazepam",
+   "Clozapine, olanzapine, theophylline and warfarin",
+   "Chlordiazepoxide, thiamine, haloperidol and quetiapine",
+   "Metformin, ramipril, atorvastatin and aspirin"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Standard Operating Procedure names clozapine, olanzapine, theophylline and warfarin as medicines whose metabolism is affected by tobacco use, and requires prescribers to be informed at the earliest opportunity and kept updated on progress so doses can be adjusted.",
+  "source": "Derbyshire Healthcare - Inpatient Smoking Cessation Service Standard Operating Procedure",
+  "sourceDate": "No issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Substance Misuse & Smoking",
+  "difficulty": "Medium",
+  "scenario": "A patient is transferred to the Royal Derby Hospital for physical health treatment and is screened for alcohol use there.",
+  "question": "At what AUDIT-C score does the Alcohol Care Team (ACT) Standard Operating Procedure say the team will offer an assessment?",
+  "options": [
+   "Any score of 1 or above",
+   "A score of 5 or above",
+   "A score of 11 or above",
+   "Only where the treating team makes a direct telephone referral"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Standard Operating Procedure states the ACT will offer an assessment to anyone scoring 5 or above on the AUDIT-C, which is completed on all inpatients aged 18 and over at the Royal Derby Hospital, with the referral also registered on Derbyshire Healthcare's SystmOne record.",
+  "source": "Derbyshire Healthcare - Alcohol Care Team Standard Operating Procedure",
+  "sourceDate": "December 2025, review April 2027"
+ }
+]

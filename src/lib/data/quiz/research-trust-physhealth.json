@@ -1,0 +1,628 @@
+[
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A patient is transferred to your ward straight from an acute medical ward, where they were seen by a doctor two days ago.",
+  "question": "Under the Trust's Physical Care of Adult Inpatients policy, by when must a detailed physical examination, including weight and height, be completed for this patient?",
+  "options": [
+   "Within 4 hours of admission",
+   "Within 48 hours of admission, even though they came from an acute medical ward",
+   "It is not needed because they were examined on the acute ward",
+   "Within 7 days of admission"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires a comprehensive physical examination including observations, weight and height within 48 hours of admission, and states explicitly that this must be completed even if the patient has been transferred from another acute medical ward or inpatient setting.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "question": "The Trust's Physical Care of Adult Inpatients policy sets a standard for completing a full physical health review after admission, quoting the Accreditation for Inpatient Mental Health Services (AIMS) standard. What is the timescale?",
+  "options": [
+   "Within 2 days of admission",
+   "Within 5 working days of admission",
+   "By the first ward round",
+   "Within 14 days of admission"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states a full physical health review should be completed within 2 days of admission (AIMS standard), ordinarily requiring liaison with the GP, the summary care record and carers.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "question": "Where nothing else has been specified for an individual patient, what does the Trust's Physical Care of Adult Inpatients policy set as the MINIMUM frequency for recording physical clinical observations?",
+  "options": [
+   "Daily",
+   "Twice weekly",
+   "Weekly, including weight, pulse and blood pressure",
+   "Monthly"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that where it is not specified otherwise, physical clinical observations should be recorded as a minimum weekly, including weight, pulse and blood pressure. Frequency above that minimum is guided by clinical need and the NEWS2 escalation plan.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "scenario": "A patient on your ward has now been an inpatient for seven months.",
+  "question": "How often does the Trust's Physical Care of Adult Inpatients policy say a comprehensive physical health review must be repeated for long-stay patients?",
+  "options": [
+   "Every three months",
+   "Every six months",
+   "Every twelve months",
+   "Only if a new physical problem is identified"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that Physical Health Assessment documentation in the Electronic Patient Record must be completed on admission and at agreed timescales during the stay, with a minimum of every six months, and that for patients in hospital for extended periods a comprehensive physical health review should be repeated every six months.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "You have just recorded a set of observations on a patient who feels hot and unwell.",
+  "question": "According to the Trust's Physical Care of Adult Inpatients policy, which National Early Warning Score 2 (NEWS2) findings should prompt you to complete the Trust sepsis screening tool?",
+  "options": [
+   "Any score of 1 or more",
+   "A score of 3 in a single parameter, or an aggregate score above 5",
+   "An aggregate score of 3 or more only",
+   "Only an aggregate score of 7 or more"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that where patients trigger 3 in a single parameter or have an aggregate score greater than 5, a Trust sepsis screening tool should be completed.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "A physically unwell patient has been placed on Enhanced Physical Care Monitoring (E-PCM).",
+  "question": "What monitoring and recording interval does the Trust's Physical Care of Adult Inpatients policy set out for Enhanced Physical Care Monitoring (E-PCM)?",
+  "options": [
+   "Every 5 minutes",
+   "Every 15 minutes, or more often as the condition dictates",
+   "Every 30 minutes",
+   "Hourly"
+  ],
+  "correctIndex": 1,
+  "rationale": "The E-PCM procedure in Appendix 1 of the policy says to monitor and record every 15 minutes or more as the condition dictates, using the Early Warning System, and requires enough handover overlap for both practitioners to visually agree the patient's condition and the frequency of observation.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "A pregnant woman is admitted to the ward overnight.",
+  "question": "The Trust's Physical Care of Adult Inpatients policy requires a full physical history and examination for all women admitted, including blood pressure, pulse, temperature, respiration rate and urinalysis. By when must these be recorded in the patient notes?",
+  "options": [
+   "Within 4 hours of admission",
+   "Within 12 hours of admission",
+   "Within 24 hours of admission",
+   "By the next working day"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that all women admitted must have a full physical history and examination including blood pressure, pulse, temperature, respiration rate and urinalysis (dipsticks) recorded in the patient notes within 4 hours of admission.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "A woman is admitted three days after giving birth.",
+  "question": "What does the Trust's Physical Care of Adult Inpatients policy require for a woman admitted within 5 days post-partum?",
+  "options": [
+   "Daily National Early Warning Score 2 (NEWS2) and a midwife visit within five days",
+   "Weekly National Early Warning Score 2 (NEWS2) and a GP review",
+   "An agreed physical health National Early Warning Score 2 (NEWS2) twice daily until no longer clinically necessary, and to be seen by a midwife within two days",
+   "No routine observations unless she reports feeling unwell"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that women admitted within 5 days post-partum should have an agreed physical health NEWS2 completed twice daily until clinically no longer necessary, and be seen by a midwife within two days, with the visit recorded in the electronic patient record.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "question": "Under the Trust's Physical Care of Adult Inpatients policy, how quickly must the discharge summary and discharge clinical narrative be sent to the GP after discharge?",
+  "options": [
+   "Within 24 hours of discharge, by NHS.net email",
+   "Within 72 hours of discharge, by internal post",
+   "Within one week of discharge",
+   "Within two weeks of discharge"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy requires the discharge summary and discharge clinical narrative to be completed on SystmOne and sent to GPs within 24 hours of discharge by NHS.net email. Follow-up summaries should be sent within 2 weeks of discharge.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "scenario": "A patient on your ward has just been started on an antipsychotic.",
+  "question": "Under the responsibilities of the registered nurse in the Trust's Physical Care of Adult Inpatients policy, how often should weight be checked for patients initiated on antipsychotics and mood stabilisers?",
+  "options": [
+   "Daily",
+   "Weekly",
+   "Fortnightly",
+   "Monthly"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy lists 'ensuring weekly weight checks for patients initiated on antipsychotics and mood stabilisers' as a specific duty of the registered nurse, alongside implementing the physical care plan including Lester Tool monitoring.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A newly admitted patient gives an account of recent substance use, and a urine drug screen is indicated.",
+  "question": "Within what period of admission does the Trust's Physical Care of Adult Inpatients policy say an indicated urine drug screen should be taken?",
+  "options": [
+   "Within 4 hours of admission",
+   "Within 24 hours of admission",
+   "Within 48 hours of admission",
+   "At the first ward round"
+  ],
+  "correctIndex": 1,
+  "rationale": "In the list of investigations required on admission, the policy specifies a urine drug screen if indicated within 24 hours of admission.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "question": "The Trust's Resuscitation Policy sets the frequency of emergency equipment checks. How often must grab bags and the contents on the TOP of the emergency trolley be checked in an inpatient setting?",
+  "options": [
+   "Every 24 hours",
+   "Every 48 hours",
+   "Weekly",
+   "Monthly"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy's frequency of checks table gives 'DHcFT Emergency Trolley top contents - Daily (24hrs)', with grab bags and trolley top checked every 24 hours in inpatient settings and weekly in community settings.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "question": "How often does the Trust's Resuscitation Policy require the DRAWER contents of the inpatient resuscitation trolley to be checked?",
+  "options": [
+   "Every 24 hours",
+   "Weekly, ensuring a tamper proof tag is used",
+   "Monthly",
+   "Only after the trolley has been used"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states the checks are weekly for the resuscitation trolley drawer contents, ensuring a tamper proof tag is used. The Trust's Resuscitation Trolley Check List is headed 'CHECKED WEEKLY (unless security tab has been broken)'.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "Your ward manager asks how long the completed resuscitation equipment check records need to be kept.",
+  "question": "According to the Trust's Resuscitation Policy, how long must the signed and dated record of emergency equipment checks be maintained?",
+  "options": [
+   "1 year",
+   "2 years",
+   "3 years",
+   "7 years"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that a signed and dated record of these checks should be maintained and kept for 3 years, and should be available for inspection, with assurance routinely confirmed to line managers.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "You are doing the daily emergency equipment check and reach the oxygen cylinder.",
+  "question": "What does the Trust's Resuscitation Policy say about checking oxygen cylinders?",
+  "options": [
+   "Cylinders must be at least 50% full and all cylinders should be turned on to test flow",
+   "Cylinders must be at least 75% full, and cylinders with integrated BOC valve heads should NOT be turned on during the checking procedure",
+   "Cylinders must be completely full and replaced weekly regardless of contents",
+   "Cylinder contents only need checking after the cylinder has been used"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states oxygen cylinders must be at least 75% full, that cylinders with integrated BOC valve heads should NOT be turned on during the checking procedure, and that those without the live gauge should be turned on to confirm 75% capacity. The Daily Clinic Checklist likewise records the large oxygen cylinder as 'min 75% full'.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "question": "The Trust's Resuscitation Policy states that the Automated External Defibrillator (AED) runs its own self-tests. What is the ONLY check staff need to carry out on the AED on a daily basis?",
+  "options": [
+   "Run a manual shock test and record the result",
+   "Confirm the status indicator shows a flashing hour glass symbol, and that 2 sets of defibrillator pads are in date and available for immediate use",
+   "Remove and re-seat the battery, then check the pads",
+   "Download the device memory and file it in the patient record"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states AEDs have a comprehensive self-test system running daily, weekly and monthly diagnostic checks, and that the only daily check needed by staff is to confirm the status indicator shows a flashing hour glass symbol and that 2 sets of defibrillator pads are in date and available for immediate use.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A cardiopulmonary resuscitation (CPR) attempt is underway on the ward and you are the nurse leading it.",
+  "question": "What does the Trust's Resuscitation Policy require in relation to the Trust's CPR Report Form?",
+  "options": [
+   "The lead must allocate a member of staff to complete it DURING the event so correct timings are captured, and the form is then scanned into the DATIX incident form",
+   "It should be completed from memory by the lead at the end of the shift",
+   "It is only needed if the patient does not survive",
+   "It replaces the need for a DATIX incident report"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy requires the Trust's CPR Report Form for every resuscitation event, with the member of staff taking the lead role allocating someone to complete the documentation during the event to capture correct timings. The form is kept and scanned into the DATIX incident form, and an electronic DATIX incident report must be completed for all CPR attempts.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "A patient has regained a pulse after a resuscitation attempt and you are waiting for the paramedics.",
+  "question": "What does the Trust's Resuscitation Policy say about immediate post-resuscitation care?",
+  "options": [
+   "Recommence ABCDE assessment and document findings every 15 minutes, and switch the Automated External Defibrillator (AED) off to save the battery",
+   "Recommence ABCDE assessment and document findings every two minutes using National Early Warning Score 2 (NEWS2), leave the AED switched on and leave the pads adhered and plugged in",
+   "Record a full set of observations once, then wait for the ambulance crew",
+   "Remove the AED pads and clean the equipment before the crew arrives"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy's post-resuscitation care section requires ABCDE assessment recommenced and findings documented every two minutes using NEWS2, with the AED left switched on and the chest pads left adhered and plugged in, so the AED can be used without delay if the patient re-arrests.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "A patient's National Early Warning Score 2 (NEWS2) total comes out at 7. You have contacted the doctor, who says they cannot get to the ward for about half an hour.",
+  "question": "Under the escalation table in the Trust's Resuscitation Policy, what should you do?",
+  "options": [
+   "Wait for the doctor and repeat the observations in 30 minutes",
+   "Call an ambulance, because at a total of 7 or more a delay of more than 15 minutes means an ambulance should be called unless the doctor advises otherwise",
+   "Increase observations to 2 hourly and review at the next handover",
+   "Call an ambulance only if the score rises above 9"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy's NEWS2 escalation table sets a total of 7 or more as the emergency response threshold, requiring the registered nurse to inform the medical team immediately at at least registrar level, and to call the doctor for an immediate visit or, if a delay of more than 15 minutes, to call an ambulance unless advised otherwise by the doctor. At a total of 5 or more the equivalent delay trigger is 30 minutes.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "question": "The Trust's Resuscitation Policy sets a minimum standard for clinical areas that practise Rapid Tranquillisation (RT). What must those areas have access to?",
+  "options": [
+   "A full resuscitation trolley and a resident anaesthetist",
+   "An Automated External Defibrillator (AED), a grab bag and appropriately trained staff",
+   "An AED only",
+   "A pulse oximeter and a first aid kit"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that those areas which practice rapid tranquillisation should have access to an AED, grab bag and appropriately trained staff as a minimum. It also requires staff involved in RT to have ongoing competency training to a minimum of Resuscitation Council (UK) Immediate Life Support (ILS) and to be trained in the use of pulse oximeters.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A patient collapses in cardiac arrest on a ward where emergency bleep holders are expected to attend.",
+  "question": "In what order does the Trust's Resuscitation Policy say the emergency calls should be made?",
+  "options": [
+   "The internal medical emergency bleep request first, then the ambulance call",
+   "The 999 ambulance call first, then the internal medical emergency bleep request, stating a Medical Emergency, the location and whether the victim is an adult or child",
+   "Only the internal bleep request; the bleep holder will call the ambulance",
+   "Only 999; the bleep is not used for cardiac arrest"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that in all cases of respiratory and cardiopulmonary arrest 999 must be dialled to summon the ambulance service, and that in areas where bleep holders are expected to attend, the ambulance call should be made FIRST, followed by the internal bleep request, stating a Medical Emergency, the location of the event and whether the victim is an adult or child. The Hartington Unit has a separate arrangement with the Chesterfield Royal Hospital switchboard and cardiac arrest team.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "question": "How often does the Trust's Resuscitation Policy say ALL emergency equipment will be audited, and who coordinates that audit?",
+  "options": [
+   "Every six months, coordinated by the ward manager",
+   "A minimum of once a year, coordinated by the Physical Health Care and Infection Control Committee (PHCIC)",
+   "Every two years, coordinated by People Development Services",
+   "Only when an incident occurs, coordinated by the Lead Resuscitation Officer"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that all emergency equipment will be audited a minimum of once a year, that the audit is coordinated by the PHCIC, and that any remedial action required is reported to the appropriate unit manager immediately.",
+  "source": "Derbyshire Healthcare - Resuscitation Policy and Procedures",
+  "sourceDate": "Sept 2025, issue 13, review Sept 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "question": "The Trust's Resuscitation Trolley Check List is headed with the frequency it must be completed. What does it say?",
+  "options": [
+   "Checked daily",
+   "Checked weekly, unless the security tab has been broken",
+   "Checked monthly",
+   "Checked at every shift handover"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust's Resuscitation Trolley Check List is headed 'CHECKED WEEKLY (unless security tab has been broken)', and requires the ward, date, quantity, expiry date of the first item to expire, staff signature and the security tag numbers removed and added.",
+  "source": "Derbyshire Healthcare - Resuscitation Trolley Check List (General)",
+  "sourceDate": "April 2026, version 1.4"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "scenario": "You need a ligature cutter from the resuscitation trolley in a hurry.",
+  "question": "On the Trust's Resuscitation Trolley Check List, which drawer holds the ligature cutter and the tough cut scissors?",
+  "options": [
+   "The 1st drawer, Airway",
+   "The 2nd drawer, Breathing",
+   "The 3rd drawer, Circulation",
+   "The bottom drawer"
+  ],
+  "correctIndex": 0,
+  "rationale": "The checklist lists the ligature cutter, tough cut scissor and pen torch in the 1st drawer (Airway), alongside airway adjuncts, pocket mask, Magills forceps and spare suction tubing. The bottom drawer holds the infusion fluids, the Adrenaline Shock Pack and the Naloxone 400 microgram Emergency Pack.",
+  "source": "Derbyshire Healthcare - Resuscitation Trolley Check List (General)",
+  "sourceDate": "April 2026, version 1.4"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "You are working through the Daily Clinic Checklist and reach the glucometer section.",
+  "question": "What does the Trust's Daily Clinic Checklist say about the glucometer control solutions?",
+  "options": [
+   "Check the date of the glucose control solutions, which must be less than 3 months since opened, and recalibrate if replaced with new solutions",
+   "Control solutions last 12 months once opened and no recalibration is needed",
+   "Control solutions only need checking when a reading looks wrong",
+   "Control solutions must be replaced weekly"
+  ],
+  "correctIndex": 0,
+  "rationale": "The Daily Clinic Checklist includes 'Check date of glucose control solutions (less than 3 months since opened)' and carries the note that if they are replaced with new solutions you must remember to recalibrate.",
+  "source": "Derbyshire Healthcare - Daily Clinic Checklist",
+  "sourceDate": "April 2026"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "question": "The Trust's Daily Clinic Checklist includes a stock check of disposable ligature knives. How many must be available in EVERY green zone?",
+  "options": [
+   "One",
+   "Two",
+   "Three",
+   "Five"
+  ],
+  "correctIndex": 2,
+  "rationale": "The Daily Clinic Checklist requires disposable ligature knives x3 and disposable tough cut scissors x3 in every green zone, plus a storage box holding 20 ligature knives and 5 tough cut scissors, with the stock check form updated to reflect current stock.",
+  "source": "Derbyshire Healthcare - Daily Clinic Checklist",
+  "sourceDate": "April 2026"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "question": "Besides the defibrillator and airway kit, which of the following does the Trust's Daily Clinic Checklist require to be present on TOP of the resuscitation trolley?",
+  "options": [
+   "ReSPECT forms and an SBARD notepad and pen",
+   "The patient's paper drug chart",
+   "A copy of the ward's off-duty rota",
+   "A spare set of patient observation charts only"
+  ],
+  "correctIndex": 0,
+  "rationale": "The Daily Clinic Checklist lists ReSPECT forms and an SBARD notepad and pen among the items checked daily on top of the resuscitation trolley, along with the AED and pads, the printed BLS algorithm hung off the drip stand, an empty resus-only sharps bin, a small full oxygen cylinder, the suction machine and the bag valve mask with HEPA filter.",
+  "source": "Derbyshire Healthcare - Daily Clinic Checklist",
+  "sourceDate": "April 2026"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "scenario": "A patient is being managed for suspected sepsis while transfer is arranged.",
+  "question": "What oxygen saturation target does the Trust's Sepsis Policy set within the Sepsis Six?",
+  "options": [
+   "Saturations of 88% or higher for everyone",
+   "Saturations of 94% or higher, or above 88% for patients known to have moderate to severe pulmonary disease",
+   "Saturations of 90% or higher for everyone",
+   "Oxygen should be withheld until a prescription is written"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states oxygen should be given to maintain target saturations of 94% or higher, and that where patients are known to have moderate to severe pulmonary disease the recommendation to give oxygen remains but with a lower target above 88%. It notes patients with sepsis are exempt from British Thoracic Society oxygen guidance because hypoxia will kill before hypercapnia.",
+  "source": "Derbyshire Healthcare - Sepsis Policy and Procedure",
+  "sourceDate": "August 2025, issue 003, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "A deteriorating patient with suspected Red Flag Sepsis needs high flow oxygen immediately and no prescription has been written.",
+  "question": "What does the Trust's Sepsis Policy say about the need for an oxygen prescription in this situation?",
+  "options": [
+   "All oxygen administration requires a prescription first, without exception",
+   "High flow continuous oxygen via a non-rebreathing mask for the express purpose of life saving does not require a prescription, although titrating oxygen to maintain a specified saturation is oxygen therapy and does require one",
+   "Oxygen never requires a prescription in any circumstances",
+   "Only a doctor may apply the mask, and only after prescribing"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that titrating oxygen delivery to maintain a specified saturation is provision of oxygen therapy and requires a prescription, but that high flow continuous oxygen delivery via non-rebreathing mask for the express purpose of life saving does not require a prescription.",
+  "source": "Derbyshire Healthcare - Sepsis Policy and Procedure",
+  "sourceDate": "August 2025, issue 003, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A patient on your ward has one Red Flag Sepsis criterion and you are arranging transfer.",
+  "question": "What does the Trust's Sepsis Policy say about how the ambulance call and the referral to the Emergency Department (ED) should be made?",
+  "options": [
+   "Request a routine ambulance and let the crew brief the ED on arrival",
+   "Transfer by blue light ambulance with a paramedic crew if immediately available, with the call using the term 'Red Flag Sepsis', and where possible a telephone referral to the receiving ED also using the term 'Red Flag Sepsis'",
+   "Ask the on-call doctor to arrange transfer the following morning",
+   "Transfer by ward staff car with an escort, since this is usually quicker"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that transfer should be by blue light ambulance with a paramedic crew if immediately available, that the call should include direct reference to the acuity using the term 'Red Flag Sepsis', and that where possible a telephone referral to the receiving Emergency Department should be made using the same term. The equivalent wording for Amber Flag is 'Amber Flag Sepsis'.",
+  "source": "Derbyshire Healthcare - Sepsis Policy and Procedure",
+  "sourceDate": "August 2025, issue 003, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "question": "Under the Trust's Sepsis Policy, who is responsible for making sure sepsis screening in a clinical area is audited, and how often?",
+  "options": [
+   "The Lead Resuscitation Officer, every three years",
+   "The senior clinician in overall charge of each clinical area, at least annually",
+   "The Chief Executive, every two years",
+   "The ward manager, only after a serious incident"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states the senior clinician in overall charge of each clinical area is responsible for ensuring the standard of sepsis screening in their area is audited for compliance at least annually. Clinical audit outcomes are reported to the Safeguarding and Patient Safety Group and the Mortality Review Panel, and all sepsis incidents are reviewed through DATIX.",
+  "source": "Derbyshire Healthcare - Sepsis Policy and Procedure",
+  "sourceDate": "August 2025, issue 003, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A patient has a tonic clonic seizure that stops after about three minutes. Two hours later they have another one.",
+  "question": "How does the Trust's tonic clonic seizure template classify this situation?",
+  "options": [
+   "Routine observation only, because each seizure was under 5 minutes",
+   "A medical emergency, because a seizure under 5 minutes followed by a further seizure within 24 hours (or a sustained injury) meets the emergency criteria, as does any seizure lasting more than 5 minutes",
+   "Urgent action but not an emergency, because only seizures over 10 minutes are emergencies",
+   "A medical emergency only if the patient has no diagnosis of epilepsy"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust's template sets the medical emergency threshold as a seizure lasting more than 5 minutes (consider status epilepticus), OR a seizure under 5 minutes where the person suffers a further seizure within 24 hours or sustains an injury. Where a seizure resolves in under 5 minutes with no repeat, the template directs urgent action, contacting the doctor or Advanced Clinical Practitioner (ACP) to review immediately and agree a management plan, which can be done by phone.",
+  "source": "Derbyshire Healthcare - Tonic Clonic Seizure Template",
+  "sourceDate": "September 2025"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A patient is having a tonic clonic seizure on the ward.",
+  "question": "Alongside performing ABCDE and National Early Warning Score 2 (NEWS2), which specific bedside test does the Trust's tonic clonic seizure template tell you to do, and what must be recorded?",
+  "options": [
+   "A urine dipstick, recording only the time the seizure started",
+   "A blood glucose test, keeping an accurate record of the time, duration and description of the seizure",
+   "A 12 lead ECG, recording only the patient's response afterwards",
+   "A peak flow, recording the recovery position used"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust's template directs staff to perform ABCDE and NEWS2, do a blood glucose test, secure the airway and consider oxygen, and to keep an accurate record of time, duration and description. It also says do not restrain the person, do not put anything in their mouth, do not move them unless they are in danger, and stay with them until they have recovered.",
+  "source": "Derbyshire Healthcare - Tonic Clonic Seizure Template",
+  "sourceDate": "September 2025"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A patient on the ward has sudden facial droop and cannot raise one arm. You have dialled 999.",
+  "question": "According to the Trust's stroke protocol for a patient presenting as unwell in an inpatient setting, what should you do while you await assistance?",
+  "options": [
+   "Sit the patient up and give sips of water to check their swallow",
+   "Perform a blood glucose measurement to exclude hypoglycaemia and keep the patient warm, and do NOT provide anything orally",
+   "Give aspirin immediately and record a 12 lead ECG",
+   "Walk the patient to the clinic room for a full examination"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust's stroke protocol, based on the FAST campaign, treats suspected stroke as a medical emergency: perform ABCDE and an early warning score, dial 999, make sure resuscitation equipment is available, and while awaiting assistance perform a BM to exclude hypoglycaemia and keep the patient warm. It states explicitly: do not provide anything orally.",
+  "source": "Derbyshire Healthcare - Stroke Medical Protocol, Patient Presents as Unwell in Inpatient Setting",
+  "sourceDate": "issue date, issue number and review date left blank on the document"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "scenario": "A patient who has taken an overdose on the ward refuses to go to the Emergency Department (ED).",
+  "question": "What does the Trust's Immediate Management of Overdose / Self-Poisoning (Inpatient) procedure say should happen next?",
+  "options": [
+   "Accept the refusal and monitor observations on the ward overnight",
+   "A capacity assessment is required; if the patient is capacitous and still declines, a Mental Health Act assessment should be considered, and charcoal given while this is arranged if the ED advises it",
+   "Restrain and convey the patient to the ED immediately",
+   "Discharge responsibility to the ambulance crew and take no further action"
+  ],
+  "correctIndex": 1,
+  "rationale": "The procedure states that if a patient refuses transfer to the ED a capacity assessment is required, that if a capacitous patient declines a Mental Health Act assessment should be considered, and that whilst this is being arranged charcoal should be given if the ED advises it.",
+  "source": "Derbyshire Healthcare - Immediate Management of Overdose / Self-Poisoning: Inpatient",
+  "sourceDate": "no issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "A 17 year old on the ward has taken an overdose and is refusing treatment. They appear to have capacity.",
+  "question": "What does the Trust's Immediate Management of Overdose / Self-Poisoning (Inpatient) procedure say about this?",
+  "options": [
+   "Capacity settles it, so the refusal should simply be documented",
+   "It is a safeguarding issue even when the young person has capacity, and advice or support should be sought from the safeguarding lead or social care as appropriate",
+   "Parental consent alone resolves the situation with no further action",
+   "A safeguarding referral is only needed if the young person is under 16"
+  ],
+  "correctIndex": 1,
+  "rationale": "The procedure's safeguarding considerations box states that a young person under 18 years refusing treatment is a safeguarding issue even when there is capacity, and that advice or support should be sought from the safeguarding lead or social care as appropriate. The procedure also directs staff to alert the ED of the pending arrival with the risk and relevant history, and to inform family or carers with the patient's consent.",
+  "source": "Derbyshire Healthcare - Immediate Management of Overdose / Self-Poisoning: Inpatient",
+  "sourceDate": "no issue or review date shown on the document"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "scenario": "You are recording oxygen saturations on a patient using the ward's finger pulse oximeter.",
+  "question": "What does the Trust's Use of Pulse Oximetry Standard Operating Procedure (SOP) say about when to take the reading?",
+  "options": [
+   "Take the reading as soon as any number appears on the display",
+   "Take the reading only once the oximeter has been displaying a green light for at least 10 seconds",
+   "Take the reading after a full 60 seconds regardless of the display",
+   "Take three readings and average them"
+  ],
+  "correctIndex": 1,
+  "rationale": "The SOP states that readings should only be taken once the oximeter has been displaying a green light for at least 10 seconds, and warns that cold extremities, nail polish, nicotine stained fingers and dark skin pigmentation may interfere with the reading. It also requires staff to document the readings in the patient's electronic record.",
+  "source": "Derbyshire Healthcare - (Use of) Pulse Oximetry Standard Operating Procedure (SOP)",
+  "sourceDate": "August 2025, issue 6, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Hard",
+  "question": "Under the Trust's Use of Pulse Oximetry Standard Operating Procedure (SOP), how often must planned preventative maintenance of pulse oximeters be undertaken, and by whom?",
+  "options": [
+   "Every three months, by the ward manager",
+   "Every six months, through Clinical Engineering",
+   "Annually, by the supplier",
+   "Only when a fault is reported"
+  ],
+  "correctIndex": 1,
+  "rationale": "The SOP states that regular checks on the equipment's functionality must be made and that planned preventative maintenance must be undertaken every six months through Clinical Engineering.",
+  "source": "Derbyshire Healthcare - (Use of) Pulse Oximetry Standard Operating Procedure (SOP)",
+  "sourceDate": "August 2025, issue 6, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Easy",
+  "scenario": "A patient's condition changes acutely during your shift and you need to escalate to the on-call doctor.",
+  "question": "Which structured communication tool does the Trust's Physical Care of Adult Inpatients policy tell ward teams to use for escalation, referrals and emergency situations?",
+  "options": [
+   "SBARD (Situation, Background, Assessment, Recommendation, Decision)",
+   "SOAP (Subjective, Objective, Assessment, Plan)",
+   "PINCH ME",
+   "AVPU (Alert, Voice, Pain, Unresponsive)"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that each ward should use the SBARD communication system for continuity of care and completion of outstanding tasks, and that communication of referrals and emergency situations is delivered using SBARD to ensure effective, structured communication of key information. AVPU is used within Enhanced Physical Care Monitoring to assess conscious level, and PINCH ME is used to identify likely causes of delirium.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ },
+ {
+  "category": "Trust Policy - Physical Health & Emergencies",
+  "difficulty": "Medium",
+  "question": "Under the Trust's Physical Care of Adult Inpatients policy, how often must ward nursing staff check the ward's physical health assessment equipment, such as the sphygmomanometer, oximeter and auroscope?",
+  "options": [
+   "At least weekly, with a clear procedure for reporting equipment failure",
+   "At least monthly",
+   "Only at the annual equipment audit",
+   "Only when a member of staff reports a fault"
+  ],
+  "correctIndex": 0,
+  "rationale": "The equipment section of the policy states there should be a clear procedure for nursing staff to check the equipment on at least a weekly basis, reporting equipment failure, with a budget for maintenance and replacement. It adds that resuscitation equipment is checked in accordance with the Resuscitation Policy, which sets separate daily and weekly frequencies.",
+  "source": "Derbyshire Healthcare - Physical Care of Adult Inpatients Policy and Procedure",
+  "sourceDate": "August 2025, issue 05, review April 2028"
+ }
+]

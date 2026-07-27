@@ -1,0 +1,530 @@
+[
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "scenario": "A bank nurse is working her first shift on a working age adult acute ward and asks where the ligature cutters are.",
+  "question": "On the Trust's working age adult acute wards, where are ligature cutters and tough cut scissors kept?",
+  "options": [
+   "In the locked clinic room cupboard with the controlled drugs",
+   "In a designated area known as 'the green wall'",
+   "One set carried by each qualified nurse on the shift",
+   "In the nursing office desk drawer"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust guidance states the knives and tough cut scissors are kept in a designated area of the ward called 'the green wall', so that staff unfamiliar with the ward can find them quickly. All new staff, including bank and agency, must be orientated to this area.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "question": "How often must a working age adult acute ward check that it holds the agreed minimum number of ligature cutters?",
+  "options": [
+   "Daily",
+   "At every shift handover",
+   "Weekly",
+   "Monthly"
+  ],
+  "correctIndex": 0,
+  "rationale": "The Trust guidance requires a daily check to ensure the ward has the agreed minimum number of ligature cutters available, with the ward manager giving assurance on this as part of senior nurse walkarounds.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "question": "What is the minimum stock of ligature cutters and tough cut scissors the Trust requires an acute inpatient area to hold?",
+  "options": [
+   "10 ligature cutters and 2 tough cut scissors",
+   "10 ligature cutters and 5 tough cut scissors",
+   "20 ligature cutters and 5 tough cut scissors",
+   "20 ligature cutters and 10 tough cut scissors"
+  ],
+  "correctIndex": 2,
+  "rationale": "The Trust guidance sets acute inpatient areas at 20 ligature cutters and 5 tough cut scissors, which is a higher local stock level than other inpatient areas because of the higher rate of incidents and acuity.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "A nurse moves from an acute ward to an older adults inpatient ward and expects the same stock levels.",
+  "question": "What minimum stock of ligature cutters does the Trust set for older adults, forensic and rehabilitation inpatient areas?",
+  "options": [
+   "20 ligature cutters and 5 tough cut scissors, the same as acute",
+   "10 ligature cutters and 5 tough cut scissors",
+   "5 ligature cutters and 5 tough cut scissors",
+   "There is no set minimum, it is decided by the ward manager"
+  ],
+  "correctIndex": 1,
+  "rationale": "Because these areas have a lower rate of incidents than working age adult acute wards, the Trust sets a lower local stock level of 10 cutters plus 5 tough cut scissors, and these areas do not use the weekly acute tracking system.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "question": "Under the Trust's stock control process for acute inpatient units, when are the unit stock cupboards audited and by whom?",
+  "options": [
+   "Every Monday by the ward manager",
+   "Every Tuesday by the clinical leads and Matrons",
+   "Every Friday by the Estates team",
+   "Monthly by the Health and Safety Team"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust guidance states unit stock cupboards are audited weekly on a Tuesday by the clinical leads and Matrons, and that this audit is what informs the ordering process for restocking the Trust ligature knife supply.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "A nurse is completing the emergency trolley check at the start of a shift.",
+  "question": "According to the Trust's ligature cutter guidance, where must one set of cutters always be kept as part of the emergency equipment?",
+  "options": [
+   "Taped to the inside of the seclusion room door",
+   "In the airway section of the resuscitation trolley or Red Bag",
+   "With the ward keys held by the nurse in charge",
+   "In the drugs trolley next to the naloxone"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust guidance on a page states one set must be in the airway section of the resus trolley or Red Bag, and that compliance with the ligature cutter guidance should be assessed as part of the emergency trolley checks.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "A patient has used a leather belt as a ligature.",
+  "question": "Which of the two ligature cutters supplied by the Trust is intended for tougher materials such as leather, towelling, some steel cables and electrical flexes?",
+  "options": [
+   "The disposable cutter",
+   "The tough cut scissors",
+   "Either, there is no difference in what they will cut",
+   "Standard ward scissors from the clinic room"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust supplies two products. The disposable cutter is most effective for most items, while the tough cut scissors will cut tougher materials such as leather, towelling, some steel cables and electrical flexes, although more effort and time may be needed.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "question": "Where does the Trust's ligature cutter guidance recommend inserting the cutter blade in relation to the patient's neck?",
+  "options": [
+   "At the back of the neck",
+   "At the front of the neck, over the airway",
+   "To the side of the neck",
+   "Wherever the knot happens to be"
+  ],
+  "correctIndex": 2,
+  "rationale": "The guidance recommends cutting to the side of the neck where the natural soft tissues and hollows ease insertion of the blade. This reduces pulling on the airway, which happens if the cutter is inserted at the back, and reduces further airway trauma, which can happen from the front.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "scenario": "A ligature has been tied with a firm knot and a nurse is deciding where to cut.",
+  "question": "Why does the Trust's ligature cutter guidance say staff must, where possible, avoid cutting the knot?",
+  "options": [
+   "It makes removal more difficult and the knot may be required later for forensic investigation",
+   "Cutting the knot will blunt the disposable cutter",
+   "The knot is the strongest point and the cutter will not go through it",
+   "Cutting the knot invalidates the manufacturer's warranty"
+  ],
+  "correctIndex": 0,
+  "rationale": "The guidance says staff must avoid cutting the knot where possible because it makes removal more difficult and the knot may be needed later for forensic investigation.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "A ligature incident on the ward has ended in a fatality.",
+  "question": "What does the Trust's ligature guidance say must happen to the room in the event of a fatality?",
+  "options": [
+   "The room should be cleaned and made safe before relatives arrive",
+   "The ligature should be removed and bagged, and the room reopened",
+   "The room and all of its contents must not be touched or moved, the room must be secured, and the ligature left in the room until the police arrive",
+   "Only the ligature point itself needs to be preserved"
+  ],
+  "correctIndex": 2,
+  "rationale": "The Trust guidance is explicit that in the event of a fatality the room and all of its contents must not be touched or moved, the room must be secured to prevent anyone accessing it until police arrive, and the ligature must be left in the room.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "scenario": "A ligature cutter has been used and the nurse is completing the paperwork.",
+  "question": "What does the Trust's ligature cutter guidance say must be recorded on the incident report after a ligature cutter is used?",
+  "options": [
+   "Only the patient's observation level at the time",
+   "The type of cutter or scissors that was used, with the incident also recorded in the patient notes",
+   "The serial number of the cutter",
+   "Nothing, unless the patient was injured"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Trust's guidance on a page requires staff to complete a Datix incident report indicating the type of cutter or scissors used, record the incident in the patient notes, and replace the cutter.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "A cutter has been used on an older adults ward and needs replacing.",
+  "question": "Outside the working age adult acute units, how does a Trust ward or community base replace a ligature cutter that has been used in an incident?",
+  "options": [
+   "It is automatically replaced at the next weekly Estates delivery",
+   "The ward manager orders directly from the supplier",
+   "A replacement is requested from Kingsway stores",
+   "The Health and Safety Team issues one on receipt of the Datix"
+  ],
+  "correctIndex": 2,
+  "rationale": "For older adults, forensic, rehabilitation and community bases such as CAMHS, the Trust guidance says that when an incident occurs a replacement cutter should be requested from Kingsway stores, as these areas do not use the weekly acute tracking system.",
+  "source": "Derbyshire Healthcare - Ligature Cutter Guidance including Storage / Ordering Process",
+  "sourceDate": "September 2024, issue 01, review September 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "question": "Which tool and which system does the Trust's Standard Operating Procedure (SOP) require staff to use to complete and record a ligature risk assessment?",
+  "options": [
+   "The Care Quality Commission (CQC) Ligature Risk Assessment Tool, with the risk record held in Datix",
+   "A locally designed ward checklist stored on the ward shared drive",
+   "The SystmOne risk screen template",
+   "The Health and Safety Executive workplace risk form"
+  ],
+  "correctIndex": 0,
+  "rationale": "The SOP provides instructions for completing the CQC Ligature Risk Assessment Tool and recording the risk in Datix. The January 2026 update confirms risk records remain in Datix because the intended new risk management system was not delivered.",
+  "source": "Derbyshire Healthcare - Ligature Risk Assessment Standard Operating Procedure",
+  "sourceDate": "January 2026, issue 02, review January 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "question": "How often does Trust policy require a ligature risk assessment for a ward environment to be reviewed as a minimum?",
+  "options": [
+   "Every six months",
+   "At least annually, or sooner if the environment or patient population changes significantly",
+   "Every three years in line with the policy review cycle",
+   "Only after a ligature incident or near miss"
+  ],
+  "correctIndex": 1,
+  "rationale": "Both the policy and the SOP require ligature risk assessments to be reviewed at least annually, or sooner if there are significant changes to the environment, the service, the patient population, or following a near miss incident. The frequency may be more often depending on the current risk rating.",
+  "source": "Derbyshire Healthcare - Ligature Risk Reduction Policy and Procedure",
+  "sourceDate": "January 2026, issue 7, review December 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "scenario": "A ward assessment has identified one high rated ligature point and several low rated ones.",
+  "question": "What does the Trust SOP say the overall Current Risk Rating field in the Datix risk record must be?",
+  "options": [
+   "An average of all the individual point ratings",
+   "The rating agreed by the Estates team",
+   "No less than the highest rated point identified within the CQC tool",
+   "Always rated as medium until actions are agreed"
+  ],
+  "correctIndex": 2,
+  "rationale": "The SOP states the overall current risk rating recorded in the Datix Current Risk Rating field should be no less than the highest rated point within the CQC tool, so a single high rated point makes the whole assessment high. Ratings are only re-assessed once actions are completed.",
+  "source": "Derbyshire Healthcare - Ligature Risk Assessment Standard Operating Procedure",
+  "sourceDate": "January 2026, issue 02, review January 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "question": "In the Care Quality Commission (CQC) tier scale used by the Trust, which tier is applied to a ligature point with high likelihood and severity that needs immediate attention?",
+  "options": [
+   "Tier 1",
+   "Tier 2",
+   "Tier 3",
+   "Tier 4"
+  ],
+  "correctIndex": 2,
+  "rationale": "The Trust SOP maps the CQC tier scale of 1 to 3 as Tier 3 high risk needing immediate attention, Tier 2 medium risk that can be addressed with mitigations over time, and Tier 1 low risk requiring monitoring but not immediate action.",
+  "source": "Derbyshire Healthcare - Ligature Risk Assessment Standard Operating Procedure",
+  "sourceDate": "January 2026, issue 02, review January 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "A team is working through the tier guidance linked from the Trust's ligature policy and is deciding which tier applies to each room.",
+  "question": "Which ward areas are given as examples of Tier 3 in the Care Quality Commission (CQC) tiers and mitigating controls guidance the Trust uses?",
+  "options": [
+   "Bedrooms, bathrooms, en-suites and toilets",
+   "Lounges, day rooms and dining rooms",
+   "Activity rooms, interview rooms and clinic rooms",
+   "Corridors and stairwells"
+  ],
+  "correctIndex": 0,
+  "rationale": "The CQC guidance linked from the Trust policy describes Tier 3 as areas where patients may spend a lot of time alone with minimal or no supervision, giving bedrooms, bathrooms, en-suites and toilets as examples. Lounges, day rooms and dining rooms are Tier 2, and activity, interview and clinic rooms are Tier 1.",
+  "source": "Derbyshire Healthcare - CQC Tiers and Mitigating Controls (linked from the Ligature Risk Reduction Policy)",
+  "sourceDate": "linked document, from Ligature Risk Reduction Policy January 2026, issue 7, review December 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "During a walkthrough a team spots a low fixture that a patient could not suspend from.",
+  "question": "What does the Trust's Ligature Risk Reduction Policy say about low-lying ligature points?",
+  "options": [
+   "They can be scored as low risk because suspension is not possible",
+   "They should not be judged as low risk and should be removed where possible",
+   "They do not need recording in the risk assessment",
+   "They are only relevant in seclusion and de-escalation areas"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states explicitly that low-lying ligature points should not be judged as low risk and should be removed where possible, and that assessments must include both known and new forms of ligature point.",
+  "source": "Derbyshire Healthcare - Ligature Risk Reduction Policy and Procedure",
+  "sourceDate": "January 2026, issue 7, review December 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "question": "Under the Trust's Ligature Risk Reduction Policy, how often do the Ligature Risk Reduction Group and the Capital Projects team carry out their joint review of matters such as procurement, training and incident data?",
+  "options": [
+   "Monthly",
+   "Every three months",
+   "Every six months",
+   "Annually"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states the Ligature Risk Reduction Group and Capital Projects team will review every three months against a set list including collaboration and best practice, compliance and safety, training effectiveness, patient and carer involvement, and incident review.",
+  "source": "Derbyshire Healthcare - Ligature Risk Reduction Policy and Procedure",
+  "sourceDate": "January 2026, issue 7, review December 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "scenario": "A ward is having new fittings installed and a nurse asks what makes something genuinely anti-ligature.",
+  "question": "How does the Trust's Ligature Risk Reduction Policy define an anti-ligature fitting?",
+  "options": [
+   "Any fitting with no exposed edges or gaps",
+   "Any fitting that has been Building Research Establishment (BRE) tested",
+   "A fitting designed so a ligature slips off, or the fitting breaks away from its mount at 40kg or less when placed under pressure of weight",
+   "A fitting that will not support the weight of an average adult, taken as 70kg"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy defines an anti-ligature fitting as one designed to prevent a ligature being attached, which should either cause the ligature to slip off or break away from its mount at 40kg or less when placed under pressure of weight.",
+  "source": "Derbyshire Healthcare - Ligature Risk Reduction Policy and Procedure",
+  "sourceDate": "January 2026, issue 7, review December 2027"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "scenario": "A patient who was on agreed leave has not come back to the ward at the expected time and no one knows where they are.",
+  "question": "How does the Derbyshire joint policy distinguish an absent patient from a missing patient?",
+  "options": [
+   "Absent means gone under two hours, missing means gone over two hours",
+   "Absent means the person is not where they are expected or required to be, missing means their whereabouts cannot be established and there is concern about crime, risk of harm, or out of character circumstances",
+   "Absent applies to informal patients and missing applies to detained patients",
+   "Absent means the ward knows where they are, missing means the police have been called"
+  ],
+  "correctIndex": 1,
+  "rationale": "The joint policy uses two categories. Absent or AWOL means a person is not at a place where they are expected or required to be, having escaped, absconded, gone absent without leave or not returned from authorised leave. Missing means their whereabouts cannot be established with the added concerns listed. The distinction is not based on elapsed time.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "scenario": "A healthcare support worker realises a patient is not on the ward and cannot be found in the communal areas.",
+  "question": "Under the Derbyshire joint policy, who must the member of staff who identifies that a patient is absent inform first?",
+  "options": [
+   "The Nurse in Charge",
+   "The police, on 101",
+   "The patient's Responsible Clinician",
+   "The Mental Health Act office"
+  ],
+  "correctIndex": 0,
+  "rationale": "The on-site search measures begin with the member of staff who identifies that a patient is missing informing the Nurse in Charge. The Nurse in Charge then follows the organisation escalation process and requests a comprehensive search of the ward or department and the immediate environment.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "scenario": "The initial search of the ward has not found the patient and the Nurse in Charge is widening the search.",
+  "question": "In the on-site search sequence set out in the Derbyshire joint policy, which area is searched immediately after the ward or unit itself?",
+  "options": [
+   "Offices",
+   "Toilets",
+   "Storerooms",
+   "The wider hospital and grounds"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy sets out a widening sequence of ward or unit, toilets, offices, corridors, departments, storerooms, locked rooms, then wider hospital and grounds search. Toilets come second.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "question": "In the observation levels described in the Derbyshire joint policy, what does Level 2 mean, and where must any change to a patient's observation level be documented?",
+  "options": [
+   "Within arm's length, documented in the daily nursing notes",
+   "Within eyesight, documented on the patient's Risk Management Plan",
+   "Intermittent observation, documented on the handover sheet",
+   "General observation, documented on the observation sheet only"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy sets out four levels: Level 1 within arm's length, Level 2 within eyesight, Level 3 intermittent observation and Level 4 general observation. It states that any change to a patient's observation level must be documented on the patient's Risk Management Plan.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "scenario": "A patient was admitted yesterday afternoon.",
+  "question": "Under the Derbyshire joint policy on absent and missing patients, within what time of admission must every patient have a care plan completed?",
+  "options": [
+   "Within 4 hours",
+   "Within 12 hours",
+   "Within 24 hours",
+   "Within 72 hours"
+  ],
+  "correctIndex": 2,
+  "rationale": "As a preventative measure the policy states that every patient should have a care plan and that this should be completed within 24 hours of admission, with an agreed level of observation forming part of that plan.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "question": "Under the Derbyshire joint policy, who agrees a decision on escorted or unescorted leave around the unit?",
+  "options": [
+   "The Nurse in Charge of the shift alone",
+   "The Responsible Clinician and/or the Named Nurse, in line with the patient's Risk Management Plan and observation level",
+   "The ward manager at the weekly ward round",
+   "The Mental Health Act office"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states a decision for escorted and/or unescorted leave around the unit must be in line with the patient's Risk Management Plan and observation level, and must be agreed by the Responsible Clinician and/or Named Nurse.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "scenario": "An informal patient is trying to leave the ward and the nurse in charge is considering the nurse's holding power.",
+  "question": "Under the Derbyshire joint policy, what does a Section 5(4) nurse's holding power provide, and what condition must be met?",
+  "options": [
+   "Detention for up to 6 hours, and the patient must be on the grounds of the hospital",
+   "Detention for up to 72 hours, and the patient must be on the grounds of the hospital",
+   "Detention for up to 6 hours, and it can be used anywhere in the community",
+   "Detention for up to 24 hours, with the Responsible Clinician's agreement"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states a Registered Nurse of a prescribed class can issue a 5(4), a legal holding power to detain for up to 6 hours with immediate effect, and that the patient must be on the grounds of the hospital for the holding power to be enacted. A doctor's 5(2) provides up to 72 hours on the same condition.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "scenario": "A patient subject to a Deprivation of Liberty Safeguards (DoLS) authorisation has gone from the hospital premises.",
+  "question": "What does the Derbyshire joint policy say staff should do for a patient under a Deprivation of Liberty Safeguards (DoLS) authorisation who goes missing?",
+  "options": [
+   "Follow the absent patient procedure, because DoLS is not a Mental Health Act detention",
+   "Wait until the person has been gone for a set period before escalating",
+   "Follow the procedure for missing rather than absent patients, and report the level of risk to police as high",
+   "Contact the Mental Health Act office to convert the authorisation before acting"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy directs staff to follow the missing rather than the absent procedure for DoLS patients, and given the level of risk and vulnerability of individuals on DoLS it recommends staff report the level of risk to the individual as high when reporting the incident to police.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Hard",
+  "question": "The Derbyshire joint policy names the system on which the police record all missing persons. What is it called?",
+  "options": [
+   "Compact",
+   "Datix",
+   "THRIVE",
+   "Niche"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that the police record all missing persons on a system known as Compact. THRIVE is named separately in the policy as the police framework used to inform their assessment, and Datix is the Trust's own incident reporting system.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "scenario": "A patient reported missing to the police walks back onto the ward at 3am.",
+  "question": "What does the Derbyshire joint policy require when a patient who has been reported missing returns to the unit?",
+  "options": [
+   "Wait until the morning so the day team can update the police in office hours",
+   "Notify the police without delay",
+   "Notify the police only if the patient is detained under the Mental Health Act",
+   "Let the family contact the police, as they made the original report"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that when a missing person returns to the unit the police must be notified without delay, because police resources directed to a missing person enquiry can be extensive and could otherwise continue to be used searching for someone who is already back.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "A detained patient has returned to the ward after being absent without leave.",
+  "question": "What role does the Trust's Mental Health Act office have in the absent and missing process?",
+  "options": [
+   "It authorises the search of the hospital grounds",
+   "It takes over the police liaison from the Nurse in Charge",
+   "It advises staff on the procedures to follow when an absent detained patient returns, and notifies the Care Quality Commission (CQC) of incidents of absconding detained patients",
+   "It decides whether the incident is reportable as a serious incident"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy sets out the Mental Health Act office role as advising all staff on the procedures to be followed when an absent detained patient returns to hospital, and notifying the Care Quality Commission of incidents of absconding detained patients.",
+  "source": "Derbyshire Healthcare - Absent and Missing Mental Health Patients Joint System Policy",
+  "sourceDate": "June 2025, review June 2026 (replaces joint policy version 9)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Medium",
+  "scenario": "An absent detained patient has been located at a friend's address but is refusing to return and will not let staff in.",
+  "question": "Under the Derbyshire Right Care Right Person multi-agency agreement, who makes the application for a Section 135(2) warrant when a service user is AWOL?",
+  "options": [
+   "The Approved Mental Health Professional (AMHP)",
+   "Derbyshire Healthcare NHS Foundation Trust staff",
+   "The police officer attending",
+   "The Responsible Clinician, via the Mental Health Act office"
+  ],
+  "correctIndex": 1,
+  "rationale": "The agreement states that Trust staff make the application for the Section 135(2) warrant if the service user is AWOL, whereas Approved Mental Health Professionals make the application for a Section 135(1) warrant. Police hold the primary responsibility for executing the 135(2) warrant with the clinical team present.",
+  "source": "Derbyshire Healthcare - Right Care Right Person Derby and Derbyshire Multi-Agency Agreement",
+  "sourceDate": "version 16, Final, approved by DHcFT Quality and Safeguarding Committee 10 December 2024, review date TBC"
+ },
+ {
+  "category": "Trust Policy - Ligature & Missing Patients",
+  "difficulty": "Easy",
+  "scenario": "A nurse needs to record on SystmOne that a patient has gone AWOL.",
+  "question": "Following the Trust's AWOL Standard Operating Procedure (SOP) on SystmOne, what happens in ward view once a patient has been marked as AWOL?",
+  "options": [
+   "The patient is removed from the ward list until they return",
+   "The bed turns red",
+   "An automatic alert is sent to the Mental Health Act office",
+   "The bed is released to the bed management team"
+  ],
+  "correctIndex": 1,
+  "rationale": "The SOP describes right clicking the patient in ward view, choosing Clinical then Mark as AWOL, completing the started date and time, indicating whether the bed can be freed, and adding notes. Once saved, the bed turns red in ward view. It reverts to its normal colour when the AWOL leave record is ended.",
+  "source": "Derbyshire Healthcare - AWOL Standard Operating Procedure (SystmOne)",
+  "sourceDate": "issue 01, no issue or review date recorded on the document"
+ }
+]

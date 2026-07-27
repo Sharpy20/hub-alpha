@@ -41,6 +41,8 @@ export interface QuizQuestion {
   sourceUrl?: string;
   /** Optional publication / last-reviewed date of the source. */
   sourceDate?: string;
+  /** Set when the source document's own review date has passed, e.g. "review date passed". */
+  reviewFlag?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -368,6 +370,26 @@ import researchEmerg from "./research-emergencies.json";
 import researchLd from "./research-ldautism.json";
 import researchRestrict from "./research-restrictive.json";
 import researchPerinatal from "./research-perinatal.json";
+// Derbyshire Healthcare trust policies and SOPs (mined from the offline policy library,
+// 117 distinct documents). These are the local-detail questions: trust timings, who
+// authorises what, named trust forms and SystmOne nodes, local thresholds.
+import trustObs from "./research-trust-observations.json";
+import trustSearching from "./research-trust-searching.json";
+import trustCto from "./research-trust-cto-s117.json";
+import trustPhys from "./research-trust-physhealth.json";
+import trustLigature from "./research-trust-ligature.json";
+import trustSubstance from "./research-trust-substance.json";
+import trustRestrict from "./research-trust-restrictive.json";
+import trustDignity from "./research-trust-dignity.json";
+import trustIpc from "./research-trust-ipc.json";
+import trustSafeguarding from "./research-trust-safeguarding.json";
+import trustMha from "./research-trust-mha.json";
+import trustCapacity from "./research-trust-capacity.json";
+import trustAdt from "./research-trust-adt.json";
+import trustMeds from "./research-trust-medicines.json";
+import trustSeclusion from "./research-trust-seclusion.json";
+import trustRapidTranq from "./research-trust-rapidtranq.json";
+import trustRecords from "./research-trust-records.json";
 
 interface RawQuizQuestion {
   category: string;
@@ -380,6 +402,7 @@ interface RawQuizQuestion {
   source: string;
   sourceUrl?: string;
   sourceDate?: string;
+  reviewFlag?: string;
 }
 
 function normalise(raw: RawQuizQuestion[], prefix: string): QuizQuestion[] {
@@ -397,9 +420,31 @@ function normalise(raw: RawQuizQuestion[], prefix: string): QuizQuestion[] {
     if (q.scenario) out.scenario = q.scenario;
     if (q.sourceUrl) out.sourceUrl = q.sourceUrl;
     if (q.sourceDate && q.sourceDate !== "not stated") out.sourceDate = q.sourceDate;
+    if (q.reviewFlag) out.reviewFlag = q.reviewFlag;
     return out;
   });
 }
+
+/** Derbyshire Healthcare trust policies and SOPs. Listed first so trust topics lead the picker. */
+const TRUST: QuizQuestion[] = [
+  ...normalise(trustObs as RawQuizQuestion[], "t-obs"),
+  ...normalise(trustSearching as RawQuizQuestion[], "t-search"),
+  ...normalise(trustCto as RawQuizQuestion[], "t-cto"),
+  ...normalise(trustPhys as RawQuizQuestion[], "t-phys"),
+  ...normalise(trustLigature as RawQuizQuestion[], "t-lig"),
+  ...normalise(trustSubstance as RawQuizQuestion[], "t-subst"),
+  ...normalise(trustRestrict as RawQuizQuestion[], "t-restrict"),
+  ...normalise(trustDignity as RawQuizQuestion[], "t-dignity"),
+  ...normalise(trustIpc as RawQuizQuestion[], "t-ipc"),
+  ...normalise(trustSafeguarding as RawQuizQuestion[], "t-safeg"),
+  ...normalise(trustMha as RawQuizQuestion[], "t-mha"),
+  ...normalise(trustCapacity as RawQuizQuestion[], "t-cap"),
+  ...normalise(trustAdt as RawQuizQuestion[], "t-adt"),
+  ...normalise(trustMeds as RawQuizQuestion[], "t-meds"),
+  ...normalise(trustSeclusion as RawQuizQuestion[], "t-secl"),
+  ...normalise(trustRapidTranq as RawQuizQuestion[], "t-rt"),
+  ...normalise(trustRecords as RawQuizQuestion[], "t-rec"),
+];
 
 const RESEARCH: QuizQuestion[] = [
   ...normalise(researchMha as RawQuizQuestion[], "mha"),
@@ -418,7 +463,7 @@ const RESEARCH: QuizQuestion[] = [
   ...normalise(researchPerinatal as RawQuizQuestion[], "perinatal"),
 ];
 
-export const QUIZ_QUESTIONS: QuizQuestion[] = [...SEED, ...RESEARCH];
+export const QUIZ_QUESTIONS: QuizQuestion[] = [...TRUST, ...SEED, ...RESEARCH];
 
 /** All categories present in the bank, in first-seen order. */
 export const QUIZ_CATEGORIES: string[] = Array.from(

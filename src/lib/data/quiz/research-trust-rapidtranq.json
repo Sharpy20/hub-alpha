@@ -1,0 +1,514 @@
+[
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "The trust's Rapid Tranquilisation (RT) prescribing algorithm names two first-choice intramuscular (IM) options. What are they?",
+    "options": [
+      "IM olanzapine on its own, or IM aripiprazole with IM lorazepam",
+      "IM lorazepam on its own, or IM haloperidol combined with IM promethazine",
+      "IM diazepam on its own, or IM haloperidol combined with IM lorazepam",
+      "IM midazolam on its own, or IM zuclopenthixol acetate"
+    ],
+    "correctIndex": 1,
+    "rationale": "The trust's Rapid Tranquilisation Prescribing Algorithm gives a choice of either IM lorazepam alone or IM haloperidol combined with IM promethazine for rapid tranquilisation in adults.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": "A patient is newly admitted overnight. There is almost no history available and no record of them ever having taken an antipsychotic. Rapid Tranquilisation (RT) is now needed.",
+    "question": "Which intramuscular (IM) option does the trust algorithm say to use in this situation?",
+    "options": [
+      "IM lorazepam",
+      "IM haloperidol combined with IM promethazine",
+      "IM olanzapine",
+      "IM haloperidol on its own"
+    ],
+    "correctIndex": 0,
+    "rationale": "The trust algorithm states that if there is insufficient information to guide the choice of medication, or the person has not taken antipsychotic medication before, use IM lorazepam.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "Where does the trust policy say all medication for Rapid Tranquilisation (RT) must be prescribed from on SystmOne, and why does it matter?",
+    "options": [
+      "The Live Master Formulary, so the medication appears on the main drug chart",
+      "The ward stock list, so pharmacy can reorder the medication",
+      "The RT Formulary, so that monitoring is triggered after administration",
+      "Any formulary, as long as the dose is written as 'once only'"
+    ],
+    "correctIndex": 2,
+    "rationale": "The policy states that RT must be prescribed using the Rapid Tranquilisation formulary on SystmOne to ensure monitoring is triggered after administration, and that administration links to the RT questionnaire.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "How does the trust policy classify the administration of intramuscular (IM) Rapid Tranquilisation (RT) for incident reporting purposes?",
+    "options": [
+      "It is a restrictive practice and must be reported on DATIX on every occasion",
+      "It only needs a DATIX report if the patient was also physically restrained",
+      "It only needs a DATIX report if the patient came to harm",
+      "It is recorded on the SystmOne form only, with no DATIX report needed"
+    ],
+    "correctIndex": 0,
+    "rationale": "The Administration of IM Medication for Rapid Tranquilisation algorithm states in capitals that IM RT is a RESTRICTIVE PRACTICE and must be reported on DATIX on every occasion.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "Which set of physical observations does the trust's Rapid Tranquilisation (RT) monitoring algorithm tell you to monitor the person for?",
+    "options": [
+      "Blood pressure, pulse, respiratory rate, blood glucose, weight and level of consciousness",
+      "Side effects, blood pressure, pulse, respiratory rate, temperature, hydration and level of consciousness",
+      "Blood pressure, pulse and level of consciousness only",
+      "Side effects, blood pressure, pulse, oxygen saturation and urine output"
+    ],
+    "correctIndex": 1,
+    "rationale": "The trust monitoring algorithm lists side effects, blood pressure, pulse, respiratory rate, temperature, hydration and level of consciousness.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "What does the trust policy say about zuclopenthixol acetate (Clopixol Acuphase) in the management of violence and aggression?",
+    "options": [
+      "It is the trust's preferred option when two doses of intramuscular (IM) lorazepam have failed",
+      "It may be used as Rapid Tranquilisation (RT) if a specialist pharmacist agrees",
+      "It is not an appropriate medicine for the rapid resolution of violence and aggression",
+      "It is the first choice for RT in patients with a prolonged QT interval"
+    ],
+    "correctIndex": 2,
+    "rationale": "The policy states plainly that zuclopenthixol acetate is not an appropriate medicine for use in the rapid resolution of violence and aggression, and points to a separate trust guideline for its role in treating acute psychosis or mania.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "In the trust's pathway for using medicines in violence and aggression, when should intramuscular (IM) Rapid Tranquilisation (RT) be used rather than oral medication?",
+    "options": [
+      "Whenever the patient is agitated, because IM works faster",
+      "Only when the patient is violent and aggressive and oral medication is refused, inappropriate or has not worked adequately",
+      "Whenever a patient is detained under the Mental Health Act",
+      "Only after two doses of oral medication have been given in the same shift"
+    ],
+    "correctIndex": 1,
+    "rationale": "The trust pathway states that oral medication should always be offered first line, and that IM RT is for when the patient is violent and aggressive AND oral medication is refused, inappropriate or has not produced an adequate response.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "How does the trust policy say the first prescription for Rapid Tranquilisation (RT) should be written?",
+    "options": [
+      "As a regular twice daily prescription for 72 hours",
+      "As a 'when required' (PRN) prescription with a maximum of four doses in 24 hours",
+      "As a 'once only' single dose that is not repeated until the effect of the first dose has been assessed",
+      "As a 'when required' prescription that can be repeated after the minimum interval without further review"
+    ],
+    "correctIndex": 2,
+    "rationale": "The policy requires the initial prescription to be written as a 'once only' single dose, not to be repeated until the effect of the initial dose has been reviewed, with the actions documented.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": "A patient on your ward received intramuscular (IM) Rapid Tranquilisation (RT) yesterday evening and needed a further dose this morning.",
+    "question": "What medical review does the trust policy require while RT is being used?",
+    "options": [
+      "A senior doctor or prescribing Approved Clinician (AC) review documented within 24 hours, and a senior doctor or AC review of all medication at least once a day",
+      "A review by any doctor within 72 hours",
+      "A review at the next weekly ward round only",
+      "A review only if the patient has a physical health problem or a poor response"
+    ],
+    "correctIndex": 0,
+    "rationale": "The trust monitoring and debrief algorithm requires a senior medical or AC review documented within 24 hours, and a senior doctor or AC to review all medication at least once a day while rapid tranquilisation is being used.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "The trust's Standard Operating Procedure (SOP) for Rapid Tranquilisation (RT) walks you through the SystmOne clinical monitoring form. What does it tell you to do in addition to completing that form?",
+    "options": [
+      "Print the form and file it in the paper notes",
+      "Email the completed form to the ward manager",
+      "Ensure a narrative is recorded in the patient's clinical record",
+      "Nothing further, as the form replaces the nursing entry"
+    ],
+    "correctIndex": 2,
+    "rationale": "The SOP states in capitals that staff must ensure a narrative is recorded in the patient's clinical record, alongside completing the RT clinical monitoring form on SystmOne.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure: Rapid Tranquilisation",
+    "sourceDate": "Issue 1, no issue or review date completed on the document"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "Under the trust's High Dose Antipsychotic Treatment (HDAT) policy, who may make the decision to start a patient on high dose antipsychotic treatment?",
+    "options": [
+      "Any prescriber, provided a specialist pharmacist agrees",
+      "Only a consultant psychiatrist or a prescribing Approved Clinician (AC)",
+      "The duty doctor, if the patient is acutely disturbed",
+      "The multidisciplinary team (MDT) by consensus at the weekly review"
+    ],
+    "correctIndex": 1,
+    "rationale": "The HDAT policy states that only consultant psychiatrists or prescribing ACs should initiate prescribing of antipsychotics above the recommended upper limit, although prescribing may then be continued by junior doctors or non-medical prescribers within their scope of practice subject to consultant review.",
+    "source": "Derbyshire Healthcare - Antipsychotics: High Dose Antipsychotic Treatment (HDAT) Policy (Inpatient and Community Service Users)",
+    "sourceDate": "November 2024, issue 9, review November 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": "A patient needs Rapid Tranquilisation (RT). There is a note of cardiovascular disease in the record and no recent electrocardiogram (ECG) has been done.",
+    "question": "What does the trust algorithm direct you towards?",
+    "options": [
+      "Use intramuscular (IM) haloperidol with IM promethazine at a reduced dose",
+      "Use IM haloperidol on its own and arrange an ECG afterwards",
+      "Use IM lorazepam and avoid the IM haloperidol and promethazine combination",
+      "Do not give any RT until an ECG has been completed"
+    ],
+    "correctIndex": 2,
+    "rationale": "The trust algorithm says that where there is evidence of cardiovascular disease including a prolonged QT interval, or no ECG has been carried out, avoid IM haloperidol combined with IM promethazine and use IM lorazepam instead.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "The trust's Rapid Tranquilisation (RT) monitoring algorithm sets out 'higher risk' criteria that increase the level of monitoring needed. Which of the following is listed as one of them?",
+    "options": [
+      "The patient has taken illicit drugs or alcohol",
+      "The patient is under 25 years old",
+      "The patient is detained under the Mental Health Act",
+      "The patient has refused oral medication twice"
+    ],
+    "correctIndex": 0,
+    "rationale": "The trust's higher risk list is: appears to be asleep or sedated, has taken illicit drugs or alcohol, has a pre-existing physical health problem, or has experienced any harm as a result of a restrictive intervention.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": "After Rapid Tranquilisation (RT), a patient will not allow you anywhere near them to take a blood pressure or pulse.",
+    "question": "What does the trust policy tell you to do?",
+    "options": [
+      "Record the observations as 'not done' and move on",
+      "Document the reasons why observations could not be completed, and any evidence that the patient's wellbeing is being maintained",
+      "Restrain the patient again so that observations can be taken",
+      "Wait until the next scheduled shift handover and try then"
+    ],
+    "correctIndex": 1,
+    "rationale": "The trust monitoring algorithm states that if physical observations cannot be completed, staff must document the reasons why and any evidence that the patient's wellbeing is maintained.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "How often does the trust policy say the patient's individualised pharmacological strategy should be reviewed, and by whom?",
+    "options": [
+      "Daily, by the ward nurse in charge",
+      "At least monthly, by the responsible clinician alone",
+      "At least once a week, by a multidisciplinary team (MDT) that includes a psychiatrist or prescribing Approved Clinician (AC) and a specialist mental health pharmacist",
+      "Only when a change of medication is being proposed"
+    ],
+    "correctIndex": 2,
+    "rationale": "The Individualised Pharmacological Strategy algorithm requires an MDT including a psychiatrist (consultant or speciality doctor) or prescribing AC, plus a specialist mental health pharmacist, to review the strategy at least once a week and more frequently if events are escalating.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": "The immediate risks after an episode of intramuscular (IM) Rapid Tranquilisation (RT) have been managed and the ward is settled again.",
+    "question": "Who does the trust policy say must be involved in the immediate post-incident debrief?",
+    "options": [
+      "A nurse and a doctor",
+      "Two registered nurses",
+      "The ward manager and a member of the security team",
+      "The nurse in charge alone, with a doctor informed afterwards"
+    ],
+    "correctIndex": 0,
+    "rationale": "The trust monitoring and debrief algorithm requires an immediate post-incident debrief including a nurse and a doctor, to identify and address physical harm, ongoing risk and the emotional impact on service users and staff, including witnesses.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": "SystmOne is down across the unit and a patient has just been given intramuscular (IM) Rapid Tranquilisation (RT).",
+    "question": "What does the trust guidance tell you to use for the monitoring record?",
+    "options": [
+      "The standard nursing observation chart, then copy it into SystmOne when it returns",
+      "The National Early Warning Score 2 (NEWS2) chart alone, as it is the only approved paper record",
+      "A free text entry in the paper notes, as no paper form exists",
+      "The hard copy 'Rapid Tranquilisation - Clinical monitoring Form', found under 'approved forms' on the Trust intranet"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy states that if SystmOne is unavailable, hard copy monitoring forms can be found in 'approved forms' on the Trust intranet under the title 'Rapid Tranquilisation - Clinical monitoring Form', and reminds staff not to forget the DATIX.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": "A patient given intramuscular (IM) haloperidol develops severe painful muscular stiffness and their eyes roll upwards.",
+    "question": "What management does the trust policy's side-effect table give for acute dystonia?",
+    "options": [
+      "Intramuscular (IM) procyclidine 5 to 10mg",
+      "Oral diazepam 10mg",
+      "IM promethazine 25mg",
+      "Withhold all medication and observe for one hour"
+    ],
+    "correctIndex": 0,
+    "rationale": "The trust's management of side-effects table lists acute dystonia, including oculogyric crisis, as managed with procyclidine IM 5 to 10mg.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "Under the trust's Rapid Tranquilisation (RT) Standard Operating Procedure (SOP), when should the debriefing form and checklist be completed with the patient?",
+    "options": [
+      "Before the end of the shift on which RT was given",
+      "Within 48 hours of ceasing the intervention, and if that is not possible then as soon as possible with the reason for delay documented",
+      "Within 7 days, at the next multidisciplinary team (MDT) review",
+      "Within 72 hours, but only if the patient asks for a debrief"
+    ],
+    "correctIndex": 1,
+    "rationale": "The SOP states the debriefing form and checklist should be completed with the patient within 48 hours of ceasing the intervention, and if that is not possible then as soon as possible, documenting the reason for the delay.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure: Rapid Tranquilisation",
+    "sourceDate": "Issue 1, no issue or review date completed on the document"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "In the SystmOne Rapid Tranquilisation (RT) template described in the trust Standard Operating Procedure (SOP), how are the post-injection monitoring observations recorded?",
+    "options": [
+      "Free text only, in the presentation box",
+      "On a separate paper observation chart scanned in later",
+      "Using the National Early Warning Score 2 (NEWS2) template, opened from the monitoring form",
+      "By copying the figures into the medication chart notes field"
+    ],
+    "correctIndex": 2,
+    "rationale": "The SOP directs staff to use NEWS2 to record monitoring details in the post-injection monitoring section, opening the NEWS2 template from the RT monitoring form, with previous readings shown alongside.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure: Rapid Tranquilisation",
+    "sourceDate": "Issue 1, no issue or review date completed on the document"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "How does the trust's High Dose Antipsychotic Treatment (HDAT) policy define a high dose antipsychotic?",
+    "options": [
+      "Any antipsychotic prescribed alongside a benzodiazepine",
+      "Any antipsychotic given by the intramuscular (IM) route",
+      "Any dose above 75 per cent of the British National Formulary (BNF) maximum",
+      "A total daily dose of a single antipsychotic above the maximum licensed dose for the patient's age and indication, or a total daily dose of two or more antipsychotics that exceeds the maximum using the percentage method"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy uses the British National Formulary definition: either a single antipsychotic above its maximum licensed dose for the age and indication, or two or more antipsychotics whose combined percentages exceed the maximum, and 'as required' doses must be included at the maximum the prescription permits in 24 hours.",
+    "source": "Derbyshire Healthcare - Antipsychotics: High Dose Antipsychotic Treatment (HDAT) Policy (Inpatient and Community Service Users)",
+    "sourceDate": "November 2024, issue 9, review November 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Medium",
+    "scenario": "A detained patient was given urgent treatment under Section 62 of the Mental Health Act 1983 during an episode of acute disturbance. The patient has now settled.",
+    "question": "What does the trust's Section 62 urgent treatment form say about continuing under Section 62?",
+    "options": [
+      "Section 62 can continue for up to 72 hours from the first dose",
+      "Urgent treatment cannot be continued beyond the point at which the crisis has been brought to an end, and the usual Part IV safeguards should be observed",
+      "Section 62 continues until a Second Opinion Appointed Doctor (SOAD) attends the ward",
+      "Section 62 covers all further doses of the same medication for the rest of the admission"
+    ],
+    "correctIndex": 1,
+    "rationale": "The trust's Section 62 form states that urgent treatment cannot be continued beyond the point at which the crisis has been brought to an end, and that the usual safeguards provided in Part IV should then be observed.",
+    "source": "Derbyshire Healthcare - Mental Health Act 1983 Section 62 Urgent Treatment form",
+    "sourceDate": "No issue or review date shown on the form"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": "A patient who had drunk alcohol before admission has just received intramuscular (IM) Rapid Tranquilisation (RT), so meets the trust's 'higher risk' criteria.",
+    "question": "What monitoring frequency does the trust algorithm set for a higher risk patient?",
+    "options": [
+      "Every 15 minutes for one hour, then hourly for four hours",
+      "Every 30 minutes for two hours, then at the nurse's discretion",
+      "Every 15 minutes until a doctor documents that monitoring can be safely reduced or stopped, then every 30 minutes until the patient is ambulatory with no further concerns",
+      "Continuous one to one observation for 12 hours"
+    ],
+    "correctIndex": 2,
+    "rationale": "For a patient meeting any higher risk criterion the trust algorithm requires monitoring every 15 minutes until a doctor documents that it can be safely reduced or stopped, then every 30 minutes until the patient is ambulatory and there are no further concerns. Where no higher risk factor applies the algorithm sets monitoring every 15 minutes for one hour.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": "Following Rapid Tranquilisation (RT) a patient is deeply asleep on their bed.",
+    "question": "What does the trust policy say about monitoring a patient who is asleep or unconscious after RT?",
+    "options": [
+      "Leave the patient to sleep and check them at the next scheduled observation round",
+      "Continuous pulse oximetry to measure oxygen saturation is desirable, and a nurse should remain with the patient until they are ambulatory",
+      "Wake the patient every 15 minutes to check their level of consciousness",
+      "Move the patient to the seclusion room so they can be observed through the window"
+    ],
+    "correctIndex": 1,
+    "rationale": "The monitoring section of the policy states that if the patient is asleep or unconscious, continuous use of pulse oximetry to measure oxygen saturation is desirable and a nurse should remain with the patient until ambulatory.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": "A patient accepts oral 'when required' (PRN) lorazepam for agitation and settles.",
+    "question": "What does the trust's oral PRN algorithm require you to document afterwards?",
+    "options": [
+      "The patient's activity and alertness one hour after administration",
+      "A full set of physical observations every 15 minutes for one hour",
+      "The patient's activity and alertness four hours after administration",
+      "Nothing beyond signing the medication chart, unless the patient deteriorates"
+    ],
+    "correctIndex": 0,
+    "rationale": "The trust's Oral PRN Medication algorithm requires staff to document the patient's activity and alertness one hour after administration of oral PRN, and to follow the rapid tranquilisation monitoring guidance if there are clinical concerns.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": "Rapid Tranquilisation (RT) is given at 2am on a Sunday. The ward's senior medical team are not on site.",
+    "question": "How does the trust policy allow the required senior review to happen out of hours?",
+    "options": [
+      "The review is deferred until the next working day and recorded then",
+      "The duty doctor completes the review in their own right and no senior involvement is needed",
+      "The nurse in charge documents the review on behalf of the medical team",
+      "The duty doctor can discuss the patient's presentation, care, medication and response with a senior doctor, then document the review in the care record and on the SystmOne RT questionnaire, with the senior doctor remaining responsible for the review"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy states that outside normal working hours a duty doctor may discuss the case with a senior doctor and then document the review in the care record and on the SystmOne RT questionnaire, and that the senior doctor remains responsible for the review. It does not mandate the senior doctor's attendance.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": null,
+    "question": "Beyond the immediate debrief, what does the trust's Rapid Tranquilisation (RT) monitoring and debrief algorithm say must be offered to the service user, and in what timescale?",
+    "options": [
+      "Within 72 hours, the opportunity to discuss the incident in a supportive environment and to write their own perspective of the event for their care record",
+      "Within 24 hours, a written apology from the ward manager",
+      "Within 7 days, a referral to an Independent Mental Health Advocate (IMHA)",
+      "Within 28 days, a copy of the DATIX incident report"
+    ],
+    "correctIndex": 0,
+    "rationale": "The algorithm requires that within 72 hours the service user is offered the opportunity to discuss the incident in a supportive environment and to write their perspective of the event for inclusion in their care record, and that their care plan is reviewed and updated.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": "A patient prescribed an anticoagulant needs an intramuscular (IM) injection for Rapid Tranquilisation (RT).",
+    "question": "What administration steps does the trust policy set out to reduce the risk of a deep muscle haematoma?",
+    "options": [
+      "Use a shorter needle and inject into the deltoid rather than the thigh",
+      "Massage the site for 30 seconds to disperse the drug, then apply a dressing",
+      "Apply firm pressure to the injection site for at least 2 minutes to aid clotting, and do not rub or massage the site",
+      "Apply an ice pack to the site for 10 minutes after the injection"
+    ],
+    "correctIndex": 2,
+    "rationale": "The administration algorithm says that for a patient with a bleeding disorder or on an anticoagulant, staff should apply firm pressure to the injection site for at least 2 minutes to aid clotting and must not rub or massage the site. If these steps are impractical this must be discussed with the prescriber and a risk assessment documented first.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": "A patient who is not currently violent or aggressive refuses their regular oral antipsychotic. The multidisciplinary team (MDT) has agreed a short term intramuscular (IM) injection as part of their individualised pharmacological strategy.",
+    "question": "How does the trust policy say this non-Rapid Tranquilisation (non-RT) IM injection must be handled?",
+    "options": [
+      "Prescribe it on the Rapid Tranquilisation (RT) formulary and complete an RT form and a DATIX, as for any IM injection",
+      "Prescribe it on the Live Master Formulary rather than the RT formulary, monitor the patient one hour after administration, and do not complete a DATIX or an RT form specifically for this administration",
+      "Prescribe it on the Live Master Formulary but still complete the SystmOne RT form so that monitoring is triggered",
+      "Prescribe it on either formulary, as long as the reason for choosing the IM route is documented"
+    ],
+    "correctIndex": 1,
+    "rationale": "The non-RT IM injection algorithm requires prescribing through the Live Master Formulary on SystmOne and not the RT Formulary, monitoring one hour after administration, and states explicitly that staff should not complete a DATIX specifically for this type of administration and should not record it on a SystmOne RT form.",
+    "source": "Derbyshire Healthcare - Drug Management of Violence and Aggression: Policy",
+    "sourceDate": "August 2025, issue 10, review January 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": null,
+    "question": "A patient has just been started on High Dose Antipsychotic Treatment (HDAT). Which monitoring schedule does the trust HDAT policy set for the early weeks?",
+    "options": [
+      "Blood pressure, pulse, QTc and urea and electrolytes (U&Es) daily for the first week only",
+      "Blood pressure and pulse alone, monthly for the first three months",
+      "Blood pressure, pulse, QTc and urea and electrolytes (U&Es) weekly for 4 weeks, then one week after each dose increase and at reviews",
+      "A full physical health screen at 6 weeks and then annually"
+    ],
+    "correctIndex": 2,
+    "rationale": "The HDAT physical monitoring section requires blood pressure, pulse, QTc and U&Es to be recorded weekly for 4 weeks, then one week after each dose increase and at reviews, with a wider repeat panel at least 3-monthly for the first year.",
+    "source": "Derbyshire Healthcare - Antipsychotics: High Dose Antipsychotic Treatment (HDAT) Policy (Inpatient and Community Service Users)",
+    "sourceDate": "November 2024, issue 9, review November 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": "An electrocardiogram (ECG) for a patient on High Dose Antipsychotic Treatment (HDAT) reports a QTc of 510ms.",
+    "question": "What does the trust HDAT policy flag this as, and what action does it list?",
+    "options": [
+      "A red flag: manually confirm the calculated QTc, review other medication that may increase the QTc, check potassium, magnesium and calcium levels and correct abnormalities, and consider reducing the antipsychotic dose immediately",
+      "A routine finding: repeat the ECG at the next 3-monthly review",
+      "A red flag: stop all medication immediately and transfer the patient to the acute hospital",
+      "A borderline result: no action needed unless the patient has symptoms"
+    ],
+    "correctIndex": 0,
+    "rationale": "The HDAT policy sets a red flag at a QTc above 499ms, with four listed actions: manually confirm the calculated QTc, review other QTc-prolonging medication, check potassium, magnesium and calcium and correct abnormalities, and consider reducing the antipsychotic dose immediately. A QTc above 450ms in men or 460ms in women prompts a treatment review.",
+    "source": "Derbyshire Healthcare - Antipsychotics: High Dose Antipsychotic Treatment (HDAT) Policy (Inpatient and Community Service Users)",
+    "sourceDate": "November 2024, issue 9, review November 2027"
+  },
+  {
+    "category": "Trust Policy - Rapid Tranquillisation & High Dose",
+    "difficulty": "Hard",
+    "scenario": "It is the middle of the night. A Registered Mental Nurse (RMN) takes a telephone call from the Responsible Clinician (RC) authorising urgent treatment under Section 62 of the Mental Health Act 1983.",
+    "question": "What does the trust's verbal instruction form require?",
+    "options": [
+      "Only the RC's verbal authorisation, recorded as a progress note in the care record",
+      "The nurse records the details of the one off treatment authorised and signs the form, and agrees with the RC or Approved Clinician (AC) when they will come in and sign it, that is the next day or the next working day",
+      "Two nurses to sign the form, with no further medical signature required",
+      "The nurse to fax the form to the Mental Health Act office before giving the medication"
+    ],
+    "correctIndex": 1,
+    "rationale": "The trust's verbal instruction form is completed and signed by the nurse who received the telephone instruction, records the details of the one off treatment authorised, and states that the nurse is to agree with the RC or AC when they will come in and sign the form, that is the next day or the next working day.",
+    "source": "Derbyshire Healthcare - Verbal Instruction for the administration of Mental Health Act 1983 Section 62 Urgent Treatment",
+    "sourceDate": "No issue or review date shown on the form"
+  }
+]

@@ -1,0 +1,489 @@
+[
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "scenario": "A patient was admitted to your ward at 2pm yesterday.",
+  "question": "Under the trust's Acute Inpatient policy, by when must a named nurse be allocated to a newly admitted patient?",
+  "options": [
+   "Within 24 hours of admission",
+   "Within 72 hours of admission",
+   "At the first ward round",
+   "By the admission meeting in the first week"
+  ],
+  "correctIndex": 0,
+  "rationale": "The trust admission checklist lists 'Allocate named nurse (within 24 hours of admission)', to be done by the Lead or Senior Nurse and recorded in the central index under involved staff.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "question": "A patient on your ward is assessed as needing Psychiatric Intensive Care Unit (PICU) level intervention. What does the trust's Acute Inpatient policy say happens next?",
+  "options": [
+   "They are transferred to the trust's own PICU at the Radbourne Unit",
+   "The trust does not currently have a PICU, so they must be referred to an out-of-area PICU provider, coordinated by the PICU Case Manager",
+   "They are nursed on enhanced observations on the acute ward until settled, as PICU is not commissioned in Derbyshire",
+   "The ward manager applies to the Managing Director for a temporary PICU bay to be opened"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that Derbyshire Healthcare does not currently have a PICU, so all patients needing that level of intervention are referred to out-of-area PICU providers, with referral, monitoring and repatriation coordinated by the PICU Case Manager.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "question": "Under the trust's gatekeeping protocol for informal admissions, who holds the ultimate decision on whether an informal admission goes ahead or an alternative pathway is offered?",
+  "options": [
+   "The ward consultant on the receiving ward",
+   "The bed management team",
+   "The Crisis Resolution and Home Treatment Team (CRHT)",
+   "The Approved Mental Health Professional (AMHP) on duty"
+  ],
+  "correctIndex": 2,
+  "rationale": "The protocol is explicit that CRHT is the gatekeeper for all informal hospital admissions, so the ultimate decision to admit or offer an alternative pathway is held by CRHT.",
+  "source": "Derbyshire Healthcare - Protocol for Gatekeeping Informal Admissions: Working Age Adults CRHT",
+  "sourceDate": "No issue date, issue number or review date shown on document"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "scenario": "You are attending a gatekeeping Multi-Disciplinary Meeting (MDM) as the ward representative.",
+  "question": "Under the trust's gatekeeping protocol, who chairs the gatekeeping MDM and completes the gatekeeping questionnaire?",
+  "options": [
+   "A Crisis Resolution and Home Treatment Team (CRHT) representative",
+   "The practitioner who requested the admission",
+   "The inpatient clinical lead",
+   "Ward admin, who minutes the meeting for the chair"
+  ],
+  "correctIndex": 0,
+  "rationale": "The protocol states the CRHT representative will chair the MDM and complete the gatekeeping questionnaire in full during the meeting, using the version accessed via the CRHT launchpad on SystmOne.",
+  "source": "Derbyshire Healthcare - Protocol for Gatekeeping Informal Admissions: Working Age Adults CRHT",
+  "sourceDate": "No issue date, issue number or review date shown on document"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "question": "According to the trust's Acute Inpatient policy, when does discharge planning begin?",
+  "options": [
+   "At the first weekly ward round after admission",
+   "At the point of admission",
+   "Once the patient is assessed as medically ready for discharge",
+   "At the pre-discharge multi-disciplinary meeting"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that discharge planning begins at the point of admission, and that all involved professionals and the patient should be clear on the treatment plan and what needs to happen to effect discharge.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "scenario": "A patient is discharged home from your ward on a Tuesday morning.",
+  "question": "Under the trust's Acute Inpatient policy, within what timeframe must the General Practitioner (GP) receive a copy of the discharge summary?",
+  "options": [
+   "Within 24 hours of the discharge",
+   "Within 48 hours of the discharge",
+   "Within 7 days of the discharge",
+   "Within 14 days of the discharge"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states plainly that the GP must receive a copy of the discharge summary within 24 hours of the discharge. This was tightened from 48 hours to 24 hours in an earlier revision of the trust's discharge policy.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "scenario": "A 17-year-old has been admitted to your adult acute ward in an emergency.",
+  "question": "What does the trust's policy say about the room this young person should be given?",
+  "options": [
+   "Any available bed, provided a member of staff is allocated to them",
+   "A shared bay so they are not isolated from other patients",
+   "An en-suite single room in close proximity to the ward office or nurses' station",
+   "A room at the far end of the ward, away from the busiest area"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states the young person must have an en-suite single room which is in close proximity to the ward office or nurses' station.",
+  "source": "Derbyshire Healthcare - Admission of Young People to an Adult Mental Health Inpatient Unit Policy and Procedure",
+  "sourceDate": "April 2024, issue 04, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "scenario": "The bleep holder calls at 3am asking whether your adult acute ward can take a 15-year-old from the Emergency Department.",
+  "question": "What does the trust's policy on admitting young people to adult wards say?",
+  "options": [
+   "Under no circumstances will a young person under the age of 16 be admitted to an adult ward",
+   "A 15-year-old may be admitted overnight only, and must be moved by 9am",
+   "A 15-year-old may be admitted if the on-call manager and the Emergency Department consultant both agree",
+   "A 15-year-old may be admitted if placed on 1 to 1 observations and the Care Quality Commission is notified"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy is absolute on this point: under no circumstances will a young person under the age of 16 be admitted to an adult ward. Only 16 to 18 year olds may be admitted, and only in exceptional circumstances with senior agreement.",
+  "source": "Derbyshire Healthcare - Admission of Young People to an Adult Mental Health Inpatient Unit Policy and Procedure",
+  "sourceDate": "April 2024, issue 04, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Easy",
+  "question": "Under the trust's Acute Inpatient policy, how often as a minimum should the medical team review a patient's medication during an acute admission?",
+  "options": [
+   "Daily",
+   "Weekly",
+   "Fortnightly",
+   "Only at the point of any change in presentation"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states medications will be reviewed as a minimum on a weekly basis by the medical teams, with a documented record of adherence, response to treatment and any side effects.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "A patient admitted this morning tells you she is not sure why she is in hospital.",
+  "question": "Under the trust's admission checklist, by when must the purpose of admission be explained or reiterated to the patient, and when is it revisited?",
+  "options": [
+   "Within the first 4 hours, revisited at the admission meeting",
+   "Within the first 12 hours, then reviewed again in the first Multidisciplinary Team (MDT) meeting",
+   "Within the first 24 hours, then reviewed at discharge planning",
+   "Within the first 7 days, at the admission meeting"
+  ],
+  "correctIndex": 1,
+  "rationale": "The trust admission checklist requires the nurse to explain or reiterate the purpose of admission to the patient within the first 12 hours of admission and to review it again in the first MDT, documenting this in the patient's notes.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "A patient was admitted on Monday and ward admin is arranging the first big meeting.",
+  "question": "Under the trust's Acute Inpatient policy, when should the admission meeting take place, and who starts arranging it?",
+  "options": [
+   "Within 7 working days of admission, with ward admin starting arrangements on the day of admission or the next working day",
+   "Within 14 days of admission, arranged by the named nurse once assessments are complete",
+   "Within 72 hours of admission, arranged by the responsible clinician",
+   "At the first available ward round slot, arranged by the bed management team"
+  ],
+  "correctIndex": 0,
+  "rationale": "The trust's admission meeting pro-forma states the meeting should occur within the first 7 days of admission, and that ward admin, directed by the Senior Nurse or Nurse in Charge, will begin arrangements on the day of admission or the next working day to allow community representatives time to attend.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "A newly admitted patient hands you a watch and a wallet containing cash, and you are working through the property check on the admission checklist.",
+  "question": "What does the trust's admission checklist say about valuables?",
+  "options": [
+   "All valuables must be locked in the ward's controlled drugs cupboard",
+   "Valuable items above 50 pounds should go home with relatives or be placed in the patient's bank for safekeeping",
+   "Valuables must be photographed and returned to the patient's bedroom locker",
+   "Valuables above 20 pounds must be handed to the on-call manager"
+  ],
+  "correctIndex": 1,
+  "rationale": "The trust admission checklist states that property and valuables are checked, paperwork completed and scanned onto the Electronic Patient Record, and that valuable items above 50 pounds should go home with relatives or be placed in the patient's bank for safekeeping, with the record kept in the cash and valuables book.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "It is 10pm and a referrer is asking who is coordinating an urgent admission request.",
+  "question": "Under the trust's Acute Inpatient policy, what are the bed management team's core hours, and who coordinates admissions outside them?",
+  "options": [
+   "9am to 5pm, with the on-call manager coordinating outside those hours",
+   "8am to 8pm, with each unit's bleep holder coordinating outside those hours",
+   "24 hours a day, so the bed management team always coordinates",
+   "7am to 7pm, with the Crisis Resolution and Home Treatment Team coordinating outside those hours"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states the dedicated bed management team operates core hours of 8am to 8pm, when most admission requests occur, and that outside these hours each unit bleep holder will coordinate admissions.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "question": "The trust's Clinical Priorities for Admission policy lists primary diagnoses for which the acute inpatient wards are not commissioned to accept admissions, unless there is a co-occurring mental health condition. Which set is correct?",
+  "options": [
+   "Organic mental illness, alcohol induced mental illness, primary eating disorder, and primary diagnosis of learning disability or Autism Spectrum Disorder (ASD)",
+   "Personality disorder, substance misuse, self-harm, and dementia",
+   "Dementia, epilepsy, acquired brain injury, and post-traumatic stress disorder",
+   "Primary eating disorder, bipolar affective disorder, psychosis in older adults, and learning disability"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy lists exactly these four: organic mental illness, alcohol induced mental illness, primary eating disorder, and primary diagnosis of learning disability or ASD. Each is excluded only where it is the primary diagnosis with no co-occurring mental health condition.",
+  "source": "Derbyshire Healthcare - Clinical Priorities for Admission Policy and Procedure",
+  "sourceDate": "June 2025, issue 1, review Nov 2026"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "A community practitioner has assessed a patient at home, and both the patient and her carer are asking whether she can come into hospital.",
+  "question": "What does the trust's gatekeeping protocol say about offering admission at this stage?",
+  "options": [
+   "Admission can be offered if the assessing practitioner is a registered professional, with the Crisis Resolution and Home Treatment Team (CRHT) informed afterwards",
+   "Admission should be discussed as one option, but should not be offered to the person before discussion with CRHT",
+   "Admission can be offered if the patient's consultant agrees by telephone",
+   "Admission should never be discussed with a patient before a gatekeeping Multi-Disciplinary Meeting has taken place"
+  ],
+  "correctIndex": 1,
+  "rationale": "The protocol says admission should be discussed with the person and their carers as one option so their views inform the process, but it is important admission is not offered before discussion with CRHT, because less restrictive alternatives are much harder to promote once the person has been told they are being admitted.",
+  "source": "Derbyshire Healthcare - Protocol for Gatekeeping Informal Admissions: Working Age Adults CRHT",
+  "sourceDate": "No issue date, issue number or review date shown on document"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "A gatekeeping Multi-Disciplinary Meeting (MDM) is being convened at short notice out of hours and several invitees cannot make it.",
+  "question": "Under the trust's gatekeeping protocol, which attendance is mandatory rather than 'routinely invited'?",
+  "options": [
+   "A clinical lead from inpatient services and a representative from early discharge services",
+   "The local crisis house and the patient's Community Mental Health Team (CMHT)",
+   "The practitioner requesting admission (or who conducted the assessment) and a Crisis Resolution and Home Treatment Team (CRHT) representative",
+   "The patient and their carer"
+  ],
+  "correctIndex": 2,
+  "rationale": "The protocol states the practitioner requesting admission (or the person who conducted the assessment) and a CRHT representative must attend. An inpatient clinical lead, early discharge services and the crisis house are routinely invited, and the patient and carers may attend, but if they cannot their views must still be sought and represented.",
+  "source": "Derbyshire Healthcare - Protocol for Gatekeeping Informal Admissions: Working Age Adults CRHT",
+  "sourceDate": "No issue date, issue number or review date shown on document"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "A patient on your ward meets the criteria for the Care Programme Approach (CPA) but has no community care coordinator allocated yet.",
+  "question": "Under the trust's Care Principles and CPA policy, who acts as the interim Care Co-ordinator for a patient in mental health inpatient services?",
+  "options": [
+   "The ward manager",
+   "The named nurse, if appropriate",
+   "The responsible clinician",
+   "The Community Mental Health Team duty worker"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that for people in mental health inpatient services, the named nurse will be the interim Care Co-ordinator if appropriate.",
+  "source": "Derbyshire Healthcare - Care Principles and Care Programme Approach (CPA) Policy and Procedure",
+  "sourceDate": "May 2023, issue 06, review October 2026"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "The ward team believes a patient is ready for discharge, but the community team strongly disagrees about the level of current risk.",
+  "question": "Under the trust's Discharge, Transfers/Transitions and Leave policy, what must happen before any act of discharge or leave?",
+  "options": [
+   "The ward consultant makes the final decision as the responsible clinician",
+   "The disagreement is escalated to the Clinical Directors for both areas",
+   "A second opinion is requested from the on-call consultant",
+   "A Datix is completed and the discharge proceeds as planned"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that where there is disagreement around risk or clinical presentation between inpatient and community teams, this must be escalated to the Clinical Directors for both areas prior to any act of discharge or leave.",
+  "source": "Derbyshire Healthcare - Discharge, Transfers/Transitions and Leave for People with Mental Health Difficulties Policy and Procedure",
+  "sourceDate": "November 2023, issue 5, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "A patient needs to move from your acute ward to another acute ward within the trust.",
+  "question": "Under the trust's Acute Inpatient policy, what must an inter-ward transfer between adult acute wards involve?",
+  "options": [
+   "A consultant to consultant discussion, with the transfer planned during working hours",
+   "Agreement between the two ward managers only",
+   "Authorisation by the bed management flow coordinator",
+   "A Multidisciplinary Team (MDT) vote recorded in the Electronic Patient Record"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states inter ward transfers within acute inpatient services should be planned during working hours and must involve a consultant to consultant discussion, with nursing staff coordinating the transfer on the direction of the Responsible Clinician. Out-of-hours emergency transfers are discussed with the on-call consultant and on-call manager.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Medium",
+  "scenario": "A patient on your acute ward has been accepted for a rehabilitation ward bed and you are recording the move on SystmOne.",
+  "question": "Under the trust's Standard Operating Procedure (SOP), how is a move from an acute ward to a rehabilitation ward recorded?",
+  "options": [
+   "As an internal transfer, using the transfer option on the ward view",
+   "As a planned transfer, ticking the Move Bed box",
+   "It is not classed as a transfer: the patient is discharged from the acute ward and then admitted to the rehabilitation ward",
+   "As a medically fit for transfer entry, with the discharge recorded afterwards"
+  ],
+  "correctIndex": 2,
+  "rationale": "Both the Admission and the Discharge SOPs state that moving from an acute ward to a rehabilitation ward will not be classed as a transfer. The patient is discharged from the acute ward and then admitted to the rehabilitation ward as a planned admission.",
+  "source": "Derbyshire Healthcare - Standard Operating Procedure: Admission to Inpatient Unit",
+  "sourceDate": "Issue 01, trust wide; no issue date or review date shown on document"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "A patient is admitted at 9am. You are working out what physical health tasks are due and when.",
+  "question": "Under the trust's Acute Inpatient policy, which set of physical health tasks falls in the 'within 4 hours' group rather than the 'within 24 hours' group?",
+  "options": [
+   "Physical examination, height and weight, blood tests and Electrocardiogram (ECG)",
+   "Medicines reconciliation history, current medication and adherence, consideration of alcohol or drug withdrawal risk, and baseline observations of blood pressure, pulse and respirations",
+   "Waterlow assessment, personal handling risk assessment and Health of the Nation Outcome Scales (HoNOS)",
+   "Blood tests and ECG only, with all other physical health tasks due within one week"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy splits the physical health assessment: within four hours it covers past medicines reconciliation history, current medication including side effects and adherence, consideration of alcohol or drug withdrawal risk, and baseline observations of blood pressure, pulse and respirations. Physical examination, height and weight, blood tests and ECG sit in the within 24 hours group.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "A patient has been on your ward for five weeks with no incidents and a stable presentation.",
+  "question": "Under the trust's Acute Inpatient policy, what is the minimum frequency for updating a patient's safety and risk assessment?",
+  "options": [
+   "Weekly, and after any incident",
+   "Fortnightly, and before any period of leave",
+   "According to clinical need, or a minimum of once per month, or following any incident",
+   "Only at the admission meeting and again before discharge"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states safety and risk assessments will be updated according to clinical need, or a minimum of once per month, or following any incident.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "The bed management team ask whether your ward can take an admission at 2pm.",
+  "question": "The trust's Acute Inpatient policy names three staff shift handover periods when admissions should be avoided where possible. Which set is correct?",
+  "options": [
+   "7am to 7.30am, 1.45pm to 2.30pm, and 9pm to 9.30pm",
+   "8am to 8.30am, 12noon to 1pm, and 8pm to 8.30pm",
+   "7.30am to 8am, 2pm to 3pm, and 10pm to 10.30pm",
+   "6.45am to 7.15am, 1pm to 2pm, and 9.30pm to 10pm"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy names 7am to 7.30am, 1.45pm to 2.30pm and 9pm to 9.30pm as the handover periods to avoid, unless there is an urgent requirement related to immediate patient safety. Learning from incidents showed admissions in these windows increase the risk of information not transferring and admission actions not being allocated.",
+  "source": "Derbyshire Healthcare - Acute Inpatient Mental Health Services for Adults of Working Age Policy and Procedures",
+  "sourceDate": "May 2023, issue 2, review May 2026 (version control update Aug 2024)",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "question": "Under the trust's Clinical Priorities for Admission policy, when does the bed management meeting take place, and who chairs it at weekends and on bank holidays?",
+  "options": [
+   "Twice daily at 9am and 4pm, chaired by the Area Service Manager at weekends",
+   "Once a day at 10.30am, 7 days a week, chaired at weekends and bank holidays by the Crisis or Liaison teams and bleep holders with support from the Bed Management FLOW team",
+   "Once a day at 10.30am, Monday to Friday only, with no weekend meeting",
+   "Once a day at 8am, 7 days a week, always chaired by the Bed Manager"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states a bed management meeting is held once a day at 10.30am, 7 days a week. Monday to Friday it is chaired by the Bed Manager, and at weekends and on bank holidays it is chaired by the Crisis or Liaison teams and bleep holders, with support from the Bed Management FLOW team, who ensure everyone on the list is discussed.",
+  "source": "Derbyshire Healthcare - Clinical Priorities for Admission Policy and Procedure",
+  "sourceDate": "June 2025, issue 1, review Nov 2026"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "The bed management meeting has agreed the order of priority for the day's admissions. Later, an on-call manager contacts the ward asking for a different patient to be admitted first because of a 12-hour breach in the Emergency Department.",
+  "question": "What does the trust's Clinical Priorities for Admission policy say about this?",
+  "options": [
+   "Prioritisation agreed at the bed management meeting should not be overridden by on-call managers, bleep holders or directors, and an Emergency Department 12-hour breach request is given as an example",
+   "The on-call manager can override the clinical priority where a 12-hour breach applies, as this is a national performance standard",
+   "The ward manager decides, as they hold operational responsibility for the bed",
+   "The Emergency Department consultant and the on-call manager jointly agree a new order of priority"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that once prioritisation is agreed by the bed management meeting it should not be overridden by other areas such as an on-call manager, bleep holder or director, and it gives a 12-hour breach request from the Emergency Department as the example. Unresolved disagreements go to the on-call consultant.",
+  "source": "Derbyshire Healthcare - Clinical Priorities for Admission Policy and Procedure",
+  "sourceDate": "June 2025, issue 1, review Nov 2026"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "An Approved Mental Health Professional (AMHP) has completed a Mental Health Act (MHA) assessment meeting the 'special urgency' threshold under Section 140, and is waiting on a bed.",
+  "question": "Under the trust's Section 140 arrangements, how is 'a short period of time' for a bed becoming available interpreted locally?",
+  "options": [
+   "Thirty minutes",
+   "One hour",
+   "Two hours",
+   "Four hours"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states the local interpretation of 'short period of time' is two hours. The AMHP may make the application for detention once informed a bed is available or will become available within that period; if no bed is expected within two hours, the application cannot be made.",
+  "source": "Derbyshire Healthcare - Clinical Priorities for Admission Policy and Procedure",
+  "sourceDate": "June 2025, issue 1, review Nov 2026"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "A patient on the Care Programme Approach (CPA) has had a significant deterioration in their illness during this admission.",
+  "question": "Under the trust's Care Principles and CPA policy, what is the review pattern for their care plan?",
+  "options": [
+   "A minimum of annually, with a review at the point of deterioration and again six months later, reverting to annual once stable",
+   "A minimum of six-monthly at all times, regardless of stability",
+   "Quarterly for the first year after any deterioration",
+   "A minimum of annually, with no additional review required unless the person requests one"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy sets a minimum standard of at least one review a year (with every 9 months recommended), and states that if a person experiences a deterioration in their illness a review should be held at that time and again six months later, reverting to annual reviews once stable. A review is also held before any discharge or transfer.",
+  "source": "Derbyshire Healthcare - Care Principles and Care Programme Approach (CPA) Policy and Procedure",
+  "sourceDate": "May 2023, issue 06, review October 2026"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "A 17-year-old was admitted to your adult ward at 6pm on Friday and is still with you on Sunday evening.",
+  "question": "Under the trust's policy, what notification duty has now been triggered?",
+  "options": [
+   "No external notification is needed unless the young person is detained under the Mental Health Act",
+   "The Care Quality Commission (CQC) must be notified, as the young person has remained on an adult ward continuously for over 48 hours, and a Datix must be completed in all cases",
+   "Only NHS England must be notified, via the Tier 4 referral form",
+   "The CQC must be notified only if the admission exceeds 7 days"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires the CQC to be notified without delay if an under 18-year-old is placed on an adult psychiatric ward for longer than a continuous period of 48 hours, using the Appendix 3 template, and states a Datix must be completed in all cases.",
+  "source": "Derbyshire Healthcare - Admission of Young People to an Adult Mental Health Inpatient Unit Policy and Procedure",
+  "sourceDate": "April 2024, issue 04, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "A 16-year-old has been admitted to your adult acute ward in core hours.",
+  "question": "Under the trust's policy, what must the Child and Adolescent Mental Health Services (CAMHS) Area Service Manager do, and what happens if the timeframe is missed?",
+  "options": [
+   "Visit the adult ward within 24 hours to delegate a competent person to conduct a safeguarding assessment; if this timeframe is not achieved a Datix must be completed and the records updated",
+   "Visit within 72 hours; if missed, the ward manager escalates to the Head of Nursing",
+   "Telephone the ward within 4 hours; no Datix is required as the visit is advisory",
+   "Visit within 7 days, or before the first Multidisciplinary Team (MDT) meeting, whichever is sooner"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that in core hours the CAMHS Area Service Manager liaises directly with the admitting ward and arranges to visit within 24 hours to delegate an appropriately competent person to conduct a safeguarding assessment using the Royal College of Psychiatrists guidelines. Where that timeframe is not achieved, a Datix form must be completed and the young person's records updated.",
+  "source": "Derbyshire Healthcare - Admission of Young People to an Adult Mental Health Inpatient Unit Policy and Procedure",
+  "sourceDate": "April 2024, issue 04, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Admission, Discharge & Transfer",
+  "difficulty": "Hard",
+  "scenario": "A 17-year-old admitted to your adult ward is finding constant close staff presence distressing, and the team is discussing reducing her observation level.",
+  "question": "Under the trust's policy, what is the starting observation level for a young person on an adult ward, and how far can it be reduced?",
+  "options": [
+   "General observations, increased only if risk indicates",
+   "Within eyesight observations at all times, reducible to hourly checks by Multidisciplinary Team (MDT) agreement",
+   "1 to 1 within arm's length observations at all times, reducible to no less than within eyesight observations if the clinical team agrees it is in her best interests and safety can be maintained",
+   "1 to 1 within arm's length observations for the first 24 hours only, then general observations"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states a young person under 18 on an adult ward must be placed on 1 to 1 within arm's length observations at all times, and that this can only be reduced to no less than within eyesight observations if agreed by the clinical team, it is in the young person's best interests and their safety can be maintained. Any decision not to nurse within eyesight must be fully risk assessed and reviewed at least every 24 hours.",
+  "source": "Derbyshire Healthcare - Admission of Young People to an Adult Mental Health Inpatient Unit Policy and Procedure",
+  "sourceDate": "April 2024, issue 04, review March 2027"
+ }
+]

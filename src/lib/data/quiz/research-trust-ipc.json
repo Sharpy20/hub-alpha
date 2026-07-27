@@ -1,0 +1,523 @@
+[
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "scenario": "Two patients in the same bay develop diarrhoea within a day of each other.",
+  "question": "Under the trust's Managing an Outbreak of Infection policy, what is the definition of an outbreak?",
+  "options": [
+   "Two or more cases linked by time, place and person",
+   "Any single case of diarrhoea on an inpatient ward",
+   "Five or more laboratory confirmed cases in one unit",
+   "Three or more cases in a single bay within one week"
+  ],
+  "correctIndex": 0,
+  "rationale": "The trust policy defines an outbreak as two or more cases linked by time, place and person, indicating a transmissible agent is affecting service users and/or staff.",
+  "source": "Derbyshire Healthcare - Managing an Outbreak of Infection (including Diarrhoea and Vomiting) Policy and Procedure",
+  "sourceDate": "July 2025, issue 08, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "question": "The trust uses the term 'period of increased incidence' (PII) when a clinical team reports one or more cases of a possible infection. At what point does that become a declared outbreak?",
+  "options": [
+   "As soon as any single case of possible infection is reported",
+   "When two or more cases are linked, the situation has been assessed and verified by the Infection Control Team and confirmed by the Director of Infection Prevention and Control (DIPC) or their nominated deputy",
+   "When the ward has been closed to admissions for 48 hours",
+   "When the Consultant Microbiologist confirms the organism on culture"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states a PII is not considered an outbreak until there is a significant link between cases (time, place, person), there have been two or more linked cases, and the situation has been assessed and verified by the Infection Control Team and confirmed by the DIPC or nominated deputy.",
+  "source": "Derbyshire Healthcare - Managing an Outbreak of Infection (including Diarrhoea and Vomiting) Policy and Procedure",
+  "sourceDate": "July 2025, issue 08, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "scenario": "You are the nurse in charge on a night shift during a declared outbreak of diarrhoea and vomiting.",
+  "question": "How often must the Outbreak Log Sheet and the Outbreak Checklist be completed, and whose responsibility is this?",
+  "options": [
+   "Log sheet weekly and checklist monthly, completed by the ward administrator",
+   "Both completed once at the start of the outbreak by the Infection Control Team",
+   "The log sheet is updated every shift and the checklist completed daily, and this is the responsibility of the nurse in charge, although the tasks can be appropriately delegated",
+   "Log sheet daily and checklist only at the end of the outbreak, completed by the Matron"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy makes the nurse in charge responsible for accurate completion of the Outbreak Log Sheet on a shift by shift basis and the Outbreak Checklist daily, with the forms supplied by the Infection Control Team. These tasks can be appropriately delegated.",
+  "source": "Derbyshire Healthcare - Managing an Outbreak of Infection (including Diarrhoea and Vomiting) Policy and Procedure",
+  "sourceDate": "July 2025, issue 08, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "scenario": "It is 11pm on a Saturday and the Infection Control Team advises that the ward may need to close to admissions.",
+  "question": "Under the trust's outbreak policy, who has the authority to close a ward to admissions out of hours?",
+  "options": [
+   "The nurse in charge of the affected ward",
+   "The bleep holder, who acts as the Divisional Nurse",
+   "The 2nd on call manager, who acts as the Director of Infection Prevention and Control (DIPC) until the return of normal business hours",
+   "The Infection Control Team on call"
+  ],
+  "correctIndex": 2,
+  "rationale": "Out of hours the 2nd on call manager acts as DIPC and has the authority to close a ward if required. The decision must be kept under daily review and notified to the Chief Executive Officer and the DIPC when normal business hours resume.",
+  "source": "Derbyshire Healthcare - Managing an Outbreak of Infection (including Diarrhoea and Vomiting) Policy and Procedure",
+  "sourceDate": "July 2025, issue 08, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "question": "In an outbreak of diarrhoea and vomiting, when does the trust's policy say the terminal clean should be booked and approved?",
+  "options": [
+   "Pre-booked once the ward has been 24 hours free of new cases, with final approval given at 48 hours free of new cases",
+   "Booked as soon as the first case is reported",
+   "Booked only after seven days free of new cases",
+   "Booked when the last symptomatic patient is discharged"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy says the terminal clean will be pre-booked at the 24 hours free stage, with final approval at 48 hours free of new cases. The whole ward is terminally cleaned, including shampoo or steam cleaning of soft furnishings and laundering of curtains, before admissions recommence.",
+  "source": "Derbyshire Healthcare - Managing an Outbreak of Infection (including Diarrhoea and Vomiting) Policy and Procedure",
+  "sourceDate": "July 2025, issue 08, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "question": "How must an outbreak of infection be recorded on the trust's incident reporting system?",
+  "options": [
+   "No incident report is needed because the Infection Control Team keeps its own chronology",
+   "On a Trust Incident Report via the DATIX system, graded as a 'red' incident",
+   "By email to the Director of Infection Prevention and Control (DIPC) only",
+   "On a DATIX report graded 'amber', with a separate report naming each affected patient"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires any outbreak to be detailed on a Trust Incident Reporting form via DATIX and graded as a 'red' incident. It may be completed as an overall situation report rather than naming individual patients, or using initials.",
+  "source": "Derbyshire Healthcare - Managing an Outbreak of Infection (including Diarrhoea and Vomiting) Policy and Procedure",
+  "sourceDate": "July 2025, issue 08, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "scenario": "The ward is in a declared outbreak and the linen skip needs emptying.",
+  "question": "How must used linen from the affected ward be sent to the laundry during the outbreak period?",
+  "options": [
+   "In a standard white linen bag, as normal",
+   "In an orange clinical waste bag",
+   "In a clear plastic bag placed inside a black bag",
+   "As infected or contaminated linen, in a tied dissolvo (water soluble) sack which is then tied inside a red bag"
+  ],
+  "correctIndex": 3,
+  "rationale": "During an outbreak the policy requires all used linen to be sent as infected or contaminated, in a tied dissolvo sack and then tied in a red bag, because of the potential for spread during onward transit.",
+  "source": "Derbyshire Healthcare - Managing an Outbreak of Infection (including Diarrhoea and Vomiting) Policy and Procedure",
+  "sourceDate": "July 2025, issue 08, review July 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "scenario": "A patient has passed two type 7 stools in the last 12 hours.",
+  "question": "The trust's Clostridioides difficile (C. diff) policy asks ward staff to use the SIGHT mnemonic. What does SIGHT stand for?",
+  "options": [
+   "Suspect, Isolate, Gloves and aprons, Handwashing, Test samples",
+   "Screen, Isolate, Gel, Hydrate, Treat",
+   "Suspect, Inform, Gown, Hydrate, Transfer",
+   "Sample, Isolate, GP inform, Hand gel, Treat"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy lists SIGHT (Suspect, Isolate, Gloves and aprons, Handwashing and Test samples) as a responsibility of clinical ward staff, and specifically says to avoid the use of alcohol hand gel.",
+  "source": "Derbyshire Healthcare - Clostridiodes Difficile (C. Diff) Policy and Procedure",
+  "sourceDate": "July 2023, issue 07, review May 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "scenario": "A patient's Clostridioides difficile (C. diff) symptoms have settled and the team is discussing stopping the stool chart.",
+  "question": "How long does the trust's C. diff policy say stool charts must continue for a patient with confirmed infection?",
+  "options": [
+   "Until the first negative repeat sample is received",
+   "For 72 hours after the diarrhoea stops",
+   "Every day until the patient has had 14 days of normal (for them) bowel activity",
+   "Only for the duration of the antibiotic course"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states patients with C. diff infection must have stool charts completed every day until they have had 14 days of normal (for them) bowel activity, and staff must remain vigilant for relapse.",
+  "source": "Derbyshire Healthcare - Clostridiodes Difficile (C. Diff) Policy and Procedure",
+  "sourceDate": "July 2023, issue 07, review May 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "scenario": "A patient with diarrhoea has been using a dedicated commode in their side room.",
+  "question": "Under the trust's C. diff policy, how long are separate toilet or commode facilities required?",
+  "options": [
+   "Until the stool sample result comes back",
+   "Until the patient has been symptom free for 24 hours",
+   "Until the patient has been symptom free for 72 hours and has passed a formed stool (not type 6 or 7)",
+   "For the whole of the admission once C. diff has ever been diagnosed"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy requires separate toilet or commode facilities until the patient is symptom free for 72 hours and a formed stool has been passed. Commodes must be cleaned after each use with a sporicidal agent.",
+  "source": "Derbyshire Healthcare - Clostridiodes Difficile (C. Diff) Policy and Procedure",
+  "sourceDate": "July 2023, issue 07, review May 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "scenario": "A patient with a positive C. diff toxin result is still symptomatic five days into treatment and a colleague asks whether to send another sample.",
+  "question": "What does the trust's C. diff policy say about repeat stool samples?",
+  "options": [
+   "Send a repeat sample every 48 hours until it is negative",
+   "Send a repeat sample weekly until the patient is discharged",
+   "Send a repeat sample only if the patient deteriorates clinically",
+   "Do not send repeat samples unless specifically requested by the Infection Control Team (ICT), and do not retest toxin positive cases within 28 days while symptoms persist"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy states repeat samples should not be sent unless specifically requested by the ICT, and toxin positive cases should not be retested within 28 days unless symptoms resolve and then recur and recurrent infection needs confirming.",
+  "source": "Derbyshire Healthcare - Clostridiodes Difficile (C. Diff) Policy and Procedure",
+  "sourceDate": "July 2023, issue 07, review May 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "question": "How does the trust's C. diff policy define 'resolved' and 'recurrence'?",
+  "options": [
+   "Resolved means one formed stool has been passed; recurrence means any diarrhoea within 7 days",
+   "Resolved means the patient has normal formed stools for 72 hours; recurrence means becoming symptomatic again within 28 days of the diarrhoea having resolved",
+   "Resolved means a negative toxin test; recurrence means any second positive test at any point",
+   "Resolved means 48 hours symptom free; recurrence means symptoms returning within 14 days"
+  ],
+  "correctIndex": 1,
+  "rationale": "The definitions section of the policy sets 'resolved' as normal formed stools for 72 hours and 'reoccurrence' as becoming symptomatic again within 28 days of the diarrhoea having resolved.",
+  "source": "Derbyshire Healthcare - Clostridiodes Difficile (C. Diff) Policy and Procedure",
+  "sourceDate": "July 2023, issue 07, review May 2026",
+  "reviewFlag": "review date passed"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "scenario": "A patient is admitted to the ward directly from a nursing home.",
+  "question": "Under the trust's MRSA policy, which patients are screened for Methicillin Resistant Staphylococcus aureus (MRSA)?",
+  "options": [
+   "Every inpatient, on admission and then weekly",
+   "Only patients who have an open wound",
+   "No one, because mental health services are classed as low risk",
+   "Defined groups only, screened on admission: those admitted directly from another healthcare provider, those with a known MRSA history, those with a proven history of intravenous drug use, those with an open wound or indwelling device, and any patient with MRSA found on another clinical specimen"
+  ],
+  "correctIndex": 3,
+  "rationale": "Routine admission screening is not recommended in mental health settings, but the trust has defined a limited list of risk groups who are screened, and screening takes place on admission only.",
+  "source": "Derbyshire Healthcare - MRSA Policy and Procedure",
+  "sourceDate": "August 2025, issue 08, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "question": "When should an MRSA screen ideally be taken after admission, and how long do results usually take?",
+  "options": [
+   "Ideally within 48 hours of admission, with results generally available at around 48 hours",
+   "Within 7 days of admission, with results in 24 hours",
+   "At the pre-discharge review, with results in one week",
+   "Within 2 hours of admission, with results the same day"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy says the screen should ideally be taken within 48 hours of admission (clinical judgement prevails, and any delay must be documented and reviewed by the multidisciplinary team), and patients should be told results are available to clinical staff in approximately 48 hours.",
+  "source": "Derbyshire Healthcare - MRSA Policy and Procedure",
+  "sourceDate": "August 2025, issue 08, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "scenario": "An inpatient's admission screen comes back MRSA positive.",
+  "question": "What decolonisation regime does the trust's MRSA policy describe?",
+  "options": [
+   "A single dose of oral antibiotic prescribed by the Consultant Microbiologist",
+   "A 5 day course of Octenisan body wash plus Mupirocin 2% applied to each anterior nare three times a day, with the hair washed with the Octenisan twice within the 5 days",
+   "A 10 day course of chlorhexidine body wash alone",
+   "A 5 day course of nasal Mupirocin only, with no body wash"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy specifies a 5 day course of Octenisan body wash with Mupirocin 2% to each anterior nare three times daily, and the hair washed with Octenisan twice within the 5 days because the scalp can be heavily colonised.",
+  "source": "Derbyshire Healthcare - MRSA Policy and Procedure",
+  "sourceDate": "August 2025, issue 08, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "scenario": "A patient has just finished the 5 day decolonisation course.",
+  "question": "What does the trust's MRSA policy say happens next?",
+  "options": [
+   "Re-screen immediately at the end of treatment, and one negative screen is enough",
+   "No re-screening is needed unless the patient becomes unwell",
+   "Stop treatment for two days, then re-screen, with a second screen a further 24 hours later; two negative screens are needed to class the patient as negative",
+   "Re-screen one week later and automatically repeat the treatment if positive"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states treatment is given for five days, stopped for two days, then the patient is re-screened with a second screen a further 24 hours later. Two post treatment screens are needed, and treatment must not be repeated except on the advice of a Consultant Microbiologist.",
+  "source": "Derbyshire Healthcare - MRSA Policy and Procedure",
+  "sourceDate": "August 2025, issue 08, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "scenario": "The ward has one side room and staff are discussing whether an MRSA positive patient needs it.",
+  "question": "Which situations does the trust's MRSA policy give as examples where a single room is required?",
+  "options": [
+   "Any patient who is MRSA colonised, in all circumstances",
+   "Only patients who refuse decolonisation treatment",
+   "Only patients who are also positive for Clostridioides difficile",
+   "An MRSA chest infection with a productive cough, a shedding skin condition such as psoriasis, or leaking wounds not contained by dressings"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy says a single bedroom is preferable for MRSA colonisation but the patient need not stay in the room unless isolated for one of these reasons. Any additional measures are agreed with the Infection Control Team, documented in a care plan, and the Head of Nursing for the area must be involved.",
+  "source": "Derbyshire Healthcare - MRSA Policy and Procedure",
+  "sourceDate": "August 2025, issue 08, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "scenario": "A colleague sustains a needlestick injury while giving an intramuscular injection.",
+  "question": "What immediate first aid does the trust's Managing an Inoculation Incident policy require?",
+  "options": [
+   "Suck the wound to draw out blood, then apply a plaster",
+   "Wash the site liberally with soap and water without scrubbing, encourage free bleeding, dry the area and apply a waterproof dressing",
+   "Scrub the site hard with an alcohol wipe and apply a dry dressing",
+   "Soak the finger in a chlorhexidine solution for five minutes"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy's first aid steps are to wash liberally with soap and water without scrubbing, not to suck the wound, to encourage free bleeding of puncture wounds, and to dry and apply a waterproof dressing. Exposed mucous membranes are irrigated with water.",
+  "source": "Derbyshire Healthcare - Managing an Inoculation Incident Policy and Procedure",
+  "sourceDate": "August 2025, issue 6, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "question": "Who must an inoculation incident be reported to first under the trust's policy?",
+  "options": [
+   "Immediately to a senior member of staff, for example the nurse in charge or head of department, who makes an initial risk assessment of the incident",
+   "The Infection Control Team on the next working day",
+   "The Trust Risk Management Department, by DATIX report only",
+   "The injured staff member's own general practitioner (GP)"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy requires all incidents to be reported immediately to a senior member of staff such as the nurse in charge, who carries out the initial risk assessment and ensures the required actions follow. An Untoward Incident Report form is also completed.",
+  "source": "Derbyshire Healthcare - Managing an Inoculation Incident Policy and Procedure",
+  "sourceDate": "August 2025, issue 6, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "question": "What timings does the trust's policy give for HIV post exposure prophylaxis (PEP)?",
+  "options": [
+   "Start within 24 hours and take for 7 days",
+   "Start within 6 hours and take for 14 days",
+   "Start within 72 hours and take for 3 months",
+   "Supply and commence as soon as possible and ideally within one hour of exposure, never more than 72 hours after the incident, and continue for 28 days"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy states HIV PEP should be commenced as soon as possible and ideally within one hour, should not be commenced more than 72 hours after the incident, and needs to be taken for 28 days to be most effective.",
+  "source": "Derbyshire Healthcare - Managing an Inoculation Incident Policy and Procedure",
+  "sourceDate": "August 2025, issue 6, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "scenario": "It is 9pm and a staff member sustains what looks like a high risk exposure.",
+  "question": "What does the trust's policy say should happen out of hours?",
+  "options": [
+   "Leave a message on the Occupational Health answer machine and wait for a call back the next working day",
+   "The senior member of staff must contact the Emergency Department, and if HIV exposure is suspected the injured worker may be asked to attend for treatment which should start within one hour",
+   "Wait until Occupational Health opens the next working morning",
+   "Ask the ward pharmacist to dispense post exposure prophylaxis (PEP) from ward stock"
+  ],
+  "correctIndex": 1,
+  "rationale": "For high risk incidents the policy says to contact Occupational Health without delay in working hours, and outside those times the senior member of staff must contact the Emergency Department. The answer machine route applies only to low risk incidents involving high risk fluids.",
+  "source": "Derbyshire Healthcare - Managing an Inoculation Incident Policy and Procedure",
+  "sourceDate": "August 2025, issue 6, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "scenario": "The sharps bin in the clinic room is filling up.",
+  "question": "When must a sharps container be sealed and disposed of under trust policy?",
+  "options": [
+   "Only when it is completely full to the top",
+   "At the end of every shift",
+   "When three quarters full or at the indicator line, or at maximum intervals not exceeding three months, whichever is earlier",
+   "Every week without exception"
+  ],
+  "correctIndex": 2,
+  "rationale": "Trust policy requires disposal at three quarters full or the indicator line, or at intervals not exceeding three months, whichever comes first. Containers must be labelled with the date started, ward or department and the initials of the person assembling them, and sealed containers go directly into a lockable clinical waste container, not a yellow bag.",
+  "source": "Derbyshire Healthcare - Managing an Inoculation Incident Policy and Procedure",
+  "sourceDate": "August 2025, issue 6, review August 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "scenario": "There is a blood spillage on the hard floor of the clinic room.",
+  "question": "How does the trust's Cleaning, Disinfection and Decontamination policy say this should be dealt with?",
+  "options": [
+   "Wipe up with warm water and general purpose detergent only",
+   "Apply alcohol gel to the spillage and leave it to dry",
+   "Wearing gloves and apron, cover with paper towels and apply a chlorine releasing disinfectant at 10,000 parts per million for a minimum of 3 minutes, remove the residual waste into an orange waste bag, then clean the area with warm water and general purpose detergent",
+   "Apply a 1,000 parts per million chlorine solution for 30 seconds then rinse"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy specifies a chlorine releasing disinfectant at 10,000 parts per million with a minimum 3 minute contact time for blood spillages, residual waste removed with disposable paper into an orange waste bag, and only then cleaning with warm water and general purpose detergent.",
+  "source": "Derbyshire Healthcare - Cleaning, Disinfection and Decontamination Clinical Policy and Procedure",
+  "sourceDate": "May 2025, issue 7, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "scenario": "A patient has spilled urine on the floor of the day area.",
+  "question": "What does the trust's cleaning policy specifically warn against here?",
+  "options": [
+   "Using paper towels to absorb the spill",
+   "Wearing gloves and an apron, as these are not needed for urine",
+   "Using warm water and general purpose detergent to remove the organic material",
+   "Applying a chlorine releasing agent such as Actichlor directly onto urine, as this may result in rapid release of toxic levels of chlorine"
+  ],
+  "correctIndex": 3,
+  "rationale": "The policy is explicit that chlorine releasing agents must not be applied directly onto urine. Organic material is removed first with warm water and general purpose detergent, and no further decontamination is needed for urine unless visible blood is present.",
+  "source": "Derbyshire Healthcare - Cleaning, Disinfection and Decontamination Clinical Policy and Procedure",
+  "sourceDate": "May 2025, issue 7, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "question": "How often must curtains in clinical and ward areas be changed under the trust's cleaning policy?",
+  "options": [
+   "Once a year",
+   "A minimum of every six months, with weekly checks, and taken down and laundered immediately if splashed with body fluids",
+   "Every two years",
+   "Only when they are visibly dirty"
+  ],
+  "correctIndex": 1,
+  "rationale": "The cleaning schedule in the policy sets curtains at a minimum of every six months with weekly checks, and immediate laundering if splashed with body fluids. Disposable curtains are used after risk assessment, clearly labelled and changed after six months or if contaminated.",
+  "source": "Derbyshire Healthcare - Cleaning, Disinfection and Decontamination Clinical Policy and Procedure",
+  "sourceDate": "May 2025, issue 7, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "question": "What does the trust's mattress care and decontamination guidance require ward staff to do each month?",
+  "options": [
+   "Send every mattress away for external decontamination",
+   "Replace all mattress covers",
+   "Steam clean every mattress on the ward",
+   "Turn the mattress as per the manufacturer's instructions, open the zip and visually check the foam for staining, condemning and replacing any stained mattress as soon as reasonably practicable, with a record held at ward level"
+  ],
+  "correctIndex": 3,
+  "rationale": "The mattress appendix requires a monthly turn with the zip opened and the foam checked for stains. Stained mattresses, or any with splits or breaks in the covering, must be condemned and replaced, and a local record of actions and of the age of the mattress kept at ward level. Fully sealed mattresses need only an external visual inspection.",
+  "source": "Derbyshire Healthcare - Cleaning, Disinfection and Decontamination Clinical Policy and Procedure",
+  "sourceDate": "May 2025, issue 7, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "scenario": "A doctor confirms scabies in a patient on the ward.",
+  "question": "Which contacts does the trust's scabies guideline say should be treated?",
+  "options": [
+   "Everyone who has set foot on the ward in the past month, regardless of contact",
+   "Only the patient's named nurse",
+   "Other inpatients, ward staff, other healthcare workers, family members or regular visitors who have had prolonged contact, defined as at least 5 minutes constant skin to skin contact",
+   "Only people who have already developed a rash or itching"
+  ],
+  "correctIndex": 2,
+  "rationale": "The guideline defines prolonged contact as at least 5 minutes constant skin to skin contact and says those contacts should be treated. Family members and visitors are advised to request treatment from their own GP.",
+  "source": "Derbyshire Healthcare - Scabies Clinical Guideline and Procedures",
+  "sourceDate": "April 2023, issue 1, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "question": "Under the trust's scabies guideline, how many treatments should the affected patient and their contacts receive?",
+  "options": [
+   "The infected patient is treated twice, 7 days apart, and contacts receive one precautionary treatment",
+   "Both the patient and their contacts receive a single treatment",
+   "The patient is treated three times on consecutive days and contacts are not treated",
+   "The patient is treated twice, 24 hours apart, and contacts are treated weekly for a month"
+  ],
+  "correctIndex": 0,
+  "rationale": "The guideline states treatment should be prescribed and undertaken twice, 7 days apart, and that contacts are advised to receive one treatment which is precautionary in intent. Inpatients are prescribed treatment as a stat dose on the Medication Prescription and Administration chart.",
+  "source": "Derbyshire Healthcare - Scabies Clinical Guideline and Procedures",
+  "sourceDate": "April 2023, issue 1, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Medium",
+  "scenario": "Scabies has been confirmed in a clinical area and several staff have had close contact.",
+  "question": "Who contacts the Infection Control Team (ICT), and who authorises treatment for affected staff?",
+  "options": [
+   "The ward pharmacist contacts the ICT, and the on call doctor authorises staff treatment",
+   "The Appointed Practitioner in Charge contacts the ICT for advice, and Occupational Health authorises treatment for staff and confirms the product to be used",
+   "The Domestic Supervisor contacts the ICT, and the patient's consultant authorises staff treatment",
+   "Any staff member contacts the UK Health Security Agency, who authorise treatment"
+  ],
+  "correctIndex": 1,
+  "rationale": "The guideline says the Appointed Practitioner in Charge contacts the ICT for advice, and the ICT contacts Occupational Health, who authorise staff treatment and confirm the product. If the ICT is unavailable, contact Occupational Health directly and inform the Senior Nurse, Head of Nursing or Area Service Manager.",
+  "source": "Derbyshire Healthcare - Scabies Clinical Guideline and Procedures",
+  "sourceDate": "April 2023, issue 1, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "question": "The trust uses the nationally agreed colour coding for disposable aprons and cleaning equipment. Which colour is used when nursing a patient in isolation or cohort nursing during an outbreak?",
+  "options": [
+   "Red",
+   "Green",
+   "Yellow",
+   "Blue"
+  ],
+  "correctIndex": 2,
+  "rationale": "In the trust's colour coding table yellow is for nursing a patient in isolation or cohort nursing in an outbreak. Red is for bathrooms and assisting with toileting, blue for general areas and routine personal care, green for catering and food, and white or clear for clean procedures such as wound care and catheterisation.",
+  "source": "Derbyshire Healthcare - Standard Infection Control Principles Policy and Procedure",
+  "sourceDate": "05 November 2025, issue 07, review November 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "question": "Which glove type does the trust's Standard Infection Control Principles policy specify for routine clinical use as personal protective equipment (PPE)?",
+  "options": [
+   "Powder free nitrile, non latex",
+   "Polythene or vinyl",
+   "Sterile powder free latex surgeons' gloves",
+   "Whatever is available, since glove type does not matter for routine care"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy's glove selection table gives powder free nitrile (non latex) for routine clinical use, states latex free gloves must be used and latex gloves should not be in use, and says vinyl or polythene gloves are not recommended for clinical practice.",
+  "source": "Derbyshire Healthcare - Standard Infection Control Principles Policy and Procedure",
+  "sourceDate": "05 November 2025, issue 07, review November 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Hard",
+  "scenario": "A patient known to be colonised with MRSA dies on the ward and staff ask whether a body bag is needed.",
+  "question": "What does the trust's Standard Infection Control Principles policy say?",
+  "options": [
+   "A body bag is always required for any patient with MRSA",
+   "The presence of MRSA or Clostridioides difficile infection or colonisation does not require the routine use of a body bag",
+   "A body bag is required and relatives cannot view the body",
+   "A body bag is used only if the family request one"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy is explicit that MRSA and Clostridium difficile infection or colonisation do not require routine use of a body bag, and warns that inappropriate use may cause unnecessary distress to relatives. A notification form must still accompany the body to advise of any special precautions or infection risk.",
+  "source": "Derbyshire Healthcare - Standard Infection Control Principles Policy and Procedure",
+  "sourceDate": "05 November 2025, issue 07, review November 2028"
+ },
+ {
+  "category": "Trust Policy - Infection Prevention & Control",
+  "difficulty": "Easy",
+  "scenario": "The alcohol hand rub dispenser by the ward door is nearly empty and there is a part used bottle of the same product in the store cupboard.",
+  "question": "What does the trust's Hand Hygiene policy say about this?",
+  "options": [
+   "Never top up bottles or dispensers; they should be regarded as single use, and dispensers that require topping up must not be installed in Trust premises without specific clearance from Infection Control",
+   "Top it up, provided the same product and batch is used",
+   "Top it up and record the batch number in the ward cleaning file",
+   "Top it up only if the spare bottle was opened less than 24 hours ago"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states topping up of bottles should never occur because the inside of bottles, even those with antiseptic solutions, can become breeding grounds for bacteria, and dispensers should be regarded as single use.",
+  "source": "Derbyshire Healthcare - Hand Hygiene Policy and Procedure",
+  "sourceDate": "May 2025, issue 6, review May 2028"
+ }
+]

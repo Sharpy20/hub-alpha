@@ -1,0 +1,511 @@
+[
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "Beds are tight across the unit and a duty manager suggests putting a male patient into a spare bed in a female bed bay overnight.",
+  "question": "Under the trust's minimum standards for delivering same sex accommodation, how is overnight mixing of sexes in a bed bay rated?",
+  "options": [
+   "Green - acceptable if the nurse in charge agrees",
+   "Amber - should not occur unless clinically unavoidable",
+   "Red - it should be a 'never event' and must not occur",
+   "Not rated, because bed pressures are outside the policy's scope"
+  ],
+  "correctIndex": 2,
+  "rationale": "The trust's minimum standards table rates overnight mixing of sexes in a bay as Red, stating it should be a 'never event' and must not occur. Amber is reserved for things like a temporary single en-suite room in the opposite-gender area during a clinical emergency.",
+  "source": "Derbyshire Healthcare - Privacy and Dignity (Including Delivering Same Sex Accommodation Guidance) Policy and Procedures",
+  "sourceDate": "May 2026, issue 7, review May 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "A patient has been placed in a bed bay of the opposite sex overnight and the decision was not based on clinical need.",
+  "question": "What does the trust's Privacy and Dignity policy require after a Red-rated same sex accommodation breach?",
+  "options": [
+   "An incident (breach) report only, closed at ward level",
+   "An incident (breach) report plus a Root Cause Analysis and an action plan",
+   "A verbal handover to the matron and an entry in the ward diary",
+   "No report unless the patient or a relative makes a complaint"
+  ],
+  "correctIndex": 1,
+  "rationale": "For Red-rated breaches the policy requires an incident report indicating a breach, a Root Cause Analysis and a development of an action plan, plus a plan to move the patient out of the mixed sex environment at the soonest opportunity.",
+  "source": "Derbyshire Healthcare - Privacy and Dignity (Including Delivering Same Sex Accommodation Guidance) Policy and Procedures",
+  "sourceDate": "May 2026, issue 7, review May 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "An incident report has been submitted flagging a possible Amber same sex accommodation (SSA) breach, and the ward team are unsure whether it will count as a breach.",
+  "question": "Under the trust's SSA Breach Reporting Guidance, who confirms whether an Amber event is a breach?",
+  "options": [
+   "The ward manager, in the next ward governance meeting",
+   "The Head of Patient Experience (the Delivering Same Sex Accommodation Lead), who then informs the Contracting Department",
+   "The Care Quality Commission (CQC), at the next inspection",
+   "The Mental Health Act (MHA) office"
+  ],
+  "correctIndex": 1,
+  "rationale": "The Amber key in the policy states that a decision about whether a possible breach is a breach will be confirmed by the Head of Patient Experience (the Delivering Same Sex Accommodation Lead), who will inform the Contracting Department.",
+  "source": "Derbyshire Healthcare - Privacy and Dignity (Including Delivering Same Sex Accommodation Guidance) Policy and Procedures",
+  "sourceDate": "May 2026, issue 7, review May 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "question": "Which of the following does the trust's policy list as an acceptable justification, meaning it is NOT counted as a same sex accommodation breach?",
+  "options": [
+   "The ward is short staffed, so patients have been cohorted differently for the night",
+   "The skill mix on the late shift did not allow the usual bed layout to be maintained",
+   "An acutely ill or disturbed patient requires constant one-to-one nursing care, for example in seclusion",
+   "The patient said they did not mind being in the opposite sex bay"
+  ],
+  "correctIndex": 2,
+  "rationale": "Acceptable justifications listed are a life-threatening emergency, an acutely ill or disturbed patient needing constant one-to-one nursing care such as seclusion, and situations where a nurse must be physically present at all times. The policy states explicitly that staff shortages or skill mix are not acceptable as the rationale.",
+  "source": "Derbyshire Healthcare - Privacy and Dignity (Including Delivering Same Sex Accommodation Guidance) Policy and Procedures",
+  "sourceDate": "May 2026, issue 7, review May 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "On a mixed ward, a patient has to walk through the opposite sex bed area to reach the bathroom.",
+  "question": "How does the trust's policy define this situation?",
+  "options": [
+   "Acceptable, as long as the patient is escorted by a staff member of their own sex",
+   "A same sex accommodation breach, because accessing bathing or toileting facilities requires the patient to pass through (not by) a bed area of the opposite sex",
+   "Acceptable, because only sleeping accommodation counts",
+   "A breach only if it happens more than once in a 24 hour period"
+  ],
+  "correctIndex": 1,
+  "rationale": "The definition of a breach in Appendix 1 includes where accessing bathing or toileting facilities requires a patient to pass through (not by) a bed area of the opposite sex. The same sex accommodation definition also states no one should have to pass through rooms occupied by the opposite sex to reach their toilet and washing facilities.",
+  "source": "Derbyshire Healthcare - Privacy and Dignity (Including Delivering Same Sex Accommodation Guidance) Policy and Procedures",
+  "sourceDate": "May 2026, issue 7, review May 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "The Multidisciplinary Team (MDT) decides that one particular visitor's contact is anti-therapeutic and agrees to restrict their visits.",
+  "question": "Under the Adult Inpatient Visiting Policy, how much notice should be given of a restriction made on clinical grounds when possible?",
+  "options": [
+   "24 hours",
+   "48 hours",
+   "7 days",
+   "No notice is expected, the restriction takes effect immediately"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy says the reason for a restriction on clinical grounds should be recorded and explained to both the patient and the visitor, orally and in writing, and that when possible 24 hours' notice should be given of the decision.",
+  "source": "Derbyshire Healthcare - Adult Inpatient Visiting Policy and Procedure",
+  "sourceDate": "May 2026, issue 3, review November 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "A visitor has been excluded from the ward after repeatedly attempting to bring illicit substances in.",
+  "question": "Besides documenting the reasons and explaining them to the patient orally and in writing, what does the trust's visiting policy require?",
+  "options": [
+   "A safeguarding referral in every case",
+   "A Datix incident report is completed",
+   "A letter from the Chief Executive to the visitor",
+   "Nothing further, provided the ward round notes are updated"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that any decision to exclude a visitor must be fully documented with reasons, made available for independent scrutiny by regulators such as the Care Quality Commission (CQC), and that a Datix should be completed.",
+  "source": "Derbyshire Healthcare - Adult Inpatient Visiting Policy and Procedure",
+  "sourceDate": "May 2026, issue 3, review November 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "A norovirus outbreak on the unit means the ward is considering closing to visitors for several days.",
+  "question": "Under the Adult Inpatient Visiting Policy, who must agree infection prevention restrictions on visiting?",
+  "options": [
+   "The nurse in charge of the affected ward",
+   "The Multidisciplinary Team (MDT) at the next ward round",
+   "The Director of Infection Control or their nominated deputy, with the restrictions reviewed by the Infection Control Team",
+   "The Mental Health Act (MHA) Committee"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states restrictions of this kind will be reviewed by the Infection Control Team and agreed by the Director of Infection Control or their nominated deputy, so there is clear support, governance and accountability for the decision. They must be time limited and reviewed in line with infection prevention control guidelines.",
+  "source": "Derbyshire Healthcare - Adult Inpatient Visiting Policy and Procedure",
+  "sourceDate": "May 2026, issue 3, review November 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "A patient asks whether they can see their visitor somewhere other than the busy communal visiting room.",
+  "question": "What does the trust's visiting policy say about where visits can take place?",
+  "options": [
+   "Visits must always take place in the designated visitors' room",
+   "Where possible patients should be able to see visitors in private, including in their own bedroom if the patient wishes",
+   "Private visits are only permitted for informal patients",
+   "Private visits require written authorisation from the Responsible Clinician"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that patients, when possible, should be able to see all their visitors in private, including in their own bedroom if the patient wishes. Where dormitories are in use, the privacy and dignity of others sharing must be considered and alternative private areas made available.",
+  "source": "Derbyshire Healthcare - Adult Inpatient Visiting Policy and Procedure",
+  "sourceDate": "May 2026, issue 3, review November 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "A relative of an older adult patient asks to come in at lunchtime to help their family member eat, but the ward operates protected mealtimes.",
+  "question": "According to the trust's visiting policy, how should this be handled?",
+  "options": [
+   "Refuse, because protected mealtimes cannot be varied for any reason",
+   "Allow it only if the patient is an informal patient",
+   "It can be arranged following discussion with the ward manager or nurse in charge",
+   "Refer the request to the Mental Health Act office"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy acknowledges that some older adult wards adhere to protected mealtimes but that some patients may prefer support and encouragement to eat from their relatives, and this can be arranged following discussions with the ward manager or nurse in charge.",
+  "source": "Derbyshire Healthcare - Adult Inpatient Visiting Policy and Procedure",
+  "sourceDate": "May 2026, issue 3, review November 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "A newly admitted patient's daughter has been supporting them daily at home and you have taken her contact details.",
+  "question": "Where does the trust's carers policy say carer data should be recorded?",
+  "options": [
+   "The Carer Dashboard on SystmOne",
+   "A paper carers file kept in the ward office",
+   "The ward handover sheet only",
+   "The Datix system"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states the Carer Dashboard is available on SystmOne and is where staff should record all carer data from first contact wherever possible. The dashboard also holds an introduction letter template and signposting information.",
+  "source": "Derbyshire Healthcare - Carers: Working with and Supporting Carers Policy",
+  "sourceDate": "June 2025, issue 6, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "question": "How often does the trust expect teams and service lines to complete their Triangle of Care self-assessment and update their action plan?",
+  "options": [
+   "Every 6 months",
+   "Every 12 months",
+   "Every 18 months",
+   "Every 3 years"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states there is an expectation that trust teams and service lines will complete their Triangle of Care self-assessments and update their action plan every 18 months. The trust holds two-star Triangle of Care status with the Carers Trust.",
+  "source": "Derbyshire Healthcare - Carers: Working with and Supporting Carers Policy",
+  "sourceDate": "June 2025, issue 6, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "A newly detained patient refuses permission for anything to be shared with their mother, who has been caring for them for years and is now on the phone, distressed.",
+  "question": "What does the trust's carers policy say staff must still do?",
+  "options": [
+   "Decline to speak to her at all until consent is given",
+   "Give general information about mental illness and treatment options, discuss her concerns and signpost her to carer support services",
+   "Share the diagnosis only, since that is not personal information",
+   "Ask the Responsible Clinician to override the patient's decision"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy is explicit that even if permission to share is refused, staff must still give general information about mental illness and treatment options, discuss the carer's concerns or fears and signpost them to carer support services. It also notes the refusal should be revisited regularly as things settle.",
+  "source": "Derbyshire Healthcare - Carers: Working with and Supporting Carers Policy",
+  "sourceDate": "June 2025, issue 6, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "A carer asks about a carer's assessment, but the person they care for is currently refusing all services.",
+  "question": "What does the trust's carers policy say about offering the carer an assessment in this situation?",
+  "options": [
+   "The carer cannot be assessed while the cared-for person is refusing services",
+   "The carer can only be assessed once the cared-for person is accepted onto a caseload",
+   "The cared-for person refusing services does not prevent the carer from being offered an assessment",
+   "The assessment must be deferred until the next care plan review"
+  ],
+  "correctIndex": 2,
+  "rationale": "The Procedure for working with carers states that if the service user they care for is currently refusing services, this does not prevent the carer from being offered an assessment. Good practice is to explain that the assessment identifies help and support rather than being a test of how well someone is caring.",
+  "source": "Derbyshire Healthcare - Carers: Working with and Supporting Carers Policy",
+  "sourceDate": "June 2025, issue 6, review May 2028"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "An out of area bed is declined for a trans patient, and the reason given relates to their gender identity.",
+  "question": "Under the trust's transgender and gender nonconforming policy, what must happen?",
+  "options": [
+   "It is recorded as a Datix by the bleepholder or flow coordinator",
+   "It is raised only at the next divisional governance meeting",
+   "The ward manager writes to the receiving provider",
+   "No action is needed if an alternative bed is found the same day"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states twice that if a trans person is refused an out of area admission based on their gender identity or trans status, this should be recorded as a Datix by the bleepholder or flow coordinator. It also says a trust bed should be prioritised where possible given the complexity of out of area placement.",
+  "source": "Derbyshire Healthcare - Policy for Community and Inpatient services on the Care and Support of Transgender and Gender Nonconforming Service Users and Staff",
+  "sourceDate": "November 2023, issue 3, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "An intimate external search is needed for a trans patient who identifies as non-binary and, when asked, expresses no preference about the gender of the searching staff member.",
+  "question": "What does the trust's policy say should happen?",
+  "options": [
+   "The search should be postponed indefinitely until a preference is given",
+   "The search should be matched to the biological sex of the person being searched",
+   "The nurse in charge chooses the searcher regardless of gender",
+   "Two staff of different genders should carry out the search together"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy says intimate external searches should generally be performed by a gender chosen by the trans person; if they cannot confirm, the searcher should be aligned with their affirmed gender; and if the person is non-binary and gives no preference, searches should be matched with the biological sex of the person being searched.",
+  "source": "Derbyshire Healthcare - Policy for Community and Inpatient services on the Care and Support of Transgender and Gender Nonconforming Service Users and Staff",
+  "sourceDate": "November 2023, issue 3, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "A patient tells you they want to be known by a different name and different pronouns from those on their records.",
+  "question": "What does the trust's transgender and gender nonconforming policy say is needed before staff address them that way?",
+  "options": [
+   "A Gender Recognition Certificate",
+   "A deed poll or statutory declaration",
+   "Nothing formal - the way a service user wishes to be addressed does not require any paperwork or official notification of name change",
+   "Written agreement from the Responsible Clinician"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states that the way a service user wishes to be addressed does not require any formal paper or other official notification of a name change, and that names and titles should be changed as a matter of courtesy, not dependent on holding a Gender Recognition Certificate. Where families disagree, the trans person's preference must be followed.",
+  "source": "Derbyshire Healthcare - Policy for Community and Inpatient services on the Care and Support of Transgender and Gender Nonconforming Service Users and Staff",
+  "sourceDate": "November 2023, issue 3, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "Mental Health Act (MHA) paperwork is being completed for a trans patient whose legal name differs from the name they use.",
+  "question": "What does the trust's policy say about how the name should be recorded?",
+  "options": [
+   "Use only the name the person currently uses",
+   "Give the legal name, and it is permissible to add the other name in brackets, for example '(who identifies as NAME)'",
+   "Leave the name blank and attach a separate note",
+   "Use the legal name and do not record the other name anywhere"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that MHA paperwork must pertain to the person in front of the person completing it, that it should give their legal name, and that if they identify as another name it is permissible to put the name and then brackets '(who identifies as NAME)'. Use of he or she is not detrimental so long as it is clear who it relates to.",
+  "source": "Derbyshire Healthcare - Policy for Community and Inpatient services on the Care and Support of Transgender and Gender Nonconforming Service Users and Staff",
+  "sourceDate": "November 2023, issue 3, review November 2026"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "A healthcare assistant asks whether two staff should always be present for personal care, to protect staff from allegations.",
+  "question": "What does the trust's Intimate Care Policy say?",
+  "options": [
+   "Two staff must always be present for any intimate care",
+   "Two staff are required only for patients detained under the Mental Health Act",
+   "It is not always necessary, for example unless needed for health and safety reasons such as moving and handling, and if more than one person is required the rationale must be documented in the care record",
+   "One staff member is always sufficient and a second is never justified"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states it is not always necessary for two staff to be involved unless for health and safety reasons, and notes that while a second person may protect against allegations it further erodes the person's privacy. Where more than one person is required, the rationale must be documented in the care record.",
+  "source": "Derbyshire Healthcare - Intimate Care Policy and Procedure",
+  "sourceDate": "March 2024, issue 5, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "While assisting a patient with washing, you notice unexplained bruising on their upper arm.",
+  "question": "What does the trust's Intimate Care Policy require?",
+  "options": [
+   "Record it in the notes at the end of the shift and mention it on handover",
+   "Record it, complete a body map as soon as possible and report it to the nurse in charge or designated manager",
+   "Photograph the bruising on a ward mobile phone",
+   "Wait to see whether it worsens before recording anything"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states all unusual markings, discolouration or swelling must be recorded and a body map completed as soon as possible and reported to the nurse in charge or designated manager, with the safeguarding team contacted where there are concerns.",
+  "source": "Derbyshire Healthcare - Intimate Care Policy and Procedure",
+  "sourceDate": "March 2024, issue 5, review March 2027"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "A patient's partner is on the ward and offers to stay in the room during an intimate examination so that a staff member is not needed.",
+  "question": "Under the current Chaperone Policy, can the partner act as the chaperone?",
+  "options": [
+   "Yes, a family member or carer counts as a chaperone if the patient consents",
+   "Yes, provided the examining clinician agrees",
+   "No - family members or carers may provide emotional support but do not replace a formal chaperone, who must be a trained member of staff",
+   "Only if no trained staff member is available within the hour"
+  ],
+  "correctIndex": 2,
+  "rationale": "The 2026 version of the policy changed this. A formal chaperone must be a trained member of staff; family or carers may give emotional support but cannot replace a formal chaperone. All intimate examinations of under-18s require a formal chaperone even when a parent or carer is present.",
+  "source": "Derbyshire Healthcare - Chaperone Policy and Procedure",
+  "sourceDate": "April 2026, issue 7, review April 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "question": "Under the trust's Chaperone Policy, which staff may act as a formal chaperone?",
+  "options": [
+   "Any registered nurse on duty",
+   "Only staff who have been Disclosure and Barring Service (DBS) checked and have completed trust safeguarding training",
+   "Any substantive member of staff, but not bank or agency staff",
+   "Any member of staff who has completed an annual appraisal"
+  ],
+  "correctIndex": 1,
+  "rationale": "The training and competency section states that only staff who have been DBS checked and who have completed trust safeguarding training may act as chaperones. 'Trained' for the purposes of this policy means having undergone safeguarding adults or children's training.",
+  "source": "Derbyshire Healthcare - Chaperone Policy and Procedure",
+  "sourceDate": "April 2026, issue 7, review April 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "Mid-way through an intimate procedure the chaperone is called away to an emergency elsewhere on the ward.",
+  "question": "What does the trust's Chaperone Policy say should happen?",
+  "options": [
+   "The examiner may continue if the patient says they are happy to",
+   "The procedure should be halted until the chaperone returns, with the patient's privacy and dignity maintained, for example with a cover blanket",
+   "Another patient's visitor may step in temporarily",
+   "The examiner should finish as quickly as possible and document the gap afterwards"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that if the chaperone has to leave the room the procedure should be halted until they return, and during this time the patient's privacy and dignity must be maintained, for example by using a cover blanket. The chaperone must also stay in a position to witness the examination.",
+  "source": "Derbyshire Healthcare - Chaperone Policy and Procedure",
+  "sourceDate": "April 2026, issue 7, review April 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "A patient on the ward needs daily help with washing, dressing and using the toilet.",
+  "question": "What does the trust's Chaperone Policy require in relation to who provides that personal care?",
+  "options": [
+   "Care must always be given by a staff member of the same gender as the patient",
+   "All patients who need assistance with personal care must be asked what gender of staff they would prefer to be assisted by",
+   "The named nurse decides based on the ward's staffing rota",
+   "Gender preference only needs to be considered for intimate examinations, not personal care"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy states that all patients who require assistance with meeting their personal care needs must be asked what gender staff they would prefer. It also recognises that some people have personal reasons for not wanting to be assisted by someone of the same gender, and preferences must be clearly documented in the patient's record.",
+  "source": "Derbyshire Healthcare - Chaperone Policy and Procedure",
+  "sourceDate": "April 2026, issue 7, review April 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "A patient is admitted to the ward at 8pm on a Monday.",
+  "question": "Under the trust's Nutrition and Hydration Policy, what nutritional risk screening is required and by when?",
+  "options": [
+   "The Malnutrition Universal Screening Tool (MUST), completed within 48 hours of admission",
+   "The Malnutrition Universal Screening Tool (MUST), completed within 7 days of admission",
+   "The Lester tool, completed within 24 hours of admission",
+   "No screening tool is required unless the patient looks underweight"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states every adult patient admitted to an inpatient ward will have a nutritional risk screen completed within 48 hours of admission, that the approved tool is the Malnutrition Universal Screening Tool (MUST), and that any exception must be clearly documented. MUST is built into the SystmOne electronic patient record.",
+  "source": "Derbyshire Healthcare - Nutrition and Hydration Policy and Procedure",
+  "sourceDate": "August 2024, issue 5, review July 2027"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "A Malnutrition Universal Screening Tool (MUST) screen has just identified that a patient is at nutritional risk.",
+  "question": "Within what timeframe does the trust's policy say a care plan must be developed?",
+  "options": [
+   "Within 6 hours of the risk being identified",
+   "Within 24 hours of the risk being identified",
+   "By the next multidisciplinary team (MDT) review",
+   "Within 72 hours of the risk being identified"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states that those identified to be at risk must have a care plan developed within 6 hours of the risk being identified, with referral to Dietetics if required, and the care plan must reflect the first line advice provided by the dietetics department.",
+  "source": "Derbyshire Healthcare - Nutrition and Hydration Policy and Procedure",
+  "sourceDate": "August 2024, issue 5, review July 2027"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "A patient scores 2 on the Malnutrition Universal Screening Tool (MUST).",
+  "question": "What does the trust's Nutrition and Hydration Policy say this means?",
+  "options": [
+   "Low risk - repeat the screen at the next routine review",
+   "Medium risk - consider first line advice at ward level only",
+   "High risk - a care plan using the tool's management guidelines is required and a referral to a dietitian must be made",
+   "The score is inconclusive and the screen should be repeated the following day"
+  ],
+  "correctIndex": 2,
+  "rationale": "A MUST score of 2 or above is high risk. The policy requires a care plan developed using the tool's management guidelines, discussion of the tool, care plan and evaluation as part of multidisciplinary review, and states that in undernutrition identified at MUST 2 or above a referral to a dietitian must be made.",
+  "source": "Derbyshire Healthcare - Nutrition and Hydration Policy and Procedure",
+  "sourceDate": "August 2024, issue 5, review July 2027"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "A colleague asks how often patients should be weighed on an adult mental health ward compared with an older people's inpatient ward.",
+  "question": "What does the trust's Nutrition and Hydration Policy give as the indicative frequencies?",
+  "options": [
+   "Weekly on adult mental health wards and monthly on older people's wards",
+   "Monthly on adult mental health wards and weekly on older people's wards, with weekly monitoring where medium or high nutritional risk is identified",
+   "Fortnightly on both, regardless of risk",
+   "On admission and discharge only, unless the dietitian asks otherwise"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy gives an indicative frequency of monthly for adult mental health wards and weekly for older people's inpatient wards, with clinical judgement prevailing, and states that where medium or high nutritional risk is identified weight monitoring and nutritional screening should be repeated weekly as per the MUST tool guidelines.",
+  "source": "Derbyshire Healthcare - Nutrition and Hydration Policy and Procedure",
+  "sourceDate": "August 2024, issue 5, review July 2027"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "A patient has begun refusing meals and most drinks over the last two days.",
+  "question": "What does the trust's Nutrition and Hydration Policy require?",
+  "options": [
+   "Document all diet and fluid offered and refused, and have the patient reviewed by members of the multidisciplinary team (MDT) daily",
+   "Wait 72 hours before escalating, to allow the pattern to settle",
+   "Start a fluid balance chart only once the patient becomes physically unwell",
+   "Refer straight to the enteral feeding pathway"
+  ],
+  "correctIndex": 0,
+  "rationale": "The policy states all diet and fluid offered and refused must be documented and the patient will be required to be reviewed by members of the MDT daily. Patients at risk of malnutrition or reduced intake must also have an electronic Food and Fluid Record chart, with a fluid balance chart where dehydration is a risk, and concerns escalated to the medical team.",
+  "source": "Derbyshire Healthcare - Nutrition and Hydration Policy and Procedure",
+  "sourceDate": "August 2024, issue 5, review July 2027"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Medium",
+  "scenario": "A healthcare assistant with a food hygiene qualification offers to run a baking session with a patient in the ward's therapeutic kitchen.",
+  "question": "What does the Use of Therapeutic Kitchens Policy require?",
+  "options": [
+   "Only Occupational Therapists (OTs) may ever use a therapeutic kitchen with a patient",
+   "Any member of staff may supervise as long as the ward manager agrees",
+   "Non-OT staff such as healthcare assistants or peer support workers may facilitate the activity provided they hold the required Level 2 Food Safety certification and an Occupational Therapist provides oversight",
+   "A Level 3 food safety qualification is required for all staff leading kitchen sessions"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy requires staff to complete the Level 2 Award in Food Safety in Catering before leading or supervising food-related therapeutic activity, plus Food Hygiene Awareness e-learning on starting with the trust. Non-OT staff with the Level 2 certification may facilitate sessions where an Occupational Therapist provides oversight.",
+  "source": "Derbyshire Healthcare - Use of Therapeutic Kitchens Policy",
+  "sourceDate": "February 2026, issue 1, review February 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Hard",
+  "scenario": "At the end of a cooking group, one of the knives cannot be found.",
+  "question": "What does the trust's Use of Therapeutic Kitchens Policy require?",
+  "options": [
+   "Note it in the session record and check again the next time the kitchen is used",
+   "Inform the nurse in charge or team leader immediately, treat it as a security incident, search the area and escalate through the incident reporting procedure if it is not found quickly",
+   "Report it only if a patient is thought to have taken it",
+   "Replace the knife from stock and continue as normal"
+  ],
+  "correctIndex": 1,
+  "rationale": "The policy requires all cutlery and utensils to be counted before and after each session against a checklist. If any item is missing or unaccounted for, staff must immediately inform the nurse in charge or team leader and treat it as a security incident, search the area, and escalate per the trust's incident reporting procedures. Sharps must be stored in locked cupboards with staff holding the keys.",
+  "source": "Derbyshire Healthcare - Use of Therapeutic Kitchens Policy",
+  "sourceDate": "February 2026, issue 1, review February 2029"
+ },
+ {
+  "category": "Trust Policy - Dignity, Visiting & Carers",
+  "difficulty": "Easy",
+  "scenario": "You are setting up a therapeutic kitchen session and find a wooden chopping board in the cupboard.",
+  "question": "What does the trust's Use of Therapeutic Kitchens Policy say about wooden chopping boards?",
+  "options": [
+   "They may be used for dry ingredients only",
+   "They may be used if scrubbed with hot water immediately after use",
+   "They must not be used at all, because of the difficulty in sanitising them - use colour-coded plastic boards instead",
+   "They may be used for vegetables but never for meat"
+  ],
+  "correctIndex": 2,
+  "rationale": "The policy states wooden chopping boards must not be used at all due to the difficulty in sanitising them, and that plastic cutting boards should be used following the standard colour-coding system (red raw meat, blue raw fish, green salad and fruit, brown root vegetables, white dairy and bakery, yellow cooked meats).",
+  "source": "Derbyshire Healthcare - Use of Therapeutic Kitchens Policy",
+  "sourceDate": "February 2026, issue 1, review February 2029"
+ }
+]

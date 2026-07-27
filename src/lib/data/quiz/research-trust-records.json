@@ -1,0 +1,516 @@
+[
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": "A patient on the ward has come to moderate harm following an incident, and the incident has been assessed as meeting the Duty of Candour.",
+    "question": "Under the Trust's Duty of Candour policy, by when must the patient or their relevant person be given the notification?",
+    "options": [
+      "Within 24 hours of the incident happening",
+      "Within 28 days of the incident being reported on the incident system",
+      "Once the learning response has finished and all the facts are confirmed",
+      "As soon as possible and within 10 working days of the incident being assessed as Duty of Candour"
+    ],
+    "correctIndex": 3,
+    "rationale": "The Trust policy says notification should be given in person, sharing all factual information known to date, as soon as possible and within 10 working days of the incident being assessed as Duty of Candour.",
+    "source": "Derbyshire Healthcare - Policy and Procedure for Duty of Candour",
+    "sourceDate": "March 2025, issue 9, review February 2028"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "Which levels of harm bring an incident within the statutory Duty of Candour under the Trust's policy?",
+    "options": [
+      "Any incident at all, including near misses",
+      "Low harm and above",
+      "Severe harm or death only",
+      "Moderate harm, prolonged pain, prolonged psychological harm, severe harm or death"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy defines the trigger as moderate harm, prolonged pain, prolonged psychological harm, severe harm or death, and states that near misses, no harm and low harm incidents are not required to follow the Duty of Candour process.",
+    "source": "Derbyshire Healthcare - Policy and Procedure for Duty of Candour",
+    "sourceDate": "March 2025, issue 9, review February 2028"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": null,
+    "question": "The Trust's Duty of Candour policy defines 'prolonged psychological harm'. Over what continuous period must the harm have been experienced, or be likely to be experienced?",
+    "options": [
+      "7 days or more",
+      "14 days or more",
+      "21 days or more",
+      "28 days or more"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy defines both prolonged pain and prolonged psychological harm as lasting, or being likely to last, for a continuous period of at least 28 days.",
+    "source": "Derbyshire Healthcare - Policy and Procedure for Duty of Candour",
+    "sourceDate": "March 2025, issue 9, review February 2028"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": "You have just had the Duty of Candour conversation with a patient's relative and apologised.",
+    "question": "Where does the Trust policy say this must be recorded?",
+    "options": [
+      "Clearly in the patient's electronic patient record, with the incident record also updated to log the discussion and any letters uploaded",
+      "In the ward handover book, so the next shift knows",
+      "In your own supervision notes only",
+      "On the incident record only, because the electronic patient record is not used for incidents"
+    ],
+    "correctIndex": 0,
+    "rationale": "The policy requires the apology and what further enquiries will be made to be clearly documented in the patient's electronic patient record, and says all contacts should be documented there with the incident record also updated and copies of letters uploaded.",
+    "source": "Derbyshire Healthcare - Policy and Procedure for Duty of Candour",
+    "sourceDate": "March 2025, issue 9, review February 2028"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "Which team at this Trust offers training, support and advice to staff on applying the Duty of Candour, and supports patients and families after an incident?",
+    "options": [
+      "The Mental Health Act office",
+      "The Family Liaison Team",
+      "The Freedom to Speak Up Guardians",
+      "The Practice Development Team"
+    ],
+    "correctIndex": 1,
+    "rationale": "The policy names Family Liaison as the team that offers training, support and advice on Duty of Candour and supports patients and families following an incident of moderate harm or above.",
+    "source": "Derbyshire Healthcare - Policy and Procedure for Duty of Candour",
+    "sourceDate": "March 2025, issue 9, review February 2028"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "In the event of a homicide, who does the Trust's Duty of Candour policy apply to?",
+    "options": [
+      "The victim's families and carers only",
+      "The perpetrator's families and carers only",
+      "The families and carers of both the victim and the perpetrator",
+      "Neither, because homicides are handled entirely by an independent investigation"
+    ],
+    "correctIndex": 2,
+    "rationale": "The policy states explicitly that in the event of a homicide it applies to the families and carers of both the victim and the perpetrator.",
+    "source": "Derbyshire Healthcare - Policy and Procedure for Duty of Candour",
+    "sourceDate": "March 2025, issue 9, review February 2028"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": "A patient known to the service has died and the death meets the Trust's red flag criteria for reporting as an incident.",
+    "question": "How quickly must the incident form be completed?",
+    "options": [
+      "Within 24 hours of the death, or of staff becoming aware of the death",
+      "Within 3 working days",
+      "Within 5 working days",
+      "Before the end of the shift on which the death occurred"
+    ],
+    "correctIndex": 0,
+    "rationale": "The Learning from Deaths policy says that for deaths which need to be reported as an incident, an incident form must be completed within 24 hours of the death or of staff becoming aware of the death.",
+    "source": "Derbyshire Healthcare - Learning from Deaths Policy and Procedure",
+    "sourceDate": "June 2024, issue 03, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "Which deaths are screened against the Trust's mortality and incident red flags?",
+    "options": [
+      "Only deaths that happen on an inpatient ward",
+      "Only deaths of patients detained under the Mental Health Act",
+      "All deaths of patients known to services within the last 6 months",
+      "All deaths of patients known to services within the last 12 months"
+    ],
+    "correctIndex": 2,
+    "rationale": "The policy states that all deaths of patients known to services within 6 months are considered against the mortality and incident Trust red flags for reporting onto the incident system.",
+    "source": "Derbyshire Healthcare - Learning from Deaths Policy and Procedure",
+    "sourceDate": "June 2024, issue 03, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": null,
+    "question": "Which of these appears on the Trust's list of 'red flags' for a death that must be reported as an untoward incident?",
+    "options": [
+      "The death of any former patient discharged in the last 12 months",
+      "The death of an inpatient who died within 30 days of discharge from a Trust hospital",
+      "The death of any patient over the age of 75",
+      "The death of any patient who missed an outpatient appointment"
+    ],
+    "correctIndex": 1,
+    "rationale": "The red flag list includes death whilst an inpatient and death of an inpatient who died within 30 days of discharge from a Trust hospital, alongside suicide, death following restraint or absconsion, detention under the Mental Health Act or Deprivation of Liberty Safeguards, learning disability and autism.",
+    "source": "Derbyshire Healthcare - Learning from Deaths Policy and Procedure",
+    "sourceDate": "June 2024, issue 03, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": null,
+    "question": "One of the Trust's levels of scrutiny after a flagged death is the Incident Review Tool. Within what timescale must the service complete it?",
+    "options": [
+      "Within 24 hours",
+      "Within 3 working days",
+      "Within 10 working days",
+      "Within 5 working days, or sooner"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy says the Incident Review Tool is completed by the service within 5 working days (or sooner) and includes immediate themes, learning and best practice.",
+    "source": "Derbyshire Healthcare - Learning from Deaths Policy and Procedure",
+    "sourceDate": "June 2024, issue 03, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": "The ward is notified that a patient recently open to the service has died.",
+    "question": "What does the Trust's Learning from Deaths process ask the clinical team to complete?",
+    "options": [
+      "A paper mortality form sent directly to the coroner's office",
+      "A Health of the Nation Outcome Scales (HoNOS) assessment",
+      "A Coroner's Regulation 28 report",
+      "A SystmOne proforma, which the mortality technician then quality assures"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy says the red flag screening is supported by a SystmOne proforma completed by operational clinical teams when they are notified of a death, and that the mortality technician is responsible for quality assuring that process.",
+    "source": "Derbyshire Healthcare - Learning from Deaths Policy and Procedure",
+    "sourceDate": "June 2024, issue 03, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "Which group receives an overview of the deaths of patients in the Trust's care and decides which need further scrutiny, and how often does it do this?",
+    "options": [
+      "The Quality and Safeguarding Committee, weekly",
+      "The ward Multidisciplinary Team (MDT), at each ward round",
+      "The Operational Incident Review Group, monthly",
+      "The Trust Board, at every public meeting"
+    ],
+    "correctIndex": 2,
+    "rationale": "The policy sets out that the Operational Incident Review Group receives an overview of deaths recorded of patients in the Trust's care on a monthly basis and determines which need further scrutiny. The Trust Board receives the mortality report quarterly.",
+    "source": "Derbyshire Healthcare - Learning from Deaths Policy and Procedure",
+    "sourceDate": "June 2024, issue 03, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": "A patient has died on the ward and the record needs updating on SystmOne.",
+    "question": "Under the Trust's Deceased Patient (Inpatient) Standard Operating Procedure (SOP), who is responsible for ending the care of the patient on the system?",
+    "options": [
+      "The doctor",
+      "The nurse in charge of the shift",
+      "The ward administrator",
+      "The bed management team"
+    ],
+    "correctIndex": 0,
+    "rationale": "The SOP states under responsibilities that the doctor will be responsible for ending the care of the patient on the system.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure for Deceased Patient - Inpatient",
+    "sourceDate": "Issue 01, first version (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "Recording an inpatient death on SystmOne, which of the following steps does the Trust Standard Operating Procedure (SOP) include?",
+    "options": [
+      "Leaving the bed open on the ward view until the coroner has reported",
+      "Completing Bed Clean Up, selecting the type of cleaning, and closing the bed",
+      "Marking the whole patient record in error",
+      "Transferring the open referral to the community team"
+    ],
+    "correctIndex": 1,
+    "rationale": "The SOP takes you through discharge with method 'Patient died', then Bed Clean Up where you select the type of cleaning and close the bed, before entering date and time of death, the informant, cause of death and place of death.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure for Deceased Patient - Inpatient",
+    "sourceDate": "Issue 01, first version (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "The Trust's Case Notes Standard Operating Procedure (SOP) splits clinical note taking on SystmOne into three note types. Which three?",
+    "options": [
+      "Session notes, Duty notes and Triage notes",
+      "Admission notes, Review notes and Discharge notes",
+      "Nursing notes, Medical notes and Therapy notes",
+      "Progress notes, Handover notes and Incident notes"
+    ],
+    "correctIndex": 0,
+    "rationale": "The SOP distinguishes clinical note taking into Session notes, Duty notes and Triage notes, with Admin / Communication used by administrative staff for non clinical entries only.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Case Notes",
+    "sourceDate": "Issue 01, version dated 30/10/2020 (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": "A colleague writes the patient's care plan into the 'Action Plan / Next Steps' box of a session note.",
+    "question": "What does the Trust's Case Notes Standard Operating Procedure (SOP) say about this?",
+    "options": [
+      "That is correct, the action plan box is where care plans belong",
+      "Care plans can go in either place as long as the entry is countersigned",
+      "Action Plan / Next Steps is for general next steps only and is not to be used for care planning, which follows the Care Planning SOP",
+      "Care plans should be typed into Admin / Communication instead"
+    ],
+    "correctIndex": 2,
+    "rationale": "The SOP repeats for session, triage and duty notes that the Action Plan / Next Steps field covers general next steps such as calling the GP or making a referral, and is not to be used for care planning.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Case Notes",
+    "sourceDate": "Issue 01, version dated 30/10/2020 (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "How does the Trust's Care Planning Standard Operating Procedure (SOP) say the care plan review date should be set?",
+    "options": [
+      "Automatically 12 weeks from the start date for every patient",
+      "By the responsible clinician at the next ward round, and nowhere else",
+      "In line with your local care plan review policy",
+      "There is no review date field on the care plan"
+    ],
+    "correctIndex": 2,
+    "rationale": "The SOP says all care plans require a review date and that it should be added in line with local departmental care plan review policy. It does not set a single trust-wide frequency.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Care Planning",
+    "sourceDate": "Issue 01, version dated 30/10/2020 (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": "You are starting a new care plan on SystmOne and the system asks whether you want to link a referral.",
+    "question": "What does the Trust's Care Planning Standard Operating Procedure (SOP) tell you to do?",
+    "options": [
+      "Link the referral that led to the admission",
+      "Link a referral only for detained patients",
+      "Link a referral only when the plan relates to Section 117 aftercare",
+      "Do not link a referral, so that every pathway can add to the plan as they join or leave the patient's journey"
+    ],
+    "correctIndex": 3,
+    "rationale": "The SOP is explicit: do not link a referral, leave it as no linked referral, so that all pathways can add to the document. When the system asks you to confirm you did not want to link a referral, click yes.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Care Planning",
+    "sourceDate": "Issue 01, version dated 30/10/2020 (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "Under the Trust's Care Planning Standard Operating Procedure (SOP), when is a care plan closed?",
+    "options": [
+      "At the end of every internal pathway the patient moves through",
+      "On discharge from the service, not for internal pathways",
+      "Every 6 months, whether or not the patient is still open",
+      "Whenever the named nurse changes"
+    ],
+    "correctIndex": 1,
+    "rationale": "The SOP describes the care plan as a live document that remains open and active throughout the patient journey, and says the plan is only closed on discharge from the service, not for internal pathways.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Care Planning",
+    "sourceDate": "Issue 01, version dated 30/10/2020 (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "At first contact with a patient, which three identifiers must always be checked under the Trust's Patient Identification Policy?",
+    "options": [
+      "Name, NHS number and next of kin",
+      "Name, date of birth and GP practice",
+      "Date of birth, ward and responsible clinician",
+      "Name, address and date of birth"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy states that at the first contact with a patient the three identifiers of name, address and date of birth must always be checked.",
+    "source": "Derbyshire Healthcare - Patient Identification Policy and Procedure",
+    "sourceDate": "April 2024, issue 05, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": null,
+    "question": "How often, as an absolute minimum, does the Trust's Patient Identification Policy require a patient's demographic details to be checked for accuracy?",
+    "options": [
+      "Monthly",
+      "Every three months",
+      "Every six months",
+      "Every twelve months"
+    ],
+    "correctIndex": 2,
+    "rationale": "The policy says demographic details should be checked regularly, for example at reviews and on admission, and that as a minimum this must be done six monthly.",
+    "source": "Derbyshire Healthcare - Patient Identification Policy and Procedure",
+    "sourceDate": "April 2024, issue 05, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "Wristbands are not routinely worn by patients at this Trust. In which situation does the policy say a wristband will always be worn?",
+    "options": [
+      "By every patient detained under the Mental Health Act",
+      "By every patient on enhanced observations",
+      "By every patient on their first admission",
+      "By all service users prior to receiving Electro Convulsive Therapy (ECT)"
+    ],
+    "correctIndex": 3,
+    "rationale": "The policy states that all patients receiving Electro Convulsive Therapy will wear an identification wristband prior to arrival in the department. Older adult organic wards use them when care is being transferred to another hospital, but not routinely.",
+    "source": "Derbyshire Healthcare - Patient Identification Policy and Procedure",
+    "sourceDate": "April 2024, issue 05, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": "A patient with a known allergy is being transferred to the acute hospital and needs a wristband.",
+    "question": "What does the Trust's Patient Identification Policy require?",
+    "options": [
+      "A red wristband with the allergen and severity written on it",
+      "A standard white wristband, with a red sticker added to the drug chart",
+      "A red wristband carrying only patient identification, with allergy details kept in the patient's notes",
+      "A yellow wristband, checked by two registered nurses"
+    ],
+    "correctIndex": 2,
+    "rationale": "The policy requires all patients with known allergies to have a red wristband on a limb that can easily be seen, but says only patient identification should appear on the wristband and staff must refer to the patient's notes for details of the allergy or alert.",
+    "source": "Derbyshire Healthcare - Patient Identification Policy and Procedure",
+    "sourceDate": "April 2024, issue 05, review April 2027"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": "You have completed the risk screening tool on SystmOne for a newly admitted patient.",
+    "question": "What is the practical difference between 'save for future editing' and 'save final version'?",
+    "options": [
+      "There is no difference, both publish the risk alerts",
+      "'Save for future editing' will not pull the risk alerts through - only 'save final version' does",
+      "'Save final version' deletes the draft and starts again",
+      "'Save for future editing' notifies the whole team by task"
+    ],
+    "correctIndex": 1,
+    "rationale": "The Alerts on System SOP flags this directly: save for future editing will not pull risk alerts through, whereas save final version does, generating the derived content box and the risk summary.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Alerts on System",
+    "sourceDate": "Issue 01, first version (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "Alerts show in the demographics box when a patient record is retrieved. What does the Trust's Alerts on System Standard Operating Procedure (SOP) say specifically about safeguarding alerts?",
+    "options": [
+      "They are never displayed on the record",
+      "They are shown, but only users with the relevant access rights can view the alert itself",
+      "They can only be viewed by the Caldicott Guardian",
+      "They are emailed to the ward manager each morning"
+    ],
+    "correctIndex": 1,
+    "rationale": "The SOP says that although safeguarding alerts are shown, only users with the relevant access rights will be able to view the alert. Alerts can be reviewed, amended and ended when they are no longer relevant.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Alerts on System",
+    "sourceDate": "Issue 01, first version (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "Under the Trust's Allergy Recording Standard Operating Procedure (SOP), who holds the principal responsibility for establishing a patient's allergy status?",
+    "options": [
+      "The prescriber",
+      "The admitting nurse",
+      "The ward pharmacist",
+      "The patient's GP practice"
+    ],
+    "correctIndex": 0,
+    "rationale": "The SOP states the prescriber retains the principal responsibility for ascertaining allergy status for any patient they prescribe for, while everyone involved in prescribing, dispensing or administering must take every practical step to establish it.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Allergy Recording",
+    "sourceDate": "Issue 01, first version dated 12/11/2020 (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "How often does the Trust's Allergy Recording Standard Operating Procedure (SOP) say allergy and sensitivity status should be reconfirmed?",
+    "options": [
+      "On a regular basis and upon every change in prescription",
+      "Once, on admission",
+      "Annually",
+      "Only if the patient reports a new reaction"
+    ],
+    "correctIndex": 0,
+    "rationale": "The SOP says allergy and sensitivity status can change over time, so it must be reconfirmed on a regular basis and upon every change in prescription. It also advises using more than one information source where possible.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Allergy Recording",
+    "sourceDate": "Issue 01, first version dated 12/11/2020 (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Medium",
+    "scenario": null,
+    "question": "Which statement matches the Trust's Standard Operating Procedure (SOP) on confidential notes in SystmOne?",
+    "options": [
+      "A confidential note can be locked so that only its author can ever see it",
+      "Confidential notes are hidden from everyone outside the psychology team",
+      "A confidential note is never locked to an individual member of staff, and roles such as the Caldicott Guardian and Clinical Safety Officer can always access the record",
+      "Once saved, a confidential note cannot be viewed by anyone else at all"
+    ],
+    "correctIndex": 2,
+    "rationale": "The SOP states the confidential note will never be locked to an individual member of staff, and that the Clinical Safety Officer, Caldicott Guardian, Chief Clinical Informatics Officer, Clinical Records Manager and Patient Safety Lead will always be able to access the records.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Confidential Notes: Marking as Private and Recording Restrictions",
+    "sourceDate": "Issue 01, first version (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "What does marking an entry as 'private' on SystmOne do, under the Trust's confidential notes Standard Operating Procedure (SOP)?",
+    "options": [
+      "It hides the entry from everyone in the Trust except the author",
+      "It deletes the entry after 30 days",
+      "It flags the entry for the ward manager to approve",
+      "It stops the entry being seen on the shared record outside the Trust"
+    ],
+    "correctIndex": 3,
+    "rationale": "The SOP explains that marking an entry as private means the note will not be seen on the shared record outside of the Trust. Limiting access within or across organisations is done separately, through record restrictions and exclusions.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Confidential Notes: Marking as Private and Recording Restrictions",
+    "sourceDate": "Issue 01, first version (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Easy",
+    "scenario": null,
+    "question": "Completing a Health of the Nation Outcome Scales (HoNOS) assessment on SystmOne, what does the Trust Standard Operating Procedure (SOP) require?",
+    "options": [
+      "An answer must be selected for every question",
+      "Answer only the questions that are relevant to the patient",
+      "Only the responsible clinician may complete it",
+      "A written note must be added for every behaviour scored"
+    ],
+    "correctIndex": 0,
+    "rationale": "The SOP says you must select an answer for all the questions. Notes against each behaviour, added using the green bubble, are described as not a mandatory entry.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure HoNOS",
+    "sourceDate": "Issue 01, first version (no issue date or review date recorded on the document)"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": "A student nurse on the ward has written a session note that needs countersigning.",
+    "question": "Under the Trust's Countersigning Standard Operating Procedure (SOP), how is the need identified and how is the countersignature requested on SystmOne?",
+    "options": [
+      "The need is set automatically by staff band, and the system routes the entry to a supervisor",
+      "All entries by unregistered staff are countersigned by the ward manager at the end of each shift",
+      "The need is identified through supervision or with a mentor based on clinical judgement of competency, and the request is sent as a 'New Task' to the named individual expected to countersign",
+      "The entry is printed and signed by hand, then scanned back into the record"
+    ],
+    "correctIndex": 2,
+    "rationale": "The SOP says the requirement is identified following discussion during supervision or with a mentor, based on clinical judgement of competency level, and the request is sent using the 'New Task' button to the specific person expected to countersign, with clear instructions.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Countersigning",
+    "sourceDate": "March 2024, issue 03, review March 2025",
+    "reviewFlag": "review date passed"
+  },
+  {
+    "category": "Trust Policy - Records, Incidents & Duty of Candour",
+    "difficulty": "Hard",
+    "scenario": null,
+    "question": "Since electronic prescribing was introduced, when does the Medication Countersigning box appear on SystmOne and what is needed to complete it?",
+    "options": [
+      "For every medication administered - the second checker signs the paper chart",
+      "For controlled drugs or injectable medication - a qualified member of staff enters their name and SystmOne PIN number",
+      "For as required (PRN) medication only - a second nurse adds their initials",
+      "For rapid tranquillisation only - the doctor enters a password"
+    ],
+    "correctIndex": 1,
+    "rationale": "The Countersigning SOP states that with the introduction of electronic prescribing, countersigning of the administration of controlled drugs and injectable medication is now required on SystmOne, and a qualified member of staff must enter their name and SystmOne PIN number in the Medication Countersigning box.",
+    "source": "Derbyshire Healthcare - Standard Operating Procedure Countersigning",
+    "sourceDate": "March 2024, issue 03, review March 2025",
+    "reviewFlag": "review date passed"
+  }
+]

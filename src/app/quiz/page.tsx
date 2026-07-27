@@ -443,6 +443,12 @@ export default function QuizPage() {
                 Source: {q.source}
                 {q.sourceDate && q.sourceDate !== "current" ? ` (${q.sourceDate})` : ""}
               </p>
+              {q.reviewFlag && (
+                <p className="mt-1 text-xs font-medium text-amber-700">
+                  Heads up: this document is past its own review date, so check FOCUS for a newer
+                  issue before you rely on it.
+                </p>
+              )}
             </div>
           )}
         </div>

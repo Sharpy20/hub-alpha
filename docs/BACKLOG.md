@@ -16,8 +16,11 @@ Related task docs (roll findings into here over time):
 The `/quiz` bank was ~95% national guidance. It is now **942 questions across 43 topics, 574 of them
 (61%) mined from 117 distinct Derbyshire Healthcare documents** in `E:\Hub\Policy dump not for git hub\`
 (483 files). 17 `research-trust-*.json` batches, all wired into `src/lib/data/quiz/index.ts` and live.
-Trust topics lead the topic picker. Questions from a document past its own review date show an amber
-"check FOCUS for a newer issue" line after you answer (`reviewFlag` on the question).
+Trust topics lead the topic picker. Questions whose source copy was near or past its stated review
+date show a quiet "check FOCUS for the current version" line after you answer (`reviewFlag`).
+**Mike's steer 27 Jul: do NOT chase the overdue-review questions** - the offline policy dump is a
+snapshot, so "overdue" reflects our copy, not necessarily the live document. Revisit after the
+refresh, see Section L.
 - **Reusable pipeline:** `scratchpad/docx2txt.js` (zero-dep docx extractor - no Python on this box),
   `scratchpad/TRUST-QUIZ-BRIEF.md` (agent brief - mine LOCAL detail only), `scratchpad/gen-quiz-md.js`
   (regenerates `docs/quiz-question-bank.md`). Add a batch file, rerun the generator, add an import.
@@ -173,6 +176,10 @@ All done AT WORK in M365 Copilot / Teams, not in this repo. Context: [[focus-dow
    agents cannot see it. Its figures are ALREADY baked into `/guides/leave-absence`
    (bereavement 5 days paid, end-of-life 6 weeks, domestic 10 days, carers 1 week unpaid) -
    after upload, ask the Policy Checker to verify that step as a test.
+5. [ ] **wH Quiz Writer: add a CONFIRM mode (do NOT start before 30 Jul).** The agent creates
+   questions but cannot check existing ones, so every policy refresh means re-reading by hand.
+   Full instruction sketch + why it matters: **Section L, item 3**. Build it so the same confirm
+   mode can be pointed at guide content, not just quiz questions.
 
 ## K. Repo clean + publish pipeline + SharePoint handover readiness (DEADLINE: meeting Thu 30 Jul, 1:30pm)
 Agreed 21 Jul (extended same evening). Goal: all raw trust material out of GitHub and onto
@@ -254,6 +261,40 @@ Related (parked for a quiet day, agreed 21 Jul - do NOT build yet):
       books, checks them, and keeps them." Text-on-screen, no voiceover, NHS tokens,
       1080p mp4 played offline. Project lives at E:\Hub\wardhub-video (NOT in this repo).
       Frame as "the model at full build", not "running today".
+
+## L. Quiz source refresh + confirm-don't-just-create (agreed 27 Jul - AFTER the 30 Jul green light)
+Do not start this before the sponsor meeting. If the pilot is approved on Thu 30 Jul, this becomes
+the follow-up work on the quiz. Context: [[session-31-quiz]].
+
+**Why it exists:** the 942-question bank was mined from an OFFLINE SNAPSHOT of the policy library
+(`E:\Hub\Policy dump not for git hub\`, 483 files). Mike is updating the real policies. Once that
+lands, the snapshot is stale and some answers may be wrong - not because the questions were badly
+written, but because the source moved.
+
+1. [ ] **Re-run the quiz sources against the refreshed library.** For each of the 117 documents
+   cited in `src/lib/data/quiz/research-trust-*.json`, check whether the issue number or review date
+   has changed. Where it has, re-read that section and confirm or correct every question citing it.
+   Update `sourceDate`, and clear `reviewFlag` where the document has been reissued.
+   Cheap way in: the `source` string on every question names its document, so group by source first
+   and only re-read the documents that actually moved.
+2. [ ] **Re-check the 5 omitted questions** (listed in `E:\Hub\quiz-policy-conflicts.md`). If the
+   refresh resolves the seclusion debrief clock, the independent-review window, or the post-discharge
+   follow-up contradiction, those questions can go back in.
+3. [ ] **Change the wH Quiz Writer agent so it CONFIRMS as well as CREATES** (work-side, M365 Agent
+   Builder - see Section J for how the agents are managed). Right now it only generates new questions.
+   It needs a second mode: given an existing question plus its cited document, say whether the stated
+   fact is still exactly what the current document says, and if not, quote the new wording. Without
+   this, every policy refresh means re-reading everything by hand.
+   Sketch of the added instruction: *"You have two jobs. CREATE: write new questions from the
+   document. CONFIRM: when given an existing question and its source document, find the passage the
+   question rests on and answer CONFIRMED (quote it verbatim), CHANGED (quote the new wording and say
+   what the answer should now be), or NOT FOUND (say where you looked). Never guess a number. Never
+   mark CONFIRMED from memory - only from the document in front of you."*
+   Same confirm-mode idea applies to the guides, so build it so it can be pointed at either.
+4. [ ] **Decide the sign-off model for /quiz** - it carries no traffic-light StatusBadge yet, unlike
+   the guides. If a nurse can be told "this is what our policy says", it probably needs one.
+
+---
 
 ## MIKE'S HOMEWORK DUMP (4 Jul 2026 - captured, organised into A-E below)
 Full verbatim capture + per-guide notes + source-doc inventory: **`docs/homework-04-Jul-2026-dump.md`**.

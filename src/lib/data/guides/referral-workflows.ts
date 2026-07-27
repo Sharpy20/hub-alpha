@@ -261,8 +261,8 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Contact the PICU team for bed availability and submit referral:",
         methods: [
-          { type: "phone", label: "PICU Direct Line", value: "01234 567890" },
-          { type: "email", label: "PICU Coordinator", value: "picu.referrals@example.nhs.net" },
+          { type: "phone", label: "PICU Direct Line", value: "Hidden in demo mode" },
+          { type: "email", label: "PICU Coordinator", value: "Hidden in demo mode" },
         ],
       },
       {
@@ -418,8 +418,8 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to the dietetics team:",
         methods: [
-          { type: "email", label: "Dietetics Team", value: "dietetics.referrals@example.nhs.net" },
-          { type: "phone", label: "Dietetics Dept", value: "01234 567891" },
+          { type: "email", label: "Dietetics Team", value: "Hidden in demo mode" },
+          { type: "phone", label: "Dietetics Dept", value: "Hidden in demo mode" },
         ],
       },
       {
@@ -823,7 +823,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Contact the Tissue Viability service:",
         methods: [
-          { type: "email", label: "TV Team", value: "tissueviability@example.nhs.net" },
+          { type: "email", label: "TV Team", value: "Hidden in demo mode" },
           { type: "phone", label: "TV Nurse Ext", value: "Ext. 5678" },
         ],
       },
@@ -887,8 +887,8 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to dental services:",
         methods: [
-          { type: "phone", label: "Special Care Dental", value: "01234 567892" },
-          { type: "email", label: "Dental Referrals", value: "dental.referrals@example.nhs.net" },
+          { type: "phone", label: "Special Care Dental", value: "Hidden in demo mode" },
+          { type: "email", label: "Dental Referrals", value: "Hidden in demo mode" },
         ],
       },
       {
@@ -952,7 +952,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to physiotherapy:",
         methods: [
-          { type: "email", label: "Physio Team", value: "physio.referrals@example.nhs.net" },
+          { type: "email", label: "Physio Team", value: "Hidden in demo mode" },
           { type: "phone", label: "Physio Dept", value: "Ext. 4567" },
         ],
       },
@@ -1016,7 +1016,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to OT team:",
         methods: [
-          { type: "email", label: "OT Team", value: "ot.referrals@example.nhs.net" },
+          { type: "email", label: "OT Team", value: "Hidden in demo mode" },
           { type: "phone", label: "Ward OT", value: "Ext. 3456" },
         ],
       },
@@ -1081,7 +1081,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to SALT team:",
         methods: [
-          { type: "email", label: "SALT Team", value: "salt.referrals@example.nhs.net" },
+          { type: "email", label: "SALT Team", value: "Hidden in demo mode" },
           { type: "phone", label: "SALT Urgent", value: "Ext. 2345" },
         ],
       },
@@ -1143,7 +1143,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Contact the Early Discharge Team:",
         methods: [
-          { type: "email", label: "EDT Referrals", value: "edt.referrals@example.nhs.net" },
+          { type: "email", label: "EDT Referrals", value: "Hidden in demo mode" },
           { type: "phone", label: "EDT Office", value: "01onal 234 5678" },
         ],
       },
@@ -1212,7 +1212,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to the ERP team:",
         methods: [
-          { type: "email", label: "ERP Referrals", value: "erp.referrals@example.nhs.net" },
+          { type: "email", label: "ERP Referrals", value: "Hidden in demo mode" },
         ],
       },
       {
@@ -1291,7 +1291,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         title: "Submit Referral",
         content: "Submit to the JUCD Keyworking Team:",
         methods: [
-          { type: "email", label: "JUCD Keyworking", value: "keyworking@example.nhs.net" },
+          { type: "email", label: "JUCD Keyworking", value: "Hidden in demo mode" },
           { type: "phone", label: "Keyworking Team", value: "01onal 234 5678" },
         ],
       },
@@ -1355,7 +1355,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Contact welfare rights services:",
         methods: [
           { type: "phone", label: "Citizens Advice", value: "0800 144 8848" },
-          { type: "email", label: "Trust Welfare Rights", value: "welfare.rights@example.nhs.net" },
+          { type: "email", label: "Trust Welfare Rights", value: "Hidden in demo mode" },
         ],
       },
       {
@@ -1434,7 +1434,7 @@ export const DEFAULT_WORKFLOW: WorkflowData = {
       title: "Submit Referral",
       content: "Send the completed referral to the appropriate service.",
       methods: [
-        { type: "email", label: "Referral Email", value: "referrals@example.nhs.net" },
+        { type: "email", label: "Referral Email", value: "Hidden in demo mode" },
       ],
     },
     {

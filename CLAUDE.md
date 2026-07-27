@@ -1705,6 +1705,40 @@ typed on stage; confirm whether a Duty to Refer can go in without consent (guide
 **Known gap:** the guide editor cannot jump or loop between branch cells - a `goto` step type
 is designed in BACKLOG Section N.
 
+### 28 July 2026 - Session 43 (Evaluation template v2.0 + 13-hat evaluation)
+Reworked the evaluation framework, then ran it. Build clean, 32/32 tests, `tsc` now 0 errors.
+
+- [x] **`docs/evaluations/project-evaluation-template.md` -> v2.0.** Evidence-first ground
+  rules (name the file or leave the claim out), a verification log, a scorecard with
+  direction arrows, and a carry-forward rule so recommendations stop being re-issued as
+  new. **Three new hats:** Clinical Content Editor (the real backlog - content, not code),
+  Deployment and Operations, Patient and Carer. Added a Devil's Advocate section, plus
+  "For Mike" and "Not verified this pass" report sections and reduced-scope run modes.
+  Every hat now has project-specific checks pointing at real files.
+- [x] **`docs/evaluations/2026-07-28_project-evaluation.md`** - full 13-hat pass.
+- [x] **FIXED: 15 invented contact values** in `referral-workflows.ts` (12
+  `@example.nhs.net` emails + `01234 5678xx` phones) were rendering in submission steps
+  bold, `text-xl`, in a green box with a one-tap copy button - visually identical to the
+  real verified numbers beside them. Now "Hidden in demo mode" (Rule 4 convention) and the
+  CopyChip is suppressed on that value. **Mike: the real contacts are needed for PICU,
+  dietetics, dental, tissue viability, physio, OT, SALT, EDT, ERP, JUCD keyworking and
+  welfare rights.**
+- [x] **FIXED: GDPR page was inaccurate** - claimed tasks are stored in localStorage (they
+  are not stored anywhere: `tasks-provider.tsx` is `useState` only, everything dies on
+  refresh), claimed "no cookies in use" (the password gate sets `site_access`), and still
+  referenced the retired chase log. All three corrected.
+- [x] **FIXED: typecheck was never clean** - 26 errors, all in test files (`jest.setup.js`
+  is plain JS so the jest-dom matcher types never reached the TS program). Added
+  `types/testing-library.d.ts` + fixed a closure-narrowing `never` in providers.test.
+  `tsc --noEmit` returns 0, so it can now be used as a real gate.
+- [x] **Next 16.2.9 -> 16.2.12** via plain `npm audit fix`, closing a high-severity
+  unauthenticated Server Function endpoint disclosure. The 3 remaining production highs
+  (postcss x2, sharp) are vendored inside Next; sharp exposure is nil (no `next/image`
+  anywhere). Still **NEVER `npm audit fix --force`**.
+- **Headline finding:** 1 guide of 71 is signed off green. 20 red, 50 amber (43 of those
+  never reviewed at all). Placeholder `#` form links have grown 86 -> 131. Content is now
+  the project risk, not code.
+
 ### 13 July 2026 - Session 37 (Pay-roster split, band picker, rest rules)
 Picked up from a claude.ai chat session (AfC facts verified there against NHS Employers).
 Pushed (commit b6668b1), build clean, verified in browser.

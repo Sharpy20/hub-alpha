@@ -965,7 +965,7 @@ export default function UnifiedGuidePage() {
                           <p className="text-sm text-gray-500 font-medium">{method.label}</p>
                           <p className="font-bold text-gray-900 text-xl flex items-center gap-1.5">
                             {method.value}
-                            {(method.type === "email" || method.type === "phone") && (
+                            {(method.type === "email" || method.type === "phone") && method.value !== "Hidden in demo mode" && (
                               <CopyChip
                                 value={method.value}
                                 label={method.type === "email" ? "email address" : "phone number"}

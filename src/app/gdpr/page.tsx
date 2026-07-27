@@ -145,20 +145,28 @@ export default function GdprPage() {
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>
-                <strong>Browser storage only</strong> - Everything you enter
-                (login choice, tasks, feedback, personal links) is stored in your
+                <strong>Browser storage only</strong> - What you enter (login
+                choice, preferences, feedback, personal links) is stored in your
                 browser's localStorage and never sent to a server
               </li>
               <li>
-                <strong>No tracking</strong> - No analytics, no cookies in use,
-                no external scripts or fonts. The only party that sees any
-                traffic is Vercel, which hosts the site and keeps standard
-                request logs (as any web host does)
+                <strong>Tasks are not saved at all</strong> - The demo diary
+                lives in the page's memory only. Claiming a job, handing one
+                back or completing one is gone the moment you refresh. Nothing
+                about a patient is written to your device or to a server
+              </li>
+              <li>
+                <strong>No tracking</strong> - No analytics, no external scripts
+                or fonts. The one cookie in use is the site password cookie
+                (`site_access`), which only records that you typed the shared
+                password correctly. The only party that sees any traffic is
+                Vercel, which hosts the site and keeps standard request logs (as
+                any web host does)
               </li>
               <li>
                 <strong>Automatic clearing</strong> - Data is removed when you
-                clear your browser data/cache; logging out also clears anything
-                patient-related (the referral chase log and care review tracker)
+                clear your browser data/cache; logging out also clears the care
+                review tracker
               </li>
               <li>
                 <strong>Device-specific</strong> - Data does not sync between

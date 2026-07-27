@@ -40,10 +40,13 @@ describe('Providers', () => {
   })
 
   it('provides allWards array', () => {
-    let context: ReturnType<typeof useApp> | null = null
+    // Held in an object so TypeScript does not narrow it to `null` - it cannot
+    // see that the onReady callback has already run by the time we assert.
+    const held: { context: ReturnType<typeof useApp> | null } = { context: null }
     renderWithProviders(
-      <TestConsumer onReady={(ctx) => { context = ctx }} />
+      <TestConsumer onReady={(ctx) => { held.context = ctx }} />
     )
+    const context = held.context
     expect(context?.allWards).toContain('Byron')
     expect(context?.allWards).toContain('Shelley')
     expect(context?.allWards.length).toBe(5)
@@ -68,11 +71,11 @@ describe('hasFeature', () => {
   test.each(features)(
     'hasFeature(%s) always returns true',
     (feature) => {
-      let context: ReturnType<typeof useApp> | null = null
+      const held: { context: ReturnType<typeof useApp> | null } = { context: null }
       renderWithProviders(
-        <TestConsumer onReady={(ctx) => { context = ctx }} />
+        <TestConsumer onReady={(ctx) => { held.context = ctx }} />
       )
-      expect(context?.hasFeature(feature)).toBe(true)
+      expect(held.context?.hasFeature(feature)).toBe(true)
     }
   )
 })

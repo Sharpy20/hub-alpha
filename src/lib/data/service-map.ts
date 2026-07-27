@@ -86,7 +86,21 @@ export interface Service {
   id: string;
   name: string;
   cluster: string;
-  parent?: string;        // node-off-node: reached via this service
+  /**
+   * A REAL dependency: you get to this service THROUGH that one, so if the
+   * parent is closed this is genuinely out of reach (Crisis via the Helpline).
+   * Only `parent` cuts a child off.
+   */
+  parent?: string;
+  /**
+   * Layout only: "draw me next to that one". Never gates access.
+   *
+   * Added 27 Jul after an audit found six national services unreachable out of
+   * area because they hung off a Derbyshire-only parent - you do not need a
+   * Duty to Refer to phone Shelter. `parent` was doing two jobs; this is the
+   * other one.
+   */
+  near?: string;
   // areas = the areas of RESIDENCE the service accepts (where the PERSON LIVES),
   // NOT where the service building is. A service based in Derby can still accept
   // county residents, and vice versa. For most Derbyshire services catchment is
@@ -157,13 +171,13 @@ export const SERVICES: Service[] = [
   // ============ Housing, Money & Practical ============
   { id: "housing-dtr", name: "Housing / Duty to Refer", cluster: "practical", areas: CC, include: [{ label: "At risk of, or experiencing, homelessness", test: (f) => f.housing !== "settled" }], exclude: [] },
   { id: "derby-homes", name: "Derby Homes / Housing Options", cluster: "practical", parent: "housing-dtr", areas: ["city"], include: [{ label: "Housing need in Derby City", test: (f) => f.housing !== "settled" }], exclude: [] },
-  { id: "shelter", name: "Shelter housing advice", cluster: "practical", parent: "housing-dtr", areas: NAT, include: [{ label: "Housing need", test: (f) => f.housing !== "settled" }], exclude: [], contact: "0808 800 4444" },
+  { id: "shelter", name: "Shelter housing advice", cluster: "practical", near: "housing-dtr", areas: NAT, include: [{ label: "Housing need", test: (f) => f.housing !== "settled" }], exclude: [], contact: "0808 800 4444" },
   { id: "social-care", name: "Social Care (Care Act)", cluster: "practical", areas: CC, include: [{ label: "Care & support need (housing, LD, or older adult)", test: (f) => f.housing !== "settled" || dx(f, "Learning disability") || f.age >= 65 }], exclude: [] },
   { id: "careline-derby", name: "Derby City Careline", cluster: "practical", parent: "social-care", areas: ["city"], include: [{ label: "Adult social-care need (City)", test: (f) => f.housing !== "settled" || dx(f, "Learning disability") || f.age >= 65 }], exclude: [], contact: "01332 640777" },
   { id: "call-derbyshire", name: "Call Derbyshire", cluster: "practical", parent: "social-care", areas: ["county"], include: [{ label: "Adult social-care need (County)", test: (f) => f.housing !== "settled" || dx(f, "Learning disability") || f.age >= 65 }], exclude: [], contact: "01629 533190" },
   { id: "welfare", name: "Welfare Rights / Benefits", cluster: "practical", areas: CC, include: [{ label: "Not yet receiving PIP / benefits help", test: (f) => f.pip !== "awarded" }], exclude: [] },
-  { id: "citizens-advice", name: "Citizens Advice", cluster: "practical", parent: "welfare", areas: NAT, include: [], exclude: [], contact: "0800 144 8848", note: "Money, benefits, debt, housing advice." },
-  { id: "turn2us", name: "Turn2us (grants/benefits)", cluster: "practical", parent: "welfare", areas: NAT, include: [{ label: "Financial hardship", test: (f) => f.pip !== "awarded" }], exclude: [], contact: "turn2us.org.uk" },
+  { id: "citizens-advice", name: "Citizens Advice", cluster: "practical", near: "welfare", areas: NAT, include: [], exclude: [], contact: "0800 144 8848", note: "Money, benefits, debt, housing advice." },
+  { id: "turn2us", name: "Turn2us (grants/benefits)", cluster: "practical", near: "welfare", areas: NAT, include: [{ label: "Financial hardship", test: (f) => f.pip !== "awarded" }], exclude: [], contact: "turn2us.org.uk" },
   { id: "foodbank", name: "Food bank (Trussell Trust)", cluster: "practical", areas: NAT, include: [{ label: "Financial hardship / housing need", test: (f) => f.housing !== "settled" || f.pip !== "awarded" }], exclude: [], contact: "Find local: trusselltrust.org" },
 
   // ============ Advocacy & Rights ============
@@ -194,7 +208,7 @@ export const SERVICES: Service[] = [
   { id: "galop", name: "Galop (LGBT+ DA)", cluster: "life", parent: "refuge", areas: NAT, include: [{ label: "Domestic abuse (LGBT+)", test: (f) => flag(f, "domestic-abuse") }], exclude: [], contact: "0800 999 5428" },
   { id: "elm", name: "Derbyshire DA Helpline (Elm Foundation)", cluster: "life", parent: "refuge", areas: CC, include: [{ label: "Domestic abuse in Derbyshire", test: (f) => flag(f, "domestic-abuse") }], exclude: [], contact: "08000 198 668 (24/7)", note: "Local front door - routes to refuge, outreach, advocacy." },
   { id: "sv2", name: "SV2 (Sexual Violence, Derbyshire)", cluster: "life", areas: CC, include: [], exclude: [], contact: "01773 746115", note: "Supporting victims of sexual violence, all ages/genders." },
-  { id: "rape-crisis", name: "Rape Crisis", cluster: "life", parent: "sv2", areas: NAT, include: [], exclude: [], contact: "0808 500 2222 (24/7)" },
+  { id: "rape-crisis", name: "Rape Crisis", cluster: "life", near: "sv2", areas: NAT, include: [], exclude: [], contact: "0808 500 2222 (24/7)" },
   { id: "victim-support", name: "Victim Support / Derbyshire Victim Services", cluster: "life", areas: NAT, include: [], exclude: [], contact: "Derbyshire 0800 612 6505; national 0808 168 9111 (24/7)", note: "Victims of any crime, reported or not." },
   { id: "cruse", name: "Cruse Bereavement", cluster: "life", areas: NAT, include: [{ label: "Recently bereaved", test: (f) => flag(f, "bereaved") }], exclude: [], contact: "0808 808 1677" },
   { id: "sobs", name: "SOBS (Bereaved by Suicide)", cluster: "life", parent: "cruse", areas: NAT, include: [{ label: "Recently bereaved", test: (f) => flag(f, "bereaved") }], exclude: [], contact: "0300 111 5065" },
@@ -203,9 +217,9 @@ export const SERVICES: Service[] = [
   { id: "re-engage", name: "Re-engage (75+ social groups)", cluster: "life", parent: "silverline", areas: NAT, include: [{ label: "Aged 75+", test: (f) => f.age >= 75 }, { label: "Socially isolated / lonely", test: (f) => flag(f, "isolated") }], exclude: [], contact: "0800 716543 / reengage.org.uk", note: "Free monthly tea parties and call companions for isolated older people." },
   { id: "age-uk", name: "Age UK Derby & Derbyshire", cluster: "life", areas: CC, include: [{ label: "Older adult (roughly 50+)", test: (f) => f.age >= 50 }], exclude: [], contact: "01773 768240", note: "Covers both Derby City and Derbyshire county.", catchmentNote: "By home address (Derby City + Derbyshire)." },
   { id: "carers-derbyshire", name: "Carers in Derbyshire", cluster: "life", areas: ["county"], include: [{ label: "Is a carer", test: (f) => flag(f, "carer") }], exclude: [], contact: "01773 833 833", note: "County carers - assessments, advice, peer groups (not Derby City)." },
-  { id: "carers-direct", name: "NHS Carers Direct", cluster: "life", parent: "carers-derbyshire", areas: NAT, include: [{ label: "Is a carer", test: (f) => flag(f, "carer") }], exclude: [], contact: "0300 123 1053" },
+  { id: "carers-direct", name: "NHS Carers Direct", cluster: "life", near: "carers-derbyshire", areas: NAT, include: [{ label: "Is a carer", test: (f) => flag(f, "carer") }], exclude: [], contact: "0300 123 1053" },
   { id: "derbyshire-lgbt", name: "Derbyshire LGBT+", cluster: "life", areas: CC, include: [{ label: "LGBT+ (support around identity, sexuality or gender)", test: (f) => flag(f, "lgbtq") }], exclude: [], contact: "01332 207704 / derbyshirelgbt.org.uk", note: "Local LGBT+ charity - 1:1 support, groups and advocacy across Derby and Derbyshire. To verify: current referral route.", catchmentNote: "By home address (Derby City + Derbyshire)." },
-  { id: "switchboard-lgbt", name: "Switchboard LGBT+ Helpline", cluster: "life", parent: "derbyshire-lgbt", areas: NAT, include: [{ label: "LGBT+ (support around identity, sexuality or gender)", test: (f) => flag(f, "lgbtq") }], exclude: [], contact: "0800 0119 100 (10am-10pm) / switchboard.lgbt", note: "National listening service run by LGBT+ volunteers - phone, chat and email." },
+  { id: "switchboard-lgbt", name: "Switchboard LGBT+ Helpline", cluster: "life", near: "derbyshire-lgbt", areas: NAT, include: [{ label: "LGBT+ (support around identity, sexuality or gender)", test: (f) => flag(f, "lgbtq") }], exclude: [], contact: "0800 0119 100 (10am-10pm) / switchboard.lgbt", note: "National listening service run by LGBT+ volunteers - phone, chat and email." },
   { id: "andys-man-club", name: "Andy's Man Club", cluster: "life", areas: NAT, include: [{ label: "Man aged 18+", test: (f) => f.gender === "male" && f.age >= 18 }], exclude: [], contact: "andysmanclub.co.uk - Mondays 7pm, free, no referral", note: "Peer-support talking groups for men, including Derby and Chesterfield groups. Just turn up." },
   { id: "womens-work", name: "Women's Work Derbyshire", cluster: "life", areas: CC, include: [{ label: "Woman aged 18+", test: (f) => f.gender === "female" && f.age >= 18 }], exclude: [], contact: "womens-work.org.uk", note: "Derby-based charity supporting vulnerable women - outreach, groups, 1:1. To verify: referral route + current contact number." },
 

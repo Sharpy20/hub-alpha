@@ -15,10 +15,14 @@ import {
   GENDER_OPTIONS, EMPTY_FACTS, SAMPLE_PATIENTS,
   type Facts, type Area, type Gender, type Evaluation,
 } from "@/lib/data/service-map";
-import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2, List, Map as MapIcon, ChevronDown, Printer, GripVertical } from "lucide-react";
+import { Info, RotateCcw, MapPin, CheckCircle2, XCircle, CircleDashed, Ban, Search, Phone, ZoomIn, ZoomOut, Maximize2, List, Map as MapIcon, ChevronDown, Printer, GripVertical, Home, CornerUpLeft } from "lucide-react";
 
 const CX = 550, CY = 500;
-const BANDS = [175, 300, 400];
+// Where the 12 category nodes sit in the hub view, and the bands services use
+// once you are inside a category. Wider than BANDS because a focused view has
+// far fewer nodes to fit, so they can breathe and the labels stay readable.
+const CATEGORY_R = 300;
+const FOCUS_BANDS = [230, 360, 470];
 // Round SVG coords so server and client stringify identical values (no hydration mismatch).
 const rnd = (n: number) => Math.round(n * 100) / 100;
 
@@ -98,6 +102,14 @@ export default function ServiceMapPage() {
   // Directory list is the default - the map is a visual extra behind a toggle.
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [search, setSearch] = useState("");
+  // What the map is centred on. null = the hub, showing the 12 CATEGORIES only.
+  // Otherwise a cluster id (that category at the centre with its services around
+  // it) or a service id (that service at the centre with its branch).
+  //
+  // Before this, all 115 services radiated straight off the hub onto one ring
+  // and collapsed into an unreadable spiral (Mike, 27 Jul: "unusable"). Showing
+  // one level at a time is the fix, not zooming.
+  const [focus, setFocus] = useState<string | null>(null);
 
   // Collapsible cluster sections + drag-to-reorder (order persists per browser,
   // self-heals if the cluster list changes - same pattern as wardhub_guide_order).
@@ -217,36 +229,80 @@ export default function ServiceMapPage() {
   // layout for the visible clusters (in the user's saved order)
   const orderedClusters = [...CLUSTERS].sort((a, b) => clusterOrder.indexOf(a.id) - clusterOrder.indexOf(b.id));
   const visClusters = clusterFilter === "all" ? orderedClusters : orderedClusters.filter((c) => c.id === clusterFilter);
-  const pos = useMemo(() => {
+
+  // The cluster currently at the centre, if any. A service focus implies its own
+  // cluster, so picking a service from the list drops you into the right branch.
+  const focusCluster = useMemo(() => {
+    if (!focus) return null;
+    if (CLUSTERS.some((c) => c.id === focus)) return focus;
+    return SERVICES.find((s) => s.id === focus)?.cluster ?? null;
+  }, [focus]);
+  const focusService = focus && !CLUSTERS.some((c) => c.id === focus) ? focus : null;
+
+  // Layout. Three modes, one level of detail each - that is the whole point.
+  //   hub      -> the 12 category nodes, nothing else
+  //   cluster  -> that category at the centre, its services branching off it
+  //   service  -> that service at the centre, its own branch around it
+  const { pos, clusterPos } = useMemo(() => {
     const pos: Record<string, { x: number; y: number; depth: number }> = {};
-    const N = visClusters.length;
-    visClusters.forEach((cl, ci) => {
-      const svs = SERVICES.filter((s) => s.cluster === cl.id);
-      if (!svs.length) return;
+    const clusterPos: Record<string, { x: number; y: number }> = {};
+
+    // Layout a set of services radially around the centre, honouring the real
+    // parent chains so "reached via" still reads as a branch.
+    const radial = (svs: typeof SERVICES, rootIds: Set<string>) => {
       const ids = new Set(svs.map((s) => s.id));
-      const childrenOf = (id: string) => svs.filter((s) => s.parent === id && ids.has(s.parent!));
-      const roots = svs.filter((s) => !s.parent || !ids.has(s.parent));
-      const totalLeaves = svs.filter((s) => childrenOf(s.id).length === 0).length || 1;
-      const tc = -Math.PI / 2 + (ci + 0.5) * ((2 * Math.PI) / N);
-      const half = N === 1 ? Math.PI * 0.94 : ((2 * Math.PI) / N) * 0.44;
-      const step = (2 * half) / totalLeaves;
+      const childrenOf = (id: string) => svs.filter((s) => s.parent === id && ids.has(id));
+      const roots = svs.filter((s) => rootIds.has(s.id));
+      const leaves = svs.filter((s) => childrenOf(s.id).length === 0).length || 1;
+      const step = (2 * Math.PI) / leaves;
       let cursor = 0;
       const ang: Record<string, number> = {}, dep: Record<string, number> = {};
       const assign = (s: (typeof svs)[number], depth: number) => {
         const ch = childrenOf(s.id);
         dep[s.id] = depth;
-        if (!ch.length) { ang[s.id] = tc - half + (cursor + 0.5) * step; cursor++; return; }
+        if (!ch.length) { ang[s.id] = -Math.PI / 2 + (cursor + 0.5) * step; cursor++; return; }
         ch.forEach((c) => assign(c, depth + 1));
         ang[s.id] = ch.reduce((a, c) => a + ang[c.id], 0) / ch.length;
       };
       roots.forEach((r) => assign(r, 0));
       svs.forEach((s) => {
-        const r = BANDS[Math.min(dep[s.id], BANDS.length - 1)];
+        if (ang[s.id] === undefined) return;
+        const r = FOCUS_BANDS[Math.min(dep[s.id], FOCUS_BANDS.length - 1)];
         pos[s.id] = { x: rnd(CX + r * Math.cos(ang[s.id])), y: rnd(CY + r * Math.sin(ang[s.id])), depth: dep[s.id] };
       });
-    });
-    return pos;
-  }, [visClusters]);
+    };
+
+    if (focusService) {
+      const svc = SERVICES.find((s) => s.id === focusService);
+      if (svc) {
+        pos[svc.id] = { x: CX, y: CY, depth: 0 };
+        const branch = SERVICES.filter((s) => {
+          let cur: (typeof SERVICES)[number] | undefined = s;
+          const seen = new Set<string>();
+          while (cur && !seen.has(cur.id)) { seen.add(cur.id); if (cur.id === svc.id) return true; cur = cur.parent ? SERVICES.find((x) => x.id === cur!.parent) : undefined; }
+          return false;
+        }).filter((s) => s.id !== svc.id);
+        if (branch.length) {
+          const kids = branch.filter((s) => s.parent === svc.id);
+          radial(branch, new Set(kids.map((k) => k.id)));
+        }
+      }
+    } else if (focusCluster) {
+      clusterPos[focusCluster] = { x: CX, y: CY };
+      const svs = SERVICES.filter((s) => s.cluster === focusCluster);
+      const ids = new Set(svs.map((s) => s.id));
+      const roots = svs.filter((s) => !s.parent || !ids.has(s.parent));
+      radial(svs, new Set(roots.map((r) => r.id)));
+    } else {
+      // Hub: categories only, evenly spaced on one readable ring.
+      const N = visClusters.length || 1;
+      visClusters.forEach((cl, ci) => {
+        const a = -Math.PI / 2 + (ci + 0.5) * ((2 * Math.PI) / N);
+        clusterPos[cl.id] = { x: rnd(CX + CATEGORY_R * Math.cos(a)), y: rnd(CY + CATEGORY_R * Math.sin(a)) };
+      });
+    }
+    return { pos, clusterPos };
+  }, [visClusters, focusCluster, focusService]);
 
   const visServices = SERVICES.filter((s) => pos[s.id]);
 
@@ -453,17 +509,55 @@ export default function ServiceMapPage() {
                 <button onClick={() => zoomCentre(1.25)} aria-label="Zoom out" className="w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-700"><ZoomOut className="w-4 h-4" /></button>
                 <button onClick={resetView} aria-label="Reset zoom" disabled={!isZoomed} className={`w-9 h-9 flex items-center justify-center rounded-lg bg-white border border-gray-200 shadow-sm text-gray-700 ${isZoomed ? "hover:bg-gray-50" : "opacity-40 cursor-default"}`}><Maximize2 className="w-4 h-4" /></button>
               </div>
+
+              {/* Where am I, and how do I get back out. */}
+              {focus && (
+                <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
+                  <button onClick={() => { setFocus(null); resetView(); }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700 hover:border-nhs-blue hover:text-nhs-blue">
+                    <Home className="w-3.5 h-3.5" /> All categories
+                  </button>
+                  {focusService && focusCluster && (
+                    <button onClick={() => { setFocus(focusCluster); resetView(); }}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700 hover:border-nhs-blue hover:text-nhs-blue">
+                      <CornerUpLeft className="w-3.5 h-3.5" />
+                      {CLUSTERS.find((c) => c.id === focusCluster)?.label}
+                    </button>
+                  )}
+                </div>
+              )}
               {isZoomed && <span className="absolute top-3 left-3 z-10 text-[11px] font-semibold text-gray-500 bg-white/80 rounded px-2 py-0.5 border border-gray-200">Drag to pan - scroll to zoom</span>}
               <svg ref={svgRef} viewBox={`${rnd(view.x)} ${rnd(view.y)} ${rnd(view.w)} ${rnd(view.h)}`} className="w-full h-auto touch-none select-none" style={{ cursor: panRef.current ? "grabbing" : "grab" }} role="group" aria-label="Service town map"
                 onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={endPan} onPointerLeave={endPan}>
                 {/* band rings */}
-                {BANDS.map((r) => <circle key={r} cx={CX} cy={CY} r={r} fill="none" stroke="#eef2f7" strokeDasharray="3 7" />)}
+                {(focus ? FOCUS_BANDS : [CATEGORY_R]).map((r) => <circle key={r} cx={CX} cy={CY} r={r} fill="none" stroke="#eef2f7" strokeDasharray="3 7" />)}
 
-                {/* cluster labels (only in all view) */}
-                {clusterFilter === "all" && visClusters.map((cl, ci) => {
-                  const tc = -Math.PI / 2 + (ci + 0.5) * ((2 * Math.PI) / visClusters.length);
-                  const lx = rnd(CX + 452 * Math.cos(tc)), ly = rnd(CY + 452 * Math.sin(tc));
-                  return <text key={cl.id} x={lx} y={ly} textAnchor="middle" fontSize="11" fontWeight="700" fill={cl.color}>{wrap(cl.label, 18).map((ln, i) => <tspan key={i} x={lx} dy={i ? 12 : 0}>{ln}</tspan>)}</text>;
+                {/* Hub view: a spoke and a node per CATEGORY, and nothing else.
+                    Click one to drop into it. */}
+                {!focus && visClusters.map((cl) => {
+                  const cp = clusterPos[cl.id];
+                  if (!cp) return null;
+                  const svs = SERVICES.filter((s) => s.cluster === cl.id);
+                  const openCount = svs.filter((s) => { const e = effective(s.id); return e === "open" || e === "everyone"; }).length;
+                  const lines = wrap(cl.label, 16);
+                  return (
+                    <g key={cl.id} onClick={() => { if (draggedRef.current) { draggedRef.current = false; return; } setFocus(cl.id); }}
+                      style={{ cursor: "pointer" }} tabIndex={0} role="button"
+                      aria-label={`${cl.label}: ${svs.length} services, ${openCount} open. Open this category.`}
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFocus(cl.id); } }}>
+                      <line x1={CX} y1={CY} x2={cp.x} y2={cp.y} stroke={cl.color} strokeWidth={openCount ? 4 : 2} opacity={openCount ? 0.75 : 0.3} strokeLinecap="round" />
+                      <circle cx={cp.x} cy={cp.y} r={62} fill="#fff" stroke={cl.color} strokeWidth={3} />
+                      <text textAnchor="middle" fontSize="11.5" fontWeight="700" fill={cl.color} pointerEvents="none">
+                        {lines.map((ln, i) => <tspan key={i} x={cp.x} y={cp.y - 10 + i * 13}>{ln}</tspan>)}
+                      </text>
+                      <text x={cp.x} y={cp.y + 10 + (lines.length - 1) * 13} textAnchor="middle" fontSize="10" className="fill-gray-500" pointerEvents="none">
+                        {svs.length} services
+                      </text>
+                      <text x={cp.x} y={cp.y + 24 + (lines.length - 1) * 13} textAnchor="middle" fontSize="10" fontWeight="700" className="fill-green-700" pointerEvents="none">
+                        {openCount ? `${openCount} open` : ""}
+                      </text>
+                    </g>
+                  );
                 })}
 
                 {/* paths */}
@@ -482,11 +576,36 @@ export default function ServiceMapPage() {
                   );
                 })}
 
-                {/* centre */}
-                <circle cx={CX} cy={CY} r={46} fill="#005EB8" />
-                <text x={CX} y={CY - 4} textAnchor="middle" className="fill-white" fontSize="13" fontWeight="700">Service</text>
-                <text x={CX} y={CY + 12} textAnchor="middle" className="fill-white" fontSize="13" fontWeight="700">user</text>
-                <text x={CX} y={CY + 30} textAnchor="middle" className="fill-white" fontSize="10" opacity={0.85}>{AREA_LABEL[facts.area]}</text>
+                {/* centre - the service user at the hub, otherwise whatever is
+                    in focus, so you always know where you are standing */}
+                {(() => {
+                  if (!focus) {
+                    return (
+                      <g>
+                        <circle cx={CX} cy={CY} r={46} fill="#005EB8" />
+                        <text x={CX} y={CY - 4} textAnchor="middle" className="fill-white" fontSize="13" fontWeight="700">Service</text>
+                        <text x={CX} y={CY + 12} textAnchor="middle" className="fill-white" fontSize="13" fontWeight="700">user</text>
+                        <text x={CX} y={CY + 30} textAnchor="middle" className="fill-white" fontSize="10" opacity={0.85}>{AREA_LABEL[facts.area]}</text>
+                      </g>
+                    );
+                  }
+                  const cl = CLUSTERS.find((c) => c.id === focusCluster);
+                  const svc = focusService ? SERVICES.find((s) => s.id === focusService) : null;
+                  const label = svc ? svc.name : cl?.label || "";
+                  const colour = cl?.color || "#005EB8";
+                  const lines = wrap(label, 15);
+                  return (
+                    <g>
+                      <circle cx={CX} cy={CY} r={66} fill={colour} />
+                      <text textAnchor="middle" className="fill-white" fontSize="12.5" fontWeight="700" pointerEvents="none">
+                        {lines.map((ln, i) => <tspan key={i} x={CX} y={CY - 6 + i * 14}>{ln}</tspan>)}
+                      </text>
+                      <text x={CX} y={CY + 14 + (lines.length - 1) * 14} textAnchor="middle" className="fill-white" fontSize="9.5" opacity={0.85} pointerEvents="none">
+                        {AREA_LABEL[facts.area]}
+                      </text>
+                    </g>
+                  );
+                })()}
 
                 {/* nodes */}
                 {visServices.map((s) => {
@@ -499,7 +618,13 @@ export default function ServiceMapPage() {
                   const hit = !searchLc || s.name.toLowerCase().includes(searchLc);
                   const lines = wrap(s.name, clusterFilter === "all" ? 15 : 18);
                   return (
-                    <g key={s.id} onClick={() => { if (draggedRef.current) { draggedRef.current = false; return; } setSelected(s.id); }} style={{ cursor: "pointer" }} tabIndex={0} role="button"
+                    <g key={s.id} onClick={() => {
+                        if (draggedRef.current) { draggedRef.current = false; return; }
+                        setSelected(s.id);
+                        // Clicking a node that has its own branch recentres on it,
+                        // so you can keep walking down without the rest in the way.
+                        if (SERVICES.some((x) => x.parent === s.id)) { setFocus(s.id); resetView(); }
+                      }} style={{ cursor: "pointer" }} tabIndex={0} role="button"
                       aria-label={`${s.name}: ${meta.label}`} opacity={eff === "cutoff" ? 0.5 : hit ? 1 : 0.15}
                       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(s.id); } }}>
                       {searchLc && hit && <circle cx={p.x} cy={p.y} r={r + 5} fill="none" stroke="#f59e0b" strokeWidth={3} />}

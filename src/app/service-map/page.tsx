@@ -9,7 +9,7 @@
 
 import { useMemo, useState, useRef, useEffect } from "react";
 import { MainLayout } from "@/components/layout";
-import { Breadcrumb } from "@/components/ui";
+import { Breadcrumb, renderWithContacts } from "@/components/ui";
 import {
   SERVICES, CLUSTERS, evaluate, AREA_LABEL, DIAGNOSIS_OPTIONS, FLAG_OPTIONS,
   GENDER_OPTIONS, EMPTY_FACTS, SAMPLE_PATIENTS,
@@ -599,7 +599,7 @@ export default function ServiceMapPage() {
                                   {via && <p className="text-xs text-gray-500">Reached via {via}.</p>}
                                   {s.note && <p className="text-xs text-gray-600">{s.note}</p>}
                                   {s.catchmentNote && <p className="flex items-start gap-1.5 text-xs text-gray-600"><MapPin className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" /> Catchment: {s.catchmentNote}</p>}
-                                  {s.contact && <p className="flex items-start gap-1.5 font-medium text-gray-700"><Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-nhs-blue" /> {s.contact}</p>}
+                                  {s.contact && <p className="flex items-start gap-1.5 font-medium text-gray-700"><Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-nhs-blue" /> {renderWithContacts(s.contact)}</p>}
                                   {eff === "cutoff" && <p className="flex items-start gap-1.5 text-gray-500"><Ban className="w-4 h-4 mt-0.5 flex-shrink-0" /> Cut off - you reach this via {via}, which is currently closed.</p>}
                                   {ev.blockedReason && <p className="flex items-start gap-1.5 text-red-700"><XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {ev.blockedReason}</p>}
                                   {ev.met.map((c) => <p key={c} className="flex items-start gap-1.5 text-green-700"><CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" /> {c}</p>)}
@@ -631,7 +631,7 @@ export default function ServiceMapPage() {
                 {selSvc.catchmentNote && (
                   <p className="flex items-start gap-1.5 text-xs text-gray-600 mb-2"><MapPin className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" /> Catchment: {selSvc.catchmentNote}</p>
                 )}
-                {selSvc.contact && <p className="flex items-start gap-1.5 text-sm text-gray-700 mb-2 font-medium"><Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-nhs-blue" /> {selSvc.contact}</p>}
+                {selSvc.contact && <p className="flex items-start gap-1.5 text-sm text-gray-700 mb-2 font-medium"><Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-nhs-blue" /> {renderWithContacts(selSvc.contact)}</p>}
                 {selEff === "cutoff" && <p className="flex items-start gap-1.5 text-sm text-gray-500 mb-1"><Ban className="w-4 h-4 mt-0.5 flex-shrink-0" /> Cut off - you reach this via {parentName}, which is currently closed.</p>}
                 {selEv.blockedReason && <p className="flex items-start gap-1.5 text-sm text-red-700 mb-1"><XCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> {selEv.blockedReason}</p>}
                 {selEv.met.map((c) => <p key={c} className="flex items-start gap-1.5 text-sm text-green-700"><CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" /> {c}</p>)}

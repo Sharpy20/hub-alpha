@@ -4,7 +4,7 @@ import { Suspense, useState, useRef } from "react";
 import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout";
-import { Badge, StatusBadge } from "@/components/ui";
+import { Badge, StatusBadge, CopyChip } from "@/components/ui";
 import { DynamicIcon } from "@/components/common";
 import { linkApproval } from "@/lib/data/approval-status";
 import { bookmarks, getCategories } from "@/lib/data/bookmarks";
@@ -343,8 +343,12 @@ function BookmarksContent() {
                       </p>
                     )}
                     {bookmark.phone && (
-                      <p className="text-lg font-bold text-emerald-700 mt-1">
+                      <p className="text-lg font-bold text-emerald-700 mt-1 flex items-center gap-1.5">
                         {bookmark.phone}
+                        {/* "Hidden in demo mode" placeholders have no number to copy */}
+                        {/\d/.test(bookmark.phone) && (
+                          <CopyChip value={bookmark.phone} label="phone number" />
+                        )}
                       </p>
                     )}
                     <div className="flex items-center gap-2 mt-2 flex-wrap">

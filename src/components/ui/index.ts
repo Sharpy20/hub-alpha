@@ -9,6 +9,8 @@ export { ConfirmDialog } from "./confirm-dialog";
 export { VerificationBadge } from "./VerificationBadge";
 export { StatusBadge } from "./StatusBadge";
 export { Breadcrumb } from "./Breadcrumb";
+export { CopyChip } from "./CopyChip";
+export { ContactText, renderWithContacts } from "./ContactText";
 // GuideSelect is intentionally NOT re-exported here: it imports the full guide
 // catalog (which drags in the referral-workflows data). Re-exporting it from
 // this barrel put ~65 kB of guide data into the root layout bundle on every

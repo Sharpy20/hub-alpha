@@ -1,7 +1,7 @@
 "use client";
 
 import { MainLayout } from "@/components/layout";
-import { Button, Card, CardContent, Badge, Breadcrumb } from "@/components/ui";
+import { Button, Card, CardContent, Badge, Breadcrumb, CopyChip, renderWithContacts } from "@/components/ui";
 import { GuideFeedback } from "@/components/guides/GuideFeedback";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useApp } from "@/app/providers";
@@ -79,7 +79,9 @@ function renderWithLinks(text: string) {
         </span>
       );
     }
-    return <span key={i}>{part}</span>;
+    // Anything that is not a URL still gets scanned for phone numbers and
+    // email addresses, each of which picks up a copy button.
+    return <span key={i}>{renderWithContacts(part)}</span>;
   });
 }
 
@@ -714,7 +716,7 @@ export default function UnifiedGuidePage() {
               </div>
               <div className="mb-6">
                 {rStep.content.split("\n").map((line, i) => (
-                  <p key={i} className={`text-gray-600 text-lg ${line.startsWith("•") ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}>{line}</p>
+                  <p key={i} className={`text-gray-600 text-lg ${line.startsWith("•") ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}>{renderWithLinks(line)}</p>
                 ))}
               </div>
 
@@ -851,7 +853,19 @@ export default function UnifiedGuidePage() {
                     <div key={method.label} className={`p-5 rounded-xl border-2 ${method.type === "email" ? "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200" : method.type === "phone" ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200" : "bg-gradient-to-r from-purple-50 to-violet-50 border-purple-200"}`}>
                       <div className="flex items-center gap-3">
                         {method.type === "email" ? <Mail className="w-6 h-6 text-blue-600" /> : method.type === "phone" ? <Phone className="w-6 h-6 text-green-600" /> : <ExternalLink className="w-6 h-6 text-purple-600" />}
-                        <div><p className="text-sm text-gray-500 font-medium">{method.label}</p><p className="font-bold text-gray-900 text-xl">{method.value}</p></div>
+                        <div>
+                          <p className="text-sm text-gray-500 font-medium">{method.label}</p>
+                          <p className="font-bold text-gray-900 text-xl flex items-center gap-1.5">
+                            {method.value}
+                            {(method.type === "email" || method.type === "phone") && (
+                              <CopyChip
+                                value={method.value}
+                                label={method.type === "email" ? "email address" : "phone number"}
+                                className="!p-1.5"
+                              />
+                            )}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   ))}

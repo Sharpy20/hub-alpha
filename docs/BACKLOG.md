@@ -644,6 +644,13 @@ end of the session.
       not tell which state you were in); acting on a job no longer makes it vanish from under
       you (`useStickyActions` pins anything you touch, and a cleared barrier stays visible with
       a "barrier cleared" tick); clicking a job opens the full `TaskDetailModal`, same as the diary.
+- [ ] **Barriers-only filter should drive the per-patient toggles (Mike, 27 Jul - not started).**
+      Turning the page-level Barriers-only filter ON should also switch ON the barriers-only toggle
+      on each patient, rather than leaving the two controls out of step. Currently the page filter
+      and the per-patient switches are independent, so you can be filtered to barriers at the top
+      while individual patients still show everything. Presumably the per-patient toggles should
+      follow the page filter and stay individually overridable afterwards - confirm that reading
+      with Mike before building.
 
 ### Site-wide
 - [x] **Copy-to-clipboard on every phone number and email address.** New `CopyChip` +
@@ -757,6 +764,20 @@ end of the session.
 
       Overlaps Section C "capacity assessment guide - make interactive" (choices should alter the
       case-note output).
+- [ ] **⚠️ CONFIRM WITH MIKE - can a Duty to Refer go in WITHOUT consent?** Mike (27 Jul): "I
+      thought we send in their best interest but need to check." The N3 fix above assumes it cannot,
+      and the guide now tells staff that a declined referral means no referral is made. **If that is
+      wrong it is wrong in a live guide, so this is the first thing to settle.** What is (fairly)
+      certain: s.213B Housing Act 1996, inserted by the Homelessness Reduction Act 2017, frames the
+      duty to refer around the person's consent - they must agree to the referral and to which
+      housing authority it goes to. What is NOT settled and needs Mike/the trust to confirm: whether
+      a best-interests referral under the MCA is made where the patient **lacks capacity** to
+      consent (a refusal by someone with capacity is a different thing from an inability to
+      consent), and whether local practice refers anyway on safeguarding or vital-interests grounds.
+      If best-interests referrals do happen, the consent step needs a third option
+      ("Patient lacks capacity - referred in their best interests") with its own case-note wording,
+      not just yes/no. Do not flip the guide wording on my reading alone - Mike to check against
+      trust policy / the housing team.
 - [ ] **Break up text-heavy guides with progressive disclosure (not started).** Pattern Mike set:
       **S117 Aftercare & Funding - the basics** - truncate each paragraph under its header until
       clicked, and for "who qualifies" add an optional **"Does my patient qualify?"** pop-up that

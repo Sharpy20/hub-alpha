@@ -11,6 +11,7 @@ import {
   getPatientsByWard,
 } from "@/lib/data/tasks";
 import { WARDS, Patient, DiaryTask, TaskPriority, PRIORITY_CONFIG } from "@/lib/types";
+import { TaskDetailModal } from "@/components/modals";
 import { toLocalDateStr } from "@/lib/utils/date";
 import {
   STAMP_ITEMS,
@@ -78,7 +79,10 @@ const lensMatches = (lens: TaskLens, t: DiaryTask): boolean => {
     case "outstanding": return isOutstanding(t);
     case "overdue": return t.status === "overdue";
     case "done": return t.status === "completed";
-    case "barriers": return isOutstanding(t) && !!t.blocksDischarge;
+    // A cleared barrier stays in the barriers view showing its tick. In a bed
+    // meeting "that one is now done" is the useful answer; having it vanish the
+    // moment you complete it just loses your place (Mike, 27 Jul).
+    case "barriers": return !!t.blocksDischarge;
     default: return true;
   }
 };
@@ -139,6 +143,36 @@ interface JobActions {
   onToggleBarrier: (task: DiaryTask) => void;
 }
 
+interface StickyCtl {
+  has: (id: string) => boolean;
+  clear: () => void;
+}
+
+// Wraps the job actions so anything you act on is pinned into view, even once
+// it stops matching the active filter. Without this, ticking off the job you
+// are looking at makes it vanish and you lose your place in the list.
+function useStickyActions(actions: JobActions): [StickyCtl, JobActions] {
+  const [ids, setIds] = useState<Set<string>>(() => new Set());
+  const keep = useCallback((id: string) => setIds((prev) => new Set(prev).add(id)), []);
+
+  const wrapped = useMemo<JobActions>(
+    () => ({
+      onComplete: (t) => { keep(t.id); actions.onComplete(t); },
+      onReopen: (t) => { keep(t.id); actions.onReopen(t); },
+      onRedo: (t, d) => { keep(t.id); actions.onRedo(t, d); },
+      onToggleBarrier: (t) => { keep(t.id); actions.onToggleBarrier(t); },
+    }),
+    [actions, keep]
+  );
+
+  const ctl = useMemo<StickyCtl>(
+    () => ({ has: (id) => ids.has(id), clear: () => setIds(new Set()) }),
+    [ids]
+  );
+
+  return [ctl, wrapped];
+}
+
 // ---------------------------------------------------------------------------
 // Job row - the actionable unit. Outstanding jobs offer Complete and the
 // barrier flag; completed jobs offer Reopen and Redo (reopen with a new date).
@@ -146,10 +180,12 @@ interface JobActions {
 const JobRow = ({
   task,
   actions,
+  onOpen,
   compact = false,
 }: {
   task: DiaryTask;
   actions: JobActions;
+  onOpen: (task: DiaryTask) => void;
   compact?: boolean;
 }) => {
   const done = task.status === "completed";
@@ -178,13 +214,24 @@ const JobRow = ({
             title={`${PRIORITY_CONFIG[task.priority].label} priority`}
           />
         )}
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-800">
+        {/* Click the job to open the full detail, same as the diary. Kept as a
+            sibling of the action buttons rather than wrapping them, so we do
+            not nest interactive elements (axe: nested-interactive). */}
+        <button
+          onClick={() => onOpen(task)}
+          className="flex-1 min-w-0 text-left group"
+          title="Open the full job details"
+        >
+          <p className="text-sm font-medium text-gray-800 group-hover:text-violet-700 group-hover:underline decoration-violet-300 underline-offset-2">
             {done ? "✓ " : "○ "}
             {task.title}
-            {!done && task.blocksDischarge && (
-              <span className="ml-1.5 inline-flex items-center rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-800 align-middle">
-                🚧 blocks discharge
+            {task.blocksDischarge && (
+              <span
+                className={`ml-1.5 inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold align-middle ${
+                  done ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
+                }`}
+              >
+                {done ? "✓ barrier cleared" : "🚧 blocks discharge"}
               </span>
             )}
           </p>
@@ -200,7 +247,7 @@ const JobRow = ({
               </>
             )}
           </p>
-        </div>
+        </button>
 
         {/* Inline actions - hidden on print, this is a working screen */}
         <div className="flex flex-wrap items-center gap-1 print-hide">
@@ -382,16 +429,61 @@ const CounterButton = ({
   </button>
 );
 
+// Standing Y/N switch for the barriers filter. Deliberately a persistent
+// control rather than a banner that only appears when filtered - from a glance
+// at the tile you can always tell which state you are in (Mike, 27 Jul).
+const BarriersSwitch = ({
+  on,
+  count,
+  onToggle,
+}: {
+  on: boolean;
+  count: number;
+  onToggle: () => void;
+}) => (
+  <button
+    onClick={onToggle}
+    aria-pressed={on}
+    title={
+      on
+        ? "Showing only jobs flagged as blocking discharge - tap for all jobs"
+        : "Show only jobs flagged as blocking discharge"
+    }
+    className={`print-hide flex flex-col items-center justify-center rounded-lg border-2 px-2.5 transition-colors ${
+      on
+        ? "bg-amber-100 border-amber-400 text-amber-900"
+        : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+    }`}
+  >
+    <span className="text-[10px] font-semibold uppercase tracking-wide leading-tight text-center">
+      Barriers
+      <br />
+      only
+    </span>
+    <span
+      className={`mt-1 rounded-full px-2 py-0.5 text-xs font-bold ${
+        on ? "bg-amber-500 text-white" : "bg-gray-200 text-gray-600"
+      }`}
+    >
+      {on ? "YES" : "NO"}
+    </span>
+    <span className="mt-0.5 text-[10px] text-gray-500">
+      {count} open
+    </span>
+  </button>
+);
+
 // ---------------------------------------------------------------------------
 // Patient tile
 // ---------------------------------------------------------------------------
 const PatientReviewCard = ({
   summary,
-  actions,
+  actions: rawActions,
   stamps,
   today,
   onStamp,
   onClearStamp,
+  onOpenTask,
 }: {
   summary: PatientSummary;
   actions: JobActions;
@@ -399,14 +491,22 @@ const PatientReviewCard = ({
   today: string;
   onStamp: (patientId: string, kind: StampKind) => void;
   onClearStamp: (patientId: string, kind: StampKind) => void;
+  onOpenTask: (task: DiaryTask) => void;
 }) => {
   const s = summary;
   const [lens, setLens] = useState<TaskLens>("all");
+  // Jobs you have just acted on stay in view even if they no longer match the
+  // filter, so ticking something off does not make it disappear from under you
+  // (Mike, 27 Jul). Cleared whenever you change the filter.
+  const [sticky, actions] = useStickyActions(rawActions);
 
-  const toggleLens = (next: TaskLens) => setLens((cur) => (cur === next ? "all" : next));
+  const toggleLens = (next: TaskLens) => {
+    sticky.clear();
+    setLens((cur) => (cur === next ? "all" : next));
+  };
 
   const sortedTasks = useMemo(() => {
-    const inLens = s.tasks.filter((t) => lensMatches(lens, t));
+    const inLens = s.tasks.filter((t) => lensMatches(lens, t) || sticky.has(t.id));
     const out = inLens.filter(isOutstanding).sort((a, b) => {
       const p = PRIORITY_RANK[b.priority] - PRIORITY_RANK[a.priority];
       if (p !== 0) return p;
@@ -445,42 +545,51 @@ const PatientReviewCard = ({
         </div>
       </div>
 
-      {/* Clickable counters */}
-      <div className="grid grid-cols-4 gap-1 p-3 bg-gray-50 border-b border-gray-100 print-stats-row">
-        <CounterButton
-          value={s.total}
-          label="Total"
-          lens="all"
-          active={lens === "all"}
-          tone="text-gray-600"
-          icon={<ListTodo className="w-4 h-4 print-hide" />}
-          onClick={() => setLens("all")}
-        />
-        <CounterButton
-          value={s.outstanding}
-          label="Outstanding"
-          lens="outstanding"
-          active={lens === "outstanding"}
-          tone="text-amber-600"
-          icon={<Clock className="w-4 h-4 print-hide" />}
-          onClick={toggleLens}
-        />
-        <CounterButton
-          value={s.overdue}
-          label="Overdue"
-          lens="overdue"
-          active={lens === "overdue"}
-          tone="text-red-600"
-          onClick={toggleLens}
-        />
-        <CounterButton
-          value={s.completed}
-          label="Done"
-          lens="done"
-          active={lens === "done"}
-          tone="text-emerald-600"
-          icon={<CheckCircle2 className="w-4 h-4 print-hide" />}
-          onClick={toggleLens}
+      {/* Clickable counters, with a standing Barriers-only switch on the right
+          so it is always obvious whether you are filtered (Mike, 27 Jul). */}
+      <div className="flex items-stretch gap-2 p-3 bg-gray-50 border-b border-gray-100 print-stats-row">
+        <div className="grid grid-cols-4 gap-1 flex-1">
+          <CounterButton
+            value={s.total}
+            label="Total"
+            lens="all"
+            active={lens === "all"}
+            tone="text-gray-600"
+            icon={<ListTodo className="w-4 h-4 print-hide" />}
+            onClick={() => { sticky.clear(); setLens("all"); }}
+          />
+          <CounterButton
+            value={s.outstanding}
+            label="Outstanding"
+            lens="outstanding"
+            active={lens === "outstanding"}
+            tone="text-amber-600"
+            icon={<Clock className="w-4 h-4 print-hide" />}
+            onClick={toggleLens}
+          />
+          <CounterButton
+            value={s.overdue}
+            label="Overdue"
+            lens="overdue"
+            active={lens === "overdue"}
+            tone="text-red-600"
+            onClick={toggleLens}
+          />
+          <CounterButton
+            value={s.completed}
+            label="Done"
+            lens="done"
+            active={lens === "done"}
+            tone="text-emerald-600"
+            icon={<CheckCircle2 className="w-4 h-4 print-hide" />}
+            onClick={toggleLens}
+          />
+        </div>
+
+        <BarriersSwitch
+          on={lens === "barriers"}
+          count={s.barriers}
+          onToggle={() => toggleLens("barriers")}
         />
       </div>
 
@@ -498,30 +607,36 @@ const PatientReviewCard = ({
       {/* Job list */}
       <div className="p-3 print-task-list">
         {lens !== "all" && (
-          <div className="mb-2 flex items-center justify-between gap-2 rounded-lg bg-violet-50 px-2.5 py-1.5 print-hide">
-            <span className="text-xs font-medium text-violet-800">
+          <div
+            className={`mb-2 flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 print-hide ${
+              lens === "barriers" ? "bg-amber-50" : "bg-violet-50"
+            }`}
+          >
+            <span
+              className={`text-xs font-medium ${
+                lens === "barriers" ? "text-amber-900" : "text-violet-800"
+              }`}
+            >
               Showing {LENS_LABEL[lens]} only ({sortedTasks.length})
             </span>
             <button
-              onClick={() => setLens("all")}
-              className="text-xs font-medium text-violet-600 hover:text-violet-800 inline-flex items-center gap-1"
+              onClick={() => { sticky.clear(); setLens("all"); }}
+              className={`text-xs font-medium inline-flex items-center gap-1 ${
+                lens === "barriers"
+                  ? "text-amber-700 hover:text-amber-900"
+                  : "text-violet-600 hover:text-violet-800"
+              }`}
             >
               <X className="w-3 h-3" /> Show all
             </button>
           </div>
         )}
-        {s.barriers > 0 && lens !== "barriers" && (
-          <button
-            onClick={() => setLens("barriers")}
-            className="mb-2 w-full text-left text-xs font-medium text-amber-800 bg-amber-50 hover:bg-amber-100 rounded-lg px-2.5 py-1.5 print-hide"
-          >
-            🚧 {s.barriers} job{s.barriers > 1 ? "s" : ""} blocking discharge - show just these
-          </button>
-        )}
 
         <div className="space-y-2">
           {sortedTasks.length > 0 ? (
-            sortedTasks.map((task) => <JobRow key={task.id} task={task} actions={actions} />)
+            sortedTasks.map((task) => (
+              <JobRow key={task.id} task={task} actions={actions} onOpen={onOpenTask} />
+            ))
           ) : (
             <p className="text-sm text-gray-500 text-center py-4">
               {lens === "all" ? "No jobs recorded" : `No ${LENS_LABEL[lens]} jobs`}
@@ -559,6 +674,43 @@ const PatientReviewCard = ({
   );
 };
 
+// Same standing switch, laid out inline for the expanded table row.
+const BarriersSwitchInline = ({
+  on,
+  count,
+  onToggle,
+}: {
+  on: boolean;
+  count: number;
+  onToggle: () => void;
+}) => (
+  <button
+    onClick={onToggle}
+    aria-pressed={on}
+    title={
+      on
+        ? "Showing only jobs flagged as blocking discharge - tap for all jobs"
+        : "Show only jobs flagged as blocking discharge"
+    }
+    className={`inline-flex items-center gap-1.5 rounded-lg border-2 px-2.5 py-1 text-xs font-medium transition-colors ${
+      on
+        ? "bg-amber-100 border-amber-400 text-amber-900"
+        : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
+    }`}
+  >
+    <Construction className="w-3.5 h-3.5" />
+    Barriers only
+    <span
+      className={`rounded-full px-1.5 py-0.5 font-bold ${
+        on ? "bg-amber-500 text-white" : "bg-gray-200 text-gray-600"
+      }`}
+    >
+      {on ? "YES" : "NO"}
+    </span>
+    <span className="text-gray-400">({count} open)</span>
+  </button>
+);
+
 // ---------------------------------------------------------------------------
 // Table view
 // ---------------------------------------------------------------------------
@@ -568,11 +720,12 @@ const PatientTableRow = ({
   summary,
   expanded,
   onToggle,
-  actions,
+  actions: rawActions,
   stamps,
   today,
   onStamp,
   onClearStamp,
+  onOpenTask,
 }: {
   summary: PatientSummary;
   expanded: boolean;
@@ -582,20 +735,23 @@ const PatientTableRow = ({
   today: string;
   onStamp: (patientId: string, kind: StampKind) => void;
   onClearStamp: (patientId: string, kind: StampKind) => void;
+  onOpenTask: (task: DiaryTask) => void;
 }) => {
   const s = summary;
   const [lens, setLens] = useState<TaskLens>("all");
+  const [sticky, actions] = useStickyActions(rawActions);
   const pct = s.total > 0 ? Math.round((s.completed / s.total) * 100) : 0;
 
   const sortedTasks = useMemo(() => {
-    const inLens = s.tasks.filter((t) => lensMatches(lens, t));
+    const inLens = s.tasks.filter((t) => lensMatches(lens, t) || sticky.has(t.id));
     const out = inLens.filter(isOutstanding).sort((a, b) => PRIORITY_RANK[b.priority] - PRIORITY_RANK[a.priority]);
     const done = inLens.filter((t) => t.status === "completed");
     return [...out, ...done];
-  }, [s.tasks, lens]);
+  }, [s.tasks, lens, sticky]);
 
   // Clicking a count opens the row already filtered to those jobs.
   const openWith = (next: TaskLens) => {
+    sticky.clear();
     setLens(next);
     if (!expanded) onToggle();
   };
@@ -671,19 +827,29 @@ const PatientTableRow = ({
       {expanded && (
         <tr className="bg-gray-50/60">
           <td colSpan={9} className="px-3 pb-3 pt-1">
-            {lens !== "all" && (
-              <div className="mb-2 flex items-center gap-2 print-hide">
-                <span className="text-xs font-medium text-violet-800 bg-violet-50 rounded px-2 py-1">
-                  Showing {LENS_LABEL[lens]} only ({sortedTasks.length})
-                </span>
-                <button
-                  onClick={() => setLens("all")}
-                  className="text-xs font-medium text-violet-600 hover:text-violet-800"
-                >
-                  Show all
-                </button>
-              </div>
-            )}
+            <div className="mb-2 flex flex-wrap items-center gap-2 print-hide">
+              <BarriersSwitchInline
+                on={lens === "barriers"}
+                count={s.barriers}
+                onToggle={() => {
+                  sticky.clear();
+                  setLens((cur) => (cur === "barriers" ? "all" : "barriers"));
+                }}
+              />
+              {lens !== "all" && lens !== "barriers" && (
+                <>
+                  <span className="text-xs font-medium text-violet-800 bg-violet-50 rounded px-2 py-1">
+                    Showing {LENS_LABEL[lens]} only ({sortedTasks.length})
+                  </span>
+                  <button
+                    onClick={() => { sticky.clear(); setLens("all"); }}
+                    className="text-xs font-medium text-violet-600 hover:text-violet-800"
+                  >
+                    Show all
+                  </button>
+                </>
+              )}
+            </div>
             <div className="space-y-1.5">
               {sortedTasks.length === 0 && (
                 <p className="text-sm text-gray-400 py-1">
@@ -691,7 +857,7 @@ const PatientTableRow = ({
                 </p>
               )}
               {sortedTasks.map((task) => (
-                <JobRow key={task.id} task={task} actions={actions} compact />
+                <JobRow key={task.id} task={task} actions={actions} onOpen={onOpenTask} compact />
               ))}
             </div>
           </td>
@@ -706,11 +872,20 @@ const PatientTableRow = ({
 // ---------------------------------------------------------------------------
 export default function OverviewPage() {
   const { user, activeWard } = useApp();
-  const { tasks, allTasks, updateTask, toggleComplete, restoreFromError } = useTasks();
+  const { tasks, allTasks, updateTask, toggleComplete, claimTask, restoreFromError } = useTasks();
   const [showInError, setShowInError] = useState(false);
   const inErrorTasks = allTasks.filter((t) => t.inError);
 
   const userName = user?.name || "Staff";
+
+  // Full job detail, same modal the diary uses - so anything you cannot do from
+  // the inline actions (edit, claim, reassign, mark in error) is one tap away.
+  const [detailTaskId, setDetailTaskId] = useState<string | null>(null);
+  const detailTask = useMemo(
+    () => tasks.find((t) => t.id === detailTaskId) ?? null,
+    [tasks, detailTaskId]
+  );
+  const openTaskDetail = useCallback((task: DiaryTask) => setDetailTaskId(task.id), []);
 
   // Scope. Defaults to the ward the user works on when we know it; when we do
   // not, no ward is preselected and the screen asks for one (Mike, 27 Jul).
@@ -1399,6 +1574,7 @@ export default function OverviewPage() {
                     today={today}
                     onStamp={handleStamp}
                     onClearStamp={handleClearStamp}
+                    onOpenTask={openTaskDetail}
                   />
                 ))}
               </div>
@@ -1471,6 +1647,7 @@ export default function OverviewPage() {
                           today={today}
                           onStamp={handleStamp}
                           onClearStamp={handleClearStamp}
+                          onOpenTask={openTaskDetail}
                         />
                       ))}
                     </tbody>
@@ -1540,6 +1717,19 @@ export default function OverviewPage() {
           </div>
         )}
       </div>
+
+      {/* Full job detail - the same modal the Team Diary uses, so a job opened
+          from a review looks and behaves exactly as it does everywhere else. */}
+      <TaskDetailModal
+        isOpen={!!detailTask}
+        onClose={() => setDetailTaskId(null)}
+        task={detailTask}
+        currentUserName={userName}
+        onClaim={(taskId) => claimTask(taskId, userName)}
+        onSteal={(taskId) => claimTask(taskId, userName, true)}
+        onToggleComplete={(taskId) => toggleComplete(taskId, userName)}
+        onUpdate={updateTask}
+      />
     </MainLayout>
   );
 }

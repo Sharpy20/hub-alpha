@@ -276,11 +276,11 @@ moment ONE genuinely internal item is actually in there - hence the fictional-de
       are real and meant to be used. Build clean, 32/32 tests pass.
       - Mike's decisions, 27 Jul: **keep the 4 public/ blank forms**; **no second history
         rewrite** for the stripped comments (internal extensions in a private repo, not PII).
-      - **One left for Mike:** `referral-workflows.ts:642` (S117 meeting request criteria)
-        names an individual in visible content - "approved by Karamjit Chhoker, Head of
-        Service" - as the provenance for the 7-day notice rule. Probably a public council
-        role, but it is the only named individual on screen. Keep, or cut to "approved by
-        the Head of Service"?
+      - **RESOLVED 27 Jul:** the S117 meeting request criteria named an individual in visible
+        content as the provenance for the 7-day notice rule - the only named person rendered
+        anywhere in the app. Mike's call: **soften to "approved by the Head of Service"**.
+        Done. The name is preserved in `E:\Hub\temp\internal-contacts.md` (outside the repo)
+        so the provenance is not lost. **No named individual now appears on screen.**
 - [ ] History verify: F1 rewrite (6 Jul) already purged the FOCUS dumps - check nothing
       trust-sourced was committed since; targeted rewrite if needed (bundle playbook exists).
 - [PARK] **BUILD: mini publish pipeline** - **deferred past the 30 Jul demo (Mike, 27 Jul).**

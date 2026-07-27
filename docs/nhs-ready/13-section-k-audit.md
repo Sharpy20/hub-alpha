@@ -129,11 +129,17 @@ rather than line number so it stays correct as the files change.
 be used: council duty lines, charity helplines, IMHA providers, crisis numbers. Build clean,
 32/32 tests pass, no code touched - the diff is 33 comment deletions and three header notes.
 
-### One item still open
+### The last named individual - resolved
 
-`referral-workflows.ts:642` names an individual in **visible** content - "approved by Karamjit
-Chhoker, Head of Service" - given as the provenance for the 7-day notice rule on S117 meeting
-requests. Almost certainly a public council role, and the attribution is what makes the rule
-credible to a nurse. But it is the only named individual rendered on screen anywhere in the app,
-which makes it worth a deliberate decision rather than an oversight. Keep, or soften to "approved
-by the Head of Service"?
+The sweep found one person named in **visible** content: the S117 meeting request criteria gave
+an individual by name and job title as the provenance for the 7-day notice rule (reduced from 14
+days). Almost certainly a public council role, and the attribution is what made the rule credible
+to a nurse reading it - but it was the only named individual rendered on screen anywhere in the
+app, so it was worth a decision rather than surviving by accident.
+
+**Mike's call, 27 July: softened to "approved by the Head of Service".** The rule keeps its
+authority, nobody is named. The individual's name is preserved in
+`E:\Hub\temp\internal-contacts.md`, outside the repo, so the provenance can still be produced if
+anyone challenges the 7-day figure.
+
+**No named individual appears on screen anywhere in wardHub.**

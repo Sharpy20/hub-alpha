@@ -230,9 +230,19 @@ moment ONE genuinely internal item is actually in there - hence the fictional-de
       with exact trust wording - police capacity form, ABC chart - flagged for Mike's
       keep-or-pull call) AND every real internal number in code comments (Rule-4 pattern:
       real values sit in comments beside "Hidden in demo mode").
-- [ ] Guide manuscript export script: dump every guide's content from the TS data to one
-      markdown per guide (~66 files) -> folder for Mike to upload = the SharePoint
-      "wardHub Guide Manuscripts" library, the canonical authoring home going forward.
+- [x] **Guide manuscript export script - DONE 27 Jul.** `scripts/export-guide-manuscripts.mjs`
+      (`node scripts/export-guide-manuscripts.mjs`). Writes **68 staff guides + 29 patient
+      leaflets** as markdown to `E:\Hub\guide-manuscripts\` (outside the repo) plus a
+      `_MANIFEST.md`. Zero new deps - it shells out to the repo's own tsc to transpile the
+      guide data, then renders each content shape (workflow / how-to / prompt guide /
+      checklist / MHA checker / chip-bank builder). Patient leaflets are converted from
+      `public/patient-guides.html`. Frontmatter carries category, guide type, traffic-light
+      approval and the code path, so SharePoint can filter on them. **Re-runnable** - it
+      overwrites the folder, so never hand-edit there; once uploaded, SharePoint is the
+      authoring home. **MIKE: upload this folder** (see Mike-side below).
+      - Two content gaps it surfaced: risk domain 6 ("Risk to a foetus, infant or child
+        under 18") has an EMPTY risk list in `risk.ts` so it offers nothing in the app; and
+        the patient-leaflet card still says "23 patient-facing guides" when there are 29.
 - [ ] Purge: delete/gitignore the manifest files; strip real-number comments (values
       already preserved in E:\Hub\temp\...\_CONTACTS-INVENTORY.md, outside repo).
 - [ ] History verify: F1 rewrite (6 Jul) already purged the FOCUS dumps - check nothing

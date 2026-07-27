@@ -541,16 +541,20 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "consent",
         type: "consent",
         title: "Patient Consent",
-        content: "Unlike a safeguarding referral, the Duty to Refer needs the patient's agreement. The Homelessness Reduction Act 2017 requires consent to the referral and to their details being passed to the housing authority.\n\nIf they say no, you cannot make the referral - but you can still give them the housing contact details, offer to help them self-refer, and record that the offer was made.",
+        content: "Unlike a safeguarding referral, the Duty to Refer is built around the patient's agreement. The Homelessness Reduction Act 2017 asks for their consent to the referral, and to their details going to the housing authority.\n\n[confirm] What to do when you cannot get consent is still being checked with the Trust. A refusal by someone with capacity is not the same as being unable to consent - where a patient LACKS CAPACITY, a best-interests referral may still be appropriate. Do not treat a 'no' here as the final answer: check with your discharge coordinator or the housing team.\n\nEither way, give them the housing contact details, offer to help them self-refer, and record that the offer was made.",
         consentYesLabel: "Patient Consents",
         consentYesDesc: "The patient agrees to the referral and to their details being shared with housing",
-        consentNoLabel: "Patient Declines",
-        consentNoDesc: "Referral cannot be made - give them the details and record the offer",
-        // These carry the "was a referral actually made" clause, because a declined
-        // Duty to Refer means no referral went in at all. The template must not
-        // open with "referral submitted" or the two halves contradict each other.
+        consentNoLabel: "No Consent Recorded",
+        consentNoDesc: "Declined, or unable to consent - read the [confirm] note above before you decide what to do next",
+        // These carry the "was a referral actually made" clause, because whether a
+        // referral goes in depends on the answer. The template must not open with
+        // "referral submitted" or the two halves can contradict each other.
+        // The no-consent wording deliberately states only what is known - it does
+        // NOT say "no referral was made", because whether a best-interests referral
+        // applies where the patient lacks capacity is still to be confirmed with the
+        // Trust (see BACKLOG Section N, the [confirm] item).
         consentYesNote: "Referral submitted with the patient's consent to their details being shared with housing.",
-        consentNoNote: "Patient declined, so no referral was made. Housing contact details were given and the offer of support recorded.",
+        consentNoNote: "Consent to the referral was not obtained at this point. Housing contact details were given and the offer of support recorded.",
       },
       {
         id: "area",
@@ -606,7 +610,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "gdpr",
         type: "gdpr",
         title: "GDPR Reminder",
-        content: "Patient consent is required for Duty to Refer. Document consent in notes.",
+        content: "The Duty to Refer is consent-based, so record what the patient agreed to and what they were told. [confirm] Where a patient lacks capacity to consent, check the best-interests position with your discharge coordinator before sharing their details.",
       },
     ],
   },

@@ -200,6 +200,21 @@ data team the moment traction lands - "no waiting on Mike".
 - **SharePoint cannot serve the public site directly** - needs an Azure AD app registration
   + trust IT admin consent = a Production-stage decision. Same applies to upgrading the
   site gate to NHS auth. Neither can/should happen by the 30th.
+- **⛔ AND THE PUSH ROUTE IS ALSO CLOSED (checked 27 Jul).** The site cannot PULL from a
+  private SharePoint library without credentials, so the obvious workaround was to have
+  SharePoint PUSH instead: a Power Automate flow runs inside the tenant as Mike, already has
+  permission to read the library, and needs no app registration. **Mike's licence is "Power
+  Automate for Office 365" - Standard connectors only. Premium and Custom connectors are both
+  unavailable, and the HTTP action is premium.** So a flow cannot call out to wardHub or
+  Supabase at all. No standard connector reaches an arbitrary web endpoint.
+  - **Surviving options, cheapest first, all deferred:** (1) check whether the tenant permits
+    **anonymous "anyone with the link" sharing** - if it does, the site can fetch a published
+    file directly with no auth and no licence (free, but NHS tenants usually disable it, and
+    it is a governance conversation in its own right); (2) ask IT for the **Power Automate
+    premium add-on** - a per-user licence ask, far smaller than an app registration;
+    (3) **manual publish** - Mike pastes into a gated form in wardHub (the original plan);
+    (4) full app registration at Production stage, which was always the real answer.
+  - **Do NOT re-derive this.** The constraint is the licence, not the code.
 - **Pipeline = SharePoint (authoring) -> Mike presses publish -> Supabase (site datastore)
   -> site renders server-side.** Repo holds ONLY scaffold/fetch code, zero guide content.
   Supabase write keys live in Vercel env settings, never in the repo or Claude's workspace.
@@ -268,7 +283,14 @@ moment ONE genuinely internal item is actually in there - hence the fictional-de
         the Head of Service"?
 - [ ] History verify: F1 rewrite (6 Jul) already purged the FOCUS dumps - check nothing
       trust-sourced was committed since; targeted rewrite if needed (bundle playbook exists).
-- [ ] **BUILD: mini publish pipeline** (1-2 sessions) - guide content JSON schema; server-side
+- [PARK] **BUILD: mini publish pipeline** - **deferred past the 30 Jul demo (Mike, 27 Jul).**
+      Two reasons: the automatic route needs a Power Automate licence he does not have (see
+      Architecture decisions above), and **the site must behave on the day exactly as it does
+      now** - no new wiring, nothing to fail on stage. The pipeline story is already told by
+      the security/architecture video ("AI builds the shelves, the Trust writes the books"),
+      and the 30th is a pilot pitch, not a technical acceptance test. Pick this up after,
+      with the licence question answered. Original spec below.
+      (1-2 sessions) - guide content JSON schema; server-side
       fetch + render path in the guide viewer for pipeline guides (static guides untouched);
       publish mechanism for Mike (gated publish form or Supabase dashboard paste); seed with
       1-3 new guides carrying fictional internal detail. Keys via Vercel env only.

@@ -71,6 +71,30 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] Tighten remaining criteria from FOCUS (CAMHS pathways, condition charities, etc.) - best-effort now, "verify".
 - [ ] Decide real home: a button on the patient profile ("what's open to this person"), pulling approved dated facts instead of manual toggles (full-build/PII feature).
 - [ ] Refinement idea: a child off an "unknown" (not just "closed") parent still shows open - consider inheriting parent state.
+- [ ] **Map view is too cluttered - branch through the CATEGORY first (Mike, 27 Jul).** Right now
+      every service radiates off the hub, so 115 nodes compete for the same ring. Make the first
+      node out from the hub the **category** (the same 12 cluster labels the list uses), then branch
+      the services off their category node. Same data, one more level of hierarchy; the existing
+      node-off-node parent chain hangs below that unchanged. Should also make the cluster filter
+      feel like a zoom rather than a hide.
+- [ ] **⚠️ BUG found by audit 27 Jul: 6 national services are unreachable out of area, 1 in the city.**
+      Mike: "some services don't seem reachable regardless what filter options I use." He was right -
+      it is not the filters, it is the parent chain. A child is cut off when its parent is closed
+      (`reach[]` in `/service-map/page.tsx`), and six services that serve the WHOLE COUNTRY hang off
+      a parent that only serves Derbyshire, so out-of-area they can never open:
+      `shelter` (via housing-dtr), `citizens-advice` and `turn2us` (via welfare), `rape-crisis`
+      (via sv2), `switchboard-lgbt` (via derbyshire-lgbt), `carers-direct` (via carers-derbyshire).
+      **`carers-direct` is worse** - its parent is county-only, so it is unreachable for Derby City
+      residents too. Everything else checks out: all 115 services are reachable for some combination
+      of filters, no duplicate ids, no unknown clusters, no missing parents, every service in a
+      real cluster.
+      **The cause is a modelling one:** `parent` is being used for two different things - a genuine
+      dependency ("you reach Crisis via the Helpline") and a display convenience ("Shelter sits near
+      housing"). You do not need a Duty to Refer to phone Shelter. Options, cheapest first:
+      (1) drop the `parent` on those six so they sit on their own; (2) keep the visual link but stop
+      cutting a child off when the child's own `areas` already cover the current area; (3) split the
+      field into `parent` (true dependency) and `near` (layout only) - the honest fix, and it pairs
+      naturally with the category-first rework above. **Mike's call - it changes what the map claims.**
 - [ ] Sweep other FOCUS sections for more services/links (Mike logged in; only did /clinical/referrals).
 - [PARK] Real vs demo: criteria stay illustrative until the full research/sign-off pass.
 - [ ] **Postcode / GP-surgery lookup (Mike, 4 Jul)** - some teams allocate by **GP surgery location**, others by **home address**; build a checker that takes a postcode (and/or GP surgery) and tells you: Derby **City vs County**, which **AMHP team** to call, which **CMHT**, and the **S117 responsible authority**. Build it into the "which services are accessible" tool (this service map / town-map). **Data now fully in hand** (Part 1 of `_CONTACTS-INVENTORY.md`): every CMHT's complete GP-surgery list + numbers, the Derby City Team B/C split, and the city/county AMHP + social-care split. KEY RULE captured: CMHTs route by **registered GP surgery**; AMHP + social care route by **home address** (city vs county); S117 by authority-of-residence-when-sectioned. GP-surgery -> CMHT is a clean static table; city/county needs a postcode -> local-authority resolver (static boundary table for demo, or postcode API live - Rule: check before sending anything out).

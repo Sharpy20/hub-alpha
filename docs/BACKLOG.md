@@ -674,8 +674,8 @@ end of the session.
       hands straight over. Confirmation line on save. Diary Add Task verified unchanged.
       - Note: `formatDate` in `tasks/page.tsx` was a duplicate of `toLocalDateStr`; the extracted
         file uses the shared util.
-- [~] **Guide question answers must reach the case note. AUDIT DONE 27 Jul - findings below,
-      nothing edited yet.** Every guide that asks a question with answer options was traced from
+- [x] **Guide question answers must reach the case note. AUDIT DONE + ALL FIVE FIXED 27 Jul.**
+      Every guide that asks a question with answer options was traced from
       the answer through to the end-of-guide clipboard text. Snag 92-95 was only half true: the
       **area** answer works everywhere, the **consent** answer works nowhere.
 
@@ -726,6 +726,34 @@ end of the session.
 
       **GAP - N5. `mha-checker` has no case-note output at all.** The pathway choice and the whole
       scrutiny checklist are ticked and then lost. Obvious candidate for a ChecklistSummary.
+
+      **WHAT WAS BUILT (Mike picked both recommended options):**
+      - **New pattern: the step owns its case-note wording.** New `consentYesNote` / `consentNoNote`
+        on the consent step, swapped into a `[CONSENT]` placeholder. The viewer never invents
+        clinical phrasing, and an unanswered question leaves its placeholder visible rather than
+        guessing - a blank is obvious in a note, a wrong assertion is not. Documented in the guide
+        editor's consent panel so editors can use it.
+      - **N1 consent (two questions).** Consent and informing are now asked separately, on the same
+        screen (`informedQuestion` + `[INFORMED]`), so the note can say both truthfully. Next is
+        gated on both. Applied to `safeguarding` and `safeguarding-children`; `imha-advocacy` gained
+        a consent sentence in its bespoke note; `ctr-dsp` got real Obtained/Pending labels feeding
+        `DSP consent [CONSENT]`.
+      - **N2 social-care.** New `s117` step type with three options (on S3 now / previously on S3 /
+        no qualifying section) plus `S117_OPTIONS` and an `entitled` flag. Picking one shows a
+        pathway callout that spells out the aftercare meeting vs the discharge planning meeting, and
+        `[S117]` writes a full sentence into the note. The old generic MHA picker could not express
+        "previously on S3", the case entitlement actually turns on.
+      - **N3 homeless-discharge.** Consent split out of the criteria tick into its own step. The
+        note no longer opens with "referral submitted" - that clause moved into the consent wording,
+        because a declined Duty to Refer means no referral went in at all. Declining now reads
+        "Patient declined, so no referral was made. Housing contact details were given..." instead
+        of contradicting itself.
+      - **N4 chase log.** `handleLogReferral` filters submission methods by the chosen area.
+      - **N5 mha-checker.** ChecklistSummary added - pathway name plus ticked/outstanding scrutiny
+        items.
+      - Verified in the browser end to end on all five guides (safeguarding no-consent-but-informed,
+        social-care previously-on-S3, IMHA declined consent, ctr-dsp pending, homeless declined) and
+        the chase-log entry confirmed as "Derbyshire County". Build clean, 32/32 tests pass.
 
       Overlaps Section C "capacity assessment guide - make interactive" (choices should alter the
       case-note output).

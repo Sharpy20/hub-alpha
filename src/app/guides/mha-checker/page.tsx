@@ -10,6 +10,7 @@ import {
 } from "@/lib/data/guides/admission";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
+import { ChecklistSummary } from "@/components/guides/ChecklistSummary";
 import { PatientLink } from "@/components/guides/PatientLink";
 import { Patient } from "@/lib/types";
 import {
@@ -319,6 +320,19 @@ export default function MhaCheckerPage() {
                 </div>
               </div>
             </div>
+
+            {/* The pathway and the scrutiny ticks were being thrown away at the end
+                of the check. Same optional case-note entry the other checklists use. */}
+            <ChecklistSummary
+              title={`Detention papers checked - ${pathway.label}`}
+              patientName={patient?.name}
+              completed={scrutinySets.flatMap((set) =>
+                set.items.filter((_, i) => ticks[`${set.title}-${i}`]).map((item) => item)
+              )}
+              outstanding={scrutinySets.flatMap((set) =>
+                set.items.filter((_, i) => !ticks[`${set.title}-${i}`]).map((item) => item)
+              )}
+            />
 
             {/* Cross-link: what the section means */}
             <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 print:hidden">

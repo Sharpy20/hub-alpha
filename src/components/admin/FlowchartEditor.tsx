@@ -56,6 +56,15 @@ const STEP_TYPE_CONFIG = {
     description: "Select MHA section or legal status",
     category: "basic",
   },
+  s117: {
+    label: "S117 Status",
+    icon: Shield,
+    color: "from-indigo-500 to-indigo-600",
+    bgColor: "bg-indigo-50",
+    borderColor: "border-indigo-300",
+    description: "On S3 now / previously on S3 / no qualifying section",
+    category: "basic",
+  },
   area: {
     label: "Area Selection",
     icon: MapPin,
@@ -1400,9 +1409,14 @@ function StepEditorPanel({
               This step shows a Derby City / Derbyshire County picker. Forms and submission methods with a matching <strong>area filter</strong> will be the only ones shown after this step. Case-note tokens <code className="px-1 bg-white rounded">[DERBY CITY/DERBYSHIRE COUNTY]</code> are also filled.
             </div>
           )}
+          {editedStep.type === "s117" && (
+            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-sm text-indigo-800">
+              This step shows a three-way S117 picker (on S3 now / previously on S3 / no qualifying section). The choice is available in case-note templates as <code className="px-1 bg-white rounded">[S117]</code>, which expands to a full sentence naming the entitlement and the aftercare-meeting requirement.
+            </div>
+          )}
           {editedStep.type === "consent" && (
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-sm text-purple-800">
-              This step records the patient&apos;s consent (Yes / No). The next step runs either way – consent is captured for the audit trail.
+              This step records the patient&apos;s consent (Yes / No). The next step runs either way – consent is captured for the audit trail. Put <code className="px-1 bg-white rounded">[CONSENT]</code> in the case-note template and it is replaced by whichever wording this step carries for the answer given. If the step also asks whether the person was told about the referral, <code className="px-1 bg-white rounded">[INFORMED]</code> is filled the same way.
             </div>
           )}
           {editedStep.type === "gdpr" && (

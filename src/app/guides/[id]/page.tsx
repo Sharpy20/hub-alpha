@@ -20,7 +20,7 @@ import {
   ExternalLink, Phone, Mail, Pencil, UserPlus, AlertCircle, Lightbulb, Info, Printer,
 } from "lucide-react";
 import {
-  WORKFLOWS, DEFAULT_WORKFLOW, STEP_GRADIENTS, SECTION_OPTIONS, AREA_OPTIONS,
+  WORKFLOWS, DEFAULT_WORKFLOW, STEP_GRADIENTS, SECTION_OPTIONS, S117_OPTIONS, AREA_OPTIONS,
   type WorkflowData, type WorkflowStep,
 } from "@/lib/data/guides/referral-workflows";
 import {
@@ -38,7 +38,7 @@ import { toLocalDateStr } from "@/lib/utils/date";
 
 // Step icons for referral workflows
 const STEP_ICONS: Record<string, typeof CheckCircle> = {
-  info: Info, criteria: CheckCircle, consent: CheckCircle, section: FileText, area: FileText,
+  info: Info, criteria: CheckCircle, consent: CheckCircle, section: FileText, s117: FileText, area: FileText,
   forms: FileText, submission: Send, casenote: Clipboard, reminder: Calendar, gdpr: Shield,
 };
 
@@ -223,7 +223,11 @@ export default function UnifiedGuidePage() {
   // Referral-specific state
   const [criteriaConfirmed, setCriteriaConfirmed] = useState(false);
   const [patientConsent, setPatientConsent] = useState<"yes" | "no" | null>(null);
+  // Separate from consent: was the person actually told the referral is going in.
+  // Only asked where the step sets informedQuestion (the two safeguarding guides).
+  const [patientInformed, setPatientInformed] = useState<"yes" | "no" | null>(null);
   const [patientSection, setPatientSection] = useState<string>("");
+  const [s117Status, setS117Status] = useState<string>("");
   const [selectedArea, setSelectedArea] = useState<"city" | "county" | null>(null);
   const [referralLogged, setReferralLogged] = useState(false);
   const [pendingFollowUp, setPendingFollowUp] = useState(false);
@@ -290,10 +294,40 @@ export default function UnifiedGuidePage() {
         const sectionLabel = SECTION_OPTIONS.find(o => o.value === patientSection)?.label || patientSection?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || "[SECTION]";
         statusText = `Patient is detained under ${sectionLabel}`;
       }
-      return `${patientText}Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. ${statusText} and would benefit from independent advocacy support.${staffText}`;
+      const consentStep = workflow.steps.find(s => s.type === "consent");
+      const consentText = patientConsent && consentStep
+        ? ` ${patientConsent === "yes" ? consentStep.consentYesNote : consentStep.consentNoNote}`
+        : "";
+      return `${patientText}Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. ${statusText} and would benefit from independent advocacy support.${consentText}${staffText}`;
     }
     let text = rStep.clipboardText || "";
     text = text.replace(/\[DATE\]/g, todayDate);
+    // Answers the user gave earlier in the wizard. Each step owns the wording it
+    // wants in the note (consentYesNote etc) so the viewer never invents clinical
+    // phrasing. An unanswered question leaves its placeholder visible rather than
+    // guessing - a blank is obvious, a wrong assertion is not.
+    const consentStep = workflow.steps.find(s => s.type === "consent");
+    if (patientConsent && consentStep) {
+      const note = patientConsent === "yes" ? consentStep.consentYesNote : consentStep.consentNoNote;
+      if (note) text = text.replace(/\[CONSENT\]/g, note);
+    }
+    if (patientInformed && consentStep) {
+      const note = patientInformed === "yes" ? consentStep.informedYesNote : consentStep.informedNoNote;
+      if (note) text = text.replace(/\[INFORMED\]/g, note);
+    }
+    if (s117Status) {
+      const opt = S117_OPTIONS.find(o => o.value === s117Status);
+      if (opt) {
+        text = text.replace(
+          /\[S117\]/g,
+          opt.entitled
+            // Lowercase the first letter only - toLowerCase() on the whole label
+            // turned "Previously on Section 3" into "section 3".
+            ? `Patient has S117 aftercare entitlement (${opt.label.charAt(0).toLowerCase() + opt.label.slice(1)}) - a S117 aftercare meeting is required before discharge.`
+            : "Patient has no qualifying section, so no S117 aftercare entitlement; standard Care Act route."
+        );
+      }
+    }
     if (selectedArea) {
       text = text.replace(/\[DERBY CITY\/DERBYSHIRE COUNTY\]/g, selectedArea === "city" ? "Derby City" : "Derbyshire County");
       text = text.replace(/\[DERBY\/COUNTY\]/g, selectedArea === "city" ? "Derby City" : "Derbyshire County");
@@ -310,8 +344,9 @@ export default function UnifiedGuidePage() {
   const canProceed = () => {
     if (!isReferral || !rStep) return true;
     if (rStep.type === "criteria") return criteriaConfirmed;
-    if (rStep.type === "consent") return patientConsent !== null;
+    if (rStep.type === "consent") return patientConsent !== null && (!rStep.informedQuestion || patientInformed !== null);
     if (rStep.type === "section") return patientSection !== "";
+    if (rStep.type === "s117") return s117Status !== "";
     if (rStep.type === "area") return selectedArea !== null;
     return true;
   };
@@ -366,7 +401,11 @@ export default function UnifiedGuidePage() {
       sentTo = selectedArea === "city" ? "Derby City IMHA (Disability Direct)" : "Derbyshire County IMHA (Cloverleaf)";
     } else {
       const sub = workflow.steps.find(s => s.type === "submission");
-      if (sub?.methods && sub.methods.length > 0) sentTo = sub.methods[0].label;
+      // Honour the area they picked - taking methods[0] blindly logged a county
+      // referral as having gone to the Derby City team.
+      const methods = (sub?.methods || []).filter(m => !m.area || m.area === selectedArea);
+      if (methods.length > 0) sentTo = methods[0].label;
+      else if (sub?.methods && sub.methods.length > 0) sentTo = sub.methods[0].label;
     }
     addReferralLog({
       workflowId: guideId,
@@ -758,6 +797,51 @@ export default function UnifiedGuidePage() {
                     <span className="text-3xl">{"\u26A0\uFE0F"}</span>
                     <div><p className="font-bold text-lg">{rStep.consentNoLabel || "No Consent"}</p><p className={patientConsent === "no" ? "text-white/80" : "text-gray-500"}>{rStep.consentNoDesc || "Consent declined or could not be obtained (referral can still proceed)"}</p></div>
                   </button>
+
+                  {/* Second question on the same screen. Consent and informing are
+                      different facts and the case note needs both, so asking them
+                      together beats an extra step in the wizard. */}
+                  {rStep.informedQuestion && (
+                    <div className="pt-4 mt-4 border-t border-gray-200 space-y-3">
+                      <p className="font-semibold text-gray-800">{rStep.informedQuestion}</p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button onClick={() => setPatientInformed("yes")} className={`p-4 rounded-xl text-center transition-all border-2 ${patientInformed === "yes" ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-green-500" : "bg-green-50 text-gray-800 border-green-200 hover:border-green-400"}`}>
+                          <p className="font-bold">{rStep.informedYesLabel || "Informed"}</p>
+                        </button>
+                        <button onClick={() => setPatientInformed("no")} className={`p-4 rounded-xl text-center transition-all border-2 ${patientInformed === "no" ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-500" : "bg-amber-50 text-gray-800 border-amber-200 hover:border-amber-400"}`}>
+                          <p className="font-bold">{rStep.informedNoLabel || "Not informed"}</p>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* S117 status. Its own three options rather than the 10-way MHA list -
+                  entitlement turns on whether a qualifying section was EVER held, and
+                  "previously on S3" cannot be said with the generic picker. */}
+              {rStep.type === "s117" && (
+                <div className="space-y-3">
+                  {S117_OPTIONS.map((option) => (
+                    <button key={option.value} onClick={() => setS117Status(option.value)} className={`w-full p-5 rounded-xl text-left flex items-center gap-4 transition-all border-2 ${s117Status === option.value ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-indigo-500" : "bg-indigo-50 text-gray-800 border-indigo-200 hover:border-indigo-400"}`}>
+                      <span className="text-3xl">{option.entitled ? "⚖️" : "➖"}</span>
+                      <div><p className="font-bold text-lg">{option.label}</p><p className={s117Status === option.value ? "text-white/80" : "text-gray-500"}>{option.description}</p></div>
+                    </button>
+                  ))}
+                  {s117Status && (
+                    <div className={`rounded-xl p-4 border-2 ${S117_OPTIONS.find(o => o.value === s117Status)?.entitled ? "bg-amber-50 border-amber-300" : "bg-gray-50 border-gray-200"}`}>
+                      <p className="font-semibold text-gray-800">
+                        {S117_OPTIONS.find(o => o.value === s117Status)?.entitled
+                          ? "S117 pathway - a S117 aftercare meeting is required before discharge (7 days notice), as well as this referral."
+                          : "Standard Care Act pathway - no S117 aftercare meeting needed."}
+                      </p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {S117_OPTIONS.find(o => o.value === s117Status)?.entitled
+                          ? "This is separate from the discharge planning meeting every patient should have. The two are often held together."
+                          : "The patient should still have a discharge planning meeting before they leave."}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 

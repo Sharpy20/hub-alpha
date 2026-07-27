@@ -2431,6 +2431,13 @@ function QAPackSection() {
     { q: "How do staff learn to use it?", a: "No formal training needed. The app includes an interactive demo tour, intro guide, and FAQ. The design philosophy is: if you need a manual, the UX has failed." },
     { q: "What is the pilot plan?", a: "Start with one ward running a light trial alongside existing processes. No disruption, no risk. If it helps, expand. If it does not, it cost almost nothing to find out." },
     { q: "Who approves this going live?", a: "Trust Digital Services for hosting and security. Information Governance for DPIA approval. Clinical Safety Officer for DCB 0129 sign-off. Ward management for operational sign-off." },
+    // The question the demo has to survive: who said you could put Trust policy
+    // information in a third-party database? The answer only holds while it is
+    // literally true, which is why the fictional-detail rule is load-bearing and
+    // not cosmetic (BACKLOG Section K).
+    { q: "Who gave you permission to put Trust policy information in Supabase?", a: "No one - and nothing in the demo needs it. Supabase holds three things: derived publishable guide content, which is the same classification already on the gated public site; fictional demo data; and nothing else. No policy documents, no patient data, no internal contacts. Policies stay on FOCUS and SharePoint, Copilot reads them inside the Trust tenant, and only publishable output crosses out. Real internal detail and real patient data only enter when the Trust approves hosting, signs the DPIA and takes data-controller ownership. Getting through that gate properly is exactly what I am here to ask for." },
+    { q: "Where does the data actually live?", a: "Today: the gated demo site on Vercel, plus a Supabase project that is wired but dormant - no feature queries it, and the client is deliberately kept out of the shared exports so its keys never reach the browser bundle. Any write keys live in Vercel environment settings, never in the repository. In production this is the Trust's decision: their hosting, their authentication, their database, or a direct SharePoint connection once IT grants an app registration." },
+    { q: "What internal Trust detail is in the demo?", a: "None. Contacts that are not publicly findable show 'Hidden in demo mode'; the real values are held outside the repository. What you can see is public and meant to be used - council duty lines, charity helplines, advocacy providers, crisis numbers. Anything published through the guide pipeline before Trust approval uses realistic but fictional internal detail, so 'no placeholders on screen' and 'nothing leaked' are both true at once." },
   ];
 
   return (

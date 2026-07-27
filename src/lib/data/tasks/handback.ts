@@ -32,12 +32,14 @@ export const HANDBACK_NEXT: { value: HandbackNext; label: string }[] = [
 ];
 
 /**
- * Who ends up holding the job. The original wording ("Schedule for a day") did
- * not say whether the job came back to you or to the ward, which was the first
- * thing people asked (Mike, 27 Jul) - so every label now names the owner.
+ * Who ends up holding the job. Two options, the same two every time.
  *
- * When the state is "waiting on someone" the chase date always applies, so the
- * middle option is hidden: it would only repeat what the date already says.
+ * Earlier versions had three ("on a later day") and hid one of them depending
+ * on the state answer - so the question changed shape as you moved through it,
+ * which reads as a bug rather than as help (Mike, 27 Jul). WHO holds it and
+ * WHEN it comes back are separate questions, so the date is its own field and
+ * is always offered - including a future date on a job you keep, which is how
+ * you put something in your own diary.
  */
 export const HANDBACK_DESTINATIONS: {
   value: HandbackDestination;
@@ -48,11 +50,6 @@ export const HANDBACK_DESTINATIONS: {
     value: "pool",
     label: "Back to the ward",
     hint: "Unclaimed - anyone on shift can pick it up",
-  },
-  {
-    value: "scheduled",
-    label: "Back to the ward, on a later day",
-    hint: "Unclaimed, and out of today's list until the day you pick",
   },
   {
     value: "keep",
@@ -209,12 +206,7 @@ export function handbackHistoryDetail(handback: TaskHandback): string {
   const parts = [stateLabel(handback.state)];
   if (handback.state === "waiting" && handback.waitingOn) parts.push(`on ${handback.waitingOn}`);
   parts.push(`next: ${nextLabel(handback.next).toLowerCase()}`);
-  if (handback.destination === "scheduled" && handback.chaseDate) {
-    parts.push(`scheduled ${ukDate(handback.chaseDate)}`);
-  } else if (handback.destination === "keep") {
-    parts.push("kept with them");
-  } else {
-    parts.push("back to the pool");
-  }
+  parts.push(handback.destination === "keep" ? "kept with them" : "back to the ward");
+  if (handback.chaseDate) parts.push(`for ${ukDate(handback.chaseDate)}`);
   return parts.join(", ");
 }

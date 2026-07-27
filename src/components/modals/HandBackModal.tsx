@@ -93,12 +93,10 @@ export function HandBackModal({
   const [reopened, setReopened] = useState<number | null>(null);
 
   const isWaiting = state === "waiting";
-  // Waiting needs no machinery of its own: it is a reason plus a date, reusing
-  // the scheduling from question 3.
-  const needsDate = destination === "scheduled" || isWaiting;
-
-  const ready =
-    !!state && !!next && !!destination && (!isWaiting || !!waitingOn) && (!needsDate || !!chaseDate);
+  // The date is always asked and always applies - it is not a fourth question
+  // that appears and disappears. Defaults to today, so the job stays in this
+  // shift unless someone deliberately pushes it out.
+  const ready = !!state && !!next && !!destination && (!isWaiting || !!waitingOn) && !!chaseDate;
 
   const draft: TaskHandback | null = useMemo(() => {
     if (!ready) return null;
@@ -107,11 +105,11 @@ export function HandBackModal({
       next: next as HandbackNext,
       destination: destination as HandbackDestination,
       waitingOn: isWaiting ? waitingOn : undefined,
-      chaseDate: needsDate ? chaseDate : undefined,
+      chaseDate,
       by: staffName || "Unknown",
       at: toLocalDateStr(),
     };
-  }, [ready, state, next, destination, isWaiting, waitingOn, needsDate, chaseDate, staffName]);
+  }, [ready, state, next, destination, isWaiting, waitingOn, chaseDate, staffName]);
 
   const caseNote = draft
     ? handbackCaseNote(draft, { taskTitle, patientName, staffName })
@@ -294,26 +292,14 @@ export function HandBackModal({
           </div>
         )}
 
-        {/* 3. Where does it go? Stays open when a date is still needed. */}
-        {collapsed(3, !!destination) && !needsDate ? (
-          <AnsweredRow
-            step={3}
-            question="Where does it go?"
-            answer={HANDBACK_DESTINATIONS.find((d) => d.value === destination)?.label || ""}
-            onChange={() => setReopened(3)}
-          />
-        ) : (
+        {/* 3. Who holds it. Never collapses: the date lives underneath and
+            stays editable, so folding this away would hide the date too. */}
         <div>
           <p className="font-bold text-gray-800 mb-2">
-            <span className="text-gray-400 mr-1.5">3.</span>Where does it go?
+            <span className="text-gray-400 mr-1.5">3.</span>Who holds it now?
           </p>
           <div className="space-y-2">
-            {/* Always all three. An earlier version hid "on a later day" when
-                the state was "waiting on someone", on the grounds that the
-                chase date already said it - but a list that changes length
-                depending on an answer three questions earlier just reads as a
-                bug (Mike hit it twice, 27 Jul). The redundancy is harmless;
-                the inconsistency was not. */}
+            {/* The same two, every time. */}
             {HANDBACK_DESTINATIONS.map((d) => (
               <button
                 key={d.value}
@@ -329,27 +315,30 @@ export function HandBackModal({
               </button>
             ))}
           </div>
-          {needsDate && (
-            <div className="mt-3">
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                {isWaiting ? "Chase it on" : "Bring it back on"}
-              </label>
-              <p className="text-xs text-gray-500 mb-1.5">
-                {destination === "keep"
-                  ? "It stays yours and reappears in your list that day."
-                  : "It goes back to the ward and reappears in the diary that day."}
-              </p>
-              <input
-                type="date"
-                value={chaseDate}
-                min={toLocalDateStr()}
-                onChange={(e) => setChaseDate(e.target.value)}
-                className="rounded-lg border-2 border-gray-200 px-3 py-2 text-sm"
-              />
-            </div>
-          )}
+
+          {/* Always offered. Today by default so nothing gets quietly buried;
+              a future date on a job you keep is how you diary it for yourself. */}
+          <div className="mt-3">
+            <label htmlFor="handback-date" className="block text-sm font-semibold text-gray-700 mb-1">
+              {isWaiting ? "Chase it on" : "Back on"}
+            </label>
+            <p className="text-xs text-gray-500 mb-1.5">
+              {destination === "keep"
+                ? "Stays yours and reappears in your list that day."
+                : destination === "pool"
+                  ? "Goes back to the ward and reappears in the diary that day."
+                  : "Today keeps it in this shift. Pick a later day to push it out."}
+            </p>
+            <input
+              id="handback-date"
+              type="date"
+              value={chaseDate}
+              min={toLocalDateStr()}
+              onChange={(e) => setChaseDate(e.target.value)}
+              className="rounded-lg border-2 border-gray-200 px-3 py-2 text-sm"
+            />
+          </div>
         </div>
-        )}
 
         {/* The case note the answers generate. Nobody typed a word of it. */}
         {draft && (

@@ -182,8 +182,13 @@ export type HandbackNext =
   | "needs_decision"
   | "carry_on";
 
-/** Where the job goes after it is handed back. */
-export type HandbackDestination = "pool" | "scheduled" | "keep";
+/**
+ * Who ends up holding the job. Only two answers, always the same two - an
+ * earlier version added a third ("on a later day") and hid options depending on
+ * the state answer, which just read as the screen changing its mind (Mike,
+ * 27 Jul). WHEN it comes back is the date field, asked separately every time.
+ */
+export type HandbackDestination = "pool" | "keep";
 
 export interface TaskHandback {
   state: HandbackState;

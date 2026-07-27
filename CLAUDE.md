@@ -1670,6 +1670,41 @@ Then open http://localhost:3000
 
 ---
 
+### 27 July 2026 - Session 42 (Task hand-back, service map rebuild, chase log retired)
+27 commits, all pushed as Sharpy20. Build clean and 32/32 tests throughout. Ran BACKLOG
+Section N item 3.1 -> 3.6, then Section M.
+
+- [x] **Task hand-back BUILT** (BACKLOG Section M items 1-4 + 6). Drop splits into **Drop**
+  (claimed by mistake, silent) and **Hand back**: three dropdowns, **no free text anywhere**,
+  which is what makes it defensible. Waiting-on asks who + a chase date and shows age.
+  **The answers generate a SystmOne case note whether or not the job is done.** Append-only
+  history means Reopen is no longer lossy. My Jobs columns are now To do / Waiting / Done.
+  Two doors: the diary modal and "Not finished" at the end of a patient-linked guide.
+  `/overview` gained a waiting lens mirroring barriers.
+- [x] **Chase log RETIRED** - page, provider, button, route and the ReferralLog types. Its
+  three free-text fields went with it, so structured-only is now true product-wide.
+- [x] **Service map rebuilt** - hub shows the 12 CATEGORIES only, click to open one, click a
+  service to recentre. `Service.parent` split into `parent` (real dependency, cuts a child
+  off) and `near` (layout only). That fixed six national services being unreachable out of
+  area, and Carers Direct in Derby City. Stub spokes count MATCHING services so the tree
+  grows as you answer profile questions.
+- [x] **Guides**: every question answer now reaches the case note (the consent answer reached
+  it nowhere before); new `s117` step type; progressive disclosure on 23 how-to steps;
+  S117 "does my patient qualify?" redrawn as a flowchart; guide-builder agent instructions
+  updated in the repo.
+- [x] **Overview**: page barriers/waiting filter now drives the per-patient toggles; completed
+  jobs drop into a plain Done list instead of turning green (which fought the RAG colours).
+- [x] **Dev panel**: the Supabase governance questions answered (Q13-Q15).
+- [x] **History verify**: 91 commits since the 6 Jul rewrite are clean - no trust-sourced
+  material added, Rule-4 placeholders intact, zero leftover real-value comments.
+
+**Open for Mike:** paste the updated Guide Builder instructions into M365; read the Supabase
+region off the dashboard; settle the lawful-basis wording and whether the site password is
+typed on stage; confirm whether a Duty to Refer can go in without consent (guide carries a
+`[confirm]` marker meanwhile); the ~47 amber guide walkthrough.
+**Known gap:** the guide editor cannot jump or loop between branch cells - a `goto` step type
+is designed in BACKLOG Section N.
+
 ### 13 July 2026 - Session 37 (Pay-roster split, band picker, rest rules)
 Picked up from a claude.ai chat session (AfC facts verified there against NHS Employers).
 Pushed (commit b6668b1), build clean, verified in browser.

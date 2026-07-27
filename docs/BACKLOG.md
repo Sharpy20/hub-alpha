@@ -799,6 +799,19 @@ end of the session.
         outcome states both halves of the two-meetings rule (see memory `s117-two-meetings-rule`).
       - Deliberately NOT persisted and NOT part of the case note - it is a thinking aid, and the
         entitlement decision belongs to the MHA Office.
+      - **REDONE as a flowchart (Mike, same evening): "the pop up doesn't make it any clearer -
+        just took the earlier text and asked the same again".** He was right: v1 asked the questions
+        one at a time and revealed an answer at the end, which restated the rules instead of showing
+        them. It is now a diagram, visible in full the moment it opens - both questions, every
+        branch, and the landing box under each branch before you pick it (Yes -> "S117 applies",
+        No -> "Go to question 2"). Answering rings your choice and fades the rest so the path is
+        visible; question 2 stays dimmed until question 1 is answered No. Visual language matches
+        the section-papers checker (`/guides/mha-checker`) as Mike asked - bordered tiles, ring on
+        the live choice, muted everything else. Question wording cut to one line each
+        ("Is the patient on Section 3 in THIS admission?"), with the fuller section list as help
+        text. New `CriteriaAnswer.minor` keeps the "I am not sure" escape hatches off the spine as
+        small links so they survive without cluttering a yes/no diagram, and `CriteriaOutcome.short`
+        carries the box label.
       - Verified in browser: four sections split correctly, walker reachable, both qualifying
         outcomes and the no-duty outcome correct, Back/Start over work, non-progressive guides
         unchanged. Build clean, 32/32 tests pass.

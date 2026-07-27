@@ -1066,9 +1066,17 @@ export default function UnifiedGuidePage() {
                 </div>
               )}
               <div className="prose prose-gray max-w-none">
-                {hStep.content.split("\n").map((line, i) => (
-                  <p key={i} className={`${line.startsWith("- ") ? "ml-4" : ""} ${line === "" ? "h-2" : "mb-2"} text-gray-700 leading-relaxed`}>{renderGuideText(line, showRefs)}</p>
-                ))}
+                {hStep.progressive ? (
+                  <ProgressiveContent
+                    content={hStep.content}
+                    renderLine={(line) => renderGuideText(line, showRefs)}
+                    size="base"
+                  />
+                ) : (
+                  hStep.content.split("\n").map((line, i) => (
+                    <p key={i} className={`${line.startsWith("- ") ? "ml-4" : ""} ${line === "" ? "h-2" : "mb-2"} text-gray-700 leading-relaxed`}>{renderGuideText(line, showRefs)}</p>
+                  ))
+                )}
               </div>
               {hStep.widget === "pay-band-picker" && <PayBandPicker />}
               {hStep.widget === "shift-checker" && <ShiftChecker />}

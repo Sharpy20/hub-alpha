@@ -803,8 +803,32 @@ end of the session.
         outcomes and the no-duty outcome correct, Back/Start over work, non-progressive guides
         unchanged. Build clean, 32/32 tests pass.
       Overlaps Section C (`domestic-abuse-guide` text density).
-- [ ] **Sweep all guides for the same opportunity (not started)** - especially "meets criteria"
-      sections. Report before bulk editing.
+- [x] **Sweep all guides for the same opportunity. DONE 27 Jul - 23 steps across 13 guides.**
+      Scanned all 282 steps with content (120 referral-workflow, 162 how-to) for the
+      "header + bullets" shape at 350+ characters with 2+ headers.
+      - **Referral workflows: only ONE candidate repo-wide** (the S117 step, already done in 3.4).
+        Their steps are short and single-purpose, so there is nothing to sweep there. The density
+        problem is entirely in the how-to guides.
+      - **How-to guides: 29 candidates, 23 flagged.** `progressive?: boolean` added to `GuideStep`
+        and wired into the how-to branch of the viewer (`size="base"` so it renders at body size,
+        and the splitter now treats both `•` and `- ` as bullets).
+      - **Flagged:** mha-statuses (4 - holding powers, CTO, forensic sections, patient rights),
+        domestic-abuse-guide (3), online-safety-children (4), abc-chart (1 - the Datix workflow),
+        peer-conflict-guide (1), honour-based-abuse (1 - FGM), non-recent-abuse (2), child-in-need
+        (2), safeguarding-adults-referral (1), safeguarding-children-referral (1), faith-belief-abuse
+        (1), send-safeguarding (1), special-guardianship (1).
+      - **Deliberately NOT flagged (6)** - hiding these would cost more than the tidiness is worth:
+        `domestic-abuse-guide` step 5 and `honour-based-abuse` step 4 are short DO / DO NOT safety
+        guidance; `abc-chart` steps 3, 4 and 5 are sequential teaching where the worked example is
+        the entire point of the step; `peer-conflict-guide` step 1 (Levels of Conflict) is a
+        comparison you need to scan side by side - **it is a better candidate for a CriteriaWalker
+        ("which level is this?") than for collapsing**, worth doing when the walker gets reused.
+      - **Bug caught by the sweep, fixed in the component:** guides often close with a standalone
+        line belonging to the whole step, not to the last header - three of them were
+        **"call 999" lines**, which the naive split filed inside a collapsed section. `splitIntoSections`
+        now peels trailing prose off the last section into an `outro` rendered in the open. Verified
+        across all 23 steps: 7 outros correctly kept open (including all three 999 lines), 0 steps
+        left with an empty or single section. Build clean, 32/32 tests pass.
 - [ ] **Update the guide-building agents (not started)** - `docs/copilot-guide-builder-kit.md`
       plus the LIVE agent instructions in M365 Agent Builder (Mike-side, see Section J), so new
       guides use collapsible sections and criteria pop-ups by default instead of long prose.

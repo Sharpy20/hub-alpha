@@ -29,7 +29,14 @@ const isHeader = (line: string) =>
   !line.trim().startsWith("-") &&
   line.trim().length <= 70;
 
-export function splitIntoSections(content: string): { intro: string[]; sections: Section[] } {
+// Referral workflows bullet with "•", how-to guides with "- ". Both indent.
+const isBullet = (line: string) => line.startsWith("•") || line.startsWith("- ");
+
+export function splitIntoSections(content: string): {
+  intro: string[];
+  sections: Section[];
+  outro: string[];
+} {
   const lines = content.split("\n");
   const intro: string[] = [];
   const sections: Section[] = [];
@@ -51,7 +58,23 @@ export function splitIntoSections(content: string): { intro: string[]; sections:
     while (s.body.length && s.body[s.body.length - 1].trim() === "") s.body.pop();
   });
 
-  return { intro, sections };
+  // Guides often close with a standalone line that belongs to the whole step,
+  // not to the last header - "If a child is in immediate danger, call 999."
+  // sitting under "Key resources". Naively it lands inside the final section and
+  // gets hidden behind a click, which for a 999 line is exactly wrong. So peel
+  // any trailing prose off the last section and render it in the open.
+  const outro: string[] = [];
+  const last = sections[sections.length - 1];
+  if (last && last.body.some(isBullet)) {
+    while (last.body.length) {
+      const line = last.body[last.body.length - 1];
+      if (isBullet(line)) break;
+      outro.unshift(last.body.pop() as string);
+    }
+    while (outro.length && outro[0].trim() === "") outro.shift();
+  }
+
+  return { intro, sections, outro };
 }
 
 // First real line of the body, trimmed of its bullet, as the teaser.
@@ -65,15 +88,19 @@ export function ProgressiveContent({
   content,
   renderLine,
   extras,
+  size = "lg",
 }: {
   content: string;
   /** Reuse the viewer's link/contact renderer so behaviour does not diverge. */
   renderLine: (line: string) => ReactNode;
   /** Extra UI to drop at the end of a named section, keyed by header text. */
   extras?: Record<string, ReactNode>;
+  /** Referral steps run at text-lg; how-to guides at the body size. */
+  size?: "lg" | "base";
 }) {
-  const { intro, sections } = useMemo(() => splitIntoSections(content), [content]);
+  const { intro, sections, outro } = useMemo(() => splitIntoSections(content), [content]);
   const [open, setOpen] = useState<Record<string, boolean>>({});
+  const bodyClass = size === "lg" ? "text-gray-600 text-lg" : "text-gray-700 leading-relaxed";
 
   const allOpen = sections.length > 0 && sections.every((s) => open[s.key]);
   const toggleAll = () => {
@@ -88,7 +115,7 @@ export function ProgressiveContent({
         {content.split("\n").map((line, i) => (
           <p
             key={i}
-            className={`text-gray-600 text-lg ${line.startsWith("•") ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}
+            className={`${bodyClass} ${isBullet(line) ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}
           >
             {renderLine(line)}
           </p>
@@ -104,7 +131,7 @@ export function ProgressiveContent({
           {intro.map((line, i) => (
             <p
               key={i}
-              className={`text-gray-600 text-lg ${line.startsWith("•") ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}
+              className={`${bodyClass} ${isBullet(line) ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}
             >
               {renderLine(line)}
             </p>
@@ -155,7 +182,7 @@ export function ProgressiveContent({
                   {s.body.map((line, i) => (
                     <p
                       key={i}
-                      className={`text-gray-600 ${line.startsWith("•") ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}
+                      className={`text-gray-700 ${isBullet(line) ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}
                     >
                       {renderLine(line)}
                     </p>
@@ -167,6 +194,19 @@ export function ProgressiveContent({
           );
         })}
       </div>
+
+      {outro.length > 0 && (
+        <div className="mt-4">
+          {outro.map((line, i) => (
+            <p
+              key={i}
+              className={`${bodyClass} ${isBullet(line) ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}
+            >
+              {renderLine(line)}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

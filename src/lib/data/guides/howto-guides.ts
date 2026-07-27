@@ -20,6 +20,11 @@ export interface GuideStep {
   //                   rule, pay estimate and 11-hour rest verdict.
   // "payslip-decoder" = the clickable fictional payslip (payslip guide).
   widget?: "pay-band-picker" | "pay-faq" | "shift-checker" | "payslip-decoder";
+  // Break this step into collapsible sections keyed off its "header:" lines.
+  // Set it on reference and resource steps the reader dips into; leave it OFF
+  // where hiding content would hurt - short DO / DO NOT safety guidance, and
+  // sequential teaching steps where the worked example is the whole point.
+  progressive?: boolean;
 }
 
 export interface GuideData {
@@ -1372,23 +1377,27 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "6",
+        progressive: true,
         title: "Section 5(2) and 5(4) - Holding Powers",
         content: "Allow staff to detain a voluntary patient already in hospital for a short period.\n\nSection 5(2) - Doctor's Holding Power:\n- Applied by the doctor in charge of the patient's treatment (or their nominated deputy)\n- Lasts up to 72 hours\n- Used when a voluntary inpatient needs to be prevented from leaving\n- During this time, an AMHP assessment should be arranged\n\nSection 5(4) - Nurse's Holding Power:\n- Applied by a registered mental health nurse or learning disability nurse\n- Lasts up to 6 hours\n- Used when a doctor is not immediately available\n- The doctor must be contacted immediately to attend\n\nThese holding powers can only be used for patients already receiving inpatient treatment - not for patients in A&E or outpatient settings.",
         tip: "Section 5 cannot be renewed. If further detention is needed, a full MHA assessment under Section 2 or 3 must be arranged during the holding period.",
       },
       {
         id: "7",
+        progressive: true,
         title: "Section 17A - Community Treatment Order (CTO)",
         content: "A patient is discharged from hospital but remains subject to conditions and can be recalled if they stop treatment or their health deteriorates.\n\nRequirements:\n- Patient must be detained under Section 3 (or equivalent)\n- Responsible Clinician and AMHP must agree the CTO is appropriate\n- Treatment must be available in the community\n\nConditions may include:\n- Attending appointments\n- Taking medication\n- Living at a specified address\n- Allowing access to clinical staff\n\nRecall: The Responsible Clinician can recall the patient to hospital if conditions are breached or there is a deterioration.\n\nDuration: Initially 6 months, renewable for 6 months then annually.\n\nAppeals: Patient can appeal to the tribunal once per CTO period.",
       },
       {
         id: "8",
+        progressive: true,
         title: "Forensic Sections (37, 37/41, 47/49)",
         content: "Section 37 - Hospital Order:\nA court orders detention for treatment instead of a prison sentence. Requirements are similar to Section 3 but the order comes from the court.\n\nSection 37/41 - Restricted Hospital Order:\nA Section 37 with restrictions imposed by the Crown Court for public safety. The patient cannot be given leave, transferred, or discharged without the consent of the Secretary of State (via the Ministry of Justice). These patients require enhanced security oversight.\n\nSection 47/49 - Transfer Direction:\nTransfer from prison to hospital with restrictions. The Secretary of State directs that a prisoner be transferred to hospital for treatment. Section 49 adds restrictions similar to Section 41.\n\nNote: Patients under restricted orders have additional governance requirements. Always check with the MHA Office before making any changes to their care plan, leave arrangements, or ward moves.",
         tip: "Forensic sections involve the Ministry of Justice. Never arrange leave or transfer for patients under Section 41 or 49 restrictions without MHA Office approval.",
       },
       {
         id: "9",
+        progressive: true,
         title: "Patient Rights Summary",
         content: "All patients (informal and detained) are entitled to:\n- Access to an Independent Mental Health Advocate (IMHA)\n- Information about their rights (in a language they understand)\n- Access to complaints procedures\n- Respect for dignity and privacy\n\nDetained patients additionally have:\n- Right to appeal to the Mental Health Tribunal\n- Right to have their detention reviewed\n- Right to a second opinion on treatment (SOAD)\n- Right to have their nearest relative informed\n- Right to receive written information about their section\n\nNursing responsibilities:\n- Ensure patients are informed of their rights on admission and at regular intervals\n- Document that rights have been explained\n- Refer to IMHA if the patient requests or would benefit from advocacy\n- Ensure Section papers are correctly completed and filed",
         tip: "Rights must be re-explained at each renewal or change of section. Use the trust's rights leaflets and document that the discussion took place.",
@@ -1569,6 +1578,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "6",
+        progressive: true,
         title: "Submit the Referral",
         content: "Ring and discuss the case first, then submit the form.\n\nDerbyshire County:\n• Office hours (Mon-Fri 8am-8pm, Sat 9:30am-4pm): Hidden in demo mode\n• Out of hours: Hidden in demo mode\n• Online form: derbyshiresab.org.uk/professionals/safeguarding-adult-referrals\n\nDerby City:\n• MASH (Mon-Fri 9am-5pm): Hidden in demo mode\n• Out of hours (Careline): Hidden in demo mode\n• Email: AdultsMASH@derby.gov.uk\n• Online form: secure.derby.gov.uk/forms/?formid=345",
       },
@@ -1615,6 +1625,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "6",
+        progressive: true,
         title: "Make the Referral - Written",
         content: "For non-urgent referrals (or as follow-up to a phone call), submit written referrals:\n\nDerby City:\nmyaccount.derby.gov.uk/en/service/report_concerns_about_a_child\n\nDerbyshire:\nDerbyshire Starting Point Referral Form (online)\n\nCases closed within the last three months should also be referred through these links.\n\nDocument in the patient's records and inform relevant agencies. Include all essential information and any assessments that may support the quality of the referral.",
       },
@@ -1645,6 +1656,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "3",
+        progressive: true,
         title: "Signs to Look For",
         content: "Physical signs:\n• Unexplained injuries or injuries inconsistent with explanation\n• Multiple injuries at different stages of healing\n• Injuries during pregnancy\n\nBehavioural signs:\n• Low self-confidence, withdrawn, submissive\n• Always checking with partner, letting partner speak for them\n• Frequent missed or cancelled appointments\n\nTelephone indicators:\n• Short one-word responses\n• Sense someone is listening on speakerphone\n• Tense discussion of home environment\n\nIn older people:\n• May not identify abuse as abuse\n• Rely on perpetrator for care\n• Injuries attributed to age rather than abuse",
       },
@@ -1661,11 +1673,13 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "6",
+        progressive: true,
         title: "DASH Risk Assessment",
         content: "If domestic abuse is suspected or disclosed, consider using the DASH risk assessment - even when the victim may not recognise it as abuse.\n\nThe DASH (Domestic Abuse, Stalking and Harassment) risk checklist is a nationally recognised tool developed by SafeLives (formerly CAADA - hence 'CAADA-DASH'). It helps identify high-risk cases that may need a MARAC (Multi-Agency Risk Assessment Conference) referral.\n\nSafeLives (the DASH source):\nhttps://safelives.org.uk\n\nMARAC referral forms (multiple languages) - Safer Derbyshire:\nhttps://www.saferderbyshire.gov.uk/what-we-do/domestic-abuse/marac/\n\nGeneral domestic abuse information and support:\nhttps://www.saferderbyshire.gov.uk/what-we-do/domestic-abuse/",
       },
       {
         id: "7",
+        progressive: true,
         title: "Where to Get Help",
         content: "For the patient:\n• National DA Helpline: 0808 2000 247 (24hr, free)\n• Safer Derbyshire website for local services\n\nFor professional advice:\n• DHCFT Safeguarding Team: Hidden in demo mode\n• MASH Health Advisors: Hidden in demo mode\n\nIf children are in the household:\n• Always consider a children's safeguarding referral\n• Starting Point: Hidden in demo mode\n\nIn immediate danger: call 999",
         tip: "Document your concerns and actions in the patient's notes. If you suspect DA but the patient doesn't disclose, record your professional concerns and revisit at future contacts. When you save the record on SystmOne, tick 'Safeguarding relevant' at the bottom so it is flagged correctly.",
@@ -1701,6 +1715,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "5",
+        progressive: true,
         title: "Making the Referral",
         content: "When making a peer-on-peer safeguarding referral:\n\n• Use patients' full names - not initials\n• Include Police incident number if Police have been informed\n• If consent was not obtained, justify why it was overridden\n• If stating the patient lacks capacity, ensure a referral to advocacy is also made\n• Include what immediate measures have been put in place to prevent further harm\n\nContact:\n• DHCFT Safeguarding Team: Hidden in demo mode\n• MASH Health Advisors: Hidden in demo mode",
       },
@@ -1788,17 +1803,20 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "2",
+        progressive: true,
         title: "Nudes and Semi-Nudes",
         content: "Sharing nudes or semi-nudes (previously called 'sexting') is when someone shares sexual or naked images of themselves or others electronically.\n\nKey points for practitioners:\n- It is illegal for anyone to possess, share or create indecent images of under-18s, even if the young person consented or created the image themselves\n- Young people may not understand the legal implications\n- Coercion, pressure or manipulation may be involved\n- Images shared once can be re-shared without control\n- The impact on mental health can be severe and long-lasting\n\nIf a young person discloses:\n- Do not view, copy or share the image\n- Do not ask to see it\n- Record what the young person tells you\n- Follow your safeguarding reporting process\n- Consider whether police involvement is needed",
       },
       {
         id: "3",
+        progressive: true,
         title: "Online Bullying",
         content: "Online bullying can include:\n- Sending threatening or abusive messages\n- Deliberately excluding someone from online groups\n- Sharing embarrassing photos or information\n- Creating fake profiles to humiliate someone\n- Persistent negative comments\n- 'Doxxing' (publishing private information)\n\nImpact on young people:\n- Anxiety, depression and self-harm\n- Social withdrawal and school avoidance\n- Sleep disturbance\n- Loss of confidence and self-esteem\n- In severe cases, suicidal thoughts\n\nUnlike face-to-face bullying, online bullying can happen 24/7, can reach a wide audience instantly, and content can be permanent. Always take it seriously.",
         tip: "Ask young people about their online experiences as part of routine mental health assessments. Many won't volunteer this information unless directly asked.",
       },
       {
         id: "4",
+        progressive: true,
         title: "Sextortion",
         content: "Sextortion is when someone threatens to share sexual images or information unless the victim complies with demands - often for money, more images, or sexual acts.\n\nWarning signs:\n- Sudden anxiety or distress, especially when using devices\n- Withdrawal from family and friends\n- Unexplained requests for money\n- Secretive behaviour around devices\n- Signs of distress after using social media\n\nIf a young person is being sextorted:\n- Reassure them it is not their fault\n- Advise them not to pay or send further images\n- Report to the police (101 or 999 if immediate risk)\n- Report to CEOP (ceop.police.uk)\n- Support their mental health - this is traumatic\n- Contact the platform to request removal of content",
       },
@@ -1810,6 +1828,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "6",
+        progressive: true,
         title: "Resources and Support",
         content: "Key resources for online safety:\n\n- UK Safer Internet Centre (saferinternet.org.uk) - advice for professionals and families\n- CEOP (ceop.police.uk) - report online child sexual exploitation\n- NSPCC (nspcc.org.uk) - guidance on all forms of online abuse\n- Childnet International - resources for young people\n- Internet Watch Foundation - reporting illegal content\n- DDSCP Online Safety resources (ddscp.org.uk)\n\nFor professional advice:\n- DHCFT Safeguarding Unit: Hidden in demo mode\n\nIf a child is in immediate danger, call 999.",
       },
@@ -1828,6 +1847,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "2",
+        progressive: true,
         title: "Female Genital Mutilation (FGM)",
         content: "FGM involves the partial or total removal of external female genitalia for non-medical reasons. It is illegal in the UK.\n\nKey points:\n- FGM is a criminal offence under the Female Genital Mutilation Act 2003\n- There is a mandatory duty to report FGM in under-18s to the police (since 2015)\n- It is often carried out on girls aged 0-15, frequently before puberty\n- It may be performed abroad during school holidays\n- There is no medical justification for FGM\n\nSigns to look for:\n- Prolonged absence from school or services\n- Behavioural changes - withdrawal, anxiety\n- Difficulty walking, sitting or standing\n- Reluctance to undergo medical examinations\n- Talk of a 'special procedure' or holiday\n\nIf you suspect FGM has occurred or is planned, this is a safeguarding referral and must be reported to the police.",
         tip: "The mandatory reporting duty means you MUST report to the police if you discover FGM has been carried out on a girl under 18. This is a legal requirement, not optional.",
@@ -1892,6 +1912,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "3",
+        progressive: true,
         title: "How to Respond",
         content: "If you suspect CALFB:\n\n1. Follow your normal safeguarding procedures - this is child abuse\n2. Record your concerns clearly, including the language used by the family\n3. Contact the DHCFT Safeguarding Team for advice: Hidden in demo mode\n4. Make a referral to Children's Social Care\n5. Do not attempt to challenge or debate the belief directly\n6. Do not dismiss concerns as 'cultural' or 'religious'\n\nChildren's Social Care will work with specialist agencies if needed.\n\nFor more information:\n- National FGM Centre (nationalfgmcentre.org.uk) covers CALFB\n- DDSCP chapter on CALFB (available on the DDSCP website)\n\nIf a child is in immediate danger, call 999.",
         tip: "You do not need to understand or agree with a family's belief system to recognise that a child is being harmed. Focus on the impact on the child.",
@@ -1916,6 +1937,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "3",
+        progressive: true,
         title: "Local SEND Offers",
         content: "Derby and Derbyshire both publish a 'Local Offer' setting out the support available for children and young people with SEND:\n\nDerby City:\n- Derby's SEND Local Offer (derby.gov.uk)\n- Information on education, health and social care services\n\nDerbyshire County:\n- SEND Service Contact Details (localoffer.derbyshire.gov.uk)\n- Derbyshire Information, Advice and Support Service for SEND (derbyshireiass.co.uk)\n\nNational guidance:\n- GOV.UK overview of SEND (gov.uk/children-with-special-educational-needs)\n- NHS England SEND pages (england.nhs.uk)",
       },
@@ -1940,6 +1962,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "2",
+        progressive: true,
         title: "Responding to a Disclosure",
         content: "When an adult discloses non-recent abuse:\n\n- Listen without judgement\n- Believe them - false disclosures are extremely rare\n- Thank them for telling you\n- Do not press for details beyond what they choose to share\n- Explain what will happen next (you may need to share the information)\n- Record their words accurately\n- Consider their current mental health and safety\n\nAsk yourself:\n- Is the alleged perpetrator still alive and potentially in contact with children or vulnerable adults?\n- Are there current safeguarding concerns?\n- Does the person need mental health support for the impact of the abuse?",
       },
@@ -1951,6 +1974,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "4",
+        progressive: true,
         title: "Supporting the Survivor",
         content: "After a disclosure:\n\n- Offer follow-up support and ensure continuity of care\n- Consider referral to specialist trauma services\n- Share the 'Talking About Non-Recent Abuse' leaflet (available on DDSCP website)\n- Provide information about reporting options - the person should feel in control\n- Document the disclosure and any actions taken\n- Consider your own wellbeing - hearing disclosures can be distressing\n\nPractitioner wellbeing support:\n- Staff Wellbeing and Recognition Team\n- Health Assured (EAP): 0800 028 0199 (24/7)\n- Resolve counselling: Hidden in demo mode\n- Samaritans: 116 123 (24/7)",
       },
@@ -1969,6 +1993,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "2",
+        progressive: true,
         title: "Why This Matters on the Ward",
         content: "You may encounter SGOs when:\n- A patient's child is subject to an SGO (the child lives with a special guardian)\n- A patient IS a special guardian and their mental health is affecting their ability to care\n- Family dynamics around an SGO are contributing to a patient's distress\n- A young person under an SGO is admitted or known to services\n\nAs a mental health practitioner, consider:\n- Does the child's placement remain safe and stable?\n- Is the special guardian receiving adequate support?\n- Are there emerging concerns about the child's wellbeing?\n- Should Children's Social Care be informed of changes?",
       },
@@ -1992,6 +2017,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "2",
+        progressive: true,
         title: "Your Role in CIN",
         content: "As a mental health practitioner, you play a key role in CIN arrangements when your patient is a parent or carer.\n\nYour responsibilities:\n- Attend CIN meetings when invited - your input on the parent's mental health is essential\n- Share relevant information about parenting capacity, risk and protective factors\n- Contribute to the CIN plan with clear, measurable actions\n- Provide updates to the allocated social worker on progress or deterioration\n- Alert social care immediately if concerns escalate\n\nConsider:\n- How does the parent's mental health affect their day-to-day parenting?\n- What does life look like for the child when the parent is unwell?\n- What support would help the parent maintain safe parenting?",
       },
@@ -2002,6 +2028,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "4",
+        progressive: true,
         title: "Resources",
         content: "Key resources:\n\n- DDSCP Threshold Document - guidance on levels of need\n- DDSCP Assessment Tools Library (Early Help Assessment, GCP, DVRIM, CRE)\n- DDSCP Best Practice Guide: Child in Need (October 2024)\n- DHCFT Safeguarding Team for advice: Hidden in demo mode\n\nConsultation lines:\n- Derbyshire Starting Point: Hidden in demo mode (Mon-Fri 10am-4pm)\n- Derby City Professional Consultation Line: Hidden in demo mode (Mon-Fri 10am-4pm)\n\nEscalation:\n- Multi-agency dispute resolution protocol available on DDSCP website",
         tip: "If you feel a CIN plan is drifting or not reducing risk, you have a professional duty to escalate. The child's wellbeing is everyone's responsibility.",
@@ -2053,6 +2080,7 @@ export const GUIDES: Record<string, GuideData> = {
       },
       {
         id: "7",
+        progressive: true,
         title: "The Datix to S1 Workflow",
         content: "How ABC charts get from Datix into the patient record:\n\n1. Complete the Datix as normal after an incident\n2. Ensure the Description, Immediate Action and Contributing Factors fields are completed with ABC-quality detail\n3. Ward leadership brings the Datix to handover and discusses with staff to ensure all contributing factors are documented\n4. Ward leadership converts the Datix into an ABC chart via the Datix system\n5. The ABC chart is attached to the patient record on the clinical system under Attached Documents\n\nWhat happens with this information:\n- Analysed by the team, looking for patterns\n- Formulating the underlying need that drives the behaviour\n- Meeting that need in other ways to reduce frequency and intensity\n- Trialling more helpful ways of responding\n- Used as evidence at panel for placement and funding decisions",
         tip: "If you're unsure about completing the ABC detail on Datix, raise it in group or individual supervision. Ward leadership can support you.",

@@ -176,10 +176,11 @@ All done AT WORK in M365 Copilot / Teams, not in this repo. Context: [[focus-dow
    agents cannot see it. Its figures are ALREADY baked into `/guides/leave-absence`
    (bereavement 5 days paid, end-of-life 6 weeks, domestic 10 days, carers 1 week unpaid) -
    after upload, ask the Policy Checker to verify that step as a test.
-5. [ ] **wH Quiz Writer: add a CONFIRM mode (do NOT start before 30 Jul).** The agent creates
-   questions but cannot check existing ones, so every policy refresh means re-reading by hand.
-   Full instruction sketch + why it matters: **Section L, item 3**. Build it so the same confirm
-   mode can be pointed at guide content, not just quiz questions.
+5. [ ] **CONFIRM mode for the content agents (do NOT start before 30 Jul).** The wH Quiz Writer and
+   Guide Builder both only CREATE - neither can check whether existing content still matches the
+   current policy, so every refresh means re-reading by hand. Add a confirm mode that returns
+   CONFIRMED / CHANGED / NOT FOUND against the document in front of it. Full instruction sketch,
+   the guide-side blocker and the traffic-light payoff: **Section L, items 3 and 4**.
 
 ## K. Repo clean + publish pipeline + SharePoint handover readiness (DEADLINE: meeting Thu 30 Jul, 1:30pm)
 Agreed 21 Jul (extended same evening). Goal: all raw trust material out of GitHub and onto
@@ -262,7 +263,7 @@ Related (parked for a quiet day, agreed 21 Jul - do NOT build yet):
       1080p mp4 played offline. Project lives at E:\Hub\wardhub-video (NOT in this repo).
       Frame as "the model at full build", not "running today".
 
-## L. Quiz source refresh + confirm-don't-just-create (agreed 27 Jul - AFTER the 30 Jul green light)
+## L. Content confirm pipeline: quiz + guides (agreed 27 Jul - AFTER the 30 Jul green light)
 Do not start this before the sponsor meeting. If the pilot is approved on Thu 30 Jul, this becomes
 the follow-up work on the quiz. Context: [[session-31-quiz]].
 
@@ -290,9 +291,175 @@ written, but because the source moved.
    question rests on and answer CONFIRMED (quote it verbatim), CHANGED (quote the new wording and say
    what the answer should now be), or NOT FOUND (say where you looked). Never guess a number. Never
    mark CONFIRMED from memory - only from the document in front of you."*
-   Same confirm-mode idea applies to the guides, so build it so it can be pointed at either.
-4. [ ] **Decide the sign-off model for /quiz** - it carries no traffic-light StatusBadge yet, unlike
-   the guides. If a nurse can be told "this is what our policy says", it probably needs one.
+4. [ ] **Point the same CONFIRM mode at GUIDE content (Mike, 27 Jul: "great idea").** Bigger prize
+   than the quiz. A wrong quiz answer is a bad revision session; a wrong guide is someone doing the
+   job wrong at 3am. Same staleness problem, same fix, but the guides need one thing built first:
+   - **Blocker: guides do not record which document each fact came from.** `GuideData` has
+     `focus?: {label,url}[]` (a link to the policy on FOCUS) and some guides carry `[#n]` inline
+     reference markers, but there is no machine-readable "this fact came from document X, issue Y,
+     review Z". The quiz has exactly that (`source` + `sourceDate`), which is why a confirm pass on
+     the quiz is straightforward and on the guides is not.
+   - **Do first:** add a `sources?: { doc: string; issue?: string; reviewDate?: string; steps?: number[] }[]`
+     field to `GuideData` mirroring the quiz shape, and backfill it for the trust-sourced guides
+     (the `focus` links already name most of the documents, so it is a fill-in not a research job).
+     `steps` lets a CHANGED verdict point at the step that needs editing rather than the whole guide.
+   - **Then:** run the agent guide by guide - it reads the current policy, checks each step's factual
+     claims, and returns CONFIRMED / CHANGED (with the new wording) / NOT FOUND per step.
+   - **Best bit - wire it to the traffic light.** `GUIDE_APPROVAL` in `src/lib/data/approval-status.ts`
+     is a manual green/amber/red map. A CHANGED verdict on a green guide should knock it back to
+     amber automatically with a note saying which step and which document moved. That turns the
+     traffic light from "Mike checked this once" into "checked, and still true as of the current
+     policy" - which is the thing that makes the sign-off meaningful to a sponsor.
+   - Guides most worth doing first (heaviest trust-policy content): seclusion-support-plan,
+     restraint-monitoring, observation-engagement, section-132, section-17, dols, awol,
+     leave-discharge-transfer, admission-checklist.
+5. [ ] **Decide the sign-off model for /quiz** - it carries no traffic-light StatusBadge yet, unlike
+   the guides. If a nurse can be told "this is what our policy says", it probably needs one. Falls
+   out naturally if item 4 lands, since the same confirm verdicts can drive it.
+
+---
+
+## M. Task handover + Overview review screen (SPEC, designed 27 Jul 2026 - not built)
+
+Design session with Mike, 27 Jul. Nothing built yet. This section is the agreed spec.
+Trigger: Tess Martin (QI lead) asked for a comments/update field on tasks so staff can say
+what is happening. Mike's two objections, both right: (1) the update becomes a record that
+never reaches SystmOne, (2) nobody follows up from the note. So the answer is NOT a notes box.
+
+### The problem in one paragraph
+There is no supported way to hand a half-done job back. Walk it as a band 5 at 21:15 with a
+part-finished referral: **Mark Complete** lies (and falsely clears a discharge barrier);
+**leave it claimed** hides it (My Diary hides ward tasks claimed by others, so the next shift
+never sees it); **Drop** forgets it (no trace it was ever started); **edit the description**
+is the PII leak; **make a new task** loses the barrier's age. Every route lies, hides or forgets.
+
+### Decisions locked
+- **Structured only. No free text anywhere in the handover.** Not a compromise - it is the
+  reason the feature is defensible. Nothing to type means nothing clinical can land in the
+  wrong record.
+- **No separate list, no new place.** Jobs stay in the diary. Waiting is a badge and a filter,
+  exactly like `blocksDischarge` is today (which also has no page of its own).
+- **No referral tracking.** Mike's call, and correct: on a ward some services track their own
+  referrals and just turn up (dietitian), others go silent forever (housing). Trying to track
+  both makes work for the first and still misses the second. Replaced by the ward-round review
+  below, which rides a ritual that already happens daily instead of inventing a new one.
+- **No shift-based handover screen.** Tasks are a continuous 24h pool people dive in and out of.
+  Handover fires when the person leaves the job, not when the clock says so.
+- **Take over stays silent.** The person losing it is not notified. The history line is the record.
+- **Patient tasks + appointments only** for this work. Team/ward shift tasks are a separate
+  question - see "Open" below.
+
+### 1. Hand-back sheet (the core build)
+Split today's Drop into two actions: **Drop** (claimed by mistake, silent, as now) and
+**Hand back**, which asks three things, all dropdowns, all one tap:
+
+1. **What state is it in?** Not started / Part done / Waiting on someone / Blocked / Done but needs checking
+2. **What's next?** Chase it / Send the form / Make the call / Needs a decision / Just carry on
+3. **Where does it go?** Back into today's pool / Schedule for a day / Keep it with me
+   (Mike: let the user decide. This is free - they are already answering it.)
+
+Reached from two doors, one component: the job diary, and the end of a patient-linked guide
+(alongside "mark complete", add "not finished" opening the same sheet).
+
+### 2. Waiting on
+- Picking "waiting on someone" asks **who**, then schedules the job forward to a chase date.
+  So waiting needs no machinery of its own: it is a reason plus a date, reusing the scheduling
+  from question 3. Keeps un-actionable jobs out of today's pool while staying visible.
+- Same weight as barrier to discharge (Mike): badge on the job, count on the patient, filter
+  and column in Overview. Shows age, e.g. "waiting on housing, 11 days".
+- **The dropdown** (grouped; six most-used pinned; ward-editable in the same way ward settings
+  already does `customAlerts`). Mike's ten plus the services the guide catalogue refers to:
+  - *Ward and trust:* doctor/consultant, named nurse, MDT/ward round, pharmacy, bed management,
+    MHA office, safeguarding team, estates, IT
+  - *Therapies and physical health:* OT, physiotherapy, dietitian, SALT, psychology/DBT,
+    tissue viability, dental, GP or acute hospital
+  - *Community and social:* social care/MASH, housing, CPN/care coordinator, CMHT, Early
+    Discharge Team, placement or care home, funding panel/CHC, benefits/DWP
+  - *People and logistics:* family/next of kin, the patient, advocacy (IMHA), transport,
+    interpreter, police
+  - *Other* -> prompt "Document this in SystmOne" (the one case that cannot generate a
+    specific case note, so it hands the writing back to the person)
+  - Forensic/probation deliberately excluded (Mike's parked decision).
+
+### 3. Case note out, even when incomplete (Mike's requirement)
+The structured answers generate a copy-paste SystmOne line **whether or not the job is done**.
+Nobody types anything and a progress update still reaches the clinical record. Reuses the
+existing guide clipboard machinery (auto-fills date, patient name, staff name - snag 94).
+- *Part done:* "Housing / Duty to Refer: form started, not yet sent. Returned to the ward jobs
+  list for completion. S Johnson, 27/07/2026."
+- *Waiting:* "CPN invited to ward round. Called 27/07/2026, no answer. Awaiting response from
+  CPN, to chase 29/07/2026. S Johnson."
+- *Blocked:* "Social care referral cannot proceed, needs a consultant decision. Escalated to
+  MDT. S Johnson, 27/07/2026."
+
+**The IG answer, have it ready:** prose in SystmOne for the clinical record, structured state in
+wardHub for the workflow. Different shapes, not duplication. The job history keeps the state
+even if the paste never happens.
+
+### 4. Task history (append-only)
+Every claim, hand back, take over, state change, reopen and reschedule writes who / when /
+what / structured reason. Small timeline in the task detail modal. The events already fire
+(see `tasks-provider.tsx`), they are simply not kept. Also makes Reopen non-lossy - it
+currently wipes `completedBy`/`completedAt` outright.
+
+### 5. `/overview` becomes the one place (Mike's call)
+Merge `/reports` into `/overview` and retire the reports page as a separate thing. Reports
+already has the right bones (patient rows expandable to jobs, filters, sort, priority colours,
+barrier badges, tile/table toggle) - it needs a scope selector and the rows need to become
+actionable. `/overview` today is only a read-only trust-wide barriers roll-up.
+
+- **Scope, all filter-based:** one patient / one ward / one ward professional's patients /
+  whole trust. Tile-card and table toggle as now.
+- **Modes:** ward round (one patient at a time), rapid review (all patients, compact rows),
+  meeting. Same screen, same actions - the mode changes density and which stamp is offered.
+- **Entry point** from the patient card ("Review this patient") deep-links into the same screen
+  scoped to one patient. Two doors, one screen.
+- **Inline actions on each job row. Speed is make-or-break** - ward round is fast and someone is
+  already typing into SystmOne. One tap, no modals, no confirmations; anything needing a
+  follow-up choice expands in place.
+  - *On completed jobs:* reopen, redo, chase, confirm completed
+  - *On outstanding jobs:* no longer needed, mark urgent, mark barrier to discharge
+  - *On waiting jobs:* still waiting, chase again, it has come back (close), escalate
+  - **Chase = the waiting state**, reached from ward round instead of the hand-back. Same state,
+    same badge, same column. These are one feature with two doors, not two features.
+  - **Redo** = reopen the old job with a new date (Mike), not a new linked job.
+  - **Anyone can do any of it** (Mike). Optional reason dropdown, skippable in one tap:
+    *no longer needed* (done elsewhere / patient discharged / MDT decision / duplicate / no
+    longer indicated); *reopen* (wasn't actually done / needs doing again / new information).
+- **Three stamps**, per patient not per job, worded as an attestation rather than a tick:
+  MDT, rapid review, named nurse review. E.g. "Jobs list agreed as current. MDT, 27 Jul."
+  Free by-product: a report of patients not seen by their named nurse in two weeks, or not
+  through rapid review since Friday. Real assurance metric, one tap.
+- **"Reviewed, no changes"** single tap when nothing needs doing, so the stamp still lands.
+
+### 6. Retire the chase log
+`/referrals/log` + `referral-log-provider.tsx` + the "Log to Chase Log" button on the referral
+completion screen all go. It was built early, has one entry point (a button in the `/guides`
+header), only fills if someone opts in, and is per-browser localStorage - which is why neither
+of us remembered it existed. Its one useful behaviour ("referral sent to X on date Y") becomes
+a job in the waiting state. Its three free-text fields die with it, which is what makes the
+structured-only rule true across the whole product.
+Types to remove or repurpose: `ReferralLog`, `ReferralChase`, `ReferralLogStatus`.
+
+### Bugs this exposes (fix as part of the build)
+- **Drop does not touch status** (`tasks-provider.tsx` claimTask): a dropped job keeps
+  `in_progress`, so an unclaimed job can sit in the pool displaying as in progress.
+- **Claim and Take Over reset `in_progress` -> `pending`**: the one signal that someone got part
+  way is deleted at the exact moment of handover.
+- **Tasks do not persist at all.** `tasks-provider.tsx` is plain `useState` seeded from
+  `ALL_DEMO_TASKS`, so the diary resets on every refresh. The retiring chase log was the only
+  work record that survived a reload. Decide persistence before any of this is demo-able.
+
+### Open
+- [ ] **Team/ward shift tasks: what happens when one is not completed that shift?** Mike thinks
+  something was already built. There is a `carryOver` flag on `WardTask` and a per-category
+  carry-over setting in ward settings, so a mechanism exists - check whether it actually works.
+  Separate session.
+- [ ] Confirm the exact stamp wording ("current state of play" vs the draft above).
+- [ ] Sponsor demo is Thu 30 Jul. This is a multi-session build. Decide the smallest slice that
+  demos: probably the rapid-review screen with a few actions live.
+- [ ] Follow-up line to Tess once agreed - the generated case note answers her original ask
+  better than the reply already sent.
 
 ---
 

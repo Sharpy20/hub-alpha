@@ -778,10 +778,31 @@ end of the session.
       ("Patient lacks capacity - referred in their best interests") with its own case-note wording,
       not just yes/no. Do not flip the guide wording on my reading alone - Mike to check against
       trust policy / the housing team.
-- [ ] **Break up text-heavy guides with progressive disclosure (not started).** Pattern Mike set:
-      **S117 Aftercare & Funding - the basics** - truncate each paragraph under its header until
-      clicked, and for "who qualifies" add an optional **"Does my patient qualify?"** pop-up that
-      walks the deciding criteria. Overlaps Section C (`domestic-abuse-guide` text density).
+- [x] **Break up text-heavy guides with progressive disclosure. DONE 27 Jul on the S117 guide,
+      built as a reusable pattern so 3.5 is cheap.**
+      - **`ProgressiveContent`** (`src/components/guides/ProgressiveContent.tsx`) splits a step's
+        content into collapsible sections: header always visible, first line as a one-line teaser,
+        full body on click, plus Expand all / Collapse all. **Sections are derived from the text,
+        not from new data fields** - the guides already write headers as a short line ending in a
+        colon with bullets underneath, so the splitter keys off that. Anything before the first
+        header stays visible as an intro (it is the "why you are reading this" paragraph). Switching
+        it on for a step is one flag, `progressive: true`. A step whose content has no headers falls
+        back to the old flat rendering, so the flag is always safe to set.
+      - **`CriteriaWalker`** (`src/components/guides/CriteriaWalker.tsx`) + the `CriteriaWalk` type
+        (`src/lib/data/guides/criteria-walk.ts`): a data-driven question tree in the accessible base
+        Modal, with Back, Start over, and colour-toned outcomes (yes / no / go and check). Attaches
+        to a named section via `walk.section`, so the trigger button renders inside that section.
+      - **`S117_QUALIFY_WALK`** wires "Does my patient qualify?" into the *Who qualifies* section of
+        the S117 guide. Two questions: qualifying section in THIS admission, then in ANY previous
+        admission. Five outcomes, including the two "I am not sure" routes which send you to the MHA
+        Office rather than letting an unknown history be treated as a no. The previous-admission
+        outcome states both halves of the two-meetings rule (see memory `s117-two-meetings-rule`).
+      - Deliberately NOT persisted and NOT part of the case note - it is a thinking aid, and the
+        entitlement decision belongs to the MHA Office.
+      - Verified in browser: four sections split correctly, walker reachable, both qualifying
+        outcomes and the no-duty outcome correct, Back/Start over work, non-progressive guides
+        unchanged. Build clean, 32/32 tests pass.
+      Overlaps Section C (`domestic-abuse-guide` text density).
 - [ ] **Sweep all guides for the same opportunity (not started)** - especially "meets criteria"
       sections. Report before bulk editing.
 - [ ] **Update the guide-building agents (not started)** - `docs/copilot-guide-builder-kit.md`

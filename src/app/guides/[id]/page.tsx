@@ -23,6 +23,8 @@ import {
   WORKFLOWS, DEFAULT_WORKFLOW, STEP_GRADIENTS, SECTION_OPTIONS, S117_OPTIONS, AREA_OPTIONS,
   type WorkflowData, type WorkflowStep,
 } from "@/lib/data/guides/referral-workflows";
+import { ProgressiveContent } from "@/components/guides/ProgressiveContent";
+import { CriteriaWalker } from "@/components/guides/CriteriaWalker";
 import {
   GUIDES, DEFAULT_GUIDE, GUIDE_CONFIG, GUIDE_WAGOLLS,
   type GuideData,
@@ -773,9 +775,17 @@ export default function UnifiedGuidePage() {
                 </div>
               </div>
               <div className="mb-6">
-                {rStep.content.split("\n").map((line, i) => (
-                  <p key={i} className={`text-gray-600 text-lg ${line.startsWith("•") ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}>{renderWithLinks(line)}</p>
-                ))}
+                {rStep.progressive ? (
+                  <ProgressiveContent
+                    content={rStep.content}
+                    renderLine={renderWithLinks}
+                    extras={rStep.walk ? { [rStep.walk.section]: <CriteriaWalker walk={rStep.walk} /> } : undefined}
+                  />
+                ) : (
+                  rStep.content.split("\n").map((line, i) => (
+                    <p key={i} className={`text-gray-600 text-lg ${line.startsWith("•") ? "ml-4" : ""} ${line === "" ? "h-3" : "mb-1.5"}`}>{renderWithLinks(line)}</p>
+                  ))
+                )}
               </div>
 
               {/* Criteria */}

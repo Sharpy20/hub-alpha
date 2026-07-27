@@ -226,10 +226,19 @@ I'm here to ask for." (Optica lesson: the wrapper before the data.) This collaps
 moment ONE genuinely internal item is actually in there - hence the fictional-detail rule.
 
 ### Claude-side (run early week of 21 Jul - Mike's SharePoint upload must land ~Mon 27/Tue 28 to beat ingestion lag)
-- [ ] Audit: manifest every tracked trust-sourced file (docs/ dumps, public/ blank forms
-      with exact trust wording - police capacity form, ABC chart - flagged for Mike's
-      keep-or-pull call) AND every real internal number in code comments (Rule-4 pattern:
-      real values sit in comments beside "Hidden in demo mode").
+- [x] **Audit - DONE 27 Jul.** Full write-up: `docs/nhs-ready/13-section-k-audit.md`.
+      Result: **no trust-sourced file is tracked at all** (the dumps are already untracked,
+      moved to `E:\Hub\temp\` and purged from history); all 41 tracked `docs/` files are
+      Claude-authored. What remains is 4 blank forms in `public/` (no branding, no contacts -
+      Mike's keep-or-pull call, my read is keep) and **33 real internal contact values in
+      source comments** across bookmarks/index.ts (27), referral-workflows.ts (5),
+      howto-guides.ts (1). Nothing renders live - the two "renders live" findings from the
+      6 Jul audit are both confirmed fixed.
+      - **⚠ Caught a trap:** this plan said the comment values were "already preserved in
+        `_CONTACTS-INVENTORY.md`, outside repo". That file never existed;
+        `E:\Hub\temp\internal-contacts.md` held only 3 of the 33. Running the purge against it
+        would have destroyed 30 values. **Now rebuilt as a complete 33-value inventory** with
+        file, line and owning entry - so the strip below is safe to run.
 - [x] **Guide manuscript export script - DONE 27 Jul.** `scripts/export-guide-manuscripts.mjs`
       (`node scripts/export-guide-manuscripts.mjs`). Writes **68 staff guides + 29 patient
       leaflets** as markdown to `E:\Hub\guide-manuscripts\` (outside the repo) plus a

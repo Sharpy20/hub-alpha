@@ -169,6 +169,12 @@ All done AT WORK in M365 Copilot / Teams, not in this repo. Context: [[focus-dow
    Source of truth kept in repo: `docs/nhs-ready/12-meet-the-agents.md`.
    STILL FOR MIKE: pin the page as a tab in a Teams channel if wanted (page is on the site,
    not yet a tab), and give it a skim before pointing stakeholders at it.
+3b. [ ] ⏰ **Re-paste the Guide Builder instructions (Mike, at work, 2 minutes).** Updated 27 Jul with
+   the progressive-disclosure structure rules and the DECISION FLOW block - see Section N item 3.6
+   for what changed and why. Verbatim text: `docs/nhs-ready/12-meet-the-agents.md`, section
+   "1. wH Guide Builder", the whole fenced block. Paste into the agent's Instructions box in Agent
+   Builder and Update. No other setting changes. The "Meet the wardHub AI agents" SharePoint page
+   carries the old text too, so refresh that page's Guide Builder block at the same time.
 4. [ ] **Upload Special_Leave_Policy.docx to the SharePoint Trust Policy Library (Mike, at work).**
    Missed in the big FOCUS auto-download; Mike found it 13 Jul and saved it to
    `E:\Hub\Policy dump not for git hub\Special_Leave_Policy.docx` (v7, issued 10 Jul 2024,
@@ -842,9 +848,32 @@ end of the session.
         now peels trailing prose off the last section into an `outro` rendered in the open. Verified
         across all 23 steps: 7 outros correctly kept open (including all three 999 lines), 0 steps
         left with an empty or single section. Build clean, 32/32 tests pass.
-- [ ] **Update the guide-building agents (not started)** - `docs/copilot-guide-builder-kit.md`
-      plus the LIVE agent instructions in M365 Agent Builder (Mike-side, see Section J), so new
-      guides use collapsible sections and criteria pop-ups by default instead of long prose.
+- [~] **Update the guide-building agents. REPO SIDE DONE 27 Jul - ⏰ ONE PASTE JOB LEFT FOR MIKE.**
+      Two new blocks written into the Guide Builder prompt so new guides arrive in the shape the
+      new components need, instead of as long prose someone has to restructure by hand:
+      - **STRUCTURE FOR PROGRESSIVE DISCLOSURE** - what a header line is (short, own line, ends in a
+        colon, 70 chars max, not a bullet), bullets underneath, intro before the first header stays
+        visible, two headers minimum or leave it as prose. **And the rule the sweep taught us:** any
+        line that applies to the whole step - above all a 999 line, a legal deadline or a safety
+        warning - must be the LAST line, after the final bullets, or it gets filed under the
+        preceding header and hidden behind a click.
+      - **DECISION FLOW** - a paste-ready block format (ATTACH TO SECTION / BUTTON / TITLE / Q1 with
+        HELP and YES / NO / NOT SURE routes / OUTCOME with TONE, SHORT, TITLE, DETAIL, ACTIONS) that
+        maps straight onto `CriteriaWalk`, so a "who qualifies" or "meets criteria" section comes
+        back as a flowchart rather than rules the nurse has to apply themselves. Rules baked in:
+        max 3 questions, question fits one line with the detail in HELP, **ask what HAS HAPPENED not
+        what is true now** (the S117 "on Section 3 now" error - a rescinded section still counts),
+        and every question needs a NOT SURE route so an unknown can never read as a no.
+      - The take-to-work kit also gained two worked examples (a long step showing where the 999 line
+        goes, and the live S117 decision flow) and four new troubleshooting lines.
+      - **Fixed pre-existing drift:** `docs/copilot-guide-builder-kit.md` was missing the DATA-HEAVY
+        SAFETY NET and TEMPLATE C that Section J item 2 recorded as added on 10 Jul - only
+        `E:\Hub\Copilot-Guide-Builder-Kit.md` had them. The repo copy is now a byte-for-byte copy of
+        the take-to-work file. **Keep the two in sync - they drift silently.**
+      - ⏰ **STILL FOR MIKE (at work, 2 minutes):** paste the updated Guide Builder instructions into
+        M365 Agent Builder and Update. Verbatim text is in
+        `docs/nhs-ready/12-meet-the-agents.md` under "1. wH Guide Builder" - copy the whole fenced
+        block. Nothing else about the agent changes (no knowledge source, all toggles off).
 
 ### After the above
 - [ ] **Guide walkthrough with Mike, approving one by one** - each currently in development or

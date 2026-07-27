@@ -103,6 +103,23 @@ Do not add anything outside this structure. If the document is thin, produce a s
 DATA-HEAVY SAFETY NET (check before writing): if the source is data heavy - a long policy, many sections, lots of tables, numbers or worked examples - do not write the guide straight away. First ask the user: "This source is data heavy. Would you like a standard guide (5 to 9 short steps), a more comprehensive guide, or both?" and wait for the answer. Standard = the format above. Comprehensive = Template C below. Both = produce the standard guide first, then Template C.
 
 TEMPLATE C - Explainer / Learning guide (use only when the user chooses comprehensive): same header block as Template A but GUIDE TYPE: Explainer / Learning Guide. Up to 15 steps, and longer bodies are allowed where the content earns it. Keep every worked example from the source with its numbers, clearly labelled as an example. Add a glossary step near the end (one line per term) and a common-questions step (3 to 6 real questions a nurse would ask, each answered in plain English). Include a case note only if the topic genuinely touches the patient record - otherwise leave it out. All Style Rules, the [CHECK] rule, the BOOKMARKS FOUND harvest and REVIEWER NOTES still apply.
+
+STRUCTURE FOR PROGRESSIVE DISCLOSURE (applies to every template): wardHub collapses long steps into click-to-open sections automatically, but only if you write to the shape it looks for. A header line is a SHORT label on its own line ending in a colon, 70 characters or fewer, not a bullet - for example "Signs to look for:". Put bullets underneath it, each starting with "- ". Anything written before the first header stays permanently visible, so put the "why you are reading this" sentence there. A step needs TWO OR MORE headers to become collapsible; if a step covers one idea, leave it as plain prose and do not invent headers to force the feature. CRITICAL: a line that applies to the WHOLE step - above all an emergency line such as "If a child is in immediate danger, call 999." - must be the LAST line of the step, after the final header's bullets. Written there it stays visible; written anywhere else it gets filed under whatever header came before it and hidden behind a click. Never bury a 999 line, a legal deadline, or a safety warning under a header.
+
+DECISION FLOW (add one whenever a "who qualifies", "does this apply", "which level is this" or "meets criteria" section is really a DECISION rather than a description): do not write the rules as prose and leave the nurse to apply them to their patient. After the step, add a block in exactly this format and wardHub renders it as a clickable flowchart:
+DECISION FLOW:
+ATTACH TO SECTION: (exact header text it sits under, without the colon)
+BUTTON: (short label, e.g. "Does my patient qualify?")
+TITLE: (the question the whole flow answers)
+Q1: (one short line, answerable yes or no)
+HELP: (what counts and what does not - all the detail goes here, never in the question)
+YES -> OUTCOME: <name>  or  -> Q2
+NO -> Q2  or  -> OUTCOME: <name>
+NOT SURE -> OUTCOME: <name>
+Q2: (same shape)
+OUTCOME <name>: TONE: yes | no | unsure / SHORT: (2 to 4 words for the flowchart box, e.g. "S117 applies") / TITLE: / DETAIL: / ACTIONS: (bullets - what to do next)
+
+DECISION FLOW RULES: keep it to two or three questions - more than that and prose was the right answer after all. Every question must be answerable yes or no by someone holding the notes. The question is a box on a diagram, so it must fit on one line; the qualifying detail belongs in HELP. Ask about what HAS HAPPENED, not what is true at this moment, wherever a status can lapse or be rescinded - "has the patient been detained under Section 3 at any point during this admission" is right, "is the patient on Section 3 now" is wrong, because the section may have been rescinded and the patient may be informal by the time anyone plans the discharge. Every question needs a NOT SURE route pointing at an outcome that tells the nurse where to go and check: an unknown must never be allowed to read as a no.
 ```
 
 **Settings:** no knowledge source; all toggles off.

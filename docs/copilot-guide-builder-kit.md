@@ -139,6 +139,27 @@ REVIEWER NOTES (be honest here):
 
 Do not add anything outside this structure. If the document is thin, produce a shorter guide rather than padding it, and say so in Reviewer Notes.
 
+DATA-HEAVY SAFETY NET (check before writing): if the source is data heavy - a long policy, many sections, lots of tables, numbers or worked examples - do not write the guide straight away. First ask the user: "This source is data heavy. Would you like a standard guide (5 to 9 short steps), a more comprehensive guide, or both?" and wait for the answer. Standard = the format above. Comprehensive = Template C below. Both = produce the standard guide first, then Template C.
+
+TEMPLATE C - Explainer / Learning guide (use only when the user chooses comprehensive): same header block as Template A but GUIDE TYPE: Explainer / Learning Guide. Up to 15 steps, and longer bodies are allowed where the content earns it. Keep every worked example from the source with its numbers, clearly labelled as an example. Add a glossary step near the end (one line per term) and a common-questions step (3 to 6 real questions a nurse would ask, each answered in plain English). Include a case note only if the topic genuinely touches the patient record - otherwise leave it out. All Style Rules, the [CHECK] rule, the BOOKMARKS FOUND harvest and REVIEWER NOTES still apply.
+
+STRUCTURE FOR PROGRESSIVE DISCLOSURE (applies to every template): wardHub collapses long steps into click-to-open sections automatically, but only if you write to the shape it looks for. A header line is a SHORT label on its own line ending in a colon, 70 characters or fewer, not a bullet - for example "Signs to look for:". Put bullets underneath it, each starting with "- ". Anything written before the first header stays permanently visible, so put the "why you are reading this" sentence there. A step needs TWO OR MORE headers to become collapsible; if a step covers one idea, leave it as plain prose and do not invent headers to force the feature. CRITICAL: a line that applies to the WHOLE step - above all an emergency line such as "If a child is in immediate danger, call 999." - must be the LAST line of the step, after the final header's bullets. Written there it stays visible; written anywhere else it gets filed under whatever header came before it and hidden behind a click. Never bury a 999 line, a legal deadline, or a safety warning under a header.
+
+DECISION FLOW (add one whenever a "who qualifies", "does this apply", "which level is this" or "meets criteria" section is really a DECISION rather than a description): do not write the rules as prose and leave the nurse to apply them to their patient. After the step, add a block in exactly this format and wardHub renders it as a clickable flowchart:
+DECISION FLOW:
+ATTACH TO SECTION: (exact header text it sits under, without the colon)
+BUTTON: (short label, e.g. "Does my patient qualify?")
+TITLE: (the question the whole flow answers)
+Q1: (one short line, answerable yes or no)
+HELP: (what counts and what does not - all the detail goes here, never in the question)
+YES -> OUTCOME: <name>  or  -> Q2
+NO -> Q2  or  -> OUTCOME: <name>
+NOT SURE -> OUTCOME: <name>
+Q2: (same shape)
+OUTCOME <name>: TONE: yes | no | unsure / SHORT: (2 to 4 words for the flowchart box, e.g. "S117 applies") / TITLE: / DETAIL: / ACTIONS: (bullets - what to do next)
+
+DECISION FLOW RULES: keep it to two or three questions - more than that and prose was the right answer after all. Every question must be answerable yes or no by someone holding the notes. The question is a box on a diagram, so it must fit on one line; the qualifying detail belongs in HELP. Ask about what HAS HAPPENED, not what is true at this moment, wherever a status can lapse or be rescinded - "has the patient been detained under Section 3 at any point during this admission" is right, "is the patient on Section 3 now" is wrong, because the section may have been rescinded and the patient may be informal by the time anyone plans the discharge. Every question needs a NOT SURE route pointing at an outcome that tells the nurse where to go and check: an unknown must never be allowed to read as a no.
+
 ------------------------------------------------------------
 
 ## If you only want the bookmarks
@@ -199,6 +220,56 @@ REVIEWER NOTES:
 
 That is exactly the shape we want. Titles, short bodies, honest [CHECK]s, a copyable case note, and the bookmarks pulled out.
 
+## What a LONG step should look like (so it collapses properly)
+
+When a step has to carry a lot, the header-and-bullets shape is what turns it into click-to-open sections in wardHub. Note where the 999 line goes - last, on its own, after everything else:
+
+```
+3. TITLE: Signs and what to do
+   BODY:
+   Abuse rarely arrives as a disclosure. Most of the time you notice a pattern first.
+
+   Physical signs:
+   - Injuries that do not match the explanation
+   - Repeat attendances for minor injury
+
+   Behavioural signs:
+   - Withdrawal, or a partner who answers for them
+   - Reluctance to go home before a visit
+
+   If the person is in immediate danger, call 999.
+```
+
+Two headers, so it collapses. The opening line stays visible as the intro. The 999 line sits at the very end, so it stays visible too - had it been written under "Behavioural signs" it would be hidden until someone clicked.
+
+## What a DECISION FLOW looks like
+
+Use one where a section is really "does this apply to my patient", not a description. This is the live S117 one:
+
+```
+DECISION FLOW:
+ATTACH TO SECTION: Who qualifies
+BUTTON: Does my patient qualify?
+TITLE: Does my patient qualify for S117 aftercare?
+Q1: Has the patient been detained under Section 3 at ANY point during this admission?
+HELP: It counts even if the section has since been rescinded and they are informal now.
+  Sections 37, 45A, 47 and 48 count too, including 37/41 and 47/49. Section 2, Section 4
+  and the holding powers do not create the duty on their own.
+YES -> OUTCOME: applies
+NO -> Q2
+NOT SURE -> OUTCOME: check-section
+Q2: Was the patient detained under Section 3 in a PREVIOUS admission?
+HELP: Any earlier admission counts, however long ago - entitlement survives readmission.
+YES -> OUTCOME: still-applies
+NO -> OUTCOME: no-duty
+NOT SURE -> OUTCOME: check-history
+OUTCOME applies: TONE: yes / SHORT: S117 applies / TITLE: ... / DETAIL: ... / ACTIONS: ...
+OUTCOME no-duty: TONE: no / SHORT: No S117 duty / TITLE: ... / DETAIL: ... / ACTIONS: ...
+OUTCOME check-history: TONE: unsure / SHORT: Check the history / TITLE: ... / DETAIL: ... / ACTIONS: ...
+```
+
+Two things to copy from that. The questions ask what **has happened**, not what is true right now - a rescinded section still counts, and asking "is the patient on Section 3 now" would send exactly the wrong patient down the no-duty branch. And every question has a NOT SURE route, so an unknown history can never quietly read as a no.
+
 ## Bring home
 
 - Copy Copilot's **whole** reply.
@@ -212,3 +283,7 @@ That is exactly the shape we want. Titles, short bodies, honest [CHECK]s, a copy
 - **It paraphrased an official form:** tell it "keep the exact wording of the form fields, do not reword them".
 - **It made up a phone number or link:** tell it "replace anything you are not certain came from the document with [CHECK]".
 - **It ignored the format:** paste the prompt again on its own first, then the document.
+- **Long steps came back as one block of prose:** tell it "break the long steps into short header lines ending in a colon with bullets underneath, so they collapse in wardHub".
+- **It buried a 999 or safety line under a header:** tell it "move any line that applies to the whole step to the very end, after the last set of bullets".
+- **A "who qualifies" section is still prose:** tell it "turn that section into a DECISION FLOW block".
+- **A decision-flow question asks about right now:** tell it "ask whether it has EVER happened during the admission, not whether it is true today - the status may have been rescinded".

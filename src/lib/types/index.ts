@@ -573,32 +573,8 @@ export interface UserFavorites {
   bookmarkIds: string[];
 }
 
-// ============================================
-// REFERRAL TRACKING TYPES
-// ============================================
-
-export type ReferralLogStatus = "sent" | "awaiting_response" | "chased" | "completed" | "cancelled";
-
-export interface ReferralLog {
-  id: string;
-  workflowId: string; // e.g., "imha-advocacy", "picu"
-  workflowTitle: string;
-  patientName?: string;
-  patientId?: string;
-  sentDate: string; // ISO date
-  sentBy: string; // User name
-  sentTo: string; // Service/email/phone
-  status: ReferralLogStatus;
-  notes?: string;
-  chaseHistory: ReferralChase[];
-  completedDate?: string;
-  completedNotes?: string;
-}
-
-export interface ReferralChase {
-  id: string;
-  date: string; // ISO date
-  method: "phone" | "email" | "other";
-  notes: string;
-  chasedBy: string;
-}
+// Referral tracking (ReferralLog / ReferralChase / ReferralLogStatus) was
+// removed 27 Jul with the chase log. Its one useful behaviour - "referral sent
+// to X on date Y, needs chasing" - is now a job in the waiting state, and its
+// three free-text fields died with it, which is what makes the structured-only
+// rule true across the whole product (BACKLOG Section M item 6).

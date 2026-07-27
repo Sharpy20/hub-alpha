@@ -12,7 +12,6 @@ import { AddTaskModal, type AddTaskPrefill } from "@/components/modals";
 import { Patient, DiaryTask } from "@/lib/types";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useReferralLog } from "@/app/referral-log-provider";
 import { useTour } from "@/app/tour-provider";
 import {
   CheckCircle, FileText, Eye, BookOpen, Send, Clipboard, ClipboardList,
@@ -96,7 +95,6 @@ export default function UnifiedGuidePage() {
   const searchParams = useSearchParams();
   const { user, activeWard } = useApp();
   const { addTask, tasks, toggleComplete, handBackTask, claimTask } = useTasks();
-  const { addReferralLog } = useReferralLog();
   const { canEdit } = useCanEdit();
   const { isTourActive, setIsInLiveWalkthrough, setCurrentSection, setCurrentSlide } = useTour();
   const isTourMode = searchParams.get("tour") === "true";
@@ -253,7 +251,6 @@ export default function UnifiedGuidePage() {
   const [patientSection, setPatientSection] = useState<string>("");
   const [s117Status, setS117Status] = useState<string>("");
   const [selectedArea, setSelectedArea] = useState<"city" | "county" | null>(null);
-  const [referralLogged, setReferralLogged] = useState(false);
   const [pendingFollowUp, setPendingFollowUp] = useState(false);
 
   // Follow-up task. Used to silently create a task 7 days out that you never
@@ -419,31 +416,6 @@ export default function UnifiedGuidePage() {
   };
 
   const isComplete = currentStep === totalSteps - 1;
-
-  const handleLogReferral = () => {
-    let sentTo = "External Service";
-    if (guideId === "imha-advocacy") {
-      sentTo = selectedArea === "city" ? "Derby City IMHA (Disability Direct)" : "Derbyshire County IMHA (Cloverleaf)";
-    } else {
-      const sub = workflow.steps.find(s => s.type === "submission");
-      // Honour the area they picked - taking methods[0] blindly logged a county
-      // referral as having gone to the Derby City team.
-      const methods = (sub?.methods || []).filter(m => !m.area || m.area === selectedArea);
-      if (methods.length > 0) sentTo = methods[0].label;
-      else if (sub?.methods && sub.methods.length > 0) sentTo = sub.methods[0].label;
-    }
-    addReferralLog({
-      workflowId: guideId,
-      workflowTitle: workflow.title,
-      patientName: linkedPatient?.name,
-      sentDate: new Date().toISOString(),
-      sentBy: user?.name || "Unknown",
-      sentTo,
-      status: "sent",
-      notes: linkedPatient ? `Referral for ${linkedPatient.name}` : undefined,
-    });
-    setReferralLogged(true);
-  };
 
   // Tour mode
   const handleReturnToTour = () => {
@@ -1190,16 +1162,6 @@ export default function UnifiedGuidePage() {
         {/* Referral completion actions */}
         {isReferral && isComplete && (
           <div className="flex gap-3">
-            {!isV2 && !referralLogged && (
-              <Button onClick={handleLogReferral} className="flex-1 py-4 text-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700">
-                <ClipboardList className="w-5 h-5 mr-2" /> Log to Chase Log
-              </Button>
-            )}
-            {!isV2 && referralLogged && (
-              <Button disabled className="flex-1 py-4 text-lg bg-amber-100 text-amber-700 cursor-not-allowed">
-                <Check className="w-5 h-5 mr-2" /> Logged
-              </Button>
-            )}
             <Button onClick={() => { setShowFireworks(true); setTimeout(() => router.push(link("/guides")), 2500); }} className="flex-1 py-4 text-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 relative overflow-hidden">
               <Check className="w-5 h-5 mr-2" /> Complete
             </Button>

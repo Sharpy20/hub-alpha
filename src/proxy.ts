@@ -22,7 +22,6 @@ const FULL_ONLY_PREFIXES = [
   "/overview",
   "/reports",
   "/data-sources",
-  "/referrals/log",
   "/staff",
 ];
 // Note: /patient-guides is PII-free (MH educational leaflets for patients),
@@ -39,6 +38,10 @@ function isFullOnly(subpath: string): boolean {
 function legacyTarget(subpath: string): string | null {
   if (subpath === "/bookmarks") return "/links";
   if (subpath === "/referrals" || subpath === "/how-to") return "/guides";
+  // The chase log was retired 27 Jul (BACKLOG Section M item 6). Without this,
+  // an old bookmark falls through the rule below to /guides/log and renders a
+  // blank default guide, which looks like a broken page rather than a gone one.
+  if (subpath === "/referrals/log") return "/guides";
   if (subpath.startsWith("/referrals/")) return "/guides/" + subpath.slice("/referrals/".length);
   if (subpath.startsWith("/how-to/")) return "/guides/" + subpath.slice("/how-to/".length);
   return null;

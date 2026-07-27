@@ -4,24 +4,20 @@ import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout";
 import { Badge, StatusBadge } from "@/components/ui";
 import Link from "next/link";
-import { ArrowRight, Clock, Filter, FileText, Pencil, Search } from "lucide-react";
+import { ArrowRight, Filter, FileText, Pencil, Search } from "lucide-react";
 import { guideApproval } from "@/lib/data/approval-status";
 import { ALL_GUIDES, TYPE_STYLE, guideType } from "@/lib/data/guides/catalog";
-import { useReferralLog } from "@/app/referral-log-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
-import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
+import { useV2Href } from "@/lib/hooks/useV2";
 
 
 export default function GuidesPage() {
   const { canEdit } = useCanEdit();
-  const { getPendingCount } = useReferralLog();
-  const isV2 = useIsV2();
   const link = useV2Href();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [customOrder, setCustomOrder] = useState<{ id: string; category: string }[] | null>(null);
-  const pendingCount = getPendingCount();
 
   // Load custom order from localStorage (set via editor)
   useEffect(() => {
@@ -95,20 +91,6 @@ export default function GuidesPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {!isV2 && (
-                <Link
-                  href={link("/referrals/log")}
-                  className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline"
-                >
-                  <Clock className="w-4 h-4" />
-                  Chase Log
-                  {pendingCount > 0 && (
-                    <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full">
-                      {pendingCount}
-                    </span>
-                  )}
-                </Link>
-              )}
               {canEdit && (
                 <Link
                   href={link("/admin/workflows")}

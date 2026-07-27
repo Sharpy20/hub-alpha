@@ -5,7 +5,6 @@ import { Providers } from "./providers";
 import { TasksProvider } from "./tasks-provider";
 import { WardSettingsProvider } from "./ward-settings-provider";
 import { VerificationProvider } from "./verification-provider";
-import { ReferralLogProvider } from "./referral-log-provider";
 import { TourProvider } from "./tour-provider";
 import { TourModal } from "@/components/tour/TourModal";
 import { Toaster } from "sonner";
@@ -53,14 +52,12 @@ export default function RootLayout({
         <Providers>
           <TasksProvider>
             <WardSettingsProvider>
-              <ReferralLogProvider>
                 <VerificationProvider>
                   <TourProvider>
                     <ErrorBoundary>{children}</ErrorBoundary>
                     <TourModal />
                   </TourProvider>
                 </VerificationProvider>
-              </ReferralLogProvider>
             </WardSettingsProvider>
           </TasksProvider>
         </Providers>

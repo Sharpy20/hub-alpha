@@ -323,8 +323,17 @@ moment ONE genuinely internal item is actually in there - hence the fictional-de
         anywhere in the app. Mike's call: **soften to "approved by the Head of Service"**.
         Done. The name is preserved in `E:\Hub\temp\internal-contacts.md` (outside the repo)
         so the provenance is not lost. **No named individual now appears on screen.**
-- [ ] History verify: F1 rewrite (6 Jul) already purged the FOCUS dumps - check nothing
-      trust-sourced was committed since; targeted rewrite if needed (bundle playbook exists).
+- [x] **History verify - DONE 27 Jul. Clean, no rewrite needed.** Checked all 91 commits since the
+      6 Jul F1 rewrite: no dump/FOCUS/policy/contact folders added (the only new file matching those
+      patterns is `src/components/ui/ContactText.tsx`, ours); no `@nhs.net` or trust-domain
+      addresses introduced; none in the working tree either apart from the deliberate
+      `michael.sharpe4` feedback mailto. Rule-4 placeholders are in place and intact - 50
+      "Hidden in demo mode" entries across bookmarks, how-to guides and referral workflows, with
+      **zero** leftover real-value comments beside them.
+      **Known and accepted:** the 33 internal contact values stripped on 27 Jul (commit 73f22dd) are
+      still in pre-27-Jul history. Mike decided against a second rewrite for those (finding E of
+      `docs/nhs-ready/13-section-k-audit.md`) - the repo is private and the values are Trust-internal
+      phone numbers, not patient data. Revisit only if the repo is ever made public.
 - [PARK] **BUILD: mini publish pipeline** - **deferred past the 30 Jul demo (Mike, 27 Jul).**
       Two reasons: the automatic route needs a Power Automate licence he does not have (see
       Architecture decisions above), and **the site must behave on the day exactly as it does
@@ -336,8 +345,15 @@ moment ONE genuinely internal item is actually in there - hence the fictional-de
       fetch + render path in the guide viewer for pipeline guides (static guides untouched);
       publish mechanism for Mike (gated publish form or Supabase dashboard paste); seed with
       1-3 new guides carrying fictional internal detail. Keys via Vercel env only.
-- [ ] Add the Supabase permission Q&A to the dev panel stakeholder Q&A pack.
-- [ ] Verify/report the Supabase project region.
+- [x] **Supabase permission Q&A added to the dev panel - DONE 27 Jul (commit a31c632).** The judo
+      answer was written up here but never reached the pack where it is needed. Q13-Q15 now cover:
+      who gave permission (no one, and nothing in the demo needs it); where the data actually lives
+      today (Vercel + a wired-but-dormant Supabase, keys in Vercel env only); and what internal
+      Trust detail is in the demo (none - Rule 4 placeholders, real values outside the repo).
+- [ ] **Verify/report the Supabase project region. ⏰ MIKE - cannot be done from the repo.** The
+      project ref in `.env.local` does not encode the region. Supabase dashboard -> Project Settings
+      -> General -> Region. Needed for the "where does the data live?" question and it is a
+      `[confirm]` marker in the run-sheet; the answer needs to be UK/EU (AWS London is available).
 
 ### Mike-side (at work, by ~Tue 28 to beat ingestion lag)
 - [ ] Upload manuscript folder + remaining source docs to SharePoint.

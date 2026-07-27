@@ -4,6 +4,7 @@ import { DiaryTask, PRIORITY_CONFIG, TASK_CATEGORY_CONFIG, SHIFT_CONFIG } from "
 import { Hand, Check, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useApp } from "@/app/providers";
+import { HandbackBadge } from "@/components/tasks/HandbackBadge";
 
 function getKanbanAccent(theme: string, taskType: string) {
   type T = Record<string, { accent: string; tint: string; text: string; muted: string }>;
@@ -140,6 +141,12 @@ export function KanbanTaskCard({ task, onDragStart, onUnclaim, onComplete, onReo
             </div>
           </div>
           {typeTag && <span className="inline-block text-[10px] rounded px-1.5 py-0.5 mb-1" style={{ color: accent, background: `${accent}20` }}>{typeTag}</span>}
+          {/* The badge is the hint that this is not a brand new job. */}
+          {task.handback && !isCompleted && (
+            <div className="mb-1.5">
+              <HandbackBadge handback={task.handback} count={task.handbackCount} size="xs" />
+            </div>
+          )}
           {task.type !== "appointment" && <p className="text-xs mb-2" style={{ color: textMuted }}>Due: {task.dueDate}</p>}
           <div className="flex items-center gap-2 flex-wrap">
             {!isCompleted ? (

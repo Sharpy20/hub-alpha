@@ -156,6 +156,70 @@ export type PatientTaskCategory =
   | "medical_review"
   | "other";
 
+// ---------------------------------------------------------------------------
+// Hand-back (BACKLOG Section M). There was no supported way to hand a half-done
+// job back: Mark Complete lies and falsely clears a discharge barrier, leaving
+// it claimed hides it from the next shift, Drop forgets it was ever started,
+// and editing the description is a PII leak. So Drop splits into Drop (claimed
+// by mistake, silent) and Hand back, which captures STRUCTURED state only.
+//
+// Structured with no free text anywhere is the point, not a compromise: nothing
+// to type means nothing clinical can land in the wrong record, and the answers
+// still generate a case-note line for SystmOne.
+// ---------------------------------------------------------------------------
+
+export type HandbackState =
+  | "not_started"
+  | "part_done"
+  | "waiting"
+  | "blocked"
+  | "needs_check";
+
+export type HandbackNext =
+  | "chase"
+  | "send_form"
+  | "make_call"
+  | "needs_decision"
+  | "carry_on";
+
+/** Where the job goes after it is handed back. */
+export type HandbackDestination = "pool" | "scheduled" | "keep";
+
+export interface TaskHandback {
+  state: HandbackState;
+  next: HandbackNext;
+  /** Who we are waiting on. Only set when state is "waiting". */
+  waitingOn?: string;
+  /** Date to chase / the day it was scheduled forward to (YYYY-MM-DD). */
+  chaseDate?: string;
+  destination: HandbackDestination;
+  by: string;
+  at: string; // YYYY-MM-DD
+}
+
+export type TaskEventType =
+  | "claimed"
+  | "handed_back"
+  | "taken_over"
+  | "dropped"
+  | "completed"
+  | "reopened"
+  | "rescheduled"
+  | "in_error"
+  | "restored";
+
+/**
+ * Append-only. `detail` is always assembled from structured choices, never from
+ * anything the user typed, so the history can never carry clinical prose.
+ */
+export interface TaskEvent {
+  id: string;
+  type: TaskEventType;
+  by: string;
+  at: string; // ISO timestamp
+  detail?: string;
+}
+
 // Base task interface
 interface BaseTask {
   id: string;
@@ -180,6 +244,14 @@ interface BaseTask {
   inError?: boolean;
   markedInErrorBy?: string;
   markedInErrorAt?: string;
+  // The state whoever last handed this job back left it in. Cleared when the
+  // job is completed or claimed afresh, so a live claim never shows a stale one.
+  handback?: TaskHandback;
+  // How many times the job has been handed back. A job round the loop four
+  // times is going in circles - exactly the "no answer, try again tomorrow"
+  // failure - so the card can say so.
+  handbackCount?: number;
+  history?: TaskEvent[];
 }
 
 // Ward Task - recurring shift tasks

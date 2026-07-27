@@ -86,9 +86,9 @@ export function KanbanColumn({
         {tasks.length === 0 ? (
           <div className="h-full flex items-center justify-center">
             <div className="text-center px-4" style={{ color: isFantastical ? "#818CF8" : "#6b7280" }}>
-              <p className="text-4xl mb-2">{title === "Not Started" ? "📋" : title === "In Progress" ? "🔄" : "🎉"}</p>
-              <p className="text-sm font-medium">{title === "Not Started" ? "No tasks claimed" : title === "In Progress" ? "Nothing in progress" : "Nothing completed yet"}</p>
-              <p className="text-xs mt-1">{title === "Not Started" ? "Claim tasks from the Team Diary" : title === "In Progress" ? "Drag tasks here when working" : "Complete tasks to see them here"}</p>
+              <p className="text-4xl mb-2">{title === "To do" ? "📋" : title === "Waiting" ? "⏳" : "🎉"}</p>
+              <p className="text-sm font-medium">{title === "To do" ? "No jobs claimed" : title === "Waiting" ? "Not waiting on anyone" : "Nothing completed yet"}</p>
+              <p className="text-xs mt-1">{title === "To do" ? "Claim jobs from the Team Diary" : title === "Waiting" ? "Hand a job back as “waiting on someone” and it lands here" : "Complete jobs to see them here"}</p>
             </div>
           </div>
         ) : (

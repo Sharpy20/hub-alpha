@@ -2,9 +2,27 @@
 
 import { createContext, useContext, useState, ReactNode, useCallback, useMemo } from "react";
 import { toast } from "sonner";
-import { DiaryTask } from "@/lib/types";
+import { DiaryTask, TaskEvent, TaskEventType, TaskHandback } from "@/lib/types";
 import { ALL_DEMO_TASKS } from "@/lib/data/tasks";
+import { handbackHistoryDetail } from "@/lib/data/tasks/handback";
 import { toLocalDateStr } from "@/lib/utils/date";
+
+// Append-only task history. The events already fired, they were simply never
+// kept - so Reopen used to wipe completedBy/completedAt with no trace.
+let eventSeq = 0;
+function event(type: TaskEventType, by: string, detail?: string): TaskEvent {
+  eventSeq += 1;
+  return {
+    id: `ev-${eventSeq}-${type}`,
+    type,
+    by,
+    at: new Date().toISOString(),
+    detail,
+  };
+}
+
+const withEvent = <T extends DiaryTask>(task: T, e: TaskEvent): T =>
+  ({ ...task, history: [...(task.history || []), e] }) as T;
 
 interface TasksContextType {
   // Tasks marked in error are excluded here, so every consumer's lists and
@@ -19,6 +37,8 @@ interface TasksContextType {
   // Tasks are never deleted - marking in error keeps the record for audit.
   markInError: (taskId: string, userName: string) => void;
   restoreFromError: (taskId: string) => void;
+  // Hand a part-done job back with structured state (BACKLOG Section M).
+  handBackTask: (taskId: string, userName: string, handback: TaskHandback) => void;
 }
 
 const TasksContext = createContext<TasksContextType | null>(null);
@@ -65,22 +85,32 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         if (t.id !== taskId) return t;
 
         if (t.claimedBy === userName) {
-          // Unclaim if we own it
-          return {
-            ...t,
-            claimedBy: undefined,
-            claimedAt: undefined,
-          };
+          // Drop: claimed by mistake, silent, no state recorded. Handing a
+          // part-done job back is a different action (handBackTask).
+          return withEvent(
+            { ...t, claimedBy: undefined, claimedAt: undefined },
+            event("dropped", userName)
+          );
         } else if (!t.claimedBy || steal) {
           // Claim if unclaimed, or steal if already claimed
           // Set status to pending (Todo) not in_progress
           const today = toLocalDateStr();
-          return {
-            ...t,
-            claimedBy: userName,
-            claimedAt: today,
-            status: t.status === "completed" ? "pending" : t.status === "in_progress" ? "pending" : t.status,
-          };
+          return withEvent(
+            {
+              ...t,
+              claimedBy: userName,
+              claimedAt: today,
+              status: t.status === "completed" ? "pending" : t.status === "in_progress" ? "pending" : t.status,
+              // A live claim must not show someone else's stale hand-back state,
+              // but the history line keeps the record of it.
+              handback: undefined,
+            },
+            event(
+              steal && t.claimedBy ? "taken_over" : "claimed",
+              userName,
+              steal && t.claimedBy ? `from ${t.claimedBy}` : undefined
+            )
+          );
         }
         return t;
       });
@@ -108,12 +138,21 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
       return prev.map((t) =>
         t.id === taskId
-          ? {
-              ...t,
-              status: t.status === "completed" ? "pending" : "completed",
-              completedAt: t.status === "completed" ? undefined : today,
-              completedBy: t.status === "completed" ? undefined : userName,
-            }
+          ? withEvent(
+              {
+                ...t,
+                status: t.status === "completed" ? "pending" : "completed",
+                completedAt: t.status === "completed" ? undefined : today,
+                completedBy: t.status === "completed" ? undefined : userName,
+                // Completing settles whatever state it was handed back in.
+                handback: t.status === "completed" ? t.handback : undefined,
+              },
+              // Reopen used to wipe completedBy/completedAt with no trace; the
+              // history line is what makes it non-lossy.
+              t.status === "completed"
+                ? event("reopened", userName, t.completedBy ? `was completed by ${t.completedBy}` : undefined)
+                : event("completed", userName)
+            )
           : t
       );
     });
@@ -155,6 +194,54 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  /**
+   * Hand a job back with structured state. Unlike Drop this leaves a trace, and
+   * unlike Mark Complete it does not lie (so a discharge barrier stays up).
+   * Destination decides where it lands: back in today's pool, scheduled forward
+   * to the chase date, or kept with the person who handed it back.
+   */
+  const handBackTask = useCallback(
+    (taskId: string, userName: string, handback: TaskHandback) => {
+      setTasks((prev) => {
+        const task = prev.find((t) => t.id === taskId);
+        if (!task) return prev;
+
+        setTimeout(() => {
+          toast.success(
+            handback.destination === "keep"
+              ? `Updated "${task.title}" - still with you`
+              : `Handed back "${task.title}"`
+          );
+        }, 0);
+
+        return prev.map((t) => {
+          if (t.id !== taskId) return t;
+          const dateField = t.type === "appointment" ? "appointmentDate" : "dueDate";
+          const reschedule =
+            handback.destination === "scheduled" && handback.chaseDate
+              ? { [dateField]: handback.chaseDate }
+              : {};
+          return withEvent(
+            {
+              ...t,
+              ...reschedule,
+              handback,
+              handbackCount: (t.handbackCount || 0) + 1,
+              // Keeping it means it stays claimed by you; otherwise it goes back
+              // into the pool so the next person on shift can actually see it.
+              claimedBy: handback.destination === "keep" ? userName : undefined,
+              claimedAt: handback.destination === "keep" ? t.claimedAt : undefined,
+              // Never completed - that is the lie this feature exists to avoid.
+              status: "pending",
+            } as DiaryTask,
+            event("handed_back", userName, handbackHistoryDetail(handback))
+          );
+        });
+      });
+    },
+    []
+  );
+
   // Everything reading `tasks` skips marked-in-error records automatically.
   const visibleTasks = useMemo(() => tasks.filter((t) => !t.inError), [tasks]);
 
@@ -170,6 +257,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         addTask,
         markInError,
         restoreFromError,
+        handBackTask,
       }}
     >
       {children}

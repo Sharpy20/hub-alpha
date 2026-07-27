@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { X, Hand, Check, Clock, AlertTriangle, Calendar, User, FileText, Link as LinkIcon, Save } from "lucide-react";
+import { X, Hand, Check, Clock, AlertTriangle, Calendar, User, FileText, Link as LinkIcon, Save, Undo2 } from "lucide-react";
+import { HandBackModal } from "@/components/modals/HandBackModal";
+import { HandbackBadge } from "@/components/tasks/HandbackBadge";
+import { TaskHistory } from "@/components/tasks/TaskHistory";
 import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import { DiaryTask, SHIFT_CONFIG, TASK_CATEGORY_CONFIG, PRIORITY_CONFIG } from "@/lib/types";
 import Link from "next/link";
 import { toasts, showInfo } from "@/lib/utils/toast";
 import { useTasks } from "@/app/tasks-provider";
+import { nextLabel } from "@/lib/data/tasks/handback";
 
 interface TaskDetailModalProps {
   isOpen: boolean;
@@ -29,7 +33,8 @@ export function TaskDetailModal({
   onToggleComplete,
   onUpdate,
 }: TaskDetailModalProps) {
-  const { markInError } = useTasks();
+  const { markInError, handBackTask } = useTasks();
+  const [showHandBack, setShowHandBack] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   // Two-tap confirm for "Mark in error" - tasks are never deleted, this flags
   // a wrongly-entered task and drops it from active views (restorable in Reports).
@@ -162,6 +167,10 @@ export function TaskDetailModal({
   };
 
   return (
+    <>
+    {/* The backdrop closes on click, so the hand-back sheet is rendered as a
+        sibling below - nested inside, every click in it would bubble up here
+        and shut both modals. */}
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={onClose}>
       <div
         ref={dialogRef}
@@ -283,6 +292,34 @@ export function TaskDetailModal({
                   {task.patientName || "No patient specified"}
                 </p>
               )}
+            </div>
+          )}
+
+          {/* What state the last person left it in, and what happens next. This
+              is what "leave it claimed" used to hide from the next shift. */}
+          {task.handback && (
+            <div className="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-4">
+              <label className="text-xs font-semibold text-indigo-500 uppercase tracking-wider">
+                Handed back
+              </label>
+              <div className="mt-1.5">
+                <HandbackBadge handback={task.handback} count={task.handbackCount} />
+              </div>
+              <p className="text-sm text-indigo-900 mt-2">
+                Next: <strong>{nextLabel(task.handback.next)}</strong>
+                {task.handback.chaseDate && (
+                  <>
+                    {" "}
+                    &middot; {task.handback.state === "waiting" ? "chase" : "back"} on{" "}
+                    <strong>
+                      {task.handback.chaseDate.split("-").reverse().join("/")}
+                    </strong>
+                  </>
+                )}
+              </p>
+              <p className="text-xs text-indigo-700 mt-0.5">
+                Left by {task.handback.by}
+              </p>
             </div>
           )}
 
@@ -443,6 +480,9 @@ export function TaskDetailModal({
             </div>
           )}
 
+          {/* Append-only history - who did what, so Reopen is no longer lossy */}
+          <TaskHistory history={task.history} />
+
           {/* Created Info */}
           <div className="text-xs text-gray-400 pt-2 border-t border-gray-100">
             Created by {task.createdBy} on {task.createdAt}
@@ -490,14 +530,27 @@ export function TaskDetailModal({
                   Claim Task
                 </button>
               )}
+              {/* Drop splits in two (BACKLOG Section M): Drop stays the silent
+                  "claimed by mistake", Hand back records what state it is in so
+                  the next shift is not guessing. */}
               {!isCompleted && isClaimedByMe && (
                 <button
                   onClick={handleClaim}
                   className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center gap-2"
-                  title="Release this task so others can pick it up"
+                  title="Claimed this by mistake - release it, no state recorded"
                 >
                   <Hand className="w-4 h-4" />
                   Drop
+                </button>
+              )}
+              {!isCompleted && (
+                <button
+                  onClick={() => setShowHandBack(true)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2"
+                  title="Leave it in a known state for whoever picks it up next"
+                >
+                  <Undo2 className="w-4 h-4" />
+                  Hand back
                 </button>
               )}
               {!isCompleted && isClaimed && !isClaimedByMe && (
@@ -552,5 +605,20 @@ export function TaskDetailModal({
         </div>
       </div>
     </div>
+
+    <HandBackModal
+      isOpen={showHandBack}
+      onClose={() => setShowHandBack(false)}
+      task={task}
+      taskTitle={task.title}
+      patientName={task.type === "ward" ? undefined : task.patientName}
+      staffName={currentUserName}
+      onConfirm={(handback) => {
+        handBackTask(task.id, currentUserName, handback);
+        // The job has left this person - close the detail view behind it.
+        onClose();
+      }}
+    />
+    </>
   );
 }

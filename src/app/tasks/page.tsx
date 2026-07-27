@@ -53,6 +53,7 @@ import {
 import { ConfirmDialog } from "@/components/ui";
 import { GuideSelect } from "@/components/ui/GuideSelect";
 import { guideLabel } from "@/lib/data/guides/catalog";
+import { HandbackBadge, handbackTooltip } from "@/components/tasks/HandbackBadge";
 
 // Helper functions – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {
@@ -230,6 +231,12 @@ function TaskCard({
               {(task.type === "patient" || task.type === "appointment") && task.patientName && (
                 <p className={`text-white font-medium truncate ${compact ? "text-xs" : "text-sm"}`}>👤 {task.patientName}</p>
               )}
+              {/* Someone has been on this and left it in a known condition. */}
+              {task.handback && !isCompleted && (
+                <div className="mt-1">
+                  <HandbackBadge handback={task.handback} count={task.handbackCount} size="xs" />
+                </div>
+              )}
               {isClaimed && !isCompleted && (
                 <div className="flex items-center justify-between gap-1.5 mt-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -323,6 +330,13 @@ function TaskCard({
               </div>
               {(task.type === "patient" || task.type === "appointment") && task.patientName && (
                 <p style={{ color: "#9B9A97", fontSize: "11px", fontFamily: '"Courier New", monospace' }}>👤 {task.patientName}</p>
+              )}
+              {/* Someone has been on this and left it in a known condition -
+                  the thing "leave it claimed" used to hide from the next shift. */}
+              {task.handback && !isCompleted && (
+                <div className="mt-1">
+                  <HandbackBadge handback={task.handback} count={task.handbackCount} size="xs" />
+                </div>
               )}
               <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                 {!isCompleted && !isClaimed && onClaim && (
@@ -453,6 +467,11 @@ function SimpleTaskCard({
           {(task.type === "patient" || task.type === "appointment") && task.patientName && (
             <span className="text-white/80 text-[10px] flex-shrink-0 truncate max-w-[120px]">👤 {task.patientName}</span>
           )}
+          {/* Simple view is deliberately two lines, so the hand-back state is a
+              marker with the detail in the tooltip rather than a full badge. */}
+          {task.handback && (
+            <span className="text-[11px] flex-shrink-0" title={handbackTooltip(task.handback)}>⏳</span>
+          )}
           {!isClaimed && onClaim && (
             <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0" title="Assign this task to yourself"><Hand className="w-2.5 h-2.5" /> Claim</button>
           )}
@@ -486,6 +505,9 @@ function SimpleTaskCard({
         <h4 className="text-xs truncate flex-1 min-w-0" style={{ color: textColor, fontWeight: isNotion ? 400 : 600 }}>{task.title}</h4>
         {(task.type === "patient" || task.type === "appointment") && task.patientName && (
           <span className="text-[10px] flex-shrink-0 truncate max-w-[100px]" style={{ color: isNotion ? "#9B9A97" : `${textColor}90` }}>👤 {task.patientName}</span>
+        )}
+        {task.handback && (
+          <span className="text-[11px] flex-shrink-0" title={handbackTooltip(task.handback)}>⏳</span>
         )}
         {!isClaimed && onClaim && (
           <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="text-[10px] flex-shrink-0 rounded px-1.5 py-0.5 transition-colors" style={{ border: `1px solid ${accent}`, color: accent }} title="Assign this task to yourself">Claim</button>

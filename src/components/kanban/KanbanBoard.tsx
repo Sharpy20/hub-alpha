@@ -1,6 +1,7 @@
 "use client";
 
 import { DiaryTask } from "@/lib/types";
+import { showInfo } from "@/lib/utils/toast";
 import { KanbanColumn } from "./KanbanColumn";
 import { toLocalDateStr } from "@/lib/utils/date";
 
@@ -15,14 +16,16 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   // Filter tasks claimed by current user
   const myTasks = tasks.filter((t) => t.claimedBy === currentUserName);
 
-  // Separate into columns
-  // "Not Started" = claimed tasks that are pending (not in_progress or completed)
-  const todayTasks = myTasks.filter(
-    (t) => t.status === "pending" || t.status === "overdue"
+  // Columns are To do / Waiting / Done (BACKLOG Section M). The old "In
+  // Progress" column was self-declared - you dragged a card into it and nobody
+  // else learned anything. What you are WAITING on is the useful split: it
+  // declutters the list and shows what actually needs chasing.
+  const waitingTasks = myTasks.filter(
+    (t) => t.status !== "completed" && t.handback?.state === "waiting"
   );
-  // "In Progress" = tasks with in_progress status
-  const inProgressTasks = myTasks.filter((t) => t.status === "in_progress");
-  // "Completed" = completed tasks (show recent ones)
+  const todoTasks = myTasks.filter(
+    (t) => t.status !== "completed" && t.handback?.state !== "waiting"
+  );
   const completedTasks = myTasks.filter((t) => t.status === "completed");
 
   const handleDragStart = (e: React.DragEvent, task: DiaryTask) => {
@@ -33,12 +36,15 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
     e.preventDefault();
   };
 
-  const handleDropToday = (taskId: string) => {
-    onUpdateTask(taskId, { status: "pending" });
+  // Dragging out of Waiting clears the waiting state - you are back on it.
+  const handleDropTodo = (taskId: string) => {
+    onUpdateTask(taskId, { status: "pending", handback: undefined });
   };
 
-  const handleDropInProgress = (taskId: string) => {
-    onUpdateTask(taskId, { status: "in_progress" });
+  // You cannot drag INTO waiting: waiting means waiting on someone, and the
+  // "who" is the whole point. Hand back is where that gets recorded.
+  const handleDropWaiting = () => {
+    showInfo("Use Hand back on the job to say who you are waiting on.");
   };
 
   const handleDropCompleted = (taskId: string) => {
@@ -76,11 +82,11 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   return (
     <div tabIndex={0} role="group" aria-label="Task board columns" className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 px-1 snap-x snap-mandatory sm:snap-none">
       <KanbanColumn
-        title="Not Started"
+        title="To do"
         icon="📋"
-        tasks={todayTasks}
+        tasks={todoTasks}
         gradient="from-amber-500 to-orange-600"
-        onDrop={handleDropToday}
+        onDrop={handleDropTodo}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onUnclaim={handleUnclaim}
@@ -89,11 +95,11 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
         onTaskClick={onTaskClick}
       />
       <KanbanColumn
-        title="In Progress"
-        icon="🔄"
-        tasks={inProgressTasks}
-        gradient="from-blue-500 to-indigo-600"
-        onDrop={handleDropInProgress}
+        title="Waiting"
+        icon="⏳"
+        tasks={waitingTasks}
+        gradient="from-sky-500 to-blue-600"
+        onDrop={handleDropWaiting}
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onUnclaim={handleUnclaim}
@@ -102,7 +108,7 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
         onTaskClick={onTaskClick}
       />
       <KanbanColumn
-        title="Completed"
+        title="Done"
         icon="✅"
         tasks={completedTasks}
         gradient="from-green-500 to-emerald-600"

@@ -211,16 +211,16 @@ export default function MyTasksPage() {
           <h3 className="font-semibold text-gray-900 mb-3">How it works</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
-              <p className="font-medium text-gray-900 mb-1">📋 Today</p>
-              <p className="text-gray-500">Tasks you&apos;ve claimed from the Team Diary. These are your priorities for today.</p>
+              <p className="font-medium text-gray-900 mb-1">📋 To do</p>
+              <p className="text-gray-500">Jobs you have claimed from the Team Diary. These are yours to get through.</p>
             </div>
             <div>
-              <p className="font-medium text-gray-900 mb-1">🔄 In Progress</p>
-              <p className="text-gray-500">Drag tasks here when you start working on them. The Team Diary shows &quot;{user.name} working on&quot;.</p>
+              <p className="font-medium text-gray-900 mb-1">⏳ Waiting</p>
+              <p className="text-gray-500">Jobs where you are waiting on someone else. Hand a job back as &quot;waiting on someone&quot; and it moves here with a chase date, so it stops cluttering your list without being forgotten.</p>
             </div>
             <div>
-              <p className="font-medium text-gray-900 mb-1">✅ Completed</p>
-              <p className="text-gray-500">Drop tasks here or click &quot;Done&quot; to mark them complete. Completed tasks will be removed when a patient is discharged.</p>
+              <p className="font-medium text-gray-900 mb-1">✅ Done</p>
+              <p className="text-gray-500">Drop jobs here or click &quot;Done&quot; to mark them complete. Completed jobs are removed when a patient is discharged.</p>
             </div>
           </div>
         </div>

@@ -25,11 +25,9 @@ import {
 } from "@/lib/data/tasks/handback";
 import { toLocalDateStr } from "@/lib/utils/date";
 
-const addDays = (n: number) => {
-  const d = new Date();
-  d.setDate(d.getDate() + n);
-  return toLocalDateStr(d);
-};
+// The date defaults to TODAY, not a couple of days out (Mike, 27 Jul): a job
+// handed back should stay in this shift's pool unless someone deliberately
+// pushes it out. Defaulting forward quietly buries work for two days.
 
 /** An answered question, folded down to one line with a way back in. */
 function AnsweredRow({
@@ -87,7 +85,7 @@ export function HandBackModal({
   const [next, setNext] = useState<HandbackNext | null>(null);
   const [destination, setDestination] = useState<HandbackDestination | null>(null);
   const [waitingOn, setWaitingOn] = useState<string>("");
-  const [chaseDate, setChaseDate] = useState<string>(addDays(2));
+  const [chaseDate, setChaseDate] = useState<string>(toLocalDateStr());
   const [copied, setCopied] = useState(false);
   // Answered questions collapse to a one-line summary so the sheet does not
   // grow into a scrolling wall - especially with the waiting-on picker and the
@@ -124,7 +122,7 @@ export function HandBackModal({
     setNext(null);
     setDestination(null);
     setWaitingOn("");
-    setChaseDate(addDays(2));
+    setChaseDate(toLocalDateStr());
     setCopied(false);
     setReopened(null);
   };

@@ -308,9 +308,13 @@ export function HandBackModal({
             <span className="text-gray-400 mr-1.5">3.</span>Where does it go?
           </p>
           <div className="space-y-2">
-            {/* Waiting already carries a chase date, so "on a later day" would
-                just restate it - the only real question left is who holds it. */}
-            {HANDBACK_DESTINATIONS.filter((d) => !(isWaiting && d.value === "scheduled")).map((d) => (
+            {/* Always all three. An earlier version hid "on a later day" when
+                the state was "waiting on someone", on the grounds that the
+                chase date already said it - but a list that changes length
+                depending on an answer three questions earlier just reads as a
+                bug (Mike hit it twice, 27 Jul). The redundancy is harmless;
+                the inconsistency was not. */}
+            {HANDBACK_DESTINATIONS.map((d) => (
               <button
                 key={d.value}
                 onClick={() => { setDestination(d.value); setReopened(null); }}

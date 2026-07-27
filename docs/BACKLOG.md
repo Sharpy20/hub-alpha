@@ -674,11 +674,61 @@ end of the session.
       hands straight over. Confirmation line on save. Diary Add Task verified unchanged.
       - Note: `formatDate` in `tasks/page.tsx` was a duplicate of `toLocalDateStr`; the extracted
         file uses the shared util.
-- [ ] **Guide question answers must reach the case note (AUDIT, not started).** Review every
-      guide that asks the user a question with answer options and confirm the chosen answer flows
-      into the end-of-guide clipboard text. Some already do (area city/county, consent, S117
-      status - snags 92-95). Report findings before editing. Overlaps Section C "capacity
-      assessment guide - make interactive" (choices should alter the case-note output).
+- [~] **Guide question answers must reach the case note. AUDIT DONE 27 Jul - findings below,
+      nothing edited yet.** Every guide that asks a question with answer options was traced from
+      the answer through to the end-of-guide clipboard text. Snag 92-95 was only half true: the
+      **area** answer works everywhere, the **consent** answer works nowhere.
+
+      **Where the answers are captured:** `src/app/guides/[id]/page.tsx` holds four bits of state -
+      `criteriaConfirmed`, `patientConsent`, `patientSection`, `selectedArea` (lines 224-227), and
+      `generateCaseNote()` (line 279) is the only place they can reach the clipboard.
+
+      **WORKING (no action):**
+      - **Area (city/county) - 4 of 4 workflows.** `imha-advocacy` builds a bespoke note naming the
+        right provider and email; `safeguarding`, `safeguarding-children` substitute
+        `[DERBY CITY/DERBYSHIRE COUNTY]`, `homeless-discharge` substitutes `[DERBY/COUNTY]`.
+      - **Legal status in `imha-advocacy`** - bespoke branch writes "Patient is informal (voluntary)"
+        or "Patient is detained under <section>".
+      - **`leave-discharge-transfer`** - the 3-way pathway choice titles the ChecklistSummary.
+      - The builders (MSE, care plan, risk assessment, admission checklist) assemble their output
+        from the selections themselves, so they cannot drift. The 6 pure-guidance `GuidePrompts`
+        tools have no output by design (Session 27) - out of scope.
+
+      **BROKEN - N1. Consent answer never reaches any case note (4 workflows).** `patientConsent`
+      is used only to colour the buttons and to unlock Next (`canProceed`, line 313). It is never
+      read by `generateCaseNote()`. So:
+      - `imha-advocacy` - note has no consent sentence at all, despite asking.
+      - `safeguarding` - `Patient [WAS/WAS NOT] informed of referral.` left literal.
+      - `safeguarding-children` - `Parent [WAS/WAS NOT] informed.` left literal.
+      - `ctr-dsp` - `DSP consent [OBTAINED/PENDING].` left literal.
+      - ⚠️ **Needs Mike's call before the fix:** in the two safeguarding guides the question asked is
+        *"did you get consent"* but the placeholder records *"was the patient/parent informed"*.
+        Those are different facts - a straight substitution would put something untrue in the record.
+        Consent and informing need either two questions or a reworded note.
+      - ⚠️ `ctr-dsp`'s consent step defines no yes/no labels, so it falls back to the generic
+        "Consent Obtained" / "No Consent", which does not map onto Obtained/Pending.
+
+      **BROKEN - N2. `social-care` throws its answer away.** It asks the S117 question but its case
+      note has no `[SECTION]` placeholder - in fact `[SECTION]` appears in **zero** clipboard strings
+      repo-wide, so the substitution at line 301 is dead code outside the IMHA bespoke branch. Two
+      further problems with the same step: it asks a yes/no-shaped question ("is the patient under
+      S3, **or have they been in a previous admission**") but renders the generic 10-option MHA
+      status list, so "previously on S3" cannot be expressed at all - and that is exactly the case
+      S117 entitlement turns on (see memory `s117-two-meetings-rule`). The S117-vs-standard pathway
+      described in the step content drives nothing: no forms, contacts or note text change.
+
+      **BROKEN - N3. `homeless-discharge` asserts a fact it never asked for.** Its note hardcodes
+      "Patient consent obtained." and the workflow has no consent step.
+
+      **BROKEN - N4. Chase log ignores the area answer.** `handleLogReferral` (line 368) takes
+      `sub.methods[0].label` regardless of `selectedArea`, so a county safeguarding referral is
+      logged as sent to the Derby City team. 28 area-tagged submission methods are affected.
+
+      **GAP - N5. `mha-checker` has no case-note output at all.** The pathway choice and the whole
+      scrutiny checklist are ticked and then lost. Obvious candidate for a ChecklistSummary.
+
+      Overlaps Section C "capacity assessment guide - make interactive" (choices should alter the
+      case-note output).
 - [ ] **Break up text-heavy guides with progressive disclosure (not started).** Pattern Mike set:
       **S117 Aftercare & Funding - the basics** - truncate each paragraph under its header until
       clicked, and for "who qualifies" add an optional **"Does my patient qualify?"** pop-up that

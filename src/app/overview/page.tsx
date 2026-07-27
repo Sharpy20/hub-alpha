@@ -542,6 +542,7 @@ const PatientReviewCard = ({
   onStamp,
   onClearStamp,
   onOpenTask,
+  pageLens,
 }: {
   summary: PatientSummary;
   actions: JobActions;
@@ -550,9 +551,15 @@ const PatientReviewCard = ({
   onStamp: (patientId: string, kind: StampKind) => void;
   onClearStamp: (patientId: string, kind: StampKind) => void;
   onOpenTask: (task: DiaryTask) => void;
+  pageLens: TaskLens;
 }) => {
   const s = summary;
-  const [lens, setLens] = useState<TaskLens>("all");
+  const [lens, setLens] = useState<TaskLens>(pageLens);
+  // Filtering the page to barriers (or waiting) now switches every patient to
+  // that view too - the two controls used to disagree, so you could be filtered
+  // at the top while each tile still showed everything (Mike, 27 Jul). Still
+  // overridable per patient afterwards.
+  useEffect(() => { setLens(pageLens); }, [pageLens]);
   // Jobs you have just acted on stay in view even if they no longer match the
   // filter, so ticking something off does not make it disappear from under you
   // (Mike, 27 Jul). Cleared whenever you change the filter.
@@ -862,6 +869,7 @@ const PatientTableRow = ({
   onStamp,
   onClearStamp,
   onOpenTask,
+  pageLens,
 }: {
   summary: PatientSummary;
   expanded: boolean;
@@ -872,9 +880,11 @@ const PatientTableRow = ({
   onStamp: (patientId: string, kind: StampKind) => void;
   onClearStamp: (patientId: string, kind: StampKind) => void;
   onOpenTask: (task: DiaryTask) => void;
+  pageLens: TaskLens;
 }) => {
   const s = summary;
-  const [lens, setLens] = useState<TaskLens>("all");
+  const [lens, setLens] = useState<TaskLens>(pageLens);
+  useEffect(() => { setLens(pageLens); }, [pageLens]);
   const [sticky, actions] = useStickyActions(rawActions);
   const pct = s.total > 0 ? Math.round((s.completed / s.total) * 100) : 0;
 
@@ -1137,6 +1147,9 @@ export default function OverviewPage() {
   const [statusFilter, setStatusFilter] = useState<"all" | "outstanding" | "done">("all");
   const [barriersOnly, setBarriersOnly] = useState(false);
   const [waitingOnly, setWaitingOnly] = useState(false);
+  // What the page-level filters mean for each patient tile. Barriers wins if
+  // both are on - it is the one people filter by in a bed meeting.
+  const pageLens: TaskLens = barriersOnly ? "barriers" : waitingOnly ? "waiting" : "all";
   const [overdueOnly, setOverdueOnly] = useState(false);
   const [unreviewedOnly, setUnreviewedOnly] = useState(false);
   const [wardFilter, setWardFilter] = useState<string[]>([]);
@@ -1757,6 +1770,7 @@ export default function OverviewPage() {
                     onStamp={handleStamp}
                     onClearStamp={handleClearStamp}
                     onOpenTask={openTaskDetail}
+                    pageLens={pageLens}
                   />
                 ))}
               </div>
@@ -1831,6 +1845,7 @@ export default function OverviewPage() {
                           onStamp={handleStamp}
                           onClearStamp={handleClearStamp}
                           onOpenTask={openTaskDetail}
+                          pageLens={pageLens}
                         />
                       ))}
                     </tbody>

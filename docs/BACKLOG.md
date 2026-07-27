@@ -588,7 +588,7 @@ actionable. `/overview` today is only a read-only trust-wide barriers roll-up.
   through rapid review since Friday. Real assurance metric, one tap.
 - **"Reviewed, no changes"** single tap when nothing needs doing, so the stamp still lands.
 
-### 6. Retire the chase log
+### 6. Retire the chase log - DONE 27 Jul (session 41)
 `/referrals/log` + `referral-log-provider.tsx` + the "Log to Chase Log" button on the referral
 completion screen all go. It was built early, has one entry point (a button in the `/guides`
 header), only fills if someone opts in, and is per-browser localStorage - which is why neither

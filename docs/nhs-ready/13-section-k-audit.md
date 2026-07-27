@@ -114,11 +114,26 @@ the repo stands.
 | Step | Status |
 |---|---|
 | Rebuild the contacts inventory outside the repo | **Done** (finding D) |
-| Decide on the four blank forms | **Needs Mike** (finding B) |
-| Strip the 33 comment values from source | Ready to run - safe now the inventory is complete |
-| Second history rewrite for the comment values | **Needs Mike** - my read is no (finding E) |
+| Decide on the four blank forms | **Done** - Mike: keep (finding B) |
+| Strip the 33 comment values from source | **Done** - see below |
+| Second history rewrite for the comment values | **Done** - Mike: no (finding E) |
 | Mini publish pipeline build | Not started - the remaining big Section K item |
 
-The strip is mechanical and reversible through git. It is not done yet because those comments
-are also working notes - once they are gone, the only place the numbers exist is the inventory
-file and the Trust's own systems. Say the word and it runs.
+### The strip (27 July 2026)
+
+All 33 comments removed. Each of the three files now carries a header note explaining the Rule-4
+pattern and pointing at `E:\Hub\temp\internal-contacts.md`, which was re-keyed by **entry id**
+rather than line number so it stays correct as the files change.
+
+**No internal contact detail remains in the repo.** What is still visible is public and meant to
+be used: council duty lines, charity helplines, IMHA providers, crisis numbers. Build clean,
+32/32 tests pass, no code touched - the diff is 33 comment deletions and three header notes.
+
+### One item still open
+
+`referral-workflows.ts:642` names an individual in **visible** content - "approved by Karamjit
+Chhoker, Head of Service" - given as the provenance for the 7-day notice rule on S117 meeting
+requests. Almost certainly a public council role, and the attribution is what makes the rule
+credible to a nurse. But it is the only named individual rendered on screen anywhere in the app,
+which makes it worth a deliberate decision rather than an oversight. Keep, or soften to "approved
+by the Head of Service"?

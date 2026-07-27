@@ -1,5 +1,12 @@
 import { Bookmark } from "@/lib/types";
 
+// Rule 4: contacts that are not publicly findable display "Hidden in demo mode".
+// The real values used to sit in comments beside them; they were stripped on
+// 27 July 2026 so no internal contact detail lives in this repo. They are held
+// outside it in E:\Hub\temp\internal-contacts.md, keyed by the entry id below.
+// Do not paste a real internal number back in - add it through the pipeline once
+// the Trust owns the hosting.
+
 export const bookmarks: Bookmark[] = [
   // Crisis Support - Derbyshire MH Helpline first (local service)
   {
@@ -272,7 +279,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Trust safeguarding team advice line (Option 1)",
     phone: "Hidden in demo mode",
-    // Real: 01332 623730 Option 1
   },
   {
     id: "sg-mash-health",
@@ -282,7 +288,6 @@ export const bookmarks: Bookmark[] = [
     category: "Safeguarding",
     requiresFocus: true,
     description: "Multi-Agency Safeguarding Hub health advisors",
-    // Real: dhcft.safeguardingadults@nhs.net
   },
   {
     id: "sg-derbyshire-sc",
@@ -293,7 +298,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Adult safeguarding referrals (Mon-Fri 8am-8pm, Sat 9:30am-4pm)",
     phone: "Hidden in demo mode",
-    // Real: 01629 533190 (office), 01629 532600 (out of hours)
   },
   {
     id: "sg-derby-city-mash",
@@ -304,7 +308,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Derby City adult safeguarding (Mon-Fri 9am-5pm)",
     phone: "Hidden in demo mode",
-    // Real: 01332 642855, out of hours Careline 01332 956606, AdultsMASH@derby.gov.uk
   },
   {
     id: "sg-dsab",
@@ -470,7 +473,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "DHCFT Safeguarding Unit advice line for children's concerns",
     phone: "Hidden in demo mode",
-    // Real: 01332 623730 Option 1
   },
   {
     id: "sg-derby-consultation",
@@ -481,7 +483,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Professional consultation line for Derby City children's concerns (Mon-Fri 10am-4pm)",
     phone: "Hidden in demo mode",
-    // Real: personal mobile - held in E:\Hub\temp\internal-contacts.md (kept out of the repo)
   },
   {
     id: "sg-derbyshire-consultation",
@@ -492,7 +493,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Starting Point Consultation and Advice Service for Professionals (Mon-Fri 10am-4pm)",
     phone: "Hidden in demo mode",
-    // Real: 01629 535353
   },
   {
     id: "sg-nspcc",
@@ -669,7 +669,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Main MHA admin. Section paperwork, tribunal requests, queries. Mon-Fri.",
     phone: "Hidden in demo mode",
-    // Real: 01332 623700 ext 33333
   },
   {
     id: "mha-admin-derwent",
@@ -680,7 +679,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "North MHA admin. Covers Chesterfield Royal SLA.",
     phone: "Hidden in demo mode",
-    // Real: 01246 216527
   },
   {
     id: "mha-focus-hub",
@@ -709,7 +707,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: false,
     description: "Guardianship forms G1-G10 and advice",
     phone: "Hidden in demo mode",
-    // Real: 01629 537904
   },
   {
     id: "mha-guardianship-city",
@@ -741,7 +738,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Clinical safety planning, incident management, safety boxes",
     phone: "Hidden in demo mode",
-    // Real: 01332 623700 ext 33350
   },
   {
     id: "ps-safety-planning",
@@ -799,7 +795,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "IPC queries, audits, hand hygiene, outbreaks. Ashbourne Centre.",
     phone: "Hidden in demo mode",
-    // Real: 01332 389150, dhcft.hpu@nhs.net
   },
   {
     id: "ipc-focus-hub",
@@ -819,7 +814,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Report immediately. Royal Derby Hospital occupational health.",
     phone: "Hidden in demo mode",
-    // Real: 01332 788331
   },
 
   // ===== PHARMACY =====
@@ -832,7 +826,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Medicines queries, prescribing advice. Ashbourne Centre, Kingsway.",
     phone: "Hidden in demo mode",
-    // Real: Stephen Jones (Chief), Rebecca Keeler (Clinical), Michelle Lad (Safety)
   },
   {
     id: "pharm-focus-hub",
@@ -873,7 +866,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: false,
     description: "Free 1:1 counselling. Self-referral. Assessment within 2-4 weeks. Mon-Fri 9-5.",
     phone: "Hidden in demo mode",
-    // Real: 01246 515951
   },
   {
     id: "wb-team",
@@ -884,7 +876,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Central contact for wellbeing queries, events, and resources",
     phone: "Hidden in demo mode",
-    // Real: dchst.yourwellbeingteam@nhs.net, 01332 564856 opt 6
   },
   {
     id: "wb-jucd",
@@ -925,7 +916,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Duty chaplain, all faiths and none. Ashbourne Centre.",
     phone: "Hidden in demo mode",
-    // Real: 01332 623700 (ask for duty chaplain), dhcft.chaplaincy.service@nhs.net
   },
   {
     id: "chap-hartington",
@@ -936,7 +926,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Duty chaplain at Chesterfield. 24/7.",
     phone: "Hidden in demo mode",
-    // Real: 01246 512567
   },
   {
     id: "chap-focus-hub",
@@ -958,7 +947,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "O2 cylinders, bed removals, patient transport within Trust",
     phone: "Hidden in demo mode",
-    // Real: 01332 623700 ext 33283, dhcft.portershelpdesk@nhs.net
   },
   {
     id: "ef-catering",
@@ -969,7 +957,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Patient/staff meals, hospitality",
     phone: "Hidden in demo mode",
-    // Real: 01332 623700 ext 33450/33232
   },
   {
     id: "ef-waste",
@@ -989,7 +976,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Report insects or pests on ward",
     phone: "Hidden in demo mode",
-    // Real: 01332 623700 ext 31047
   },
   {
     id: "ef-patient-transport",
@@ -1049,7 +1035,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Teams phones, 0300 numbers, mobiles, voicemail, pagers. Mon-Fri 9-5.",
     phone: "Hidden in demo mode",
-    // Real: named individual's direct dial - held in E:\Hub\temp\internal-contacts.md (kept out of the repo)
   },
 
   // ===== COUNTER FRAUD =====
@@ -1082,7 +1067,6 @@ export const bookmarks: Bookmark[] = [
     category: "Clinical Systems",
     requiresFocus: true,
     description: "Blood and lab results portal",
-    // Real URL: https://ice.chesterfieldroyal.nhs.uk/icedesktop/
   },
   {
     id: "language-line",
@@ -1102,7 +1086,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Incident reporting support. Mon-Fri 9-5.",
     phone: "Hidden in demo mode",
-    // Real: dhcft.datix@nhs.net
   },
   {
     id: "risk-management",
@@ -1113,7 +1096,6 @@ export const bookmarks: Bookmark[] = [
     requiresFocus: true,
     description: "Risk register, incident reviews, serious incidents",
     phone: "Hidden in demo mode",
-    // Real: named individual's email - held in E:\Hub\temp\internal-contacts.md (kept out of the repo)
   },
 ];
 

@@ -1,4 +1,9 @@
 // How-to guide data - extracted from how-to/[id]/page.tsx
+//
+// Rule 4: contacts that are not publicly findable display "Hidden in demo mode".
+// The real values used to sit in comments beside them; they were stripped on
+// 27 July 2026 and are held outside the repo in E:\Hub\temp\internal-contacts.md,
+// keyed by guide id.
 
 export interface GuideStep {
   id: string;
@@ -980,7 +985,6 @@ export const GUIDES: Record<string, GuideData> = {
     ],
     caseNote: `Take-home Prenoxad (naloxone injection) supplied under PGD on [DATE]. Patient identified at risk of opioid overdose and agreed at MDT. Informed consent obtained. Overdose-awareness and Prenoxad administration training completed with patient [+/- carer] on [DATE] by [NURSE]. Kit supplied: 1 x Prenoxad, batch [BATCH], expiry [EXPIRY]. Advised: call 999, IM injection, recovery position, stay until ambulance arrives, naloxone is short-acting. Added to leave/discharge plan. Further supplies via Derbyshire Recovery Partnership.`,
   },
-  // Real AMHP numbers (hidden in demo per Rule 4): City 01332 255609, County 01629 537904.
   "arrange-mha-assessment": {
     id: "arrange-mha-assessment",
     title: "Arranging an MHA Assessment",
@@ -1161,7 +1165,6 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "6",
         title: "If in doubt",
-        // Real: the "291" bleep (internal bleep id - hidden per Rule 4)
         content: "Contact the patient's regular doctor, or the duty doctor bleep holder out of hours (bleep number hidden in demo mode).",
       },
     ],

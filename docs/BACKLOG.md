@@ -252,8 +252,20 @@ moment ONE genuinely internal item is actually in there - hence the fictional-de
       - Two content gaps it surfaced: risk domain 6 ("Risk to a foetus, infant or child
         under 18") has an EMPTY risk list in `risk.ts` so it offers nothing in the app; and
         the patient-leaflet card still says "23 patient-facing guides" when there are 29.
-- [ ] Purge: delete/gitignore the manifest files; strip real-number comments (values
-      already preserved in E:\Hub\temp\...\_CONTACTS-INVENTORY.md, outside repo).
+- [x] **Purge - DONE 27 Jul.** No manifest files to delete (see audit - none tracked). All
+      **33 Rule-4 comments stripped** from bookmarks/index.ts, referral-workflows.ts and
+      howto-guides.ts; each file gained a header note saying what the pattern is and that the
+      values live in `E:\Hub\temp\internal-contacts.md`, keyed by entry id (not line number,
+      so it stays correct as files move). **No internal contact detail remains in the repo** -
+      what is left is public: council lines, charities, IMHA providers, crisis numbers, which
+      are real and meant to be used. Build clean, 32/32 tests pass.
+      - Mike's decisions, 27 Jul: **keep the 4 public/ blank forms**; **no second history
+        rewrite** for the stripped comments (internal extensions in a private repo, not PII).
+      - **One left for Mike:** `referral-workflows.ts:642` (S117 meeting request criteria)
+        names an individual in visible content - "approved by Karamjit Chhoker, Head of
+        Service" - as the provenance for the 7-day notice rule. Probably a public council
+        role, but it is the only named individual on screen. Keep, or cut to "approved by
+        the Head of Service"?
 - [ ] History verify: F1 rewrite (6 Jul) already purged the FOCUS dumps - check nothing
       trust-sourced was committed since; targeted rewrite if needed (bundle playbook exists).
 - [ ] **BUILD: mini publish pipeline** (1-2 sessions) - guide content JSON schema; server-side

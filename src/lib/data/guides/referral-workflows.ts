@@ -1,4 +1,9 @@
 // Referral workflow data - extracted from referrals/[id]/page.tsx
+//
+// Rule 4: contacts that are not publicly findable display "Hidden in demo mode".
+// The real values used to sit in comments beside them; they were stripped on
+// 27 July 2026 and are held outside the repo in E:\Hub\temp\internal-contacts.md,
+// keyed by workflow id. Public numbers (councils, charities, MASH) stay visible.
 
 export interface WorkflowForm {
   label: string;
@@ -434,13 +439,9 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "For urgent referrals, telephone first then follow up in writing within 48 hours. Save a copy of the referral in the child's health record.\n\nInclude: child's name, DOB, address, school. Parent/carer details. Nature of concern - be specific. How long concerns have been present. Any assessment tools used. Whether the family were informed. Other agencies involved. Your details and contact number.",
         methods: [
           { type: "phone", label: "Derby City - Initial Response Team (Mon-Fri 9am-5pm)", value: "Hidden in demo mode", area: "city" },
-          // Real: 01332 641172
           { type: "phone", label: "Derby City - Out of Hours (Careline)", value: "Hidden in demo mode", area: "city" },
-          // Real: 01332 956607
           { type: "phone", label: "Derbyshire - Starting Point (Mon-Fri 9am-5pm)", value: "Hidden in demo mode", area: "county" },
-          // Real: 01629 533190
           { type: "phone", label: "Derbyshire - Out of Hours", value: "Hidden in demo mode", area: "county" },
-          // Real: 01629 532600
           { type: "email", label: "Non-urgent written referral (Derbyshire)", value: "starting.point@derbyshire.gov.uk" },
         ],
       },
@@ -549,7 +550,6 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "criteria",
         type: "criteria",
         title: "Confirm Criteria",
-        // Real: MHA Office 01332 623700 ext 33333 (internal extension - hidden per Rule 4)
         content: "Patient has potential Care Act needs, requires Enablement input, or requires Adult Social Care attendance for S117 meetings.\n\nBefore referral, confirm:\n• Patient is a Derby City resident (check usual address / funding authority)\n• If S117 – confirm who has S117 aftercare responsibility\n• What was the patient's address when they were made subject to Section 3?\n\nMHA Office number to check if Derby City are S117 responsible: Hidden in demo mode",
         checkboxLabel: "I confirm the patient is a Derby City resident and meets criteria for this referral",
       },
@@ -589,7 +589,6 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         methods: [
           { type: "email", label: "Derby City MH Social Care (All referrals & S117 meeting requests)", value: "MHSOCIALCARE@DERBY.GOV.UK" },
           { type: "phone", label: "Derby City MH Social Care Team", value: "01332 640777" },
-          // Real: 01332 623700 ext 33333 (internal extension - hidden per Rule 4)
           { type: "phone", label: "MHA Office (S117 responsibility check)", value: "Hidden in demo mode" },
           { type: "phone", label: "Derbyshire County ASC", value: "01629 533190", area: "county" },
         ],

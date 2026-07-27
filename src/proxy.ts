@@ -19,6 +19,7 @@ const FULL_ONLY_PREFIXES = [
   "/my-diary",
   "/my-tasks",
   "/patients",
+  "/overview",
   "/reports",
   "/data-sources",
   "/referrals/log",

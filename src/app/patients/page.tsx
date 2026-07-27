@@ -467,11 +467,11 @@ export default function PatientsPage() {
                 Add Patient
               </button>
               <Link
-                href={link("/reports")}
+                href={link("/overview")}
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:from-violet-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
               >
                 <BarChart3 className="w-5 h-5" />
-                Reports
+                Overview
               </Link>
             </div>
           </div>

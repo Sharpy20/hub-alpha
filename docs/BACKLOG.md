@@ -473,7 +473,50 @@ currently wipes `completedBy`/`completedAt` outright.
 times is going round in circles - exactly the failure in Tess's "no answer, try again tomorrow"
 example. Surfacing "4th time round" on the card makes it visible in ward round, and it demos well.
 
-### 5. `/overview` becomes the one place (Mike's call)
+### 5. `/overview` becomes the one place - BUILT 27 Jul (session 41)
+**Mike's verdict on the 22 Jul `/overview` + the reports page: "buries the useful bit, and it is
+not clear it offers any of the features we discussed - the daily review / MDT feels like an
+afterthought."** Rebuilt this session. What shipped:
+- **Menu:** "Trust Overview" -> **Overview**, now FIRST in the More dropdown (desktop + mobile).
+  "Progress Reports" removed from both menus; `/reports` is a redirect stub to `/overview`.
+  Patients page button relabelled Reports -> Overview.
+- **Lands on the work, not a wizard.** The old two-stage "pick a scope -> Generate Report" gate
+  is gone; the screen opens on the patient list with the default scope already applied.
+- **Trust-wide barriers roll-up DROPPED ENTIRELY** (Mike's call, 27 Jul - it was the thing doing
+  the burying). The ward league table, "most common barriers" and blocked-patient list from the
+  22 Jul build are gone. Barrier data survives everywhere it is actually useful: the headline
+  strip, the per-patient count, the per-job badge, the barriers-only filter and the new
+  barrier-flag toggle. `CareReviewRollup` also dropped from this screen (still used on /patients).
+- **Scope:** the three pickers kept, compacted into one bar. Defaults to **single ward with the
+  user's own ward preselected**; when the ward is unknown nothing is preselected and the screen
+  asks for one rather than silently showing Byron (the old code defaulted to `activeWard ||
+  "Byron"` AND mismatched the select's lowercase option values, so the dropdown lied).
+- **Three review stamps per patient** - MDT / rapid review / named nurse. One tap each, records
+  who and when, tap again same-day to undo. Chips age green -> amber past each stamp's interval
+  (MDT 7d, rapid 1d, named nurse 14d). New `src/lib/data/patient-review.ts` (localStorage,
+  same pattern as `care-review.ts`). New **"Stamp all shown"** row for the rapid-review case, a
+  **"Not reviewed today"** filter to work down to an empty list, a **Reviewed** column in the
+  table (sortable) and a **reviewed-today** headline counter. This is the assurance metric
+  falling out for free - no extra data entry.
+- **Inline job actions, one tap, no modals.** Outstanding: Complete, Flag/unflag barrier to
+  discharge. Completed: Reopen (keeps the date), Redo (expands a date picker in place and
+  reopens with the new date - Mike's "reopen the old job with a new date", not a new linked job).
+  All route through the existing provider so the diary, kanban and every count stay in step.
+- **Counters are filters.** Tapping Total / Outstanding / Overdue / Done on a patient tile
+  narrows that patient's job list; tapping the same count in the table opens the row already
+  filtered. Plus a one-tap "N jobs blocking discharge - show just these" on any blocked patient.
+- **Governance fix caught on the way:** `/overview` was never in `FULL_ONLY_PREFIXES` in
+  `src/proxy.ts` despite rendering patient names since 22 Jul. Added. Dormant either way while
+  `COLLAPSED_FOR_DEMO=true`, but it would have leaked PII into the limited build the moment the
+  v1/v2 split was restored.
+- Verified in-browser end to end (stamp persists + headline recount, complete, redo with a new
+  date, counter filters in both views, /reports redirect, menu order). Build clean, 32/32 tests.
+- **Still open from the spec below:** the hand-back sheet (section 1), waiting-on (2), case note
+  out (3), task history (4), retire the chase log (6). The stamps landing makes 4 more valuable -
+  hand-back count on the card needs history.
+
+**Original spec kept below for reference.**
+
 Merge `/reports` into `/overview` and retire the reports page as a separate thing. Reports
 already has the right bones (patient rows expandable to jobs, filters, sort, priority colours,
 barrier badges, tile/table toggle) - it needs a scope selector and the rows need to become

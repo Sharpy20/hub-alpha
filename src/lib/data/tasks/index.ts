@@ -303,7 +303,8 @@ const PATIENT_TASK_TEMPLATES: {
   linkedReferralId?: string;
   linkedGuideId?: string;
   repeatIntervalDays?: number;
-  blocksDischarge?: boolean;
+  // No blocksDischarge here on purpose - every barrier comes from BARRIER_PLAN
+  // below, so what /overview shows is exactly what that plan says.
 }[] = [
   { title: "IMHA Referral", description: "Refer to advocacy service", category: "referral" as const, priority: "important" as const, linkedReferralId: "imha-advocacy" },
   { title: "Call family", description: "Update family about care plan", category: "family_contact" as const, priority: "routine" as const },
@@ -311,12 +312,12 @@ const PATIENT_TASK_TEMPLATES: {
   { title: "Capacity assessment", description: "Complete capacity to consent assessment", category: "documentation" as const, priority: "urgent" as const, linkedGuideId: "capacity-assessment" },
   { title: "Phone GP surgery", description: "Request medication history", category: "phone_call" as const, priority: "routine" as const },
   { title: "Section 17 leave form", description: "Complete S17 paperwork", category: "documentation" as const, priority: "important" as const, linkedGuideId: "section-17" },
-  { title: "Discharge planning meeting", description: "MDT meeting for discharge", category: "discharge_planning" as const, priority: "important" as const, blocksDischarge: true },
+  { title: "Discharge planning meeting", description: "MDT meeting for discharge", category: "discharge_planning" as const, priority: "important" as const },
   { title: "CPA Review preparation", description: "Prepare documentation for CPA", category: "documentation" as const, priority: "routine" as const },
   { title: "Update risk assessment", description: "Review and update risk assessment", category: "documentation" as const, priority: "important" as const, linkedGuideId: "risk-assessment" },
   { title: "Chase blood results", description: "Follow up on blood test results", category: "phone_call" as const, priority: "routine" as const },
   { title: "Care plan review", description: "Review and update care plan", category: "documentation" as const, priority: "routine" as const },
-  { title: "Social worker referral", description: "Refer for social care assessment", category: "referral" as const, priority: "important" as const, blocksDischarge: true },
+  { title: "Social worker referral", description: "Refer for social care assessment", category: "referral" as const, priority: "important" as const },
   { title: "OT assessment", description: "Arrange occupational therapy assessment", category: "referral" as const, priority: "routine" as const },
   { title: "1:1 nursing notes", description: "Complete 1:1 engagement documentation", category: "documentation" as const, priority: "routine" as const },
   { title: "Medication review", description: "Arrange medication review with doctor", category: "documentation" as const, priority: "important" as const },
@@ -326,6 +327,69 @@ const PATIENT_TASK_TEMPLATES: {
   { title: "Physical health review", description: "Complete physical health assessment", category: "documentation" as const, priority: "routine" as const, repeatIntervalDays: 14 },
   { title: "Contact CMHT", description: "Liaise with community team", category: "phone_call" as const, priority: "routine" as const },
 ];
+
+// ---------------------------------------------------------------------------
+// BARRIERS TO DISCHARGE - the data behind /overview
+//
+// These are deliberately shaped, not random. The trust-wide roll-up only says
+// something if the wards look DIFFERENT to each other, so one ward is clearly
+// the worst (Dickinson 9) and one is nearly clear (Byron 2). Barriers stack on
+// a few patients rather than spreading one each, because that is how it really
+// goes - a stuck patient is usually waiting on funding AND a placement AND
+// transport, and it keeps the blocked-patient count meaningfully different from
+// the barrier count.
+//
+// Titles are reused across wards on purpose: /overview groups barriers by title
+// to show the most common ones trust-wide, and that list is useless if every
+// barrier is unique.
+//
+// To change the spread, edit BARRIER_PLAN below - nothing else generates a
+// blocksDischarge task, so what is here is exactly what the screen shows.
+// ---------------------------------------------------------------------------
+
+const BARRIER_TYPES = {
+  housing: { title: "Housing referral - awaiting decision", description: "Duty to Refer sent, nothing back from the local authority yet", priority: "important", category: "referral" },
+  placement: { title: "Supported accommodation - placement search", description: "No placement identified yet", priority: "urgent", category: "discharge_planning" },
+  funding: { title: "Funding panel decision", description: "Waiting on the continuing healthcare funding decision", priority: "urgent", category: "discharge_planning" },
+  socialCare: { title: "Social care assessment", description: "Care Act assessment requested, not yet allocated", priority: "important", category: "referral" },
+  careHome: { title: "Care home assessment visit", description: "The home wants to assess before they will offer a bed", priority: "important", category: "discharge_planning" },
+  transport: { title: "Discharge transport", description: "Transport not yet booked", priority: "routine", category: "discharge_planning" },
+  s117: { title: "S117 aftercare meeting", description: "Aftercare package not yet agreed", priority: "important", category: "discharge_planning" },
+  cmht: { title: "CMHT allocation", description: "No care coordinator allocated yet", priority: "important", category: "referral" },
+  packageOfCare: { title: "Package of care - restart", description: "Restart of the home care package not confirmed", priority: "important", category: "referral" },
+} as const;
+
+type BarrierKey = keyof typeof BARRIER_TYPES;
+
+// [patient index on the ward, barrier, days until due (negative = overdue), days since it was raised]
+// Ages run back several weeks so the screen can show how long things have been
+// stuck without anyone having to regenerate the data.
+const BARRIER_PLAN: Record<string, [number, BarrierKey, number, number][]> = {
+  // Worst ward - 9 barriers over 3 patients, 2 of them already overdue.
+  Dickinson: [
+    [0, "funding", -4, 26], [0, "placement", -1, 24], [0, "s117", 5, 12], [0, "transport", 9, 5],
+    [1, "housing", 3, 19], [1, "socialCare", 7, 14], [1, "cmht", 12, 9],
+    [2, "careHome", 6, 11], [2, "placement", 14, 7],
+  ],
+  Keats: [
+    [0, "housing", -2, 21], [0, "placement", 4, 16], [0, "funding", 8, 16],
+    [1, "socialCare", 6, 10], [1, "transport", 11, 4],
+    [2, "s117", 5, 13], [2, "packageOfCare", 13, 6],
+  ],
+  Shelley: [
+    [0, "housing", 4, 12], [0, "cmht", 9, 8],
+    [1, "careHome", 7, 9], [1, "transport", 13, 3],
+  ],
+  Wordsworth: [
+    [0, "funding", 3, 17], [0, "socialCare", 10, 6],
+    [1, "housing", 12, 4],
+  ],
+  // Nearly clear - the contrast with Dickinson is the point of the screen.
+  Byron: [
+    [0, "transport", 5, 3],
+    [1, "placement", 14, 2],
+  ],
+};
 
 // Generate patient tasks - at least one per patient
 const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
@@ -371,33 +435,34 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
       ...(template.linkedReferralId && { linkedReferralId: template.linkedReferralId }),
       ...(template.linkedGuideId && { linkedGuideId: template.linkedGuideId }),
       ...(template.repeatIntervalDays && { repeatIntervalDays: template.repeatIntervalDays }),
-      ...(template.blocksDischarge && { blocksDischarge: true }),
       ...(slot.claim && { claimedBy: staffMember, claimedAt: todayStr }),
     });
   }
 
-  // Guarantee one visible barrier-to-discharge task per ward for the demo
-  // (few active patients means the flagged templates above may not be reached).
-  if (wardPatients.length > 0) {
-    const bp = wardPatients[0];
+  // Barriers to discharge - see BARRIER_PLAN above.
+  (BARRIER_PLAN[ward] || []).forEach(([patientIndex, key, dueIn, raisedDaysAgo], n) => {
+    const patient = wardPatients[patientIndex];
+    if (!patient) return;
+    const barrier = BARRIER_TYPES[key];
+
     tasks.push({
       id: `pt${id++}`,
       type: "patient",
-      title: "Housing referral - awaiting placement",
-      description: `Supported accommodation not yet confirmed for ${bp.name}`,
-      status: "pending",
-      priority: "important",
-      category: "discharge_planning",
-      patientId: bp.id,
-      patientName: bp.name,
-      dueDate: tomorrowStr,
+      title: barrier.title,
+      description: `${barrier.description} - ${patient.name}`,
+      status: dueIn < 0 ? "overdue" : "pending",
+      priority: barrier.priority,
+      category: barrier.category,
+      patientId: patient.id,
+      patientName: patient.name,
+      dueDate: formatDate(addDays(today, dueIn)),
       carryOver: true,
       ward,
-      createdAt: todayStr,
-      createdBy: staff[0],
+      createdAt: formatDate(addDays(today, -raisedDaysAgo)),
+      createdBy: staff[n % staff.length],
       blocksDischarge: true,
     });
-  }
+  });
 
   return tasks;
 };

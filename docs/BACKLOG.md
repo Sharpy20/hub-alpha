@@ -469,7 +469,25 @@ a job in the waiting state. Its three free-text fields die with it, which is wha
 structured-only rule true across the whole product.
 Types to remove or repurpose: `ReferralLog`, `ReferralChase`, `ReferralLogStatus`.
 
-### 7. Demo data top-up for `/overview` (DO FIRST - independent of everything above)
+### 7. Demo data top-up for `/overview` - DONE 27 Jul
+Built and verified. `/overview` now reads: **25 active patients, 12 blocked, 25 open barriers,
+3 overdue** - Dickinson 9 (2 overdue) / Keats 7 (1 overdue) / Shelley 4 / Wordsworth 3 / Byron 2.
+Nine realistic blocker types (housing, placement search, funding panel, social care assessment,
+care home visit, transport, S117 aftercare, CMHT allocation, package of care), reused across wards
+so the "most common barriers trust-wide" list ranks properly instead of showing all 1s. Barriers
+stack on a few patients (Bernard Lowe has 4), so blocked-patient count differs from barrier count
+on every ward. Dated 3-14 days out plus 3 deliberately overdue, so today's diary stays clear;
+`createdAt` runs back up to 26 days so age is there when the screen wants it.
+- **One knob:** `BARRIER_PLAN` in `src/lib/data/tasks/index.ts`. `blocksDischarge` was removed
+  from `PATIENT_TASK_TEMPLATES` so that plan is the ONLY source of barriers and the numbers stay
+  exactly what it says.
+- **Worth knowing:** the wards hold 5 patients each (25 total), not the 100 this spec assumed -
+  `PATIENT_NAMES` was cut to 5 per ward ("Mike: 5 max per ward"). So 12 blocked is roughly half
+  the demo trust. It reads fine as "a trust with a discharge problem", which is the story the
+  screen is for, but drop a few rows from `BARRIER_PLAN` if it looks overstated in the room.
+
+**Original spec kept below for reference.**
+
 Wanted for the **Thu 30 Jul** sponsor demo. Standalone: touches only the generator in
 `src/lib/data/tasks/index.ts`, so it can ship on its own without any of Section M being built.
 

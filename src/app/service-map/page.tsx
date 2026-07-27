@@ -163,6 +163,16 @@ export default function ServiceMapPage() {
   const zoomCentre = (factor: number) => { const v = viewRef.current; zoomAt(factor, v.x + v.w / 2, v.y + v.h / 2); };
   const resetView = () => setView({ ...FULL_VIEW });
 
+  // Moving the map clears the detail panel. Without this the last service you
+  // tapped sat under the map forever, describing something no longer on screen
+  // (Mike: "why does the CALM tile sit under the map at all times?"). Focusing a
+  // SERVICE keeps it selected, because then the panel is describing the centre.
+  const goTo = (next: string | null) => {
+    setFocus(next);
+    setSelected(next && SERVICES.some((s) => s.id === next) ? next : null);
+    resetView();
+  };
+
   // Wheel-to-cursor zoom (non-passive so we can preventDefault the page scroll).
   useEffect(() => {
     const el = svgRef.current; if (!el) return;
@@ -513,12 +523,12 @@ export default function ServiceMapPage() {
               {/* Where am I, and how do I get back out. */}
               {focus && (
                 <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
-                  <button onClick={() => { setFocus(null); resetView(); }}
+                  <button onClick={() => goTo(null)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700 hover:border-nhs-blue hover:text-nhs-blue">
                     <Home className="w-3.5 h-3.5" /> All categories
                   </button>
                   {focusService && focusCluster && (
-                    <button onClick={() => { setFocus(focusCluster); resetView(); }}
+                    <button onClick={() => goTo(focusCluster)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-700 hover:border-nhs-blue hover:text-nhs-blue">
                       <CornerUpLeft className="w-3.5 h-3.5" />
                       {CLUSTERS.find((c) => c.id === focusCluster)?.label}
@@ -540,12 +550,33 @@ export default function ServiceMapPage() {
                   const svs = SERVICES.filter((s) => s.cluster === cl.id);
                   const openCount = svs.filter((s) => { const e = effective(s.id); return e === "open" || e === "everyone"; }).length;
                   const lines = wrap(cl.label, 16);
+                  // Stub spokes fanning out behind each category - you cannot read
+                  // anything from them, and that is the point: they show there is
+                  // more here and invite the click (Mike, 27 Jul).
+                  const outward = Math.atan2(cp.y - CY, cp.x - CX);
+                  const stubCount = Math.min(5, svs.length);
+                  const stubs = Array.from({ length: stubCount }, (_, k) => {
+                    const spread = 1.15;
+                    const a = outward + (stubCount === 1 ? 0 : -spread / 2 + (k * spread) / (stubCount - 1));
+                    const len = 34 + (k % 2) * 14;
+                    return {
+                      x1: rnd(cp.x + 62 * Math.cos(a)), y1: rnd(cp.y + 62 * Math.sin(a)),
+                      x2: rnd(cp.x + (62 + len) * Math.cos(a)), y2: rnd(cp.y + (62 + len) * Math.sin(a)),
+                    };
+                  });
                   return (
-                    <g key={cl.id} onClick={() => { if (draggedRef.current) { draggedRef.current = false; return; } setFocus(cl.id); }}
+                    <g key={cl.id} onClick={() => { if (draggedRef.current) { draggedRef.current = false; return; } goTo(cl.id); }}
                       style={{ cursor: "pointer" }} tabIndex={0} role="button"
                       aria-label={`${cl.label}: ${svs.length} services, ${openCount} open. Open this category.`}
-                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setFocus(cl.id); } }}>
+                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goTo(cl.id); } }}>
                       <line x1={CX} y1={CY} x2={cp.x} y2={cp.y} stroke={cl.color} strokeWidth={openCount ? 4 : 2} opacity={openCount ? 0.75 : 0.3} strokeLinecap="round" />
+                      {/* behind the node, so it reads as "this opens up" */}
+                      {stubs.map((st, k) => (
+                        <g key={k} opacity={0.3}>
+                          <line x1={st.x1} y1={st.y1} x2={st.x2} y2={st.y2} stroke={cl.color} strokeWidth={2} strokeLinecap="round" />
+                          <circle cx={st.x2} cy={st.y2} r={7} fill="#fff" stroke={cl.color} strokeWidth={2} />
+                        </g>
+                      ))}
                       <circle cx={cp.x} cy={cp.y} r={62} fill="#fff" stroke={cl.color} strokeWidth={3} />
                       <text textAnchor="middle" fontSize="11.5" fontWeight="700" fill={cl.color} pointerEvents="none">
                         {lines.map((ln, i) => <tspan key={i} x={cp.x} y={cp.y - 10 + i * 13}>{ln}</tspan>)}
@@ -623,7 +654,7 @@ export default function ServiceMapPage() {
                         setSelected(s.id);
                         // Clicking a node that has its own branch recentres on it,
                         // so you can keep walking down without the rest in the way.
-                        if (SERVICES.some((x) => x.parent === s.id)) { setFocus(s.id); resetView(); }
+                        if (SERVICES.some((x) => x.parent === s.id)) goTo(s.id);
                       }} style={{ cursor: "pointer" }} tabIndex={0} role="button"
                       aria-label={`${s.name}: ${meta.label}`} opacity={eff === "cutoff" ? 0.5 : hit ? 1 : 0.15}
                       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelected(s.id); } }}>
@@ -747,7 +778,14 @@ export default function ServiceMapPage() {
               <div className="bg-white rounded-2xl border border-gray-200 p-4">
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <h3 className="font-bold text-gray-800">{selSvc.name}</h3>
-                  <span className={`text-xs font-bold px-2 py-1 rounded-full ${EFF_META[selEff].badge}`}>{EFF_META[selEff].label}</span>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${EFF_META[selEff].badge}`}>{EFF_META[selEff].label}</span>
+                    {/* It is a panel about one thing you tapped - let it be dismissed. */}
+                    <button onClick={() => setSelected(null)} aria-label={`Close ${selSvc.name} details`}
+                      className="p-1 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors">
+                      <XCircle className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
                 <p className="text-xs text-gray-500 mb-2">
                   {CLUSTERS.find((c) => c.id === selSvc.cluster)?.label} - accepts people living in {selSvc.areas.map((a) => AREA_LABEL[a]).join(", ")}

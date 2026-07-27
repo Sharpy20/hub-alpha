@@ -941,6 +941,23 @@ end of the session.
       Section L item 4 (CONFIRM mode for guide content) and to the publish-pipeline question in
       Section K - if SharePoint becomes the authoring home, "who owns the current text" needs
       answering before an agent can safely rewrite a guide.
+- [ ] **Guide editor: branches can only ever go FORWARD into new cells - no jump, no loop
+      (Mike, 27 Jul).** After a decision cell you can add cells to each branch and finish with
+      "+ endpoint", but there is no way to point a branch at a cell that already exists. His example:
+      *"Want to add a family member? Y/N - on Yes repeat until N is chosen, but on N where do I
+      jump?"* Today the only answers are to duplicate the following steps into every branch, or to
+      end the branch there.
+      **Cause is the data model, not the UI.** `WorkflowStep.branches` is `{ label, steps: WorkflowStep[] }[]`
+      (`src/components/admin/FlowchartEditor.tsx`) - each branch OWNS a nested array, so a step can
+      only ever be reached from one place. A strict tree cannot express a loop or a merge.
+      **Proposed fix: a `goto` step type** carrying `targetStepId`, offered as a branch terminator
+      alongside "+ endpoint". Picker lists every step in the flow by title (ids already exist; needs a
+      flattener over the nested arrays). Covers both cases with one concept - "repeat until N" is a
+      goto back to the decision itself, "on N carry on" is a goto forward to the shared step. Viewer
+      renders it as "continue at X"; validation already demands branches end in a terminator, so
+      `goto` just becomes another valid one. Needs a visited-set guard so a loop cannot hang the
+      viewer, and the editor should refuse a goto that points at a step inside a different branch.
+      **Not a quick fix - own session.** Pairs with the review below.
 - [ ] **Review the guide editor with Mike.**
 
 ---

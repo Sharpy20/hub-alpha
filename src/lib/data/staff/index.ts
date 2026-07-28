@@ -4,16 +4,26 @@ import { StaffMember, UserRole } from "@/lib/types";
 export const WARDS = ["Byron", "Shelley", "Keats", "Wordsworth", "Dickinson"] as const;
 export type WardName = (typeof WARDS)[number];
 
-// Real (fictional) staff names - 5 per ward for now (Mike: 5 max per ward).
-// Role is assigned by INDEX in getRoleForIndex below: 0 Ward Admin, 1 Senior
-// Admin, 2 Lead, 3 Manager, 4 Staff. Consultants are separate (CONSULTANTS in
-// tasks/index.ts) so the ward staff list stays nurse/leadership only.
+// DEMO NAMING THEME - everything in the demo comes from English literature, so
+// that nobody can mistake demo data for a real roster or a real patient list:
+//   Wards       poets            (Byron, Shelley, Keats, Wordsworth, Dickinson)
+//   Staff       Jane Austen      (this file)
+//   Patients    other classic novels - Brontes, Eliot, Gaskell, Hardy, Dickens
+//   Consultants doctors from novels
+// The patient and consultant halves live in src/lib/data/tasks/index.ts.
+// Keep any new name inside the theme. Deliberately avoided: villains, characters
+// defined by madness or asylums, and Dickens' joke names.
+//
+// 5 per ward (Mike: 5 max per ward). Role is assigned by INDEX in
+// getRoleForIndex below: 0 Ward Admin, 1 Senior Admin, 2 Lead, 3 Manager,
+// 4 Staff. Consultants are separate so the ward staff list stays
+// nurse/leadership only.
 export const STAFF_NAMES: Record<string, string[]> = {
-  Byron: ["Karen Whitfield", "Paul Roberts", "Emma Docherty", "James Okafor", "Sophie Bennett"],
-  Shelley: ["Lisa Hammond", "David Chen", "Grace Adeyemi", "Tom Fielding", "Hannah Price"],
-  Keats: ["Marie Dawson", "Steven Blake", "Priya Nair", "Chris O'Neill", "Amy Sutton"],
-  Wordsworth: ["Janet Cole", "Mohammed Iqbal", "Rebecca Lloyd", "Gary Simmons", "Olivia Reid"],
-  Dickinson: ["Susan Frost", "Daniel Osei", "Chloe Barnes", "Neil Patterson", "Jack Merton"],
+  Byron: ["Charlotte Lucas", "George Knightley", "Elinor Dashwood", "Henry Tilney", "Anne Elliot"],
+  Shelley: ["Harriet Smith", "Frederick Wentworth", "Emma Woodhouse", "Edmund Bertram", "Fanny Price"],
+  Keats: ["Mary Musgrove", "Fitzwilliam Darcy", "Elizabeth Bennet", "Edward Ferrars", "Catherine Morland"],
+  Wordsworth: ["Lucy Steele", "Charles Bingley", "Jane Fairfax", "Robert Martin", "Sophia Croft"],
+  Dickinson: ["Augusta Weston", "Frank Churchill", "Julia Yates", "Christopher Brandon", "Isabella Thorpe"],
 };
 
 // Role distribution pattern: first four are named roles, rest are normal staff

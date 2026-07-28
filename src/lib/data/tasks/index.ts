@@ -37,24 +37,31 @@ const fiveDaysStr = formatDate(addDays(today, 5));
 const WARD_STAFF = STAFF_NAMES;
 
 // Real (fictional) patient names - 5 per ward for now (Mike: 5 max per ward).
+// Demo patients are characters from classic novels - the Brontes, George Eliot,
+// Elizabeth Gaskell, Thomas Hardy and Dickens. Staff are Jane Austen characters
+// (src/lib/data/staff/index.ts) and the wards are poets, so the whole demo cast
+// reads as fiction at a glance and cannot be mistaken for a real patient list.
+// Deliberately avoided: villains, anyone whose story is about madness or an
+// asylum, and Dickens' joke names. Keep new names inside the theme.
 const PATIENT_NAMES: Record<string, string[]> = {
-  Byron: ["Arthur Pledger", "Denise Holt", "Marcus Quinn", "Yvonne Carr", "Liam Ashby"],
-  Shelley: ["Brenda Nash", "Colin Reeves", "Aisha Karim", "Gordon Platt", "Melanie Dodd"],
-  Keats: ["Harold Venn", "Tina Busby", "Omar Sadiq", "Pauline Rooke", "Wesley Groom"],
-  Wordsworth: ["Edith Marsh", "Ryan Colgan", "Nadia Bell", "Stuart Vane", "Gloria Ashton"],
-  Dickinson: ["Bernard Lowe", "Kayleigh Munro", "Idris Kane", "Sheila Prewett", "Tony Farrow"],
+  Byron: ["Dorothea Brooke", "Gabriel Oak", "Margaret Hale", "Arthur Clennam", "Esther Summerson"],
+  Shelley: ["Silas Marner", "Agnes Wickfield", "Adam Bede", "Amy Dorrit", "John Thornton"],
+  Keats: ["Jane Eyre", "Nicholas Nickleby", "Ada Clare", "Tom Pinch", "Bathsheba Everdene"],
+  Wordsworth: ["Caroline Helstone", "Herbert Pocket", "Maggie Tulliver", "Daniel Doyce", "Molly Gibson"],
+  Dickinson: ["Sydney Carton", "Bella Wilfer", "Caleb Garth", "Diggory Venn", "Thomasin Yeobright"],
 };
 const getPatientName = (ward: string, index: number): string =>
   PATIENT_NAMES[ward]?.[index] || `Patient ${index + 1}`;
 
 // Consultant psychiatrist per ward (kept out of the ward staff list so the staff
 // list stays nurses/leadership; used for patient.consultant + appointments).
+// Doctors from novels, to complete the literary theme.
 const CONSULTANTS: Record<string, string> = {
-  Byron: "Dr. Rachel Mbeki",
-  Shelley: "Dr. Alan Whitaker",
-  Keats: "Dr. Fiona Grant",
-  Wordsworth: "Dr. Peter Hollis",
-  Dickinson: "Dr. Nina Kaur",
+  Byron: "Dr. Tertius Lydgate",      // Middlemarch
+  Shelley: "Dr. Thomas Thorne",      // Doctor Thorne
+  Keats: "Dr. Martin Arrowsmith",    // Arrowsmith
+  Wordsworth: "Dr. Allan Woodcourt", // Bleak House
+  Dickinson: "Dr. Aziz Ahmed",       // A Passage to India
 };
 
 // Legal statuses distribution (weighted for realistic ward mix)

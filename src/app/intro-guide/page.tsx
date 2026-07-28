@@ -167,7 +167,7 @@ function ProfileVisual() {
       <div className="flex justify-end">
         <div className="bg-white rounded-xl border border-gray-200 shadow-lg w-56 overflow-hidden">
           <div className="bg-indigo-500 text-white p-3">
-            <div className="font-bold">Sarah Johnson</div>
+            <div className="font-bold">Anne Elliot</div>
             <div className="text-xs text-indigo-200">Staff Nurse</div>
           </div>
           <div className="p-2 border-b">

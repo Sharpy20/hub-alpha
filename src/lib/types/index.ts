@@ -405,12 +405,13 @@ export interface User {
   ward: string;
 }
 
-// Demo data for users
+// Demo data for users. Names follow the literary theme (staff are Jane Austen
+// characters) - see src/lib/data/staff/index.ts, which is the real roster.
 export const DEMO_USERS: Omit<User, "id">[] = [
-  { name: "Sarah Johnson", role: "staff", ward: "Byron" },
-  { name: "Mike Chen", role: "ward_admin", ward: "Byron" },
-  { name: "Emma Wilson", role: "lead", ward: "Byron" },
-  { name: "Dr. James Patel", role: "senior_admin", ward: "Byron" },
+  { name: "Anne Elliot", role: "staff", ward: "Byron" },
+  { name: "Charlotte Lucas", role: "ward_admin", ward: "Byron" },
+  { name: "Elinor Dashwood", role: "lead", ward: "Byron" },
+  { name: "George Knightley", role: "senior_admin", ward: "Byron" },
 ];
 
 // Staff member for ward management

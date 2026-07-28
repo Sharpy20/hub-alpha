@@ -1093,7 +1093,7 @@ export default function PatientsPage() {
                   type="text"
                   value={newPatientName}
                   onChange={(e) => setNewPatientName(e.target.value)}
-                  placeholder="e.g., John Smith"
+                  placeholder="e.g., Dorothea Brooke"
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
                   autoFocus
                 />

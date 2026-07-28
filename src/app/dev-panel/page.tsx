@@ -1951,7 +1951,7 @@ function NexusSection() {
   "event": "audit_completed",
   "auditType": "fridge_temps",
   "ward": "byron",
-  "completedBy": "Staff_A",
+  "completedBy": "Anne Elliot",
   "completedAt": "2026-03-04T08:15:00Z",
   "nexusRefId": "NX-2026-0304-001"
 }

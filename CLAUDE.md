@@ -1738,6 +1738,23 @@ Reworked the evaluation framework, then ran it. Build clean, 32/32 tests, `tsc` 
 - **Headline finding:** 1 guide of 71 is signed off green. 20 red, 50 amber (43 of those
   never reviewed at all). Placeholder `#` form links have grown 86 -> 131. Content is now
   the project risk, not code.
+- [x] **Placeholder link audit** - `docs/evaluations/2026-07-28_placeholder-links-deep-dive.md`.
+  All 131 already rendered non-clickable with a badge, so never the same risk as the invented
+  numbers. But the badge said "Blocked in demo" (claims the link works live and is just
+  switched off) when no URL was ever captured. Reworded to **"Link to confirm"** /
+  **"Example to add"**. Wired 2 verified public URLs (GovWifi, EMAS). **Nothing else is
+  wirable from the 4 Jul FOCUS map** - the rest needs the guide built first. Real split:
+  blank forms 7 live/22 dead, other guides 6/42, **WAGOLL 0 live / 16 dead**.
+- [x] **DEMO NAMING THEME - everything is now English literature.** Wards are poets
+  (unchanged), **staff are Jane Austen characters**, **patients are other classic novels**
+  (Brontes, Eliot, Gaskell, Hardy, Dickens), **consultants are doctors from novels**. Reason:
+  the old names (Karen Whitfield, Arthur Pledger) were realistic enough to be mistaken for a
+  real roster or a real patient list, which is the wrong signal in a demo whose whole pitch is
+  that it holds no PII. A recognisable theme reads as fiction at a glance. Avoided villains,
+  characters defined by madness or asylums, and Dickens' joke names. Pools:
+  `STAFF_NAMES` (staff/index.ts), `PATIENT_NAMES` + `CONSULTANTS` (tasks/index.ts), plus the
+  default user in providers.tsx, `DEMO_USERS` (types), intro-guide mockup, patients placeholder.
+  **Keep new names inside the theme.**
 
 ### 13 July 2026 - Session 37 (Pay-roster split, band picker, rest rules)
 Picked up from a claude.ai chat session (AfC facts verified there against NHS Employers).

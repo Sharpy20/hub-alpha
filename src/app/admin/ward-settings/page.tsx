@@ -17,7 +17,6 @@ import {
   ChevronRight,
   AlertTriangle,
   Check,
-  X,
 } from "lucide-react";
 import {
   WardSettings,
@@ -29,7 +28,6 @@ import {
   UserRole,
   DEFAULT_WARD_SETTINGS,
 } from "@/lib/types";
-import { ALERTS_POOL } from "@/lib/data/tasks";
 import { toast } from "sonner";
 
 type TabId = "patients" | "tasks" | "shifts" | "layout" | "discharge" | "content";
@@ -247,22 +245,7 @@ function PatientsTab({
   settings: WardSettings;
   updateSettings: (updates: Partial<WardSettings>) => void;
 }) {
-  const [newAlert, setNewAlert] = useState("");
 
-  const addCustomAlert = () => {
-    if (newAlert.trim() && !settings.customAlerts.includes(newAlert.trim())) {
-      updateSettings({
-        customAlerts: [...settings.customAlerts, newAlert.trim()],
-      });
-      setNewAlert("");
-    }
-  };
-
-  const removeCustomAlert = (alert: string) => {
-    updateSettings({
-      customAlerts: settings.customAlerts.filter((a) => a !== alert),
-    });
-  };
 
   return (
     <div className="space-y-8">
@@ -296,10 +279,10 @@ function PatientsTab({
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Field Visibility (Advanced Mode)</h3>
         <div className="space-y-3">
-          {(["room", "bed", "legalStatus", "alerts"] as const).map((field) => (
+          {(["room", "bed"] as const).map((field) => (
             <div key={field} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
               <span className="font-medium text-gray-700 capitalize">
-                {field === "legalStatus" ? "MHA Status" : field}
+                {field}
               </span>
               <div className="flex gap-2">
                 {FIELD_VISIBILITY_OPTIONS.map((opt) => (
@@ -325,70 +308,6 @@ function PatientsTab({
         </div>
       </div>
 
-      {/* Custom Alerts */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Custom Alerts for Ward</h3>
-        <p className="text-sm text-gray-600 mb-4">
-          Add ward-specific alerts in addition to the standard alerts.
-        </p>
-
-        {/* Add new alert */}
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            value={newAlert}
-            onChange={(e) => setNewAlert(e.target.value)}
-            placeholder="Enter custom alert..."
-            className="flex-1 p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-            onKeyDown={(e) => e.key === "Enter" && addCustomAlert()}
-          />
-          <button
-            onClick={addCustomAlert}
-            disabled={!newAlert.trim()}
-            className="px-4 py-2 bg-indigo-500 text-white rounded-xl font-medium hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Custom alerts list */}
-        {settings.customAlerts.length > 0 && (
-          <div className="space-y-2 mb-4">
-            <p className="text-sm font-medium text-gray-700">Custom alerts:</p>
-            <div className="flex flex-wrap gap-2">
-              {settings.customAlerts.map((alert) => (
-                <span
-                  key={alert}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-800 rounded-full text-sm"
-                >
-                  {alert}
-                  <button
-                    onClick={() => removeCustomAlert(alert)}
-                    className="hover:text-red-600"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Standard alerts (read-only) */}
-        <div>
-          <p className="text-sm font-medium text-gray-700 mb-2">Standard alerts (always available):</p>
-          <div className="flex flex-wrap gap-2">
-            {ALERTS_POOL.map((alert) => (
-              <span
-                key={alert}
-                className="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-sm"
-              >
-                {alert}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

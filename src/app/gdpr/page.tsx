@@ -156,6 +156,16 @@ export default function GdprPage() {
                 about a patient is written to your device or to a server
               </li>
               <li>
+                <strong>No clinical detail about a patient</strong> - wardHub
+                holds a name, a ward and the tasks attached to them. It does not
+                hold MHA legal status, clinical alerts, risks or diagnoses.
+                wardHub is not the clinical record and does not try to be one:
+                anything it held would have nobody keeping it up to date, and
+                stale clinical information is worse than none. Anything you type
+                to complete a guide stays in the page while you are on it, goes
+                into the case note you copy across, and is not kept
+              </li>
+              <li>
                 <strong>No tracking</strong> - No analytics, no external scripts
                 or fonts. The one cookie in use is the site password cookie
                 (`site_access`), which only records that you typed the shared

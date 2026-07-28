@@ -5,7 +5,6 @@ import {
   DiaryTask,
   Patient,
   PatientStatus,
-  LegalStatus,
   AuditType,
 } from "@/lib/types";
 import { WARDS, STAFF_NAMES, getLeadsAndManagers, getWardProfessionalCandidates } from "../staff";
@@ -64,16 +63,6 @@ const CONSULTANTS: Record<string, string> = {
   Dickinson: "Dr. Aziz Ahmed",       // A Passage to India
 };
 
-// Legal statuses distribution (weighted for realistic ward mix)
-const LEGAL_STATUSES: LegalStatus[] = [
-  "informal", "informal", "informal",     // 30% informal/voluntary
-  "section_2", "section_2",               // 20% S2 (assessment)
-  "section_3", "section_3", "section_3",  // 30% S3 (treatment)
-  "cto",                                  // 10% CTO (S17A)
-  "section_37",                           // 5% Hospital Order
-  "section_5_2",                          // 5% Doctor's Holding Power
-];
-
 // Patient statuses distribution. NOTE: with only 5 patients per ward the
 // round-robin (i % 10) never reaches the non-active slots, so every generated
 // patient currently ends up "active". To see pending_discharge / on_leave /
@@ -84,25 +73,6 @@ const PATIENT_STATUSES: PatientStatus[] = [
   "pending_discharge", // 10%
   "on_leave", // 10%
   "discharged", // 10%
-];
-
-// Alerts pool - exported for use in Add Patient modal
-export const ALERTS_POOL = [
-  "Falls risk",
-  "DOLS in place",
-  "Diabetes - BMs QDS",
-  "Allergen: Penicillin",
-  "Allergen: Latex",
-  "Ligature risk",
-  "Absconding risk",
-  "Violence history",
-  "Self-harm risk",
-  "1:1 observations",
-  "Nil by mouth",
-  "Dysphagia - thickened fluids",
-  "Epilepsy",
-  "VTE prophylaxis",
-  "Pressure ulcer care",
 ];
 
 // Generate admission dates (spread over past 3 months)
@@ -135,15 +105,6 @@ const generateAllPatients = (): Patient[] => {
     for (let i = 0; i < (PATIENT_NAMES[ward]?.length || 0); i++) {
       const patientName = getPatientName(ward, i);
       const status = PATIENT_STATUSES[i % PATIENT_STATUSES.length];
-      const legalStatus = LEGAL_STATUSES[i % LEGAL_STATUSES.length];
-
-      // Assign alerts (some patients have none, some have multiple)
-      const alertCount = i % 5 === 0 ? 2 : i % 3 === 0 ? 1 : 0;
-      const alerts: string[] = [];
-      for (let a = 0; a < alertCount; a++) {
-        alerts.push(ALERTS_POOL[(i + a) % ALERTS_POOL.length]);
-      }
-
       // Assign ward professional from leads/managers (round-robin)
       const wardProfessional = wardProfessionals[i % wardProfessionals.length];
 
@@ -154,13 +115,11 @@ const generateAllPatients = (): Patient[] => {
         bed: i % 2 === 0 ? "A" : "B",
         ward,
         status,
-        legalStatus,
         admissionDate: generateAdmissionDate(i),
         admissionTime: generateAdmissionTime(i),
         namedNurse: nurses[i % nurses.length],
         consultant: CONSULTANTS[ward],
         wardProfessional,
-        ...(alerts.length > 0 && { alerts }),
         ...(status === "pending_discharge" && { expectedDischargeDate: tomorrowStr }),
         ...(status === "discharged" && { dischargeDate: yesterdayStr }),
       };

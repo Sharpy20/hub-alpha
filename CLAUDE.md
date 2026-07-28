@@ -1755,6 +1755,24 @@ Reworked the evaluation framework, then ran it. Build clean, 32/32 tests, `tsc` 
   `STAFF_NAMES` (staff/index.ts), `PATIENT_NAMES` + `CONSULTANTS` (tasks/index.ts), plus the
   default user in providers.tsx, `DEMO_USERS` (types), intro-guide mockup, patients placeholder.
   **Keep new names inside the theme.**
+- [x] **⛔ NO SPECIAL CATEGORY DATA - `legalStatus`, `alerts` and `diagnoses` REMOVED
+  ENTIRELY** (Mike's call, 28 Jul). Not deprecated, not defaulted to hidden - **gone** from the
+  `Patient` type, demo data, patient card, add/edit patient modal, patient picker chips, ward
+  settings field visibility and `customAlerts`, and the dev-panel data catalogue.
+  **Mike's reasoning, use it verbatim if asked:** getting patient name, ward and task name
+  approved is already hard, and every clinical field invites two questions nobody can answer -
+  *who is keeping it up to date*, and *what happens when a staff member bases an intervention
+  on the wrong info*. wardHub is not the clinical record so nothing it held would have an
+  owner. This is clinical safety, not just IG. **It does not come back** unless something
+  changes dramatically and the Trust asks for far more than is being offered.
+  **THE ONE EXCEPTION:** a value the user types to complete a guide and generate the
+  personalised case note may live in page memory while that guide is open (`/welcome`,
+  `/service-map` - React state, no localStorage, no network). Never written to a patient
+  record, never persisted, never shown elsewhere.
+  **GUARDED BY A TEST:** `src/__tests__/no-special-category-data.test.ts` fails if the fields
+  reappear in the type, the demo data, the ward settings, or any source file outside the
+  allow-list. Verified it actually bites (temporarily reintroduced a reference; the test went
+  red and named the file). 36 tests now, was 32.
 
 ### 13 July 2026 - Session 37 (Pay-roster split, band picker, rest rules)
 Picked up from a claude.ai chat session (AfC facts verified there against NHS Employers).

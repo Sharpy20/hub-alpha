@@ -357,17 +357,17 @@ export const STATUS_CONFIG: Record<TaskStatus, { label: string; icon: string; bg
 // ============================================
 
 export type PatientStatus = "active" | "pending_discharge" | "discharged" | "on_leave";
-export type LegalStatus =
-  | "informal"        // Voluntary - not formally detained
-  | "section_2"       // Admission for Assessment (up to 28 days)
-  | "section_3"       // Admission for Treatment (up to 6 months, renewable)
-  | "section_4"       // Emergency Admission (72 hours, one doctor)
-  | "section_5_2"     // Doctor's Holding Power (up to 72 hours)
-  | "section_5_4"     // Nurse's Holding Power (up to 6 hours)
-  | "cto"             // Section 17A - Community Treatment Order
-  | "section_37"      // Hospital Order (court-ordered)
-  | "section_37_41"   // Restricted Hospital Order (public safety)
-  | "section_47_49";  // Transfer Direction (prison to hospital)
+
+// NO SPECIAL CATEGORY DATA ON THE PATIENT RECORD (Mike, 28 Jul 2026).
+// MHA legal status, clinical alerts and diagnoses were removed from the Patient
+// model, the ward list, the add/edit forms, the patient picker and the ward
+// settings. They are not stored, not displayed and not configurable anywhere.
+//
+// The ONE exception: a value a user types to complete a guide and generate a
+// personalised case note may live in page memory for as long as that guide is
+// open (see /welcome and /service-map, which hold a profile in React state with
+// no localStorage and no network). It must not be written to a patient record,
+// persisted, or surfaced anywhere else.
 
 export interface Patient {
   id: string;
@@ -377,7 +377,6 @@ export interface Patient {
   bed?: string;
   ward: string;
   status: PatientStatus;
-  legalStatus: LegalStatus;
   admissionDate: string;
   expectedDischargeDate?: string;
   dischargeDate?: string;
@@ -388,8 +387,6 @@ export interface Patient {
   consultant?: string;
   wardProfessional?: string; // Staff member allocated as ward professional for this patient
   admissionTime?: string; // HH:MM format - time of admission
-  diagnoses?: string[];
-  alerts?: string[]; // e.g., "Falls risk", "Allergen: Penicillin"
 }
 
 // ============================================
@@ -431,11 +428,12 @@ export interface StaffMember {
 export type FieldVisibility = "hidden" | "optional" | "mandatory";
 export type PatientEntryMode = "simple" | "advanced" | "choice";
 
+// Only location fields are configurable. MHA status and clinical alerts used to
+// be here; they were removed entirely rather than defaulted to hidden, because a
+// hidden setting is still a field the app is built to hold.
 export interface PatientFieldSettings {
   room: FieldVisibility;
   bed: FieldVisibility;
-  legalStatus: FieldVisibility;
-  alerts: FieldVisibility;
 }
 
 export interface ShiftTimes {
@@ -486,7 +484,6 @@ export interface WardSettings {
   // Patient Settings (1-3)
   patientEntryMode: PatientEntryMode;
   patientFields: PatientFieldSettings;
-  customAlerts: string[]; // Ward-specific alerts in addition to defaults
 
   // Task Settings (4-7)
   taskCategories: TaskCategoryConfig[];
@@ -519,10 +516,7 @@ export const DEFAULT_WARD_SETTINGS: Omit<WardSettings, "wardId"> = {
   patientFields: {
     room: "optional",
     bed: "optional",
-    legalStatus: "optional",
-    alerts: "optional",
   },
-  customAlerts: [],
   taskCategories: [
     { category: "referral", enabled: true, carryOver: true },
     { category: "care", enabled: true, carryOver: true },

@@ -265,23 +265,6 @@ export function PatientPickerModal({
                       </span>
                     </div>
                   </div>
-                  {patient.alerts && patient.alerts.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {patient.alerts.slice(0, 3).map((alert, i) => (
-                        <span
-                          key={i}
-                          className="inline-block px-2 py-0.5 bg-red-100 text-red-700 rounded text-xs"
-                        >
-                          {alert}
-                        </span>
-                      ))}
-                      {patient.alerts.length > 3 && (
-                        <span className="text-xs text-gray-500">
-                          +{patient.alerts.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
                 </button>
               ))}
             </div>

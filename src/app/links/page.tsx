@@ -364,9 +364,9 @@ function BookmarksContent() {
                       {bookmark.url === "#" && !bookmark.requiresFocus && (
                         <span
                           className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap"
-                          title="The link is disabled in the demo. Use the phone number or details shown instead."
+                          title="No web address has been confirmed for this one yet. Use the phone number or details shown instead."
                         >
-                          Blocked in demo
+                          Link to confirm
                         </span>
                       )}
                     </div>
@@ -446,7 +446,8 @@ function BookmarksContent() {
                   </p>
                   {focusModalUrl === "#" && (
                     <p className="text-xs text-amber-700 mt-1 font-medium">
-                      The link itself is blocked in this demo - the live version opens the FOCUS page.
+                      The FOCUS address for this one has not been captured yet, so there is
+                      nothing to open. Search for it on FOCUS in the meantime.
                     </p>
                   )}
                 </div>

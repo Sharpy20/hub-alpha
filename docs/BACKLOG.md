@@ -41,9 +41,32 @@ Real FOCUS URLs now captured (temp link map). These fill the long-standing "86 p
 
 > **4 Jul progress (commit 65e24a8):** wired the 3 referral guides that already exist -
 > **dietitian, physio, ERP** - with their real FOCUS URLs. Also enhanced the guide viewer so
-> blank-form + other-guide tiles render `form.note` and show a "Blocked in demo" badge for
+> blank-form + other-guide tiles render `form.note` and show a badge for
 > dead `#` links (was only blank forms + wagoll). The rest below need the guide BUILDING first
 > (they have no workflow yet) - that's a bigger job (full referral template + criteria), left for Mike to prioritise.
+
+> **28 Jul: full audit done** - `docs/evaluations/2026-07-28_placeholder-links-deep-dive.md`.
+> Accurate split of what was "86 placeholder links" (really **131, now 129**):
+> - **80 in the referral guides.** Blank forms 7 live / 22 dead. Other guides 6 live / 42 dead.
+>   **WAGOLL 0 live / 16 dead - not one referral guide has a worked example.**
+> - **49 in the links data.** 44 are FOCUS-gated (Mike can collect these in one FOCUS session,
+>   no decisions needed); 5 are phone-first entries where the phone IS the content.
+> - **Nothing further can be wired from the 4 Jul link map** - every entry in it that has a
+>   matching guide is already wired. The rest needs the guide built first (the items below).
+> - All 131 already rendered as non-clickable with a badge, so this was never the same risk as
+>   the invented phone numbers. But the badge SAID "Blocked in demo", which claims the link
+>   works live and is merely switched off. Reworded to **"Link to confirm"** (and
+>   **"Example to add"** on WAGOLLs) so the gap reads as unsourced content, not a demo setting.
+> - Wired 2 verified public URLs: GovWifi, EMAS Patient Transport. (First guess at the EMAS
+>   path 404'd - verify every one, never construct a plausible path.)
+> - **Highest-value item is NOT link wiring: write ~6 WAGOLLs.** A worked example needs no
+>   FOCUS URL, just Mike writing one good version, and can be static HTML in the repo like
+>   the existing `public/abc-wagoll.html`. Step 3 of the standard workflow template is empty
+>   in all 16 guides.
+> - Also spotted: `benefits-review` reads like an unfinished template (duplicate stub labels
+>   "Benefits Review Referral" + "Blank Referral Form", and "Additional Guidance").
+>   And `s117-meeting`, the only green guide, has 5 dead links - decide whether green should
+>   require working links.
 
 - [ ] **NEW GUIDE needed** Autism assessment <- Autism Referral Form (`/download_file/view/9204/685`) + AQ50 (`/download_file/view/1124/685`)
 - [ ] **NEW GUIDE needed** CAMHS <- CAMHS SPOA form (`/9315/685`) + Triage & Assessment Operational Policy (`/9478/685`)

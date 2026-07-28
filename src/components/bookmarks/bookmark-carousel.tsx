@@ -59,9 +59,9 @@ function WheelItem({ bookmark, index, total, radius }: WheelItemProps) {
       {!bookmark.requiresFocus && bookmark.url === "#" && (
         <span
           className="absolute -bottom-1 bg-amber-100 text-amber-800 text-[9px] px-1.5 py-0.5 rounded font-medium"
-          title="The link is disabled in the demo"
+          title="No web address has been confirmed for this one yet"
         >
-          Blocked in demo
+          Link to confirm
         </span>
       )}
       {bookmark.requiresFocus && (

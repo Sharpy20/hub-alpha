@@ -883,10 +883,10 @@ export default function UnifiedGuidePage() {
                         {rStep.forms.blank.filter((form) => !form.area || form.area === selectedArea).map((form) => (
                           <div key={form.label}>
                             {!form.url || form.url === "#" ? (
-                              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="Form download is disabled in the demo. The live version links to the trust form on FOCUS.">
+                              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="No trust URL has been captured for this form yet. Get it from FOCUS in the meantime.">
                                 <span className="text-2xl opacity-50">{form.icon || "\uD83D\uDCC4"}</span>
                                 <span className="font-semibold text-gray-500 flex-1">{form.label}</span>
-                                <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap">Blocked in demo</span>
+                                <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap">Link to confirm</span>
                               </div>
                             ) : (
                               <a href={form.url} className="flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-colors no-underline border border-blue-200">
@@ -908,10 +908,10 @@ export default function UnifiedGuidePage() {
                         {rStep.forms.wagoll.map((form) => (
                           <div key={form.label}>
                             {!form.url || form.url === "#" ? (
-                              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="Example download is disabled in the demo. The live version links to a completed example on FOCUS.">
+                              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="No completed example has been linked for this referral yet.">
                                 <span className="text-2xl opacity-50">{"\u2728"}</span>
                                 <span className="font-semibold text-gray-500 flex-1">{form.label}</span>
-                                <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap">Blocked in demo</span>
+                                <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap">Example to add</span>
                               </div>
                             ) : (
                               <a href={form.url} className="flex items-center gap-4 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl hover:from-amber-100 hover:to-yellow-100 transition-colors no-underline border border-amber-200">
@@ -933,10 +933,10 @@ export default function UnifiedGuidePage() {
                         {rStep.forms.otherGuides.filter((form) => !form.area || form.area === selectedArea).map((form) => (
                           <div key={form.label}>
                             {!form.url || form.url === "#" ? (
-                              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="Guide link is disabled in the demo. The live version links to the trust guide on FOCUS.">
+                              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="No trust URL has been captured for this guide yet.">
                                 <span className="text-2xl opacity-50">{"\uD83D\uDCDA"}</span>
                                 <span className="font-semibold text-gray-500 flex-1">{form.label}</span>
-                                <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap">Blocked in demo</span>
+                                <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap">Link to confirm</span>
                               </div>
                             ) : (
                               <a href={form.url} className="flex items-center gap-4 p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl hover:from-teal-100 hover:to-cyan-100 transition-colors no-underline border border-teal-200">

@@ -18,11 +18,62 @@ import {
   ArrowRight,
   Sparkles,
   BookOpen,
+  Flag,
+  Check,
 } from "lucide-react";
 
 type Mode = "setup" | "playing" | "done";
 type DifficultyFilter = "all" | QuizDifficulty;
 type LengthFilter = 5 | 10 | 20 | "all";
+
+// Reporting a question. 942 questions, 61% mined from trust policies, and until
+// now no way to say "this one is wrong" at the moment you are looking at it -
+// which is the only moment anyone ever would.
+//
+// Pick a reason, no free text: the same rule the hand-back sheet follows. It
+// keeps a clinical claim out of a feedback post, and a fixed list is something
+// you can count, which "it's wrong" is not.
+const REPORT_REASONS = [
+  { id: "wrong_answer", label: "The marked answer is wrong" },
+  { id: "out_of_date", label: "Out of date - policy has changed" },
+  { id: "unclear", label: "Question or options are unclear" },
+  { id: "source", label: "Source looks wrong or is missing" },
+  { id: "typo", label: "Typo or formatting" },
+] as const;
+
+// Lands on the feedback board, same shape and key the board already reads.
+const FEEDBACK_KEY = "wardhub_feedback";
+
+function fileQuizReport(question: QuizQuestion, reasonId: string, reasonLabel: string) {
+  try {
+    const raw = localStorage.getItem(FEEDBACK_KEY);
+    const store = raw ? JSON.parse(raw) : { posts: [], comments: [], votes: [] };
+    const now = new Date().toISOString();
+    store.posts = [
+      {
+        id: `quiz-${question.id}-${reasonId}-${now}`,
+        title: `Quiz question flagged: ${reasonLabel}`,
+        // The question is quoted so it can be found again; the source is
+        // carried because "out of date" is only actionable against a document.
+        content: `Question: ${question.question}\nReason: ${reasonLabel}\nSource given: ${question.source}${question.sourceDate ? ` (${question.sourceDate})` : ""}\nQuestion id: ${question.id}`,
+        category: "Report a problem",
+        sub_category: "Quiz",
+        author_name: "Reported from the quiz",
+        author_id: "quiz-reporter",
+        upvotes: 0,
+        created_at: now,
+        updated_at: now,
+      },
+      ...(store.posts ?? []),
+    ];
+    localStorage.setItem(FEEDBACK_KEY, JSON.stringify(store));
+    return true;
+  } catch {
+    // A full or blocked localStorage should not break the quiz someone is
+    // halfway through - the button just will not confirm.
+    return false;
+  }
+}
 
 const DIFF_STYLE: Record<QuizDifficulty, string> = {
   Easy: "bg-emerald-100 text-emerald-700",
@@ -69,6 +120,10 @@ export default function QuizPage() {
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answered, setAnswered] = useState(false);
+  // Per-question report state. Keyed by nothing - it resets on `next()` - so a
+  // report never carries over to the question after it.
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportSent, setReportSent] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [answeredCount, setAnsweredCount] = useState(0);
 
@@ -132,6 +187,9 @@ export default function QuizPage() {
   };
 
   const next = () => {
+    // Always clear the report control, whichever branch we take below.
+    setReportOpen(false);
+    setReportSent(false);
     if (index + 1 >= round.length) {
       if (endless) {
         // Ran the whole bank - reshuffle and keep going
@@ -450,6 +508,54 @@ export default function QuizPage() {
                   current version.
                 </p>
               )}
+
+              {/* Report a problem. Only offered after answering, so nobody uses
+                  it to see the answer, and it sits beside the source because
+                  that is what most reports will be about. */}
+              <div className="mt-3 border-t border-black/5 pt-2">
+                {reportSent ? (
+                  <p className="flex items-center gap-1.5 text-xs font-medium text-emerald-700">
+                    <Check className="h-3.5 w-3.5" />
+                    Thanks - flagged for review. It is on the feedback board.
+                  </p>
+                ) : reportOpen ? (
+                  <div>
+                    <p className="text-xs font-semibold text-gray-700">
+                      What is wrong with this question?
+                    </p>
+                    <div className="mt-1.5 flex flex-wrap gap-1.5">
+                      {REPORT_REASONS.map((r) => (
+                        <button
+                          key={r.id}
+                          onClick={() => {
+                            fileQuizReport(q, r.id, r.label);
+                            setReportSent(true);
+                            setReportOpen(false);
+                          }}
+                          className="rounded-lg border border-gray-300 bg-white px-2.5 py-1 text-xs font-medium text-gray-700 transition-colors hover:border-purple-400 hover:bg-purple-50"
+                        >
+                          {r.label}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => setReportOpen(false)}
+                        className="rounded-lg px-2.5 py-1 text-xs font-medium text-gray-500 hover:text-gray-700"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setReportOpen(true)}
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-purple-700"
+                    title="Something wrong with this question? Flag it for review"
+                  >
+                    <Flag className="h-3.5 w-3.5" />
+                    Report an issue with this question
+                  </button>
+                )}
+              </div>
             </div>
           )}
         </div>

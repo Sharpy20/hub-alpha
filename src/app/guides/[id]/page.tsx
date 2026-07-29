@@ -89,6 +89,91 @@ function renderWithLinks(text: string) {
   });
 }
 
+/**
+ * The linked-job panel: tick the job off, or say it is not finished and leave a
+ * state behind.
+ *
+ * Two jobs can reach here and they want different placement, which is why this
+ * is a component rather than inline JSX:
+ *
+ * - A PATIENT job belongs at the END of the guide. The question there is "did
+ *   you actually finish it", and that is only answerable once you have worked
+ *   through the thing.
+ * - A WARD DIARY job does not. Fridge temps is a recurring job the guide simply
+ *   documents; you go and read the fridge, not click through eight steps. It
+ *   used to sit behind the same completion gate, so on a fresh page load the
+ *   button was invisible and the diary loop never closed (Mike, 29 Jul).
+ *
+ * Declared at module scope so it keeps a stable identity across renders
+ * (eslint: react-hooks/static-components).
+ */
+const LinkedJobPanel = ({
+  job,
+  activeWard,
+  userName,
+  onComplete,
+  onClaim,
+  onHandBack,
+}: {
+  job: DiaryTask;
+  activeWard: string;
+  userName: string;
+  onComplete: (id: string) => void;
+  onClaim: (id: string) => void;
+  onHandBack: () => void;
+}) => (
+  <div className="bg-white rounded-xl border-2 border-teal-200 overflow-hidden">
+    <div className="bg-gradient-to-r from-teal-50 to-emerald-50 px-6 py-3 border-b border-teal-200">
+      <h3 className="font-bold text-gray-800 flex items-center gap-2">
+        <CheckCircle className="w-5 h-5 text-teal-600" /> {job.type === "ward" ? "Ward diary task" : "Linked job"}
+      </h3>
+      <p className="text-sm text-gray-500 mt-0.5">
+        {job.type === "ward"
+          ? `This guide is linked to a task in today's ${activeWard} diary`
+          : `${job.title}${job.patientName ? ` - ${job.patientName}` : ""}`}
+      </p>
+    </div>
+    <div className="p-6 space-y-3">
+      {job.status === "completed" ? (
+        <p className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
+          <Check className="w-5 h-5" /> Marked complete for today in the {activeWard} diary.
+        </p>
+      ) : (
+        <>
+          {job.handback && (
+            <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2">
+              <HandbackBadge handback={job.handback} count={job.handbackCount} size="xs" />
+            </div>
+          )}
+          <Button onClick={() => onComplete(job.id)} className="w-full py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700">
+            <CheckCircle className="w-5 h-5 mr-2" /> {job.type === "ward" ? "Mark completed for today" : "Mark complete"}
+          </Button>
+          {/* Hidden when someone else holds it - it is not yours to hand back.
+              If it is unclaimed, you have just done the work on it, so claim it
+              on the way through. */}
+          {(!job.claimedBy || job.claimedBy === userName) && (
+            <>
+              <button
+                onClick={() => {
+                  if (!job.claimedBy) onClaim(job.id);
+                  onHandBack();
+                }}
+                className="w-full py-2.5 rounded-lg border-2 border-indigo-300 text-indigo-800 font-semibold hover:bg-indigo-50 transition-colors inline-flex items-center justify-center gap-2"
+              >
+                <Undo2 className="w-4 h-4" />
+                Not finished - hand it back
+              </button>
+              <p className="text-xs text-gray-500 text-center">
+                Leaves a state on the job and builds a case note, so the next person is not guessing.
+              </p>
+            </>
+          )}
+        </>
+      )}
+    </div>
+  </div>
+);
+
 export default function UnifiedGuidePage() {
   const params = useParams();
   const router = useRouter();
@@ -698,6 +783,21 @@ export default function UnifiedGuidePage() {
           </div>
         )}
 
+        {/* Today's ward diary job, if this guide documents one. Sits here rather
+            than at the end of the guide: reading the fridge does not require
+            clicking through every step first, and behind the completion gate
+            the button was effectively invisible (Mike, 29 Jul). */}
+        {!isV2 && linkedWardTask && (
+          <LinkedJobPanel
+            job={linkedWardTask}
+            activeWard={activeWard}
+            userName={user?.name || "Unknown"}
+            onComplete={(id) => toggleComplete(id, user?.name || "Unknown")}
+            onClaim={(id) => claimTask(id, user?.name || "Unknown")}
+            onHandBack={() => setShowHandBack(true)}
+          />
+        )}
+
         {/* Development disclaimer - shown on every guide. DELETE THIS BLOCK AT LAUNCH. */}
         <div className="flex items-start gap-2.5 px-4 py-3 bg-amber-50 border border-amber-300 rounded-xl text-sm text-amber-900">
           <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-600" aria-hidden="true" />
@@ -1258,56 +1358,18 @@ export default function UnifiedGuidePage() {
 
             {/* The linked job - mark it done, or say it is not finished and
                 leave a state behind. "Mark complete" on a half-done job lies,
-                and on a discharge barrier it lies expensively. */}
-            {!isV2 && linkedJob && (
-              <div className="bg-white rounded-xl border-2 border-teal-200 overflow-hidden">
-                <div className="bg-gradient-to-r from-teal-50 to-emerald-50 px-6 py-3 border-b border-teal-200">
-                  <h3 className="font-bold text-gray-800 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-teal-600" /> {linkedJob.type === "ward" ? "Ward diary task" : "Linked job"}</h3>
-                  <p className="text-sm text-gray-500 mt-0.5">
-                    {linkedJob.type === "ward"
-                      ? `This guide is linked to a task in today's ${activeWard} diary`
-                      : `${linkedJob.title}${linkedJob.patientName ? ` - ${linkedJob.patientName}` : ""}`}
-                  </p>
-                </div>
-                <div className="p-6 space-y-3">
-                  {linkedJob.status === "completed" ? (
-                    <p className="flex items-center gap-2 text-sm font-semibold text-emerald-700"><Check className="w-5 h-5" /> Marked complete for today in the {activeWard} diary.</p>
-                  ) : (
-                    <>
-                      {linkedJob.handback && (
-                        <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-3 py-2">
-                          <HandbackBadge handback={linkedJob.handback} count={linkedJob.handbackCount} size="xs" />
-                        </div>
-                      )}
-                      <Button onClick={() => toggleComplete(linkedJob.id, user?.name || "Unknown")} className="w-full py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700">
-                        <CheckCircle className="w-5 h-5 mr-2" /> {linkedJob.type === "ward" ? "Mark completed for today" : "Mark complete"}
-                      </Button>
-                      {/* Hidden when someone else holds it - it is not yours to
-                          hand back. If it is unclaimed, you have just done the
-                          work on it, so claim it on the way through. */}
-                      {(!linkedJob.claimedBy || linkedJob.claimedBy === user?.name) && (
-                        <>
-                          <button
-                            onClick={() => {
-                              if (!linkedJob.claimedBy) {
-                                claimTask(linkedJob.id, user?.name || "Unknown");
-                              }
-                              setShowHandBack(true);
-                            }}
-                            className="w-full py-2.5 rounded-lg border-2 border-indigo-300 text-indigo-800 font-semibold hover:bg-indigo-50 transition-colors inline-flex items-center justify-center gap-2"
-                          >
-                            <Undo2 className="w-4 h-4" />
-                            Not finished - hand it back
-                          </button>
-                          <p className="text-xs text-gray-500 text-center">
-                            Leaves a state on the job and builds a case note, so the next person is not guessing.
-                          </p>
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
+                and on a discharge barrier it lies expensively.
+                A ward job has already had its own panel since the top of the
+                guide, so only the patient job is offered here. */}
+            {!isV2 && linkedPatientTask && (
+              <LinkedJobPanel
+                job={linkedPatientTask}
+                activeWard={activeWard}
+                userName={user?.name || "Unknown"}
+                onComplete={(id) => toggleComplete(id, user?.name || "Unknown")}
+                onClaim={(id) => claimTask(id, user?.name || "Unknown")}
+                onHandBack={() => setShowHandBack(true)}
+              />
             )}
 
             {/* Follow-up task - hidden in v2 (no job diary) and on staff-life

@@ -60,6 +60,24 @@ before the sponsor demo, on a page he may well show. And it carries a decision o
 `docs/nhs-ready/` already holds partial markdown copies that have drifted from the JSX, so
 something has to win. Left for after Thursday.
 
+**FIXED 29 Jul - the fridge-temps mark-done button never showed.** Root cause: the panel was
+inside `{!isReferral && isComplete && ...}` in `guides/[id]/page.tsx`, so it needed you to click
+through to the LAST step first. A ward diary job is not like that - you read the fridge, not
+eight steps - so the ward panel moved to the top of the guide and is visible on load. The
+patient panel stays at the end, where "did you actually finish it" is the real question. Both
+now share a module-scope `LinkedJobPanel`. Verified end to end with client-side navigation
+(a full page load resets task state, which is what made this hard to see).
+
+**Two things spotted while fixing it, NOT fixed:**
+- [ ] **Only ONE ward task is ever generated.** `generateWardTasks` runs `for (let i = 0; i < 1;
+      i++)`, so only `WARD_TASK_TEMPLATES[0]` (fridge temps) reaches the demo. Every other ward
+      template - controlled drugs, water temps, resus, ligature, walkaround, the lot - is dead
+      data. The **Night observation round -> observation-engagement** link added the same day
+      can therefore never produce a task. Decide whether the demo should seed more ward jobs.
+- [ ] **A completed recurring task reads as complete on every day column it renders on**, not
+      just the day you completed. Ticking today's fridge check shows 8 struck-through copies
+      across the week. One task record, many renderings - completion needs to be per-date.
+
 **New follow-up found while doing item 12:**
 - [ ] **The "mark it done" button only exists in the `/guides/[id]` viewer.** Four guides now
       linked to diary jobs are static routes that override it -

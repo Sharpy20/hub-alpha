@@ -11,9 +11,12 @@ import {
   MessageSquare,
   ShieldAlert,
   Unplug,
+  Film,
 } from "lucide-react";
 import Link from "next/link";
 import { useV2Href } from "@/lib/hooks/useV2";
+import { VideoWithTranscript } from "@/components/media/VideoWithTranscript";
+import { FULL_REEL_TRANSCRIPT } from "@/lib/data/video/transcripts";
 // PERFORMANCE: import the catalog module directly (not the ui barrel) - it is
 // the lightest file that knows every guide id. See the note in components/ui/index.ts.
 import { ALL_GUIDES } from "@/lib/data/guides/catalog";
@@ -64,6 +67,44 @@ export default function AboutPage() {
               Foundation Trust as a personal development project. It is not yet a
               trust-approved system - treat it as a demo, and check the source
               document before acting on anything clinical.
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-bold text-nhs-black flex items-center gap-2">
+              <Film className="w-6 h-6 text-nhs-blue" />
+              The whole thing in under 4 minutes
+            </h2>
+            <p className="text-sm text-nhs-dark-grey mt-1">
+              No sound - every word is on screen.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <VideoWithTranscript
+              src="/video/wardhub-full-reel.mp4"
+              label="wardHub in full: the problem, what it is, where the data goes, and the ask"
+              transcript={FULL_REEL_TRANSCRIPT}
+            />
+            <p className="text-nhs-dark-grey">
+              Five chapters: the problem it solves, what wardHub actually is,
+              where the data goes, the case for a two-ward pilot, and the whole
+              model on one board. It was made to pitch the project to a senior
+              sponsor, so chapter 4 is an ask rather than an explanation.
+            </p>
+            <p className="text-sm text-nhs-mid-grey">
+              It illustrates the model <strong>at full build</strong>, not the
+              demo running today - the film names Supabase as the datastore, but
+              nothing here is sent to it. The 90-second chapter on data
+              protection is on its own on the{" "}
+              <Link
+                href={link("/gdpr")}
+                className="text-nhs-blue hover:text-nhs-dark-blue font-medium"
+              >
+                GDPR &amp; Privacy page
+              </Link>
+              .
             </p>
           </CardContent>
         </Card>

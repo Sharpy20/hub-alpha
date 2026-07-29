@@ -20,6 +20,17 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ⏰ QUEUED (Mike, 29 Jul) - review /gdpr and /dev-panel, run LAST
+- [ ] Full review of the GDPR page and the Dev Panel for currency and consistency with the
+      current pitch. Known drift to check: the dev-panel 60-second pitch still leads with
+      "Nexus Nudges" (stale vs the Overview/assurance story); the new explainer-video card
+      on /gdpr; two-ward pilot recommendation; staff-nurse wording; sign-off-by-specialty
+      model; the three-data-types framing (skeleton / trust content / patient data).
+      **Sequencing (Mike): more work is landing in another session first - do this review
+      LAST, after that session's changes are in.**
+
+---
+
 ## ✅ DONE 27 Jul 2026 - Trust-policy quiz batch (was NEXT UP)
 The `/quiz` bank was ~95% national guidance. It is now **942 questions across 43 topics, 574 of them
 (61%) mined from 117 distinct Derbyshire Healthcare documents** in `E:\Hub\Policy dump not for git hub\`

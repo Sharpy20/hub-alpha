@@ -3,11 +3,9 @@
 import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, Button } from "@/components/ui";
-import { Shield, Lock, FileText, Mail, Database, Trash2, Check, ShieldAlert, Film } from "lucide-react";
+import { Shield, Lock, FileText, Mail, Database, Trash2, Check, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { useV2Href } from "@/lib/hooks/useV2";
-import { VideoWithTranscript } from "@/components/media/VideoWithTranscript";
-import { DATA_FILM_TRANSCRIPT } from "@/lib/data/video/transcripts";
 
 export default function GdprPage() {
   const link = useV2Href();
@@ -43,43 +41,6 @@ export default function GdprPage() {
             Information about data protection and privacy in wardHub
           </p>
         </div>
-
-        <Card>
-          <CardHeader>
-            <h2 className="text-xl font-bold text-nhs-black flex items-center gap-2">
-              <Film className="w-6 h-6 text-nhs-blue" />
-              Watch: where the data goes
-            </h2>
-            <p className="text-sm text-nhs-dark-grey mt-1">
-              90 seconds. No sound - every word is on screen.
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <VideoWithTranscript
-              src="/video/where-the-data-goes.mp4"
-              label="Where the data goes: how a guide is written, and what happens to anything you enter"
-              transcript={DATA_FILM_TRANSCRIPT}
-            />
-            <p className="text-sm text-nhs-dark-grey">
-              Three steps: an AI builds the empty structure, the Trust fills it
-              from its own policies, and anything entered stays inside the Trust
-              boundary. It shows the model <strong>at full build</strong>, not
-              the demo running today - the film names Supabase as the datastore,
-              but nothing in this demo is sent to it.
-            </p>
-            <p className="text-sm text-nhs-mid-grey">
-              This is one chapter of a longer film about the whole project. The
-              full version is on the{" "}
-              <Link
-                href={link("/about")}
-                className="text-nhs-blue hover:text-nhs-dark-blue font-medium"
-              >
-                About page
-              </Link>
-              .
-            </p>
-          </CardContent>
-        </Card>
 
         <Card>
           <CardHeader>

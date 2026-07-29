@@ -5,10 +5,18 @@
 > Status: `[ ]` todo · `[~]` in progress · `[x]` done · `[BLOCKED]` needs Mike · `[PARK]` deferred
 
 Related task docs (roll findings into here over time):
+- **`docs/evaluations/2026-07-28_project-evaluation.md`** - 13-hat review, 28 Jul. **Read its
+  addendum first**, several findings were actioned the same night. Open items are Section O below.
+- `docs/evaluations/2026-07-28_placeholder-links-deep-dive.md` - the `#` link audit
 - `docs/homework-remaining-03-Jul-2026.md` - guide reviews, blocked-on-Mike items, big builds
 - `docs/homework-todo-03-Jul-2026.md` - the worked-through homework detail
 - `E:\Hub\temp\focus-referral-links-04Jul2026.md` - real FOCUS URLs behind the friendly link text
 - `E:\Hub\temp\focus-referral-criteria-notes-04Jul2026.md` - FOCUS internal referral criteria
+
+**⛔ Standing rule (28 Jul):** the patient record holds name, ward, status, admission date/time,
+named nurse, consultant, ward professional and discharge fields. **Nothing clinical.** MHA status,
+alerts, diagnoses, room and bed were removed and a test fails if they return. See CLAUDE.md
+Session 43 for the reasoning, which is Mike's and should be quoted rather than re-argued.
 
 ---
 
@@ -982,6 +990,59 @@ end of the session.
       viewer, and the editor should refuse a goto that points at a step inside a different branch.
       **Not a quick fix - own session.** Pairs with the review below.
 - [ ] **Review the guide editor with Mike.**
+
+---
+
+## O. From the 28 Jul evaluation (Session 43) - open items
+
+Full report: `docs/evaluations/2026-07-28_project-evaluation.md` (read its **addendum** first,
+several findings were actioned the same night). Everything below is unstarted.
+
+**Claude can do these, no decision needed from Mike:**
+- [ ] **CI workflow** - GitHub Action running `build` + `test` + `tsc` + `lint` on push. Highest
+      value per hour in the whole report: the gates only run today when someone remembers, which
+      is exactly why 26 typecheck errors sat in the repo for months. ~30 min.
+- [ ] **Rate-limit + log `POST /api/auth/verify-password`** - unlimited guesses at one shared
+      password today, no lockout, no delay, no logging, so a brute-force would be invisible.
+      ~10 min. While there: timing-safe compare, and replace the `pathname.includes(".")` gate
+      exemption in `proxy.ts` with an explicit static-asset match.
+- [ ] **"Nothing is saved here" notice in the diary** - task state is React memory only
+      (`tasks-provider.tsx` is `useState`, no persistence), so a refresh wipes every claim,
+      hand-back and completion. The GDPR page says so now; the diary itself does not, and mid-demo
+      it reads as broken software.
+- [ ] **Re-run axe** over everything built since the June audit: hand-back modal, `/overview`,
+      rebuilt service map (pan/zoom is the hard one for keyboard), quiz, pay band picker,
+      payslip decoder. None of it has ever been machine-tested.
+- [ ] **Move the governance docs out of `dev-panel/page.tsx`** (2,900+ lines) into markdown that
+      the page renders. The DPIA, hazard log, RBAC matrix and data catalogue currently only exist
+      as JSX, so the IG officer and clinical safety officer who must sign them cannot redline or
+      version-compare them. There are already partial markdown copies in `docs/nhs-ready/`, so
+      today there are two sets that will drift.
+- [ ] **Clear the 36 `react-hooks/static-components` lint errors** in one mechanical pass. Real
+      user-visible consequence, not pedantry: a component declared inside a render gets remounted,
+      so text someone has typed into a field can vanish while they type (`PayslipDecoder.tsx` is
+      the clearest case).
+- [ ] **Tests for the proxy split and the hand-back reducer.** The proxy test has now been
+      recommended in three consecutive evaluations and still does not exist. It matters more now
+      that `COLLAPSED_FOR_DEMO = true` leaves all the limited-build logic dormant and unexercised.
+
+**Needs Mike:**
+- [ ] Sign off or reject the **20 red guides**. Nothing else moves the project as much.
+- [ ] Decide what **amber** means for the 43 guides that have never been reviewed, versus the 7
+      considered and parked. The badge cannot currently tell them apart.
+- [ ] Collect the **44 FOCUS addresses** in one sitting on the trust network (Section A).
+- [ ] Write **~6 WAGOLLs**. Zero of 16 referral guides has a worked example. Needs no FOCUS URL,
+      can be static HTML in the repo like `public/abc-wagoll.html`.
+- [ ] Confirm the crisis and perinatal direct numbers are publicly findable: `01332 623900`,
+      `01246 293284`, `01332 623911`, `01246 216523`.
+- [ ] Supply the real referral contacts now reading "Hidden in demo mode" (PICU, dietetics,
+      dental, tissue viability, physio, OT, SALT, EDT, ERP, JUCD keyworking, welfare rights).
+- [ ] Decide whether **`/quiz` carries the traffic-light badge**. 942 questions marking people
+      right or wrong against trust policy, with no sign-off state at all.
+- [ ] Answer the **DTR consent** question (still `[confirm]` in live content) and read the
+      **Supabase region** off the dashboard.
+- [ ] Should **named nurse, consultant and admission date** follow MHA status out of the patient
+      record? Left in deliberately, but the "who keeps this current" argument reaches them too.
 
 ---
 

@@ -1724,15 +1724,17 @@ CREATE TABLE users (
 
             <div className="bg-nhs-pale-grey p-4 rounded-lg overflow-x-auto">
               <pre>{`-- Patients table (Max+ only)
+-- No clinical columns by design (28 Jul 2026). legal_status, alerts,
+-- diagnoses, room and bed were all removed: wardHub is not the clinical
+-- record, so nothing it stored would have an owner keeping it current.
 CREATE TABLE patients (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   ward TEXT NOT NULL,
-  room TEXT,
-  bed TEXT,
-  legal_status TEXT,
   admission_date DATE,
   admission_time TIMESTAMPTZ,           -- Triggers 72hr audit auto-generation
+  named_nurse UUID REFERENCES users(id),
+  consultant TEXT,
   ward_professional UUID REFERENCES users(id),  -- Assigned staff/lead/manager
   status TEXT DEFAULT 'active',
   created_at TIMESTAMPTZ DEFAULT NOW(),

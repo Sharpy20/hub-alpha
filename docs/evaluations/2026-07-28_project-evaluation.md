@@ -6,6 +6,31 @@
 
 ---
 
+## ⚠️ Addendum: what changed in the hours after this was written
+
+Several findings below were acted on in the same session, so **do not work from this
+document without reading this list first.** The body is left as it was written, because an
+evaluation that gets quietly edited is no longer evidence of anything.
+
+| Finding in this report | What happened |
+|---|---|
+| "Audit the remaining 131 placeholder links" (High Priority) | **Done, and the priority was wrong.** All 131 already rendered non-clickable with a badge, so this was never the risk the invented contacts were. The badge wording was the actual defect. See `2026-07-28_placeholder-links-deep-dive.md`. Count now 129 |
+| "Realistic demo names before Thursday" | **Done.** Whole demo cast is now English literature: staff are Austen, patients are other classic novels, consultants are doctors from novels. Also corrects this report's claim that the demo showed `Patient_BY_1`, which was stale, the names were already realistic |
+| Hat 4 / Hat 13: MHA legal status on the patient card, alerts in the patient picker | **Removed entirely, along with diagnoses, room and bed.** Not hidden, not deprecated. Mike's reasoning is clinical safety as much as IG: every clinical field invites "who keeps it up to date" and "what if someone acts on it when it is stale". Guarded by `src/__tests__/no-special-category-data.test.ts` |
+| Hat 12: "the DPIA and data catalogue live inside a React component" | Still true, but the catalogue, the draft Supabase schema and the GDPR page now state the no-clinical-data position correctly |
+| Hat 4: GDPR page inaccuracies | Fixed during the run, as recorded in "Fixed during this evaluation" below |
+
+**Scores that would move if rescored today:** Information Governance and Patient/Carer both
+improve. Clinical Content Editor does not, because none of the 20 red guides has been signed
+off and the WAGOLL gap is untouched. That remains the real backlog.
+
+**Still open and unstarted from this report:** the CI workflow, rate-limiting the password
+endpoint, the "nothing is saved here" notice in the diary, re-running axe over everything
+built since June, and moving the governance documents out of `dev-panel/page.tsx` into
+markdown. These are tracked in BACKLOG Section O.
+
+---
+
 ## Executive Summary
 
 - **The build is in better shape than the last two evaluations suggested, and the content is in worse shape.** Code health is genuinely good now: clean build, 32 tests passing, and after this session's fixes a typecheck that returns zero errors for the first time. Content is where the risk has moved. Of 71 guides, exactly **one** has been explicitly signed off green. Twenty are red. The other fifty sit on the amber default, which means nobody has said yes to them.

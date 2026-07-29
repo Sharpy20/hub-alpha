@@ -209,6 +209,21 @@ export default function AboutPage() {
               sign-off, and nothing gets waved through to make the numbers look
               better.
             </p>
+            <Link
+              href="/dev-panel?section=data-sources"
+              className="flex items-start gap-3 rounded-lg border-2 border-nhs-pale-grey p-4 hover:border-nhs-blue hover:bg-nhs-pale-grey/40 transition-colors"
+            >
+              <Database className="w-6 h-6 text-nhs-green flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <span>
+                <span className="block font-bold text-nhs-black">
+                  Where every piece of information came from
+                </span>
+                <span className="block text-sm text-nhs-dark-grey mt-0.5">
+                  The Data Sources audit log lists each policy, form and page
+                  behind the content, and when it was last checked.
+                </span>
+              </span>
+            </Link>
           </CardContent>
         </Card>
 

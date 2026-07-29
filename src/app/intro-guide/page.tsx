@@ -378,16 +378,16 @@ const guideSections: GuideSection[] = [
   },
   {
     id: "settings",
-    title: "Help & More",
+    title: "Help & Tools",
     icon: <HelpCircle className="w-5 h-5" />,
     color: "from-slate-500 to-slate-700",
     slides: [
       {
-        title: "Help & More Menus",
-        description: "The top nav has a Help button and a More dropdown with extra features:",
+        title: "Help & Tools Menus",
+        description: "The top nav has two dropdowns. Tools holds things you do, Help explains what wardHub is:",
         tips: [
-          "Help - Interactive Demo, this Intro Guide, FAQ, Feedback and the Demo selector",
-          "More - Editor (create/edit guides), Staff list, Reports, Data Sources",
+          "Help - Interactive Demo, this Intro Guide, FAQ, About, Feedback and the Demo selector",
+          "Tools - Overview, Quiz, Service Map, Staff list, Editor (create/edit guides)",
           "Editor is open to everyone, but only Contributors can publish changes",
           "Safeguarding resources are on the home page - scroll down"
         ],
@@ -417,8 +417,8 @@ export default function IntroGuidePage() {
                       "Links - Quick links to useful resources",
                       "Guides - Referral workflows and clinical how-to guides",
                       "Search - press Ctrl+K (or the search box) to jump to any guide or link",
-                      "More - Staff list and Editor",
-                      "Help - Interactive Demo, this Intro Guide, FAQ, Feedback and the Demo selector",
+                      "Tools - Staff list and Editor",
+                      "Help - Interactive Demo, this Intro Guide, FAQ, About, Feedback and the Demo selector",
                     ],
                   };
                 }

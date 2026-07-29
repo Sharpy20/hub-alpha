@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useApp, STYLE_THEMES, type StyleTheme, type ColorMode } from "@/app/providers";
-import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, Database, CircleHelp, ClipboardCheck, ArrowLeft, Play, Brain, Map, Info } from "lucide-react";
+import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Link2, FileText, Pencil, MessageSquare, Check, HelpCircle, Sparkles, CircleHelp, ClipboardCheck, ArrowLeft, Play, Brain, Map, Info } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import { getStaffByWard } from "@/lib/data/staff";
@@ -199,15 +199,17 @@ export function Header() {
                 )}
               </div>
 
-              {/* More dropdown */}
+              {/* Tools dropdown. Split rule: Tools holds things you DO, Help
+                  holds what wardHub IS plus the demo controls. About and Data
+                  Sources moved to Help/About on 29 Jul for that reason. */}
               <div className="relative" ref={settingsDropdownRef}>
                 <button
                   onClick={() => setSettingsDropdownOpen(!settingsDropdownOpen)}
-                  aria-label="More options menu"
+                  aria-label="Tools menu"
                   aria-expanded={settingsDropdownOpen}
                   className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold flex items-center gap-1.5 transition-colors text-sm"
                 >
-                  More
+                  Tools
                   <ChevronDown className={`w-4 h-4 transition-transform ${settingsDropdownOpen ? "rotate-180" : ""}`} aria-hidden="true" />
                 </button>
 
@@ -233,16 +235,6 @@ export function Header() {
                         <div><p className="font-semibold text-gray-900">Staff</p><p className="text-xs text-gray-500 mt-0.5">Staff directory and ward assignments</p></div>
                       </Link>
                     )}
-                    {!isV2 && (
-                      <Link href={link("/dev-panel?section=data-sources")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                        <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-5 h-5 text-white" /></div>
-                        <div><p className="font-semibold text-gray-900">Data Sources</p><p className="text-xs text-gray-500 mt-0.5">Audit log showing where all information comes from</p></div>
-                      </Link>
-                    )}
-                    <Link href={link("/about")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-lg flex items-center justify-center flex-shrink-0"><Info className="w-5 h-5 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900">About</p><p className="text-xs text-gray-500 mt-0.5">What wardHub is, data position and content checking</p></div>
-                    </Link>
                     {canAccessAdmin && (
                       <Link href={link("/admin")} onClick={() => setSettingsDropdownOpen(false)} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors">
                         <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-5 h-5 text-white" /></div>
@@ -283,6 +275,10 @@ export function Header() {
                     <Link href={link("/faq")} onClick={closeHelp} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                       <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><CircleHelp className="w-5 h-5 text-white" /></div>
                       <div><p className="font-semibold text-gray-900">FAQ</p><p className="text-xs text-gray-500 mt-0.5">Common questions</p></div>
+                    </Link>
+                    <Link href={link("/about")} onClick={closeHelp} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-lg flex items-center justify-center flex-shrink-0"><Info className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">About</p><p className="text-xs text-gray-500 mt-0.5">What wardHub is, where the data lives and how content is checked</p></div>
                     </Link>
                     <Link href={link("/feedback")} onClick={closeHelp} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                       <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-5 h-5 text-white" /></div>
@@ -552,7 +548,7 @@ export function Header() {
               )}
 
               <div className="py-3 border-b border-gray-100">
-                <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">More</p>
+                <p className="text-xs text-gray-500 mb-2 font-semibold uppercase">Tools</p>
                 <div className="space-y-2">
                   {!isV2 && (
                     <Link href={link("/overview")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
@@ -574,16 +570,6 @@ export function Header() {
                       <div><p className="font-semibold text-gray-900 text-sm">Staff</p><p className="text-xs text-gray-500">Staff directory and ward assignments</p></div>
                     </Link>
                   )}
-                  {!isV2 && (
-                    <Link href={link("/dev-panel?section=data-sources")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                      <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0"><Database className="w-4 h-4 text-white" /></div>
-                      <div><p className="font-semibold text-gray-900 text-sm">Data Sources</p><p className="text-xs text-gray-500">Audit log of all information</p></div>
-                    </Link>
-                  )}
-                  <Link href={link("/about")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-lg flex items-center justify-center flex-shrink-0"><Info className="w-4 h-4 text-white" /></div>
-                    <div><p className="font-semibold text-gray-900 text-sm">About</p><p className="text-xs text-gray-500">What wardHub is and how it&apos;s checked</p></div>
-                  </Link>
                   {canAccessAdmin && (
                     <Link href={link("/admin")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                       <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><Pencil className="w-4 h-4 text-white" /></div>
@@ -607,6 +593,10 @@ export function Header() {
                   <Link href={link("/faq")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0"><CircleHelp className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">FAQ</p><p className="text-xs text-gray-500">Common questions</p></div>
+                  </Link>
+                  <Link href={link("/about")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-lg flex items-center justify-center flex-shrink-0"><Info className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">About</p><p className="text-xs text-gray-500">What wardHub is and how it&apos;s checked</p></div>
                   </Link>
                   <Link href={link("/feedback")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-4 h-4 text-white" /></div>

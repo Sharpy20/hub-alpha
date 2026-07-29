@@ -34,6 +34,40 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ✅ DONE 29 Jul 2026 - Session 46: menu split by purpose, stale demo user self-heal
+
+**The rule, now written down: Tools holds things you DO, Help holds what wardHub IS plus the
+demo controls.** Session 45 made the two dropdowns the same shape but nothing decided what went
+in which, so About and Data Sources - the two pages written for the person asking "what is this
+and where did the information come from" - sat in More, where a governance reader never looks.
+That matters for the 30 Jul sponsor demo.
+
+- **More renamed to Tools** (desktop dropdown, mobile section heading, aria-label). Once About
+  and Data Sources left, everything inside is something you do, so the label earns its place.
+  Contents: Overview, Quiz, Service Map, Staff, Editor.
+- **About moved to Help**, above Feedback. Help is now: Interactive Demo, Intro Guide, FAQ,
+  About, Feedback, Demo selector. Six rows, 467px measured, still clears a laptop viewport.
+- **Data Sources dropped as a menu row** and given a prominent card on `/about` inside "How
+  content is checked" - the same conversation, and it keeps Help from growing to a seventh row.
+  Still linked from the footer.
+- Intro Guide nav copy updated in both the full and limited-build versions.
+- **Stale demo user self-heal** (`providers.tsx`): the Demo selector was showing `Staff_BY_D`,
+  a name from the pre-28-Jul cast, restored from a `wardhub_user` saved in localStorage before
+  the rename. A saved user whose name is not in `STAFF_NAMES` is now discarded and replaced with
+  the default. Anyone still carrying an old name self-heals on next load.
+- **Bug found alongside it:** `isViewingOtherWard` compared the capitalised active ward
+  ("Byron") to the lowercase ward id ("byron"), so it was **always true**. The amber
+  other-ward cue on the Help button - added in Session 45 as the only signal you are off your
+  own ward - had therefore never switched off. Now case-insensitive.
+
+**Open question, not decided:** Interactive Demo appears twice, as the pulsing amber header
+button and as the first Help row. Harmless, but the row could go now Help holds more.
+
+**Checked, no action:** `/reports` is a deliberate 12-line redirect to `/overview` with a
+comment explaining the 27 Jul merge, not an orphan.
+
+---
+
 ## ✅ DONE 29 Jul 2026 - Session 45: Help is a dropdown, and it holds the demo selector
 
 Mike's ask, and a reminder that a job agreed in conversation never reached this file - it was

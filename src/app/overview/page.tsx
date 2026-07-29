@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { MainLayout } from "@/components/layout";
-import { Button, Card, CardContent } from "@/components/ui";
+import { Button, Card, CardContent, Modal } from "@/components/ui";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import {
@@ -49,6 +49,8 @@ import {
   Undo2,
   Flame,
   Construction,
+  Circle,
+  Maximize2,
 } from "lucide-react";
 
 // Priority ranking + colours, shared by tiles and table so priority is visible
@@ -321,12 +323,15 @@ const JobRow = ({
             </>
           ) : (
             <>
+              {/* "Complete" with a filled green tick read as a STATUS - as if
+                  the job were already done - rather than the thing to press
+                  (Mike, 29 Jul). Hollow circle and an instruction now. */}
               <button
                 onClick={() => actions.onComplete(task)}
-                className={`${btn} text-emerald-700 bg-emerald-50 hover:bg-emerald-100`}
+                className={`${btn} text-emerald-700 bg-white border border-emerald-200 hover:bg-emerald-50`}
                 title="Mark this job complete"
               >
-                <CheckCircle2 className="w-3.5 h-3.5" /> Complete
+                <Circle className="w-3.5 h-3.5" /> Mark complete
               </button>
               <button
                 onClick={() => actions.onToggleBarrier(task)}
@@ -532,9 +537,13 @@ const FilterSwitch = ({
 );
 
 // ---------------------------------------------------------------------------
-// Patient tile
+// Patient focus panel - the full working view of one patient, shown inside the
+// pop-out. The grid tile used to carry all of this, which meant about one and a
+// half patients per screen. It is now split: the tile scans, this one works
+// (Mike, 29 Jul). Everything that takes a decision lives here - due dates, the
+// filters, the review stamps, and the job actions.
 // ---------------------------------------------------------------------------
-const PatientReviewCard = ({
+const PatientFocusPanel = ({
   summary,
   actions: rawActions,
   stamps,
@@ -583,6 +592,15 @@ const PatientReviewCard = ({
     return [...out, ...done];
   }, [s.tasks, lens]);
 
+  const outstandingTasks = useMemo(
+    () => sortedTasks.filter((t) => t.status !== "completed"),
+    [sortedTasks]
+  );
+  const doneTasks = useMemo(
+    () => sortedTasks.filter((t) => t.status === "completed"),
+    [sortedTasks]
+  );
+
   const statusColor =
     s.barriers > 0
       ? "from-amber-500 to-orange-600"
@@ -591,7 +609,7 @@ const PatientReviewCard = ({
         : "from-emerald-500 to-green-600";
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow print-patient-card">
+    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 print-patient-card">
       {/* Header - minimal PII: name and ward only */}
       <div className={`bg-gradient-to-r ${statusColor} p-4 text-white print-report-header`}>
         <div className="flex items-center gap-3">
@@ -727,27 +745,30 @@ const PatientReviewCard = ({
           </div>
         )}
 
+        {/* Outstanding and Done are each under their own heading, so a job's
+            group says what state it is in and the row does not have to (Mike,
+            29 Jul). */}
         <div className="space-y-2">
+          {outstandingTasks.length > 0 && (
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+              Outstanding ({outstandingTasks.length})
+            </p>
+          )}
           {sortedTasks.length > 0 ? (
-            sortedTasks
-              .filter((t) => t.status !== "completed")
-              .map((task) => (
-                <JobRow key={task.id} task={task} actions={actions} onOpen={onOpenTask} />
-              ))
+            outstandingTasks.map((task) => (
+              <JobRow key={task.id} task={task} actions={actions} onOpen={onOpenTask} />
+            ))
           ) : (
             <p className="text-sm text-gray-500 text-center py-4">
               {lens === "all" ? "No jobs recorded" : `No ${LENS_LABEL[lens]} jobs`}
             </p>
           )}
-          {sortedTasks.length > 0 && sortedTasks.every((t) => t.status === "completed") && (
+          {sortedTasks.length > 0 && outstandingTasks.length === 0 && (
             <p className="text-sm text-gray-500 text-center py-4">Nothing outstanding</p>
           )}
         </div>
 
-        <DoneList
-          tasks={sortedTasks.filter((t) => t.status === "completed")}
-          onOpen={onOpenTask}
-        />
+        <DoneList tasks={doneTasks} onOpen={onOpenTask} />
 
         <div
           className={`mt-3 p-3 rounded-xl print-summary ${
@@ -774,6 +795,240 @@ const PatientReviewCard = ({
               : "All jobs completed"}
           </p>
         </div>
+      </div>
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Compact tile - the scanning view. Job title, priority dot, barrier chip and a
+// one-click tick, nothing else: a due date and three buttons per job is what
+// pushed the grid down to about one and a half patients on screen. Everything
+// else is one click away in the pop-out (Mike, 29 Jul).
+// ---------------------------------------------------------------------------
+const CompactJobRow = ({
+  task,
+  onOpen,
+  onComplete,
+}: {
+  task: DiaryTask;
+  onOpen: (task: DiaryTask) => void;
+  onComplete: (task: DiaryTask) => void;
+}) => (
+  <li className="flex items-center gap-2 py-0.5">
+    <span
+      className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${PRIORITY_DOT[task.priority]}`}
+      title={`${PRIORITY_CONFIG[task.priority].label} priority`}
+    />
+    <button
+      onClick={() => onOpen(task)}
+      className="flex-1 min-w-0 text-left text-sm text-gray-800 hover:text-violet-700 hover:underline decoration-violet-300 underline-offset-2 truncate"
+      title={task.title}
+    >
+      {task.title}
+      {task.blocksDischarge && (
+        <span className="ml-1.5 text-[10px] font-semibold text-amber-800" title="Blocks discharge">
+          🚧
+        </span>
+      )}
+      {/* On screen the priority dot and the pop-out carry this. On paper there
+          is no pop-out to click into, so the printed sheet keeps the detail. */}
+      <span className="hidden print:inline text-gray-600">
+        {" "}
+        - {PRIORITY_CONFIG[task.priority].label}
+        {taskDueDate(task)
+          ? `, due ${new Date(taskDueDate(task)).toLocaleDateString("en-GB")}`
+          : ""}
+      </span>
+    </button>
+    <button
+      onClick={() => onComplete(task)}
+      aria-label={`Mark "${task.title}" complete`}
+      title="Mark complete"
+      className="flex-shrink-0 p-1 rounded-md text-gray-300 hover:text-emerald-600 hover:bg-emerald-50 transition-colors print-hide"
+    >
+      <Circle className="w-4 h-4" />
+    </button>
+  </li>
+);
+
+const PatientCompactCard = ({
+  summary,
+  actions: rawActions,
+  onOpenTask,
+  onOpenPatient,
+  pageLens,
+}: {
+  summary: PatientSummary;
+  actions: JobActions;
+  onOpenTask: (task: DiaryTask) => void;
+  onOpenPatient: () => void;
+  pageLens: TaskLens;
+}) => {
+  const s = summary;
+  const [lens, setLens] = useState<TaskLens>(pageLens);
+  useEffect(() => { setLens(pageLens); }, [pageLens]);
+  const [sticky, actions] = useStickyActions(rawActions);
+
+  const toggleLens = (next: TaskLens) => {
+    sticky.clear();
+    setLens((cur) => (cur === next ? "all" : next));
+  };
+
+  // The tile lists outstanding jobs. Filter to Done and it lists those instead,
+  // so the counter still does something here rather than showing an empty tile.
+  const shown = useMemo(() => {
+    const inLens = s.tasks.filter((t) => lensMatches(lens, t) || sticky.has(t.id));
+    const wantDone = lens === "done";
+    return inLens
+      .filter((t) => (wantDone ? t.status === "completed" : t.status !== "completed"))
+      .sort((a, b) => {
+        const p = PRIORITY_RANK[b.priority] - PRIORITY_RANK[a.priority];
+        if (p !== 0) return p;
+        return new Date(taskDueDate(a) || "").getTime() - new Date(taskDueDate(b) || "").getTime();
+      });
+  }, [s.tasks, lens, sticky]);
+
+  const doneTasks = useMemo(
+    () => s.tasks.filter((t) => t.status === "completed"),
+    [s.tasks]
+  );
+
+  const statusColor =
+    s.barriers > 0
+      ? "from-amber-500 to-orange-600"
+      : s.outstanding > 0
+        ? "from-blue-500 to-indigo-600"
+        : "from-emerald-500 to-green-600";
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow print-patient-card">
+      {/* The patient name opens the pop-out. Kept as its own button rather than
+          wrapping the header, so the badges beside it stay plain text. */}
+      <div className={`bg-gradient-to-r ${statusColor} p-3 text-white print-report-header`}>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onOpenPatient}
+            className="flex-1 min-w-0 text-left group"
+            title={`Open ${s.patient.name} - full jobs list, review stamps and actions`}
+          >
+            <h3 className="text-lg font-bold truncate group-hover:underline decoration-white/60 underline-offset-2">
+              {s.patient.name}
+            </h3>
+            <p className="text-white/80 text-xs">{s.patient.ward} Ward</p>
+          </button>
+          {s.barriers > 0 && (
+            <span className="flex-shrink-0 bg-white/25 rounded-full px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap">
+              🚧 {s.barriers}
+            </span>
+          )}
+          {s.waiting > 0 && (
+            <span className="flex-shrink-0 bg-white/25 rounded-full px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap">
+              ⏳ {s.waiting}
+            </span>
+          )}
+          <button
+            onClick={onOpenPatient}
+            aria-label={`Open ${s.patient.name}`}
+            title="Open this patient"
+            className="flex-shrink-0 p-1.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors print-hide"
+          >
+            <Maximize2 className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-4 gap-1 p-2 bg-gray-50 border-b border-gray-100 print-stats-row">
+        <CounterButton
+          value={s.total}
+          label="Total"
+          lens="all"
+          active={lens === "all"}
+          tone="text-gray-600"
+          onClick={() => { sticky.clear(); setLens("all"); }}
+        />
+        <CounterButton
+          value={s.outstanding}
+          label="Outstanding"
+          lens="outstanding"
+          active={lens === "outstanding"}
+          tone="text-amber-600"
+          onClick={toggleLens}
+        />
+        <CounterButton
+          value={s.overdue}
+          label="Overdue"
+          lens="overdue"
+          active={lens === "overdue"}
+          tone="text-red-600"
+          onClick={toggleLens}
+        />
+        <CounterButton
+          value={s.completed}
+          label="Done"
+          lens="done"
+          active={lens === "done"}
+          tone="text-emerald-600"
+          onClick={toggleLens}
+        />
+      </div>
+
+      <div className="p-3 print-task-list">
+        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+          {lens === "done" ? "Done" : "Outstanding"} ({shown.length})
+        </p>
+        {shown.length > 0 ? (
+          <ul className="space-y-0.5">
+            {shown.map((task) => (
+              <CompactJobRow
+                key={task.id}
+                task={task}
+                onOpen={onOpenTask}
+                onComplete={actions.onComplete}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500 text-center py-3">
+            {lens === "all" || lens === "outstanding"
+              ? "Nothing outstanding"
+              : `No ${LENS_LABEL[lens] || "matching"} jobs`}
+          </p>
+        )}
+
+        {/* Completed jobs live in the pop-out on screen. A printed sheet has to
+            stand alone, so they come back on paper. */}
+        <div className="hidden print:block">
+          <DoneList tasks={doneTasks} onOpen={onOpenTask} />
+        </div>
+
+        <button
+          onClick={onOpenPatient}
+          className={`mt-3 w-full text-left p-2.5 rounded-xl print-summary transition-colors ${
+            s.outstanding > 3
+              ? "bg-amber-50 border border-amber-100 hover:bg-amber-100"
+              : s.outstanding > 0
+                ? "bg-blue-50 border border-blue-100 hover:bg-blue-100"
+                : "bg-emerald-50 border border-emerald-100 hover:bg-emerald-100"
+          }`}
+          title="Open this patient"
+        >
+          <span
+            className={`text-sm font-medium ${
+              s.outstanding > 3
+                ? "text-amber-700"
+                : s.outstanding > 0
+                  ? "text-blue-700"
+                  : "text-emerald-700"
+            }`}
+          >
+            {s.outstanding > 0
+              ? `${s.outstanding} job${s.outstanding > 1 ? "s" : ""} outstanding${
+                  s.barriers > 0 ? ` · ${s.barriers} blocking discharge` : ""
+                }`
+              : "All jobs completed"}
+          </span>
+        </button>
       </div>
     </div>
   );
@@ -1058,6 +1313,10 @@ export default function OverviewPage() {
   );
   const openTaskDetail = useCallback((task: DiaryTask) => setDetailTaskId(task.id), []);
 
+  // Pop-out for one patient. Held by id, not by object, so the panel re-reads
+  // live task state as jobs are ticked off underneath it.
+  const [focusPatientId, setFocusPatientId] = useState<string | null>(null);
+
   // Scope. Defaults to the ward the user works on when we know it; when we do
   // not, no ward is preselected and the screen asks for one (Mike, 27 Jul).
   const [scope, setScope] = useState<ReportScope>("single_ward");
@@ -1229,6 +1488,17 @@ export default function OverviewPage() {
       return ((av as number) - (bv as number)) * dir;
     });
   }, [filtered, sortKey, sortDir, reviewedToday]);
+
+  // Read off the live summaries, so ticking a job inside the pop-out updates its
+  // counters immediately. Falls back to the unfiltered set: a filter that no
+  // longer matches the open patient should not empty the pop-out under them.
+  const focusSummary = useMemo(
+    () =>
+      focusPatientId
+        ? summaries.find((s) => s.patient.id === focusPatientId) ?? null
+        : null,
+    [summaries, focusPatientId]
+  );
 
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -1758,17 +2028,14 @@ export default function OverviewPage() {
                 )}
               </div>
             ) : viewMode === "tiles" ? (
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 print:grid-cols-2">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 print:grid-cols-2">
                 {sorted.map((s) => (
-                  <PatientReviewCard
+                  <PatientCompactCard
                     key={s.patient.id}
                     summary={s}
                     actions={actions}
-                    stamps={stamps}
-                    today={today}
-                    onStamp={handleStamp}
-                    onClearStamp={handleClearStamp}
                     onOpenTask={openTaskDetail}
+                    onOpenPatient={() => setFocusPatientId(s.patient.id)}
                     pageLens={pageLens}
                   />
                 ))}
@@ -1914,6 +2181,29 @@ export default function OverviewPage() {
           </div>
         )}
       </div>
+
+      {/* Patient pop-out. Opening one patient full size is the point: the grid
+          is for finding who needs attention, this is for working through them
+          without the other tiles competing for the eye (Mike, 29 Jul). */}
+      {focusSummary && (
+        <Modal
+          isOpen={true}
+          onClose={() => setFocusPatientId(null)}
+          title={`${focusSummary.patient.name} - jobs list`}
+          size="xl"
+        >
+          <PatientFocusPanel
+            summary={focusSummary}
+            actions={actions}
+            stamps={stamps}
+            today={today}
+            onStamp={handleStamp}
+            onClearStamp={handleClearStamp}
+            onOpenTask={openTaskDetail}
+            pageLens={pageLens}
+          />
+        </Modal>
+      )}
 
       {/* Full job detail - the same modal the Team Diary uses, so a job opened
           from a review looks and behaves exactly as it does everywhere else. */}

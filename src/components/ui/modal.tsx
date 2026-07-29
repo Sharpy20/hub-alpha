@@ -9,7 +9,7 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: ReactNode;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   showClose?: boolean;
 }
 
@@ -54,6 +54,9 @@ export function Modal({
     sm: "max-w-sm",
     md: "max-w-lg",
     lg: "max-w-2xl",
+    // For content that is a working surface in its own right, e.g. the patient
+    // pop-out on /overview.
+    xl: "max-w-4xl",
   };
 
   return (
@@ -101,8 +104,10 @@ export function Modal({
               )}
             </div>
 
-            {/* Content */}
-            <div className="px-6 py-4">{children}</div>
+            {/* Content. Scrolls rather than running off the screen - a long
+                list would otherwise push its own actions out of reach. Modals
+                shorter than the cap are unaffected. */}
+            <div className="px-6 py-4 max-h-[80vh] overflow-y-auto">{children}</div>
           </div>
         </div>
       </FocusTrap>

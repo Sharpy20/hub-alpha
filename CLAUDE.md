@@ -1,8 +1,30 @@
-# INPATIENT HUB - Claude Code Project File
+# wardHub - Claude Code Project File
 
-> **Last Updated:** 23 June 2026
 > **Project Owner:** Mike (Ward NIC)
 > **Trust:** Derbyshire Healthcare NHS Foundation Trust
+
+---
+
+## 🚨 READ THIS FIRST - PARTS OF THIS FILE ARE OUT OF DATE (flagged 30 Jul 2026)
+
+**`docs/BACKLOG.md` is the source of truth, not this file.** Start there, and with
+`docs/evaluations/2026-07-30_project-evaluation.md`. The 30 Jul evaluation flagged this file as
+materially stale, and the specific traps are:
+
+| What this file says | What is actually true |
+|---|---|
+| A Light / Medium / Max / Max+ version system with a feature matrix | **Removed in Session 9.** `hasFeature()` always returns true. There is one build. The root/`/v2` split that replaced it is itself collapsed by `COLLAPSED_FOR_DEMO = true` in `src/lib/config/build.ts` |
+| 100 patients, 100 staff, 5 wards | **5 patients and 20 staff per ward.** `PATIENT_NAMES` was cut to 5/ward |
+| Patients have `legalStatus`, `alerts`, `room`, `bed` | **All removed 28 Jul 2026** and guarded by `src/__tests__/no-special-category-data.test.ts`. The record is name, ward, status, admission date/time, named nurse, consultant, ward professional, discharge fields. Nothing clinical |
+| "Bookmarks" | Renamed **Links** system-wide (`/links`) |
+| A snag list ending at #219 | Snag numbering stopped being used. Work is tracked in `docs/BACKLOG.md` |
+| Demo names like `Staff_BY_D` / `Patient_BY_1` | **English literature cast:** staff are Jane Austen characters, patients are other classic novels, consultants are doctors from novels. Keep new names inside the theme |
+| Separate `/referrals/[id]` and `/how-to/[id]` viewers | One unified viewer at `/guides/[id]`; the old routes redirect |
+| Dev panel has a password | It does not. The site-wide password gate covers it |
+
+The sections below on **NHS styling, the standard workflow template, placeholder conventions and
+git safety are still correct** and worth keeping. The version matrix and demo-data sections are
+the stale parts. Rewriting this file properly is on the list (BACKLOG Section P).
 
 ---
 
@@ -1881,6 +1903,40 @@ clean (commit 75e1f94).
   chat held the dev port) - verified via clean build + tsc + eslint.
 
 **Build Status:** All builds pass, tsc + eslint clean. Pushed to Vercel via Sharpy20.
+
+### 30 July 2026 - Session 47 (overnight: two wards, seeded jobs, dev-panel review, evaluation)
+Ran unattended after Mike went to bed the night before the sponsor demo. Four commits, all
+pushed as Sharpy20, gates green at every step (tsc 0, eslint 0 errors, 71 tests).
+
+- [x] **Explainer reel deployed.** Another session had left a re-rendered `merged.mp4`
+  uncommitted in the working tree. Verified byte-identical to `wardhub-video/out/merged.mp4`,
+  checked the mp4 atom structure was complete before trusting the copy, pushed, polled the live
+  site until it flipped. 4m00s / 13,662,204 bytes now live (was 3m42s / 10.1MB).
+- [x] **The pilot ask is two wards everywhere.** It contradicted itself where the sponsor meets
+  it: the plan asked two wards three times then answered "what do you want from us today?" with
+  "One ward", and the dev panel said one ward in five places. Fixed across the plan, the dev
+  panel, `10b-demo-script.md` and `PROMPT-PACK.md`; four PDFs regenerated and the kit zip
+  rebuilt with every entry hash-verified. **`09-wardHub-exec-deck.pptx` is still wrong on the
+  ask** (one ward, no-patient-data build) and is flagged do-not-use rather than rebuilt.
+- [x] **Five team jobs seeded, not one.** `generateWardTasks` looped `i < 1`, so fridge temps was
+  the only team job in the product and eleven templates were dead data, including the only route
+  to the observation-engagement guide link.
+- [x] **Dev panel + GDPR review** (Mike's queued "run LAST" job). **Nine claims were false, not
+  stale** - including a Q&A promise to store patient legal status, two statements that real
+  internal numbers live in code comments, and a third surviving copy of "nothing the user enters
+  is transmitted". Removed the dead Light/Medium/Max/Max+ framing from eight sections, rebuilt
+  both C4 diagrams (they listed three API routes that do not exist; there is one), fixed the
+  jobs schema, rewrote the job lifecycle to include hand-back, and replaced four invented
+  hazards with the real 23-hazard summary.
+- [x] **New 13-hat evaluation:** `docs/evaluations/2026-07-30_project-evaluation.md`, template
+  v2.1. It carries the recommendation ledger, metric history and standing decisions, so the
+  April, June and 28 Jul reports can be deleted. Open items are BACKLOG **Section P**.
+- **Guide count corrected: 68, not 71** (1 green / 47 amber / 20 red), counted from
+  `catalog.ts`. The 28 Jul evaluation's figure was wrong.
+- **New findings worth knowing:** `main` has no branch protection and Vercel deploys straight
+  from it, so CI can be red and a deploy still ships. A scheduled GitHub Action queries Supabase
+  daily with a service key. `E:\Hub\temp\internal-contacts.md` exists once, on one drive, with
+  no backup.
 
 ---
 

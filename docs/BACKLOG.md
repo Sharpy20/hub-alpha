@@ -5,9 +5,14 @@
 > Status: `[ ]` todo · `[~]` in progress · `[x]` done · `[BLOCKED]` needs Mike · `[PARK]` deferred
 
 Related task docs (roll findings into here over time):
-- **`docs/evaluations/2026-07-28_project-evaluation.md`** - 13-hat review, 28 Jul. **Read its
-  addendum first**, several findings were actioned the same night. Open items are Section O below.
-- `docs/evaluations/2026-07-28_placeholder-links-deep-dive.md` - the `#` link audit
+- **⭐ `docs/evaluations/2026-07-30_project-evaluation.md`** - 13-hat review, 30 Jul, run against
+  template v2.1. **This is THE evaluation record.** It carries the recommendation ledger, the
+  metric history and the standing decisions, so the April, June and 28 Jul reports can be deleted
+  (Mike's call, git holds them either way). Open items are **Section P** below.
+- `docs/evaluations/2026-07-28_project-evaluation.md` - superseded by the above. Kept only until
+  Mike deletes it.
+- `docs/evaluations/2026-07-28_placeholder-links-deep-dive.md` - the `#` link audit. **KEEP** -
+  deep dives are not superseded by full evaluations.
 - `docs/homework-remaining-03-Jul-2026.md` - guide reviews, blocked-on-Mike items, big builds
 - `docs/homework-todo-03-Jul-2026.md` - the worked-through homework detail
 - `E:\Hub\temp\focus-referral-links-04Jul2026.md` - real FOCUS URLs behind the friendly link text
@@ -162,21 +167,31 @@ now share a module-scope `LinkedJobPanel`. Verified end to end with client-side 
 
 ---
 
-## ⏰ NEXT UP (end of 29 Jul) - read this first
+## ⏰ NEXT UP (overnight 29/30 Jul) - read this first
 
-Sessions 46a/b/c cleared the whole "no input needed" list bar one. What is left, in the order
-it matters:
+Session 47 ran overnight before the demo. The dev-panel/GDPR review is **DONE**, the pilot ask
+is two wards everywhere, the demo seeds five team jobs, and a fresh 13-hat evaluation is
+written. What is left, in the order it matters:
 
-1. **Sponsor demo Thu 30 Jul, 1:30pm.** The site is behind the password; the film is on
-   `/about`. Nothing below needs doing before it.
-2. **[BLOCKED on Mike] Sign off the 20 red guides**, and decide what amber means for the 43
-   never-reviewed ones. Still the single biggest thing in the project - content is the risk,
-   not the code.
-3. **After the demo:** the deferred password-endpoint hardening (Section O), then the dev-panel
-   and GDPR review Mike queued to run LAST, then item 8 (governance docs out of the 2,900-line
-   `dev-panel/page.tsx` into markdown - needs his call on which copy wins vs `docs/nhs-ready/`).
-4. **Smaller, no input needed:** only one ward task is ever generated (below); the four static
-   guide routes that cannot show the mark-done panel (Session 46b block); `/about` review stamp.
+1. **JOB 1 FOR THE NEXT SESSION: read `docs/evaluations/2026-07-30_project-evaluation.md`.**
+   It is the evaluation record and it carries the ledger, metrics and standing decisions from
+   every prior report. Its open items are **Section P** below. Do not start work without
+   reading it - three of its findings are new and none of them were in this BACKLOG before.
+2. **Sponsor demo Thu 30 Jul, 1:30pm.** Everything that had to be true is true: site behind the
+   password, the 4m00s reel live on `/about`, paper kit refreshed with the two-ward ask, diary
+   populated. Nothing below needs doing before it.
+3. **31 Jul, first thing:** the deferred **password-endpoint hardening** (Section O) plus
+   **branch protection on `main`** (new, Section P). CI runs four gates but does not gate the
+   deploy, so a red build still ships today.
+4. **[BLOCKED on Mike] Sign off the 20 red guides**, and decide what amber means for the 47
+   never-reviewed ones. Fifth time of asking. Still the single biggest thing in the project.
+   The evaluation reframes the ask: do not ask him to review 68 guides, ask for **one content
+   owner per specialty**.
+5. **Then:** item 8 (governance docs out of `dev-panel/page.tsx`, now **3,203 lines** and the
+   largest file in the repo - the review grew it. Needs Mike's call on which copy wins vs
+   `docs/nhs-ready/`).
+6. **Smaller, no input needed:** the four static guide routes that cannot show the mark-done
+   panel (Session 46b block); `/about` review stamp; **CLAUDE.md is materially stale** (P).
 
 ---
 
@@ -208,17 +223,69 @@ it matters:
 
 ---
 
-## ⏰ QUEUED (Mike, 29 Jul) - review /gdpr and /dev-panel, run LAST
-- [ ] Full review of the GDPR page and the Dev Panel for currency and consistency with the
-      current pitch. Known drift to check: the dev-panel 60-second pitch still leads with
-      "Nexus Nudges" (stale vs the Overview/assurance story); two-ward pilot recommendation;
-      staff-nurse wording; sign-off-by-specialty model; the three-data-types framing
-      (skeleton / trust content / patient data).
-      **Sequencing (Mike): more work is landing in another session first - do this review
-      LAST, after that session's changes are in.**
-      *(The explainer video was briefly on /gdpr on 29 Jul and is not there any more - it
-      lives on /about. The GDPR page is byte-identical to its pre-video state, so nothing
-      from that experiment needs reviewing.)*
+## ✅ DONE 30 Jul 2026 - Session 47: two wards, seeded jobs, dev-panel review, evaluation
+
+Ran overnight before the demo, unattended after Mike went to bed. Four commits, all pushed as
+Sharpy20, gates green at every step (tsc 0, eslint 0 errors, 71 tests).
+
+- [x] **The explainer reel deployed.** Another session left a re-rendered `merged.mp4` in the
+      working tree, uncommitted. Verified it byte-for-byte against
+      `wardhub-video/out/merged.mp4`, checked the mp4 atom structure was complete rather than
+      trusting the copy, pushed, then polled the live site until it flipped. **4m00s /
+      13,662,204 bytes** now serving from `wardhub.live/video/wardhub-full-reel.mp4`, replacing
+      the 3m42s / 10.1MB cut.
+- [x] **The pilot ask is TWO WARDS everywhere** (Mike, 30 Jul). It contradicted itself in the
+      two places the sponsor meets it: the plan asked two wards in its ask, recommendation and
+      close but answered *"what do you want from us today?"* with **"One ward"**, and the dev
+      panel said one ward in five places. Fixed in `PRESENTATION-PLAN-30JUL.md` (417, 428),
+      `dev-panel/page.tsx` (business case, implementation phase, roadmap, Q&A, RBAC),
+      `10b-demo-script.md`, `PROMPT-PACK.md`. The roadmap's *"which ward pilots first?"* is now
+      *"which two wards?"* with Mike's ward plus one other as the recommended pairing, and a
+      second decision on who runs the measures.
+      **⚠ `docs/nhs-ready/09-wardHub-exec-deck.pptx` (6 Jul) is wrong on the ask** - it says one
+      ward with the *no-patient-data* build, where the ask is two wards on the full build. It is
+      not in the kit zip and not used on the day, so it is flagged in the plan's cheat-sheet
+      caveat rather than rebuilt. **Rebuild it before it is ever shown.**
+      All four PDFs regenerated (`py -3`) and `wardHub-presentation-kit-30JUL.zip` refreshed,
+      every entry hash-verified against its source file.
+- [x] **The demo seeds five team jobs, not one.** `generateWardTasks` looped `for (i = 0; i < 1;
+      i++)`, so fridge temps was the only team job in the whole product and the other eleven
+      templates were dead data - including **Night observation round, the only route to the
+      observation-engagement guide link**. Now five via `SEEDED_WARD_TEMPLATES`, covering all
+      three shifts, all three priorities and both templates carrying a linked guide. All stay
+      pending and unclaimed: the demo script claims one live, and a job pre-claimed by someone
+      else would change what My Diary filters out. Water temps deliberately excluded, it recurs
+      on Sundays only and would read as a bug on a Thursday.
+- [x] **Dev panel + GDPR review DONE** (the item that used to live here). Read all 2,956 lines
+      against the plan, the standing decisions and the actual code. **Nine claims were false,
+      not merely stale.** Full list in the evaluation's Hat 4; the worst three:
+      the Q&A promised a live build would store **patient legal status** and the roadmap offered
+      *"add diagnosis and legal status"* as an option (both contradict the 28 Jul removal); two
+      places said trust-sensitive contacts **live in code comments** and a single `requiresFocus`
+      flip reveals them (stripped out 27 Jul); and the DPIA said *"nothing the user enters is
+      transmitted"*, the **third** surviving copy of a claim already fixed on `/gdpr` and
+      `/about`. Also removed the whole Light/Medium/Max/Max+ framing (dead since Session 9) from
+      eight sections, rebuilt both C4 diagrams (misaligned by the rename, and listing three API
+      routes and two workers that do not exist - there is **one** API route), brought the jobs
+      schema in line with hand-back / barriers / mark-in-error / per-day completion, rewrote
+      Flow 2 to include hand-back at all, and replaced the four invented hazards with the real
+      23-hazard summary. Added Q&A entries for the **sign-off-by-specialty model** and the
+      **three data types**, both absent. Added the quiz to Data Sources, which had never
+      recorded the largest block of sourced content in the app.
+      **"Staff nurse" was checked and KEPT** - the plan gives the reasoning (NIC is a rotating
+      role, "from the floor, not a title" is stronger). Commented in place so reviews stop
+      flagging it.
+- [x] **New 13-hat evaluation** written against template v2.1:
+      `docs/evaluations/2026-07-30_project-evaluation.md`. It carries the ledger, the metric
+      history and the standing decisions, so April, June and 28 Jul can be deleted. Open items
+      are **Section P**.
+- [x] **Guide count corrected: 68, not 71.** The 28 Jul evaluation was wrong. Counted from
+      `catalog.ts`: **1 green / 47 amber / 20 red**, which matches the plan's own cheat sheet.
+
+**⛔ NOT done, deliberately:** item 8 (governance docs out of `dev-panel/page.tsx` into
+markdown). Needs Mike's call on whether the JSX or `docs/nhs-ready/` wins. Note the review
+grew that file from 2,956 to **3,203 lines**, making it the largest in the repo - the case for
+moving it is stronger now, not weaker.
 
 ---
 
@@ -1370,8 +1437,13 @@ end of the session.
 
 ## O. From the 28 Jul evaluation (Session 43) - open items
 
+> **SUPERSEDED 30 Jul by Section P.** Everything still open here is carried in the 30 Jul
+> evaluation's recommendation ledger, which is now the authoritative list. Kept for the
+> reasoning in the individual entries, especially the deferred password hardening. Note the
+> guide figures below are wrong: it is **68 guides, 1 green / 47 amber / 20 red**, not 71/50.
+
 Full report: `docs/evaluations/2026-07-28_project-evaluation.md` (read its **addendum** first,
-several findings were actioned the same night). Everything below is unstarted.
+several findings were actioned the same night).
 
 **Claude can do these, no decision needed from Mike:**
 - [ ] **CI workflow** - GitHub Action running `build` + `test` + `tsc` + `lint` on push. Highest
@@ -1423,6 +1495,67 @@ several findings were actioned the same night). Everything below is unstarted.
       **Supabase region** off the dashboard.
 - [ ] Should **named nurse, consultant and admission date** follow MHA status out of the patient
       record? Left in deliberately, but the "who keeps this current" argument reaches them too.
+
+---
+
+## P. From the 30 Jul evaluation (Session 47) - open items
+
+Full report: **`docs/evaluations/2026-07-30_project-evaluation.md`**. Read it before starting
+work. Everything the 28 Jul pass left open is carried in its recommendation ledger, so Section O
+below is now history rather than a live list - the live list is here.
+
+**New findings, never raised in any previous evaluation:**
+- [ ] **`main` has NO branch protection.** Confirmed via `gh api repos/Sharpy20/hub-alpha/branches/main/protection`
+      (404, "Branch not protected"). CI runs typecheck, lint, test and build on every push but
+      **does not gate the deploy**, and Vercel builds straight from `main`, so a red build still
+      ships. The dev panel used to list "branch protection on main" as a CI/CD feature, which was
+      simply untrue. **Do this on 31 Jul alongside the password hardening.**
+- [ ] **`E:\Hub\temp\internal-contacts.md` exists exactly once, on one drive, with no backup.**
+      It holds every real internal contact keyed by entry id and it is the only copy, by design,
+      because the values were stripped out of the repo on 27 Jul. If that drive fails they are
+      unrecoverable. Highest-consequence single file in the project. **Mike: put a copy somewhere
+      else.** Same applies to `E:\Hub\printable-guides\`, `E:\Hub\wardhub-video\` (whose `src/`
+      cannot reproduce the rendered reel) and the 483-document policy dump.
+- [ ] **CLAUDE.md is materially stale and says so nowhere.** It still documents the
+      Light/Medium/Max/Max+ version system as live (removed Session 9), claims 100 patients and
+      100 staff (it is 5 patients and 20 staff per ward), and its snag list stops at #219. The
+      BACKLOG has silently become the source of truth. **It is the first file a new session
+      reads, so a new contributor would build the wrong thing.** Highest-value documentation fix
+      available.
+- [ ] **A scheduled GitHub Action queries Supabase daily.**
+      `.github/workflows/supabase-keepalive.yml` runs a `SELECT id LIMIT 1` against
+      `feedback_posts` with a **service key** from GitHub secrets, to stop the free tier being
+      paused. The app itself never queries Supabase, so "wired but dormant" was true but not the
+      whole picture. Now disclosed in the dev panel Q&A, the DPIA data flows and on `/gdpr`.
+      Rotate the key once the keep-alive is no longer needed.
+- [ ] **HAZ-020 in the hazard log is a go-live blocker for a feature that no longer exists.** Its
+      subject is the chase log, retired entirely in Session 42. A hazard log carrying a blocker
+      for a retired feature undermines the rest of it. ~5 minutes in
+      `docs/nhs-ready/03b-clinical-safety-hazard-log.md`.
+- [ ] **`overview/page.tsx` is now 2,228 lines** - the same size `tasks/page.tsx` was criticised
+      for, and it grew without anyone noticing. Split it.
+- [ ] **Task titles are free text attached to a named patient.** Nothing prevents a member of
+      staff typing clinical or judgemental content into one, which is the single hole in the
+      no-clinical-data position. The control is wording and training, not schema. **One sentence
+      of guidance in the add-job modal, before any pilot.**
+- [ ] **`package.json` pins `next: ^16.1.6`** while 16.2.12 is installed. The caret makes it
+      harmless, but the declared floor sits below a security fix. Bump it.
+- [ ] Basic uptime monitoring. Free, ten minutes, and right now nobody would know if the site
+      broke overnight.
+
+**BACKLOG items no evaluation has ever assessed** (raised by the v2.1 cross-check):
+- [ ] **Section A's eight "NEW GUIDE needed" items** (autism, CAMHS, ECT, perinatal, day
+      services, discharge liaison) have sat unstarted since 4 Jul. Decide whether the list is
+      wanted or aspirational, rather than carrying it indefinitely.
+- [ ] **Section B's postcode / GP-surgery lookup** - data described as "fully in hand" since
+      4 Jul, never started.
+- [ ] **Section D's contacts directory** - correctly specified, needs persistence, so it is
+      really a full-build item. No evaluation has said so out loud.
+- [ ] **Section E's bed-management ranking** - the closest thing to a product roadmap for the
+      sponsor's own interest area, and no evaluation has scored it.
+
+**Also flagged:** `s117-meeting` is the only green guide and it has **5 dead links**. Decide
+whether green should require working links, because at the moment green does not mean complete.
 
 ---
 

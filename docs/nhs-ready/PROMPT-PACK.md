@@ -271,7 +271,7 @@ the ward, show real screenshots) -> what it already contains (66 guides, 364-que
 training quiz, service directory, ward diary - real numbers from the repo) -> the
 governance story (demo holds no real data; DPIA draft and hazard log already written -
 reference the day-1 docs; complements SystmOne rather than competing) -> the ask (pilot on
-one ward, IG review of the prepared pack, a named clinical safety officer) -> roadmap.
+two wards, IG review of the prepared pack, a named clinical safety officer) -> roadmap.
 
 Take real screenshots: run the dev server with the preview tools, capture the home page, a
 guide, the ward diary, and the quiz, and embed them. NHS Identity styling: NHS Blue

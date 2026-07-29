@@ -413,7 +413,7 @@ function BusinessCaseSection() {
             </div>
             <div className="p-5 bg-green-50 rounded-xl border-2 border-green-300">
               <h4 className="font-bold text-green-800 mb-3">Try wardHub alongside</h4>
-              <p className="text-green-700 mb-3">Give it a go on one ward. See if staff find it useful. Nothing to lose.</p>
+              <p className="text-green-700 mb-3">Give it a go on two wards. See if staff find it useful. Nothing to lose.</p>
               <div className="space-y-2 text-green-600">
                 <p>&bull; No budget needed</p>
                 <p>&bull; No training needed</p>
@@ -615,8 +615,8 @@ function BusinessCaseSection() {
           <div className="flex gap-4 items-start">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white flex items-center justify-center font-bold flex-shrink-0">1</div>
             <div className="flex-1">
-              <h4 className="font-bold text-nhs-black">Pilot Phase – One Ward</h4>
-              <p className="text-nhs-dark-grey mt-1">Try wardHub on one ward with real use. It&apos;s up to the ward how much they use &ndash; whether that&apos;s just the links and guides, or the diary for everything. Resources build organically as staff add links, request guides, and flag gaps. Gather feedback over 4-6 weeks.</p>
+              <h4 className="font-bold text-nhs-black">Pilot Phase – Two Wards</h4>
+              <p className="text-nhs-dark-grey mt-1">Try wardHub on two wards with real use. It&apos;s up to each ward how much they use &ndash; whether that&apos;s just the links and guides, or the diary for everything. Resources build organically as staff add links, request guides, and flag gaps. Gather feedback over 4-6 weeks. Two wards rather than one because the measures worth having (referral time, missed referrals, discharge barriers, review coverage) need somewhere to compare against.</p>
               <p className="text-nhs-dark-grey mt-2 text-xs"><strong>Pilot owner:</strong> Project owner (ward staff nurse) &ndash; <strong>Success criteria:</strong> Staff find it useful, resources grow organically, no negative impact on existing workflows.</p>
             </div>
           </div>
@@ -652,7 +652,7 @@ function BusinessCaseSection() {
           </div>
           <div className="bg-nhs-pale-grey rounded-lg p-4">
             <p className="text-nhs-dark-grey">
-              <strong>What we&apos;re asking for:</strong> Permission to trial the tool on one ward with light, real use.
+              <strong>What we&apos;re asking for:</strong> Permission to trial the tool on two wards with light, real use.
               No budget required. It sits alongside existing systems &ndash; it doesn&apos;t
               replace anything. Staff can stop using it at any time. If it&apos;s useful, great. If not, nothing lost.
             </p>
@@ -666,7 +666,7 @@ function BusinessCaseSection() {
       content: (
         <div className="space-y-2 text-sm">
           {[
-            { role: "Ward Manager", scope: "Pilot approval for Byron Ward", phase: "Pilot" },
+            { role: "Ward Manager", scope: "Pilot approval for each of the two pilot wards", phase: "Pilot" },
             { role: "Matron", scope: "Awareness and support for pilot", phase: "Pilot" },
             { role: "Digital Services", scope: "Technical review and hosting approval", phase: "Rollout" },
             { role: "Information Governance", scope: "DPIA review (when PII introduced)", phase: "Trust-wide" },
@@ -2176,15 +2176,22 @@ function RoadmapSection() {
       icon: "🚀",
       items: [
         {
-          title: "Start with One Ward / Team",
-          description: "Pilot on a single ward to prove value before expanding. Two options to consider:",
+          title: "Start with Two Wards",
+          description: "Pilot on two wards to prove value before expanding. One ward cannot show whether a change is the tool or the week.",
           status: "planned",
           decisions: [
             {
-              question: "Which ward pilots first?",
+              question: "Which two wards?",
               options: [
-                "Mike's ward (Byron) – developer is on-site, can fix issues in real-time, deep understanding of workflows. Risk: too close to the problem, may miss blind spots",
-                "A different ward – honest, unbiased feedback, tests if the tool is intuitive without the developer present. Risk: slower issue resolution, may need a ward champion",
+                "Mike's ward (Byron) plus one other – the developer is on-site on one of them, so issues get fixed in real time, while the second ward tests whether the tool is intuitive without him standing there. This is the recommended pairing: it answers both questions at once",
+                "Two wards neither of which is Mike's – the most honest read, but every issue waits on a visit and both wards need a champion",
+              ],
+            },
+            {
+              question: "Who runs the measures?",
+              options: [
+                "Ward staff self-report – cheapest, but marking your own homework",
+                "A QI project with the Transformation team's own measures – slower to set up, and the only version an exec will act on. This is the ask being made",
               ],
             },
           ],
@@ -2451,7 +2458,7 @@ function QAPackSection() {
     { q: "Can other wards use it?", a: "Yes. The content is ward-configurable. Each ward can add their own links, guides, and task templates. The architecture is Trust-agnostic, so other Trusts could deploy it too." },
     { q: "What happens if the developer leaves?", a: "The codebase is documented, version-controlled, and built with standard technologies. Any web developer could maintain it. The Dev Panel itself serves as full handover documentation." },
     { q: "How do staff learn to use it?", a: "No formal training needed. The app includes an interactive demo tour, intro guide, and FAQ. The design philosophy is: if you need a manual, the UX has failed." },
-    { q: "What is the pilot plan?", a: "Start with one ward running a light trial alongside existing processes. No disruption, no risk. If it helps, expand. If it does not, it cost almost nothing to find out." },
+    { q: "What is the pilot plan?", a: "Two wards running a light trial alongside existing processes, for 4-6 weeks. Two rather than one because a single ward cannot tell you whether a change came from the tool or from the week it had. No disruption, no budget. If it helps, expand. If it does not, it cost almost nothing to find out." },
     { q: "Who approves this going live?", a: "Trust Digital Services for hosting and security. Information Governance for DPIA approval. Clinical Safety Officer for DCB 0129 sign-off. Ward management for operational sign-off." },
     // The question the demo has to survive: who said you could put Trust policy
     // information in a third-party database? The answer only holds while it is

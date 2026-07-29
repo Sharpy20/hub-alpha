@@ -127,7 +127,7 @@ badges use. The site audits itself in public."
 
 **Say:** "There's a built-in two-minute tour, so you don't need me. It's live at
 wardhub.live right now - have a play at your desk later. What I need from you is on
-the one-pager: an IG contact, one ward, and a decision path for hosting."
+the one-pager: an IG contact, two wards, and a decision path for hosting."
 
 Leave the one-pager on the table. Stop talking.
 

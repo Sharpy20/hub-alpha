@@ -214,17 +214,31 @@ const WARD_TASK_TEMPLATES: Array<{
 ];
 
 // Generate ward tasks - currently 1 recurring task per ward (kept light for a cleaner demo)
+// Indices into WARD_TASK_TEMPLATES. Fridge temps stays first because the demo
+// script opens on it. Water temps (index 4) is deliberately out: it recurs on
+// Sundays only, so it would be absent on most days and read as a bug.
+const SEEDED_WARD_TEMPLATES = [
+  0, // Fridge temperature check - early, routine, audit, guide: fridge-temps
+  10, // Resus equipment check - early, urgent, audit
+  1, // Controlled drugs check - early, important, audit
+  7, // Shift change walkaround - late, routine, audit
+  8, // Night observation round - night, important, guide: observation-engagement
+];
+
 const generateWardTasks = (ward: string, startId: number): WardTask[] => {
   const tasks: WardTask[] = [];
   let id = startId;
 
-  // Generate 1 recurring ward task (kept light for a cleaner demo)
-  for (let i = 0; i < 1; i++) {
-    const template = WARD_TASK_TEMPLATES[i % WARD_TASK_TEMPLATES.length];
-
-    // The single generated task (the fridge temperature check) stays pending and
-    // UNCLAIMED so a fresh demo always has a team task to claim - the demo
-    // script's Team Diary stop relies on it (docs/nhs-ready/10b-demo-script.md).
+  // A hand-picked few rather than all 12, so the team column reads as a real
+  // shift without burying the patient jobs beside it. Chosen to cover all three
+  // shifts, all three priorities, and both templates that carry a linked guide -
+  // the Night observation round is the only route to observation-engagement, so
+  // leaving it out made that link unreachable.
+  // All of them stay pending and UNCLAIMED: the demo script's Team Diary stop
+  // claims one live (docs/nhs-ready/10b-demo-script.md), and seeding a task
+  // already claimed by someone else would change what My Diary filters out.
+  for (const i of SEEDED_WARD_TEMPLATES) {
+    const template = WARD_TASK_TEMPLATES[i];
 
     // Build assurance dashboard URL for audit tasks
     const assuranceDashboardUrl = template.isAuditTask && template.auditType

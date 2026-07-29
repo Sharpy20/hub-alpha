@@ -278,7 +278,7 @@ export default function GdprPage() {
               your Trust's Information Governance team.
             </p>
             <p className="text-nhs-mid-grey text-sm mt-4">
-              This demo is run by the project owner (a Ward NIC at Derbyshire
+              This demo is run by the project owner (a staff nurse at Derbyshire
               Healthcare NHS Foundation Trust) as a personal development project -
               it is not yet a Trust-approved system. Questions and concerns:
               use the Feedback page.

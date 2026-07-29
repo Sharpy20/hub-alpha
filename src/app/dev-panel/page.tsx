@@ -615,7 +615,7 @@ function BusinessCaseSection() {
             <div className="flex-1">
               <h4 className="font-bold text-nhs-black">Pilot Phase – One Ward</h4>
               <p className="text-nhs-dark-grey mt-1">Try wardHub on one ward with real use. It&apos;s up to the ward how much they use &ndash; whether that&apos;s just the links and guides, or the diary for everything. Resources build organically as staff add links, request guides, and flag gaps. Gather feedback over 4-6 weeks.</p>
-              <p className="text-nhs-dark-grey mt-2 text-xs"><strong>Pilot owner:</strong> Ward NIC &ndash; <strong>Success criteria:</strong> Staff find it useful, resources grow organically, no negative impact on existing workflows.</p>
+              <p className="text-nhs-dark-grey mt-2 text-xs"><strong>Pilot owner:</strong> Project owner (ward staff nurse) &ndash; <strong>Success criteria:</strong> Staff find it useful, resources grow organically, no negative impact on existing workflows.</p>
             </div>
           </div>
           <div className="flex gap-4 items-start">
@@ -2438,7 +2438,7 @@ function RoadmapSection() {
 function QAPackSection() {
   const qaItems = [
     { q: "What is wardHub?", a: "A reference and task management tool built for NHS inpatient wards. It helps staff find referral workflows, clinical guides, and manage their daily tasks in one place." },
-    { q: "Who built it?", a: "Built by Mike, a Ward NIC at Derbyshire Healthcare NHS Foundation Trust, using modern web technology (Next.js, TypeScript, Tailwind CSS)." },
+    { q: "Who built it?", a: "Built by Mike, a staff nurse at Derbyshire Healthcare NHS Foundation Trust, using modern web technology (Next.js, TypeScript, Tailwind CSS)." },
     { q: "Does it store patient data?", a: "The demo version uses fictional data only. The live version (Max) would store minimal patient data (name, ward, legal status) with full DPIA approval and Trust infrastructure hosting." },
     { q: "How does it fit with existing systems?", a: "wardHub sits alongside existing systems, not replacing them. Referral workflows link to official forms and processes. The Max+ version can integrate with the Trust's Nexus Assurance platform for audit task completion." },
     { q: "What about GDPR?", a: "Light version: no personal data at all. Medium+: full DPIA required before deployment. Data minimisation principle applied throughout. See the DPIA Draft section for details." },

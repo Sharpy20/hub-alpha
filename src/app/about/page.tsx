@@ -60,8 +60,8 @@ export default function AboutPage() {
               process is laid out step by step.
             </p>
             <p className="text-nhs-dark-grey">
-              It was built by a Ward NIC at Derbyshire Healthcare NHS Foundation
-              Trust as a personal development project. It is not yet a
+              It was built by a staff nurse at Derbyshire Healthcare NHS
+              Foundation Trust as a personal development project. It is not yet a
               trust-approved system - treat it as a demo, and check the source
               document before acting on anything clinical.
             </p>

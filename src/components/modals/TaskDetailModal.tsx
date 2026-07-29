@@ -507,8 +507,34 @@ export function TaskDetailModal({
         <div className="p-4 border-t border-gray-200 bg-gray-50 flex flex-wrap gap-2">
           {isEditing ? (
             <>
+              {/* Mark in error lives HERE, behind Edit (Mike, 29 Jul). It used to
+                  sit in the row below alongside Complete and Take Over, which
+                  put an audit-affecting action as close to hand as ticking a job
+                  off. Editing a job is already the deliberate act, so this is
+                  where "actually, this should never have existed" belongs.
+                  Still two taps to confirm; restore still lives on Reports. */}
               <button
-                onClick={() => setIsEditing(false)}
+                onClick={() => {
+                  if (!confirmingError) {
+                    setConfirmingError(true);
+                    return;
+                  }
+                  markInError(task.id, currentUserName);
+                  onClose();
+                }}
+                onBlur={() => setConfirmingError(false)}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                  confirmingError
+                    ? "bg-red-600 text-white hover:bg-red-700"
+                    : "border border-red-200 text-red-600 hover:bg-red-50"
+                }`}
+                title="Entered by mistake? Mark it in error - it is kept for audit but leaves all active views"
+              >
+                <AlertTriangle className="w-4 h-4" />
+                {confirmingError ? "Tap again to confirm" : "Mark in error"}
+              </button>
+              <button
+                onClick={() => { setIsEditing(false); setConfirmingError(false); }}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-100 transition-colors"
               >
                 Cancel
@@ -526,7 +552,7 @@ export function TaskDetailModal({
               {/* Edit button */}
               {!isCompleted && (
                 <button
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => { setIsEditing(true); setConfirmingError(false); }}
                   className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-100 transition-colors"
                 >
                   Edit
@@ -574,29 +600,32 @@ export function TaskDetailModal({
                 </button>
               )}
 
-              {/* Mark in error - the audit-friendly "delete": the task is kept
-                  on the record but flagged and removed from every active view.
-                  Two taps to confirm; restore lives on the Reports page. */}
-              <button
-                onClick={() => {
-                  if (!confirmingError) {
-                    setConfirmingError(true);
-                    return;
-                  }
-                  markInError(task.id, currentUserName);
-                  onClose();
-                }}
-                onBlur={() => setConfirmingError(false)}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-                  confirmingError
-                    ? "bg-red-600 text-white hover:bg-red-700"
-                    : "border border-red-200 text-red-600 hover:bg-red-50"
-                }`}
-                title="Entered by mistake? Mark it in error - it is kept for audit but leaves all active views"
-              >
-                <AlertTriangle className="w-4 h-4" />
-                {confirmingError ? "Tap again to confirm" : "Mark in error"}
-              </button>
+              {/* A completed job has no Edit button, so it would otherwise lose
+                  its only route to Mark in error. Kept in the row for that case
+                  alone - realising a job should never have existed does not
+                  stop being true once someone has ticked it off. */}
+              {isCompleted && (
+                <button
+                  onClick={() => {
+                    if (!confirmingError) {
+                      setConfirmingError(true);
+                      return;
+                    }
+                    markInError(task.id, currentUserName);
+                    onClose();
+                  }}
+                  onBlur={() => setConfirmingError(false)}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                    confirmingError
+                      ? "bg-red-600 text-white hover:bg-red-700"
+                      : "border border-red-200 text-red-600 hover:bg-red-50"
+                  }`}
+                  title="Entered by mistake? Mark it in error - it is kept for audit but leaves all active views"
+                >
+                  <AlertTriangle className="w-4 h-4" />
+                  {confirmingError ? "Tap again to confirm" : "Mark in error"}
+                </button>
+              )}
 
               {/* Complete/Reopen button */}
               <button

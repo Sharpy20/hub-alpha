@@ -20,7 +20,6 @@ import {
   Repeat,
   X,
   Pencil,
-  Trash2,
   Maximize2,
   Minimize2,
   Filter,
@@ -51,7 +50,6 @@ import {
   // Add Task screen, pre-filled, for follow-up tasks.
   AddTaskModal,
 } from "@/components/modals";
-import { ConfirmDialog } from "@/components/ui";
 import { GuideSelect } from "@/components/ui/GuideSelect";
 import { guideLabel } from "@/lib/data/guides/catalog";
 import { HandbackBadge, handbackTooltip } from "@/components/tasks/HandbackBadge";
@@ -1005,13 +1003,11 @@ function RepeatWardTasksModal({
   onClose,
   tasks,
   onEditTask,
-  onDeleteTask,
 }: {
   isOpen: boolean;
   onClose: () => void;
   tasks: WardTask[];
   onEditTask: (task: WardTask) => void;
-  onDeleteTask: (taskId: string) => void;
 }) {
   if (!isOpen) return null;
 
@@ -1085,21 +1081,19 @@ function RepeatWardTasksModal({
                               Approved
                             </span>
                           )}
+                          {/* Mark in error used to sit here as a red bin beside
+                              the pencil, one tap from a list you are only
+                              skim-reading (Mike, 29 Jul). It now lives behind
+                              Edit, which opens the job's own modal and puts the
+                              action inside its edit mode - the same place it
+                              lives everywhere else. */}
                           <button
                             onClick={() => onEditTask(task)}
                             className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-                            title="Edit task"
+                            title="Open this task - edit it, or mark it in error"
                             aria-label="Edit task"
                           >
                             <Pencil className="w-4 h-4 text-gray-600" />
-                          </button>
-                          <button
-                            onClick={() => onDeleteTask(task.id)}
-                            className="p-2 hover:bg-red-100 rounded-lg transition-colors"
-                            title="Mark in error (kept for audit, removed from future dates)"
-                            aria-label="Mark task in error"
-                          >
-                            <Trash2 className="w-4 h-4 text-red-500" />
                           </button>
                         </div>
                       </div>
@@ -1541,7 +1535,7 @@ function TasksPageInner() {
   const isMyDiaryMode = searchParams.get("view") === "my-diary";
   const link = useV2Href();
   const { user, activeWard } = useApp();
-  const { tasks, setTasks, claimTask, toggleComplete, updateTask, addTask, markInError } = useTasks();
+  const { tasks, setTasks, claimTask, toggleComplete, updateTask, addTask } = useTasks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const columnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -1623,10 +1617,6 @@ function TasksPageInner() {
     setDragToast(`Task moved to ${dayLabel}`);
     setTimeout(() => setDragToast(null), 2000);
   };
-  const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; taskId: string | null }>({
-    isOpen: false,
-    taskId: null,
-  });
 
   // Generate dates array (7 days back, today, 7 days forward)
   const today = new Date();
@@ -1741,18 +1731,9 @@ function TasksPageInner() {
     setShowRepeatTasksModal(false);
   };
 
-  // Repeating tasks are never deleted - marking in error keeps the record for
-  // audit while removing it from all future dates and counts (restore in Reports).
-  const handleDeleteRepeatTask = (taskId: string) => {
-    setDeleteConfirm({ isOpen: true, taskId });
-  };
-
-  const confirmDeleteRepeatTask = () => {
-    if (deleteConfirm.taskId) {
-      markInError(deleteConfirm.taskId, user?.name || "Unknown");
-    }
-    setDeleteConfirm({ isOpen: false, taskId: null });
-  };
+  // Repeating tasks are never deleted. Marking one in error now happens inside
+  // the task's own modal, behind Edit, so the bespoke confirm dialog that used
+  // to back the red bin on the repeat list has gone with it (Mike, 29 Jul).
 
   // Check if user is lead or manager
   const isLeadOrManager = user?.role === "lead" || user?.role === "manager";
@@ -2237,7 +2218,6 @@ function TasksPageInner() {
         onClose={() => setShowRepeatTasksModal(false)}
         tasks={wardTasks}
         onEditTask={handleEditRepeatTask}
-        onDeleteTask={handleDeleteRepeatTask}
       />
 
       {/* Expanded Day View */}
@@ -2264,17 +2244,6 @@ function TasksPageInner() {
         />
       )}
 
-      {/* Mark-in-error Confirmation Dialog (tasks are never deleted) */}
-      <ConfirmDialog
-        isOpen={deleteConfirm.isOpen}
-        title="Mark Repeating Task In Error?"
-        message="This removes the task from all future dates and counts. The record is kept for audit and can be restored from the Reports page."
-        variant="danger"
-        confirmLabel="Mark in error"
-        cancelLabel="Cancel"
-        onConfirm={confirmDeleteRepeatTask}
-        onCancel={() => setDeleteConfirm({ isOpen: false, taskId: null })}
-      />
     </MainLayout>
   );
 }

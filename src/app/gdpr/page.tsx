@@ -65,7 +65,16 @@ export default function GdprPage() {
               </li>
               <li>
                 <strong>Internal numbers hidden</strong> - Trust-internal
-                numbers and extensions show as "Hidden in demo mode"
+                numbers and extensions show as "Hidden in demo mode". The real
+                values are not in the codebase at all; they are held separately,
+                outside it
+              </li>
+              <li>
+                <strong>Behind a shared password</strong> - The whole site sits
+                behind one shared password rather than individual accounts. It
+                keeps the demo from being publicly readable; it is not a
+                substitute for Trust authentication, which a live version would
+                need
               </li>
             </ul>
           </CardContent>
@@ -145,9 +154,12 @@ export default function GdprPage() {
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>
-                <strong>Browser storage only</strong> - What you enter (login
+                <strong>Browser storage</strong> - What you choose (login
                 choice, preferences, feedback, personal links) is stored in your
-                browser's localStorage and never sent to a server
+                browser's localStorage, on that device, and is not sent
+                anywhere. The one exception is the site password itself, which
+                has to be checked by the server - see &quot;No tracking&quot;
+                below
               </li>
               <li>
                 <strong>Tasks are not saved at all</strong> - The demo diary
@@ -167,11 +179,14 @@ export default function GdprPage() {
               </li>
               <li>
                 <strong>No tracking</strong> - No analytics, no external scripts
-                or fonts. The one cookie in use is the site password cookie
-                (`site_access`), which only records that you typed the shared
-                password correctly. The only party that sees any traffic is
-                Vercel, which hosts the site and keeps standard request logs (as
-                any web host does)
+                or fonts. Exactly one cookie:{" "}
+                <code className="bg-nhs-pale-grey px-1 rounded text-sm">site_access</code>, set when
+                you type the shared site password correctly. It is httpOnly,
+                lasts 7 days, and holds nothing except the fact that the
+                password was right - no name, no role, no ward. Setting it means
+                the password you type is sent to the server to be checked; that
+                is the only thing this site transmits. Beyond that, Vercel hosts
+                the site and keeps standard request logs, as any web host does
               </li>
               <li>
                 <strong>Automatic clearing</strong> - Data is removed when you
@@ -231,7 +246,10 @@ export default function GdprPage() {
                 retention aligned to NHS records management policies, audit logs,
                 and deletion requests through formal IG channels. A database
                 connection (Supabase) is configured in the codebase but is not
-                used by this demo - no data is sent to it.
+                used by this demo - no feature queries it and none of your data
+                is sent to it. For completeness: a scheduled job runs one empty
+                read against that database each day so the free-tier project is
+                not paused for inactivity. It reads nothing about you.
               </p>
             </div>
           </CardContent>
@@ -284,7 +302,7 @@ export default function GdprPage() {
               use the Feedback page.
             </p>
             <p className="text-nhs-mid-grey text-xs mt-2">
-              This page last reviewed: 4 July 2026
+              This page last reviewed: 30 July 2026
             </p>
           </CardContent>
         </Card>

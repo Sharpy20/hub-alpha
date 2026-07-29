@@ -61,7 +61,7 @@ const NAV_SECTIONS = [
   { id: "clinical-safety", label: "Clinical Safety", icon: AlertTriangle, priority: "should" },
   { id: "schemas", label: "Supabase Schemas", icon: Database, priority: "later" },
   { id: "webhooks", label: "Assurance Integration", icon: GitBranch, priority: "later" },
-  { id: "nexus", label: "Nexus Assurance (MAX+)", icon: ExternalLink, priority: "later" },
+  { id: "nexus", label: "Nexus Assurance (planned)", icon: ExternalLink, priority: "later" },
   { id: "qa-pack", label: "Q&A Pack", icon: HelpCircle, priority: "must" },
   { id: "evaluations", label: "Role Evaluations", icon: Users, priority: "should" },
   { id: "roadmap", label: "Roadmap", icon: Map, priority: "must" },
@@ -236,16 +236,23 @@ function OverviewSection() {
         </CardHeader>
         <CardContent className="prose prose-sm max-w-none">
           <p>
-            <strong>wardHub</strong> is a reference and task management tool built around the needs of an inpatient ward.
-            Referral processes are presented as interactive step-by-step guides &ndash; pulling together official forms,
-            Trust SOPs, good examples, and service admission criteria.
+            Every tool we have had for ward coordination could only do one thing: <em>watch</em> the work.
+            Weekly reports, red-to-green meetings, dashboards, audits. They exist because the information
+            does not surface itself, so someone has to go and collect it - which is why band 6s lose long
+            stretches of the week to audit instead of the floor.
           </p>
           <p>
-            As a bonus, these link through to a simple electronic jobs diary, helping individuals stay organised
-            and improving team communication between shifts.
+            <strong>wardHub flips that.</strong> Instead of adding a layer above the work, it sits where the
+            work happens. Jobs from every source - admission, ward round, referral, MDT - land in one funnel.
+            Staff see the job, an interactive guide shows them how to do it, and the case note writes itself.
           </p>
           <p>
-            No training needed &ndash; just log in and go. Built by ward staff who do the job every day.
+            Because the work happens in the tool, <strong>the oversight falls out for free</strong>: the RAG
+            picture, the MDT list, the discharge barriers, the audit trail. One view, no extra labour, nobody
+            taken off the floor to compile it. <strong>Same assurance, fewer audits.</strong>
+          </p>
+          <p>
+            No training needed &ndash; the guides are the training. Built by a ward staff nurse in his own time.
           </p>
         </CardContent>
       </Card>
@@ -271,10 +278,15 @@ function OverviewSection() {
               wardHub brings together three things in one place:
             </p>
             <ul>
-              <li><strong>Interactive Guides</strong> &ndash; Step-by-step walkthroughs for referrals, assessments, and ward processes</li>
-              <li><strong>Electronic Jobs Diary</strong> &ndash; Shared task tracking with claim/handover, replacing the paper diary</li>
-              <li><strong>Nexus Nudges</strong> &ndash; Gentle reminders for daily assurance items that stop when Nexus confirms completion</li>
+              <li><strong>Interactive Guides</strong> &ndash; Step-by-step walkthroughs for referrals, assessments and ward processes. Finishing one produces the case note to paste into SystmOne</li>
+              <li><strong>Electronic Jobs Diary</strong> &ndash; Shared job tracking with claim and structured hand-back, replacing the paper diary. A hand-back records who it is waiting on and generates a case note even when the job is not finished</li>
+              <li><strong>Assurance as a by-product</strong> &ndash; Because the jobs live here, the oversight view builds itself: discharge barriers, waiting-on, review coverage, RAG by ward. Nobody compiles it</li>
             </ul>
+            <p className="text-xs text-nhs-mid-grey">
+              This list used to lead its third item with &ldquo;Nexus Nudges&rdquo;, an integration that
+              is planned but not built. The by-product oversight is the pillar that actually exists and
+              is the one demonstrated. Nexus is still on the roadmap - see the Nexus Assurance section.
+            </p>
           </div>
 
           <div>
@@ -290,9 +302,19 @@ function OverviewSection() {
           <div>
             <h3 className="text-base font-semibold text-nhs-dark-blue">Governance Fit</h3>
             <p>
-              Pilot phase uses light, real use &ndash; a few non-essential tasks to test the workflows.
-              When deployed more broadly, patient data handling follows existing IG frameworks.
-              DPIA and DCB 0129/0160 clinical safety review planned for fuller rollout.
+              Nothing in the demo needs permission, and that was deliberate: it holds no real patient
+              data, stores no jobs, and every internal contact reads &ldquo;Hidden in demo mode&rdquo;.
+              <strong> Everything on the roadmap does need permission</strong>, and that is the
+              conversation being asked for.
+            </p>
+            <p>
+              The ask is a <strong>two-ward pilot on the full build</strong> - not a guides-only trial -
+              because every measure worth having (referral time, missed referrals, discharge barriers,
+              review coverage) only means something once the whole funnel exists. That makes it a real
+              project: a completed <strong>DPIA</strong>, a Trust-approved datastore, Trust
+              authentication, and a <strong>DCB 0129/0160</strong> clinical safety review. The draft
+              DPIA and the hazard log are already written and in this panel, so the Trust is being
+              handed a starting point rather than a blank form.
             </p>
           </div>
         </CardContent>
@@ -471,7 +493,7 @@ function BusinessCaseSection() {
                 </tr>
                 <tr>
                   <td className="p-3 font-semibold">Development</td>
-                  <td className="p-3">Ward staff (built in role)</td>
+                  <td className="p-3">Built by a ward staff nurse in his own time</td>
                   <td className="p-3 font-bold text-green-700">&pound;0</td>
                 </tr>
                 <tr>
@@ -564,13 +586,19 @@ function BusinessCaseSection() {
                 <td className="p-2">Low staff adoption</td>
                 <td className="p-2">Medium</td>
                 <td className="p-2">Medium</td>
-                <td className="p-2">Ward champion model; start with most motivated ward; iterative feedback</td>
+                <td className="p-2">Ward champion on each of the two pilot wards; iterative feedback; nothing is mandatory, so low use is a signal rather than a failure</td>
               </tr>
               <tr>
                 <td className="p-2">Data security concerns</td>
                 <td className="p-2">Low</td>
                 <td className="p-2">High</td>
-                <td className="p-2">Pilot has zero PII; phased approach aligns security controls with data sensitivity</td>
+                <td className="p-2">The demo holds no real patient data and stores no tasks. The pilot being asked for <strong>does</strong> hold real patient data, so it is gated on a completed DPIA, Trust-approved hosting, Trust authentication and a clinical safety review - not on this table</td>
+              </tr>
+              <tr>
+                <td className="p-2">Content is wrong or out of date at pilot</td>
+                <td className="p-2">High</td>
+                <td className="p-2">High</td>
+                <td className="p-2">The project&apos;s largest real risk, and currently uncontrolled: of 68 guides, <strong>1</strong> is signed off green, 47 await review and 20 are still in development. Every guide carries a visible traffic-light badge so staff can see its status, and the sign-off-by-specialty model exists to clear the backlog. A pilot should not start on guides still showing red</td>
               </tr>
               <tr>
                 <td className="p-2">Technical failure</td>
@@ -600,7 +628,7 @@ function BusinessCaseSection() {
                 <td className="p-2">Ongoing maintenance</td>
                 <td className="p-2">Low</td>
                 <td className="p-2">Low</td>
-                <td className="p-2">Minimal overhead &ndash; content maintained by ward staff via contributor role; no server management in pilot</td>
+                <td className="p-2">Content maintained by ward staff via the contributor role. Server management is real once the pilot runs on Trust infrastructure, which is part of what is being asked for</td>
               </tr>
             </tbody>
           </table>
@@ -769,25 +797,26 @@ function TechnicalSpecSection() {
             <div>
               <h3 className="font-semibold text-nhs-dark-grey mb-2">Backend / Data</h3>
               <ul className="text-sm space-y-1 text-nhs-dark-grey">
-                <li>• Light: Browser localStorage</li>
-                <li>• Medium+: Supabase (PostgreSQL)</li>
-                <li>• Max+: Nexus webhook receiver</li>
+                <li>• Today: no backend. Jobs are React state, wiped by a refresh</li>
+                <li>• Today: preferences in browser localStorage (<code className="text-xs">wardhub_*</code> keys)</li>
+                <li>• Wired but dormant: Supabase (PostgreSQL). No feature queries it</li>
+                <li>• Planned: Nexus webhook receiver (<code className="text-xs">/api/nexus/task-complete</code>)</li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-nhs-dark-grey mb-2">Hosting</h3>
               <ul className="text-sm space-y-1 text-nhs-dark-grey">
-                <li>• Light: Vercel (public)</li>
-                <li>• Medium: Behind FOCUS firewall</li>
-                <li>• Max/Max+: Trust infrastructure</li>
+                <li>• Today: Vercel, behind one shared site password</li>
+                <li>• Proposed: Trust infrastructure with Trust authentication</li>
+                <li>• Custom domain: wardHub.live</li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-nhs-dark-grey mb-2">CI/CD</h3>
               <ul className="text-sm space-y-1 text-nhs-dark-grey">
-                <li>• GitHub (Sharpy20 account)</li>
-                <li>• Vercel auto-deploy on push</li>
-                <li>• Branch protection on main</li>
+                <li>• GitHub (Sharpy20 account, private repo)</li>
+                <li>• GitHub Actions on every push and PR: typecheck, lint, test, build</li>
+                <li>• Vercel auto-deploy on push to main (independent of the CI gate)</li>
               </ul>
             </div>
           </div>
@@ -797,28 +826,49 @@ function TechnicalSpecSection() {
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">System Context (C4 Level 1)</h2>
+          <p className="text-xs text-nhs-mid-grey mt-1">
+            Two diagrams, because today and the proposal are genuinely different shapes. The old
+            single diagram put wardHub inside the Trust boundary, which is not where it runs.
+          </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="bg-nhs-pale-grey p-4 rounded-lg font-mono text-xs overflow-x-auto">
-            <pre>{`
-┌─────────────────────────────────────────────────────────────┐
-│                      TRUST BOUNDARY                          │
-│  ┌──────────┐                                               │
-│  │  Staff   │ ◄───────► ┌─────────────────┐                 │
-│  │  (User)  │           │  wardHub  │                 │
-│  └──────────┘           │    (Portal)     │                 │
-│                         └────────┬────────┘                 │
-│                                  │                          │
-│         ┌────────────────────────┼────────────────────┐     │
-│         │                        │                    │     │
-│         ▼                        ▼                    ▼     │
-│  ┌─────────────┐    ┌─────────────────┐    ┌─────────────┐  │
-│  │  Supabase   │    │  Power Automate │    │   Nexus     │  │
-│  │  (Medium+)  │    │  (Assurance)    │    │   (Max+)    │  │
-│  └─────────────┘    └─────────────────┘    └─────────────┘  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-            `}</pre>
+            <pre>{`TODAY - outside the Trust boundary
+
+  Ward staff, any browser
+    |
+    |  https, one shared password
+    v
+  wardHub (Next.js on Vercel)  <-- NOT Trust infrastructure
+    |
+    +-- /api/auth/verify-password   the only API route that exists
+    |     sets site_access cookie (httpOnly, 7 days)
+    |
+    +-- everything else is static or in-browser
+          jobs      -> React state, gone on refresh
+          settings  -> localStorage on that device
+
+  Supabase project .............. wired, dormant, not queried by the app
+                                  (one scheduled keep-alive SELECT per day)
+  Nexus Assurance ............... link only, a button that opens its dashboard
+  SystmOne ...................... no connection. Case notes are copied by hand`}</pre>
+          </div>
+          <div className="bg-nhs-pale-grey p-4 rounded-lg font-mono text-xs overflow-x-auto">
+            <pre>{`PROPOSED - inside the Trust boundary
+
+  Ward staff
+    |
+    |  Trust authentication (SSO), individual accounts
+    v
+  wardHub, hosted by the Trust
+    |
+    +-- Trust-approved datastore    jobs, patients, hand-back history, audit
+    |
+    +-- Nexus Assurance             ONE WAY IN: a completed audit ticks a job
+    |                               wardHub never writes to Nexus
+    |
+    +-- SystmOne                    still no connection, still copied by hand
+                                    (deliberate - wardHub is not the record)`}</pre>
           </div>
         </CardContent>
       </Card>
@@ -826,32 +876,45 @@ function TechnicalSpecSection() {
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Container Diagram (C4 Level 2)</h2>
+          <p className="text-xs text-nhs-mid-grey mt-1">
+            What is actually in the repository. The previous version listed
+            <code className="bg-gray-100 px-1 rounded">/api/tasks</code>,
+            <code className="bg-gray-100 px-1 rounded">/api/patients</code>, a webhook worker and a
+            Nexus receiver. None of them exist - there is exactly one API route.
+          </p>
         </CardHeader>
         <CardContent>
           <div className="bg-nhs-pale-grey p-4 rounded-lg font-mono text-xs overflow-x-auto">
-            <pre>{`
-┌─────────────────────────────────────────────────────────────┐
-│                    WARDHUB                            │
-│                                                             │
-│  ┌─────────────────┐    ┌─────────────────┐                │
-│  │   Web App       │    │   API Routes    │                │
-│  │   (Next.js)     │◄──►│   (Next.js)     │                │
-│  │                 │    │                 │                │
-│  │  • Pages        │    │  • /api/tasks   │                │
-│  │  • Components   │    │  • /api/patients│                │
-│  │  • State mgmt   │    │  • /api/nexus   │                │
-│  └─────────────────┘    └────────┬────────┘                │
-│                                  │                          │
-│                    ┌─────────────┼─────────────┐           │
-│                    │             │             │           │
-│                    ▼             ▼             ▼           │
-│            ┌───────────┐ ┌───────────┐ ┌───────────┐       │
-│            │ Supabase  │ │ Webhook   │ │ Nexus     │       │
-│            │ Client    │ │ Worker    │ │ Receiver  │       │
-│            └───────────┘ └───────────┘ └───────────┘       │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-            `}</pre>
+            <pre>{`wardHub (one Next.js app, App Router)
+
+  src/proxy.ts .................. the gate. No site_access cookie -> /password
+                                  also resolves legacy routes and, when the
+                                  root/v2 split is switched back on, blocks
+                                  the patient routes at the root
+
+  src/app/ ...................... pages
+    guides/[id] ................. one viewer for all 68 guides
+    guides/<static> ............. builders and checkers that override [id]
+    tasks/ ...................... team diary
+    my-tasks/ ................... My Jobs board (To do / Waiting / Done)
+    patients/ ................... patient list, transfer, discharge
+    overview/ ................... barriers, waiting-on, review coverage
+    quiz/ service-map/ links/ ... the rest
+    dev-panel/ .................. this page
+    api/auth/verify-password .... THE ONLY API ROUTE
+
+  src/app/providers.tsx ......... user, ward, theme (localStorage)
+  tasks-provider.tsx ............ every job, in useState. NOT PERSISTED
+
+  src/lib/data/ ................. all content, as TypeScript
+    guides/ catalog.ts .......... the guide index
+    approval-status.ts .......... the traffic lights. Mike's editorial sign-off
+    tasks/index.ts .............. the fictional demo cast and job templates
+    service-map.ts .............. ~115 services
+    quiz/ ....................... 942 questions
+
+  src/lib/supabase/client.ts .... deliberately NOT exported from the barrel,
+                                  so its URL and keys never reach the bundle`}</pre>
           </div>
         </CardContent>
       </Card>
@@ -878,70 +941,82 @@ function DataCatalogueSection() {
                 <tr>
                   <th className="text-left p-2">Entity</th>
                   <th className="text-left p-2">Contains PII?</th>
-                  <th className="text-left p-2">Mode Required</th>
-                  <th className="text-left p-2">Storage</th>
+                  <th className="text-left p-2">Stored today</th>
+                  <th className="text-left p-2">Stored in a live build</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 <tr>
                   <td className="p-2 font-medium">Links</td>
                   <td className="p-2"><span className="text-nhs-green">No</span></td>
-                  <td className="p-2">Light+</td>
-                  <td className="p-2">Static / Supabase</td>
+                  <td className="p-2">In the code (static)</td>
+                  <td className="p-2">Trust-approved datastore</td>
                 </tr>
                 <tr>
                   <td className="p-2 font-medium">Workflows</td>
                   <td className="p-2"><span className="text-nhs-green">No</span></td>
-                  <td className="p-2">Light+</td>
-                  <td className="p-2">Static / Supabase</td>
+                  <td className="p-2">In the code (static)</td>
+                  <td className="p-2">Trust-approved datastore</td>
                 </tr>
                 <tr>
                   <td className="p-2 font-medium">Guides</td>
                   <td className="p-2"><span className="text-nhs-green">No</span></td>
-                  <td className="p-2">Light+</td>
-                  <td className="p-2">Static / Supabase</td>
+                  <td className="p-2">In the code (static)</td>
+                  <td className="p-2">Trust-approved datastore</td>
                 </tr>
                 <tr>
                   <td className="p-2 font-medium">Users</td>
                   <td className="p-2"><span className="text-nhs-orange">Staff names</span></td>
-                  <td className="p-2">Medium+</td>
-                  <td className="p-2">Supabase</td>
+                  <td className="p-2">Fictional cast in the code; the chosen demo user in localStorage</td>
+                  <td className="p-2">Trust authentication</td>
                 </tr>
-                <tr>
-                  <td className="p-2 font-medium">Team Tasks</td>
+                <tr className="bg-red-50">
+                  <td className="p-2 font-medium">Team Jobs</td>
                   <td className="p-2"><span className="text-nhs-green">No</span></td>
-                  <td className="p-2">Max+</td>
-                  <td className="p-2">Supabase</td>
+                  <td className="p-2 font-semibold">Nowhere. React state, wiped by a refresh</td>
+                  <td className="p-2">Trust-approved datastore</td>
                 </tr>
-                <tr>
-                  <td className="p-2 font-medium">Patient Tasks</td>
-                  <td className="p-2"><span className="text-nhs-red">Yes</span></td>
-                  <td className="p-2">Max+</td>
-                  <td className="p-2">Supabase</td>
+                <tr className="bg-red-50">
+                  <td className="p-2 font-medium">Patient Jobs</td>
+                  <td className="p-2"><span className="text-nhs-red">Yes (in a live build)</span></td>
+                  <td className="p-2 font-semibold">Nowhere. React state, wiped by a refresh</td>
+                  <td className="p-2">Trust-approved datastore</td>
                 </tr>
-                <tr>
+                <tr className="bg-red-50">
                   <td className="p-2 font-medium">Patients</td>
-                  <td className="p-2"><span className="text-nhs-red">Yes</span></td>
-                  <td className="p-2">Max+</td>
-                  <td className="p-2">Supabase</td>
+                  <td className="p-2"><span className="text-nhs-red">Yes (in a live build)</span></td>
+                  <td className="p-2 font-semibold">Nowhere. Fictional cast generated at load</td>
+                  <td className="p-2">Trust-approved datastore</td>
+                </tr>
+                <tr>
+                  <td className="p-2 font-medium">Hand-back / job history</td>
+                  <td className="p-2"><span className="text-nhs-orange">Staff names</span></td>
+                  <td className="p-2">Nowhere. Append-only in memory only</td>
+                  <td className="p-2">Trust-approved datastore. Retention to agree</td>
                 </tr>
                 <tr>
                   <td className="p-2 font-medium">Audit Logs</td>
                   <td className="p-2"><span className="text-nhs-orange">User IDs</span></td>
-                  <td className="p-2">Medium+</td>
-                  <td className="p-2">Supabase</td>
+                  <td className="p-2">Not implemented</td>
+                  <td className="p-2">Trust-approved datastore</td>
                 </tr>
                 <tr className="bg-green-50">
                   <td className="p-2 font-medium">Personal Links</td>
                   <td className="p-2"><span className="text-nhs-green">No</span></td>
-                  <td className="p-2">All</td>
-                  <td className="p-2">localStorage (per user)</td>
+                  <td className="p-2">localStorage (that browser only)</td>
+                  <td className="p-2">Per-user record</td>
                 </tr>
                 <tr className="bg-green-50">
                   <td className="p-2 font-medium">Link Recommendations</td>
                   <td className="p-2"><span className="text-nhs-green">No</span></td>
-                  <td className="p-2">All</td>
-                  <td className="p-2">localStorage</td>
+                  <td className="p-2">localStorage (that browser only)</td>
+                  <td className="p-2">Per-user record, with approval queue</td>
+                </tr>
+                <tr className="bg-green-50">
+                  <td className="p-2 font-medium">Preferences (theme, guide order, diary view)</td>
+                  <td className="p-2"><span className="text-nhs-green">No</span></td>
+                  <td className="p-2">localStorage (<code className="text-xs">wardhub_*</code> keys)</td>
+                  <td className="p-2">Per-user record</td>
                 </tr>
               </tbody>
             </table>
@@ -985,7 +1060,10 @@ function DataCatalogueSection() {
           </div>
           <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
             <p className="text-sm text-blue-800">
-              <span className="font-semibold">How it works:</span> Trust-sensitive data is stored in code comments alongside each link or guide step. When authentication is enabled, a single flag change (<code className="bg-blue-100 px-1 rounded text-xs">requiresFocus: false</code>) reveals the real data. No data entry needed at go-live – it&apos;s already there.
+              <span className="font-semibold">How it works:</span> trust-sensitive values are <strong>not in the codebase at all</strong>. They were stripped out on 27 July 2026 and are held in a single file outside the repository, keyed by entry id. The app ships the entry with its real value absent, so what renders is &ldquo;Hidden in demo mode&rdquo;. At go-live the values are loaded back in against their ids - a short, reviewable step rather than a flag flip.
+            </p>
+            <p className="text-xs text-blue-700 mt-2">
+              This used to say the real values sat in code comments and a single <code className="bg-blue-100 px-1 rounded text-xs">requiresFocus</code> change would reveal them. That was true once and is worth correcting rather than quietly deleting: it meant a repository read gave up every internal number, which is exactly the risk the strip-out removed.
             </p>
           </div>
         </CardContent>
@@ -993,11 +1071,12 @@ function DataCatalogueSection() {
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-bold text-nhs-black">Patient Entity (Max+)</h2>
+          <h2 className="text-lg font-bold text-nhs-black">Patient Entity</h2>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-nhs-dark-grey mb-4">
-            Patient data is only present in Max and Max+ deployments. Demo version uses fictional data.
+            The full field list, in a live build. The demo generates a fictional cast at load and
+            stores none of it. This is the whole record - there is nothing below the table.
           </p>
           <div className="mb-4 p-4 rounded-lg border-l-4 border-nhs-green bg-green-50">
             <p className="font-semibold text-nhs-black mb-1">No special category data (28 July 2026)</p>
@@ -1058,7 +1137,7 @@ function RBACSection() {
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Role Definitions</h2>
-          <p className="text-xs text-nhs-mid-grey mt-1">Last reviewed: 2026-02-27</p>
+          <p className="text-xs text-nhs-mid-grey mt-1">Last reviewed: 2026-07-30</p>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -1071,12 +1150,12 @@ function RBACSection() {
               <p className="text-sm text-nhs-dark-grey">+ Filter by staff member tasks, &quot;My Patients&quot; toggle (as ward professional), 72hr admission audit visibility</p>
             </div>
             <div className="p-3 bg-amber-50 rounded-lg border border-amber-200">
-              <h3 className="font-semibold text-nhs-black">Manager</h3>
-              <p className="text-sm text-nhs-dark-grey">+ Ward settings, discharge approval, grant contributor privileges, all Lead capabilities</p>
+              <h3 className="font-semibold text-nhs-black">Manager <span className="text-xs font-normal text-nhs-mid-grey">(clinical)</span></h3>
+              <p className="text-sm text-nhs-dark-grey">All Lead capabilities, + ward settings, discharge approval, grant the contributor flag, edit content. A ward professional can be a Manager - they are still clinical staff with patients.</p>
             </div>
             <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
-              <h3 className="font-semibold text-nhs-black">Ward Admin <span className="text-xs font-normal text-nhs-mid-grey">(IT/Config)</span></h3>
-              <p className="text-sm text-nhs-dark-grey">+ Ward settings, discharge approval, view audit logs, grant contributor privileges</p>
+              <h3 className="font-semibold text-nhs-black">Ward Admin <span className="text-xs font-normal text-nhs-mid-grey">(IT / config, not clinical)</span></h3>
+              <p className="text-sm text-nhs-dark-grey">Ward settings, discharge confirmation, view audit logs, grant the contributor flag. <strong>Deliberately cannot be a ward professional and has no clinical filters</strong> - this is the configuration role, not a nursing one. That distinction is why its permissions look similar to Manager but are not the same.</p>
             </div>
             <div className="p-3 bg-rose-50 rounded-lg border border-rose-200">
               <h3 className="font-semibold text-nhs-black">Senior Admin</h3>
@@ -1093,7 +1172,7 @@ function RBACSection() {
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">Permissions Matrix</h2>
-          <p className="text-xs text-nhs-mid-grey mt-1">Last reviewed: 2026-02-27</p>
+          <p className="text-xs text-nhs-mid-grey mt-1">Last reviewed: 2026-07-30</p>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
@@ -1228,19 +1307,26 @@ function RBACSection() {
                   <td className="p-2 text-center bg-amber-50 text-nhs-green font-bold">✓</td>
                 </tr>
                 <tr>
-                  <td className="p-2">Dev Panel access</td>
-                  <td className="p-2 text-center text-nhs-orange">Key</td>
-                  <td className="p-2 text-center text-nhs-orange">Key</td>
-                  <td className="p-2 text-center text-nhs-orange">Key</td>
-                  <td className="p-2 text-center text-nhs-orange">Key</td>
-                  <td className="p-2 text-center text-nhs-orange">Key</td>
+                  <td className="p-2">Dev Panel access <span className="text-xs text-gray-500 block">(this page)</span></td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
+                  <td className="p-2 text-center text-nhs-green">✓</td>
                   <td className="p-2 text-center bg-amber-50">-</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p className="text-xs text-nhs-mid-grey mt-3">
-            Note: +Contributor is a flag (isContributor) that can be added to any role. Dev Panel uses access key in demo; production would use Trust key vault.
+            Note: +Contributor is a flag (isContributor) that can be added to any role.
+          </p>
+          <p className="text-xs text-nhs-mid-grey mt-2">
+            <strong>Dev Panel access is currently open to anyone who is past the site password.</strong>{" "}
+            Its own gate was removed in Session 11 and the row above used to claim an
+            &ldquo;access key&rdquo;, which contradicted the notice at the top of this very page.
+            There is nothing sensitive here - it is documentation about the app, not data from it -
+            but a live deployment should put it behind the same role check as user management.
           </p>
         </CardContent>
       </Card>
@@ -1286,16 +1372,24 @@ User                          Portal                        External
  │  7. Copy case note text      │                              │
  │ ─────────────────────────►   │                              │
  │                              │                              │
- │  8. (Max+) Push to S1        │                              │
- │ ─────────────────────────►   │ ─────────────────────────►   │
+ │  8. Paste into SystmOne      │                              │
+ │ ──────────────────────────────────────────────────────────► │
+ │     (the nurse does this by hand - wardHub never writes     │
+ │      to the clinical record)                                │
             `}</pre>
+          <p className="text-xs text-nhs-mid-grey mt-2">
+            Step 8 previously read &ldquo;(Max+) Push to S1&rdquo;, implying an automated write into
+            the clinical record. There is no such integration and none is proposed: the guide produces
+            the text, a human pastes it. That boundary is deliberate and is worth stating out loud in
+            any governance conversation.
+          </p>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-bold text-nhs-black">Flow 2: Task Lifecycle (Max+)</h2>
+          <h2 className="text-lg font-bold text-nhs-black">Flow 2: Job Lifecycle</h2>
         </CardHeader>
         <CardContent>
           <ol className="space-y-2 text-sm text-nhs-dark-grey">
@@ -1309,19 +1403,32 @@ User                          Portal                        External
             </li>
             <li className="flex gap-2">
               <span className="w-6 h-6 rounded-full bg-nhs-blue text-white flex items-center justify-center text-xs flex-shrink-0">3</span>
-              <span>Staff claims task → moves to "My Tasks" Kanban</span>
+              <span>Staff claims it &rarr; appears in their <strong>My Jobs</strong> board, under <em>To do</em></span>
             </li>
             <li className="flex gap-2">
               <span className="w-6 h-6 rounded-full bg-nhs-blue text-white flex items-center justify-center text-xs flex-shrink-0">4</span>
-              <span>Staff moves to "In Progress" when starting</span>
+              <span>If a guide is linked, the guide walks them through it and produces the case note</span>
             </li>
             <li className="flex gap-2">
-              <span className="w-6 h-6 rounded-full bg-nhs-blue text-white flex items-center justify-center text-xs flex-shrink-0">5</span>
-              <span>Staff marks complete → task archived</span>
+              <span className="w-6 h-6 rounded-full bg-nhs-green text-white flex items-center justify-center text-xs flex-shrink-0">5a</span>
+              <span>Marks it complete &rarr; moves to <em>Done</em>. A recurring job is completed <strong>per day</strong>, so ticking today does not close the rest of the week</span>
             </li>
             <li className="flex gap-2">
-              <span className="w-6 h-6 rounded-full bg-nhs-bright-blue text-white flex items-center justify-center text-xs flex-shrink-0">6</span>
-              <span>(Max+) Nexus auto-completes linked audit tasks</span>
+              <span className="w-6 h-6 rounded-full bg-nhs-orange text-white flex items-center justify-center text-xs flex-shrink-0">5b</span>
+              <span>
+                <strong>Or hands it back</strong> &rarr; three dropdowns, no free text: what state it is in,
+                why it is going back, and who it is waiting on with a chase date. It moves to
+                <em> Waiting</em>. <strong>A case note is generated whether or not the job is finished</strong>,
+                which is the point - an unfinished job that has been chased is still a documented action
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span className="w-6 h-6 rounded-full bg-nhs-blue text-white flex items-center justify-center text-xs flex-shrink-0">6</span>
+              <span>Every transition appends to the job&apos;s history, so reopening it loses nothing. A job can also be <strong>marked in error</strong> (behind Edit), which keeps it out of every count but preserves it for audit with a restore path</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="w-6 h-6 rounded-full bg-nhs-mid-grey text-white flex items-center justify-center text-xs flex-shrink-0">7</span>
+              <span>Planned: a completed audit on Nexus ticks the matching job here</span>
             </li>
           </ol>
         </CardContent>
@@ -1329,7 +1436,7 @@ User                          Portal                        External
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-bold text-nhs-black">Flow 3: Patient Discharge (Max+)</h2>
+          <h2 className="text-lg font-bold text-nhs-black">Flow 3: Patient Discharge</h2>
         </CardHeader>
         <CardContent>
           <ol className="space-y-2 text-sm text-nhs-dark-grey">
@@ -1375,7 +1482,7 @@ function DPIASection() {
       <div className="bg-nhs-warm-yellow/20 border border-nhs-warm-yellow rounded-lg p-4">
         <p className="text-sm text-nhs-black">
           <strong>Note:</strong> This is a draft DPIA scaffold. It requires review and completion
-          by the Trust's IG team before Max/Max+ deployment.
+          by the Trust's IG team before any build that handles real patient data.
         </p>
       </div>
 
@@ -1393,7 +1500,7 @@ function DPIASection() {
             <p className="text-nhs-dark-grey">
               Clinical reference tool and task management system for inpatient ward staff.
               Provides quick access to referral workflows, how-to guides, and useful links.
-              Max+ deployment includes patient list and ward diary with PII.
+              A live build adds the patient list and the team diary, which is where real personal data would enter.
             </p>
           </div>
           <div>
@@ -1422,8 +1529,17 @@ function DPIASection() {
           <div>
             <h3 className="font-semibold text-nhs-dark-grey">Special Category Data (Health)</h3>
             <p className="text-nhs-dark-grey">
-              <strong>Article 9(2)(h)</strong> – Processing necessary for medical diagnosis,
-              provision of health treatment, and management of health systems.
+              <strong>wardHub holds no special category data.</strong> MHA legal status, clinical
+              alerts and diagnoses were removed from the patient record entirely on 28 July 2026,
+              so there is nothing here that needs an Article 9 condition.
+            </p>
+            <p className="text-nhs-dark-grey mt-2">
+              The honest caveat: a <em>task title</em> is free text, and the fact that a person is
+              on a mental health inpatient ward is itself health data. So the residual Article 9
+              route, if the IG team judges one is needed, would be
+              <strong> Article 9(2)(h)</strong> - processing necessary for the provision of health
+              treatment and the management of health systems. The control on task titles is
+              wording and training, not the schema.
             </p>
           </div>
         </CardContent>
@@ -1440,29 +1556,29 @@ function DPIASection() {
                 <tr>
                   <th className="text-left p-2">Category</th>
                   <th className="text-left p-2">Examples</th>
-                  <th className="text-left p-2">Mode Required</th>
+                  <th className="text-left p-2">In the demo?</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 <tr>
                   <td className="p-2">Staff identifiers</td>
                   <td className="p-2">Name, role, ward</td>
-                  <td className="p-2">Medium+</td>
+                  <td className="p-2">Fictional only (Jane Austen cast)</td>
                 </tr>
                 <tr>
                   <td className="p-2">Patient identifiers</td>
-                  <td className="p-2">Name and ward only. Room and bed removed 28 Jul 2026</td>
-                  <td className="p-2">Max+</td>
+                  <td className="p-2">Name, ward, status, admission date and time, named nurse, consultant, ward professional, discharge fields. Room and bed removed 28 Jul 2026</td>
+                  <td className="p-2">Fictional only (classic novels), stored nowhere</td>
                 </tr>
                 <tr>
                   <td className="p-2">Health data</td>
-                  <td className="p-2">Task titles only. MHA status and clinical alerts removed 28 Jul 2026</td>
-                  <td className="p-2">Max+</td>
+                  <td className="p-2">Job titles only, and only inasmuch as a job title can imply care. MHA status, alerts and diagnoses removed 28 Jul 2026</td>
+                  <td className="p-2">No special category data held</td>
                 </tr>
                 <tr>
                   <td className="p-2">Audit data</td>
-                  <td className="p-2">User actions, timestamps</td>
-                  <td className="p-2">Medium+</td>
+                  <td className="p-2">Job history, hand-back reasons, who claimed what and when</td>
+                  <td className="p-2">In memory only, wiped by a refresh</td>
                 </tr>
               </tbody>
             </table>
@@ -1476,16 +1592,28 @@ function DPIASection() {
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <div className="bg-nhs-pale-grey p-4 rounded-lg">
-            <h3 className="font-semibold text-nhs-dark-grey mb-2">Current Demo (No PII)</h3>
-            <p className="text-nhs-dark-grey">User → Browser localStorage (device only). Nothing the user enters is transmitted. Hosting (Vercel) sees standard request logs; fonts are self-hosted; the Content-Security-Policy blocks connections to any other host.</p>
+            <h3 className="font-semibold text-nhs-dark-grey mb-2">Current Demo (No real PII)</h3>
+            <p className="text-nhs-dark-grey">
+              Three separate things, and they are worth keeping separate. <strong>The diary is not stored at all</strong> - claims, hand-backs and completions live in React state, so a refresh wipes them; nothing about a patient reaches the device or a server. <strong>Preferences are device-only</strong> - login choice, theme, guide order and personal links sit in that browser&apos;s localStorage. <strong>One thing is transmitted:</strong> the shared site password is POSTed to <code className="text-xs">/api/auth/verify-password</code>, which replies with a <code className="text-xs">site_access</code> cookie (httpOnly, 7 days) holding nothing but &ldquo;the password was right&rdquo;.
+            </p>
+            <p className="text-nhs-dark-grey mt-2">
+              Beyond that: hosting (Vercel) sees standard request logs, fonts are self-hosted, and the Content-Security-Policy blocks connections to any other host (<code className="text-xs">connect-src &apos;self&apos;</code>).
+            </p>
           </div>
           <div className="bg-nhs-pale-grey p-4 rounded-lg">
             <h3 className="font-semibold text-nhs-dark-grey mb-2">Future Live Build (Supabase)</h3>
-            <p className="text-nhs-dark-grey">User → Portal → Supabase (encrypted in transit, at rest). Region to be confirmed as UK before go-live. Configured but unused in the demo - no data is sent to it.</p>
+            <p className="text-nhs-dark-grey">User → Portal → Supabase (encrypted in transit and at rest). <strong>Region still to be confirmed as UK before go-live</strong> - it cannot be read from the repository and is an open action. Configured but unused by the app today: no feature queries it and no user data is sent to it.</p>
+            <p className="text-nhs-dark-grey mt-2 text-xs">
+              <strong>One exception, for completeness:</strong> a scheduled GitHub Action
+              (<code>supabase-keepalive.yml</code>) runs a daily <code>SELECT id LIMIT 1</code> against an
+              empty <code>feedback_posts</code> table so the free-tier project is not paused for
+              inactivity. It reads nothing and writes nothing, but it does mean the project is
+              contacted daily by automation. It uses a service key held in GitHub secrets.
+            </p>
           </div>
           <div className="bg-nhs-pale-grey p-4 rounded-lg">
-            <h3 className="font-semibold text-nhs-dark-grey mb-2">Max+ (Nexus Assurance)</h3>
-            <p className="text-nhs-dark-grey">Nexus → Webhook → Portal (Trust network only). One-way inbound sync marks audit tasks as complete.</p>
+            <h3 className="font-semibold text-nhs-dark-grey mb-2">Planned (Nexus Assurance)</h3>
+            <p className="text-nhs-dark-grey">Nexus → Webhook → Portal (Trust network only). One-way inbound sync marks audit jobs as complete. Not built.</p>
           </div>
         </CardContent>
       </Card>
@@ -1550,7 +1678,7 @@ function DPIASection() {
           </ul>
           <p className="mt-3">
             The portal does not create new patient records; it stores minimal operational data
-            for task tracking. In Max+ mode, Nexus sends audit completion events via webhook.
+            for job tracking. The planned Nexus link would send audit completion events inbound via webhook.
           </p>
         </CardContent>
       </Card>
@@ -1593,7 +1721,7 @@ function ClinicalSafetySection() {
       <div className="bg-nhs-warm-yellow/20 border border-nhs-warm-yellow rounded-lg p-4">
         <p className="text-sm text-nhs-black">
           <strong>Note:</strong> This section provides a starter framework. Full clinical safety
-          case requires Clinical Safety Officer review before Max/Max+ deployment.
+          case requires Clinical Safety Officer review before any build used on a real ward.
         </p>
       </div>
 
@@ -1615,55 +1743,72 @@ function ClinicalSafetySection() {
 
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-bold text-nhs-black">Hazard Log (Starter)</h2>
+          <h2 className="text-lg font-bold text-nhs-black">Hazard Log</h2>
+          <p className="text-xs text-nhs-mid-grey mt-1">
+            Summary only. <strong>The authoritative log is
+            <code className="bg-gray-100 px-1 rounded">docs/nhs-ready/03b-clinical-safety-hazard-log.md</code></strong>{" "}
+            - 23 hazards (HAZ-001 to HAZ-023) with scoring, controls and a review history.
+          </p>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-900">
+            <p className="font-semibold">This card used to be the problem it was describing.</p>
+            <p className="mt-1">
+              It listed four invented hazards (H001-H004) on a different numbering scheme to the real
+              log, with no risk scores and no mention of the go-live blockers. A Clinical Safety
+              Officer reading it would have concluded the hazard analysis had barely started. It had
+              not - it just was not here. Two sets of the same document is the underlying issue, and
+              the fix is to render the markdown rather than retype it. That is queued and needs a
+              decision on which copy wins.
+            </p>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-nhs-pale-grey">
                 <tr>
-                  <th className="text-left p-2">ID</th>
-                  <th className="text-left p-2">Hazard</th>
-                  <th className="text-left p-2">Severity</th>
-                  <th className="text-left p-2">Likelihood</th>
-                  <th className="text-left p-2">Control</th>
+                  <th className="text-left p-2">Initial risk (before controls)</th>
+                  <th className="text-left p-2">Count</th>
+                  <th className="text-left p-2">Notes</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
-                <tr>
-                  <td className="p-2">H001</td>
-                  <td className="p-2">Outdated clinical guidance displayed</td>
-                  <td className="p-2">Medium</td>
-                  <td className="p-2">Low</td>
-                  <td className="p-2">Version control, review dates, source links</td>
-                </tr>
-                <tr>
-                  <td className="p-2">H002</td>
-                  <td className="p-2">Wrong patient task assigned</td>
-                  <td className="p-2">Medium</td>
-                  <td className="p-2">Low</td>
-                  <td className="p-2">Patient confirmation, clear labelling, audit trail</td>
-                </tr>
-                <tr>
-                  <td className="p-2">H003</td>
-                  <td className="p-2">Missed task due to system unavailability</td>
-                  <td className="p-2">Low</td>
-                  <td className="p-2">Low</td>
-                  <td className="p-2">Fallback to paper diary, uptime monitoring</td>
-                </tr>
-                <tr>
-                  <td className="p-2">H004</td>
-                  <td className="p-2">Discharge without completing safety tasks</td>
-                  <td className="p-2">High</td>
-                  <td className="p-2">Low</td>
-                  <td className="p-2">Checklist enforcement, Ward Admin sign-off</td>
-                </tr>
+                <tr><td className="p-2">Very high (20-25)</td><td className="p-2">0</td><td className="p-2">-</td></tr>
+                <tr><td className="p-2">High (15-19)</td><td className="p-2">0 as deployed</td><td className="p-2">One conditional: HAZ-022 scores 16 if a browser-storage-only build were ever used as the operational diary. Recorded as a go-live blocker, not a current exposure</td></tr>
+                <tr><td className="p-2">Significant (9-14)</td><td className="p-2">3</td><td className="p-2">HAZ-015, HAZ-018, HAZ-019</td></tr>
+                <tr><td className="p-2">Moderate (5-8)</td><td className="p-2">5</td><td className="p-2">Includes the demo-state scoring of HAZ-022</td></tr>
+                <tr><td className="p-2">Low (1-4)</td><td className="p-2">15</td><td className="p-2">All others</td></tr>
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-nhs-mid-grey mt-3">
-            This is a starter log. Full hazard identification requires clinical input.
+          <p className="text-sm text-nhs-dark-grey">
+            With the proposed controls in place: nothing significant or above, one moderate (HAZ-019 -
+            printed copies can never be fully controlled), 22 low.
           </p>
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm">
+            <p className="font-semibold text-red-900">Go-live blockers</p>
+            <p className="text-red-800 mt-1">
+              <strong>HAZ-022</strong> - no shared server-side job store, so the diary is not a
+              reliable operational record. Resolves with trust-authenticated server-side storage
+              (DPIA measure M2). Neither blocks the demo continuing as a demo.
+            </p>
+            <p className="text-red-800 mt-2">
+              <strong>HAZ-020</strong> was the second blocker (chase log cleared at logout). The chase
+              log was <strong>retired entirely</strong> in Session 42, so this hazard no longer has a
+              subject - the markdown log needs updating to close it out. Flagged here because a stale
+              hazard log is its own safety problem.
+            </p>
+          </div>
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm">
+            <p className="font-semibold text-amber-900">The largest current clinical risk is content, not code</p>
+            <p className="text-amber-800 mt-1">
+              Of 68 guides, 1 is signed off, 47 await review and 20 are still in development. Guides
+              are built from Trust policy and every one carries a visible traffic-light badge, so
+              nothing is presented as approved when it is not - but the honest position is that most
+              of the clinical content has not yet been read by the department that owns it. That is
+              what the sign-off-by-specialty model is for, and it is the single most valuable thing
+              the Trust could give this project.
+            </p>
+          </div>
         </CardContent>
       </Card>
 
@@ -1725,7 +1870,7 @@ CREATE TABLE users (
             </div>
 
             <div className="bg-nhs-pale-grey p-4 rounded-lg overflow-x-auto">
-              <pre>{`-- Patients table (Max+ only)
+              <pre>{`-- Patients table (live build only - the demo stores no patients)
 -- No clinical columns by design (28 Jul 2026). legal_status, alerts,
 -- diagnoses, room and bed were all removed: wardHub is not the clinical
 -- record, so nothing it stored would have an owner keeping it current.
@@ -1745,7 +1890,9 @@ CREATE TABLE patients (
             </div>
 
             <div className="bg-nhs-pale-grey p-4 rounded-lg overflow-x-auto">
-              <pre>{`-- Tasks table
+              <pre>{`-- Jobs table. Brought in line with the app on 30 Jul 2026: this was
+-- missing hand-back, discharge barriers, mark-in-error and per-day
+-- completion, and defaulted priority to a value the app has never used.
 CREATE TABLE tasks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   type TEXT NOT NULL CHECK (type IN ('ward', 'patient', 'appointment')),
@@ -1753,14 +1900,49 @@ CREATE TABLE tasks (
   description TEXT,
   ward TEXT NOT NULL,
   patient_id UUID REFERENCES patients(id),
-  due_date DATE NOT NULL,
-  shift TEXT,
-  priority TEXT DEFAULT 'medium',
+  due_date DATE NOT NULL,                -- appointments use appointment_date
+  shift TEXT CHECK (shift IN ('early', 'late', 'night')),
+  priority TEXT NOT NULL DEFAULT 'routine'
+    CHECK (priority IN ('routine', 'important', 'urgent')),
   status TEXT DEFAULT 'pending',
   claimed_by UUID REFERENCES users(id),
+  linked_guide_id TEXT,                  -- opens the guide from the job
+
+  -- Recurring jobs are ONE row rendered on every day they fall due, so
+  -- completion cannot live in status - it would close the whole week.
+  is_recurring BOOLEAN DEFAULT FALSE,
+  recurring_days SMALLINT[],             -- 0 = Sunday
+  completed_dates DATE[] DEFAULT '{}',   -- one entry per day completed
+
+  -- Discharge barriers. Patient jobs and appointments only.
+  blocks_discharge BOOLEAN DEFAULT FALSE,
+
+  -- Hand-back. Structured, no free text anywhere by design.
+  handback_state TEXT,                   -- what state the job is in
+  handback_reason TEXT,                  -- why it is going back
+  waiting_on TEXT,                       -- who we are waiting for
+  chase_date DATE,
+
+  -- Mark in error replaced delete. Excluded from every count, kept for
+  -- audit, restorable from the reports page.
+  in_error BOOLEAN DEFAULT FALSE,
+  marked_in_error_by UUID REFERENCES users(id),
+  marked_in_error_at TIMESTAMPTZ,
+
   created_by UUID REFERENCES users(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   completed_at TIMESTAMPTZ
+);
+
+-- Append-only, so reopening a job loses nothing.
+CREATE TABLE task_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  event TEXT NOT NULL,                   -- claimed, handed back, completed...
+  event_date DATE,                       -- which day, for recurring jobs
+  actor UUID REFERENCES users(id),
+  detail JSONB,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );`}</pre>
             </div>
           </div>
@@ -1842,8 +2024,8 @@ function WebhooksSection() {
             </div>
           </div>
           <p className="mt-2">
-            <strong>Light–Max:</strong> Link-only integration (button opens Nexus dashboard)<br />
-            <strong>Max+:</strong> Auto-sync via chosen mechanism when task completed
+            <strong>Today:</strong> link-only - the job carries a button that opens the Nexus dashboard.<br />
+            <strong>Planned:</strong> auto-sync, so completing the audit on Nexus ticks the job here.
           </p>
         </CardContent>
       </Card>
@@ -1854,23 +2036,30 @@ function WebhooksSection() {
         </CardHeader>
         <CardContent>
           <div className="bg-nhs-pale-grey p-4 rounded-lg font-mono text-xs overflow-x-auto">
-            <pre>{`// Outbound: Task completion webhook
-POST /webhook/assurance-task-complete
+            <pre>{`// INBOUND to wardHub. Nexus (or Power Automate on its behalf) is the
+// sender; wardHub only ever receives. It never writes to Nexus - see the
+// Nexus Assurance section, "Direction: One-Way Inbound".
+POST /api/nexus/task-complete
 Headers:
-  X-Webhook-Secret: [shared-secret]
+  X-Nexus-Token: [shared-secret]
   Content-Type: application/json
 
 Body:
 {
-  "eventType": "task.completed",
-  "taskId": "uuid",
+  "event": "audit_completed",
   "auditType": "fridge_temps",
-  "ward": "Byron",
+  "ward": "byron",
   "completedBy": "Staff Name",
-  "completedAt": "2026-01-29T08:30:00Z",
-  "notes": "Optional completion notes",
+  "completedAt": "2026-07-30T08:30:00Z",
+  "nexusRefId": "NX-2026-0730-001",
   "idempotencyKey": "uuid"
 }`}</pre>
+            <p className="text-xs text-nhs-mid-grey mt-2">
+              This block previously described an <em>outbound</em> POST to
+              <code className="bg-gray-100 px-1 rounded">/webhook/assurance-task-complete</code>,
+              which contradicted the Nexus section on the same panel and would have been the first
+              thing a technical reviewer picked up. There is one endpoint and one direction.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -1898,7 +2087,7 @@ function NexusSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-nhs-black">Nexus Assurance Integration (MAX+)</h1>
+        <h1 className="text-2xl font-bold text-nhs-black">Nexus Assurance Integration (planned)</h1>
         <p className="text-nhs-dark-grey mt-1">Automated audit compliance sync</p>
       </div>
 
@@ -2023,7 +2212,7 @@ Response: 200 OK
             "Authentication via shared secret (rotated quarterly)",
             "No PII transmitted – only audit type, ward, and staff ID",
             "Fallback: if integration fails, staff can still mark task complete manually",
-            "DPIA update required for Max+ deployment",
+            "DPIA update required before the Nexus link goes live",
           ].map((item, i) => (
             <div key={i} className="flex items-center gap-3 p-2 bg-nhs-pale-grey rounded">
               <CheckCircle className="w-4 h-4 text-nhs-green flex-shrink-0" />
@@ -2046,16 +2235,15 @@ function RoadmapSection() {
       title: "Proof of Concept",
       status: "current",
       gradient: "from-green-500 to-emerald-600",
-      icon: "🧪",
       items: [
         {
           title: "Showcase to Clinical Leads",
-          description: "Present the working demo to ward managers and matrons. Focus on the referral workflows and task diary – the features that solve the most immediate pain points.",
+          description: "Done at ward level, then taken up: the executive sponsor session is 30 July 2026, with the Executive Director of Nursing, the Clinical Lead, Transformation and IG in the room. The ask made there is a two-ward pilot on the full build, a named IG contact, and a clinical sign-off route split by specialty.",
           status: "next",
         },
         {
           title: "Build Resources Organically",
-          description: "Start with light, real use – a few non-essential tasks to test workflows. Resources grow as users add their own links, request new guides, and flag gaps. The content is shaped by the people who use it.",
+          description: "Already happening, and it is the strongest evidence the project has. The app went online in January; six months of staff asking for what they needed next grew it to 68 step-by-step guides, a shared team diary, a 942-question quiz built from the Trust's own policy library, and a live view of what is blocking discharge. Nobody was assigned to write any of it.",
           status: "planned",
         },
         {
@@ -2082,16 +2270,19 @@ function RoadmapSection() {
       title: "Approval & Data Decisions",
       status: "future",
       gradient: "from-blue-500 to-indigo-600",
-      icon: "📋",
       items: [
         {
           title: "What Data is Essential?",
-          description: "Determine the minimum data needed for the tool to be useful. Every field stored is a governance question to answer.",
+          description: "Determine the minimum data needed for the tool to be useful. Every field stored is a governance question to answer. This one is largely settled already, and settled downwards.",
           status: "planned",
           decisions: [
             {
-              question: "Patient data – what's the minimum?",
-              options: ["Name + ward + named professional only", "Add diagnosis and legal status", "Full clinical record link"],
+              question: "Patient data – what's the minimum? (ANSWERED 28 Jul 2026)",
+              options: [
+                "SETTLED: name, ward, status, admission date and time, named nurse, consultant, ward professional, discharge fields. Nothing clinical",
+                "Still open: should named nurse, consultant and admission date follow MHA status out of the record? The 'who keeps this current' argument reaches them too",
+                "CLOSED, do not re-propose: adding diagnosis, MHA legal status, alerts, risks, room or bed. These were removed deliberately on clinical-safety grounds - wardHub is not the clinical record, so nothing it held would have an owner keeping it current, and a member of staff could act on a stale value. They return only if the Trust asks for far more than is being offered",
+              ],
             },
             {
               question: "Staff data – what do we need?",
@@ -2135,7 +2326,7 @@ function RoadmapSection() {
                 "The staff member who completed the task",
                 "Named nurse at end of shift",
                 "Ward admin on discharge",
-                "Automated via webhook (Max+)",
+                "Automated via the planned Nexus webhook",
               ],
             },
           ],
@@ -2148,7 +2339,6 @@ function RoadmapSection() {
       title: "Development & Security",
       status: "future",
       gradient: "from-purple-500 to-violet-600",
-      icon: "🔨",
       items: [
         {
           title: "Trust Provides Code Skeleton",
@@ -2173,7 +2363,6 @@ function RoadmapSection() {
       title: "Implementation",
       status: "future",
       gradient: "from-amber-500 to-orange-600",
-      icon: "🚀",
       items: [
         {
           title: "Start with Two Wards",
@@ -2236,7 +2425,6 @@ function RoadmapSection() {
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            <span>{stage.icon}</span>
             <span>{stage.phase}</span>
             {stage.status === "current" && expanded !== stage.id && (
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -2252,7 +2440,6 @@ function RoadmapSection() {
           <div key={stage.id} className="space-y-4">
             <div className={`bg-gradient-to-r ${stage.gradient} rounded-2xl p-5 text-white`}>
               <div className="flex items-center gap-3">
-                <span className="text-3xl">{stage.icon}</span>
                 <div>
                   <p className="text-sm font-medium text-white/70">{stage.phase}</p>
                   <h2 className="text-xl font-bold">{stage.title}</h2>
@@ -2420,7 +2607,7 @@ function RoadmapSection() {
                     },
                     {
                       title: "Multi-Trust Potential",
-                      desc: "The four-tier version model means any NHS Trust could deploy the Light version immediately with their own content. The architecture is Trust-agnostic – only the data is specific.",
+                      desc: "The architecture is Trust-agnostic - only the content is specific. Another Trust could take the same build, point it at their own policies and contacts, and be running a guides-and-diary version quickly. The transferable asset is the content model and the sign-off structure, not the code.",
                     },
                     {
                       title: "Meet with SystmOne Team (TPP)",
@@ -2449,23 +2636,29 @@ function RoadmapSection() {
 function QAPackSection() {
   const qaItems = [
     { q: "What is wardHub?", a: "A reference and task management tool built for NHS inpatient wards. It helps staff find referral workflows, clinical guides, and manage their daily tasks in one place." },
-    { q: "Who built it?", a: "Built by Mike, a staff nurse at Derbyshire Healthcare NHS Foundation Trust, using modern web technology (Next.js, TypeScript, Tailwind CSS)." },
-    { q: "Does it store patient data?", a: "The demo version uses fictional data only. The live version (Max) would store minimal patient data (name, ward, legal status) with full DPIA approval and Trust infrastructure hosting." },
-    { q: "How does it fit with existing systems?", a: "wardHub sits alongside existing systems, not replacing them. Referral workflows link to official forms and processes. The Max+ version can integrate with the Trust's Nexus Assurance platform for audit task completion." },
-    { q: "What about GDPR?", a: "Light version: no personal data at all. Medium+: full DPIA required before deployment. Data minimisation principle applied throughout. See the DPIA Draft section for details." },
+    // "Staff nurse" is deliberate, not stale (PRESENTATION-PLAN-30JUL.md, 0:00-0:03):
+    // NIC is a rotating role that would confuse half the room, and "staff nurse" is
+    // the stronger framing - this came from the floor, not from a title. Do not
+    // "correct" it to Ward NIC in a later review.
+    { q: "Who built it?", a: "Built by Mike, a staff nurse at Derbyshire Healthcare NHS Foundation Trust, in his own time, using modern web technology (Next.js, TypeScript, Tailwind CSS)." },
+    { q: "Does it store patient data?", a: "The demo uses fictional data only, and the demo diary is not stored anywhere at all - it lives in the page's memory and a refresh wipes it. A live build would hold a deliberately short list: name, ward, status, admission date and time, named nurse, consultant, ward professional, and the discharge fields. Nothing clinical. MHA legal status, alerts and diagnoses were removed entirely on 28 July 2026 and are not coming back - see the Data Catalogue for the reasoning, which is clinical safety as much as information governance." },
+    { q: "How does it fit with existing systems?", a: "wardHub sits alongside existing systems, not replacing them. Referral workflows link to official forms and processes, and finishing one produces a case note you copy into SystmOne - wardHub never writes to the clinical record. The planned Nexus Assurance link would let a completed audit on Nexus tick the matching job here, so staff do not update two systems." },
+    { q: "What about GDPR?", a: "The demo holds no real personal data and stores no tasks. A live build handling real patient data needs a completed DPIA before it goes anywhere near a ward. Data minimisation is the design, not an afterthought: the patient record was cut back twice, most recently on 28 July 2026. See the DPIA Draft section." },
     { q: "Is it clinically safe?", a: "wardHub is a reference tool, not a clinical decision-making system. It presents existing Trust processes in an accessible format. DCB 0129 review is planned for clinical safety sign-off." },
-    { q: "How much does it cost?", a: "The software is free (open-source). Costs come from Trust IT hosting (Route A) or external security audit (Route B). Both options are low-cost compared to commercial alternatives." },
-    { q: "Can other wards use it?", a: "Yes. The content is ward-configurable. Each ward can add their own links, guides, and task templates. The architecture is Trust-agnostic, so other Trusts could deploy it too." },
+    { q: "How much does it cost?", a: "No budget is being asked for. The software is free (open-source stack, no vendor fees) and the build was done in the project owner's own time. The real cost is Trust time: hosting and a security review, plus the IG and clinical sign-off effort." },
+    { q: "Can other wards use it?", a: "Yes. The content is ward-configurable. Each ward can add their own links, guides, and task templates. The architecture is Trust-agnostic, so other Trusts could deploy it too. Scaling is a content-ownership question rather than a technical one - which is what the sign-off-by-specialty model is for." },
     { q: "What happens if the developer leaves?", a: "The codebase is documented, version-controlled, and built with standard technologies. Any web developer could maintain it. The Dev Panel itself serves as full handover documentation." },
     { q: "How do staff learn to use it?", a: "No formal training needed. The app includes an interactive demo tour, intro guide, and FAQ. The design philosophy is: if you need a manual, the UX has failed." },
     { q: "What is the pilot plan?", a: "Two wards running a light trial alongside existing processes, for 4-6 weeks. Two rather than one because a single ward cannot tell you whether a change came from the tool or from the week it had. No disruption, no budget. If it helps, expand. If it does not, it cost almost nothing to find out." },
-    { q: "Who approves this going live?", a: "Trust Digital Services for hosting and security. Information Governance for DPIA approval. Clinical Safety Officer for DCB 0129 sign-off. Ward management for operational sign-off." },
+    { q: "Who approves this going live?", a: "Trust Digital Services for hosting and security. Information Governance for DPIA approval. Clinical Safety Officer for DCB 0129 sign-off. Ward management for operational sign-off. Content is the separate question - see the next answer." },
+    { q: "Who signs off the clinical content? One person cannot read 68 guides.", a: "Nobody is being asked to. The model is sign-off by specialty: each guide belongs to the department that owns the subject, and that department signs its own shelf. Safeguarding signs the safeguarding guides, the MHA office signs the MHA ones, pharmacy signs the medicines ones. Each guide was built from the relevant Trust policies and procedures at once, with contradictions between sources flagged automatically, so what a reviewer is being asked for is a quick expert eyeball rather than a rewrite. The traffic-light badge on every guide shows exactly where each one stands - and today that is honest rather than flattering: 1 green, 47 awaiting review, 20 still in development. Content is the project's biggest open risk, not the code." },
+    { q: "What are the three kinds of data in here?", a: "Worth separating, because they carry completely different risk. One: the skeleton - the app itself, its structure and its code, which contains no Trust information at all. Two: Trust content - the guides, referral steps and links derived from Trust policy, which is publishable material and the thing the sign-off model governs. Three: patient data - names, wards and jobs, which the demo does not hold in any real form and which only enters when the Trust approves hosting, signs the DPIA and takes data-controller ownership. Most governance conversations get harder than they need to be because these three get discussed as one thing." },
     // The question the demo has to survive: who said you could put Trust policy
     // information in a third-party database? The answer only holds while it is
     // literally true, which is why the fictional-detail rule is load-bearing and
     // not cosmetic (BACKLOG Section K).
     { q: "Who gave you permission to put Trust policy information in Supabase?", a: "No one - and nothing in the demo needs it. Supabase holds three things: derived publishable guide content, which is the same classification already on the gated public site; fictional demo data; and nothing else. No policy documents, no patient data, no internal contacts. Policies stay on FOCUS and SharePoint, Copilot reads them inside the Trust tenant, and only publishable output crosses out. Real internal detail and real patient data only enter when the Trust approves hosting, signs the DPIA and takes data-controller ownership. Getting through that gate properly is exactly what I am here to ask for." },
-    { q: "Where does the data actually live?", a: "Today: the gated demo site on Vercel, plus a Supabase project that is wired but dormant - no feature queries it, and the client is deliberately kept out of the shared exports so its keys never reach the browser bundle. Any write keys live in Vercel environment settings, never in the repository. In production this is the Trust's decision: their hosting, their authentication, their database, or a direct SharePoint connection once IT grants an app registration." },
+    { q: "Where does the data actually live?", a: "Today: the gated demo site on Vercel, plus a Supabase project that is wired but dormant - no feature in the app queries it, and the client is deliberately kept out of the shared exports so its URL and keys never reach the browser bundle. Keys live in Vercel and GitHub environment settings, never in the repository. One honest caveat: a scheduled GitHub Action runs a daily SELECT against an empty feedback_posts table purely to stop the free-tier project being paused for inactivity, so the project is touched once a day by automation even though the app never touches it. The Supabase region still needs reading off the dashboard and confirming as UK before anything real goes near it. In production this is all the Trust's decision: their hosting, their authentication, their database, or a direct SharePoint connection once IT grants an app registration." },
     { q: "What internal Trust detail is in the demo?", a: "None. Contacts that are not publicly findable show 'Hidden in demo mode'; the real values are held outside the repository. What you can see is public and meant to be used - council duty lines, charity helplines, advocacy providers, crisis numbers. Anything published through the guide pipeline before Trust approval uses realistic but fictional internal detail, so 'no placeholders on screen' and 'nothing leaked' are both true at once." },
   ];
 
@@ -2542,36 +2735,39 @@ function EvaluationsSection() {
       icon: "💻",
       perspective: "Technical governance",
       benefits: [
-        "Modern, maintainable stack (Next.js, TypeScript, Tailwind)",
-        "Four-tier version model allows incremental deployment",
-        "Light version runs on Vercel with zero Trust infrastructure",
-        "DPIA draft and clinical safety sections pre-prepared",
-        "Supabase schemas drafted for Medium+ migration",
+        "Modern, maintainable stack (Next.js 16, TypeScript, Tailwind) with no exotic dependencies",
+        "Gates run on every push: typecheck, lint, test and build via GitHub Actions, all currently green",
+        "DPIA draft, hazard log and data catalogue already written, not left as a to-do",
+        "Supabase schemas drafted, so the data model is reviewable before anything is built",
+        "A dormant-by-design backend: the Supabase client is deliberately excluded from the shared exports so its URL and keys never reach the browser bundle",
       ],
       concerns: [
-        "Max+ requires Trust hosting and webhook integration",
-        "Single developer dependency (mitigated by documentation)",
-        "Need security audit before any PII-handling version goes live",
+        "Single developer dependency. Documentation mitigates it; a bus factor of one does not go away",
+        "Security audit needed before any build that handles real patient data",
+        "main has no branch protection, and Vercel deploys straight from it - so CI can be red and a deploy still ships",
+        "Deployment is currently on Vercel, outside Trust infrastructure, which is one of the decisions being asked for",
+        "The published site sits behind a single shared password with no individual accounts and, until it is hardened, no rate limiting on the check",
       ],
-      verdict: "Low risk for Light/Medium. Standard governance pathway for Max. Well-documented for handover.",
+      verdict: "Well-documented and conventionally built, which makes it cheap to audit. The open questions are hosting, authentication and who owns it long-term - not the code.",
     },
     {
       role: "Information Governance",
       icon: "🔒",
       perspective: "Data protection",
       benefits: [
-        "Light version has zero personal data",
-        "Contact data classification system (public vs trust-sensitive)",
-        "DPIA draft section ready for review",
-        "Trust-sensitive data hidden in demo mode, revealed by single flag change at go-live",
-        "No patient data leaves Trust network in Max version",
+        "The demo holds no real personal data, and the diary is stored nowhere at all - it is page memory, wiped by a refresh",
+        "No special category data anywhere: MHA status, alerts and diagnoses were removed on 28 July 2026, and a test in the suite fails if they reappear",
+        "Contact data classification system (public vs trust-sensitive), with trust-sensitive values held outside the repository entirely",
+        "DPIA draft and hazard log already written, ready for review rather than starting from blank",
+        "Data minimisation is visible in the history: the patient record has been cut back twice, never widened",
       ],
       concerns: [
-        "Max version stores patient names and ward assignments",
-        "Need to agree data retention periods for task history",
-        "Audit trail requirements for who changed what",
+        "A live build stores patient names, wards and job titles - real personal data, needing a real DPIA",
+        "Need to agree data retention periods for task history and the hand-back audit trail",
+        "The site currently sits behind one shared password with no individual accounts, so there is no per-user audit trail yet",
+        "Task titles are free text, so a member of staff could type clinical detail into one - a training and wording control, not a technical one",
       ],
-      verdict: "Light version is straightforward. Max version needs standard DPIA approval before deployment.",
+      verdict: "Unusually clean for a pre-approval demo, and the removals were volunteered rather than requested. The live build needs a standard DPIA, a decision on hosting, and individual authentication before any real patient data.",
     },
     {
       role: "Patient / Service User",
@@ -2856,6 +3052,50 @@ function DataSourcesSection() {
         </div>
       </div>
 
+      <Card>
+        <CardHeader>
+          <h2 className="text-lg font-bold text-nhs-black">Revision Quiz (942 questions)</h2>
+          <p className="text-xs text-nhs-mid-grey mt-1">
+            The largest single block of sourced content in wardHub, and it was missing from this log
+            until 30 July 2026.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm text-nhs-dark-grey">
+          <p>
+            <strong>942 questions across 43 topics.</strong> 574 of them (61%) were written from
+            <strong> 117 distinct Derbyshire Healthcare documents</strong>; the rest come from
+            national guidance (NICE, MHA Code of Practice, RCPsych and similar). Trust topics lead
+            the topic picker, because local practice is what staff actually get asked about.
+          </p>
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <p className="font-semibold text-amber-900">Two honest limitations</p>
+            <p className="text-amber-800 mt-1">
+              <strong>The policy library it was written from is a snapshot.</strong> Where a source
+              document was near or past its stated review date, the question shows a quiet &ldquo;check
+              FOCUS for the current version&rdquo; line after you answer. A question flagged that way
+              is not necessarily wrong - our copy may simply be older than the live one. Nothing here
+              should be used to assert that a Trust policy is out of date.
+            </p>
+            <p className="text-amber-800 mt-2">
+              <strong>The quiz carries no sign-off status.</strong> Every guide has a traffic light;
+              the quiz does not, despite marking staff right or wrong against Trust policy. Whether it
+              should is an open decision.
+            </p>
+          </div>
+          <p>
+            Five questions were deliberately left out where two Trust documents give different
+            answers, and one more where a system change had overtaken the policy. Those, and every
+            other conflict found while reading the library, are listed below and in a separate
+            write-up kept outside the repository for the Trust to action - including the finding that
+            none of the five rapid tranquillisation documents describes a benzodiazepine reversal
+            pathway.
+          </p>
+          <p className="text-xs text-nhs-mid-grey">
+            Per-question sourcing: <code>docs/quiz-question-bank.md</code>. Still to be proofread.
+          </p>
+        </CardContent>
+      </Card>
+
       <ConflictsCard />
 
       <Card>
@@ -2882,7 +3122,7 @@ function DataSourcesSection() {
 
       <Card>
         <CardContent className="p-4 text-center text-sm text-nhs-mid-grey">
-          <p>This audit log is a representative sample - the authoritative sourcing lives in each guide (and its FOCUS links). Maintained as part of wardHub GDPR compliance. Last updated: 2 July 2026</p>
+          <p>This audit log is a representative sample - the authoritative sourcing lives in each guide (and its FOCUS links). Maintained as part of wardHub GDPR compliance. Last reviewed: 30 July 2026</p>
         </CardContent>
       </Card>
     </div>

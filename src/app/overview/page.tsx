@@ -1311,7 +1311,10 @@ export default function OverviewPage() {
     () => tasks.find((t) => t.id === detailTaskId) ?? null,
     [tasks, detailTaskId]
   );
-  const openTaskDetail = useCallback((task: DiaryTask) => setDetailTaskId(task.id), []);
+  // setDetailTaskId is listed even though a state setter is already stable:
+  // without it the React Compiler refuses to optimise this component at all
+  // (react-hooks/preserve-manual-memoization).
+  const openTaskDetail = useCallback((task: DiaryTask) => setDetailTaskId(task.id), [setDetailTaskId]);
 
   // Pop-out for one patient. Held by id, not by object, so the panel re-reads
   // live task state as jobs are ticked off underneath it.

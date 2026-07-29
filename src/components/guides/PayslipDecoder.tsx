@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState, useContext, createContext, type ReactNode } from "react";
 import { Check, MousePointerClick, Info } from "lucide-react";
 
 // A fictional but internally-consistent NHS (ESR) payslip used to teach the
@@ -48,6 +48,91 @@ const LABELS: Record<string, string> = {
 
 const TOTAL = Object.keys(EXPLAIN).length;
 
+// The four building blocks below live at module scope on purpose. They used to
+// be declared inside PayslipDecoder, which gave them a fresh identity on every
+// render, so React threw away and rebuilt every box each time state changed
+// instead of updating it (eslint: react-hooks/static-components).
+//
+// They need the decoder's state, and threading it through 36 call sites would
+// bury the payslip layout in plumbing, so it arrives by context instead. Call
+// sites read exactly as they did.
+interface DecoderCtx {
+  selected: string | null;
+  visited: Set<string>;
+  pick: (id: string) => void;
+  boxCls: (id: string) => string;
+}
+
+const DecoderContext = createContext<DecoderCtx | null>(null);
+
+function useDecoder(): DecoderCtx {
+  const ctx = useContext(DecoderContext);
+  if (!ctx) throw new Error("Payslip decoder parts must render inside PayslipDecoder");
+  return ctx;
+}
+
+// A clickable/teachable header cell (label on top, value below). Static cells
+// (no id) pass their own label; teachable cells take it from LABELS.
+const Cell = ({ id, value, label: staticLabel, cls = "" }: { id?: string; value: ReactNode; label?: string; cls?: string }) => {
+  const { selected, visited, pick, boxCls } = useDecoder();
+  const teach = id && EXPLAIN[id];
+  const label = id ? LABELS[id] : staticLabel ?? "";
+  const inner = (
+    <>
+      {label && <span className="block text-[9px] uppercase tracking-wide text-slate-400 leading-tight">{label}</span>}
+      <span className="block text-[13px] font-semibold tabular-nums leading-tight flex items-center gap-1">
+        {id && visited.has(id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{value}
+      </span>
+    </>
+  );
+  if (!teach) return <div className={`px-2 py-1.5 ${cls}`}>{inner}</div>;
+  return (
+    <button onClick={() => pick(id!)} aria-pressed={selected === id} className={`px-2 py-1.5 text-left w-full transition-colors ${boxCls(id!)} ${cls}`}>{inner}</button>
+  );
+};
+
+// A clickable Pay and Allowance line (5 columns).
+const PayLine = ({ id, wkd, paid, rate, amount, strong }: { id: string; wkd?: string; paid?: string; rate?: string; amount: string; strong?: boolean }) => {
+  const { selected, visited, pick, boxCls } = useDecoder();
+  return (
+    <button onClick={() => pick(id)} aria-pressed={selected === id}
+      className={`w-full grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] px-2 py-1 text-[12px] tabular-nums border-t border-slate-200 transition-colors ${boxCls(id)} ${strong ? "font-bold bg-slate-50" : ""}`}>
+      <span className="text-left flex items-center gap-1">{visited.has(id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{LABELS[id]}</span>
+      <span className="text-right text-slate-500">{wkd ?? ""}</span>
+      <span className="text-right text-slate-500">{paid ?? ""}</span>
+      <span className="text-right text-slate-500">{rate ?? ""}</span>
+      <span className="text-right">{amount}</span>
+    </button>
+  );
+};
+
+// A clickable Deductions line (3 columns: description / amount / balance c/f).
+const DedLine = ({ id, amount, strong }: { id: string; amount: string; strong?: boolean }) => {
+  const { selected, visited, pick, boxCls } = useDecoder();
+  return (
+    <button onClick={() => pick(id)} aria-pressed={selected === id}
+      className={`w-full grid grid-cols-[1.4fr_1fr_1fr] px-2 py-1 text-[12px] tabular-nums border-t border-slate-200 transition-colors ${boxCls(id)} ${strong ? "font-bold bg-slate-50" : ""}`}>
+      <span className="text-left flex items-center gap-1">{visited.has(id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{LABELS[id]}</span>
+      <span className="text-right">{amount}</span>
+      <span className="text-right text-slate-400"></span>
+    </button>
+  );
+};
+
+// A small labelled figure in the bottom summary grids.
+const Fig = ({ id, label, value }: { id?: string; label: string; value: string }) => {
+  const { selected, visited, pick, boxCls } = useDecoder();
+  const teach = id && EXPLAIN[id];
+  const body = (
+    <>
+      <span className="text-slate-500">{label}</span>
+      <span className="text-right tabular-nums font-medium flex items-center justify-end gap-1">{id && visited.has(id) && <Check className="w-3 h-3 text-emerald-500" />}{value}</span>
+    </>
+  );
+  if (!teach) return <div className="grid grid-cols-[1fr_auto] gap-x-2 px-2 py-0.5">{body}</div>;
+  return <button onClick={() => pick(id!)} aria-pressed={selected === id} className={`grid grid-cols-[1fr_auto] gap-x-2 px-2 py-0.5 w-full text-left transition-colors ${boxCls(id!)}`}>{body}</button>;
+};
+
 export function PayslipDecoder() {
   const [selected, setSelected] = useState<string | null>(null);
   const [visited, setVisited] = useState<Set<string>>(new Set());
@@ -62,63 +147,10 @@ export function PayslipDecoder() {
   const boxCls = (id: string) =>
     selected === id ? "bg-nhs-blue/10 ring-1 ring-inset ring-nhs-blue" : visited.has(id) ? "bg-emerald-50" : "hover:bg-slate-100";
 
-  // A clickable/teachable header cell (label on top, value below). Static cells
-  // (no id) pass their own label; teachable cells take it from LABELS.
-  const Cell = ({ id, value, label: staticLabel, cls = "" }: { id?: string; value: ReactNode; label?: string; cls?: string }) => {
-    const teach = id && EXPLAIN[id];
-    const label = id ? LABELS[id] : staticLabel ?? "";
-    const inner = (
-      <>
-        {label && <span className="block text-[9px] uppercase tracking-wide text-slate-400 leading-tight">{label}</span>}
-        <span className="block text-[13px] font-semibold tabular-nums leading-tight flex items-center gap-1">
-          {id && visited.has(id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{value}
-        </span>
-      </>
-    );
-    if (!teach) return <div className={`px-2 py-1.5 ${cls}`}>{inner}</div>;
-    return (
-      <button onClick={() => pick(id!)} aria-pressed={selected === id} className={`px-2 py-1.5 text-left w-full transition-colors ${boxCls(id!)} ${cls}`}>{inner}</button>
-    );
-  };
-
-  // A clickable Pay and Allowance line (5 columns).
-  const PayLine = ({ id, wkd, paid, rate, amount, strong }: { id: string; wkd?: string; paid?: string; rate?: string; amount: string; strong?: boolean }) => (
-    <button onClick={() => pick(id)} aria-pressed={selected === id}
-      className={`w-full grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] px-2 py-1 text-[12px] tabular-nums border-t border-slate-200 transition-colors ${boxCls(id)} ${strong ? "font-bold bg-slate-50" : ""}`}>
-      <span className="text-left flex items-center gap-1">{visited.has(id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{LABELS[id]}</span>
-      <span className="text-right text-slate-500">{wkd ?? ""}</span>
-      <span className="text-right text-slate-500">{paid ?? ""}</span>
-      <span className="text-right text-slate-500">{rate ?? ""}</span>
-      <span className="text-right">{amount}</span>
-    </button>
-  );
-
-  // A clickable Deductions line (3 columns: description / amount / balance c/f).
-  const DedLine = ({ id, amount, strong }: { id: string; amount: string; strong?: boolean }) => (
-    <button onClick={() => pick(id)} aria-pressed={selected === id}
-      className={`w-full grid grid-cols-[1.4fr_1fr_1fr] px-2 py-1 text-[12px] tabular-nums border-t border-slate-200 transition-colors ${boxCls(id)} ${strong ? "font-bold bg-slate-50" : ""}`}>
-      <span className="text-left flex items-center gap-1">{visited.has(id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{LABELS[id]}</span>
-      <span className="text-right">{amount}</span>
-      <span className="text-right text-slate-400"></span>
-    </button>
-  );
-
-  // A small labelled figure in the bottom summary grids.
-  const Fig = ({ id, label, value }: { id?: string; label: string; value: string }) => {
-    const teach = id && EXPLAIN[id];
-    const body = (
-      <>
-        <span className="text-slate-500">{label}</span>
-        <span className="text-right tabular-nums font-medium flex items-center justify-end gap-1">{id && visited.has(id) && <Check className="w-3 h-3 text-emerald-500" />}{value}</span>
-      </>
-    );
-    if (!teach) return <div className="grid grid-cols-[1fr_auto] gap-x-2 px-2 py-0.5">{body}</div>;
-    return <button onClick={() => pick(id!)} aria-pressed={selected === id} className={`grid grid-cols-[1fr_auto] gap-x-2 px-2 py-0.5 w-full text-left transition-colors ${boxCls(id!)}`}>{body}</button>;
-  };
-
   const sel = selected;
 
   return (
+    <DecoderContext.Provider value={{ selected, visited, pick, boxCls }}>
     <div className="mt-6 rounded-2xl border-2 border-slate-200 bg-slate-50 p-4 sm:p-5">
       <div className="flex items-center gap-2 mb-1">
         <MousePointerClick className="w-5 h-5 text-nhs-blue" />
@@ -254,5 +286,6 @@ export function PayslipDecoder() {
         your own payslip is the source of truth. Payroll and HR do not use this tool.
       </p>
     </div>
+    </DecoderContext.Provider>
   );
 }

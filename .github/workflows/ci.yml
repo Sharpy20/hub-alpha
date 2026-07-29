@@ -1,0 +1,53 @@
+name: CI
+
+# Runs the four gates that were previously only run when someone remembered.
+# That is how 26 typecheck errors sat in the repo for months (28 Jul evaluation).
+#
+# Deliberately does NOT gate deployment: Vercel builds on push independently, so
+# a red tick here is a signal to look, never a blocked demo.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A second push to the same branch cancels the first - no point finishing a run
+# for code that has already been replaced.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # ci, not install: installs exactly what package-lock.json pins, and fails
+      # rather than quietly updating it.
+      - name: Install dependencies
+        run: npm ci
+
+      # Ordered cheapest-first, and each one runs even if an earlier one fails
+      # (if: always()), so one push tells you everything that is wrong rather
+      # than only the first thing.
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        if: '!cancelled()'
+        run: npm run lint
+
+      - name: Test
+        if: '!cancelled()'
+        run: npm test
+
+      - name: Build
+        if: '!cancelled()'
+        run: npm run build

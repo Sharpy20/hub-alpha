@@ -58,6 +58,18 @@ verbally goes in here the same session from now on.
 - Verified in the browser: dropdown opens, demo view opens and returns, ward switch applies
   and turns Help amber, mobile menu reads correctly, zero console errors.
 
+**Evaluation template -> 2.1, same session.** Mike deletes superseded evaluations, which only
+works if the newest file is a complete record. It was not: the 28 Jul report cites the June one
+by name and scores findings as "third appearance", and both claims die with the file. 2.1 now
+reads **every** prior evaluation and deep dive, and carries three tables forward - a
+**recommendation ledger** (nothing leaves it by being forgotten, only by appearing once as Done
+or Dropped), **metric history** (one column per evaluation), and **standing decisions and parked
+items** (so settled calls and licence-blocked work are never re-proposed). The scorecard carries
+every past score. Added a **two-way cross-check against this BACKLOG**, reported as mismatches,
+because a finding that lives only in an evaluation is a finding nobody actions. Archiving policy
+flipped: the newest report is the record, older full evaluations can be deleted, deep dives are
+kept. **Write the new report before deleting the old ones.**
+
 **Open follow-up:** [ ] **Task management - move "Mark in error" inside the Edit option**
 (Mike, 29 Jul). It is currently its own control on the task card
 (`src/app/tasks/page.tsx` ~line 1077) sitting alongside the everyday actions, which makes an

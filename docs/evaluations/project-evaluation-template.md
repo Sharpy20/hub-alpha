@@ -2,8 +2,8 @@
 
 > **What this is:** the standing brief for a multi-perspective review of wardHub. Thirteen viewpoints, each with its own criteria and its own project-specific things to actually go and check.
 > **How to run it:** ask Claude to "run the project evaluation", or name a single hat ("put on the IG hat").
-> **Output:** a dated report, `YYYY-MM-DD_project-evaluation.md`, in this folder.
-> **Template version:** 2.0 (27 July 2026). See the change log at the bottom.
+> **Output:** a dated report, `YYYY-MM-DD_project-evaluation.md`, in this folder. **It replaces every earlier report, so it has to contain everything worth keeping from them.**
+> **Template version:** 2.1 (29 July 2026). See the change log at the bottom.
 
 ---
 
@@ -21,7 +21,15 @@ cd E:/Hub/inpatient-hub && npm run build && npm test && npx tsc --noEmit && npm 
 
 Also record: route count, rough line count of `src/`, current git author on the last few commits (must be Sharpy20), and the state of `COLLAPSED_FOR_DEMO` in `src/lib/config/build.ts`. Any hat that talks about build health, test coverage, or dependency risk is quoting these numbers, not guessing.
 
-**3. Carry forward, do not restart.** Read the previous evaluation in this folder and `docs/BACKLOG.md` first. The report must open with what moved since last time, what is still open, and anything that has gone backwards. Recommendations that appeared in the last two evaluations and are still open get called out as stuck, with a guess at why. Repeating a recommendation as if it were new is the main failure mode of this document.
+**3. Carry forward, do not restart.** Before writing anything, read **every** `*_project-evaluation.md` in this folder and in `archive/`, every `*-deep-dive.md`, and `docs/BACKLOG.md`. Not just the most recent one. The report opens with what moved, what is still open, and anything that has gone backwards. A recommendation that has appeared in two or more evaluations and is still open gets called out as stuck, with a guess at why. Repeating a recommendation as if it were new is the main failure mode of this document.
+
+**4. The new report must stand alone.** Mike deletes superseded evaluations, and he should be able to. That only works if the newest file is a complete record on its own, so:
+
+- **Never cite an older report as the only source for a claim.** "As noted in the June evaluation" is not evidence if June has been deleted. Restate the substance and the figure inline, then cite the older report as provenance if you want to.
+- **Carry the ledgers, not just the narrative.** The three tables under "Carried forward" in the report structure below (recommendation ledger, metric history, standing decisions) are not optional. They are the mechanism that lets old files go.
+- **Carry the unresolved, not the resolved detail.** A finding that was fixed two evaluations ago needs one line in the ledger saying it was fixed and when, so nobody re-raises it. It does not need its original write-up reproducing.
+- **Carry the standing decisions,** especially the ones that stop wasted work: things deliberately parked, things blocked on a licence rather than an engineering problem, and positions Mike has settled and does not want re-argued. An evaluation that re-proposes a parked decision has cost him time, not saved it.
+- **Test it before you finish:** if every other file in this folder vanished, would this report still tell someone the full story of where the project has been and what is outstanding? If not, it is not done.
 
 **Style:** house rules apply (`lessAImoreHUMANprompt.md`). No em dashes. No banned words. Write it like a colleague explaining what they found, not like a consultancy deliverable.
 
@@ -48,6 +56,65 @@ Open the report with this table so evaluations can be compared over time. RAG pl
 | 13 | Patient and Carer | | | | |
 
 Scores are for trend spotting, not for the Board. Do not average them into a single number.
+
+Carry the **whole score history** in this table, one column per evaluation, oldest on the left. That is what makes the trend readable after the older files are gone.
+
+| # | Perspective | 25 Jan | 22 Mar | 14 Apr | 21 Jun | 28 Jul | This pass | RAG | Direction |
+|---|-------------|:------:|:------:|:------:|:------:|:------:|:---------:|:---:|:---------:|
+| 1 | Web Developer | | | | | 4 | | | |
+
+Fill the historic columns from the reports you read. Where a hat did not exist yet, leave the cell blank rather than guessing a score for it.
+
+---
+
+## Carried forward
+
+Three tables, always present, always complete. These exist so that deleting every older report costs nothing.
+
+### 1. Recommendation ledger
+
+Every recommendation ever made that is not yet done, plus every one closed since the last pass. Sorted open-first.
+
+| Recommendation | First raised | Times raised | Owner | Status | Note |
+|---|---|:---:|---|---|---|
+| Proxy regression test | 14 Apr 2026 | 4 | Claude | Open | Stuck. Dormant code while `COLLAPSED_FOR_DEMO` is true, so nothing forces it |
+| Fill the placeholder guides | 21 Jun 2026 | 1 | Claude | Done, Session 32 | No empty placeholder guides remain |
+
+Rules: **nothing leaves this table by being forgotten.** A recommendation is removed only after it has appeared once as Done, or once as Dropped with a reason. "Times raised" is the honest measure of a stuck item, and a number that keeps climbing is itself a finding worth writing about.
+
+**Cross-check the ledger against `docs/BACKLOG.md` in both directions, every pass, and report the mismatches.** Every open item in the ledger should exist in the BACKLOG, and every open BACKLOG item that this evaluation would recommend should already be in the ledger. Name specifically: items marked done in one and open in the other, evaluation findings that never reached the BACKLOG, and BACKLOG items no evaluation has ever looked at. The two documents drift silently, and a finding that lives only in an evaluation is a finding nobody will action, because the BACKLOG is what gets read at the start of a session.
+
+### 2. Metric history
+
+The numbers that only mean something as a trend. One row per metric, one column per evaluation.
+
+| Metric | 21 Jun | 28 Jul | This pass |
+|---|---|---|---|
+| Guides in `ALL_GUIDES` | | 71 | |
+| Approval split (green / amber / red) | | 1 / 50 / 20 | |
+| Placeholder `#` form links | 86 | 131 | |
+| WAGOLLs live / dead | | 0 / 16 | |
+| Quiz questions | | 942 | |
+| Test files / tests | 3 / 32 | 3 / 32 | |
+| Lines in `src/` | | 50,470 | |
+| Page routes | | 49 | |
+| Production dependencies | | 7 | |
+| Open advisories (prod / dev) | | 3 / 32 | |
+| `[confirm]` markers | | 4 | |
+
+Add rows as new things become worth tracking. Do not drop a row because the number stopped moving, that is exactly when it matters.
+
+### 3. Standing decisions and parked items
+
+Positions already settled, so no future evaluation reopens them or proposes work that has already been ruled out. Each needs the decision, who made it, and enough of the reasoning to stop it being re-argued from scratch.
+
+| Decision | Date | Who | Why it stays settled |
+|---|---|---|---|
+| No special category data in the patient record. MHA status, alerts, diagnoses, room and bed removed | 28 Jul 2026 | Mike | Clinical safety as much as IG: every clinical field invites "who keeps it current" and "what if someone acts on it when it is stale". wardHub is not the clinical record. Guarded by `src/__tests__/no-special-category-data.test.ts` |
+| Never run `npm audit fix --force` | 13 Jun 2026 | Claude | Downgrades Next to 9.x |
+| Publish pipeline parked | 27 Jul 2026 | - | Power Automate is standard-connectors-only, HTTP is premium. The blocker is a licence, not code. Do not re-propose it as an engineering task |
+| Advocacy means IMHA only. Derby City is Disability Direct, County is Cloverleaf | 27 Jun 2026 | Mike | POhWER removed. Settled content decision |
+| No referral tracking, no shift-based handover screen | 27 Jul 2026 | Mike | Some services track their own referrals, others go silent. Tracking both makes work for the first and still misses the second |
 
 ---
 
@@ -446,7 +513,17 @@ Three to six blunt paragraphs. No hedging, no rebuttal. If this section reads co
 [Moved / still open / gone backwards. Name the stuck items.]
 
 ## Scorecard
-[The table, with direction arrows.]
+[The full history table, one column per evaluation, plus RAG and direction.]
+
+## Carried forward
+### Recommendation ledger
+[Every open recommendation ever raised, plus those closed since last pass.]
+### BACKLOG cross-check
+[Mismatches in both directions between the ledger and docs/BACKLOG.md.]
+### Metric history
+[One row per metric, one column per evaluation.]
+### Standing decisions and parked items
+[Settled positions, so nothing already ruled out gets re-proposed.]
 
 ## Verification Log
 | Check | Command | Result |
@@ -506,8 +583,10 @@ Deep dives get their own file: `YYYY-MM-DD_[hat-name]-deep-dive.md`.
 
 - Full evaluation: `YYYY-MM-DD_project-evaluation.md`
 - Deep dive: `YYYY-MM-DD_security-deep-dive.md`
-- Move superseded reports into `archive/` once two newer full evaluations exist. Keep the most recent two in the folder.
-- Each report ends by naming the report it supersedes and the template version it was run against.
+- **The newest full evaluation is the record.** Because it carries the ledgers, older full evaluations can be deleted outright once it is written. Nothing in this folder needs keeping for continuity, only for provenance, and git holds that anyway.
+- Deep dives are the exception worth keeping longer. They hold detail no summary table can carry, and no later evaluation reproduces them in full.
+- Each report ends by naming every report it supersedes and the template version it was run against.
+- If an older report is deleted before the new one has carried its content, that content is gone. Write the new report first.
 
 ---
 
@@ -516,4 +595,5 @@ Deep dives get their own file: `YYYY-MM-DD_[hat-name]-deep-dive.md`.
 | Version | Date | Change |
 |---------|------|--------|
 | 1.0 | 25 Jan 2026 | Original 10-hat framework |
+| 2.1 | 29 Jul 2026 | **Each report now stands alone, so superseded ones can be deleted.** Read every prior evaluation and deep dive, not only the most recent. New ground rule 4 (self-containment, with a test to apply before finishing). New "Carried forward" section carrying three mandatory tables: the recommendation ledger (nothing leaves it by being forgotten), metric history, and standing decisions and parked items (so settled calls and licence-blocked work are not re-proposed). Scorecard now carries the full score history, one column per evaluation. Added a two-way cross-check against `docs/BACKLOG.md`, reported as mismatches. Archiving policy replaced: the newest report is the record, older full evaluations can go, deep dives are kept. |
 | 2.0 | 27 Jul 2026 | Added the evidence and carry-forward ground rules, the verification log, and the scorecard. Three new hats: Clinical Content Editor, Deployment and Operations, Patient and Carer. Added the Devil's Advocate section, the "For Mike" and "Not verified this pass" report sections, and the reduced-scope run modes. Fixed stale references: project is wardHub not Inpatient Hub, roles are the current five plus the contributor flag, and there is no `/evaluate` command. Added project-specific checks to every hat so the framework points at this codebase rather than any codebase. |

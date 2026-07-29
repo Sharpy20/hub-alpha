@@ -7,6 +7,68 @@ import { Shield, Lock, FileText, Mail, Database, Trash2, Check, ShieldAlert, Fil
 import Link from "next/link";
 import { useV2Href } from "@/lib/hooks/useV2";
 
+// Text alternative for the explainer video (WCAG 2.1 1.2.1). The film is silent
+// and entirely text-on-screen, so this is a straight transcript of the cards in
+// order, not a description of narration. Chapter times match the rail shown on
+// the right of the frame. If the video is re-rendered, re-check this.
+const VIDEO_TRANSCRIPT: { time: string; title: string; lines: string[] }[] = [
+  {
+    time: "0:00",
+    title: "Chapter 1 - the problem",
+    lines: [
+      "Labels drift across the screen: Intranet. Email chains. Policy PDFs. Sticky notes. A filing cabinet. Shared drive. The person who just left. That one folder.",
+      "“A ward runs on knowledge.”",
+      "“But it is scattered - and new starters are left to hunt for it.”",
+      "“It should be in one place, and always current.”",
+    ],
+  },
+  {
+    time: "0:15",
+    title: "Chapter 2 - this is wardHub",
+    lines: [
+      "Title card: “This is wardHub. A framework for turning knowledge into action. wardHub.live”",
+      "The idea - “Built to be built on”. Three cards: Any ward. Any clinic. Any team that runs on procedures. Caption: “wardHub is a framework teams build on - not a finished, fixed app. The same platform fits any team that works to set procedures.”",
+      "How it works - “Feed it your SOPs”. An SOP document converts into an interactive guide, “Rapid tranquillisation”, whose four steps tick off one by one: Check the criteria. Complete the form. Monitor and record. Where to send it. Caption: “Feed in a policy or SOP. Your procedures become interactive digital guides.”",
+      "Real content, today - “Not a mock-up”. Three live guides: MHA detention papers (Pick the pathway, Check each form, Scrutiny checklist); Safeguarding referral (Confirm the concern, Complete the form, Where to send it); Leave and discharge (Plan the leave, Safety checks, Update the record). Caption: “This demo is populated with real SOPs from Derbyshire Healthcare NHS Foundation Trust.”",
+      "In practice - “Two ways to use them”. On its own: the Section 17 leave guide. In the team diary: a day list reading Depot clinic - bay 2, Section 17 leave review (with a Guide badge), Fridge temperature check - the two linked by a line marked “linked to the task”. Caption: “Open a guide on its own when you need it. Or reach it from a task in a simple team diary.”",
+      "“Let's take a look. wardHub.live”",
+    ],
+  },
+  {
+    time: "1:22",
+    title: "Chapter 3 - where the data goes",
+    lines: [
+      "01 - The build: “AI builds the scaffold”. An AI (labelled “AI, e.g. Claude - builds the structure”) draws three empty shelves. Two badges appear: “No patient data · No trust documents” and “Replaceable by any tool”. Caption: “The AI builds an empty structure - the shelves and the frame. It never sees patient data or trust documents.”",
+      "02 - The Trust fills it: “Inside the Trust boundary”. Within a box marked “Trust M365 boundary”, three sources - Policy Library, SOPs, Partner forms - feed Copilot agents, which “read policy, draft a guide”. A guide card, “Emotion Regulation referral”, turns from “In development” (red) to “Signed off” (green) and is stamped “Approved for the ward”. Caption: “Copilot agents draft a guide from Trust policy, SOPs and partner forms. A person edits it and signs it off. Red to green.”",
+      "03 - The boundary holds: “The data stays inside”. Inside a box marked “Trust boundary”, “Entered on the ward - tasks, notes, sign-off” flows into the “Trust datastore - Supabase (demo) · Trust infra (live)”, which copies out to SystmOne, “the record”. A red line from “Any AI outside the boundary” is blocked at the wall. Caption: “Everything entered stays inside the Trust boundary. It copies out to SystmOne. Nothing flows back to any AI.”",
+      "Closing card: “wardHub. AI builds the shelves. The Trust writes the books, checks them, and keeps them.” Footer badge: “Illustration of the full build. Not running today.”",
+    ],
+  },
+  {
+    time: "2:52",
+    title: "Chapter 4 - the ask",
+    lines: [
+      "“Back a two-ward pilot. My ward, plus one where the team doesn't know me - for honest feedback.”",
+      "Low-effort start - keep building on today's scaffold.",
+      "NHS login, with the data on Trust infrastructure.",
+      "Every guide authored and signed off by named Trust approvers.",
+      "“It needs a senior sponsor to carry it forward.”",
+    ],
+  },
+  {
+    time: "3:10",
+    title: "Chapter IG - the whole thing on one board",
+    lines: [
+      "A single diagram headed “Inside the Trust”.",
+      "Outside the box: External build tools - marked “never reaches the policies or the data”.",
+      "Inside the box: The Library - 470 policies, SOPs, guidance. M365 Copilot - agents read the Trust's own library. The Guides - published in the Trust's own system.",
+      "The Data: “Everything staff enter. Every name. Every record. Stored inside the Trust. Never sent anywhere else.”",
+      "Out: SystmOne, the patient record - the arrow is marked “copies out”, and back the other way, “nothing comes back”.",
+      "Key: Structure - built with external tools. Guides - written inside the Trust, checked by a person. Data - never leaves the Trust.",
+    ],
+  },
+];
+
 export default function GdprPage() {
   const link = useV2Href();
   const [dataCleared, setDataCleared] = useState(false);
@@ -65,11 +127,42 @@ export default function GdprPage() {
               <a href="/video/wardhub-explainer.mp4">wardhub-explainer.mp4</a>
             </video>
             <p className="text-sm text-nhs-dark-grey">
-              Four short scenes: how the guides get written, who checks them, and
-              where anything you enter ends up. It shows the model{" "}
-              <strong>at full build</strong>, not the demo running today - this
-              demo stores nothing on a server and no database is connected.
+              Five chapters: what the problem is, what wardHub is, where the data
+              goes, the ask, and the whole thing on one board. It shows the model{" "}
+              <strong>at full build</strong>, not the demo running today - the
+              film names Supabase as the datastore, but nothing in this demo is
+              sent to it. Chapter 3 (from 1:22) and the closing board are the
+              data-protection parts.
             </p>
+
+            <details className="group border border-gray-200 rounded-lg">
+              <summary className="cursor-pointer px-4 py-3 text-sm font-semibold text-nhs-blue hover:bg-nhs-pale-grey rounded-lg">
+                Read what the video says
+              </summary>
+              <div className="px-4 pb-4 pt-1 space-y-4 border-t border-gray-200">
+                <p className="text-xs text-nhs-mid-grey">
+                  The film has no narration - every word is on screen. This is
+                  what appears, in order.
+                </p>
+                {VIDEO_TRANSCRIPT.map((chapter) => (
+                  <div key={chapter.time}>
+                    <h3 className="text-sm font-semibold text-nhs-black">
+                      <span className="text-nhs-mid-grey font-normal tabular-nums mr-2">
+                        {chapter.time}
+                      </span>
+                      {chapter.title}
+                    </h3>
+                    <ul className="list-disc list-outside ml-5 mt-1 space-y-1">
+                      {chapter.lines.map((line, i) => (
+                        <li key={i} className="text-sm text-nhs-dark-grey">
+                          {line}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </details>
           </CardContent>
         </Card>
 

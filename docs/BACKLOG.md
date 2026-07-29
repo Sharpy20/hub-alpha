@@ -60,8 +60,16 @@ That matters for the 30 Jul sponsor demo.
   other-ward cue on the Help button - added in Session 45 as the only signal you are off your
   own ward - had therefore never switched off. Now case-insensitive.
 
-**Open question, not decided:** Interactive Demo appears twice, as the pulsing amber header
-button and as the first Help row. Harmless, but the row could go now Help holds more.
+**Interactive Demo now appears in two places on purpose, and they have different jobs.** The
+amber header button is the prompt for a new visitor; the Help row is the permanent home. Mike
+kept both on the understanding that the button "only shows when new to the site then vanishes".
+It did not - it rendered on every page forever, and only its *pulse* responded to anything, and
+even that only if the user ticked "don't show again" on the last screen of the tour. Close the
+tour early, refresh, and it pulsed at you again. Now made true: `tour-provider.tsx` writes
+`wardhub_tour_seen` when the tour **starts** (starting it is enough - someone who closed it
+early has still seen it) and the header hides both button variants from then on. The older
+`wardhub_tour_dismissed` key is still honoured so anyone who already ticked the box stays
+hidden. `tourDismissed` left the context; `tourSeen` replaced it.
 
 **Checked, no action:** `/reports` is a deliberate 12-line redirect to `/overview` with a
 comment explaining the 27 Jul merge, not an orphan.

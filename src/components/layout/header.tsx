@@ -124,8 +124,7 @@ export function Header() {
     senior_admin: "Senior Admin",
   };
 
-  const { startTour, tourDismissed, hasBeenStarted } = useTour();
-  const shouldPulse = !tourDismissed && !hasBeenStarted;
+  const { startTour, tourSeen } = useTour();
   // activeWard is the capitalised data name ("Byron"), user.ward the lowercase id
   // ("byron") - compare case-insensitively or this is always true and the amber
   // other-ward cue never switches off.
@@ -153,22 +152,28 @@ export function Header() {
               </div>
             </Link>
 
-            {/* Interactive Demo Tour button */}
-            <button
-              onClick={startTour}
-              aria-label="Start interactive demo tour"
-              className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all ${shouldPulse ? "animate-pulse hover:animate-none" : ""}`}
-            >
-              <Sparkles className="w-4 h-4" />
-              <span className="hidden lg:inline">Interactive Demo</span>
-            </button>
-            <button
-              onClick={startTour}
-              aria-label="Start interactive demo tour"
-              className="sm:hidden w-9 h-9 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg flex items-center justify-center shadow-md"
-            >
-              <Sparkles className="w-4 h-4" />
-            </button>
+            {/* Interactive Demo Tour button. A prompt for new visitors only, so
+                it goes once the tour has been run - after that the tour lives in
+                Help, which is its permanent home. */}
+            {!tourSeen && (
+              <>
+                <button
+                  onClick={startTour}
+                  aria-label="Start interactive demo tour"
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all animate-pulse hover:animate-none"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span className="hidden lg:inline">Interactive Demo</span>
+                </button>
+                <button
+                  onClick={startTour}
+                  aria-label="Start interactive demo tour"
+                  className="sm:hidden w-9 h-9 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-lg flex items-center justify-center shadow-md"
+                >
+                  <Sparkles className="w-4 h-4" />
+                </button>
+              </>
+            )}
 
             {/* Global search (guides + links). Ctrl/Cmd+K anywhere. */}
             <GlobalSearch />

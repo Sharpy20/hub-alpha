@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export type TourSection = "welcome" | "referrals" | "task-diary" | "diary-integration" | "nexus-nudge" | "nexus-detail" | "kanban" | "complete";
 
@@ -16,7 +16,14 @@ interface TourContextType {
   prevSlide: () => void;
   isInLiveWalkthrough: boolean;
   setIsInLiveWalkthrough: (v: boolean) => void;
-  tourDismissed: boolean;
+  /**
+   * True once this browser has run the tour at all. The amber Interactive Demo
+   * button in the header is a prompt for new visitors, so it hides from here on
+   * and Help becomes the tour's permanent home. Starting the tour is enough -
+   * the "don't show again" tick at the end is not required, because someone who
+   * closes the tour early has still seen it.
+   */
+  tourSeen: boolean;
   hasBeenStarted: boolean;
 }
 
@@ -28,12 +35,19 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isInLiveWalkthrough, setIsInLiveWalkthrough] = useState(false);
   const [hasBeenStarted, setHasBeenStarted] = useState(false);
-  const [tourDismissed] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("wardhub_tour_dismissed") === "true";
-    }
-    return false;
-  });
+  // Starts true (button hidden) and is corrected after mount, so the server and
+  // the first client render agree. A new visitor sees the button appear a frame
+  // in, which is the same trade the home page onboarding banner already makes.
+  const [tourSeen, setTourSeen] = useState(true);
+
+  useEffect(() => {
+    // wardhub_tour_dismissed is the older key, written by the "don't show again"
+    // tick. Still honoured so anyone who ticked it stays hidden.
+    const seen =
+      localStorage.getItem("wardhub_tour_seen") === "true" ||
+      localStorage.getItem("wardhub_tour_dismissed") === "true";
+    setTourSeen(seen);
+  }, []);
 
   const startTour = () => {
     setIsTourActive(true);
@@ -41,6 +55,8 @@ export function TourProvider({ children }: { children: ReactNode }) {
     setCurrentSlide(0);
     setIsInLiveWalkthrough(false);
     setHasBeenStarted(true);
+    setTourSeen(true);
+    localStorage.setItem("wardhub_tour_seen", "true");
   };
 
   const endTour = () => {
@@ -67,7 +83,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
         prevSlide,
         isInLiveWalkthrough,
         setIsInLiveWalkthrough,
-        tourDismissed,
+        tourSeen,
         hasBeenStarted,
       }}
     >

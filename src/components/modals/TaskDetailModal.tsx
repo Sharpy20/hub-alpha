@@ -21,6 +21,12 @@ interface TaskDetailModalProps {
   onSteal: (taskId: string) => void;
   onToggleComplete: (taskId: string) => void;
   onUpdate: (taskId: string, updates: Partial<DiaryTask>) => void;
+  /**
+   * Open straight into the hand-back sheet. Set when the user pressed "Hand
+   * back" on a task card rather than opening the job to read it, so letting a
+   * job go stays one tap from the diary now that Drop has been retired.
+   */
+  openHandBack?: boolean;
 }
 
 export function TaskDetailModal({
@@ -32,6 +38,7 @@ export function TaskDetailModal({
   onSteal,
   onToggleComplete,
   onUpdate,
+  openHandBack = false,
 }: TaskDetailModalProps) {
   const { markInError, handBackTask } = useTasks();
   const [showHandBack, setShowHandBack] = useState(false);
@@ -68,6 +75,13 @@ export function TaskDetailModal({
       setConfirmingError(false);
     }
   }, [task]);
+
+  // Only on open: pressing "Hand back" on a card lands you in the sheet. The
+  // deps deliberately exclude showHandBack, so cancelling the sheet while the
+  // modal stays open leaves you on the job rather than snapping back into it.
+  useEffect(() => {
+    if (isOpen) setShowHandBack(openHandBack);
+  }, [isOpen, openHandBack]);
 
   // Keyboard support: focus trap + Escape-to-close (WCAG 2.1.2)
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -519,7 +533,7 @@ export function TaskDetailModal({
                 </button>
               )}
 
-              {/* Claim/Drop/Take Over buttons */}
+              {/* Claim / Hand back / Take Over buttons */}
               {!isCompleted && !isClaimed && (
                 <button
                   onClick={handleClaim}
@@ -530,21 +544,15 @@ export function TaskDetailModal({
                   Claim Task
                 </button>
               )}
-              {/* Drop splits in two (BACKLOG Section M): Drop stays the silent
-                  "claimed by mistake", Hand back records what state it is in so
-                  the next shift is not guessing. */}
-              {!isCompleted && isClaimedByMe && (
-                <button
-                  onClick={handleClaim}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center gap-2"
-                  title="Claimed this by mistake - release it, no state recorded"
-                >
-                  <Hand className="w-4 h-4" />
-                  Drop
-                </button>
-              )}
-              {/* Only for a job you actually hold - you cannot hand back
-                  something that is already sitting in the pool (Mike, 27 Jul). */}
+              {/* DROP RETIRED (Mike, 29 Jul). Session 42 split letting a job go
+                  into two actions: Drop, silent and unrecorded, for a job
+                  claimed by mistake, and Hand back, which records the state it
+                  is in. One silent route out was one too many - a job that
+                  changed hands with no trace is the thing this feature exists
+                  to stop - so hand back is now the only way. A mis-claim goes
+                  through the same sheet.
+                  Only for a job you actually hold: you cannot hand back
+                  something already sitting in the pool (Mike, 27 Jul). */}
               {!isCompleted && isClaimedByMe && (
                 <button
                   onClick={() => setShowHandBack(true)}

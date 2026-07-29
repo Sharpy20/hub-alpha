@@ -29,6 +29,7 @@ import {
   Sunset,
   Settings2,
   UserPlus,
+  Undo2,
 } from "lucide-react";
 import {
   DiaryTask,
@@ -141,6 +142,7 @@ function TaskCard({
   onToggleComplete,
   onClaim,
   onSteal,
+  onHandBack,
   onClick,
   currentUserName,
   compact = false,
@@ -150,6 +152,9 @@ function TaskCard({
   onToggleComplete: (id: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
+  // Opens the job with the hand-back sheet already showing. Replaced Drop,
+  // which released a job silently (Mike, 29 Jul).
+  onHandBack?: (id: string) => void;
   onClick?: (task: DiaryTask) => void;
   currentUserName?: string;
   compact?: boolean;
@@ -245,9 +250,9 @@ function TaskCard({
                         <Hand className="w-2.5 h-2.5" /> Take Over
                       </button>
                     )}
-                    {isClaimedByMe && onClaim && (
-                      <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors" title="Release this task so others can pick it up">
-                        <Hand className="w-2.5 h-2.5" /> Drop
+                    {isClaimedByMe && onHandBack && (
+                      <button onClick={(e) => { e.stopPropagation(); onHandBack(task.id); }} className="flex items-center gap-1 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors" title="Let this job go, recording what state it is in for whoever picks it up">
+                        <Undo2 className="w-2.5 h-2.5" /> Hand back
                       </button>
                     )}
                     <span className="text-white/80 text-[10px] flex items-center gap-1"><Hand className="w-2.5 h-2.5" />{isInProgress ? `${task.claimedBy} working` : task.claimedBy}</span>
@@ -345,8 +350,8 @@ function TaskCard({
                 {isClaimed && !isClaimedByMe && onSteal && (
                   <button onClick={(e) => { e.stopPropagation(); onSteal(task.id); }} style={{ color: "#D97706", fontSize: 10 }} title={`Assigned to ${task.claimedBy}`}>Take Over</button>
                 )}
-                {isClaimed && isClaimedByMe && onClaim && (
-                  <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} style={{ color: "#9B9A97", fontSize: 10 }}>Drop</button>
+                {isClaimed && isClaimedByMe && onHandBack && (
+                  <button onClick={(e) => { e.stopPropagation(); onHandBack(task.id); }} style={{ color: "#9B9A97", fontSize: 10 }} title="Let this job go, recording what state it is in">Hand back</button>
                 )}
                 {isClaimed && <span style={{ color: "#9B9A97", fontSize: 10 }}>{isInProgress ? `${task.claimedBy} working` : task.claimedBy}</span>}
                 <TaskLinkedResources task={task} accent={accent} />
@@ -393,9 +398,9 @@ function TaskCard({
                         <Hand className="w-2.5 h-2.5" /> Take Over
                       </button>
                     )}
-                    {isClaimedByMe && onClaim && (
-                      <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-0.5 text-[10px] rounded px-1.5 py-0.5 transition-colors" style={{ border: `1px solid ${textMuted}`, color: textMuted }} title="Release this task so others can pick it up">
-                        <Hand className="w-2.5 h-2.5" /> Drop
+                    {isClaimedByMe && onHandBack && (
+                      <button onClick={(e) => { e.stopPropagation(); onHandBack(task.id); }} className="flex items-center gap-0.5 text-[10px] rounded px-1.5 py-0.5 transition-colors" style={{ border: `1px solid ${textMuted}`, color: textMuted }} title="Let this job go, recording what state it is in for whoever picks it up">
+                        <Undo2 className="w-2.5 h-2.5" /> Hand back
                       </button>
                     )}
                     <span className="text-[10px] flex items-center gap-0.5" style={{ color: textMuted }}>
@@ -431,6 +436,7 @@ function SimpleTaskCard({
   task,
   onClaim,
   onSteal,
+  onHandBack,
   onClick,
   currentUserName,
   onDragStart,
@@ -438,6 +444,9 @@ function SimpleTaskCard({
   task: DiaryTask;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
+  // Opens the job with the hand-back sheet already showing. Replaced Drop,
+  // which released a job silently (Mike, 29 Jul).
+  onHandBack?: (id: string) => void;
   onClick?: (task: DiaryTask) => void;
   currentUserName?: string;
   onDragStart?: (e: React.DragEvent, taskId: string, taskType: string) => void;
@@ -478,8 +487,8 @@ function SimpleTaskCard({
           {isClaimed && !isClaimedByMe && onSteal && (
             <button onClick={(e) => { e.stopPropagation(); onSteal(task.id); }} className="flex items-center gap-0.5 text-white text-[10px] bg-amber-500/60 hover:bg-amber-500/80 rounded px-1.5 py-0.5 transition-colors flex-shrink-0" title={`Assigned to ${task.claimedBy} – reassign to yourself`}><Hand className="w-2.5 h-2.5" /> Take Over</button>
           )}
-          {isClaimed && isClaimedByMe && onClaim && (
-            <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0" title="Release this task so others can pick it up"><Hand className="w-2.5 h-2.5" /> Drop</button>
+          {isClaimed && isClaimedByMe && onHandBack && (
+            <button onClick={(e) => { e.stopPropagation(); onHandBack(task.id); }} className="flex items-center gap-0.5 text-white text-[10px] bg-white/20 hover:bg-white/30 rounded px-1.5 py-0.5 transition-colors flex-shrink-0" title="Let this job go, recording what state it is in for whoever picks it up"><Undo2 className="w-2.5 h-2.5" /> Hand back</button>
           )}
         </div>
       </div>
@@ -515,8 +524,8 @@ function SimpleTaskCard({
         {isClaimed && !isClaimedByMe && onSteal && (
           <button onClick={(e) => { e.stopPropagation(); onSteal(task.id); }} className="text-[10px] flex-shrink-0 rounded px-1.5 py-0.5 transition-colors" style={{ border: "1px solid #F59E0B", color: "#D97706" }} title={`Assigned to ${task.claimedBy}`}>Take Over</button>
         )}
-        {isClaimed && isClaimedByMe && onClaim && (
-          <button onClick={(e) => { e.stopPropagation(); onClaim(task.id); }} className="text-[10px] flex-shrink-0 rounded px-1.5 py-0.5 transition-colors" style={{ border: "1px solid #9B9A97", color: "#9B9A97" }} title="Release this task">Drop</button>
+        {isClaimed && isClaimedByMe && onHandBack && (
+          <button onClick={(e) => { e.stopPropagation(); onHandBack(task.id); }} className="text-[10px] flex-shrink-0 rounded px-1.5 py-0.5 transition-colors" style={{ border: "1px solid #9B9A97", color: "#9B9A97" }} title="Let this job go, recording what state it is in">Hand back</button>
         )}
       </div>
     </div>
@@ -543,6 +552,7 @@ function PriorityGroupedTasks({
   onToggleComplete,
   onClaim,
   onSteal,
+  onHandBack,
   onTaskClick,
   currentUserName,
   compact,
@@ -553,6 +563,9 @@ function PriorityGroupedTasks({
   onToggleComplete: (id: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
+  // Opens the job with the hand-back sheet already showing. Replaced Drop,
+  // which released a job silently (Mike, 29 Jul).
+  onHandBack?: (id: string) => void;
   onTaskClick?: (task: DiaryTask) => void;
   currentUserName?: string;
   compact?: boolean;
@@ -588,6 +601,7 @@ function PriorityGroupedTasks({
           task={task}
           onClaim={onClaim}
           onSteal={onSteal}
+          onHandBack={onHandBack}
           onClick={onTaskClick}
           currentUserName={currentUserName}
           onDragStart={onTaskDragStart}
@@ -601,6 +615,7 @@ function PriorityGroupedTasks({
         onToggleComplete={onToggleComplete}
         onClaim={onClaim}
         onSteal={onSteal}
+        onHandBack={onHandBack}
         onClick={onTaskClick}
         currentUserName={currentUserName}
         compact={compact}
@@ -725,6 +740,7 @@ function DayColumn({
   onToggleComplete,
   onClaim,
   onSteal,
+  onHandBack,
   onTaskClick,
   currentUserName,
   showAddButton,
@@ -746,6 +762,9 @@ function DayColumn({
   onToggleComplete: (id: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
+  // Opens the job with the hand-back sheet already showing. Replaced Drop,
+  // which released a job silently (Mike, 29 Jul).
+  onHandBack?: (id: string) => void;
   onTaskClick?: (task: DiaryTask) => void;
   currentUserName?: string;
   showAddButton?: boolean;
@@ -889,6 +908,7 @@ function DayColumn({
             onToggleComplete={onToggleComplete}
             onClaim={onClaim}
             onSteal={onSteal}
+            onHandBack={onHandBack}
             onTaskClick={onTaskClick}
             currentUserName={currentUserName}
             compact={!isFocused}
@@ -910,6 +930,7 @@ function DayColumn({
             onToggleComplete={onToggleComplete}
             onClaim={onClaim}
             onSteal={onSteal}
+            onHandBack={onHandBack}
             onTaskClick={onTaskClick}
             currentUserName={currentUserName}
             compact={!isFocused}
@@ -931,6 +952,7 @@ function DayColumn({
             onToggleComplete={onToggleComplete}
             onClaim={onClaim}
             onSteal={onSteal}
+            onHandBack={onHandBack}
             onTaskClick={onTaskClick}
             currentUserName={currentUserName}
             compact={!isFocused}
@@ -1112,6 +1134,7 @@ function ExpandedDayView({
   onToggleComplete,
   onClaim,
   onSteal,
+  onHandBack,
   onTaskClick,
   currentUserName,
   onClose,
@@ -1130,6 +1153,9 @@ function ExpandedDayView({
   onToggleComplete: (id: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
+  // Opens the job with the hand-back sheet already showing. Replaced Drop,
+  // which released a job silently (Mike, 29 Jul).
+  onHandBack?: (id: string) => void;
   onTaskClick?: (task: DiaryTask) => void;
   currentUserName?: string;
   onClose: () => void;
@@ -1413,7 +1439,7 @@ function ExpandedDayView({
                           <h3 className="font-semibold text-gray-800">Early Shift</h3>
                           <span className="text-xs text-gray-500">({earlyTasks.length})</span>
                         </div>
-                        <PriorityGroupedTasks tasks={earlyTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                        <PriorityGroupedTasks tasks={earlyTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
                     )}
                     {showLate && lateTasks.length > 0 && (
@@ -1425,7 +1451,7 @@ function ExpandedDayView({
                           <h3 className="font-semibold text-gray-800">Late Shift</h3>
                           <span className="text-xs text-gray-500">({lateTasks.length})</span>
                         </div>
-                        <PriorityGroupedTasks tasks={lateTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                        <PriorityGroupedTasks tasks={lateTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
                     )}
                     {showNight && nightTasks.length > 0 && (
@@ -1437,7 +1463,7 @@ function ExpandedDayView({
                           <h3 className="font-semibold text-gray-800">Night Shift</h3>
                           <span className="text-xs text-gray-500">({nightTasks.length})</span>
                         </div>
-                        <PriorityGroupedTasks tasks={nightTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                        <PriorityGroupedTasks tasks={nightTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
                     )}
                   </>
@@ -1457,7 +1483,7 @@ function ExpandedDayView({
                   </span>
                 </h2>
                 {showPatientTasks && patientTasks.length > 0 ? (
-                  <PriorityGroupedTasks tasks={patientTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                  <PriorityGroupedTasks tasks={patientTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                 ) : (
                   <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
                     None scheduled – tap to add patient task
@@ -1474,7 +1500,7 @@ function ExpandedDayView({
                   </span>
                 </h2>
                 {showAppointments && appointments.length > 0 ? (
-                  <PriorityGroupedTasks tasks={appointments} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                  <PriorityGroupedTasks tasks={appointments} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                 ) : (
                   <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
                     None scheduled – tap to add appointment
@@ -1561,6 +1587,7 @@ function TasksPageInner() {
   const [showStaffTasksModal, setShowStaffTasksModal] = useState(false);
   const [showRepeatTasksModal, setShowRepeatTasksModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<DiaryTask | null>(null);
+  const [openHandBack, setOpenHandBack] = useState(false);
 
   // Drag and drop between days
   const [dragOverDate, setDragOverDate] = useState<string | null>(null);
@@ -1677,6 +1704,16 @@ function TasksPageInner() {
   // Handle clicking on a task to open details modal
   const handleTaskClick = (task: DiaryTask) => {
     setSelectedTask(task);
+    setOpenHandBack(false);
+  };
+
+  // "Hand back" on a card opens the same modal with the sheet already showing.
+  // Drop used to release a job from here in one silent tap (Mike, 29 Jul).
+  const handleHandBack = (taskId: string) => {
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+    setSelectedTask(task);
+    setOpenHandBack(true);
   };
 
   // Handle updating task from modal - use shared context
@@ -2108,6 +2145,7 @@ function TasksPageInner() {
                 onToggleComplete={handleToggleComplete}
                 onClaim={handleClaim}
                 onSteal={handleSteal}
+                onHandBack={handleHandBack}
                 onTaskClick={handleTaskClick}
                 currentUserName={user?.name}
                 showAddButton={true}
@@ -2184,13 +2222,14 @@ function TasksPageInner() {
           used to leave it showing the old state until you closed and reopened. */}
       <TaskDetailModal
         isOpen={!!selectedTask}
-        onClose={() => setSelectedTask(null)}
+        onClose={() => { setSelectedTask(null); setOpenHandBack(false); }}
         task={selectedTask ? tasks.find((t) => t.id === selectedTask.id) ?? selectedTask : null}
         currentUserName={user?.name || "Unknown"}
         onClaim={handleClaim}
         onSteal={handleSteal}
         onToggleComplete={handleToggleComplete}
         onUpdate={handleUpdateTask}
+        openHandBack={openHandBack}
       />
 
       <RepeatWardTasksModal
@@ -2210,6 +2249,7 @@ function TasksPageInner() {
           onToggleComplete={handleToggleComplete}
           onClaim={handleClaim}
           onSteal={handleSteal}
+          onHandBack={handleHandBack}
           onTaskClick={handleTaskClick}
           currentUserName={user?.name}
           onClose={() => setExpandedDay(null)}

@@ -54,6 +54,7 @@ import { GuideSelect } from "@/components/ui/GuideSelect";
 import { guideLabel } from "@/lib/data/guides/catalog";
 import { HandbackBadge, handbackTooltip } from "@/components/tasks/HandbackBadge";
 import { isCompleteOn } from "@/lib/utils/task-completion";
+import { Modal } from "@/components/ui";
 
 // Helper functions – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {
@@ -1233,10 +1234,22 @@ function ExpandedDayView({
 
   const totalFiltered = wardTasks.length + patientTasks.length + appointments.length;
 
+  // A POP-OUT, not a page. It used to be a full-screen `fixed` overlay, which
+  // looked like a new page but pushed no history: Back skipped it entirely and
+  // landed on whatever you were on before the diary, and the only way out was a
+  // minimise icon buried in the filter row (Mike, 29 Jul). It is now the same
+  // shared Modal the /overview patient pop-out uses - backdrop, header, close
+  // button, Escape and a focus trap, all for free.
   return (
-    <div className="fixed top-[57px] left-0 right-0 bottom-0 bg-gray-50 z-20 overflow-hidden flex flex-col">
+    <Modal
+      isOpen
+      onClose={onClose}
+      title={`${formatDisplayDate(date)}${isToday ? " - today" : ""}`}
+      size="xl"
+    >
+    <div className="flex flex-col -mx-6 -my-4">
       {/* Filter Bar */}
-      <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-30">
+      <div className="bg-white border-b border-gray-200 p-4">
         <div className="max-w-7xl mx-auto">
           {/* Filter controls + day navigation on same row */}
           <div className="flex flex-wrap items-center gap-4">
@@ -1345,15 +1358,9 @@ function ExpandedDayView({
               >
                 <ChevronRight className="w-4 h-4 text-gray-700" />
               </button>
-              <div className="w-px h-5 bg-gray-300" />
-              <button
-                onClick={onClose}
-                className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                title="Back to overview"
-                aria-label="Back to overview"
-              >
-                <Minimize2 className="w-4 h-4 text-gray-700" />
-              </button>
+              {/* The minimise icon that used to live here was the only way out
+                  of the old full-screen view, and nobody found it sat among the
+                  filters. The pop-out's own close button does the job. */}
               <div className="w-px h-5 bg-gray-300" />
               <input
                 type="date"
@@ -1521,18 +1528,22 @@ function ExpandedDayView({
         </div>
       </div>
 
-      {/* Floating Add Task button */}
+      {/* Add Task. Was a floating button pinned to the viewport corner, which
+          made sense on a full-screen takeover and floats over the backdrop in a
+          pop-out - so it sits at the foot of the content instead. */}
       {onAddTask && (
-        <button
-          onClick={onAddTask}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-110 transition-all flex items-center justify-center"
-          title="Add Task"
-          aria-label="Add Task"
-        >
-          <Plus className="w-7 h-7" />
-        </button>
+        <div className="px-6 pb-6">
+          <button
+            onClick={onAddTask}
+            className="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
+            aria-label="Add Task"
+          >
+            <Plus className="w-5 h-5" /> Add Task
+          </button>
+        </div>
       )}
     </div>
+    </Modal>
   );
 }
 
@@ -1692,8 +1703,11 @@ function TasksPageInner() {
     return () => clearTimeout(timer);
   }, [todayStr, scrollToDate]);
 
-  const handleToggleComplete = (taskId: string) => {
-    toggleComplete(taskId, user?.name || "Unknown");
+  // onDate is the day column the tick came from. Dropping it here would send
+  // every recurring job's completion to today, whichever day you were looking
+  // at - which is most of the bug this replaced.
+  const handleToggleComplete = (taskId: string, onDate?: string) => {
+    toggleComplete(taskId, user?.name || "Unknown", onDate);
   };
 
   // Handle claim/unclaim/steal - use shared context

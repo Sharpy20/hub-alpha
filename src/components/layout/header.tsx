@@ -126,7 +126,10 @@ export function Header() {
 
   const { startTour, tourDismissed, hasBeenStarted } = useTour();
   const shouldPulse = !tourDismissed && !hasBeenStarted;
-  const isViewingOtherWard = user && activeWard !== user.ward;
+  // activeWard is the capitalised data name ("Byron"), user.ward the lowercase id
+  // ("byron") - compare case-insensitively or this is always true and the amber
+  // other-ward cue never switches off.
+  const isViewingOtherWard = !!user && activeWard.toLowerCase() !== user.ward.toLowerCase();
   const canAccessAdmin = !!user;
 
   return (

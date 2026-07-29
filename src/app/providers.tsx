@@ -2,8 +2,17 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { WARDS as WARD_DATA } from "@/lib/types";
+import { STAFF_NAMES } from "@/lib/data/staff";
 
 const WARD_IDS = WARD_DATA.map(w => w.id);
+
+// Every demo identity comes from the staff roster (the login picker is a dropdown
+// off it), so a saved user whose name is no longer in it is stale - left over from
+// an older demo cast, e.g. the "Staff_BY_D" placeholders replaced in July 2026.
+// Self-heal rather than showing a name that exists nowhere in the app.
+const KNOWN_STAFF_NAMES = new Set(Object.values(STAFF_NAMES).flat());
+const isKnownStaffName = (name: unknown): boolean =>
+  typeof name === "string" && KNOWN_STAFF_NAMES.has(name);
 const capitalizeWard = (ward: string): string => {
   return ward.charAt(0).toUpperCase() + ward.slice(1);
 };
@@ -84,26 +93,32 @@ export function Providers({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    // Byron's plain-staff member, index 4 of STAFF_NAMES. Used when there is no
+    // saved user (so visitors can use the diary straight away without logging
+    // in - the login page is still there to switch user/ward) and when a saved
+    // one turns out to be stale.
+    const defaultUser: User = { name: "Anne Elliot", role: "staff", ward: "byron", isContributor: false };
     const savedUser = localStorage.getItem("wardhub_user") || localStorage.getItem("inpatient_hub_user");
     if (savedUser) {
       try {
         const parsedUser = JSON.parse(savedUser);
+        if (!isKnownStaffName(parsedUser?.name)) {
+          throw new Error("stale demo user");
+        }
         setUser(parsedUser);
         setActiveWardState(capitalizeWard(parsedUser.ward));
         if (!localStorage.getItem("wardhub_user")) {
           localStorage.setItem("wardhub_user", savedUser);
         }
       } catch {
-        // Corrupt saved user would otherwise crash every page - drop it and continue logged out
+        // Corrupt saved user would otherwise crash every page; a stale one shows
+        // a name that exists nowhere else in the app. Drop either and carry on.
         localStorage.removeItem("wardhub_user");
         localStorage.removeItem("inpatient_hub_user");
+        setUser(defaultUser);
       }
     } else {
-      // No saved user: default to a demo staff member so visitors can use the
-      // diary straight away without logging in. The login page is still there
-      // to switch user/ward.
-      // Byron's plain-staff member, index 4 of STAFF_NAMES.
-      setUser({ name: "Anne Elliot", role: "staff", ward: "byron", isContributor: false });
+      setUser(defaultUser);
     }
     const savedGdpr = localStorage.getItem("wardhub_gdpr") || localStorage.getItem("inpatient_hub_gdpr");
     if (savedGdpr === "true") {

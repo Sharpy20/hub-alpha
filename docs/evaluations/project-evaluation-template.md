@@ -276,7 +276,8 @@ The five roles are `staff`, `lead`, `manager`, `ward_admin`, `senior_admin`, wit
 - **Feedback:** does the system say what just happened?
 - **Error Recovery:** can a mistake be undone?
 - **Cognitive Load:** how much is on screen at once?
-- **Mobile Experience:** responsive in practice, not just at breakpoints
+- **Screen sizes that matter:** ward desktops and Trust laptops, at the resolutions actually
+  on the ward. Small screens are explicitly not a goal - do not score against them.
 - **NHS Identity:** aligned with the NHS design system
 
 ### Project-specific checks

@@ -270,7 +270,7 @@ const guideSections: GuideSection[] = [
         title: "Welcome to wardHub",
         description: "Your central resource for ward tasks, referrals, and clinical guides. This quick guide will show you around.",
         tips: [
-          "Works on desktop, tablet, and mobile",
+          "Built for ward desktops and Trust devices",
           "All data is demo data - explore freely!",
           "Find this guide again via Help in the top nav"
         ],

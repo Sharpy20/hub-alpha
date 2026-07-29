@@ -19,8 +19,6 @@
   questions beforehand so you are not reading them cold.
 - Have the Team Diary page glanced at: today's column should have at least one
   unclaimed task (the fridge temperature check is reliably there).
-- Phone or tablet in your pocket with the site open, in case someone asks "does it work
-  on mobile". It does; show them rather than telling them.
 
 Timings below add up to about nine and a half minutes, which leaves you slack.
 
@@ -128,9 +126,8 @@ badges use. The site audits itself in public."
 "Your ward's go-to guide."
 
 **Say:** "There's a built-in two-minute tour, so you don't need me. It's live at
-wardhub.live right now, on any device - try it on your phone in the lift on the way
-out. What I need from you is on the one-pager: an IG contact, one ward, and a decision
-path for hosting."
+wardhub.live right now - have a play at your desk later. What I need from you is on
+the one-pager: an IG contact, one ward, and a decision path for hosting."
 
 Leave the one-pager on the table. Stop talking.
 

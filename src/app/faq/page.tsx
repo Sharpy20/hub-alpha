@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MainLayout } from "@/components/layout";
-import { ChevronDown, HelpCircle, Shield, Smartphone, Users, Lock, AlertCircle, Stethoscope, Search } from "lucide-react";
+import { ChevronDown, HelpCircle, Shield, Users, Lock, AlertCircle, Stethoscope, Search } from "lucide-react";
 import Link from "next/link";
 import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 
@@ -98,21 +98,6 @@ function buildFAQItems(isV2: boolean, link: (h: string) => string): FAQItem[] {
         </ul>
         <p>
           All feedback helps shape the tool and ensure it meets the needs of ward staff.
-        </p>
-      </div>
-    ),
-  },
-  {
-    id: "mobile",
-    question: "Can I use this on my phone?",
-    icon: <Smartphone className="w-5 h-5" />,
-    answer: (
-      <div className="space-y-3">
-        <p>
-          wardHub is designed for use on ward desktop computers and Trust devices. Mobile access is not currently a priority as personal phones are not permitted on the ward.
-        </p>
-        <p>
-          If accessing from a Trust tablet or similar device, the interface will adapt to the screen size, but the best experience is on a desktop browser.
         </p>
       </div>
     ),

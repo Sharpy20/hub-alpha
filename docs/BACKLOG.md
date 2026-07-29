@@ -20,27 +20,48 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
-## ⏰ QUEUED (Mike, 29 Jul) - stop claiming it works on a phone
+## ✅ DONE 29 Jul 2026 - no more "works on your phone", anywhere
 
-- [ ] **Drop "works on your phone" everywhere.** Mike's call: it *renders* on a phone but is
-      close to unusable, it is not a feature we need, and personal phones are not permitted on
-      the ward anyway - so claiming it invites a demo where someone tries it and it looks bad.
-      Already removed from the 30 Jul handout (`E:\Hub\presentation-scripts\handout_pdf.py`).
-      **Still to fix:**
-      - `src/app/intro-guide/page.tsx` **~273** - "Works on desktop, tablet, and mobile" in the
-        feature list. Strongest claim in the product; cut it or narrow to Trust desktops.
-      - `E:\Hub\presentation-scripts\takeaway_pdf.py` **~57** - "works on any device, phone
-        included". Regenerate `TAKEAWAY-PACK-30JUL.pdf` after editing, and refresh
-        `wardHub-presentation-kit-30JUL.zip`, which still holds the old PDFs.
-      - `E:\Hub\PRESENTATION-PLAN-30JUL.md` **307** ("try it on your phone in the lift") and
-        **508** ("mobile-first with Tailwind CSS. Try it on your phone now") - the second is a
-        spoken answer to a technical question, so it needs a truthful replacement, not a
-        deletion. Mobile-first Tailwind is accurate about the CSS; the usability claim is not.
-      - `inpatient-hub/docs/nhs-ready/10b-demo-script.md` **22** and **131** - same lift line
-        plus "have a phone or tablet in your pocket in case someone asks does it work".
-      **Leave alone:** `src/app/faq/page.tsx` **~112** already says mobile is not a priority
-      because personal phones are not permitted on the ward - that is the line to match, not
-      change. `howto-guides.ts` **436** is about the Loop roster app on your phone, not wardHub.
+**Standing decision (Mike, 29 Jul):** wardHub does not claim to work on a phone. It *renders*
+on one but is close to unusable, it is not a feature we need, and personal phones are not
+permitted on the ward - so the claim only invites a demo that looks bad. **Do not reintroduce
+it, and do not add a mobile check to any review.** Screens that matter: ward desktops and
+Trust laptops.
+
+- [x] **30 Jul handout** (`E:\Hub\presentation-scripts\handout_pdf.py`) - page 2 deleted, live
+      URL + password panel added, "works on your phone" and the tour line both dropped.
+- [x] **`src/app/intro-guide/page.tsx`** - "Works on desktop, tablet, and mobile" ->
+      "Built for ward desktops and Trust devices". Was the strongest claim in the product.
+- [x] **`src/app/faq/page.tsx`** - the whole "Can I use this on my phone?" entry REMOVED
+      (with its now-unused `Smartphone` import). Its answer was already honest ("not a
+      priority, personal phones are not permitted on the ward"), so restoring it is a
+      reasonable call if the question keeps coming up - it just no longer raises the topic
+      unprompted.
+- [x] **`takeaway_pdf.py`** - "works on any device, phone included" -> "best on a desktop or
+      laptop browser".
+- [x] **`PRESENTATION-PLAN-30JUL.md`** - lift line -> "have a play at your desk later";
+      "see it fail" now invites them onto their own PC; **the scripted answer to "does it work
+      on mobile" is rewritten** as a tablet/small-screen answer that explicitly says do NOT
+      offer a small-screen demo (the old script said "Yes - mobile-first with Tailwind. Try it
+      on your phone now", which was the one wrong claim that would have been said out loud);
+      "phone in pocket" setup item deleted and the list renumbered.
+- [x] **`PRESENTATION-CUECARD-30JUL.md`** + **`cuecard_pdf.py`** - "One-pager, phones, tour"
+      -> "One-pager, live link, tour"; "Phone in pocket" checkbox gone.
+- [x] **`detailed_pdf.py`** - "Phones: wardhub.live + tour" -> follow along on their PCs;
+      "Phone in pocket, site open" setup line gone.
+- [x] **`docs/nhs-ready/10b-demo-script.md`** - phone-in-pocket prep line deleted; the closing
+      "on any device - try it on your phone in the lift" rewritten.
+- [x] **`docs/evaluations/project-evaluation-template.md`** - the UX hat's "Mobile Experience"
+      criterion replaced with ward-screen sizes plus an explicit "small screens are not a goal,
+      do not score against them", so a future evaluation stops re-raising it.
+- [x] All five PDFs regenerated and **`wardHub-presentation-kit-30JUL.zip` refreshed** (it had
+      been serving the old two-page handout and every pre-fix PDF). Verified by extracting the
+      zip and re-reading each file, including `10a-one-pager.docx`. tsc + eslint clean.
+
+**Left alone deliberately:** `howto-guides.ts` ~436 ("Loop - the app for viewing your roster
+on your phone") is about the Trust roster app, not wardHub. Service and dev-panel phone
+*numbers* are contacts, not device claims. `03b-clinical-safety-hazard-log.md` "publicly
+reachable from any device" is a true risk statement.
 
 ---
 

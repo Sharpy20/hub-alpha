@@ -20,6 +20,58 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ⏰ QUEUED (Mike, 29 Jul) - stop claiming it works on a phone
+
+- [ ] **Drop "works on your phone" everywhere.** Mike's call: it *renders* on a phone but is
+      close to unusable, it is not a feature we need, and personal phones are not permitted on
+      the ward anyway - so claiming it invites a demo where someone tries it and it looks bad.
+      Already removed from the 30 Jul handout (`E:\Hub\presentation-scripts\handout_pdf.py`).
+      **Still to fix:**
+      - `src/app/intro-guide/page.tsx` **~273** - "Works on desktop, tablet, and mobile" in the
+        feature list. Strongest claim in the product; cut it or narrow to Trust desktops.
+      - `E:\Hub\presentation-scripts\takeaway_pdf.py` **~57** - "works on any device, phone
+        included". Regenerate `TAKEAWAY-PACK-30JUL.pdf` after editing, and refresh
+        `wardHub-presentation-kit-30JUL.zip`, which still holds the old PDFs.
+      - `E:\Hub\PRESENTATION-PLAN-30JUL.md` **307** ("try it on your phone in the lift") and
+        **508** ("mobile-first with Tailwind CSS. Try it on your phone now") - the second is a
+        spoken answer to a technical question, so it needs a truthful replacement, not a
+        deletion. Mobile-first Tailwind is accurate about the CSS; the usability claim is not.
+      - `inpatient-hub/docs/nhs-ready/10b-demo-script.md` **22** and **131** - same lift line
+        plus "have a phone or tablet in your pocket in case someone asks does it work".
+      **Leave alone:** `src/app/faq/page.tsx` **~112** already says mobile is not a priority
+      because personal phones are not permitted on the ward - that is the line to match, not
+      change. `howto-guides.ts` **436** is about the Loop roster app on your phone, not wardHub.
+
+---
+
+## ✅ DONE 29 Jul 2026 - Session 46c: per-day completion + the day view pops out
+
+Two of Mike's, both pushed, gates green (tsc 0, eslint 0 errors, 71 tests).
+
+- [x] **A recurring job completes one day at a time.** It is ONE record rendered on every day it
+      falls due, and completion was written to `status` - so ticking today's fridge check marked
+      the whole week done, eight struck-through copies from one tap. Completion now lives in
+      **`completedDates`** (one entry per day) with `status` left alone, and everything asks
+      `isCompleteOn(task, date)` (`src/lib/utils/task-completion.ts`) so one-off jobs are
+      untouched. `toggleComplete` takes an optional date; the diary passes the column's own
+      date, every other caller means today and gets it by default. Hide-completed filters ask
+      per day. My Jobs asks "done today" for its Done column, or a recurring job would sit in To
+      do forever. History records the day - "completed" alone is meaningless on a job that
+      recurs. **8 new tests** (`recurring-completion.test.tsx`).
+      ⚠ One existing hand-back test was picking whichever task came first, which happened to be
+      the recurring one, so it now asks for a patient job explicitly.
+- [x] **The expanded day view is a pop-out.** It was a full-screen `fixed` overlay that looked
+      like a page but pushed no history, so Back skipped it and landed wherever you were before
+      the diary; the only exit was a minimise icon buried in the filter row. Now the same shared
+      `Modal` as the `/overview` patient pop-out - backdrop, titled header, close button, Escape,
+      focus trap. Minimise icon gone. Add Task moved from a floating corner button (which
+      hovered over the backdrop) to the foot of the content.
+      **Found while verifying:** `handleToggleComplete` was dropping its date argument, so
+      ticking a recurring job inside the pop-out recorded it against today rather than the day
+      on screen - the same bug one layer up. Fixed and confirmed against the history line.
+
+---
+
 ## ✅ DONE 29 Jul 2026 - Session 46b: the "no input needed" list, worked through
 
 Mike went for dinner and asked for the whole list. Everything below is pushed, with tsc, eslint
@@ -68,15 +120,14 @@ patient panel stays at the end, where "did you actually finish it" is the real q
 now share a module-scope `LinkedJobPanel`. Verified end to end with client-side navigation
 (a full page load resets task state, which is what made this hard to see).
 
-**Two things spotted while fixing it, NOT fixed:**
+**Two things spotted while fixing it:**
 - [ ] **Only ONE ward task is ever generated.** `generateWardTasks` runs `for (let i = 0; i < 1;
       i++)`, so only `WARD_TASK_TEMPLATES[0]` (fridge temps) reaches the demo. Every other ward
       template - controlled drugs, water temps, resus, ligature, walkaround, the lot - is dead
       data. The **Night observation round -> observation-engagement** link added the same day
       can therefore never produce a task. Decide whether the demo should seed more ward jobs.
-- [ ] **A completed recurring task reads as complete on every day column it renders on**, not
-      just the day you completed. Ticking today's fridge check shows 8 struck-through copies
-      across the week. One task record, many renderings - completion needs to be per-date.
+- [x] **DONE 29 Jul - a completed recurring task read as complete on every day column.** See
+      the Session 46c block at the top of this file.
 
 **New follow-up found while doing item 12:**
 - [ ] **The "mark it done" button only exists in the `/guides/[id]` viewer.** Four guides now
@@ -87,6 +138,24 @@ now share a module-scope `LinkedJobPanel`. Verified end to end with client-side 
       Note also that the button renders at the END of a guide: `fridge-temps`, the case that has
       worked since it was built, does not surface it on a fresh page load either, so the
       condition is worth re-reading while in there.
+
+---
+
+## ⏰ NEXT UP (end of 29 Jul) - read this first
+
+Sessions 46a/b/c cleared the whole "no input needed" list bar one. What is left, in the order
+it matters:
+
+1. **Sponsor demo Thu 30 Jul, 1:30pm.** The site is behind the password; the film is on
+   `/about`. Nothing below needs doing before it.
+2. **[BLOCKED on Mike] Sign off the 20 red guides**, and decide what amber means for the 43
+   never-reviewed ones. Still the single biggest thing in the project - content is the risk,
+   not the code.
+3. **After the demo:** the deferred password-endpoint hardening (Section O), then the dev-panel
+   and GDPR review Mike queued to run LAST, then item 8 (governance docs out of the 2,900-line
+   `dev-panel/page.tsx` into markdown - needs his call on which copy wins vs `docs/nhs-ready/`).
+4. **Smaller, no input needed:** only one ward task is ever generated (below); the four static
+   guide routes that cannot show the mark-done panel (Session 46b block); `/about` review stamp.
 
 ---
 

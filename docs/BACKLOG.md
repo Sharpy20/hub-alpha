@@ -202,7 +202,10 @@ the data goes (1:22), 4 the ask for a two-ward pilot (2:52), IG the whole model 
 chapter (`out/3.mp4`). It loses the chapter rail and the closing IG board, which is most of what
 makes the film land. `/gdpr` is byte-identical to its pre-session state.
 
-**Open follow-ups:**
+**Open follow-ups.** ⛔ **OWNED BY ANOTHER SESSION (Mike, 29 Jul) - do not touch `/about`, the
+video, or `E:\Hub\wardhub-video`.** A separate session is working on the explainer video. These
+stay listed for the record only; leave them to that session, including the `/about` review stamp
+below, which that session will be editing the same page for.
 - [ ] **The rendered reel does not match its own source.** `E:\Hub\wardhub-video\src\` is dated
       22 Jul and contains **no chapter rail and no IG board** - `grep` for "rail"/"chapter"/"IG"
       finds nothing. `merged.mp4` (29 Jul) has both. So whatever produced the reel is not in that
@@ -317,7 +320,11 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
       the services off their category node. Same data, one more level of hierarchy; the existing
       node-off-node parent chain hangs below that unchanged. Should also make the cluster filter
       feel like a zoom rather than a hide.
-- [ ] **⚠️ BUG found by audit 27 Jul: 6 national services are unreachable out of area, 1 in the city.**
+- [x] **DONE in Session 42, never ticked (verified 29 Jul).** `near?: string` exists on `Service`
+      (`src/lib/data/service-map.ts:103`) and all six named services carry it: `shelter`,
+      `citizens-advice`, `turn2us`, `rape-crisis`, `carers-direct`, `switchboard-lgbt`. The
+      original write-up is kept below because the modelling reasoning is worth having.
+- [x] **⚠️ BUG found by audit 27 Jul: 6 national services are unreachable out of area, 1 in the city.**
       Mike: "some services don't seem reachable regardless what filter options I use." He was right -
       it is not the filters, it is the parent chain. A child is cut off when its parent is closed
       (`reach[]` in `/service-map/page.tsx`), and six services that serve the WHOLE COUNTRY hang off
@@ -339,7 +346,9 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
       child off; `near` is layout only and never gates access. The six above become `near`, since you
       do not need a Duty to Refer to phone Shelter. Do it in the same pass as the category-first
       layout - they touch the same code.
-- [ ] **Re-centre the map on a node (Mike, 27 Jul).** Click a service (or its category) to make it
+- [x] **DONE in Session 42, never ticked (verified 29 Jul):** clicking a node with its own branch
+      recentres on it (`src/app/service-map/page.tsx:688`).
+- [x] **Re-centre the map on a node (Mike, 27 Jul).** Click a service (or its category) to make it
       the centre and push the rest out of the way, so one branch can be read without the other 100
       nodes competing. Plus a **Recentre button** back to the hub view. Pairs with the category-first
       layout: the category becomes a natural first-level focus target, so the journey is
@@ -1212,10 +1221,12 @@ several findings were actioned the same night). Everything below is unstarted.
       password today, no lockout, no delay, no logging, so a brute-force would be invisible.
       ~10 min. While there: timing-safe compare, and replace the `pathname.includes(".")` gate
       exemption in `proxy.ts` with an explicit static-asset match.
-- [ ] **"Nothing is saved here" notice in the diary** - task state is React memory only
-      (`tasks-provider.tsx` is `useState`, no persistence), so a refresh wipes every claim,
-      hand-back and completion. The GDPR page says so now; the diary itself does not, and mid-demo
-      it reads as broken software.
+- [REJECTED] ~~"Nothing is saved here" notice in the diary~~ - **Mike, 29 Jul: this is by design
+      and not worth cluttering the site for. He demos it live and says it out loud.** The
+      underlying fact is unchanged and stays documented on `/gdpr`: task state is React memory
+      only (`tasks-provider.tsx` is `useState`), so a refresh wipes every claim, hand-back and
+      completion. **Do not re-propose an in-app notice** - if a later evaluation raises it, this
+      is the answer.
 - [ ] **Re-run axe** over everything built since the June audit: hand-back modal, `/overview`,
       rebuilt service map (pan/zoom is the hard one for keyboard), quiz, pay band picker,
       payslip decoder. None of it has ever been machine-tested.

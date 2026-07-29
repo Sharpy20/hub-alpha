@@ -34,6 +34,38 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ✅ DONE 29 Jul 2026 - Session 45: Help is a dropdown, and it holds the demo selector
+
+Mike's ask, and a reminder that a job agreed in conversation never reached this file - it was
+**not** in Section M or anywhere else, so it was lost until he asked again. Anything agreed
+verbally goes in here the same session from now on.
+
+- **Help was a "pop out"**: clicking it replaced the entire nav bar with a toolbar, plus a
+  bouncing "Try different roles!" arrow pointing at the Demo Mode button. It is now a
+  **dropdown in the same shape as More** - same width, same icon-plus-description rows -
+  so the two menus behave identically and the nav never disappears.
+- **The standalone "Demo Mode" button is gone from the header.** It is now the last row of
+  the Help dropdown, renamed **Demo selector**, and opens the same panel (ward, role,
+  specific user, appearance, style theme, log out) with a "Back to Help" row above it.
+  The row's subtitle carries the current state, e.g. "Anne Elliot · Staff · viewing Dickinson".
+- **The viewing-another-ward signal was preserved**, which mattered: it used to turn the
+  Demo Mode button amber, and that is the only cue you are not on your own ward. The Help
+  button now turns amber instead.
+- Mobile: the ward and role blocks are grouped under a **Demo selector** heading, with
+  sub-labels "Viewing ward" and "Role".
+- Copy updated where it named the old menu: intro guide navigation tips, the "Help & More"
+  slide (both the full and limited-build versions), and a comment in `login/page.tsx`.
+- Verified in the browser: dropdown opens, demo view opens and returns, ward switch applies
+  and turns Help amber, mobile menu reads correctly, zero console errors.
+
+**Open follow-up:** [ ] **Task management - move "Mark in error" inside the Edit option**
+(Mike, 29 Jul). It is currently its own control on the task card
+(`src/app/tasks/page.tsx` ~line 1077) sitting alongside the everyday actions, which makes an
+audit-affecting action as easy to hit as completing a job. It should live behind Edit.
+Check `/overview` too, where the same action appears in the inline row actions.
+
+---
+
 ## ✅ DONE 29 Jul 2026 - Session 44: explainer video + two accuracy fixes
 
 Short session. The explainer video is now in the product, and two pages were saying things

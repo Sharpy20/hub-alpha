@@ -285,7 +285,7 @@ const guideSections: GuideSection[] = [
           "Guides - Referral workflows and clinical how-to guides",
           "Patients - Patient list, transfers, and discharge",
           "Search - press Ctrl+K (or the search box) to jump to any guide or link",
-          "More/Help/Demo Mode - Extra tools and settings"
+          "More and Help - extra tools, the guided tour, and the demo selector"
         ],
         visual: <NavVisual />,
       },
@@ -345,8 +345,8 @@ const guideSections: GuideSection[] = [
     color: "from-emerald-500 to-teal-500",
     slides: [
       {
-        title: "Demo Mode Menu",
-        description: "Click 'Demo Mode' in the top-right to open the profile menu. Switch wards, roles, pick a specific staff member, and change the visual theme.",
+        title: "Demo selector",
+        description: "Open Help in the top nav and choose Demo selector. Switch wards, roles, pick a specific staff member, and change the visual theme.",
         tips: [
           "Switch wards to view another ward's tasks",
           "Change demo role to see different permissions",
@@ -386,7 +386,7 @@ const guideSections: GuideSection[] = [
         title: "Help & More Menus",
         description: "The top nav has a Help button and a More dropdown with extra features:",
         tips: [
-          "Help - Interactive Demo, this Intro Guide, FAQ, and Feedback",
+          "Help - Interactive Demo, this Intro Guide, FAQ, Feedback and the Demo selector",
           "More - Editor (create/edit guides), Staff list, Reports, Data Sources",
           "Editor is open to everyone, but only Contributors can publish changes",
           "Safeguarding resources are on the home page - scroll down"
@@ -418,7 +418,7 @@ export default function IntroGuidePage() {
                       "Guides - Referral workflows and clinical how-to guides",
                       "Search - press Ctrl+K (or the search box) to jump to any guide or link",
                       "More - Staff list and Editor",
-                      "Help - Interactive Demo, this Intro Guide, FAQ, and Feedback",
+                      "Help - Interactive Demo, this Intro Guide, FAQ, Feedback and the Demo selector",
                     ],
                   };
                 }

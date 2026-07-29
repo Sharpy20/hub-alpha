@@ -86,7 +86,7 @@ export default function LoginPage() {
 
   // Get staff directly - no useMemo needed for this small dataset
   // In v2, restrict to plain staff only. "Editor" is just a staff member with
-  // the contributor flag (shown with a pen badge), set via the Demo Mode menu.
+  // the contributor flag (shown with a pen badge), set via Help > Demo selector.
   const wardStaff = getStaffByWard(capitalizedWard).filter((s) =>
     isV2 ? s.role === "staff" : true
   );

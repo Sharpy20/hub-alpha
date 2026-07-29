@@ -752,7 +752,9 @@ export default function ServiceMapPage() {
                         </span>
                         <button onClick={() => toggleCollapsed(cl.id)} aria-expanded={!isCollapsed}
                           className="flex-1 flex items-center justify-between gap-2 pl-1.5 pr-4 py-2.5 text-left text-sm font-bold">
-                          <span>{cl.label} <span className="text-xs font-semibold opacity-80">({rows.length})</span></span>
+                          {/* No opacity on the count: dimming white on the red
+                              category chip drops it to 3.53:1 (axe, 29 Jul). */}
+                          <span>{cl.label} <span className="text-xs font-semibold">({rows.length})</span></span>
                           <ChevronDown className={`w-4 h-4 transition-transform ${isCollapsed ? "-rotate-90" : ""}`} />
                         </button>
                       </div>

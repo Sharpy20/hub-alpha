@@ -563,7 +563,7 @@ export default function UnifiedGuidePage() {
                   <input type="checkbox" checked={pickerSel.has(s.id)} onChange={(e) => {
                     setPickerSel((prev) => { const n = new Set(prev); if (e.target.checked) n.add(s.id); else n.delete(s.id); return n; });
                   }} className="mt-0.5 w-4 h-4 rounded border-gray-300 text-nhs-blue focus:ring-nhs-blue" />
-                  <span className="text-sm text-gray-700"><span className="text-gray-400">{i + 1}.</span> {s.title}</span>
+                  <span className="text-sm text-gray-700"><span className="text-gray-500">{i + 1}.</span> {s.title}</span>
                 </label>
               ))}
             </div>
@@ -1101,7 +1101,7 @@ export default function UnifiedGuidePage() {
             <ol className="space-y-1.5 text-sm text-slate-600">
               {guide.sources.map((s) => (
                 <li key={s.n} className="flex gap-2">
-                  <span className="font-bold text-slate-400 flex-shrink-0">{s.n}.</span>
+                  <span className="font-bold text-slate-600 flex-shrink-0">{s.n}.</span>
                   {s.url ? (
                     <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-nhs-blue hover:text-nhs-dark-blue break-words">{s.label}</a>
                   ) : (

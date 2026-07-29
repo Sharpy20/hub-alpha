@@ -187,7 +187,7 @@ export function HandBackModal({
         ) : (
           <div>
             <p className="font-bold text-gray-800 mb-2">
-              <span className="text-gray-400 mr-1.5">1.</span>What state is it in?
+              <span className="text-gray-500 mr-1.5">1.</span>What state is it in?
             </p>
             <div className="space-y-2">
               {HANDBACK_STATES.map((s) => (
@@ -272,7 +272,7 @@ export function HandBackModal({
         ) : (
           <div>
             <p className="font-bold text-gray-800 mb-2">
-              <span className="text-gray-400 mr-1.5">2.</span>What&apos;s next?
+              <span className="text-gray-500 mr-1.5">2.</span>What&apos;s next?
             </p>
             <div className="flex flex-wrap gap-2">
               {HANDBACK_NEXT.map((n) => (
@@ -296,7 +296,7 @@ export function HandBackModal({
             stays editable, so folding this away would hide the date too. */}
         <div>
           <p className="font-bold text-gray-800 mb-2">
-            <span className="text-gray-400 mr-1.5">3.</span>Who holds it now?
+            <span className="text-gray-500 mr-1.5">3.</span>Who holds it now?
           </p>
           <div className="space-y-2">
             {/* The same two, every time. */}

@@ -205,8 +205,10 @@ export function TaskDetailModal({
               </div>
             </div>
             <div className="flex items-center gap-2">
+              {/* red-600, not red-500: white on red-500 measures 3.8:1 at this
+                  size and fails AA (axe, 29 Jul). */}
               {isOverdue && (
-                <span className="bg-red-500 text-white text-xs px-2 py-1 rounded font-medium flex items-center gap-1">
+                <span className="bg-red-600 text-white text-xs px-2 py-1 rounded font-medium flex items-center gap-1">
                   <AlertTriangle className="w-3 h-3" />
                   Overdue
                 </span>
@@ -455,13 +457,13 @@ export function TaskDetailModal({
                 <p className="text-sm text-gray-600 flex items-center gap-2">
                   <Hand className="w-4 h-4" />
                   {isClaimedByMe ? "Claimed by you" : `Claimed by ${task.claimedBy}`}
-                  {task.claimedAt && <span className="text-gray-400">on {task.claimedAt}</span>}
+                  {task.claimedAt && <span className="text-gray-500">on {task.claimedAt}</span>}
                 </p>
               )}
               {isCompleted && task.completedBy && (
                 <p className="text-sm text-gray-600">
                   Completed by {task.completedBy}
-                  {task.completedAt && <span className="text-gray-400"> on {task.completedAt}</span>}
+                  {task.completedAt && <span className="text-gray-500"> on {task.completedAt}</span>}
                 </p>
               )}
             </div>

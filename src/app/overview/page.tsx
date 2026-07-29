@@ -339,7 +339,8 @@ const JobRow = ({
                 className={`${btn} ${
                   task.blocksDischarge
                     ? "text-amber-800 bg-amber-100 hover:bg-amber-200"
-                    : "text-gray-500 bg-gray-100 hover:bg-gray-200"
+                    // gray-600: 500 on a gray-100 chip is 4.39:1 (axe, 29 Jul)
+                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
                 }`}
                 title={
                   task.blocksDischarge
@@ -440,7 +441,7 @@ const StampRow = ({
               <ClipboardCheck className="w-3.5 h-3.5" />
             )}
             {meta.short}
-            <span className={age === "today" ? "text-white/80" : "text-gray-400"}>
+            <span className={age === "today" ? "text-white/90" : "text-gray-500"}>
               {ageLabel(stamp, today)}
             </span>
           </button>
@@ -480,7 +481,9 @@ const CounterButton = ({
       {icon}
       <span className="text-xl font-bold">{value}</span>
     </div>
-    <p className="text-xs text-gray-500">{label}</p>
+    {/* gray-600 not gray-500: these sit on a gray-50 strip, where 500 measures
+        4.07:1 and fails AA (axe, 29 Jul). */}
+    <p className="text-xs text-gray-600">{label}</p>
   </button>
 );
 
@@ -1067,7 +1070,7 @@ const BarriersSwitchInline = ({
     >
       {on ? "YES" : "NO"}
     </span>
-    <span className="text-gray-400">({count} open)</span>
+    <span className="text-gray-500">({count} open)</span>
   </button>
 );
 
@@ -1105,7 +1108,7 @@ const WaitingSwitchInline = ({
     >
       {on ? "YES" : "NO"}
     </span>
-    <span className="text-gray-400">({count} open)</span>
+    <span className="text-gray-500">({count} open)</span>
   </button>
 );
 
@@ -1178,7 +1181,7 @@ const PatientTableRow = ({
               <span className="text-gray-700">{PRIORITY_CONFIG[s.topPriority].label}</span>
             </span>
           ) : (
-            <span className="text-gray-400">-</span>
+            <span className="text-gray-500">-</span>
           )}
         </td>
         <td className="py-2.5 px-3 text-center text-gray-700">
@@ -1645,7 +1648,7 @@ export default function OverviewPage() {
         <Card className="print-hide">
           <CardContent className="p-4 space-y-3">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-xs font-medium text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-xs font-medium text-gray-600 uppercase tracking-wider flex items-center gap-1.5">
                 <Users className="w-4 h-4" /> Reviewing
               </span>
 
@@ -1709,7 +1712,7 @@ export default function OverviewPage() {
               {/* Stamp everything shown - the rapid-review shortcut */}
               {sorted.length > 0 && (
                 <div className="ml-auto flex flex-wrap items-center gap-2">
-                  <span className="text-xs text-gray-400">Stamp all shown</span>
+                  <span className="text-xs text-gray-600">Stamp all shown</span>
                   {STAMP_ITEMS.map((meta) => (
                     <button
                       key={meta.id}
@@ -1976,7 +1979,7 @@ export default function OverviewPage() {
 
               {scopeWards.length > 1 && (
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">Ward</span>
+                  <span className="text-xs font-medium text-gray-600 uppercase tracking-wider">Ward</span>
                   {scopeWards.map((w) => {
                     const on = wardFilter.includes(w.id);
                     return (
@@ -1999,7 +2002,7 @@ export default function OverviewPage() {
               )}
 
               <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500 pt-1">
-                <span className="font-medium text-gray-400 uppercase tracking-wider">Priority</span>
+                <span className="font-medium text-gray-600 uppercase tracking-wider">Priority</span>
                 {(["urgent", "important", "routine"] as TaskPriority[]).map((p) => (
                   <span key={p} className="flex items-center gap-1.5">
                     <span className={`w-2.5 h-2.5 rounded-full ${PRIORITY_DOT[p]}`} />
@@ -2007,7 +2010,7 @@ export default function OverviewPage() {
                   </span>
                 ))}
                 <span className="flex items-center gap-1">🚧 Barrier to discharge</span>
-                <span className="text-gray-400">
+                <span className="text-gray-500">
                   Tap any count to show just those jobs. Tap a stamp to record the review.
                 </span>
               </div>

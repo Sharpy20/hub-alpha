@@ -79,7 +79,7 @@ const Cell = ({ id, value, label: staticLabel, cls = "" }: { id?: string; value:
   const label = id ? LABELS[id] : staticLabel ?? "";
   const inner = (
     <>
-      {label && <span className="block text-[9px] uppercase tracking-wide text-slate-400 leading-tight">{label}</span>}
+      {label && <span className="block text-[9px] uppercase tracking-wide text-slate-600 leading-tight">{label}</span>}
       <span className="block text-[13px] font-semibold tabular-nums leading-tight flex items-center gap-1">
         {id && visited.has(id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{value}
       </span>
@@ -114,7 +114,7 @@ const DedLine = ({ id, amount, strong }: { id: string; amount: string; strong?: 
       className={`w-full grid grid-cols-[1.4fr_1fr_1fr] px-2 py-1 text-[12px] tabular-nums border-t border-slate-200 transition-colors ${boxCls(id)} ${strong ? "font-bold bg-slate-50" : ""}`}>
       <span className="text-left flex items-center gap-1">{visited.has(id) && <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" />}{LABELS[id]}</span>
       <span className="text-right">{amount}</span>
-      <span className="text-right text-slate-400"></span>
+      <span className="text-right text-slate-600"></span>
     </button>
   );
 };
@@ -207,8 +207,8 @@ export function PayslipDecoder() {
           <div className="grid grid-cols-2 border-b border-slate-400 divide-x-2 divide-slate-400">
             {/* Pay and allowance */}
             <div>
-              <div className="px-2 py-1 bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-500">Pay and Allowance <span className="normal-case font-normal">(- = minus amount)</span></div>
-              <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] px-2 py-0.5 text-[8.5px] uppercase text-slate-400 font-semibold tracking-wide">
+              <div className="px-2 py-1 bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-600">Pay and Allowance <span className="normal-case font-normal">(- = minus amount)</span></div>
+              <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] px-2 py-0.5 text-[8.5px] uppercase text-slate-600 font-semibold tracking-wide">
                 <span>Description</span><span className="text-right">Wkd/Earned</span><span className="text-right">Paid/Due</span><span className="text-right">Rate</span><span className="text-right">Amount</span>
               </div>
               <PayLine id="basic" wkd="162.95" paid="162.95" amount="3253.58" />
@@ -219,8 +219,8 @@ export function PayslipDecoder() {
             </div>
             {/* Deductions */}
             <div>
-              <div className="px-2 py-1 bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-500">Deductions <span className="normal-case font-normal">(R indicates refund)</span></div>
-              <div className="grid grid-cols-[1.4fr_1fr_1fr] px-2 py-0.5 text-[8.5px] uppercase text-slate-400 font-semibold tracking-wide">
+              <div className="px-2 py-1 bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-600">Deductions <span className="normal-case font-normal">(R indicates refund)</span></div>
+              <div className="grid grid-cols-[1.4fr_1fr_1fr] px-2 py-0.5 text-[8.5px] uppercase text-slate-600 font-semibold tracking-wide">
                 <span>Description</span><span className="text-right">Amount</span><span className="text-right">Balance C/F</span>
               </div>
               <DedLine id="pension" amount="361.70" />
@@ -233,7 +233,7 @@ export function PayslipDecoder() {
           {/* Year to date + This period summary */}
           <div className="grid grid-cols-2 divide-x-2 divide-slate-400 text-[11px]">
             <div>
-              <div className="px-2 py-1 bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-500">Year To Date Balances (this employment only)</div>
+              <div className="px-2 py-1 bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-600">Year To Date Balances (this employment only)</div>
               <Fig id="ytdgross" label="Gross Pay" value="18,454.30" />
               <Fig label="Taxable Pay" value="16,645.80" />
               <Fig label="Tax Paid" value="2,150.00" />
@@ -243,7 +243,7 @@ export function PayslipDecoder() {
               <Fig label="SD Ref Number" value="87654321" />
             </div>
             <div>
-              <div className="px-2 py-1 bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-500">This Period Summary</div>
+              <div className="px-2 py-1 bg-slate-100 text-[10px] font-semibold uppercase tracking-wide text-slate-600">This Period Summary</div>
               <Fig label="Pensionable Pay" value="3,690.86" />
               <Fig id="taxablepay" label="Taxable Pay" value="3,329.16" />
               <Fig label="Tax Period" value="5 (Monthly)" />
@@ -270,7 +270,7 @@ export function PayslipDecoder() {
             <p className="text-sm text-slate-700 leading-relaxed">{EXPLAIN[sel]}</p>
           </>
         ) : (
-          <p className="flex items-center gap-2 text-sm text-slate-500 italic">
+          <p className="flex items-center gap-2 text-sm text-slate-600 italic">
             <Info className="w-4 h-4 flex-shrink-0" /> Tap any box on the payslip above to see what it means.
           </p>
         )}

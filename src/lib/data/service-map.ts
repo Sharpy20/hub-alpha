@@ -65,16 +65,21 @@ export const EMPTY_FACTS: Facts = {
 
 export interface Cluster { id: string; label: string; color: string; }
 
+// These colours carry WHITE text on the category headers, so each one has to
+// clear 4.5:1 against white. Four did not (axe, 29 Jul) and were darkened by a
+// step or two, keeping the same hue: sky 500->700 (2.77), yellow 600->800
+// (2.93), green 600->700 (3.29), teal 600->700 (3.74). Check any new colour the
+// same way before adding it.
 export const CLUSTERS: Cluster[] = [
   { id: "crisis", label: "Crisis & Urgent", color: "#dc2626" },
   { id: "community", label: "Community & Secondary MH", color: "#005EB8" },
-  { id: "talking", label: "Talking Therapies", color: "#0ea5e9" },
+  { id: "talking", label: "Talking Therapies", color: "#0369a1" },
   { id: "substance", label: "Substance & Addiction", color: "#b45309" },
-  { id: "practical", label: "Housing, Money & Practical", color: "#ca8a04" },
+  { id: "practical", label: "Housing, Money & Practical", color: "#854d0e" },
   { id: "advocacy", label: "Advocacy & Rights", color: "#7c3aed" },
-  { id: "condition", label: "Condition Charities", color: "#16a34a" },
+  { id: "condition", label: "Condition Charities", color: "#15803d" },
   { id: "life", label: "Life Events & Relationships", color: "#db2777" },
-  { id: "cyp", label: "Children, YP & Family", color: "#0d9488" },
+  { id: "cyp", label: "Children, YP & Family", color: "#0f766e" },
   { id: "ld-autism", label: "Learning Disability & Autism", color: "#9333ea" },
   { id: "vets", label: "Veterans", color: "#166534" },
   { id: "dementia", label: "Dementia & Later Life", color: "#475569" },

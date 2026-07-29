@@ -20,6 +20,34 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ⏰ QUEUED (Mike, 29 Jul) - task actions
+
+- [ ] **Retire Drop - hand back becomes the only way to let a job go** (Mike, 29 Jul).
+      Session 42 deliberately split them: Drop for "claimed this by mistake", silent, no state
+      recorded; Hand back for the structured version that leaves a case note. **Mike is
+      reversing that split** - one route out, always recorded. The argument for the original
+      split (a mis-claim should not have to explain itself) is what changed, so do not re-argue
+      it from the old comments, which say the opposite and will need rewriting.
+      **Where Drop lives:** `src/app/tasks/page.tsx` lines **250, 349, 398, 482, 519** (one per
+      style theme - all call `onClaim(task.id)`, which toggles the claim off) and
+      `src/components/modals/TaskDetailModal.tsx` **~533-545**, whose comment explains the split
+      being undone. `my-tasks/page.tsx:223` says "Drop jobs here", but that is drag-and-drop
+      wording, not this feature - leave it.
+      **Open question for Mike:** a genuine mis-claim (wrong patient, fat finger) now has to go
+      through the hand-back sheet. Does hand-back gain a "claimed by mistake" reason that skips
+      the case note, or does every release generate one?
+
+- [ ] **Move "Mark in error" inside Edit** (Mike, 29 Jul - restated 29 Jul, still not done).
+      Currently a top-level control in two places: a red trash icon beside the Edit pencil on
+      the repeating-task row (`src/app/tasks/page.tsx` **~1074**), and a button in the action
+      row next to Take Over and Complete (`src/components/modals/TaskDetailModal.tsx` **~572**,
+      two-tap confirm). An audit-affecting action sits as close to hand as completing a job.
+      `/overview` needs no separate work - it has no control of its own, it opens
+      TaskDetailModal, so fixing the modal fixes it. Keep the two-tap confirm and the Reports
+      restore path exactly as they are.
+
+---
+
 ## ⏰ QUEUED (Mike, 29 Jul) - review /gdpr and /dev-panel, run LAST
 - [ ] Full review of the GDPR page and the Dev Panel for currency and consistency with the
       current pitch. Known drift to check: the dev-panel 60-second pitch still leads with
@@ -139,11 +167,8 @@ because a finding that lives only in an evaluation is a finding nobody actions. 
 flipped: the newest report is the record, older full evaluations can be deleted, deep dives are
 kept. **Write the new report before deleting the old ones.**
 
-**Open follow-up:** [ ] **Task management - move "Mark in error" inside the Edit option**
-(Mike, 29 Jul). It is currently its own control on the task card
-(`src/app/tasks/page.tsx` ~line 1077) sitting alongside the everyday actions, which makes an
-audit-affecting action as easy to hit as completing a job. It should live behind Edit.
-Check `/overview` too, where the same action appears in the inline row actions.
+**Open follow-up:** moved to the QUEUED section at the top of this file (29 Jul), with the
+`/overview` half resolved: there is no separate control there, it opens TaskDetailModal.
 
 ---
 

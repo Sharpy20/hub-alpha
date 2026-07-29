@@ -1773,6 +1773,18 @@ Reworked the evaluation framework, then ran it. Build clean, 32/32 tests, `tsc` 
   reappear in the type, the demo data, the ward settings, or any source file outside the
   allow-list. Verified it actually bites (temporarily reintroduced a reference; the test went
   red and named the file). 36 tests now, was 32.
+- [x] **`room` and `bed` REMOVED too** (Mike: "we dont use on the ward anyways"). They were the
+  last configurable patient fields, so a chunk of machinery went with them: the
+  **Simple/Advanced add-patient toggle** (nothing left to reveal), `PatientEntryMode`,
+  `PatientFieldSettings`/`patientFields`, `RoomConfig` + `settings.rooms`, the whole
+  **Patients tab in `/admin/ward-settings`** (it only held Entry Mode + Field Visibility), and
+  the Room Configuration block in the Layout tab. Room display stripped from 8 surfaces
+  (patient card, tasks modal, discharge audit, patient picker + its search, PatientLink,
+  AddTask, BulkPatientTasks, overview, guide viewer). Ward capacity/`showCapacityOnList` KEPT
+  (a bed count is a ward property, no patient attached). `Appointment.location` KEPT (a meeting
+  venue like "Conference Room A", not a patient location).
+  **The patient record is now: name, ward, status, admission date/time, named nurse,
+  consultant, ward professional, discharge fields.** That is it.
 
 ### 13 July 2026 - Session 37 (Pay-roster split, band picker, rest rules)
 Picked up from a claude.ai chat session (AfC facts verified there against NHS Employers).

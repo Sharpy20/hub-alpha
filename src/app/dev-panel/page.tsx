@@ -1001,7 +1001,9 @@ function DataCatalogueSection() {
             <p className="font-semibold text-nhs-black mb-1">No special category data (28 July 2026)</p>
             <p className="text-sm text-nhs-dark-grey">
               MHA legal status, clinical alerts and diagnoses were removed from the
-              patient record entirely. Not stored, not displayed, not configurable.
+              patient record entirely, along with room and bed, which the ward does
+              not use. What is left is a name, a ward, who is looking after them and
+              the jobs attached to them. Not stored, not displayed, not configurable.
               The reason is as much clinical safety as information governance: wardHub
               is not the clinical record, so any clinical field it held would have no
               owner keeping it current, and a member of staff could act on a stale MHA
@@ -1026,14 +1028,14 @@ function DataCatalogueSection() {
                 <tr><td className="p-2">id</td><td className="p-2">UUID</td><td className="p-2">Indirect</td><td className="p-2">Internal reference</td></tr>
                 <tr><td className="p-2">name</td><td className="p-2">String</td><td className="p-2 text-nhs-red font-medium">Direct PII</td><td className="p-2">Patient name</td></tr>
                 <tr><td className="p-2">ward</td><td className="p-2">String</td><td className="p-2">Non-PII</td><td className="p-2">Current ward</td></tr>
-                <tr><td className="p-2">room</td><td className="p-2">String</td><td className="p-2">Indirect</td><td className="p-2">Location</td></tr>
-                <tr><td className="p-2">bed</td><td className="p-2">String</td><td className="p-2">Indirect</td><td className="p-2">Location</td></tr>
                 <tr><td className="p-2">admissionDate</td><td className="p-2">Date</td><td className="p-2">Indirect</td><td className="p-2">When admitted</td></tr>
                 <tr className="bg-green-50"><td className="p-2 font-medium">admissionTime</td><td className="p-2">Time</td><td className="p-2">Indirect</td><td className="p-2">Triggers 72hr audit auto-generation</td></tr>
                 <tr className="bg-green-50"><td className="p-2 font-medium">wardProfessional</td><td className="p-2">String (FK)</td><td className="p-2">Indirect</td><td className="p-2">Assigned staff/lead/manager responsible for patient</td></tr>
                 <tr className="bg-gray-100"><td className="p-2 line-through text-gray-500">legalStatus</td><td className="p-2 text-gray-500">Enum</td><td className="p-2 font-medium text-gray-600">REMOVED 28 Jul 2026</td><td className="p-2 text-gray-600">MHA status. No longer held anywhere</td></tr>
                 <tr className="bg-gray-100"><td className="p-2 line-through text-gray-500">alerts</td><td className="p-2 text-gray-500">Array</td><td className="p-2 font-medium text-gray-600">REMOVED 28 Jul 2026</td><td className="p-2 text-gray-600">Clinical alerts. No longer held anywhere</td></tr>
                 <tr className="bg-gray-100"><td className="p-2 line-through text-gray-500">diagnoses</td><td className="p-2 text-gray-500">Array</td><td className="p-2 font-medium text-gray-600">REMOVED 28 Jul 2026</td><td className="p-2 text-gray-600">Never populated. No longer held anywhere</td></tr>
+                <tr className="bg-gray-100"><td className="p-2 line-through text-gray-500">room</td><td className="p-2 text-gray-500">String</td><td className="p-2 font-medium text-gray-600">REMOVED 28 Jul 2026</td><td className="p-2 text-gray-600">Not used on the ward. Location no longer held</td></tr>
+                <tr className="bg-gray-100"><td className="p-2 line-through text-gray-500">bed</td><td className="p-2 text-gray-500">String</td><td className="p-2 font-medium text-gray-600">REMOVED 28 Jul 2026</td><td className="p-2 text-gray-600">Not used on the ward. Location no longer held</td></tr>
               </tbody>
             </table>
           </div>
@@ -1447,7 +1449,7 @@ function DPIASection() {
                 </tr>
                 <tr>
                   <td className="p-2">Patient identifiers</td>
-                  <td className="p-2">Name, location</td>
+                  <td className="p-2">Name and ward only. Room and bed removed 28 Jul 2026</td>
                   <td className="p-2">Max+</td>
                 </tr>
                 <tr>

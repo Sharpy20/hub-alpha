@@ -143,13 +143,6 @@ export function DischargeAuditModal({
                 <span className="ml-2 font-medium">{patient.ward}</span>
               </div>
               <div>
-                <span className="text-gray-500">Room:</span>
-                <span className="ml-2 font-medium">
-                  {patient.room}
-                  {patient.bed && ` (${patient.bed})`}
-                </span>
-              </div>
-              <div>
                 <span className="text-gray-500">Admitted:</span>
                 <span className="ml-2 font-medium">
                   {new Date(patient.admissionDate).toLocaleDateString("en-GB")}

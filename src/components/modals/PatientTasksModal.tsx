@@ -106,8 +106,8 @@ export function PatientTasksModal({ isOpen, onClose, patient, tasks, onTaskClick
         <div className="bg-gray-50 rounded-lg p-3 text-sm">
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <span className="text-gray-500">Room:</span>{" "}
-              <span className="font-medium text-gray-900">{patient.room} {patient.bed && `(${patient.bed})`}</span>
+              <span className="text-gray-500">Ward:</span>{" "}
+              <span className="font-medium text-gray-900">{patient.ward}</span>
             </div>
             <div>
               <span className="text-gray-500">Named Nurse:</span>{" "}

@@ -6,7 +6,6 @@ import { useApp } from "@/app/providers";
 import { useWardSettings } from "@/app/ward-settings-provider";
 import {
   Settings,
-  Users,
   Calendar,
   Building2,
   ClipboardCheck,
@@ -16,13 +15,10 @@ import {
   Save,
   ChevronRight,
   AlertTriangle,
-  Check,
 } from "lucide-react";
 import {
   WardSettings,
-  PatientEntryMode,
   FieldVisibility,
-  RoomConfig,
   DischargeChecklistItem,
   AutoAssignRule,
   UserRole,
@@ -30,10 +26,9 @@ import {
 } from "@/lib/types";
 import { toast } from "sonner";
 
-type TabId = "patients" | "tasks" | "shifts" | "layout" | "discharge" | "content";
+type TabId = "tasks" | "shifts" | "layout" | "discharge" | "content";
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
-  { id: "patients", label: "Patients", icon: <Users className="w-4 h-4" /> },
   { id: "tasks", label: "Tasks", icon: <ClipboardCheck className="w-4 h-4" /> },
   { id: "shifts", label: "Shifts", icon: <Calendar className="w-4 h-4" /> },
   { id: "layout", label: "Ward Layout", icon: <Building2 className="w-4 h-4" /> },
@@ -47,11 +42,6 @@ const FIELD_VISIBILITY_OPTIONS: { value: FieldVisibility; label: string }[] = [
   { value: "mandatory", label: "Mandatory" },
 ];
 
-const PATIENT_ENTRY_MODES: { value: PatientEntryMode; label: string; description: string }[] = [
-  { value: "simple", label: "Simple Only", description: "Users can only use simple mode (name only)" },
-  { value: "advanced", label: "Advanced Only", description: "Users must fill all visible fields" },
-  { value: "choice", label: "User Choice", description: "Users can toggle between simple and advanced" },
-];
 
 const ROLES: { value: UserRole; label: string }[] = [
   { value: "staff", label: "Staff" },
@@ -64,7 +54,7 @@ const ROLES: { value: UserRole; label: string }[] = [
 export default function WardSettingsPage() {
   const { user, activeWard } = useApp();
   const { getWardSettings, updateWardSettings } = useWardSettings();
-  const [activeTab, setActiveTab] = useState<TabId>("patients");
+  const [activeTab, setActiveTab] = useState<TabId>("tasks");
   const [localSettings, setLocalSettings] = useState<WardSettings | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -152,8 +142,6 @@ export default function WardSettingsPage() {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "patients":
-        return <PatientsTab settings={localSettings} updateSettings={updateLocal} />;
       case "tasks":
         return <TasksTab settings={localSettings} updateSettings={updateLocal} />;
       case "shifts":
@@ -237,80 +225,6 @@ export default function WardSettingsPage() {
 // ============================================
 // TAB COMPONENTS
 // ============================================
-
-function PatientsTab({
-  settings,
-  updateSettings,
-}: {
-  settings: WardSettings;
-  updateSettings: (updates: Partial<WardSettings>) => void;
-}) {
-
-
-  return (
-    <div className="space-y-8">
-      {/* Entry Mode */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Patient Entry Mode</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {PATIENT_ENTRY_MODES.map((mode) => (
-            <button
-              key={mode.value}
-              onClick={() => updateSettings({ patientEntryMode: mode.value })}
-              className={`p-4 rounded-xl border-2 text-left transition-all ${
-                settings.patientEntryMode === mode.value
-                  ? "border-indigo-500 bg-indigo-50"
-                  : "border-gray-200 hover:border-gray-300"
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-gray-900">{mode.label}</span>
-                {settings.patientEntryMode === mode.value && (
-                  <Check className="w-5 h-5 text-indigo-600" />
-                )}
-              </div>
-              <p className="text-sm text-gray-600">{mode.description}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Field Visibility */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Field Visibility (Advanced Mode)</h3>
-        <div className="space-y-3">
-          {(["room", "bed"] as const).map((field) => (
-            <div key={field} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-              <span className="font-medium text-gray-700 capitalize">
-                {field}
-              </span>
-              <div className="flex gap-2">
-                {FIELD_VISIBILITY_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() =>
-                      updateSettings({
-                        patientFields: { ...settings.patientFields, [field]: opt.value },
-                      })
-                    }
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                      settings.patientFields[field] === opt.value
-                        ? "bg-indigo-500 text-white"
-                        : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-    </div>
-  );
-}
 
 function TasksTab({
   settings,
@@ -543,29 +457,6 @@ function LayoutTab({
   settings: WardSettings;
   updateSettings: (updates: Partial<WardSettings>) => void;
 }) {
-  const [newRoomName, setNewRoomName] = useState("");
-  const [newRoomBeds, setNewRoomBeds] = useState("A,B");
-
-  const addRoom = () => {
-    if (newRoomName.trim()) {
-      const newRoom: RoomConfig = {
-        id: `room-${Date.now()}`,
-        name: newRoomName.trim(),
-        beds: newRoomBeds.split(",").map((b) => b.trim()).filter(Boolean),
-      };
-      updateSettings({
-        rooms: [...settings.rooms, newRoom],
-      });
-      setNewRoomName("");
-      setNewRoomBeds("A,B");
-    }
-  };
-
-  const removeRoom = (id: string) => {
-    updateSettings({
-      rooms: settings.rooms.filter((r) => r.id !== id),
-    });
-  };
 
   return (
     <div className="space-y-8">
@@ -595,59 +486,6 @@ function LayoutTab({
         </div>
       </div>
 
-      {/* Rooms */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Room Configuration</h3>
-
-        {/* Add new room */}
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            value={newRoomName}
-            onChange={(e) => setNewRoomName(e.target.value)}
-            placeholder="Room name (e.g., Room 101)"
-            className="flex-1 p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-          />
-          <input
-            type="text"
-            value={newRoomBeds}
-            onChange={(e) => setNewRoomBeds(e.target.value)}
-            placeholder="Beds (comma separated)"
-            className="w-40 p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
-          />
-          <button
-            onClick={addRoom}
-            disabled={!newRoomName.trim()}
-            className="px-4 py-2 bg-indigo-500 text-white rounded-xl font-medium hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Plus className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Rooms list */}
-        {settings.rooms.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No rooms configured. Add rooms above.</p>
-        ) : (
-          <div className="space-y-2">
-            {settings.rooms.map((room) => (
-              <div key={room.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-                <div>
-                  <span className="font-medium text-gray-700">{room.name}</span>
-                  <span className="text-gray-500 ml-2">
-                    Beds: {room.beds.length > 0 ? room.beds.join(", ") : "None"}
-                  </span>
-                </div>
-                <button
-                  onClick={() => removeRoom(room.id)}
-                  className="p-2 text-red-500 hover:bg-red-100 rounded-lg"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

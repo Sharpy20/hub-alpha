@@ -658,7 +658,7 @@ export default function UnifiedGuidePage() {
                     <div className="w-10 h-10 bg-white/30 rounded-lg flex items-center justify-center"><UserPlus className="w-5 h-5" /></div>
                     <div>
                       <p className="font-semibold">{linkedPatient.name}</p>
-                      <p className="text-white/70 text-sm">{linkedPatient.ward} Ward - Room {linkedPatient.room}</p>
+                      <p className="text-white/70 text-sm">{linkedPatient.ward} Ward</p>
                     </div>
                   </div>
                   <button onClick={() => setShowPatientPicker(true)} className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-medium transition-colors">Change</button>

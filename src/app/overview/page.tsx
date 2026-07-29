@@ -1553,7 +1553,6 @@ export default function OverviewPage() {
                               {selectedPatients.includes(patient.id) && <CheckCircle2 className="w-3 h-3" />}
                             </div>
                             <span className="text-sm">{patient.name}</span>
-                            <span className="text-xs text-gray-500 ml-auto">Room {patient.room}</span>
                           </button>
                         ))}
                       </div>

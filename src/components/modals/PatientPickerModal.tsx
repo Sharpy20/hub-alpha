@@ -40,8 +40,7 @@ export function PatientPickerModal({
         const search = searchTerm.toLowerCase();
         return (
           patient.name.toLowerCase().includes(search) ||
-          patient.ward.toLowerCase().includes(search) ||
-          patient.room?.toLowerCase().includes(search)
+          patient.ward.toLowerCase().includes(search)
         );
       }
 
@@ -105,7 +104,7 @@ export function PatientPickerModal({
             <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-200">
               <p className="text-sm text-indigo-600 font-medium mb-1">Selected Patient</p>
               <p className="text-lg font-bold text-gray-900">{selectedPatient.name}</p>
-              <p className="text-sm text-gray-600">{selectedPatient.ward} Ward - Room {selectedPatient.room}</p>
+              <p className="text-sm text-gray-600">{selectedPatient.ward} Ward</p>
             </div>
 
             {/* What will happen */}
@@ -196,7 +195,7 @@ export function PatientPickerModal({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search patients by name, ward, or room..."
+              placeholder="Search patients by name or ward..."
               className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
             />
           </div>
@@ -248,7 +247,7 @@ export function PatientPickerModal({
                     <div>
                       <p className="font-semibold text-gray-900">{patient.name}</p>
                       <p className="text-sm text-gray-600">
-                        {patient.ward} Ward - Room {patient.room}
+                        {patient.ward} Ward
                       </p>
                     </div>
                     <div className="text-right">

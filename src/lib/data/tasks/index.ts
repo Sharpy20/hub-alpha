@@ -111,8 +111,6 @@ const generateAllPatients = (): Patient[] => {
       const patient: Patient = {
         id: `p${idCounter}`,
         name: patientName,
-        room: `Room ${i + 1}`,
-        bed: i % 2 === 0 ? "A" : "B",
         ward,
         status,
         admissionDate: generateAdmissionDate(i),

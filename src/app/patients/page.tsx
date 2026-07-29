@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
-import { useWardSettings } from "@/app/ward-settings-provider";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { MainLayout } from "@/components/layout";
 import { Card } from "@/components/ui";
@@ -40,7 +39,7 @@ import {
   ALL_DEMO_TASKS,
 } from "@/lib/data/tasks";
 import { getWardProfessionalCandidates } from "@/lib/data/staff";
-import { Patient, DiaryTask, PatientStatus, FieldVisibility } from "@/lib/types";
+import { Patient, DiaryTask, PatientStatus } from "@/lib/types";
 
 
 const PATIENT_STATUS_CONFIG: Record<PatientStatus, { label: string; color: string; bgColor: string; icon: React.ReactNode }> = {
@@ -56,8 +55,6 @@ export default function PatientsPage() {
   const link = useV2Href();
   const { user, activeWard } = useApp();
   const { addTask } = useTasks();
-  const { getWardSettings } = useWardSettings();
-  const wardSettings = getWardSettings(activeWard);
 
   // Bulk "add tasks for a patient" - shared modal, adds into the diary context
   const [isBulkTasksOpen, setIsBulkTasksOpen] = useState(false);
@@ -94,8 +91,6 @@ export default function PatientsPage() {
   const wpCandidates = getWardProfessionalCandidates(wardName);
 
   const [newPatientName, setNewPatientName] = useState("");
-  const [newPatientRoom, setNewPatientRoom] = useState("");
-  const [newPatientBed, setNewPatientBed] = useState("");
   const [newPatientAdmissionTime, setNewPatientAdmissionTime] = useState(
     () => {
       const now = new Date();
@@ -103,27 +98,7 @@ export default function PatientsPage() {
     }
   );
 
-  // Ward admin can set: "simple" (always simple), "advanced" (always advanced), "choice" (user chooses)
-  const patientEntryMode = wardSettings.patientEntryMode;
-  const patientFields = wardSettings.patientFields;
 
-  // Determine effective mode based on ward settings
-  const getDefaultMode = (): "simple" | "advanced" => {
-    if (patientEntryMode === "simple") return "simple";
-    if (patientEntryMode === "advanced") return "advanced";
-    return "simple"; // Default for "choice"
-  };
-  const [addPatientMode, setAddPatientMode] = useState<"simple" | "advanced">(getDefaultMode);
-
-  // Whether toggle is shown (only when "choice" mode)
-  const showModeToggle = patientEntryMode === "choice";
-
-  // Whether to show advanced fields (either mode is advanced, or user toggled to advanced)
-  const showAdvancedFields = addPatientMode === "advanced";
-
-  // Helper to check if a field should be shown
-  const shouldShowField = (field: FieldVisibility): boolean => field !== "hidden";
-  const isFieldRequired = (field: FieldVisibility): boolean => field === "mandatory";
 
   // Initialize patients and tasks from demo data
   useEffect(() => {
@@ -277,8 +252,6 @@ export default function PatientsPage() {
     const newPatient: Patient = {
       id: patientId,
       name: newPatientName.trim(),
-      room: newPatientRoom.trim() || "TBA",
-      bed: newPatientBed.trim() || undefined,
       ward: wardName,
       status: "active",
       admissionDate: nowDate,
@@ -314,8 +287,6 @@ export default function PatientsPage() {
 
     // Reset form
     setNewPatientName("");
-    setNewPatientRoom("");
-    setNewPatientBed("");
     setNewPatientWP("");
     setNewPatientAdmissionTime(
       `${new Date().getHours().toString().padStart(2, "0")}:${new Date().getMinutes().toString().padStart(2, "0")}`
@@ -993,38 +964,7 @@ export default function PatientsPage() {
 
             {/* Form */}
             <div className="p-6 space-y-4 overflow-y-auto flex-1">
-              {/* Simple/Advanced Toggle - only show when ward allows choice */}
-              {showModeToggle && (
-                <div className="flex items-center justify-between bg-gray-100 rounded-xl p-1">
-                  <button
-                    onClick={() => setAddPatientMode("simple")}
-                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                      addPatientMode === "simple"
-                        ? "bg-white text-green-600 shadow-sm"
-                        : "text-gray-600 hover:text-gray-800"
-                    }`}
-                  >
-                    Simple
-                  </button>
-                  <button
-                    onClick={() => setAddPatientMode("advanced")}
-                    className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                      addPatientMode === "advanced"
-                        ? "bg-white text-green-600 shadow-sm"
-                        : "text-gray-600 hover:text-gray-800"
-                    }`}
-                  >
-                    Advanced
-                  </button>
-                </div>
-              )}
 
-              {/* Mode indicator when fixed by admin */}
-              {!showModeToggle && (
-                <div className="text-xs text-gray-500 text-center py-1">
-                  {patientEntryMode === "simple" ? "Simple mode (set by ward admin)" : "Advanced mode (set by ward admin)"}
-                </div>
-              )}
 
               {/* Patient Name - Always shown */}
               <div>
@@ -1077,44 +1017,6 @@ export default function PatientsPage() {
                 </p>
               </div>
 
-              {/* Advanced Fields - shown when in advanced mode */}
-              {showAdvancedFields && (
-                <>
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Room field */}
-                    {shouldShowField(patientFields.room) && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Room {isFieldRequired(patientFields.room) ? "*" : <span className="text-gray-400 font-normal">(optional)</span>}
-                        </label>
-                        <input
-                          type="text"
-                          value={newPatientRoom}
-                          onChange={(e) => setNewPatientRoom(e.target.value)}
-                          placeholder="e.g., 101"
-                          className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
-                        />
-                      </div>
-                    )}
-                    {/* Bed field */}
-                    {shouldShowField(patientFields.bed) && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Bed {isFieldRequired(patientFields.bed) ? "*" : <span className="text-gray-400 font-normal">(optional)</span>}
-                        </label>
-                        <input
-                          type="text"
-                          value={newPatientBed}
-                          onChange={(e) => setNewPatientBed(e.target.value)}
-                          placeholder="e.g., A"
-                          className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                </>
-              )}
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
                 <p>
@@ -1130,8 +1032,6 @@ export default function PatientsPage() {
                 onClick={() => {
                   setIsAddPatientModalOpen(false);
                   setNewPatientName("");
-                  setNewPatientRoom("");
-                  setNewPatientBed("");
                   setNewPatientWP("");
                 }}
                 className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-colors"

@@ -47,7 +47,7 @@ const ALLOWED = [
 const isAllowed = (file: string) => ALLOWED.some((a) => file.includes(a));
 
 describe("no special category data on the patient record", () => {
-  it("the Patient type has no legalStatus, alerts or diagnoses field", () => {
+  it("the Patient type holds none of the removed fields", () => {
     const types = fs.readFileSync(path.join(SRC, "lib", "types", "index.ts"), "utf8");
     const patientBlock = types.slice(
       types.indexOf("export interface Patient {"),
@@ -56,15 +56,20 @@ describe("no special category data on the patient record", () => {
     expect(patientBlock).not.toMatch(/legalStatus/);
     expect(patientBlock).not.toMatch(/\balerts\b/);
     expect(patientBlock).not.toMatch(/diagnoses/);
+    // Room and bed went on 28 Jul too: the ward does not use them.
+    expect(patientBlock).not.toMatch(/\broom\b/);
+    expect(patientBlock).not.toMatch(/\bbed\b/);
   });
 
-  it("no demo patient carries a legal status, alert or diagnosis", () => {
+  it("no demo patient carries any of them", () => {
     expect(DEMO_PATIENTS.length).toBeGreaterThan(0);
     for (const patient of DEMO_PATIENTS) {
       const keys = Object.keys(patient);
       expect(keys).not.toContain("legalStatus");
       expect(keys).not.toContain("alerts");
       expect(keys).not.toContain("diagnoses");
+      expect(keys).not.toContain("room");
+      expect(keys).not.toContain("bed");
     }
   });
 
@@ -81,13 +86,14 @@ describe("no special category data on the patient record", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("the ward settings cannot make them configurable again", () => {
+  it("the ward settings cannot make any of them configurable again", () => {
     const types = fs.readFileSync(path.join(SRC, "lib", "types", "index.ts"), "utf8");
-    const block = types.slice(
-      types.indexOf("export interface PatientFieldSettings {"),
-      types.indexOf("}", types.indexOf("export interface PatientFieldSettings {"))
-    );
-    expect(block).not.toMatch(/legalStatus/);
-    expect(block).not.toMatch(/alerts/);
+    // The whole per-patient field-visibility mechanism is gone. There is nothing
+    // left to hide or show, so a future "just make it optional" has nowhere to
+    // land without someone rebuilding it deliberately.
+    expect(types).not.toMatch(/PatientFieldSettings/);
+    expect(types).not.toMatch(/patientFields/);
+    expect(types).not.toMatch(/PatientEntryMode/);
+    expect(types).not.toMatch(/RoomConfig/);
   });
 });

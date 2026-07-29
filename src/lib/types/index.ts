@@ -373,8 +373,6 @@ export interface Patient {
   id: string;
   name: string;
   preferredName?: string;
-  room: string;
-  bed?: string;
   ward: string;
   status: PatientStatus;
   admissionDate: string;
@@ -426,15 +424,7 @@ export interface StaffMember {
 // ============================================
 
 export type FieldVisibility = "hidden" | "optional" | "mandatory";
-export type PatientEntryMode = "simple" | "advanced" | "choice";
 
-// Only location fields are configurable. MHA status and clinical alerts used to
-// be here; they were removed entirely rather than defaulted to hidden, because a
-// hidden setting is still a field the app is built to hold.
-export interface PatientFieldSettings {
-  room: FieldVisibility;
-  bed: FieldVisibility;
-}
 
 export interface ShiftTimes {
   start: string; // HH:MM format
@@ -447,11 +437,6 @@ export interface ShiftSettings {
   night: ShiftTimes;
 }
 
-export interface RoomConfig {
-  id: string;
-  name: string;
-  beds: string[]; // e.g., ["A", "B"] or ["1", "2"]
-}
 
 export interface DischargeChecklistItem {
   id: string;
@@ -482,8 +467,6 @@ export interface WardSettings {
   wardId: string;
 
   // Patient Settings (1-3)
-  patientEntryMode: PatientEntryMode;
-  patientFields: PatientFieldSettings;
 
   // Task Settings (4-7)
   taskCategories: TaskCategoryConfig[];
@@ -496,7 +479,6 @@ export interface WardSettings {
 
   // Ward Layout (11-14)
   capacity: number;
-  rooms: RoomConfig[];
   showCapacityOnList: boolean;
 
   // Discharge Settings (18-19)
@@ -512,11 +494,6 @@ export interface WardSettings {
 
 // Default ward settings
 export const DEFAULT_WARD_SETTINGS: Omit<WardSettings, "wardId"> = {
-  patientEntryMode: "choice",
-  patientFields: {
-    room: "optional",
-    bed: "optional",
-  },
   taskCategories: [
     { category: "referral", enabled: true, carryOver: true },
     { category: "care", enabled: true, carryOver: true },
@@ -544,7 +521,6 @@ export const DEFAULT_WARD_SETTINGS: Omit<WardSettings, "wardId"> = {
     night: [],
   },
   capacity: 20,
-  rooms: [],
   showCapacityOnList: true,
   dischargeChecklist: [
     { id: "dc-1", label: "All tasks completed or transferred", required: true },

@@ -174,7 +174,6 @@ export function BulkPatientTasksModal({
                       }`}
                     >
                       <span className="font-medium text-gray-900">{patient.name}</span>
-                      <span className="text-xs text-gray-500">Room {patient.room}</span>
                     </button>
                   ))}
                 {wardPatients.filter((p) => p.name.toLowerCase().includes(patientSearch.toLowerCase())).length === 0 && (

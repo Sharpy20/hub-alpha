@@ -36,7 +36,7 @@ export function PatientLink({
             <div className="min-w-0">
               <p className="font-semibold truncate">{patient.name}</p>
               <p className="text-white/70 text-sm truncate">
-                {patient.ward} Ward{patient.room ? ` - Room ${patient.room}` : ""}
+                {patient.ward} Ward
               </p>
             </div>
           </div>

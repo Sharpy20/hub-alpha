@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MainLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, Button } from "@/components/ui";
-import { Shield, Lock, FileText, Mail, Database, Trash2, Check, ShieldAlert } from "lucide-react";
+import { Shield, Lock, FileText, Mail, Database, Trash2, Check, ShieldAlert, Film } from "lucide-react";
 import Link from "next/link";
 import { useV2Href } from "@/lib/hooks/useV2";
 
@@ -41,6 +41,37 @@ export default function GdprPage() {
             Information about data protection and privacy in wardHub
           </p>
         </div>
+
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-bold text-nhs-black flex items-center gap-2">
+              <Film className="w-6 h-6 text-nhs-blue" />
+              Watch: where the data goes
+            </h2>
+            <p className="text-sm text-nhs-dark-grey mt-1">
+              Under 4 minutes. No sound - every word is on screen.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <video
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full rounded-lg bg-black"
+              aria-label="wardHub explainer: how guides are written and where data goes"
+            >
+              <source src="/video/wardhub-explainer.mp4" type="video/mp4" />
+              Your browser cannot play this video. Download it instead:{" "}
+              <a href="/video/wardhub-explainer.mp4">wardhub-explainer.mp4</a>
+            </video>
+            <p className="text-sm text-nhs-dark-grey">
+              Four short scenes: how the guides get written, who checks them, and
+              where anything you enter ends up. It shows the model{" "}
+              <strong>at full build</strong>, not the demo running today - this
+              demo stores nothing on a server and no database is connected.
+            </p>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>

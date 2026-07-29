@@ -29,7 +29,8 @@ import {
   HelpCircle,
 } from "lucide-react";
 
-// Dev panel password removed for demo – open access
+// The dev panel's own password gate was removed (Session 11). The site-wide
+// gate in src/proxy.ts covers this page along with everything else.
 
 // Schema status (would be managed by state in real implementation)
 type SchemaStatus = "LIVE" | "DRAFT" | "UNKNOWN";
@@ -119,7 +120,8 @@ function DevPanelContent() {
           <div>
             <p className="font-semibold text-amber-800 text-sm">Test data only</p>
             <p className="text-amber-700 text-xs mt-0.5">
-              Everything here is demo data. No password needed currently.
+              Everything here is demo data. No separate password for this panel -
+              the shared site password covers the whole site.
             </p>
           </div>
           <button

@@ -23,11 +23,68 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 ## ⏰ QUEUED (Mike, 29 Jul) - review /gdpr and /dev-panel, run LAST
 - [ ] Full review of the GDPR page and the Dev Panel for currency and consistency with the
       current pitch. Known drift to check: the dev-panel 60-second pitch still leads with
-      "Nexus Nudges" (stale vs the Overview/assurance story); the new explainer-video card
-      on /gdpr; two-ward pilot recommendation; staff-nurse wording; sign-off-by-specialty
-      model; the three-data-types framing (skeleton / trust content / patient data).
+      "Nexus Nudges" (stale vs the Overview/assurance story); two-ward pilot recommendation;
+      staff-nurse wording; sign-off-by-specialty model; the three-data-types framing
+      (skeleton / trust content / patient data).
       **Sequencing (Mike): more work is landing in another session first - do this review
       LAST, after that session's changes are in.**
+      *(The explainer video was briefly on /gdpr on 29 Jul and is not there any more - it
+      lives on /about. The GDPR page is byte-identical to its pre-video state, so nothing
+      from that experiment needs reviewing.)*
+
+---
+
+## ✅ DONE 29 Jul 2026 - Session 44: explainer video + two accuracy fixes
+
+Short session. The explainer video is now in the product, and two pages were saying things
+that were not true.
+
+**The video.** `E:\Hub\wardhub-video\out\merged.mp4` is in the repo as
+`public/video/wardhub-full-reel.mp4` (10MB, 1920x1080, 3m42s, **no audio track** - every word
+is on screen). It plays on **`/about`** under the heading **"Understanding the data flow"**.
+Heading and player, nothing else: no description, no transcript, no runtime note. Mike's steer,
+and it is the right one - the film exists to explain the thing, so wrapping it in text that
+explains the film is waffle.
+
+**What the reel actually is** (worth knowing before anyone edits round it): five chapters with
+a nav rail down the right-hand side - 1 the problem (0:00), 2 what wardHub is (0:15), 3 where
+the data goes (1:22), 4 the ask for a two-ward pilot (2:52), IG the whole model on one board
+(3:10). The closing IG board is the only frame that shows the whole argument at once.
+
+**Also fixed:**
+- **`/about` said "no cookies"** and "nothing is sent to any server". Both untrue since the
+  password gate returned (Session 35): `verify-password/route.ts` sets `site_access` (httpOnly,
+  7 days, holds nothing but "the password was right"), and the password itself is POSTed. The
+  same claim was corrected on `/gdpr` in Session 43; this was the last copy of it. The CSP
+  claims in that paragraph were checked and do hold up (`connect-src 'self'`, `font-src 'self'`).
+- **Dev panel notice** said "No password needed currently" - stale for the same reason. Now says
+  there is no *separate* panel password because the site-wide one covers it.
+
+**Tried and reverted, do not redo:** splitting the reel so `/gdpr` got only the 90-second data
+chapter (`out/3.mp4`). It loses the chapter rail and the closing IG board, which is most of what
+makes the film land. `/gdpr` is byte-identical to its pre-session state.
+
+**Open follow-ups:**
+- [ ] **The rendered reel does not match its own source.** `E:\Hub\wardhub-video\src\` is dated
+      22 Jul and contains **no chapter rail and no IG board** - `grep` for "rail"/"chapter"/"IG"
+      finds nothing. `merged.mp4` (29 Jul) has both. So whatever produced the reel is not in that
+      tree. **Re-rendering from `src/` as it stands would silently produce a worse film.** Find
+      the real source before touching it.
+- [ ] **No text alternative for the video** (WCAG 2.1 1.2.1). A transcript was built and then
+      removed on Mike's steer. Deliberate, and defensible while this is a demo - everything the
+      film argues is written out in the cards below it on the same page. Revisit if wardHub ever
+      faces a formal accessibility assessment; the deleted transcript is recoverable from git
+      (commit `39ce1dd`, `src/lib/data/video/transcripts.ts`).
+- [ ] **10MB of video now lives in the repo**, and the 8.7MB 90-second cut stays in git history
+      even though the file is deleted. Fine for Vercel. Decide whether video belongs in the repo
+      at all long-term, or should be hosted outside it.
+- [ ] **`/about` still stamps "Page last reviewed: 5 July 2026"** while the page changed today.
+      Bump it next time the page is genuinely reviewed, not just edited.
+
+**For the demo (Thu 30 Jul, 1:30pm):** the film is at `wardHub.live/about` - behind the site
+password like everything else. If the network is unreliable, play the local copy at
+`E:\Hub\wardhub-video\out\merged.mp4` instead. It is silent by design, so a room with no sound
+loses nothing.
 
 ---
 

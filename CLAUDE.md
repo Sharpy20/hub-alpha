@@ -1786,6 +1786,31 @@ Reworked the evaluation framework, then ran it. Build clean, 32/32 tests, `tsc` 
   **The patient record is now: name, ward, status, admission date/time, named nurse,
   consultant, ward professional, discharge fields.** That is it.
 
+### 29 July 2026 - Session 44 (Explainer video + two accuracy fixes)
+Short session, all pushed as Sharpy20. Build clean, tsc + eslint clean, 36/36 tests.
+
+- [x] **Explainer video in the product.** `E:\Hub\wardhub-video\out\merged.mp4` copied to
+  `public/video/wardhub-full-reel.mp4` (10MB, 1920x1080, 3m42s, **no audio track**). Plays on
+  **`/about`** under **"Understanding the data flow"** - heading and player only, no surrounding
+  copy. Five chapters with a nav rail: the problem, what wardHub is, where the data goes, the
+  ask for a two-ward pilot, and the whole model on one board.
+- [x] **`/about` "no cookies" claim corrected.** Untrue since the password gate returned in
+  Session 35 - `verify-password/route.ts` sets `site_access` (httpOnly, 7 days, holds only
+  "the password was right"). "Nothing is sent to any server" narrowed too, since the password
+  itself is POSTed. Same fix `/gdpr` got in Session 43; this was the last copy. The CSP claims
+  in that paragraph were verified and do hold (`connect-src 'self'`, `font-src 'self'`).
+- [x] **Dev panel notice** no longer says "No password needed currently" - it says there is no
+  *separate* panel password because the site-wide one covers it.
+- **Tried and reverted, do not redo:** splitting the reel so `/gdpr` carried only the 90-second
+  data chapter (`out/3.mp4`). Loses the chapter rail and the closing IG board. `/gdpr` is now
+  byte-identical to its pre-session state.
+- **⚠ GOTCHA:** `E:\Hub\wardhub-video\src\` (22 Jul) has **no chapter rail and no IG board** -
+  the rendered `merged.mp4` (29 Jul) has both, so the reel's real source is not in that tree.
+  Re-rendering from `src/` as it stands would quietly produce a worse film.
+- **Open:** no text alternative for the video (deliberate, transcript recoverable from commit
+  `39ce1dd`); 10MB binary now in the repo; `/about` review stamp still says 5 July. See BACKLOG
+  "DONE 29 Jul 2026 - Session 44".
+
 ### 13 July 2026 - Session 37 (Pay-roster split, band picker, rest rules)
 Picked up from a claude.ai chat session (AfC facts verified there against NHS Employers).
 Pushed (commit b6668b1), build clean, verified in browser.

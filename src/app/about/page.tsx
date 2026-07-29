@@ -119,13 +119,22 @@ export default function AboutPage() {
           <CardContent className="space-y-4">
             <p className="text-nhs-dark-grey">
               Everything you type stays in this browser, in localStorage on
-              this device. Nothing is sent to any server: there are no
-              accounts, no tracking, no analytics and no cookies. Even the
-              fonts are self-hosted, so a page view makes no request to any
-              third party. The site&apos;s security policy (CSP) restricts
+              this device. There are no accounts, no tracking and no analytics,
+              and nothing you enter about a patient or a task is sent anywhere.
+              Even the fonts are self-hosted, so a page view makes no request to
+              any third party. The site&apos;s security policy (CSP) restricts
               connections to the site itself, which means &quot;no data
               leaves&quot; is technically enforced by the browser, not just a
               promise.
+            </p>
+            <p className="text-nhs-dark-grey">
+              There is one exception, and it is about getting through the front
+              door rather than anything you do inside. The site sits behind a
+              single shared password, which is checked on the server, and one
+              cookie (<code className="text-sm">site_access</code>) then
+              remembers for a week that you typed it correctly. It holds no
+              name, no ward and nothing about you - only that the password was
+              right.
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>

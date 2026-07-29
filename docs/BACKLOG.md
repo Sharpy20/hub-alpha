@@ -74,6 +74,33 @@ hidden. `tourDismissed` left the context; `tourSeen` replaced it.
 **Checked, no action:** `/reports` is a deliberate 12-line redirect to `/overview` with a
 comment explaining the 27 Jul merge, not an orphan.
 
+### `/overview` patient tile split in two (Mike, 29 Jul)
+
+Three faults, all fixed. **"Complete" read as a status** - filled green tick, green pill, the
+word "Complete" - so an outstanding job looked done. Now **"Mark complete"** with a hollow
+circle, matching the wording `/guides` already uses. **Outstanding jobs had no heading** while
+completed ones sat under "Done", so state was carried only by row styling; both groups are now
+headed and counted. And **the tile carried the entire working surface**, which put about one
+and a half patients on a screen.
+
+- **Tile scans:** name, ward, barrier/waiting badges, the four counters (still filters), then
+  one line per outstanding job - dot, title, barrier chip, one-click tick. ~360px, was ~700px.
+  Grid now goes to 4 columns on a wide screen.
+- **Pop-out works:** clicking the patient name opens `PatientFocusPanel` (the old card body) in
+  a modal - counters, barrier/waiting switches, review stamps, due dates, all job actions, Done
+  expanded. Held by patient **id** so counters update live as jobs are ticked.
+- **Print kept whole:** the tile is what prints, so each compact row carries a print-only
+  priority + due date and the Done list is print-only on the tile.
+- `Modal` gained `size="xl"` (max-w-4xl) and scrolls past 80vh. Both additive.
+- ⚠ **Watch the file casing:** `src/components/ui/modal.tsx` is lowercase in git. Editing it via
+  a capitalised path renames it on disk and `tsc` then fails with TS1149/TS1261 (two casings in
+  one program). Import it from `@/components/ui`, not by path.
+
+**Open - table view at real scale.** Kept deliberately: redundant with 2 wards and 5 patients,
+but the real thing is **15+ wards at 20 patients each**, where sorting and filtering by column
+is the only way through. Mike expects it will **need work of its own** before then - it has not
+been designed for that volume (paging, sticky header, per-ward grouping all unconsidered).
+
 ---
 
 ## ✅ DONE 29 Jul 2026 - Session 45: Help is a dropdown, and it holds the demo selector

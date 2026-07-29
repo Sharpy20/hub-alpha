@@ -1221,6 +1221,9 @@ several findings were actioned the same night). Everything below is unstarted.
       password today, no lockout, no delay, no logging, so a brute-force would be invisible.
       ~10 min. While there: timing-safe compare, and replace the `pathname.includes(".")` gate
       exemption in `proxy.ts` with an explicit static-asset match.
+      **⏸ DEFERRED UNTIL AFTER THU 30 JUL (Mike, 29 Jul):** it touches the only thing standing
+      between a visitor and the whole site, and a mistake locks the sponsor out mid-demo. Not
+      rejected - do it once the demo is done.
 - [REJECTED] ~~"Nothing is saved here" notice in the diary~~ - **Mike, 29 Jul: this is by design
       and not worth cluttering the site for. He demos it live and says it out loud.** The
       underlying fact is unchanged and stays documented on `/gdpr`: task state is React memory

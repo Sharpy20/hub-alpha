@@ -63,7 +63,10 @@ describe("handing a job back", () => {
 
   it("never marks the job completed - the lie the feature exists to avoid", () => {
     const { result } = setup();
-    const task = result.current.tasks.find((t) => t.type !== "appointment")!;
+    // A patient job specifically: a recurring ward job holds completion per
+    // date rather than on `status`, so `status` would never say "completed"
+    // here and the test would pass for the wrong reason.
+    const task = result.current.tasks.find((t) => t.type === "patient")!;
 
     act(() => result.current.claimTask(task.id, "Anne Elliot"));
     act(() => result.current.toggleComplete(task.id, "Anne Elliot"));

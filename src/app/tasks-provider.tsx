@@ -6,6 +6,7 @@ import { DiaryTask, TaskEvent, TaskEventType, TaskHandback } from "@/lib/types";
 import { ALL_DEMO_TASKS } from "@/lib/data/tasks";
 import { handbackHistoryDetail } from "@/lib/data/tasks/handback";
 import { toLocalDateStr } from "@/lib/utils/date";
+import { isPerDate } from "@/lib/utils/task-completion";
 
 // Append-only task history. The events already fired, they were simply never
 // kept - so Reopen used to wipe completedBy/completedAt with no trace.
@@ -32,7 +33,7 @@ interface TasksContextType {
   setTasks: React.Dispatch<React.SetStateAction<DiaryTask[]>>;
   updateTask: (taskId: string, updates: Partial<DiaryTask>) => void;
   claimTask: (taskId: string, userName: string, steal?: boolean) => void;
-  toggleComplete: (taskId: string, userName: string) => void;
+  toggleComplete: (taskId: string, userName: string, onDate?: string) => void;
   addTask: (task: DiaryTask) => void;
   // Tasks are never deleted - marking in error keeps the record for audit.
   markInError: (taskId: string, userName: string) => void;
@@ -117,13 +118,26 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const toggleComplete = useCallback((taskId: string, userName: string) => {
+  /**
+   * @param onDate the day being ticked off, for a recurring job. A recurring
+   * job is one record shown on every day it falls due, so completing it on
+   * `status` marked every one of those days done at once. Those days are
+   * separate jobs to the people doing them, so completion goes in
+   * `completedDates` instead and `status` is left alone. Defaults to today,
+   * which is what every caller outside the diary means.
+   */
+  const toggleComplete = useCallback((taskId: string, userName: string, onDate?: string) => {
     const today = toLocalDateStr();
     setTasks((prev) => {
       const task = prev.find((t) => t.id === taskId);
       if (!task) return prev;
 
-      const isCompleting = task.status !== "completed";
+      const perDate = isPerDate(task);
+      const day = onDate ?? today;
+      const isCompleting = perDate
+        ? !(task.completedDates ?? []).includes(day)
+        : task.status !== "completed";
+
       const toastMessage = isCompleting
         ? `Completed "${task.title}"`
         : `Reopened "${task.title}"`;
@@ -136,25 +150,39 @@ export function TasksProvider({ children }: { children: ReactNode }) {
         }
       }, 0);
 
-      return prev.map((t) =>
-        t.id === taskId
-          ? withEvent(
-              {
-                ...t,
-                status: t.status === "completed" ? "pending" : "completed",
-                completedAt: t.status === "completed" ? undefined : today,
-                completedBy: t.status === "completed" ? undefined : userName,
-                // Completing settles whatever state it was handed back in.
-                handback: t.status === "completed" ? t.handback : undefined,
-              },
-              // Reopen used to wipe completedBy/completedAt with no trace; the
-              // history line is what makes it non-lossy.
-              t.status === "completed"
-                ? event("reopened", userName, t.completedBy ? `was completed by ${t.completedBy}` : undefined)
-                : event("completed", userName)
-            )
-          : t
-      );
+      return prev.map((t) => {
+        if (t.id !== taskId) return t;
+
+        if (perDate) {
+          const done = t.completedDates ?? [];
+          return withEvent(
+            {
+              ...t,
+              completedDates: isCompleting ? [...done, day] : done.filter((d) => d !== day),
+              // Completing settles whatever state it was handed back in.
+              handback: isCompleting ? undefined : t.handback,
+            },
+            // The date is on the history line - "completed" with no day is
+            // meaningless on a job that recurs.
+            event(isCompleting ? "completed" : "reopened", userName, `for ${day}`)
+          );
+        }
+
+        return withEvent(
+          {
+            ...t,
+            status: t.status === "completed" ? "pending" : "completed",
+            completedAt: t.status === "completed" ? undefined : today,
+            completedBy: t.status === "completed" ? undefined : userName,
+            handback: t.status === "completed" ? t.handback : undefined,
+          },
+          // Reopen used to wipe completedBy/completedAt with no trace; the
+          // history line is what makes it non-lossy.
+          t.status === "completed"
+            ? event("reopened", userName, t.completedBy ? `was completed by ${t.completedBy}` : undefined)
+            : event("completed", userName)
+        );
+      });
     });
   }, []);
 

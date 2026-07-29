@@ -237,6 +237,19 @@ interface BaseTask {
   ward: string;
   completedAt?: string;
   completedBy?: string;
+  /**
+   * Completion for a RECURRING job, one entry per date (YYYY-MM-DD).
+   *
+   * A recurring ward job is a single record rendered on every day it falls due,
+   * so setting `status` on it marked it done on all of them at once - tick
+   * today's fridge check and the whole week read as done (Mike, 29 Jul). The
+   * days are separate jobs to the people doing them, so completion is held per
+   * date here and `status` is left alone.
+   *
+   * Read it through `isCompleteOn(task, date)` rather than directly, so
+   * one-offs and recurring jobs answer the same question the same way.
+   */
+  completedDates?: string[];
   // Task claiming fields
   claimedBy?: string;    // Staff name who claimed this task
   claimedAt?: string;    // Timestamp when claimed

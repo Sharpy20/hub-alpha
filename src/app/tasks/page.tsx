@@ -53,6 +53,7 @@ import {
 import { GuideSelect } from "@/components/ui/GuideSelect";
 import { guideLabel } from "@/lib/data/guides/catalog";
 import { HandbackBadge, handbackTooltip } from "@/components/tasks/HandbackBadge";
+import { isCompleteOn } from "@/lib/utils/task-completion";
 
 // Helper functions – use local date to avoid UTC midnight timezone drift
 const formatDate = (date: Date) => {
@@ -145,8 +146,12 @@ function TaskCard({
   currentUserName,
   compact = false,
   onDragStart,
+  viewDate,
 }: {
   task: DiaryTask;
+  // The day this card is being rendered under. A recurring job is one record
+  // shown on many days, so it needs the date to know whether IT is done here.
+  viewDate?: string;
   onToggleComplete: (id: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
@@ -159,7 +164,7 @@ function TaskCard({
   onDragStart?: (e: React.DragEvent, taskId: string, taskType: string) => void;
 }) {
   const { styleTheme } = useApp();
-  const isCompleted = task.status === "completed";
+  const isCompleted = isCompleteOn(task, viewDate);
   const isOverdue = task.status === "overdue";
   const isInProgress = task.status === "in_progress";
   const isClaimed = !!task.claimedBy;
@@ -556,8 +561,11 @@ function PriorityGroupedTasks({
   compact,
   diaryView = "detailed",
   onTaskDragStart,
+  viewDate,
 }: {
   tasks: DiaryTask[];
+  // Passed straight through to the cards - see TaskCard.
+  viewDate?: string;
   onToggleComplete: (id: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
@@ -610,6 +618,7 @@ function PriorityGroupedTasks({
       <TaskCard
         key={task.id}
         task={task}
+        viewDate={viewDate}
         onToggleComplete={onToggleComplete}
         onClaim={onClaim}
         onSteal={onSteal}
@@ -757,7 +766,7 @@ function DayColumn({
   hideCompleted: boolean;
   diaryView?: "simple" | "detailed";
   showWardTasksSetting?: boolean;
-  onToggleComplete: (id: string) => void;
+  onToggleComplete: (id: string, onDate?: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
   // Opens the job with the hand-back sheet already showing. Replaced Drop,
@@ -818,8 +827,10 @@ function DayColumn({
   const appointments = tasks.filter((t) => t.type === "appointment") as Appointment[];
 
   const shouldHideCompleted = hideCompleted || diaryView === "simple";
+  // Completion is asked per day: a recurring job done on Monday is still
+  // outstanding on Tuesday, so it must not vanish from Tuesday's column.
   const filterCompleted = (items: DiaryTask[]) =>
-    shouldHideCompleted ? items.filter((t) => t.status !== "completed") : items;
+    shouldHideCompleted ? items.filter((t) => !isCompleteOn(t, date)) : items;
 
   // Ward tasks visible on: today (always), future days (show section but maybe collapsed),
   // past days (hidden entirely – no section shown)
@@ -903,7 +914,8 @@ function DayColumn({
         >
           <PriorityGroupedTasks
             tasks={visibleWardTasks}
-            onToggleComplete={onToggleComplete}
+            viewDate={date}
+            onToggleComplete={(id) => onToggleComplete(id, date)}
             onClaim={onClaim}
             onSteal={onSteal}
             onHandBack={onHandBack}
@@ -925,7 +937,8 @@ function DayColumn({
         >
           <PriorityGroupedTasks
             tasks={visiblePatientTasks}
-            onToggleComplete={onToggleComplete}
+            viewDate={date}
+            onToggleComplete={(id) => onToggleComplete(id, date)}
             onClaim={onClaim}
             onSteal={onSteal}
             onHandBack={onHandBack}
@@ -947,7 +960,8 @@ function DayColumn({
         >
           <PriorityGroupedTasks
             tasks={visibleAppointments}
-            onToggleComplete={onToggleComplete}
+            viewDate={date}
+            onToggleComplete={(id) => onToggleComplete(id, date)}
             onClaim={onClaim}
             onSteal={onSteal}
             onHandBack={onHandBack}
@@ -1144,7 +1158,7 @@ function ExpandedDayView({
   date: string;
   tasks: DiaryTask[];
   hideCompleted: boolean;
-  onToggleComplete: (id: string) => void;
+  onToggleComplete: (id: string, onDate?: string) => void;
   onClaim?: (id: string) => void;
   onSteal?: (id: string) => void;
   // Opens the job with the hand-back sheet already showing. Replaced Drop,
@@ -1180,9 +1194,10 @@ function ExpandedDayView({
   const filterTasks = (taskList: DiaryTask[]) => {
     let filtered = taskList;
 
-    // Filter completed if needed
+    // Filter completed if needed - per day, so a recurring job done yesterday
+    // still shows as outstanding on the day being viewed.
     if (hideCompleted) {
-      filtered = filtered.filter(t => t.status !== "completed");
+      filtered = filtered.filter(t => !isCompleteOn(t, date));
     }
 
     // Filter by task type
@@ -1433,7 +1448,7 @@ function ExpandedDayView({
                           <h3 className="font-semibold text-gray-800">Early Shift</h3>
                           <span className="text-xs text-gray-500">({earlyTasks.length})</span>
                         </div>
-                        <PriorityGroupedTasks tasks={earlyTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                        <PriorityGroupedTasks tasks={earlyTasks} viewDate={date} onToggleComplete={(id) => onToggleComplete(id, date)} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
                     )}
                     {showLate && lateTasks.length > 0 && (
@@ -1445,7 +1460,7 @@ function ExpandedDayView({
                           <h3 className="font-semibold text-gray-800">Late Shift</h3>
                           <span className="text-xs text-gray-500">({lateTasks.length})</span>
                         </div>
-                        <PriorityGroupedTasks tasks={lateTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                        <PriorityGroupedTasks tasks={lateTasks} viewDate={date} onToggleComplete={(id) => onToggleComplete(id, date)} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
                     )}
                     {showNight && nightTasks.length > 0 && (
@@ -1457,7 +1472,7 @@ function ExpandedDayView({
                           <h3 className="font-semibold text-gray-800">Night Shift</h3>
                           <span className="text-xs text-gray-500">({nightTasks.length})</span>
                         </div>
-                        <PriorityGroupedTasks tasks={nightTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                        <PriorityGroupedTasks tasks={nightTasks} viewDate={date} onToggleComplete={(id) => onToggleComplete(id, date)} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                       </div>
                     )}
                   </>
@@ -1477,7 +1492,7 @@ function ExpandedDayView({
                   </span>
                 </h2>
                 {showPatientTasks && patientTasks.length > 0 ? (
-                  <PriorityGroupedTasks tasks={patientTasks} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                  <PriorityGroupedTasks tasks={patientTasks} viewDate={date} onToggleComplete={(id) => onToggleComplete(id, date)} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                 ) : (
                   <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
                     None scheduled – tap to add patient task
@@ -1494,7 +1509,7 @@ function ExpandedDayView({
                   </span>
                 </h2>
                 {showAppointments && appointments.length > 0 ? (
-                  <PriorityGroupedTasks tasks={appointments} onToggleComplete={onToggleComplete} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
+                  <PriorityGroupedTasks tasks={appointments} viewDate={date} onToggleComplete={(id) => onToggleComplete(id, date)} onClaim={onClaim} onSteal={onSteal} onHandBack={onHandBack} onTaskClick={onTaskClick} currentUserName={currentUserName} />
                 ) : (
                   <button onClick={onAddTask} className="w-full py-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors text-sm font-medium">
                     None scheduled – tap to add appointment

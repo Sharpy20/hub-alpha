@@ -4,6 +4,7 @@ import { DiaryTask } from "@/lib/types";
 import { showInfo } from "@/lib/utils/toast";
 import { KanbanColumn } from "./KanbanColumn";
 import { toLocalDateStr } from "@/lib/utils/date";
+import { isCompleteOn, isPerDate } from "@/lib/utils/task-completion";
 
 interface KanbanBoardProps {
   tasks: DiaryTask[];
@@ -20,13 +21,14 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
   // Progress" column was self-declared - you dragged a card into it and nobody
   // else learned anything. What you are WAITING on is the useful split: it
   // declutters the list and shows what actually needs chasing.
-  const waitingTasks = myTasks.filter(
-    (t) => t.status !== "completed" && t.handback?.state === "waiting"
-  );
-  const todoTasks = myTasks.filter(
-    (t) => t.status !== "completed" && t.handback?.state !== "waiting"
-  );
-  const completedTasks = myTasks.filter((t) => t.status === "completed");
+  // "Done" here means done TODAY. A recurring ward job records completion per
+  // date rather than on `status`, because one record is shown on every day it
+  // falls due (Mike, 29 Jul) - so asking `status` would leave it in To do
+  // forever no matter how many times it was ticked off.
+  const done = (t: DiaryTask) => isCompleteOn(t);
+  const waitingTasks = myTasks.filter((t) => !done(t) && t.handback?.state === "waiting");
+  const todoTasks = myTasks.filter((t) => !done(t) && t.handback?.state !== "waiting");
+  const completedTasks = myTasks.filter(done);
 
   const handleDragStart = (e: React.DragEvent, task: DiaryTask) => {
     e.dataTransfer.setData("taskId", task.id);
@@ -47,13 +49,25 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
     showInfo("Use Hand back on the job to say who you are waiting on.");
   };
 
-  const handleDropCompleted = (taskId: string) => {
+  // Completing here always means "for today". A recurring job carries its own
+  // per-date list, so writing `status` on one would mark every day it appears
+  // on as done at once.
+  const markDone = (taskId: string) => {
+    const task = myTasks.find((t) => t.id === taskId);
+    const today = toLocalDateStr();
+    if (task && isPerDate(task)) {
+      const dates = task.completedDates ?? [];
+      if (!dates.includes(today)) onUpdateTask(taskId, { completedDates: [...dates, today] });
+      return;
+    }
     onUpdateTask(taskId, {
       status: "completed",
-      completedAt: toLocalDateStr(),
+      completedAt: today,
       completedBy: currentUserName,
     });
   };
+
+  const handleDropCompleted = markDone;
 
   const handleUnclaim = (taskId: string) => {
     onUpdateTask(taskId, {
@@ -62,16 +76,19 @@ export function KanbanBoard({ tasks, currentUserName, onUpdateTask, onTaskClick 
     });
   };
 
-  const handleComplete = (taskId: string) => {
-    onUpdateTask(taskId, {
-      status: "completed",
-      completedAt: toLocalDateStr(),
-      completedBy: currentUserName,
-    });
-  };
+  const handleComplete = markDone;
 
   const handleReopen = (taskId: string) => {
-    // Reopen a completed task - set back to pending
+    // Reopen: for a recurring job that means dropping today from its list, not
+    // resetting a status it never set.
+    const task = myTasks.find((t) => t.id === taskId);
+    if (task && isPerDate(task)) {
+      const today = toLocalDateStr();
+      onUpdateTask(taskId, {
+        completedDates: (task.completedDates ?? []).filter((d) => d !== today),
+      });
+      return;
+    }
     onUpdateTask(taskId, {
       status: "pending",
       completedAt: undefined,

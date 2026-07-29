@@ -191,7 +191,7 @@ const WARD_TASK_TEMPLATES: Array<{
     auditType: "walkaround",
     isNexusLinked: true,
   },
-  { title: "Night observation round", description: "Complete observation checks", priority: "important" as const, shift: "night" as const },
+  { title: "Night observation round", description: "Complete observation checks", priority: "important" as const, shift: "night" as const, linkedGuideId: "observation-engagement" },
   { title: "Night medication round", description: "Overnight medication round", priority: "important" as const, shift: "night" as const },
   {
     title: "Resus equipment check",
@@ -276,18 +276,18 @@ const PATIENT_TASK_TEMPLATES: {
   { title: "Capacity assessment", description: "Complete capacity to consent assessment", category: "documentation" as const, priority: "urgent" as const, linkedGuideId: "capacity-assessment" },
   { title: "Phone GP surgery", description: "Request medication history", category: "phone_call" as const, priority: "routine" as const },
   { title: "Section 17 leave form", description: "Complete S17 paperwork", category: "documentation" as const, priority: "important" as const, linkedGuideId: "section-17" },
-  { title: "Discharge planning meeting", description: "MDT meeting for discharge", category: "discharge_planning" as const, priority: "important" as const },
+  { title: "Discharge planning meeting", description: "MDT meeting for discharge", category: "discharge_planning" as const, priority: "important" as const, linkedGuideId: "leave-discharge-transfer" },
   { title: "CPA Review preparation", description: "Prepare documentation for CPA", category: "documentation" as const, priority: "routine" as const },
   { title: "Update risk assessment", description: "Review and update risk assessment", category: "documentation" as const, priority: "important" as const, linkedGuideId: "risk-assessment" },
   { title: "Chase blood results", description: "Follow up on blood test results", category: "phone_call" as const, priority: "routine" as const },
-  { title: "Care plan review", description: "Review and update care plan", category: "documentation" as const, priority: "routine" as const },
-  { title: "Social worker referral", description: "Refer for social care assessment", category: "referral" as const, priority: "important" as const },
-  { title: "OT assessment", description: "Arrange occupational therapy assessment", category: "referral" as const, priority: "routine" as const },
+  { title: "Care plan review", description: "Review and update care plan", category: "documentation" as const, priority: "routine" as const, linkedGuideId: "care-plan" },
+  { title: "Social worker referral", description: "Refer for social care assessment", category: "referral" as const, priority: "important" as const, linkedGuideId: "social-care" },
+  { title: "OT assessment", description: "Arrange occupational therapy assessment", category: "referral" as const, priority: "routine" as const, linkedGuideId: "ot" },
   { title: "1:1 nursing notes", description: "Complete 1:1 engagement documentation", category: "documentation" as const, priority: "routine" as const },
   { title: "Medication review", description: "Arrange medication review with doctor", category: "documentation" as const, priority: "important" as const },
   { title: "Weekly weight check", description: "Record weekly weight", category: "documentation" as const, priority: "routine" as const, repeatIntervalDays: 7 },
   { title: "Psychology referral", description: "Refer for psychological assessment", category: "referral" as const, priority: "routine" as const },
-  { title: "Section paperwork check", description: "Verify MHA paperwork is in order", category: "documentation" as const, priority: "important" as const },
+  { title: "Section paperwork check", description: "Verify MHA paperwork is in order", category: "documentation" as const, priority: "important" as const, linkedGuideId: "mha-checker" },
   { title: "Physical health review", description: "Complete physical health assessment", category: "documentation" as const, priority: "routine" as const, repeatIntervalDays: 14 },
   { title: "Contact CMHT", description: "Liaise with community team", category: "phone_call" as const, priority: "routine" as const },
 ];
@@ -311,14 +311,18 @@ const PATIENT_TASK_TEMPLATES: {
 // blocksDischarge task, so what is here is exactly what the screen shows.
 // ---------------------------------------------------------------------------
 
+// `guide` links a barrier to the guide that tells you how to shift it. The
+// guide then offers to tick the job off, so someone who reaches the guide from
+// anywhere still closes the loop in the diary. Only set where a guide genuinely
+// covers that job - a wrong link wastes more time than none.
 const BARRIER_TYPES = {
-  housing: { title: "Housing referral - awaiting decision", description: "Duty to Refer sent, nothing back from the local authority yet", priority: "important", category: "referral" },
+  housing: { title: "Housing referral - awaiting decision", description: "Duty to Refer sent, nothing back from the local authority yet", priority: "important", category: "referral", guide: "homeless-discharge" },
   placement: { title: "Supported accommodation - placement search", description: "No placement identified yet", priority: "urgent", category: "discharge_planning" },
   funding: { title: "Funding panel decision", description: "Waiting on the continuing healthcare funding decision", priority: "urgent", category: "discharge_planning" },
-  socialCare: { title: "Social care assessment", description: "Care Act assessment requested, not yet allocated", priority: "important", category: "referral" },
+  socialCare: { title: "Social care assessment", description: "Care Act assessment requested, not yet allocated", priority: "important", category: "referral", guide: "social-care" },
   careHome: { title: "Care home assessment visit", description: "The home wants to assess before they will offer a bed", priority: "important", category: "discharge_planning" },
   transport: { title: "Discharge transport", description: "Transport not yet booked", priority: "routine", category: "discharge_planning" },
-  s117: { title: "S117 aftercare meeting", description: "Aftercare package not yet agreed", priority: "important", category: "discharge_planning" },
+  s117: { title: "S117 aftercare meeting", description: "Aftercare package not yet agreed", priority: "important", category: "discharge_planning", guide: "s117-meeting" },
   cmht: { title: "CMHT allocation", description: "No care coordinator allocated yet", priority: "important", category: "referral" },
   packageOfCare: { title: "Package of care - restart", description: "Restart of the home care package not confirmed", priority: "important", category: "referral" },
 } as const;
@@ -425,6 +429,7 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
       createdAt: formatDate(addDays(today, -raisedDaysAgo)),
       createdBy: staff[n % staff.length],
       blocksDischarge: true,
+      ...("guide" in barrier && barrier.guide ? { linkedGuideId: barrier.guide } : {}),
     });
   });
 

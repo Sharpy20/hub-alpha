@@ -1191,8 +1191,12 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         forms: {
           blank: [
             { label: "ERP Referral Form / Flowchart / Guidance (v12)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/view/9592/685", icon: "📄", note: "On FOCUS - trust login needed" },
+            // The SV2 referral form used to sit here as a dead "#" link. SV2 is
+            // the Derbyshire sexual violence service - a different referral to a
+            // different organisation, and nothing to do with completing an ERP
+            // one, so it was only ever going to send people the wrong way
+            // (Mike, 25 Jul). Removed rather than relinked.
             { label: "ERP Referral Checklist", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/view/9593/685", icon: "📄", note: "On FOCUS - trust login needed" },
-            { label: "SV2 Referral Form", url: "#", icon: "📄" },
           ],
           wagoll: [
             { label: "ERP Referral Example", url: "#", note: "Include history and current presentation" },

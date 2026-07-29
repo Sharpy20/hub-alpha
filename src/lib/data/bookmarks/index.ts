@@ -242,13 +242,17 @@ export const bookmarks: Bookmark[] = [
     description: "Derbyshire Recovery Partnership",
   },
   {
+    // id kept as "trent-pts" so anyone who has starred this keeps their
+    // favourite. Everything a user sees now points at the current service:
+    // Trent PTS is a former IAPT provider and NHS referrals no longer go
+    // through it (verified on derby-talk.co.uk, 29 Jul 2026).
     id: "trent-pts",
-    title: "Trent PTS (IAPT)",
+    title: "Derby & Derbyshire Talking Therapies",
     icon: "💬",
-    url: "https://www.trentpts.co.uk",
+    url: "https://derby-talk.co.uk/for-professionals/",
     category: "External Services",
     requiresFocus: false,
-    description: "Talking therapies",
+    description: "NHS talking therapies, 16+ and registered with a Derby or Derbyshire GP. Delivered by Vita Health Group and Everyturn. Professionals refer through the gateway on this page. Not a crisis service.",
   },
   {
     id: "dsab",

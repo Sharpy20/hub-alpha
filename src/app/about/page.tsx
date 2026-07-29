@@ -88,8 +88,8 @@ export default function AboutPage() {
             </p>
             <ul className="list-disc list-inside space-y-2 text-nhs-dark-grey">
               <li>
-                Logging out clears anything patient-related (the referral chase
-                log and care review tracker)
+                Logging out clears anything patient-related (the care review
+                tracker and review stamps)
               </li>
               <li>
                 The GDPR page has a clear-my-data button that wipes everything

@@ -20,9 +20,61 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ✅ DONE 29 Jul 2026 - Session 46b: the "no input needed" list, worked through
+
+Mike went for dinner and asked for the whole list. Everything below is pushed, with tsc, eslint
+and the tests green at each step. **Item 8 (governance docs out of the dev panel) was NOT done -
+see the bottom of this block for why.**
+
+- [x] **Retire Drop.** Six call sites gone (five card variants, one modal). The card's Hand back
+      opens the detail modal straight into the sheet via a new `openHandBack` prop.
+- [x] **Mark in error moved behind Edit** in the modal, and the red bin dropped from the
+      repeating-task row (its pencil opens the same modal). Killed the bespoke confirm dialog and
+      its handlers. **Kept in the row for COMPLETED jobs only** - they have no Edit button, so it
+      was that or lose the route entirely.
+- [x] **CI workflow** (`.github/workflows/ci.yml`) - tsc, lint, test, build on every push to main
+      and every PR. Does not gate deployment; Vercel is independent. First run green.
+- [x] **Lint clean: 37 errors to 0.** All 36 static-components errors were PayslipDecoder
+      declaring four components inside its own render; hoisted to module scope, state passed by
+      context so no call site changed. `npx eslint src` now exits 0, which is what let CI gate on
+      it.
+- [x] **Tests: 36 to 63.** `proxy.test.ts` (16) covers the password gate and BOTH routing modes by
+      re-importing with `COLLAPSED_FOR_DEMO` faked. `handback.test.tsx` (11) covers the hand-back
+      rules. Checked they bite by breaking the status rule and watching it go red.
+- [x] **axe re-run** over the hand-back modal, /overview + pop-out, service map, quiz and the
+      payslip decoder. Every failure was contrast; all fixed. **Four service-map category colours
+      failed against white text in their own right** and were darkened - the rule is now written
+      above `CLUSTERS`.
+- [x] **Talking Therapies** repointed from Trent PTS (a former IAPT provider) to
+      derby-talk.co.uk, providers named. **Living Well** gained livingwellderbyshire.org.uk.
+      Both URLs fetched and checked first. **SV2 form link removed** from the ERP guide.
+- [x] **Quiz: report a problem** per question - five fixed reasons, no free text, lands on the
+      feedback board carrying the question, its source and its id.
+- [x] **Diary jobs linked to their guides** - 8 added, including the discharge barriers, which
+      had none.
+
+**⛔ NOT DONE - item 8, governance docs out of `dev-panel/page.tsx`.** Three reasons, all
+deliberate. Mike's own instruction is that **dev-panel work runs LAST**, after the other
+session's changes land (see the QUEUED block below). It is a 2,900-line restructure the night
+before the sponsor demo, on a page he may well show. And it carries a decision only he can make:
+`docs/nhs-ready/` already holds partial markdown copies that have drifted from the JSX, so
+something has to win. Left for after Thursday.
+
+**New follow-up found while doing item 12:**
+- [ ] **The "mark it done" button only exists in the `/guides/[id]` viewer.** Four guides now
+      linked to diary jobs are static routes that override it -
+      `observation-engagement`, `care-plan`, `leave-discharge-transfer`, `mha-checker` - so they
+      get the job-to-guide link but cannot close the loop back. Either lift the linked-job block
+      into a shared component the static routes can drop in, or accept the split and say so.
+      Note also that the button renders at the END of a guide: `fridge-temps`, the case that has
+      worked since it was built, does not surface it on a fresh page load either, so the
+      condition is worth re-reading while in there.
+
+---
+
 ## ⏰ QUEUED (Mike, 29 Jul) - task actions
 
-- [ ] **Retire Drop - hand back becomes the only way to let a job go** (Mike, 29 Jul).
+- [x] **Retire Drop - hand back becomes the only way to let a job go** (Mike, 29 Jul).
       Session 42 deliberately split them: Drop for "claimed this by mistake", silent, no state
       recorded; Hand back for the structured version that leaves a case note. **Mike is
       reversing that split** - one route out, always recorded. The argument for the original
@@ -37,7 +89,7 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
       through the hand-back sheet. Does hand-back gain a "claimed by mistake" reason that skips
       the case note, or does every release generate one?
 
-- [ ] **Move "Mark in error" inside Edit** (Mike, 29 Jul - restated 29 Jul, still not done).
+- [x] **Move "Mark in error" inside Edit** (Mike, 29 Jul - restated 29 Jul, still not done).
       Currently a top-level control in two places: a red trash icon beside the Edit pencil on
       the repeating-task row (`src/app/tasks/page.tsx` **~1074**), and a button in the action
       row next to Take Over and Complete (`src/components/modals/TaskDetailModal.tsx` **~572**,
@@ -294,8 +346,8 @@ Real FOCUS URLs now captured (temp link map). These fill the long-standing "86 p
 - [ ] **NEW GUIDE needed** Perinatal <- community referral form (.docx, trust site), Beeches referrer guide (`/10045/685`), community referrer guide (`/10047/685`), referral portal (perinatal.cpms.necsu.nhs.uk)
 - [ ] **NEW GUIDE needed** Specialist Day Services <- referral diagram (`/2411/685`) + 4 group leaflets (Living Well 1134, CST 1132, Lifestyle Matters 1133, Coping w/ Emotions 2410)
 - [ ] **NEW GUIDE needed** Discharge Liaison / placement <- DLT referral form (`/9715/685`) (NB: distinct from the existing EDT guide - do not merge)
-- [ ] Talking Therapies references -> https://derby-talk.co.uk/for-professionals/ (and confirm Vita/Everyturn wording everywhere)
-- [ ] CMHT / Living Well references -> Living Well Operational Policy (.docx) + livingwellderbyshire.org.uk
+- [x] DONE 29 Jul (Session 46b). Talking Therapies references -> https://derby-talk.co.uk/for-professionals/ (and confirm Vita/Everyturn wording everywhere)
+- [x] DONE 29 Jul (Session 46b). CMHT / Living Well references -> Living Well Operational Policy (.docx) + livingwellderbyshire.org.uk
 - FOCUS base host to prepend: `https://focus.derbyshirehealthcareft.nhs.uk`
 - Forensic links: EXCLUDED from demo per standing flag.
 - Rule 4: internal `@nhs.net` team inboxes / mobiles / extensions stay OUT of the live build.
@@ -373,7 +425,7 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 - [ ] Review-only sign-offs: ~47 amber guides for Mike to read + colour (green needs dept sign-off).
 - [~] Items needing Mike's docs/photos: **MOSTLY SUPPLIED 4 Jul** in `docs 1\` - see Sections F-I. Still blocked: MHA office email; social-care secure-email name; restraint holds images (Mike to photograph).
 - [ ] **Capacity assessment guide - make interactive (Mike, 25 Jul)** - choices made while working through the guide should alter the final case-note output (same family as the shift checker / payslip decoder interactivity).
-- [ ] **ERP referral - swap the SV2 form link (Mike, 25 Jul)** - remove the "SV2 Referral Form" link from the ERP workflow's forms step (`referral-workflows.ts` ~line 1104, currently a `#` placeholder) and replace with a link to refer to ERP itself.
+- [x] DONE 29 Jul (Session 46b). **ERP referral - swap the SV2 form link (Mike, 25 Jul)** - remove the "SV2 Referral Form" link from the ERP workflow's forms step (`referral-workflows.ts` ~line 1104, currently a `#` placeholder) and replace with a link to refer to ERP itself.
 - [ ] **SV2 own guide? (checked 25 Jul: NO)** - SV2 has no guide; it only exists as a service-map entry ("SV2 (Sexual Violence, Derbyshire)", 01773 746115) plus the stray form link in the ERP workflow above. Decide whether SV2 deserves its own referral guide when doing the ERP edit.
 - [ ] mh-talking-points: reorder/group + add alternative grounding/distraction techniques (needs Mike's steer on grouping).
 - [ ] OT Tools: confirm the local OT form (MOHOST vs local); improve MOHOST examples.
@@ -398,9 +450,9 @@ ERP in/exclusions, autism assessment, + new Day Services/DLT/MH Physio). Standal
 ## E. Side quests / smaller
 - [ ] **Guide freshness vs source policy (Mike, 25 Jul - EXPLORE, no action yet)** - flag a guide when the policy it was written from is due for renewal, or better, detect that the policy has been UPDATED since the guide was written and request a review. Ideas to explore when we pick this up: store `sourcePolicyName` + `policyVersion`/`policyReviewDate` + `guideWrittenDate` per guide (could live alongside the approval-status map); compare against the 472-policy SharePoint Trust Policy Library (Copilot Policy Checker / Content Auditor agents could do the periodic check since Claude can't reach the tenant); surface as a badge on the guide tile ("source policy updated - review needed") and/or auto-flip the traffic-light status back to amber. Pairs naturally with the contacts directory's `lastReviewed` idea (Section D).
 - [x] **Print on guides** (4 Jul eve, commits 7c4f9c1 + be77d18) - Print button on every how-to guide, referral workflow and thinking-guide, rendering all steps/sections from the SAME data so future edits flow through. Reusable `downloads` field + printable blank forms (police capacity, ABC chart). Builders (risk/care-plan) skipped - they already copy out.
-- [ ] Quiz: add "report an issue" per question (feeds feedback board).
+- [x] DONE 29 Jul (Session 46b). Quiz: add "report an issue" per question (feeds feedback board).
 - [ ] Printable guide "clue cards" (title + 1 line, 4/A4, per group) for physical re-grouping.
-- [ ] Diary-task audit: which other guides map to a ward diary task (like fridge-temps) -> add "mark done" buttons.
+- [x] DONE 29 Jul (Session 46b). Diary-task audit: which other guides map to a ward diary task (like fridge-temps) -> add "mark done" buttons.
 - [ ] New guides Mike flagged: informal patient contract; no-smoking-in-the-trust (Mike has material somewhere).
 - [x] **Student Nurse Placement guide** (side quest, 4 Jul, commit 9f09614) - new "Learning & Development" category, built demo-safe from `dump july\Student Information Pack.docx` (real ward/staff names + internal numbers stripped). RED pending Mike's review. New category has one guide for now; move to Nurse Tools if a dedicated category feels heavy.
 - [x] **Discharge-barrier flag on tasks (Optica-inspired, Mike 4 Jul)** - BUILT Session 35 (8 Jul): `blocksDischarge` on patient tasks + appointments, set via add-task/bulk/detail modals, surfaced in PatientTasksModal, patient cards, /reports and the /overview trust roll-up (22 Jul). STRATEGIC: this is the bridge that makes wardHub the ward-level capture layer feeding discharge-flow tools (e.g. Optica) upward - positions wardHub as complementary, not a rival.
@@ -1230,7 +1282,7 @@ several findings were actioned the same night). Everything below is unstarted.
       only (`tasks-provider.tsx` is `useState`), so a refresh wipes every claim, hand-back and
       completion. **Do not re-propose an in-app notice** - if a later evaluation raises it, this
       is the answer.
-- [ ] **Re-run axe** over everything built since the June audit: hand-back modal, `/overview`,
+- [x] DONE 29 Jul (Session 46b). **Re-run axe** over everything built since the June audit: hand-back modal, `/overview`,
       rebuilt service map (pan/zoom is the hard one for keyboard), quiz, pay band picker,
       payslip decoder. None of it has ever been machine-tested.
 - [ ] **Move the governance docs out of `dev-panel/page.tsx`** (2,900+ lines) into markdown that
@@ -1238,11 +1290,11 @@ several findings were actioned the same night). Everything below is unstarted.
       as JSX, so the IG officer and clinical safety officer who must sign them cannot redline or
       version-compare them. There are already partial markdown copies in `docs/nhs-ready/`, so
       today there are two sets that will drift.
-- [ ] **Clear the 36 `react-hooks/static-components` lint errors** in one mechanical pass. Real
+- [x] DONE 29 Jul (Session 46b). **Clear the 36 `react-hooks/static-components` lint errors** in one mechanical pass. Real
       user-visible consequence, not pedantry: a component declared inside a render gets remounted,
       so text someone has typed into a field can vanish while they type (`PayslipDecoder.tsx` is
       the clearest case).
-- [ ] **Tests for the proxy split and the hand-back reducer.** The proxy test has now been
+- [x] DONE 29 Jul (Session 46b). **Tests for the proxy split and the hand-back reducer.** The proxy test has now been
       recommended in three consecutive evaluations and still does not exist. It matters more now
       that `COLLAPSED_FOR_DEMO = true` leaves all the limited-build logic dormant and unexercised.
 

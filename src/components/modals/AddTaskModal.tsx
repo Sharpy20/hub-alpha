@@ -17,6 +17,8 @@ import {
   PRIORITY_CONFIG,
 } from "@/lib/types";
 import { getActivePatientsByWard } from "@/lib/data/tasks";
+import type { BarrierCategory } from "@/lib/data/barrier-categories";
+import { BarrierCategoryPicker } from "@/components/tasks/BarrierCategoryPicker";
 import { GuideSelect } from "@/components/ui/GuideSelect";
 import { guideLabel } from "@/lib/data/guides/catalog";
 import { useModalA11y } from "@/lib/hooks/useModalA11y";
@@ -76,6 +78,7 @@ export function AddTaskModal({
 
   // Discharge planning: does this task block the patient's discharge?
   const [blocksDischarge, setBlocksDischarge] = useState(false);
+  const [barrierCategory, setBarrierCategory] = useState<BarrierCategory | undefined>(undefined);
 
   // Ward task specific - repeating vs one-off
   const [isRecurring, setIsRecurring] = useState(false);
@@ -130,10 +133,8 @@ export function AddTaskModal({
   // Appointment enhancements - linked referral, guide, and details
   const [apptLinkedReferral, setApptLinkedReferral] = useState("");
   const [apptLinkedGuide, setApptLinkedGuide] = useState("");
-  const [apptMoreDetails, setApptMoreDetails] = useState("");
   const [showApptReferral, setShowApptReferral] = useState(false);
   const [showApptGuide, setShowApptGuide] = useState(false);
-  const [showApptDetails, setShowApptDetails] = useState(false);
 
   // Keyboard support: focus trap + Escape-to-close (WCAG 2.1.2)
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -179,6 +180,7 @@ export function AddTaskModal({
         carryOver: true,
         repeatIntervalDays: patientRepeat ? repeatIntervalDays : undefined,
         blocksDischarge: blocksDischarge || undefined,
+        barrierCategory: blocksDischarge ? barrierCategory : undefined,
       });
     } else if (taskType === "appointment") {
       const timeValue = timeType === "preset"
@@ -187,7 +189,6 @@ export function AddTaskModal({
       // Build description from duration and more details
       const descParts = [];
       if (duration) descParts.push(`Duration: ${duration}`);
-      if (apptMoreDetails.trim()) descParts.push(apptMoreDetails.trim());
       const description = descParts.length > 0 ? descParts.join("\n") : undefined;
 
       onAdd({
@@ -200,6 +201,7 @@ export function AddTaskModal({
         linkedReferralId: showApptReferral && apptLinkedReferral ? apptLinkedReferral : undefined,
         linkedGuideId: showApptGuide && apptLinkedGuide ? apptLinkedGuide : undefined,
         blocksDischarge: blocksDischarge || undefined,
+        barrierCategory: blocksDischarge ? barrierCategory : undefined,
       });
     } else {
       // Ward task - use wardTaskDate for one-off, today for recurring
@@ -558,34 +560,17 @@ export function AddTaskModal({
                 )}
               </div>
 
-              {/* More details toggle */}
-              <div className="border border-gray-200 rounded-xl overflow-hidden">
-                <button
-                  onClick={() => setShowApptDetails(!showApptDetails)}
-                  className={`w-full p-3 text-left flex items-center justify-between transition-colors ${
-                    showApptDetails ? "bg-amber-50" : "bg-white hover:bg-gray-50"
-                  }`}
-                >
-                  <span className="flex items-center gap-2 text-sm">
-                    <span>📝</span>
-                    <span>Add more details</span>
-                  </span>
-                  <span className={`text-lg ${showApptDetails ? "text-amber-600" : "text-gray-400"}`}>
-                    {showApptDetails ? "−" : "+"}
-                  </span>
-                </button>
-                {showApptDetails && (
-                  <div className="p-3 border-t border-gray-200 bg-gray-50">
-                    <textarea
-                      value={apptMoreDetails}
-                      onChange={(e) => setApptMoreDetails(e.target.value)}
-                      placeholder="Add notes, attendees, location details, etc..."
-                      rows={3}
-                      className="w-full p-2 border border-gray-200 rounded-lg text-sm focus:border-amber-500 focus:outline-none resize-none"
-                    />
-                  </div>
-                )}
-              </div>
+              {/* REMOVED 30 Jul: the "Add more details" free-text box.
+                  It offered "notes, attendees, location details, etc" against a
+                  named patient and wrote straight into the appointment's
+                  description - an open notes field on a patient record in all
+                  but name. wardHub's whole position is that it is not a
+                  clinical record and holds nothing but name, job title, ward
+                  and date, so a box inviting notes contradicted it at the point
+                  of entry. Duration still carries into the description below,
+                  which is a structured value, not typed prose.
+                  If this is ever wanted back, the answer is structured
+                  dropdowns like the hand-back sheet - not a textarea. */}
             </div>
           </>
         )}
@@ -847,9 +832,12 @@ export function AddTaskModal({
               </span>
             </button>
             {blocksDischarge && (
-              <p className="text-xs text-amber-700 mt-1">
-                Flags this task as holding up the patient&apos;s discharge, so the MDT can see blockers at a glance.
-              </p>
+              <div className="mt-2 p-3 rounded-xl bg-amber-50 border border-amber-200">
+                <p className="text-xs text-amber-800 mb-2">
+                  Flags this task as holding up the patient&apos;s discharge, so the MDT can see blockers at a glance.
+                </p>
+                <BarrierCategoryPicker value={barrierCategory} onChange={setBarrierCategory} />
+              </div>
             )}
           </div>
         )}

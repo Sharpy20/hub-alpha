@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { X, Hand, Check, Clock, AlertTriangle, Calendar, User, FileText, Link as LinkIcon, Save, Undo2 } from "lucide-react";
 import { HandBackModal } from "@/components/modals/HandBackModal";
 import { HandbackBadge } from "@/components/tasks/HandbackBadge";
@@ -11,6 +11,12 @@ import Link from "next/link";
 import { toasts, showInfo } from "@/lib/utils/toast";
 import { useTasks } from "@/app/tasks-provider";
 import { nextLabel } from "@/lib/data/tasks/handback";
+import { getActivePatientsByWard } from "@/lib/data/tasks";
+import type { BarrierCategory } from "@/lib/data/barrier-categories";
+import {
+  BarrierCategoryPicker,
+  BarrierCategoryChip,
+} from "@/components/tasks/BarrierCategoryPicker";
 
 interface TaskDetailModalProps {
   isOpen: boolean;
@@ -47,20 +53,32 @@ export function TaskDetailModal({
   // a wrongly-entered task and drops it from active views (restorable in Reports).
   const [confirmingError, setConfirmingError] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
-  const [editedDescription, setEditedDescription] = useState("");
   const [editedPriority, setEditedPriority] = useState<"routine" | "important" | "urgent">("routine");
   const [editedDate, setEditedDate] = useState("");
   const [editedTime, setEditedTime] = useState("");
   const [editedPatientName, setEditedPatientName] = useState("");
   const [editedBlocksDischarge, setEditedBlocksDischarge] = useState(false);
+  const [editedBarrierCategory, setEditedBarrierCategory] = useState<BarrierCategory | undefined>(undefined);
+
+  // Patients selectable in edit mode: the active patients on this job's ward.
+  // The job's CURRENT patient is folded in even if they are no longer on that
+  // list (transferred or discharged since), so opening Edit on an older job can
+  // never silently blank the patient off it.
+  const patientOptions = useMemo(() => {
+    if (!task || (task.type !== "patient" && task.type !== "appointment")) return [];
+    const names = getActivePatientsByWard(task.ward).map((p) => p.name);
+    const current = task.patientName;
+    if (current && !names.includes(current)) names.unshift(current);
+    return names;
+  }, [task]);
 
   // Reset edit state when task changes
   useEffect(() => {
     if (task) {
       setEditedTitle(task.title);
-      setEditedDescription(task.description || "");
       setEditedPriority(task.priority);
       setEditedBlocksDischarge(!!task.blocksDischarge);
+      setEditedBarrierCategory(task.barrierCategory);
       // Set date based on task type
       if (task.type === "appointment") {
         setEditedDate(task.appointmentDate);
@@ -119,9 +137,10 @@ export function TaskDetailModal({
 
   const handleSave = () => {
     if (editedTitle.trim() && task) {
+      // `description` is deliberately NOT here - it is read-only in this modal
+      // (see the Description block below for why).
       const updates: Partial<DiaryTask> = {
         title: editedTitle.trim(),
-        description: editedDescription.trim() || undefined,
         priority: editedPriority,
       };
 
@@ -143,6 +162,10 @@ export function TaskDetailModal({
       if (task.type === "patient" || task.type === "appointment") {
         (updates as Partial<typeof task>).patientName = editedPatientName.trim() || undefined;
         updates.blocksDischarge = editedBlocksDischarge || undefined;
+        // Category only means anything on a live barrier - clearing the flag
+        // clears it too, so a job that stops being a barrier and later becomes
+        // one again does not silently inherit the old reason.
+        updates.barrierCategory = editedBlocksDischarge ? editedBarrierCategory : undefined;
       }
 
       onUpdate(task.id, updates);
@@ -244,19 +267,20 @@ export function TaskDetailModal({
             )}
           </div>
 
-          {/* Description */}
+          {/* Description - READ ONLY, deliberately (Mike, 30 Jul).
+              This used to be a free-text textarea in edit mode: an open notes
+              box attached to a named patient, with no length limit and nothing
+              stopping clinical or judgemental content going into it. That is
+              the one thing wardHub must not become - a second clinical record
+              that nobody owns and that never reaches SystmOne. Hand-back was
+              built structured-only for exactly this reason; this box quietly
+              undid it. The seeded description still shows, it just cannot be
+              written to from the UI.
+              If a way to say "what is happening with this job" is ever wanted,
+              the answer is the structured hand-back sheet, not a notes box. */}
           <div>
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</label>
-            {isEditing ? (
-              <textarea
-                value={editedDescription}
-                onChange={(e) => setEditedDescription(e.target.value)}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 min-h-[80px]"
-                placeholder="Add a description..."
-              />
-            ) : (
-              <p className="text-gray-600 mt-1">{task.description || "No description"}</p>
-            )}
+            <p className="text-gray-600 mt-1">{task.description || "No description"}</p>
           </div>
 
           {/* Priority (editable) */}
@@ -294,14 +318,24 @@ export function TaskDetailModal({
           {(task.type === "patient" || task.type === "appointment") && (
             <div>
               <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Patient</label>
+              {/* A SELECT, not a text box (Mike, 30 Jul). Typing a patient name
+                  by hand let you invent one, misspell one, or park a note in the
+                  field. Add Task has always used a picker of the ward's active
+                  patients; this is the same list, so the two agree. */}
               {isEditing ? (
-                <input
-                  type="text"
+                <select
                   value={editedPatientName}
                   onChange={(e) => setEditedPatientName(e.target.value)}
-                  placeholder="Enter patient name..."
-                  className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                />
+                  aria-label="Patient"
+                  className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                >
+                  <option value="">No patient specified</option>
+                  {patientOptions.map((name) => (
+                    <option key={name} value={name}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
               ) : (
                 <p className="text-gray-900 mt-1 flex items-center gap-2">
                   <User className="w-4 h-4 text-gray-400" />
@@ -401,11 +435,20 @@ export function TaskDetailModal({
                   </span>
                 </button>
               ) : (
-                <p className="mt-1">
+                <p className="mt-1 flex flex-wrap items-center gap-1.5">
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-sm font-medium text-amber-800">
                     🚧 Barrier to discharge
                   </span>
+                  <BarrierCategoryChip category={task.barrierCategory} />
                 </p>
+              )}
+              {isEditing && editedBlocksDischarge && (
+                <div className="mt-2 p-3 rounded-lg bg-amber-50 border border-amber-200">
+                  <BarrierCategoryPicker
+                    value={editedBarrierCategory}
+                    onChange={setEditedBarrierCategory}
+                  />
+                </div>
               )}
             </div>
           )}

@@ -11,8 +11,13 @@ import {
   getPatientsByWard,
 } from "@/lib/data/tasks";
 import { WARDS, Patient, DiaryTask, TaskPriority, PRIORITY_CONFIG } from "@/lib/types";
-import { TaskDetailModal } from "@/components/modals";
+import { TaskDetailModal, AddTaskModal } from "@/components/modals";
 import { toLocalDateStr } from "@/lib/utils/date";
+import { daysBlocked, barrierAgeDays } from "@/lib/utils/barriers";
+import { BarrierBand } from "@/components/overview/BarrierBand";
+import { BarrierCategoryChip } from "@/components/tasks/BarrierCategoryPicker";
+import { BARRIER_CATEGORIES, type BarrierCategory } from "@/lib/data/barrier-categories";
+import { printBedMeetingSheet } from "@/lib/utils/bedMeetingSheet";
 import {
   STAMP_ITEMS,
   StampKind,
@@ -51,6 +56,7 @@ import {
   Construction,
   Circle,
   Maximize2,
+  Plus,
 } from "lucide-react";
 
 // Priority ranking + colours, shared by tiles and table so priority is visible
@@ -112,6 +118,11 @@ interface PatientSummary {
   barriers: number;
   waiting: number;
   topPriority: TaskPriority | null;
+  /**
+   * How long this patient has been blocked, from the OLDEST open barrier.
+   * null when nothing is blocking. Derived - nobody types this.
+   */
+  blockedDays: number | null;
 }
 
 function buildSummary(patient: Patient, tasks: DiaryTask[]): PatientSummary {
@@ -136,6 +147,7 @@ function buildSummary(patient: Patient, tasks: DiaryTask[]): PatientSummary {
     barriers,
     waiting,
     topPriority,
+    blockedDays: daysBlocked(tasks),
   };
 }
 
@@ -284,6 +296,14 @@ const JobRow = ({
                 }`}
               >
                 {done ? "✓ barrier cleared" : "🚧 blocks discharge"}
+              </span>
+            )}
+            {!done && task.blocksDischarge && (
+              <BarrierCategoryChip category={task.barrierCategory} className="ml-1 align-middle" />
+            )}
+            {!done && task.blocksDischarge && (
+              <span className="ml-1 text-[10px] text-gray-500 align-middle">
+                {barrierAgeDays(task)}d
               </span>
             )}
           </p>
@@ -628,6 +648,11 @@ const PatientFocusPanel = ({
               🚧 {s.barriers} barrier{s.barriers > 1 ? "s" : ""}
             </span>
           )}
+          {s.blockedDays !== null && (
+            <span className="flex-shrink-0 bg-white/25 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap">
+              blocked {s.blockedDays}d
+            </span>
+          )}
           {s.waiting > 0 && (
             <span className="flex-shrink-0 bg-white/25 rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap">
               ⏳ {s.waiting} waiting
@@ -925,6 +950,17 @@ const PatientCompactCard = ({
               🚧 {s.barriers}
             </span>
           )}
+          {/* How long they have been stuck. Derived from the oldest open
+              barrier, so it costs nobody any typing - and it is the number a
+              bed meeting asks for first. */}
+          {s.blockedDays !== null && (
+            <span
+              className="flex-shrink-0 bg-white/25 rounded-full px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap"
+              title={`Blocked for ${s.blockedDays} day${s.blockedDays === 1 ? "" : "s"}, from the oldest open barrier`}
+            >
+              {s.blockedDays}d
+            </span>
+          )}
           {s.waiting > 0 && (
             <span className="flex-shrink-0 bg-white/25 rounded-full px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap">
               ⏳ {s.waiting}
@@ -1115,7 +1151,7 @@ const WaitingSwitchInline = ({
 // ---------------------------------------------------------------------------
 // Table view
 // ---------------------------------------------------------------------------
-type SortKey = "name" | "ward" | "priority" | "total" | "outstanding" | "overdue" | "barriers" | "waiting" | "completed" | "reviewed";
+type SortKey = "name" | "ward" | "priority" | "total" | "outstanding" | "overdue" | "barriers" | "blocked" | "waiting" | "completed" | "reviewed";
 
 const PatientTableRow = ({
   summary,
@@ -1210,6 +1246,21 @@ const PatientTableRow = ({
             )}
           </button>
         </td>
+        {/* Blocked for how long. Sortable, so "worst first" is one click. */}
+        <td className="py-2.5 px-3 text-center">
+          {s.blockedDays === null ? (
+            <span className="text-gray-300">-</span>
+          ) : (
+            <span
+              className={`text-sm font-semibold ${
+                s.blockedDays >= 14 ? "text-red-700" : s.blockedDays >= 7 ? "text-amber-700" : "text-gray-700"
+              }`}
+              title={`Oldest open barrier raised ${s.blockedDays} day${s.blockedDays === 1 ? "" : "s"} ago`}
+            >
+              {s.blockedDays}d
+            </span>
+          )}
+        </td>
         <td className="py-2.5 px-3 text-center">
           <button className={countBtn} onClick={() => openWith("waiting")} title="Show jobs waiting on someone only">
             {s.waiting > 0 ? (
@@ -1301,7 +1352,7 @@ const PatientTableRow = ({
 // ---------------------------------------------------------------------------
 export default function OverviewPage() {
   const { user, activeWard } = useApp();
-  const { tasks, allTasks, updateTask, toggleComplete, claimTask, restoreFromError } = useTasks();
+  const { tasks, allTasks, addTask, updateTask, toggleComplete, claimTask, restoreFromError } = useTasks();
   const [showInError, setShowInError] = useState(false);
   const inErrorTasks = allTasks.filter((t) => t.inError);
 
@@ -1322,6 +1373,20 @@ export default function OverviewPage() {
   // Pop-out for one patient. Held by id, not by object, so the panel re-reads
   // live task state as jobs are ticked off underneath it.
   const [focusPatientId, setFocusPatientId] = useState<string | null>(null);
+  const [showAddTask, setShowAddTask] = useState(false);
+
+  // Same shape as the diary's. Random suffix keeps ids unique when several are
+  // added in one tick.
+  const handleAddTask = useCallback(
+    (newTask: Partial<DiaryTask>) => {
+      addTask({
+        ...newTask,
+        id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      } as DiaryTask);
+      setShowAddTask(false);
+    },
+    [addTask]
+  );
 
   // Scope. Defaults to the ward the user works on when we know it; when we do
   // not, no ward is preselected and the screen asks for one (Mike, 27 Jul).
@@ -1412,6 +1477,10 @@ export default function OverviewPage() {
   const [statusFilter, setStatusFilter] = useState<"all" | "outstanding" | "done">("all");
   const [barriersOnly, setBarriersOnly] = useState(false);
   const [waitingOnly, setWaitingOnly] = useState(false);
+  // Drill-down from the barriers band: show only patients with an open barrier
+  // of this kind. Turning it on implies barriers-only, since a housing filter
+  // that still lists everyone's other jobs is not a drill-down.
+  const [categoryFilter, setCategoryFilter] = useState<BarrierCategory | null>(null);
   // What the page-level filters mean for each patient tile. Barriers wins if
   // both are on - it is the one people filter by in a bed meeting.
   const pageLens: TaskLens = barriersOnly ? "barriers" : waitingOnly ? "waiting" : "all";
@@ -1446,6 +1515,13 @@ export default function OverviewPage() {
       if (search && !s.patient.name.toLowerCase().includes(search.toLowerCase())) return false;
       if (wardFilter.length > 0 && !wardFilter.includes(s.patient.ward.toLowerCase())) return false;
       if (barriersOnly && s.barriers === 0) return false;
+      if (
+        categoryFilter &&
+        !s.tasks.some(
+          (t) => isOutstanding(t) && t.blocksDischarge && t.barrierCategory === categoryFilter
+        )
+      )
+        return false;
       if (waitingOnly && s.waiting === 0) return false;
       if (overdueOnly && s.overdue === 0) return false;
       if (unreviewedOnly && reviewedToday(s.patient.id)) return false;
@@ -1463,6 +1539,7 @@ export default function OverviewPage() {
     search,
     wardFilter,
     barriersOnly,
+    categoryFilter,
     waitingOnly,
     overdueOnly,
     unreviewedOnly,
@@ -1482,6 +1559,7 @@ export default function OverviewPage() {
         case "outstanding": return s.outstanding;
         case "overdue": return s.overdue;
         case "barriers": return s.barriers;
+        case "blocked": return s.blockedDays ?? 0;
         case "waiting": return s.waiting;
         case "completed": return s.completed;
         case "reviewed": return reviewedToday(s.patient.id) ? 1 : 0;
@@ -1527,6 +1605,7 @@ export default function OverviewPage() {
     (search ? 1 : 0) +
     wardFilter.length +
     (barriersOnly ? 1 : 0) +
+    (categoryFilter ? 1 : 0) +
     (waitingOnly ? 1 : 0) +
     (overdueOnly ? 1 : 0) +
     (unreviewedOnly ? 1 : 0) +
@@ -1537,11 +1616,65 @@ export default function OverviewPage() {
     setSearch("");
     setWardFilter([]);
     setBarriersOnly(false);
+    setCategoryFilter(null);
     setOverdueOnly(false);
     setUnreviewedOnly(false);
     setStatusFilter("all");
     setPriorityFilter("all");
   };
+
+  // The one-page bed-meeting printout. Built from the FILTERED set, so what
+  // prints is what is on screen - printing a different set to the one you just
+  // narrowed down is the kind of surprise that loses trust in a meeting.
+  const handlePrintBedSheet = useCallback(() => {
+    const scopeLabel =
+      scope === "all_wards"
+        ? "All wards"
+        : scope === "single_ward"
+          ? `${getWardDataName(selectedWard)} Ward`
+          : `${filtered.length} selected patient${filtered.length === 1 ? "" : "s"}`;
+
+    let total = 0;
+    let external = 0;
+    let ward = 0;
+    let uncategorised = 0;
+
+    const patients = filtered.map((s) => {
+      const barriers = s.tasks
+        .filter((t) => isOutstanding(t) && t.blocksDischarge)
+        .map((t) => {
+          total++;
+          if (!t.barrierCategory) uncategorised++;
+          else if (BARRIER_CATEGORIES[t.barrierCategory].owner === "external") external++;
+          else ward++;
+          return {
+            title: t.title,
+            category: t.barrierCategory,
+            ageDays: barrierAgeDays(t, today || undefined),
+            overdue: t.status === "overdue",
+          };
+        })
+        .sort((a, b) => b.ageDays - a.ageDays);
+      return {
+        name: s.patient.name,
+        ward: s.patient.ward,
+        blockedDays: s.blockedDays,
+        barriers,
+      };
+    });
+
+    printBedMeetingSheet({
+      scopeLabel,
+      dateLabel: new Date().toLocaleDateString("en-GB", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+      patients,
+      totals: { total, external, ward, uncategorised },
+    });
+  }, [filtered, scope, selectedWard, today]);
 
   const rollup = useMemo(() => {
     return filtered.reduce(
@@ -1603,14 +1736,27 @@ export default function OverviewPage() {
                 </p>
               </div>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => window.print()}
-              className="flex items-center gap-2 bg-white/10 border-white/30 text-white hover:bg-white/20"
-            >
-              <Printer className="w-4 h-4" />
-              Print
-            </Button>
+            <div className="flex items-center gap-2">
+              {/* Two different printouts on purpose. "Print" is the whole screen
+                  for a records copy; the bed-meeting sheet is the one-page
+                  worst-first list you actually carry into the meeting. */}
+              <Button
+                variant="outline"
+                onClick={handlePrintBedSheet}
+                className="flex items-center gap-2 bg-white/10 border-white/30 text-white hover:bg-white/20"
+              >
+                <Printer className="w-4 h-4" />
+                Bed meeting sheet
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => window.print()}
+                className="flex items-center gap-2 bg-white/10 border-white/30 text-white hover:bg-white/20"
+              >
+                <Printer className="w-4 h-4" />
+                Print
+              </Button>
+            </div>
           </div>
 
           {/* Headline numbers for what is currently shown */}
@@ -1641,6 +1787,22 @@ export default function OverviewPage() {
               </p>
               <p className="text-white/70 text-sm">Reviewed today</p>
             </div>
+          </div>
+
+          {/* Barriers band. Reads the FILTERED set, so it always describes what
+              is actually on screen rather than a fixed trust-wide number. */}
+          <div className="print-hide">
+            <BarrierBand
+              tasks={filtered.flatMap((s) => s.tasks)}
+              categoryFilter={categoryFilter}
+              onCategoryFilter={(next) => {
+                setCategoryFilter(next);
+                // A category drill-down only makes sense against barriers, so
+                // turn barriers-only on with it and off again when cleared.
+                setBarriersOnly(!!next);
+              }}
+              today={today || undefined}
+            />
           </div>
         </div>
 
@@ -2082,6 +2244,7 @@ export default function OverviewPage() {
                             { key: "outstanding", label: "Outstanding", align: "center" },
                             { key: "overdue", label: "Overdue", align: "center" },
                             { key: "barriers", label: "Barriers", align: "center" },
+                            { key: "blocked", label: "Blocked", align: "center" },
                             { key: "waiting", label: "Waiting", align: "center" },
                             { key: "completed", label: "Progress", align: "left" },
                             { key: "reviewed", label: "Reviewed", align: "left" },
@@ -2208,8 +2371,35 @@ export default function OverviewPage() {
             onOpenTask={openTaskDetail}
             pageLens={pageLens}
           />
+          {/* Add a job without leaving the review (Mike, 30 Jul). Ward round
+              throws up new jobs as you work down the list, and the alternative
+              was to close the pop-out, go to the diary, add it and find your
+              place again. Opens the SAME Add Task screen the diary uses,
+              pre-filled with this patient. */}
+          <div className="mt-4 pt-4 border-t border-gray-200 print-hide">
+            <Button
+              onClick={() => setShowAddTask(true)}
+              className="w-full flex items-center justify-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Add a job for {focusSummary.patient.name}
+            </Button>
+          </div>
         </Modal>
       )}
+
+      <AddTaskModal
+        isOpen={showAddTask}
+        onClose={() => setShowAddTask(false)}
+        onAdd={handleAddTask}
+        activeWard={focusSummary?.patient.ward ?? getWardDataName(selectedWard)}
+        currentUserName={userName}
+        prefill={
+          focusSummary
+            ? { taskType: "patient", patientName: focusSummary.patient.name }
+            : undefined
+        }
+      />
 
       {/* Full job detail - the same modal the Team Diary uses, so a job opened
           from a review looks and behaves exactly as it does everywhere else. */}

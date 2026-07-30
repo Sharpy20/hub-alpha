@@ -329,16 +329,28 @@ const PATIENT_TASK_TEMPLATES: {
 // guide then offers to tick the job off, so someone who reaches the guide from
 // anywhere still closes the loop in the diary. Only set where a guide genuinely
 // covers that job - a wrong link wastes more time than none.
+//
+// `barrierCategory` is what /overview groups by. Note it is NOT the same thing
+// as `category` on the line below it - that one is the job's own category
+// (referral, discharge_planning) and it stays as it was.
+//
+// Two of these are deliberately WARD-owned (`mdtDecision`, `tto`). Without
+// them every barrier in the demo would be external and the "waiting on someone
+// outside the ward" headline would read 25 of 25, which says nothing. A real
+// ward has a few of its own, and the split only means something if both sides
+// have numbers in them.
 const BARRIER_TYPES = {
-  housing: { title: "Housing referral - awaiting decision", description: "Duty to Refer sent, nothing back from the local authority yet", priority: "important", category: "referral", guide: "homeless-discharge" },
-  placement: { title: "Supported accommodation - placement search", description: "No placement identified yet", priority: "urgent", category: "discharge_planning" },
-  funding: { title: "Funding panel decision", description: "Waiting on the continuing healthcare funding decision", priority: "urgent", category: "discharge_planning" },
-  socialCare: { title: "Social care assessment", description: "Care Act assessment requested, not yet allocated", priority: "important", category: "referral", guide: "social-care" },
-  careHome: { title: "Care home assessment visit", description: "The home wants to assess before they will offer a bed", priority: "important", category: "discharge_planning" },
-  transport: { title: "Discharge transport", description: "Transport not yet booked", priority: "routine", category: "discharge_planning" },
-  s117: { title: "S117 aftercare meeting", description: "Aftercare package not yet agreed", priority: "important", category: "discharge_planning", guide: "s117-meeting" },
-  cmht: { title: "CMHT allocation", description: "No care coordinator allocated yet", priority: "important", category: "referral" },
-  packageOfCare: { title: "Package of care - restart", description: "Restart of the home care package not confirmed", priority: "important", category: "referral" },
+  housing: { title: "Housing referral - awaiting decision", description: "Duty to Refer sent, nothing back from the local authority yet", priority: "important", category: "referral", barrierCategory: "housing", guide: "homeless-discharge" },
+  placement: { title: "Supported accommodation - placement search", description: "No placement identified yet", priority: "urgent", category: "discharge_planning", barrierCategory: "placement" },
+  funding: { title: "Funding panel decision", description: "Waiting on the continuing healthcare funding decision", priority: "urgent", category: "discharge_planning", barrierCategory: "funding" },
+  socialCare: { title: "Social care assessment", description: "Care Act assessment requested, not yet allocated", priority: "important", category: "referral", barrierCategory: "social-care", guide: "social-care" },
+  careHome: { title: "Care home assessment visit", description: "The home wants to assess before they will offer a bed", priority: "important", category: "discharge_planning", barrierCategory: "placement" },
+  transport: { title: "Discharge transport", description: "Transport not yet booked", priority: "routine", category: "discharge_planning", barrierCategory: "transport-equipment" },
+  s117: { title: "S117 aftercare meeting", description: "Aftercare package not yet agreed", priority: "important", category: "discharge_planning", barrierCategory: "social-care", guide: "s117-meeting" },
+  cmht: { title: "CMHT allocation", description: "No care coordinator allocated yet", priority: "important", category: "referral", barrierCategory: "social-care" },
+  packageOfCare: { title: "Package of care - restart", description: "Restart of the home care package not confirmed", priority: "important", category: "referral", barrierCategory: "social-care" },
+  mdtDecision: { title: "MDT decision on discharge destination", description: "Destination not yet agreed at MDT", priority: "important", category: "discharge_planning", barrierCategory: "internal-clinical" },
+  tto: { title: "Discharge medication (TTO) not dispensed", description: "TTO requested, waiting on pharmacy", priority: "routine", category: "documentation", barrierCategory: "internal-clinical" },
 } as const;
 
 type BarrierKey = keyof typeof BARRIER_TYPES;
@@ -355,7 +367,7 @@ const BARRIER_PLAN: Record<string, [number, BarrierKey, number, number][]> = {
   ],
   Keats: [
     [0, "housing", -2, 21], [0, "placement", 4, 16], [0, "funding", 8, 16],
-    [1, "socialCare", 6, 10], [1, "transport", 11, 4],
+    [1, "socialCare", 6, 10], [1, "tto", 11, 4],
     [2, "s117", 5, 13], [2, "packageOfCare", 13, 6],
   ],
   Shelley: [
@@ -363,12 +375,12 @@ const BARRIER_PLAN: Record<string, [number, BarrierKey, number, number][]> = {
     [1, "careHome", 7, 9], [1, "transport", 13, 3],
   ],
   Wordsworth: [
-    [0, "funding", 3, 17], [0, "socialCare", 10, 6],
+    [0, "funding", 3, 17], [0, "mdtDecision", 10, 6],
     [1, "housing", 12, 4],
   ],
   // Nearly clear - the contrast with Dickinson is the point of the screen.
   Byron: [
-    [0, "transport", 5, 3],
+    [0, "mdtDecision", 5, 3],
     [1, "placement", 14, 2],
   ],
 };
@@ -443,6 +455,7 @@ const generatePatientTasks = (ward: string, startId: number): PatientTask[] => {
       createdAt: formatDate(addDays(today, -raisedDaysAgo)),
       createdBy: staff[n % staff.length],
       blocksDischarge: true,
+      barrierCategory: barrier.barrierCategory,
       ...("guide" in barrier && barrier.guide ? { linkedGuideId: barrier.guide } : {}),
     });
   });

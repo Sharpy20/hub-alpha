@@ -25,6 +25,100 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ✅ DONE 30 Jul 2026 - Session 48: free text out of jobs, bed-management barriers in
+
+Morning of the sponsor demo. Gates green throughout (tsc 0, eslint 0, 71 tests). **Nothing in
+the presentation pack was touched** - `src/` only, confirmed against `git status`. Mike's
+standing instruction: **tell him before anything in the pack changes, it has been printed
+three times.**
+
+### ⛔ Free text removed from the job path (Mike, 30 Jul)
+
+Mike could not find these and thought they had been dropped long ago. They had not - they were
+behind the **Edit** button on any job, which is why view mode looked clean. Driven in the
+browser to confirm before changing anything. Three fields, all live, all saved:
+
+- **Description** - a `<textarea>` in `TaskDetailModal`, placeholder "Add a description...",
+  saved to `description`. An open notes box against a named patient. **Now read-only** - the
+  seeded text still displays, it cannot be written to. `description` removed from `handleSave`.
+- **Patient** - a free-text `input` ("Enter patient name...") in the same modal, so you could
+  invent, misspell, or park a note in it. **Now a `<select>`** of the ward's active patients,
+  the same list Add Task has always used. The job's current patient is folded in even if they
+  have since left the ward, so opening Edit can never silently blank it.
+- **Appointment "Add more details"** - a `<textarea>` inviting "notes, attendees, location
+  details, etc" that wrote into the appointment's description (snag 4c, January). **Removed.**
+  Duration still carries through, because that is a structured value.
+
+**The only free text left on a job is the Title**, which has to be typed. The control there is
+wording and training, not schema - Mike's position, and unchanged.
+
+**Worth knowing why the confusion happened:** "structured only, no free text" was true of the
+**hand-back sheet** and of the **retired chase log** (both Session 42). It was never true of
+job creation. The two landed in the same session, which is what merged them in memory.
+
+**⛔ STANDING DECISION - the PII scope is FIXED (Mike, 30 Jul).** Patient **name**, **job
+title**, **ward**, **date**. That is the ask, do not widen it and do not keep re-opening it.
+Ward professional, consultant and named nurse are generic role assignments across patient
+groups - linked to a patient but not identifying of one - and they stay. This supersedes the
+30 Jul evaluation's suggestion of a guidance line in the add-job modal; **do not re-propose it**.
+
+**⛔ STANDING DECISION - guide sign-off is DEMO-ONLY for now (Mike, 30 Jul).** Part of the ask
+in the sponsor presentation is who owns content sign-off; until that is answered he cannot
+sign guides off, and the traffic lights stay as they are. **Stop listing "sign off the 20 red
+guides" as blocked-on-Mike** - it is blocked on the sponsor's answer, not on him.
+
+### Section E bed-management barriers - items 1-6 BUILT
+
+Item 7 (estimated discharge date) deliberately **left out** - it is genuinely new input and
+breaks the no-double-entry promise. Kept as a talking point for the meeting instead.
+
+- [x] **1. Barrier categories.** New `src/lib/data/barrier-categories.ts` - 8 categories worded
+      close to national delayed-discharge reason language, each carrying an `owner` of `ward` or
+      `external`. `barrierCategory?` added to `BaseTask`. Picker (`BarrierCategoryPicker`) shows
+      only once a job is flagged, is **optional**, and is chips not a `<select>` so it is one tap
+      - making it mandatory would put a dropdown between a nurse and flagging something urgent.
+      Wired into Add Task and the detail modal. Uncategorised barriers still count everywhere.
+      **Two of the demo barrier types are deliberately ward-owned** (`mdtDecision`, `tto`),
+      swapped in place of three existing entries so ward totals are unchanged - without them
+      every barrier would be external and the split would read 25 of 25, which says nothing.
+- [x] **2. Days blocked.** Derived in `src/lib/utils/barriers.ts` from the **oldest** open
+      barrier's `createdAt` (not the newest, which would reset the clock every time somebody
+      flagged something else). Shows on both patient card variants and as a **sortable column**,
+      amber past 7 days, red past 14. Zero extra input from anyone.
+- [x] **3. Ours vs theirs.** New `BarrierBand` on `/overview`: *"22 of 25 barriers waiting on
+      someone outside the ward"*, said as a sentence rather than two numbers in boxes. Reads the
+      **filtered** set, so it always describes what is on screen. Verified live at 22 external /
+      3 ours / 88%.
+- [x] **4. Drill-down - REINTERPRETED, read this before "fixing" it.** The original item said
+      "/overview ward rows -> /reports pre-filtered". Both halves are gone: `/reports` is a
+      redirect stub since Session 41, and the trust-wide ward roll-up was **deliberately dropped
+      27 Jul** for burying the useful bit. So the drill-down is now the **category chips**, which
+      are filters - tap "Housing 4" and the list narrows to those patients (verified: 4 patients,
+      9 barriers). Turning one on implies barriers-only. **Do not resurrect the ward league table.**
+- [x] **5. Bed-meeting print sheet.** `src/lib/utils/bedMeetingSheet.ts` - one page, worst-first
+      by days blocked, category tag and age per barrier, IG footer. Deliberately NOT "print the
+      /overview screen": filters, counters and stamps mean nothing on paper. `printHtml`, `esc`
+      and `IG_FOOTER` exported from `printDoc.ts` so there is still ONE iframe implementation.
+      Sits beside the existing Print button, which is unchanged.
+- [x] **6. Trend sparkline.** 14 days, in the band. **Demo data and labelled as such on screen**
+      ("Demo shape, from when each was raised"). There is no persistence in wardHub, so a real
+      trend cannot exist - instead it replays when today's open barriers were raised, which is
+      real data read backwards rather than an invented curve. No randomness, so it is stable
+      across renders and identical for everyone in the room.
+- [x] **`+ Add a job` on the `/overview` patient pop-out** (Mike, 30 Jul). Ward round throws up
+      new jobs as you work down the list; the alternative was closing the pop-out, going to the
+      diary and finding your place again. Opens the same `AddTaskModal` the diary uses,
+      pre-filled with that patient.
+
+**Verified in the browser end to end**, not just built: free-text fields gone and the patient
+picker populated, band and chips at both single-ward and all-wards scope, the housing
+drill-down, days-blocked badges, the print sheet's rendered output, and the pre-filled Add Task.
+⚠ **Gotcha for next time:** stubbing `Window.prototype.print` in the parent does NOT reach the
+print iframe - it is a different realm, and a native print dialog will hang the whole browser
+pane. Grab the iframe straight after the click and stub `iframe.contentWindow.print` instead.
+
+---
+
 ## ✅ DONE 29 Jul 2026 - no more "works on your phone", anywhere
 
 **Standing decision (Mike, 29 Jul):** wardHub does not claim to work on a phone. It *renders*

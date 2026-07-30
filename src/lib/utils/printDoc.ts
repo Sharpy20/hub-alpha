@@ -3,11 +3,13 @@
 // an iframe (not window.open) avoids pop-up blockers and keeps the app's global
 // print CSS - which hides all <button>s and strips colour - out of the way.
 
-const esc = (s: string) =>
+export const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 // Write `innerHtml` (a full <body> content) into a throwaway iframe and print it.
-function printHtml(title: string, headExtra: string, innerHtml: string) {
+// Exported so other printable views (e.g. the bed-meeting sheet) reuse ONE
+// iframe implementation rather than growing a second one.
+export function printHtml(title: string, headExtra: string, innerHtml: string) {
   const html = `<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>${esc(title)}</title>
 <style>
   body{font-family:Arial,"Source Sans 3",sans-serif;color:#212B32;line-height:1.45;font-size:11pt;margin:0;}
@@ -38,7 +40,7 @@ function printHtml(title: string, headExtra: string, innerHtml: string) {
   }, 250);
 }
 
-const IG_FOOTER =
+export const IG_FOOTER =
   `<footer><strong>Information governance:</strong> this printout may contain patient-identifiable information. Handle it in line with Trust policy - keep it secure, do not leave it unattended, and dispose of it in confidential waste. wardHub does not store what you entered.</footer>`;
 
 // ---- Free-text clinical documents (MSE, care plan, risk/RMP) ----

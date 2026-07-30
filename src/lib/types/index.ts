@@ -1,3 +1,7 @@
+import type { BarrierCategory } from "@/lib/data/barrier-categories";
+
+export type { BarrierCategory };
+
 // ============================================
 // CONTENT VERIFICATION TYPES
 // ============================================
@@ -257,6 +261,14 @@ interface BaseTask {
   // the MDT can see at a glance what is holding a discharge up. Only surfaced
   // for patient tasks and appointments (a ward task cannot block a discharge).
   blocksDischarge?: boolean;
+  // What KIND of barrier, so /overview can group them. Deliberately optional:
+  // grouping by job title falls apart on real data ("Chase social care" vs
+  // "chase SW"), but making the picker mandatory would put a dropdown between
+  // a nurse and flagging something urgent. Uncategorised barriers still count
+  // everywhere, they just land in their own bucket. See
+  // `src/lib/data/barrier-categories.ts` for the list and the ward/external
+  // split that drives the "waiting on someone outside the ward" headline.
+  barrierCategory?: BarrierCategory;
   // Marked-in-error tasks stay on the record for audit but drop out of every
   // active view and count (tasks are never deleted). Restore from Reports.
   inError?: boolean;

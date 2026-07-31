@@ -27,54 +27,54 @@ export const GOVERNANCE_DOCS: GovernanceDoc[] = [
     slug: "hazard-log",
     title: "DCB0129 Hazard Log",
     description:
-      "25 identified hazards with severity, likelihood, controls and residual risk. The entries marked CSO DECISION are the ones outside a ward nurse's competence.",
+      "27 hazards, 26 of them open, with severity, likelihood, controls and residual risk. The three marked CSO DECISION are outside a ward nurse's competence; HAZ-024, the medical device boundary, is the one to read first.",
     path: "docs/clinical-safety/DCB0129-Hazard-Log.md",
-    status: "Draft v0.3 - awaiting Clinical Safety Officer",
+    status: "Draft v0.3 (31 Jul 2026) - awaiting Clinical Safety Officer",
     group: "Clinical safety",
   },
   {
     slug: "clinical-risk-management-plan",
     title: "DCB0129 Clinical Risk Management Plan",
     description:
-      "How clinical risk is identified, scored and reviewed across the product lifecycle.",
+      "How clinical risk is identified, scored and reviewed across the product lifecycle, and the standing constraint on features that would cross the medical device boundary.",
     path: "docs/clinical-safety/DCB0129-Clinical-Risk-Management-Plan.md",
-    status: "Draft - awaiting Clinical Safety Officer",
+    status: "Draft v0.2 (31 Jul 2026) - awaiting Clinical Safety Officer",
     group: "Clinical safety",
   },
   {
     slug: "clinical-safety-case-report",
     title: "DCB0129 Clinical Safety Case Report",
     description:
-      "The argument that the product is acceptably safe for its intended use, and the evidence behind it.",
+      "The argument that the product is acceptably safe for its intended use, the evidence behind it, and the four things that are not yet argued.",
     path: "docs/clinical-safety/DCB0129-Clinical-Safety-Case-Report.md",
-    status: "Draft - awaiting Clinical Safety Officer",
+    status: "Draft v0.2 (31 Jul 2026) - awaiting Clinical Safety Officer",
     group: "Clinical safety",
   },
   {
     slug: "dpia",
     title: "Data Protection Impact Assessment",
     description:
-      "Draft DPIA covering what data is processed, the lawful basis question, identified risks and the measures proposed against each.",
+      "Draft DPIA covering what data is processed, the lawful basis question, identified risks and the measures proposed against each. Written 4 Jul 2026 and carries a dated currency note listing what has changed since.",
     path: "docs/nhs-ready/03a-dpia-draft.md",
-    status: "Draft - awaiting Data Protection Officer",
+    status: "Draft (4 Jul 2026, currency note 31 Jul) - awaiting Data Protection Officer",
     group: "Data protection",
   },
   {
     slug: "data-flow-diagram",
     title: "Data Flow Diagram",
     description:
-      "Where every piece of data enters, where it rests, and where it leaves. Companion to the DPIA.",
+      "Where every piece of data enters, where it rests, and where it leaves. Companion to the DPIA, with the same dated currency note.",
     path: "docs/nhs-ready/03c-data-flow-diagram.md",
-    status: "Draft",
+    status: "Draft (4 Jul 2026, currency note 31 Jul)",
     group: "Data protection",
   },
   {
     slug: "data-governance-audit",
     title: "Data Governance Audit",
     description:
-      "The audit that drove the data minimisation work, including what was removed from the patient record and why.",
+      "The audit that drove the data minimisation work, including what was removed from the patient record and why. A point-in-time record from 4 Jul 2026, with a dated note on what has changed since.",
     path: "docs/nhs-ready/01-data-governance-audit.md",
-    status: "Complete - findings actioned",
+    status: "Point-in-time record (4 Jul 2026) - findings actioned",
     group: "Data protection",
   },
 ];

@@ -1,5 +1,26 @@
 # wardHub data protection impact assessment (DPIA)
 
+> ## ⚠ Written 4 July 2026 - four things have changed since. Read this first.
+>
+> The body of this DPIA is unchanged from 4 July and is published as written. Four
+> changes since then contradict parts of it, and are set out here rather than edited
+> silently into the text. **Where this box and the body disagree, this box is current.**
+>
+> | Change | What it corrects below |
+> |---|---|
+> | **Site-wide password gate restored, 8 July 2026** | "There are no accounts, no cookies in use", "no cookies", and "nothing user-entered leaves the device is technically enforced" are **out of date**. The shared site password is POSTed to `/api/auth/verify-password`, which replies with a `site_access` cookie (httpOnly, 7 days) holding nothing but "the password was right". That is the only cookie and the only transmission. The CSP claims still hold |
+> | **Referral chase log retired, 27 July 2026** | The chase log was the highest-PII store in this assessment. **It no longer exists** - page, provider, route, types and its three free-text fields were all deleted. Every reference below to `wardhub-referral-logs`, and risks A1, A2, B1, B3 and B8 insofar as they rest on it, should be read as describing a feature that has been removed rather than mitigated. The care review tracker went with it |
+> | **Patient record narrowed, 28 July 2026** | MHA legal status, clinical alerts, diagnoses, room and bed were removed from the patient record **entirely**, not hidden or defaulted off, and an automated test fails if they reappear. Scope B holds less than this document assumes: name, ward, status, admission date and time, named nurse, consultant, ward professional, discharge fields |
+> | **Free text removed from jobs, 30 July 2026** | Job descriptions, the free-text patient field and appointment notes are gone. Only the job title is typed. Hand-back is three dropdowns with no free text anywhere |
+> | **Demo cast** | "100 patients and 100 staff... placeholder names like Patient_BY_1" is out of date. It is now **5 patients and 20 staff per ward across 5 wards**, named from English literature so that a reader cannot mistake the list for a real roster |
+>
+> **Net effect: every change since 4 July has reduced the data held.** None widened it. The
+> risk register below is therefore conservative rather than optimistic, which is the right
+> direction for a document under review, but a reviewer should know why some of its worst
+> cases no longer have a subject.
+>
+> ---
+>
 > Draft - 4 July 2026, prepared for trust review.
 >
 > Prompt 3 of the NHS-ready pack. Written to the ICO's DPIA structure (screening,
@@ -13,11 +34,11 @@
 | Field | Detail |
 |-------|--------|
 | Document reference | wardHub-DPIA-002 |
-| Version | 0.1 (Draft) |
+| Version | 0.1 (Draft), with a currency note added 31 July 2026 |
 | Date | 4 July 2026 |
 | Author | Mike - Ward Nursing Informatics Coordinator (Ward NIC) |
 | Organisation | Derbyshire Healthcare NHS Foundation Trust (proposed) |
-| Status | DRAFT - for IG officer / DPO review |
+| Status | **DRAFT - not valid until a Data Protection Officer reviews and owns it** |
 | Supersedes | The DPIA scaffold in the wardHub dev panel (wardHub-DPIA-001), which is out of date and should be treated as withdrawn |
 
 ---
@@ -59,12 +80,14 @@ Anything only the trust can answer is marked **[TRUST TO CONFIRM: owner]**.
 
 Honestly, probably not. The demo processes:
 
-- **No patient personal data.** All 100 patients and 100 staff are fictional
-  (placeholder names like Patient_BY_1 on poet-pseudonym wards).
+- **No patient personal data.** Every patient and staff member is fictional
+  (placeholder names on poet-pseudonym wards). *Since 28 July the cast is 5 patients
+  and 20 staff per ward, named from English literature.*
 - **Minimal, self-entered visitor data** that never leaves the visitor's own
   browser: a picked demo identity, optional free-text feedback posts, personal
-  links, and preferences. There are no accounts, no cookies in use, and no
-  analytics of any kind.
+  links, and preferences. There are no accounts and no analytics of any kind.
+  *Since 8 July there is one cookie, `site_access`, holding only that the shared
+  site password was entered correctly - see the currency note at the top.*
 - **Ordinary hosting metadata** (IP address and user agent in Vercel's request
   logs) - the same processing as visiting any website.
 
@@ -110,8 +133,12 @@ wiped on page refresh. The guide builders and the quiz store nothing. The GDPR
 page's "clear my data" button runs `localStorage.clear()` and genuinely removes
 everything.
 
-**What leaves the browser.** Two things, and only two:
+**What leaves the browser.** Two things as at 4 July, three since 8 July:
 
+0. **The shared site password**, added 8 July 2026. It is POSTed to
+   `/api/auth/verify-password`, the only API route in the application. The response
+   sets `site_access` (httpOnly, 7 days), which holds nothing except the fact that
+   the password was correct. No username, no identity, no user-entered content.
 1. **Hosting requests to Vercel** - page and asset requests carrying IP address
    and user agent, logged by Vercel as any host logs requests. No Vercel
    Analytics is installed.
@@ -125,9 +152,15 @@ everything.
 **What cannot leave the browser.** Since the 4 July fix pass, all fonts are
 self-hosted and the Content Security Policy restricts `connect-src` and `img-src`
 to `'self'`. The browser will refuse any request from the app to any other host.
-"Nothing user-entered leaves the device" is technically enforced, not just
-asserted. There is no sessionStorage use, no cookies, no external scripts,
-no iframes, no IndexedDB.
+There is no sessionStorage use, no external scripts, no iframes, no IndexedDB.
+
+*Correction, 31 July 2026:* this paragraph originally read "'Nothing user-entered
+leaves the device' is technically enforced, not just asserted... no cookies". Since
+8 July that is not quite true, and the difference matters to an IG reader. The
+accurate statement is: **nothing user-entered leaves the device except the shared
+site password**, which is POSTed to the app's own origin, and **one cookie is set**,
+`site_access`, holding only that the password was right. The CSP restrictions
+described above were re-verified on 29 July and do hold.
 
 ### 2.2 Nature of the processing - Scope B (proposed live deployment)
 
@@ -309,7 +342,7 @@ the higher of the two unless mitigations change the picture.
 
 | Measure | Addresses |
 |---------|-----------|
-| No server-side storage of anything user-entered; no accounts; no analytics; no cookies | A1, A2, A5 |
+| No server-side storage of anything user-entered; no accounts; no analytics. *One cookie since 8 Jul 2026: `site_access`, httpOnly, holding only that the shared password was right* | A1, A2, A5 |
 | CSP locked to 'self' - the browser refuses any outbound connection from the app; fonts self-hosted | A1, A5, B5 (for the demo) |
 | Logout clears the two patient-identifying stores (`wardhub-referral-logs`, `wardhub_care_tracker_v2`) | A2, B1 |
 | GDPR page one-click "clear my data" (full localStorage wipe) plus honest, updated privacy copy naming processors and the Supabase configured-but-unused position | A1, A2 |

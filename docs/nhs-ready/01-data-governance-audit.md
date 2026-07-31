@@ -1,5 +1,27 @@
 # wardHub data governance audit
 
+> ## ⚠ Point-in-time record - read this first
+>
+> **This audit was run on 4 July 2026 and is published as the record of that audit, not as
+> a description of the application today.** Four things have changed since, and each one
+> contradicts something below. They are listed here rather than silently edited into the
+> text, because a governance audit that quietly rewrites itself is worth less than one that
+> shows its corrections.
+>
+> | Since 4 July | Effect on this document |
+> |---|---|
+> | **A site-wide password gate was restored (8 July 2026)** | The claims that "nothing the user types is sent to any server" and "no cookies in use" are **no longer true**. The shared password is POSTed to `/api/auth/verify-password`, which replies with a `site_access` cookie (httpOnly, 7 days) holding nothing but "the password was right". Nothing else is transmitted, and no other cookie is set |
+> | **The referral chase log was retired entirely (27 July 2026)** | Every reference below to `wardhub-referral-logs`, its patient names, its free-text notes and its logout-clearing behaviour describes a feature that **no longer exists in the codebase**. The highest-PII localStorage store in this audit is gone |
+> | **The patient record was cut back (28 July 2026)** | MHA legal status, clinical alerts, diagnoses, room and bed were removed from the patient record entirely and are guarded by an automated test |
+> | **Free text was removed from jobs (30 July 2026)** | Job descriptions, the free-text patient field and appointment notes are gone. Only the job title is typed |
+>
+> The findings about the repository history (F1), the raw FOCUS harvest files and the
+> internal extension rendering live were actioned in July; see the fix list at the end and
+> the July session records. **The current position on data flows is stated in the DPIA and
+> the Data Flow Diagram, both published alongside this document.**
+>
+> ---
+>
 > Prompt 1 of the NHS-ready pack. Run 4 Jul 2026, four parallel sweeps over src/, the git
 > repo, and the live site. Read-only - fixes are listed at the end and applied by Prompt 2.
 > Raw sweep outputs behind this summary are in the session scratchpad; everything material
@@ -8,7 +30,8 @@
 ## The one-paragraph verdict
 
 The "no real patient data" claim holds up: demo patients and staff are fictional, nothing
-the user types is sent to any server, there is no analytics or tracking of any kind, and
+the user types is sent to any server *(true on 4 July; since 8 July the shared site
+password is POSTed - see the banner above)*, there is no analytics or tracking of any kind, and
 the quiz and builder tools genuinely store nothing. The problems are around the edges: the
 full raw trust-docs dump (~110 MB) is still downloadable from GitHub history even though
 the files were deleted; six raw FOCUS harvest files with named staff and one personal
@@ -49,8 +72,8 @@ tracker survive logout on a shared ward computer.
 | Clipboard (the copy-to-SystmOne mechanism) | Case notes prepend the linked patient's name ([guides/[id]/page.tsx:200](../../src/app/guides/[id]/page.tsx)); risk/MSE/care-plan builders copy clinician-typed narrative | By design, but Windows clipboard history (Win+V) and cloud clipboard sync can persist/sync it. Needs a line in the DPIA and "paste then clear" user guidance |
 | Google Fonts | Lora loaded at runtime from fonts.googleapis.com in [layout.tsx:45](../../src/app/layout.tsx) and again via CSS @import inside public/patient-guides.html | The only genuine third-party data flow. Source Sans 3 is already self-hosted via next/font in the same file, so the fix pattern exists |
 | Vercel | Hosting; request logs, IPs, edge caching | Inherent; must be named as a processor in the DPIA. No Vercel Analytics installed |
-| Supabase | Client instantiated in the bundle with URL + anon key, but **zero queries anywhere in src** | Dormant. Splitting the type exports from client.ts would remove it from the bundle entirely |
-| Everything else | No sessionStorage, no cookies in use (one dead legacy cookie-clearing route), no analytics, no external scripts or iframes, no IndexedDB | Clean |
+| Supabase | Client instantiated in the bundle with URL + anon key, but **zero queries anywhere in src** | Dormant. Splitting the type exports from client.ts would remove it from the bundle entirely. *Done since - the client is deliberately kept out of the barrel so its keys never reach the bundle* |
+| Everything else | No sessionStorage, no cookies in use (one dead legacy cookie-clearing route), no analytics, no external scripts or iframes, no IndexedDB | Clean. **Superseded on cookies:** since 8 July the site sets exactly one, `site_access`, httpOnly, 7 days, holding only "the password was right" |
 
 ## Findings, ordered by how badly each lands in front of an IG officer
 

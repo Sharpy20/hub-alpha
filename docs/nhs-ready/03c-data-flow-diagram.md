@@ -1,5 +1,17 @@
 # wardHub data flow diagrams
 
+> ## ⚠ Drawn 4 July 2026 - two flows have changed since. Read this first.
+>
+> | Change | Effect on the diagrams below |
+> |---|---|
+> | **Site-wide password gate restored, 8 July 2026** | Diagram 1 is missing one arrow. The shared site password is POSTed to `/api/auth/verify-password` (the only API route in the application) and the response sets a `site_access` cookie, httpOnly, 7 days, holding only "the password was right". Nothing else is transmitted and no other cookie is set |
+> | **Referral chase log and care review tracker retired, 27 July 2026** | Both appear in the localStorage node of Diagram 1 and in the arrows of Diagram 2. **Neither exists any more.** They were the only two patient-identifying browser stores, and they were deleted rather than mitigated. HAZ-020, shown here as a go-live blocker, is closed for the same reason |
+>
+> The rest of both diagrams still holds. **Where this box and a diagram disagree, this box
+> is current.**
+>
+> ---
+>
 > Draft - 4 July 2026, prepared for trust review.
 >
 > Companion to 03a-dpia-draft.md (Step 2.5). Two diagrams: the current public

@@ -556,7 +556,12 @@ patient data from shared machines and keeping a persistent chase record, will re
 | High (15-19) | 0 as deployed, 1 conditional | HAZ-022 reaches 16 if deployed operationally without a shared store |
 | Significant (9-14) | 5 | HAZ-015, HAZ-018, HAZ-019, HAZ-025, HAZ-026 |
 | Moderate (5-8) | 7 | HAZ-008, HAZ-017, HAZ-021, HAZ-022 (as demo), HAZ-023, HAZ-024, HAZ-027 |
-| Low (1-4) | 13 | All others |
+| Low (1-4) | 14 | All others |
+
+**26 open hazards, plus HAZ-020 closed.** Bands are read from the matrix cell, not from the
+score alone, so a hazard scoring 6 as Medium likelihood x Minor severity sits in a Low cell
+even though 6 falls inside the 5-8 range in the acceptability table above. The matrix
+governs.
 
 **Residual risk, with proposed controls implemented:**
 
@@ -591,7 +596,7 @@ block the demo continuing as a demo.
 |---------|------|--------|---------|
 | 0.1 | 23/03/2026 | Mike (Ward NIC) | Initial identification, 14 hazards across 5 categories (wardHub-HL-001) |
 | 0.2 | 04/07/2026 | Mike (Ward NIC) | Extension log, 9 new hazards and corrections to 3 parent entries (wardHub-HL-002) |
-| 0.3 | 31/07/2026 | Mike (Ward NIC) | Merged 0.1 and 0.2 into one current log. Re-verified every entry against the code. Closed HAZ-020 (feature retired), re-scoped HAZ-014 (never built), corrected HAZ-013, HAZ-018 and HAZ-021. Added HAZ-024 (medical device boundary) and HAZ-025 (waiting tasks). Marked CSO decisions explicitly |
+| 0.3 | 31/07/2026 | Mike (Ward NIC) | Merged 0.1 and 0.2 into one current log. Re-verified every entry against the code. Closed HAZ-020 (feature retired), re-scoped HAZ-014 (never built), corrected HAZ-013, HAZ-018 and HAZ-021. Added HAZ-024 (medical device boundary), HAZ-025 (waiting tasks), HAZ-026 (authoring agent fabricates source material) and HAZ-027 (open content clashes). Marked CSO decisions explicitly. **27 hazards, 26 open.** The Clinical Risk Management Plan and Clinical Safety Case Report were brought into line with this log the same day |
 
 ---
 

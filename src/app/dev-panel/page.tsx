@@ -1486,6 +1486,20 @@ function DPIASection() {
         </p>
       </div>
 
+      <Link
+        href="/dev-panel/documents/dpia"
+        className="flex items-center justify-between gap-4 bg-nhs-blue text-white rounded-lg p-4 hover:bg-nhs-dark-blue transition-colors"
+      >
+        <span>
+          <span className="font-semibold block">Read the full DPIA</span>
+          <span className="text-sm text-white/80">
+            The complete document, including every identified risk and the measure proposed
+            against it. This page is a summary
+          </span>
+        </span>
+        <FileText className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+      </Link>
+
       <Card>
         <CardHeader>
           <h2 className="text-lg font-bold text-nhs-black">1. Project Overview</h2>
@@ -1723,6 +1737,36 @@ function ClinicalSafetySection() {
           <strong>Note:</strong> This section provides a starter framework. Full clinical safety
           case requires Clinical Safety Officer review before any build used on a real ward.
         </p>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-3">
+        <Link
+          href="/dev-panel/documents/hazard-log"
+          className="flex items-center justify-between gap-4 bg-nhs-blue text-white rounded-lg p-4 hover:bg-nhs-dark-blue transition-colors sm:col-span-2"
+        >
+          <span>
+            <span className="font-semibold block">Read the full hazard log</span>
+            <span className="text-sm text-white/80">
+              All 25 hazards with severity, likelihood, controls and residual risk. The entries
+              marked CSO DECISION are the ones needing a qualified opinion
+            </span>
+          </span>
+          <FileText className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+        </Link>
+        <Link
+          href="/dev-panel/documents/clinical-risk-management-plan"
+          className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-3 hover:border-nhs-blue transition-colors text-sm font-medium text-nhs-black"
+        >
+          <FileText className="w-4 h-4 text-nhs-mid-grey flex-shrink-0" aria-hidden="true" />
+          Clinical Risk Management Plan
+        </Link>
+        <Link
+          href="/dev-panel/documents/clinical-safety-case-report"
+          className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-3 hover:border-nhs-blue transition-colors text-sm font-medium text-nhs-black"
+        >
+          <FileText className="w-4 h-4 text-nhs-mid-grey flex-shrink-0" aria-hidden="true" />
+          Clinical Safety Case Report
+        </Link>
       </div>
 
       <Card>

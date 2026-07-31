@@ -1,5 +1,16 @@
 # wardHub clinical safety hazard log - extension
 
+> # ⚠ SUPERSEDED - 31 July 2026
+>
+> **Do not use this document. It has been merged into
+> `docs/clinical-safety/DCB0129-Hazard-Log.md` (wardHub-HL-003, v0.3), which is now the
+> single current hazard log.**
+>
+> Kept for traceability only. Since this was written, HAZ-020 has been closed (its subject,
+> the referral chase log, was retired), HAZ-014 has been re-scoped (the integration it
+> describes was never built), and the corrections it lists against HAZ-001, HAZ-003 and
+> HAZ-013 have been applied in full. Two new hazards were added that postdate it.
+
 > Draft - 4 July 2026, prepared for trust review.
 >
 > This document EXTENDS the existing hazard log at

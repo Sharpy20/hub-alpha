@@ -285,6 +285,10 @@ export function Header() {
                       <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-lg flex items-center justify-center flex-shrink-0"><Info className="w-5 h-5 text-white" /></div>
                       <div><p className="font-semibold text-gray-900">About</p><p className="text-xs text-gray-500 mt-0.5">What wardHub is, where the data lives and how content is checked</p></div>
                     </Link>
+                    <Link href={link("/dev-panel")} onClick={closeHelp} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
+                      <div className="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><ClipboardCheck className="w-5 h-5 text-white" /></div>
+                      <div><p className="font-semibold text-gray-900">Dev panel</p><p className="text-xs text-gray-500 mt-0.5">Technical spec, governance and the full DPIA and hazard log</p></div>
+                    </Link>
                     <Link href={link("/feedback")} onClick={closeHelp} className="flex items-start gap-3 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100">
                       <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-5 h-5 text-white" /></div>
                       <div><p className="font-semibold text-gray-900">Feedback</p><p className="text-xs text-gray-500 mt-0.5">Share ideas and report issues</p></div>
@@ -602,6 +606,10 @@ export function Header() {
                   <Link href={link("/about")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-700 rounded-lg flex items-center justify-center flex-shrink-0"><Info className="w-4 h-4 text-white" /></div>
                     <div><p className="font-semibold text-gray-900 text-sm">About</p><p className="text-xs text-gray-500">What wardHub is and how it&apos;s checked</p></div>
+                  </Link>
+                  <Link href={link("/dev-panel")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="w-8 h-8 bg-gradient-to-br from-slate-600 to-slate-800 rounded-lg flex items-center justify-center flex-shrink-0"><ClipboardCheck className="w-4 h-4 text-white" /></div>
+                    <div><p className="font-semibold text-gray-900 text-sm">Dev panel</p><p className="text-xs text-gray-500">Technical spec, governance, DPIA and hazard log</p></div>
                   </Link>
                   <Link href={link("/feedback")} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <div className="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center flex-shrink-0"><MessageSquare className="w-4 h-4 text-white" /></div>

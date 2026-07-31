@@ -1204,7 +1204,7 @@ function RBACSection() {
             </div>
             <div className="p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg border-2 border-dashed border-amber-300">
               <h3 className="font-semibold text-nhs-black">Contributor <span className="text-xs bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-full font-medium ml-1">FLAG</span></h3>
-              <p className="text-sm text-nhs-dark-grey">Orthogonal privilege (not a role). Can be added to <strong>any</strong> role by Ward Admin or Manager. Grants: edit workflows, guides, links. Requires creator training completion.</p>
+              <p className="text-sm text-nhs-dark-grey">Orthogonal privilege (not a role). Can be added to <strong>any</strong> role by Ward Admin or Manager. Grants: edit workflows, guides, links. <em>Proposed, not built:</em> a creator training requirement before the flag is granted.</p>
             </div>
           </div>
         </CardContent>

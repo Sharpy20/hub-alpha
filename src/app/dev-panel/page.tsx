@@ -49,8 +49,17 @@ const INITIAL_SCHEMA_CONFIG: SchemaConfig = {
   notes: "Using draft schemas - replace with live Supabase export when available"
 };
 
-// Navigation sections
-const NAV_SECTIONS = [
+// Navigation sections.
+// Most switch the panel's active section in place. An entry with `href` is a
+// real route instead (the governance documents live at their own URL so they can
+// be linked to directly and printed), and renders as a link, not a button.
+const NAV_SECTIONS: {
+  id: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  priority: string;
+  href?: string;
+}[] = [
   { id: "overview", label: "Overview & Pitch", icon: BookOpen, priority: "must" },
   { id: "business-case", label: "Business Case", icon: FileText, priority: "must" },
   { id: "technical", label: "Technical Spec", icon: Server, priority: "must" },
@@ -59,6 +68,7 @@ const NAV_SECTIONS = [
   { id: "user-flows", label: "User Flows", icon: Workflow, priority: "should" },
   { id: "dpia", label: "DPIA Draft", icon: Shield, priority: "must" },
   { id: "clinical-safety", label: "Clinical Safety", icon: AlertTriangle, priority: "should" },
+  { id: "documents", label: "Governance Documents", icon: FileWarning, priority: "must", href: "/dev-panel/documents" },
   { id: "schemas", label: "Supabase Schemas", icon: Database, priority: "later" },
   { id: "webhooks", label: "Assurance Integration", icon: GitBranch, priority: "later" },
   { id: "nexus", label: "Nexus Assurance (planned)", icon: ExternalLink, priority: "later" },
@@ -163,21 +173,34 @@ function DevPanelContent() {
                     should: { dot: "bg-amber-400", label: "Planned" },
                     later: { dot: "bg-gray-300", label: "Future" },
                   }[section.priority] || { dot: "bg-gray-300", label: "" };
-                  return (
-                    <button
-                      key={section.id}
-                      onClick={() => setActiveSection(section.id)}
-                      className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors text-left ${
-                        isActive
-                          ? "bg-nhs-blue text-white"
-                          : "text-nhs-dark-grey hover:bg-nhs-pale-grey"
-                      }`}
-                    >
+                  const inner = (
+                    <>
                       <Icon className="w-4 h-4 flex-shrink-0" />
                       <span className="flex-1">{section.label}</span>
                       {!isActive && (
                         <span className={`w-2 h-2 rounded-full ${priorityConfig.dot}`} title={priorityConfig.label} />
                       )}
+                    </>
+                  );
+                  const classes = `w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors text-left ${
+                    isActive ? "bg-nhs-blue text-white" : "text-nhs-dark-grey hover:bg-nhs-pale-grey"
+                  }`;
+                  // Entries with an href navigate to a real page rather than
+                  // switching the section rendered inside this one.
+                  if (section.href) {
+                    return (
+                      <Link key={section.id} href={section.href} className={classes}>
+                        {inner}
+                      </Link>
+                    );
+                  }
+                  return (
+                    <button
+                      key={section.id}
+                      onClick={() => setActiveSection(section.id)}
+                      className={classes}
+                    >
+                      {inner}
                     </button>
                   );
                 })}

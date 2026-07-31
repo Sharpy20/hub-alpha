@@ -1592,6 +1592,59 @@ several findings were actioned the same night).
 
 ---
 
+## Q. Policy conflicts + agent trust (31 Jul 2026, Session 49)
+
+Raised while merging the hazard logs. The register lives OUTSIDE the repo in
+`E:\Hub\policy-audit-full\` - `CONFLICT-REGISTER.md` (the working register, IDs `CR-nn`),
+`WARDHUB-CLASHES.md` (the app-facing subset, IDs `WH-nn`), `POLICY-CONFLICT-AUDIT-25-Jul-2026.md`
+(the full 483-document audit). Nothing there is backed up.
+
+- [ ] **⭐ NEXT TIME WE TOUCH THE COPILOT AGENTS: build in quote verification.**
+      During the 25 Jul audit an agent produced a **verbatim-looking quote with a citation that
+      exists in no document**, and used it to conclude a conflict was not a conflict. The
+      fabrication ran in the direction of making two documents AGREE, which for a
+      conflict-finder is the worst possible failure. Caught only by manual copy-paste of the
+      whole source.
+      Two instruction changes needed, in BOTH copies of the kit (the repo copy and the live
+      M365 agent - they drift, see [[chase-guide-builder-repaste]]):
+      1. **Every quoted line must be confirmed present in the source before the guide or
+         finding is accepted.** Quoting both sides is already required and was not enough,
+         because the quote itself can be invented.
+      2. **Bias the instruction against agreement.** An agent that cannot find a conflict must
+         report that it could not find one, never that none exists.
+      Recorded as **HAZ-026** in the hazard log. This also has to be built into the A/B test
+      comparing a Claude-built guide against a Copilot-agent-built one - score quote fidelity,
+      not just readability, or the test proves the wrong thing.
+
+- [ ] **15 open app-vs-policy clashes, 6 CRITICAL** (`WARDHUB-CLASHES.md`, all still `OPEN`).
+      Recorded as **HAZ-027**. Each is a LEAD needing a human to open the policy and confirm
+      the wording - see the item above, not all will survive contact with the source. The
+      critical six: `WH-01` Form H4 Part 1/2 inverted · `WH-02` app says only original section
+      papers accepted (policy accepts copies) · `WH-03` s15 rectification note renders on CTO
+      recall where the Act provides none · `WH-04` IMHA entitlement over-claimed · `WH-05`
+      post-RT monitoring stops too early · `WH-06` Derby City safeguarding out-of-hours number
+      may be a children's line. **Resolve or withdraw these before the affected guides go to a
+      shelf owner** - a reviewer whose first guide carries a known defect does not come back.
+
+- [x] **Dev panel conflicts card corrected (31 Jul).** It was citing
+      `docs/policy-conflict-audit-02-Jul-2026.md`, deleted from the repo in `84f447c` and
+      superseded. Worse, it displayed as fact that **S62 Urgent Treatment had expired** - the
+      25 Jul full-corpus audit shows the Trust issued a replacement (issue 04, Dec 2025, review
+      Dec 2028) exactly as the extension lapsed. The card now leads with the corrections to the
+      earlier audit, carries the fabrication warning, and no longer claims the app "was verified
+      clean".
+
+- [ ] **Decide whether the conflict register becomes a Trust artefact.** The pitch says wardHub
+      surfaces contradictions between sources. The evidence for that claim is a 483-document
+      audit sitting on one laptop with no backup, invisible to the Trust. Options: hand it to
+      the MHA Office and safeguarding leads as a gift, publish a summary in the dev panel, or
+      keep it internal. Currently only a summary is visible.
+
+- [ ] **Back up `E:\Hub\policy-audit-full\`.** Same exposure as
+      `E:\Hub\temp\internal-contacts.md` - one drive, no copy.
+
+---
+
 ## P. From the 30 Jul evaluation (Session 47) - open items
 
 Full report: **`docs/evaluations/2026-07-30_project-evaluation.md`**. Read it before starting

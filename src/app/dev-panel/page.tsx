@@ -2932,38 +2932,49 @@ function ConflictsCard() {
   };
   const groups: { title: string; items: { s: "high" | "med" | "low" | "app"; text: string }[] }[] = [
     {
-      title: "Expired / overdue policies (raise with the Trust)",
+      title: "What the full audit corrected in the earlier one",
       items: [
-        { s: "high", text: "S62 Urgent Treatment - expired (review lapsed ~Dec 2025). Safety-critical." },
-        { s: "high", text: "Missing & Absent (AWOL / RCRP) - review date Jun 2026, now overdue." },
-        { s: "med", text: "CPA - on its stated maximum extension (re-ratify before Oct 2026); framework being nationally retired." },
-        { s: "med", text: "Joint S135/136 - due for review Sep 2026 and carries substantive errors (below)." },
+        { s: "high", text: "S62 Urgent Treatment was reported as expired. It is NOT. The Trust issued a replacement (issue 04, Dec 2025, review Dec 2028) exactly as the extension lapsed - sound governance, not a failure. The real finding is a document-control one: both versions remain retrievable in the library." },
+        { s: "med", text: "The CTO policy was reported to exist in two conflicting versions. It does not. All 28 duplicate filename pairs are content-identical once extracted to text." },
+        { s: "low", text: "Eight policies with a July 2026 review date were classified 'expiring soon' when they were due now." },
+        { s: "high", text: "The lesson, recorded in the audit: auditing a fraction of a policy library produces confident, wrong conclusions. The earlier pass covered 20 documents, about 4% of the library." },
+      ],
+    },
+    {
+      title: "Policy currency across all 483 documents",
+      items: [
+        { s: "high", text: "38 policies are expired. A further 8 were due in July 2026, 17 fall due within three months." },
+        { s: "high", text: "Worst: the Most Appropriate Agency (Right Care Right Person) document is ~3 yr 10 mo overdue, its review date falls one month AFTER its own effective date, it predates the national agreement it is named after, and a policy issued Nov 2025 still cites it as live." },
+        { s: "high", text: "All seven ePMA SOPs are ~3 years overdue. The Safety Planning SOP is ~4 yr 8 mo overdue." },
+        { s: "med", text: "274 documents carry no review date at all. Most are legitimately forms or process maps, but some are operative documents setting clinical rules with no version, date or ratifying committee." },
+      ],
+    },
+    {
+      title: "Conflicts that span several policies",
+      items: [
+        { s: "high", text: "Rapid tranquillisation: four documents give four different answers." },
+        { s: "high", text: "NEWS2: the escalation ladder as written cannot operate." },
+        { s: "high", text: "Unratified SOPs are overriding ratified policy in several places." },
+        { s: "med", text: "Migration debt - PARIS is still instructed in live documents." },
+        { s: "med", text: "Safeguarding: three different thresholds, and no referral route at all for two named abuse types." },
+        { s: "med", text: "The Hartington to Derwent rename is incomplete across the library." },
+        { s: "low", text: "Clinical risk assessment has no review clock, while a building's fire risk does." },
       ],
     },
     {
       title: "A policy that disagrees with itself",
       items: [
-        { s: "high", text: "Observations - Level 3 (Intermittent) review interval is stated as BOTH 24h and 72h across §5, §6.2 and Appendix 3. The app uses 72h (the body/quick-reference value); the 24h figure is the policy's own defect." },
-        { s: "high", text: "S135/136 - the s135(1) escape-retake window is described as '36 hours' in one place vs the correct s138(3) 24h (+12h) rule in another." },
-        { s: "med", text: "Observations - the 72h escalation names two different senior-role sets (§6.1 vs Appendix 3)." },
+        { s: "high", text: "Observations - the Level 3 (Intermittent) review interval is stated as BOTH 24h and 72h across the body and Appendix 3. The app uses 72h; the 24h figure is the policy's own defect." },
+        { s: "high", text: "S135/136 - the s135(1) escape-retake window is given as '36 hours' in one place against the correct s138(3) 24h (+12h) rule in another." },
+        { s: "med", text: "Observations - the 72h escalation names two different senior-role sets." },
       ],
     },
     {
-      title: "Cross-policy mismatches",
+      title: "Where the app itself may be wrong - 15 open items",
       items: [
-        { s: "med", text: "Stale unit name - the S135/136 form still lists 'Hartington Unit'; it was renamed 'Derwent Unit'." },
-        { s: "med", text: "CTO says 6-monthly rights re-read is 'recommended'; the S132 policy says the team 'must'." },
-        { s: "med", text: "Who obtains the S135(2) warrant differs (CTO: care co-ordinator; S17: the hospital)." },
-        { s: "med", text: "Tribunal report deadlines use different anchors (3 weeks from application vs 4 weeks before expiry)." },
-        { s: "med", text: "Safeguarding - the actual City/County referral routes appear in only 1 of the 4 SOPs; 'MASH' is used for two different bodies." },
-        { s: "low", text: "Assorted broken appendix cross-references, name/title/email typos, and legacy terms ('FACE Risk Assessment', 'CAADA-DASH')." },
-      ],
-    },
-    {
-      title: "App vs live policy",
-      items: [
-        { s: "app", text: "IMHA Derby City provider - RESOLVED (Mike, 3 Jul 2026): Disability Direct is the source of truth; One Advocacy Derby is no longer used. The app uses Disability Direct everywhere and County = Cloverleaf. Outstanding at source only: the S132 trust policy PDF still names One Advocacy Derby and needs the MHA office to update it." },
-        { s: "app", text: "mha-statuses says S4's recommendation is 'ideally from a doctor who knows the patient' - not stated in the S4 policy; to soften." },
+        { s: "app", text: "The audit found 15 points where wardHub content may contradict Trust policy, 6 of them rated critical. They are recorded with both quotes side by side in WARDHUB-CLASHES.md and are OPEN - identified, not yet verified or fixed." },
+        { s: "app", text: "The critical ones concern MHA paperwork (Form H4 part order, whether copied section papers are acceptable, whether Section 15 rectification applies to CTO recall), post-rapid-tranquillisation monitoring duration, IMHA entitlement, and a Derby City safeguarding out-of-hours number that may be a children's line." },
+        { s: "app", text: "Each is a lead requiring a human to open the policy and confirm the wording before anything is changed. None is being treated as established fact, and none of the affected guides is signed off green." },
       ],
     },
   ];
@@ -2974,9 +2985,18 @@ function ConflictsCard() {
           <AlertTriangle className="w-5 h-5 text-amber-600" /> Conflicts in source material
         </h2>
         <p className="text-xs text-nhs-mid-grey mt-1">
-          From a research-only audit of the trust policies against the app (2 July 2026). The app encodes the policies
-          accurately - most items below are defects in the source policies to raise with the Trust. Full write-up and the
-          two action lists: <code>docs/policy-conflict-audit-02-Jul-2026.md</code>.
+          From a research-only audit of the Trust policy library - 483 documents, 25 July 2026, no policy or
+          application file modified. It supersedes a 2 July pass that covered 20 documents and reached three
+          wrong conclusions; those corrections are listed first, because they matter more than the findings.
+          Most items below are defects in the source policies to raise with the Trust, not application faults.
+          The register is held outside this repository and is available on request.
+        </p>
+        <p className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md p-2 mt-2">
+          <strong>Read every quote back to the source before acting on it.</strong> During this audit an AI agent
+          produced a verbatim-looking quote, with a citation, that appears in no document - and used it to conclude
+          that a conflict was not a conflict. The fabrication ran in the direction of making two documents agree,
+          which for a conflict-finding tool is the most dangerous failure available to it. A quote from an agent is
+          a lead, never evidence.
         </p>
       </CardHeader>
       <CardContent className="space-y-5">
@@ -2995,7 +3015,9 @@ function ConflictsCard() {
         ))}
         <p className="text-xs text-nhs-mid-grey italic">
           Data-safety note: the raw AWOL source contains real internal security numbers and an on-call bleep - these are
-          kept out of the public demo. The app itself was verified clean against current policy on all time limits and holding powers.
+          kept out of the public demo. An earlier pass described the app as verified clean against current policy on all
+          time limits and holding powers; the full-corpus audit does not support that, and the 15 open items above are
+          the reason none of the affected guides is signed off.
         </p>
       </CardContent>
     </Card>

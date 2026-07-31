@@ -46,6 +46,8 @@ notes.
 | **Patient record narrowed** | In July, `legalStatus`, `alerts`, `diagnoses`, `room` and `bed` were removed from the patient record entirely and guarded by an automated test. Several hazards are scored lower as a result. The record is now name, ward, status, admission date/time, named nurse, consultant, ward professional and discharge fields |
 | **HAZ-024 added** | Medical device boundary. Raised at the sponsor session on 30 July and recorded nowhere until now |
 | **HAZ-025 added** | Task hand-back and the "waiting on" state, built in July after v0.2 was written |
+| **HAZ-026 added** | The authoring agent fabricating source material. Observed during the 25 July policy audit, not hypothetical |
+| **HAZ-027 added** | 15 open content clashes between the application and Trust policy, 6 critical, identified in July and not yet resolved |
 
 ---
 
@@ -224,6 +226,40 @@ notes.
 | **Residual risk** | `[CSO DECISION]` |
 | **Owner** | `[CSO DECISION]` - this is not the author's call to make |
 | **Status** | **Open, and the most important open item in this log.** Raised by the Clinical Safety Officer at the sponsor session on 30 July 2026. The room's view was that the product is not a medical device because it does not make clinical decisions. That view is recorded here as a view, not as a determination - it was reached in conversation, not by assessment, and the CSO who raised the question did not close it. A named individual was suggested as the right person to advise; that name should be captured and this entry completed |
+
+### HAZ-026: The authoring agent fabricates source material *(new, 31 July 2026)*
+
+| Field | Detail |
+|-------|--------|
+| **Hazard** | The AI agent used to build guides and audit policy produces text that looks like a verbatim quotation from a Trust policy, complete with a citation, but which appears in no document. That invented text is then used to justify a step in a guide, or to conclude that two policies agree when they do not |
+| **Cause** | Inherent to the technology. Confabulation is most likely where a document is long, where an answer is expected, and where agreeing is the smoother output than disagreeing |
+| **Effect** | A guide carries a process step with no basis in policy, or a genuine contradiction between two policies is silently dissolved and never surfaces for a human to resolve |
+| **Harm** | Same profile as HAZ-001 - staff follow a process that is not the Trust's - but worse in one respect: the fabricated citation makes the content *look* verified, so the normal cue to check the source is removed |
+| **Severity** | 3 Moderate |
+| **Likelihood** | 3 Medium. **This is not theoretical. It happened during the 25 July 2026 policy audit** and was caught only by manual copy-paste of the whole source document |
+| **Initial risk** | 9 Significant |
+| **Current controls** | 1. The agent instructions require both sides of any claimed conflict to be quoted, which makes fabrication visible when the source is checked. 2. Guides link to their source policies, so a reader can verify. 3. Nothing reaches the site without editorial approval, and one guide of 68 is currently signed off. 4. The incident is recorded at the top of the conflict register so anyone using it is warned |
+| **Proposed controls** | 1. **Quote verification as a required step in the agent instructions, not a convention** - every quoted line confirmed against the source document before the guide is accepted. This is the control that was missing when it happened. 2. Bias the instruction against agreement: an agent that cannot find a conflict must say it could not find one, never that none exists. 3. Spot-check quotations during clinical sign-off, and tell each shelf owner this is a known failure mode so they know to look for it |
+| **Residual risk** | 3 Low with proposed controls |
+| **Owner** | Mike (agent instructions). `[CSO DECISION]` whether quote verification should be evidenced per guide at sign-off |
+| **Status** | Open. **The direction of the observed error is the point: the fabricated quote made two documents agree.** For a tool whose purpose is surfacing contradictions, inventing text that dissolves one is the most dangerous failure available to it. Any claim that the build process "flags contradictions automatically" has to be stated alongside this |
+
+### HAZ-027: Known content clashes remain open in guides offered to a pilot *(new, 31 July 2026)*
+
+| Field | Detail |
+|-------|--------|
+| **Hazard** | The July 2026 audit identified 15 points where application content may contradict Trust policy, 6 rated critical. They remain open. A pilot ward could use a guide whose defect is already documented |
+| **Cause** | The audit produced leads faster than they could be verified and fixed. Verification needs a human to open each policy and confirm the wording, which has not yet happened |
+| **Effect** | Staff follow a documented process step that the Trust's own policy contradicts |
+| **Harm** | Varies by item, and the critical ones are not trivial: signing the wrong part of a statutory transfer form; rejecting a valid admission because the app says only original section papers are accepted; applying a rectification window to CTO recall where the Act provides none; stopping post-rapid-tranquillisation monitoring earlier than policy requires; an out-of-hours safeguarding number that may reach a children's line |
+| **Severity** | 4 Major |
+| **Likelihood** | 2 Low today - the affected guides are amber or red, none is signed off, and no ward is using them operationally |
+| **Initial risk** | 8 Moderate now. **Higher if a pilot started before these are resolved** |
+| **Current controls** | 1. No affected guide is signed off green. 2. Each item is recorded with the app text and the policy text side by side, so verification is a reading job. 3. Guides link to source policies. 4. The traffic-light badge tells staff the content is not approved |
+| **Proposed controls** | 1. **Resolve or withdraw every critical item before any guide in its group goes to a shelf owner.** A reviewer whose first guide contains a known defect is unlikely to return. 2. Verify each against the source before changing anything - see HAZ-026, these are leads and not all will survive contact with the policy. 3. Treat "zero open critical clashes" as a precondition for that guide entering pilot scope |
+| **Residual risk** | 4 Low once resolved |
+| **Owner** | Mike (verify and fix). `[CSO DECISION]` whether zero open critical clashes should be a formal pilot gate |
+| **Status** | Open. **This is the most actionable item in this log** - the work is identified, scoped and sitting in a register |
 
 ---
 
@@ -518,8 +554,8 @@ patient data from shared machines and keeping a persistent chase record, will re
 |------------|-------|------------|
 | Very High (20-25) | 0 | - |
 | High (15-19) | 0 as deployed, 1 conditional | HAZ-022 reaches 16 if deployed operationally without a shared store |
-| Significant (9-14) | 4 | HAZ-015, HAZ-018, HAZ-019, HAZ-025 |
-| Moderate (5-8) | 6 | HAZ-008, HAZ-017, HAZ-021, HAZ-022 (as demo), HAZ-023, HAZ-024 |
+| Significant (9-14) | 5 | HAZ-015, HAZ-018, HAZ-019, HAZ-025, HAZ-026 |
+| Moderate (5-8) | 7 | HAZ-008, HAZ-017, HAZ-021, HAZ-022 (as demo), HAZ-023, HAZ-024, HAZ-027 |
 | Low (1-4) | 13 | All others |
 
 **Residual risk, with proposed controls implemented:**
@@ -528,7 +564,7 @@ patient data from shared machines and keeping a persistent chase record, will re
 |------------|-------|
 | Significant or above | 0 |
 | Moderate (5-8) | 1 - HAZ-019, printed copies can never be fully controlled |
-| Low (1-4) | 21 |
+| Low (1-4) | 23 |
 | Not yet scored | 3 - HAZ-013, HAZ-024 and HAZ-019 residual acceptability are all `[CSO DECISION]` |
 
 **One hazard remains a go-live blocker in its current design:** HAZ-022, no shared
@@ -537,13 +573,15 @@ block the demo continuing as a demo.
 
 ---
 
-## The five things a reviewing CSO should look at first
+## The things a reviewing CSO should look at first
 
 1. **HAZ-024, the medical device boundary.** Raised at the sponsor session, closed by nobody. The most consequential open question in this document, and explicitly outside the author's competence.
-2. **HAZ-001 and HAZ-015 together, the content backlog.** One guide of 68 is signed off. Every control here is honest but none of them clears the backlog. This is where the real risk sits, and it is a content problem, not a software one.
-3. **HAZ-022, the absence of a shared store.** The single technical precondition for operational use.
-4. **HAZ-013, authentication.** Fine for fictional data. Nothing more.
-5. **HAZ-025, waiting tasks.** New, and it is the exact ward failure the product exists to fix - worth checking whether the design actually fixes it or merely relocates it.
+2. **HAZ-027, the 15 open content clashes.** Six are rated critical and they sit in guides a pilot would plausibly use. The most actionable item here: the work is already identified and scoped, it just has not been done.
+3. **HAZ-026, the agent fabricating source material.** It happened, it was caught by hand, and the control that would have caught it systematically does not yet exist. It also qualifies every claim about contradictions being flagged automatically.
+4. **HAZ-001 and HAZ-015 together, the content backlog.** One guide of 68 is signed off. Every control is honest but none of them clears the backlog. This is a content problem, not a software one.
+5. **HAZ-022, the absence of a shared store.** The single technical precondition for operational use.
+6. **HAZ-013, authentication.** Fine for fictional data. Nothing more.
+7. **HAZ-025, waiting tasks.** New, and it is the exact ward failure the product exists to fix - worth checking whether the design actually fixes it or merely relocates it.
 
 ---
 

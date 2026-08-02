@@ -1886,6 +1886,9 @@ one approved document.
       existing claim model (unclaimed jobs are already a pool) - a role tag narrows whose pool it
       sits in without forcing a named owner. Decide whether role is a filter on My Diary, a
       badge, or both, and whether a job can carry more than one.
+      ⚠ **Mike is exploring issues on this at work first (2 Aug) - do not build until he reports
+      back.** It also turned out to be bigger than a job tag: see **Section S4**, because the same
+      question lands on the guides index and the login, not just the diary.
 - [ ] **72-hour audit and weekly audit reports.** The 72-hour admission audit tasks already
       generate; what is missing is the report. Depends on R7 being answered honestly.
 
@@ -1945,4 +1948,128 @@ and it is the same argument that got MHA status, alerts and diagnoses removed on
       himself, and fictional demo data needs no approval from anyone. This explores what comes
       *after* Phase 0; it is not a reason to wait before starting it.
 
+## S. Occupational Therapy guides (2 Aug 2026, Session 53)
 
+**Where this came from:** Mike emailed **Georgia (OT)** asking for referral forms, assessments and
+"things you have to teach new starters" that SystmOne does not already cover well. She replied
+with a summary of the OT pathway and three files, now in `E:\Hub\temp\OT\` (outside the repo):
+
+| File | What it actually is |
+|---|---|
+| `OT Pathway 1.pdf` | 4 pages. p1 is a flowchart, p2-4 are the written pathway with AIMS standard numbers cited against each stage. Titled **"Occupational Therapy Service Pathway - The Radbourne Unit"** |
+| `Priority Screening Prompt Sheet.docx` | A MOHO-shaped prompt sheet: Motivation, Routine, Performance skills, Environment. Questions only, no scoring |
+| `Hub referral example.docx` | **NOT a worked example.** One screenshot of the SystmOne New Electronic Referral dialog showing the correct field settings, narrative box empty |
+
+She also offered to review whatever gets built. That review offer is the valuable half.
+
+### S1. Before any of this touches the repo
+
+- [ ] **`Hub referral example.docx` contains a real staff name** in the Referrer field
+      (`GRESHAM-VARNEY, Victoria (Miss)`), captured from a live S1 session. It must be redacted or
+      re-shot before it goes anywhere near git, the guides or a screenshot in a guide. Replace with
+      a name from the Jane Austen staff cast if a mock-up is wanted.
+- [ ] **The pathway document is unit-specific, not trust-wide** - it says The Radbourne Unit on its
+      face. Confirm it applies to the two pilot wards before building a guide that implies it does.
+- [ ] **It carries no version, review date, owner or ratification mark.** On the strict Section R2
+      test that makes it a **team working document, not a ratified SOP**, so it is not Tier A as
+      written. It is still single-source with no cross-policy synthesis, which is the safe part.
+      Ask Georgia for provenance: is there a controlled copy on FOCUS?
+- [ ] **Her email is a simplification of her own pathway doc** and several things in the doc are
+      missing from it. Build from the document, and check the differences with her (list in S2).
+
+### S2. What the pathway document says that the email did not
+
+Worth knowing because these are the parts with the most wardHub value.
+
+- **Physical health check inside 1-2 days, red-flagged in the doc.** Equipment ordering, home
+  visit planning, accommodation type, landlord or housing association permission, repairs, fire
+  risk, hoarding, quotes from the housing hub. The doc's own reason: *"This will take time,
+  therefore gathering details will be time efficient."* **This is the highest-value item in the
+  pack** - long lead times, started on day 1, invisible until it blocks a discharge. It maps
+  straight onto the existing `blocksDischarge` barrier flag.
+- **ReQoL appears twice** (initiated by the OTA at day 1-2, repeated at discharge) and is absent
+  from the email. The doc is explicit that it is **not an OT measure** - all MDT can support it,
+  the OTA initiates it. So it is a ward job, not an OT-only job.
+- **The 3-7 day step branches.** OTA completes the priority checklist (gathering facts), a
+  **registered OT signs it off and sets high / medium / low**, and that decision routes the
+  patient: low = signpost recreation, high = the OT may initiate a formal OT assessment instead of
+  the checklist. The email flattened this to "a Priority Screening is completed within 7 days".
+- **Day 7 ward round.** OT information feeds the first ward review, formulation of OT needs,
+  recreation team introduces its service inside the first seven days.
+- **Internal ward transfer: the ward OT reviews within 3 working days.** Not in the email, and it
+  hooks the existing patient-transfer feature directly.
+- **Named tools:** OCAIRS, MOHOST, the OT inpatient initial assessment form, practical assessment
+  group. The email's assessment list instead (Washing and Dressing, PADL, DADL, Road safety,
+  Shopping skills, Kitchen skills) appears nowhere in the pathway doc - that is her own addition
+  from the S1 OT node.
+- **AIMS standard numbers are cited against every stage** (3, 7, 194 / 2 / 21, 22, 42 / 31, 33, 34,
+  39, 40, 42, 45, 57, 195 / 76, 79, 194). The document exists to evidence AIMS accreditation. That
+  is the strongest governance hook in the whole pack: **the diary jobs would generate the audit
+  trail for named accreditation standards**, which is a better pitch to Maria than "it helps staff".
+
+### S3. Proposed build (confirm with Georgia before starting)
+
+- [ ] **OT pathway overview guide.** The timeline with its clocks: day 1-2 contact, 3-7 screening,
+      day 7 ward round, day 10 care plan, transfer +3 working days, discharge. Restructure of one
+      document, no interpretation. Show the AIMS reference against each stage.
+- [ ] **Priority Screening thinking guide** from the prompt sheet, straight into the existing
+      `GuidePrompts` component (why it matters / prompt yourself / examples / tip). Two things to
+      carry **verbatim**: *"Check orientation first (document under cognition)"*, and the sensory
+      question's audit rule - *"we must note 'Sensory pre-screen asked' in a case note on
+      SystemOne for audit purposes"*. That exact string is a perfect fit for the case-note copy
+      feature and is the single best wardHub hook in the pack.
+- [ ] **Hope and Resilience Hub referral guide**, standard referral template. The S1 field settings
+      are known from the screenshot: Recipient `HUB, Hope & Resilience`, Read code `Referral to
+      mental health team`, Type `Secondary care`, Urgency `Routine`, Task recipient `User group`.
+      **Ask Georgia for a fictionalised referral narrative** - the screenshot's narrative box is
+      empty, so there is still no WAGOLL.
+- [ ] **Day 1-2 physical health and environment checklist.** Equipment, home visit, accommodation,
+      permissions, repairs. Tick-list shape like the admission checklist, with the long-lead items
+      flagged as discharge barriers.
+- [ ] **Seed the OT pathway as diary jobs on admission**, the way the 72-hour admission audit jobs
+      already generate. This is the demo moment for an OT and it is the thing S1 does not do.
+      Blocked on the role tag (Section R6 / S4).
+- [ ] **Do NOT build six ADL assessment guides.** The templates live in the S1 OT node and Georgia
+      says which are used varies by individual. Ask her which three she actually teaches new
+      starters, and build those as "what to observe and where to record it".
+
+### S4. The role question is bigger than a job tag
+
+Mike's ask this session was role-scoped views for OT / nursing / medical. Section R6 covers only
+the diary half. The OT pack shows it also lands on:
+
+- **The guides index.** An OT should not wade through 68 nurse guides to find four. Filter, or a
+  role-chosen default view.
+- **The login.** wardHub currently asks ward then name. Profession is not captured at all.
+- **Scope inside a single guide.** The pathway draws a real professional boundary the product would
+  have to respect: *"OTA is gathering facts, not formulating"*, and the priority level is set by a
+  **registered** OT. A role tag that lets an OTA tick "priority set" would misrepresent the pathway.
+
+**Mike is exploring issues on this at work first. Do not build until he reports back.**
+
+### S5. Device boundary note for this content
+
+- The prompt sheet gathers, the **registered OT decides** high / medium / low. wardHub must never
+  compute, suggest or nudge that level. Keep the split visible in the guide, since it is also the
+  OTA/OT scope boundary.
+- Road safety, kitchen skills and shopping skills are functional **risk** assessments in all but
+  name. A guide that helps somebody conclude "safe to use a hob" is what Andy Wall meant by
+  bleeding into decision support. Observation prompts and where to record them, never a pass/fail.
+- **Useful for the R1 parameters note to Andy:** the pathway document says of itself *"What you
+  choose to do will be based upon own clinical judgment. There is no right or wrong way of
+  achieving this."* The source document is stating that it does not determine the decision.
+- **Hope and Resilience Hub** needs a Rule 4 check. It is referred to on S1 rather than by phone or
+  email, so there may be no contact value to hide, but confirm.
+
+### S6. Reply to Georgia
+
+Thank her, then ask:
+
+- [ ] Is there a controlled version of the pathway on FOCUS, with a version and review date?
+- [ ] Does it apply beyond Radbourne, to the pilot wards?
+- [ ] Are the 1-2 / 7 / 10 day clocks working days or calendar days, and do they run from admission
+      or from OT pickup? The doc says "3 working days" for transfers but is silent on the rest.
+- [ ] A fictionalised Hub referral narrative, so the guide can ship with a worked example.
+- [ ] Which three assessments do you spend the most time teaching new starters?
+- [ ] What can an OTA do alone versus what needs the registered OT? (Feeds S4.)
+- [ ] Does OT pick up every admission automatically, or is there a referral in?

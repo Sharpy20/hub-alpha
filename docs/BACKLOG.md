@@ -2009,9 +2009,14 @@ Worth knowing because these are the parts with the most wardHub value.
 
 ### S3. Proposed build (confirm with Georgia before starting)
 
-- [ ] **OT pathway overview guide.** The timeline with its clocks: day 1-2 contact, 3-7 screening,
-      day 7 ward round, day 10 care plan, transfer +3 working days, discharge. Restructure of one
-      document, no interpretation. Show the AIMS reference against each stage.
+- [x] **OT pathway overview guide - BUILT 2 Aug.** `/guides/ot-pathway`, 14 steps, category **OT
+      Tools** (which already held only `mohost`), status **red**. Faithful restructure of the one
+      document: no synthesis, no interpretation, no scoring. The provenance caveats are in step 1
+      and are load-bearing - do not strip them until a controlled copy turns up on FOCUS.
+      Progressive disclosure on the four reference-heavy steps. Case note covers the initial
+      contact, which is the document's only explicit "record this, it is auditable" instruction.
+      Carries three `[confirm]` markers: whether it applies beyond Radbourne, what ECW stands for,
+      and the AIMS numbers. **Georgia has not seen it yet.**
 - [ ] **Priority Screening thinking guide** from the prompt sheet, straight into the existing
       `GuidePrompts` component (why it matters / prompt yourself / examples / tip). Two things to
       carry **verbatim**: *"Check orientation first (document under cognition)"*, and the sensory

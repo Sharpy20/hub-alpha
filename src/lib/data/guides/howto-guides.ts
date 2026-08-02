@@ -60,6 +60,7 @@ export const GUIDE_CONFIG: Record<string, { icon: string; gradient: string; cate
   choking: { icon: "🚨", gradient: "from-red-600 to-red-800", category: "Emergency Response" },
   "cardiac-arrest": { icon: "❤️‍🔥", gradient: "from-rose-600 to-rose-800", category: "Emergency Response" },
   mohost: { icon: "🧩", gradient: "from-violet-500 to-purple-700", category: "OT Tools" },
+  "ot-pathway": { icon: "🗓️", gradient: "from-violet-600 to-indigo-800", category: "OT Tools" },
   "mha-statuses": { icon: "⚖️", gradient: "from-indigo-600 to-purple-800", category: "Legal & Advocacy" },
   "section-17": { icon: "📋", gradient: "from-indigo-500 to-indigo-700", category: "Legal & Advocacy" },
   "arrange-mha-assessment": { icon: "⚖️", gradient: "from-indigo-500 to-indigo-700", category: "Legal & Advocacy" },
@@ -871,6 +872,122 @@ export const GUIDES: Record<string, GuideData> = {
       { label: "About HoNOS (RCPsych)", url: "https://www.rcpsych.ac.uk/improving-care/ccqi/health-of-nation-outcome-scales" },
     ],
     caseNote: `HoNOS completed on [DATE] ([baseline on admission / monthly review / discharge]). Scores recorded on SystmOne; total [X]. Scales of note: [e.g. 1 Agitated behaviour 3, 7 Depressed mood 3]. Compared with previous HoNOS ([DATE], total [Y]): [improved / unchanged / deteriorated]. Suggested cluster [N] - agreed / amended by MDT. Discussed at MDT.`,
+  },
+  // Built 2 Aug 2026 from ONE document - the Occupational Therapy Service
+  // Pathway for The Radbourne Unit, supplied by the ward OT team via Georgia.
+  // Deliberately a faithful restructure of that document: no synthesis across
+  // policies, no interpretation, no scoring. See BACKLOG Section S.
+  // The source carries no version, review date or owner, and names one unit,
+  // so the provenance caveats in step 1 are load-bearing - do not remove them
+  // until a controlled copy turns up on FOCUS.
+  "ot-pathway": {
+    id: "ot-pathway",
+    title: "OT Pathway (inpatient)",
+    description: "What occupational therapy does across an admission and when - contact by day 2, screening by day 7, care plan by day 10, then Hub referral, transfer and discharge",
+    steps: [
+      {
+        id: "what",
+        title: "What this is",
+        tldr: "The OT timeline across an admission, with the timescales attached.",
+        content: "This is the occupational therapy pathway for an inpatient admission, laid out in order with the timescales attached.\n\nIt is written for the OT and the OT assistant working the pathway, and for the ward team who need to know what OT is doing, by when, and what OT needs from them.\n\nRead the timescales as the service's own standard. What you do at each stage is a clinical decision, and the source pathway says so itself: 'What you choose to do will be based upon own clinical judgment. There is no right or wrong way of achieving this.'\n\nWhere this came from:\n- One document: the Occupational Therapy Service Pathway for The Radbourne Unit, supplied by the ward OT team.\n- That document names one unit. [confirm] whether it applies to your ward before you rely on the timings.\n- It carries no version number, review date or owner, so treat it as a team working document rather than a ratified Trust SOP until a controlled copy turns up on FOCUS.",
+        tip: "If this does not match how your ward actually runs, say so. This guide is only as good as the document behind it, and that document has not been signed off yet.",
+      },
+      {
+        id: "timeline",
+        title: "The pathway at a glance",
+        content: "Day 1 - ward admission.\n\nWithin 1-2 days:\n- Initial OT contact made\n- ReQoL initiated by the OTA\n- Physical health and equipment needs checked\n\nDays 3 to 7:\n- OT priority checklist, or an OT initial assessment where the need is clearly high\n- A registered OT signs off the screening and sets the level: high, medium or low\n\nDay 7:\n- OT attends the ward round, formulation of OT needs\n- The recreation team has introduced its service\n\nBy day 10 at the latest:\n- OT care plan completed at ward level, with the patient or as a best interests plan\n- Intervention planning and implementation\n\nThen, throughout:\n- Hub OTs review care plans and assessments and amend accordingly\n- Ward OTs review the needs of internal ward transfers, within 3 working days\n- Review goals, support discharge planning, discharge report as appropriate, ReQoL repeated",
+        tip: "Only one timescale in the whole pathway is stated in working days: the 3 days after an internal ward transfer. The rest are written as plain days.",
+      },
+      {
+        id: "who",
+        title: "Who does what",
+        tldr: "The OTA gathers, the registered OT decides. That line runs through the whole pathway.",
+        progressive: true,
+        content: "The pathway draws one boundary very clearly, and it is worth reading before the rest.\n\nThe OT assistant (OTA):\n- Makes initial contact and explains their role\n- Initiates the ReQoL\n- Completes the OT priority checklist: gathering information, observing, speaking to the patient, reading the notes, speaking to carers and others\n- Completes the follow-up ReQoL at discharge\n\nThe pathway's own wording is that the OTA is gathering facts, not formulating. It adds that it is helpful to have the formulation discussion together.\n\nThe registered OT:\n- Signs off the screening and decides the level of intervention: high, medium or low\n- May initiate a formal OT initial assessment instead of the checklist where the need is clearly high\n- Formulates OT needs and takes them to the ward round\n- Completes the care plan with the patient\n\nThe ward team:\n- Can support the ReQoL - the pathway is explicit that it is not an OT measure\n- Makes referrals to physiotherapy, the manual handling lead and the tissue viability nurse\n- Shares responsibility for maintaining routine and structure where the care plan asks for it\n- Provides the evidence OT asks for: has this person been washing and dressing on the ward?",
+        tip: "The level of intervention is a registered OT's decision. Nothing here, and nothing in wardHub, sets it for them.",
+      },
+      {
+        id: "contact",
+        title: "Within 1-2 days: making contact",
+        content: "Within 1-2 days of admission, someone from OT makes contact. It might be the OT or the OTA.\n\nMeet and greet:\n- Explain who you are and what your role is. Say whether you are the OT or the OTA.\n- Offer the information leaflet.\n- Put it in the patient's red folder, if they have one.\n- Record this as the initial contact on SystmOne. This is auditable.\n\nReQoL:\n- The OTA initiates the ReQoL, a patient reported outcome measure.\n- It is not an OT measure. The whole MDT can support its completion.\n- It is repeated at discharge as a follow up.",
+        tip: "'Record this as the initial contact on SystmOne. This will be auditable.' That sentence is the document's, not ours. The contact only counts if it is written down.",
+      },
+      {
+        id: "physical",
+        title: "Within 1-2 days: physical health and the home",
+        tldr: "Longest lead times in the pathway. Start the paperwork while the admission is still young.",
+        progressive: true,
+        content: "The pathway red-flags this stage, and it is the one with the longest lead times. Anything involving a landlord, a housing association or a repair takes weeks, so the reason for doing it in the first two days is that the paperwork is moving early.\n\nEquipment:\n- Does the patient need equipment while they are in hospital? Assess the need and order it to the ward.\n- Will equipment need to be provided at home? Planning for installation starts now.\n\nTheir accommodation:\n- Do they have their own accommodation? Is it rented, owned, or housing association?\n- Where there is a landlord or a housing association, you will need to write for permission before equipment goes in. Make contact early.\n- Is a home visit needed? Start planning it.\n\nThe state of the property:\n- Does it need repair? Is there a fire risk, hoarding, or general disrepair?\n- Will quotes be needed to make it habitable and safe? Contact the housing hub for quotes.\n\nReferrals the ward team may need to make:\n- Physiotherapy\n- Manual handling lead\n- Tissue viability nurse\n\nGather the details even where you cannot act on them yet. The pathway's own reasoning: this will take time, therefore gathering details will be time efficient.",
+        tip: "These are the items that turn into discharge barriers six weeks later. If your ward uses wardHub jobs, this is the stage worth logging as a barrier while it is still just a phone call.",
+      },
+      {
+        id: "screening",
+        title: "Days 3 to 7: the priority checklist",
+        progressive: true,
+        content: "Between days 3 and 7 the patient is screened. Which route is taken depends on how much OT need is already obvious.\n\nThe OT priority checklist:\n- The OTA completes it: gathering information, observation, speaking to the patient.\n- It can be used informally too - from the notes, from carers, from others who know the person.\n- Its job is to screen, so the registered OT can decide whether OT intervention is needed at all.\n- There is a separate prompt sheet that walks it: motivation, routine, performance skills and environment.\n\nSetting the level:\n- The screening is signed off by a registered OT, who decides high, medium or low priority.\n- They may ask for more information before they decide.\n- Where there is no OT need, for example a low level one: signpost to recreation and encourage routine, so function does not decline.\n- Where there are high OT needs: see the next step.\n\nIf the person is too unwell to engage:\n- If at day 7 the person is not engaging and is unwell, it is acceptable to use the screening tool to help the OT with formulation.\n\nAlso in the first seven days:\n- The recreation team introduces its service, and its leaflet is offered.",
+        tip: "The prompt sheet is being built into wardHub as its own guide. Until it lands, work from your team's copy.",
+      },
+      {
+        id: "assessment",
+        title: "Days 3 to 7: when a full assessment is used instead",
+        content: "Where there is clearly a high level of need, the OT may choose to complete a formal OT assessment rather than the priority checklist. You may already know the need is high from records, from rapid reviews, or from a ward handover.\n\nHow the information gets gathered:\n- OCAIRS (the Occupational Circumstances Assessment Interview and Rating Scale), if the individual engages\n- The OT inpatient initial assessment form\n- MOHOST, as an observation tool\n- A practical assessment group\n\nThe purpose is to establish clear OT needs and set an initial plan with the individual. Where they cannot take part, it may be a best interests care plan at this stage.",
+        tip: "MOHOST has its own explainer in wardHub if you want to know what the OT is looking at.",
+      },
+      {
+        id: "ward-round",
+        title: "Day 7: the first ward review",
+        content: "From day 7 the OT initial assessment information feeds into the patient's first ward review. It helps the team with formulation and with the purpose of the admission.\n\nWard review schedules vary, so treat day 7 as a guide rather than a fixture.\n\nIf the person is unwell and not engaging, this is where you may be discussing a best interests plan.",
+      },
+      {
+        id: "care-plan",
+        title: "By day 10: the OT care plan",
+        tldr: "An agreed plan, made with the patient, from the OT assessment. SMART goals.",
+        content: "By day 10 at the latest, an initial care plan is completed with the patient. The information feeding it comes from your OT assessment.\n\nIt is an agreed plan, and the service user has been involved in creating it. Where they cannot be involved, it is a best interests care plan.\n\nThink SMART goals.\n\nCare plans evolve and change, and so will the individual's needs. The day 10 plan is a starting point, not a finished document.\n\nThe plan may be as simple as maintaining routine and structure and preventing a decline in skills - and the ward team have a responsibility to support that too.\n\nIt may also involve referral to Hub based groups or ward based groups. That is where intervention planning and implementation begin.",
+      },
+      {
+        id: "interventions",
+        title: "Interventions: ward level and the Hub",
+        progressive: true,
+        content: "Interventions occur at every level and they are not linear.\n\nAt ward level:\n- Support self-soothing, using sensory modulation, to change how the person feels through the senses\n- Help manage distressing symptoms\n- Build confidence and motivation, add structure and routine\n- Ward level groups are not necessarily focused on psychoeducation at this initial stage\n- Access to ward based activity groups, and to the recreation team\n\nThrough the Hope and Resilience Hub:\n- Referral and access to groups supporting self-care, productivity and leisure\n- Also skills, psychoeducation and moving on groups\n- Hub groups can be accessed at any point, when the person is ready\n- See the Hub programme for the purpose of each group\n\nWhat the Hub does with a referral:\n- Hub OT staff review any group referral and meet the person, to make sure the group meets their needs\n- At that point they can review the assessment and the goals, and add to them if the care plan has changed\n- Hub OT staff update the care plan and add an end review date as appropriate",
+      },
+      {
+        id: "hub-referral",
+        title: "Referring to the Hope and Resilience Hub",
+        tldr: "Made on SystmOne, by ward or Hub staff. Every group needs a referral based on identified need.",
+        content: "A referral to the Hub is made on SystmOne. It can be completed by ward or Hub staff.\n\nAll groups referred into the Hub need a referral based on the individual's identified needs, unless stated otherwise - a drop in group, for example.\n\nOn the referral screen:\n- Recipient: HUB, Hope & Resilience\n- Read code: Referral to mental health team\n- Type: Secondary care\n- Urgency: Routine\n- Task recipient: User group\n- Then write the referral narrative\n\n[confirm] Those field settings come from a screenshot of the referral screen supplied by the OT team. A worked example of the narrative has been asked for and is not here yet, so write it in your own words for now: what the person's identified need is, and which group you think meets it.",
+        tip: "This is a candidate for its own step-by-step guide once there is a worked example to show. Ask your ward OT if you want one sooner.",
+      },
+      {
+        id: "transfer",
+        title: "Internal ward transfer",
+        content: "Transfers may take place from one ward to another at any point in an admission. Some are planned - the pathway names ECW. [confirm] what ECW stands for on your unit.\n\nOnce a transfer is made:\n- The ward OT aims to review the patient's needs within 3 working days, to keep care continuous.\n- If further assessments are required, they are completed as per ward review.\n- Hub OTs review care plans and assessments, and amend them accordingly.",
+        tip: "This is the one stage with a working-days clock on it, and the one most easily lost when a patient moves.",
+      },
+      {
+        id: "discharge",
+        title: "Discharge planning",
+        progressive: true,
+        content: "At readiness for discharge:\n- The ward or Hub OT may attend a discharge planning meeting if required, and liaise with the relevant people.\n- That meeting may happen a week before formal discharge, so make yourself familiar with when it is likely to take place.\n- Review goals, and sign them off if they have been met. That is the Hub OT if they set the goals, otherwise ward staff.\n\nThe follow-up ReQoL:\n- Completed by the ward OTA or the Hub team as a follow up.\n- When you complete it is at your own discretion - in the last session of their group, for example.\n\nOn the way out:\n- Signpost to other services, and offer the information pack that supports signposting.\n- Complete a discharge summary report where it is needed to support access to other services, or to refer to community OT staff.\n- Optional: complete a practical activity session as an outcome measure, to show change in function.",
+      },
+      {
+        id: "aims",
+        title: "What each stage evidences",
+        tldr: "The pathway exists to evidence AIMS accreditation. Your record is the evidence.",
+        progressive: true,
+        content: "The pathway quotes AIMS standard numbers against each stage. AIMS is the Royal College of Psychiatrists' Accreditation for Inpatient Mental Health Services, run through its College Centre for Quality Improvement.\n\nThat is worth knowing for two reasons: it explains why the timings exist, and it means the record you leave at each stage is part of what the ward is assessed on.\n\n[confirm] The numbers below are the pathway document's own references. They have not been checked against the published AIMS standards, so treat them as a pointer rather than a citation.\n\nWithin 1-2 days:\n- AIMS 3, 7, 194\n\nDays 3 to 7:\n- AIMS 2\n\nBy day 10:\n- AIMS 21, 22, 42\n\nIntervention planning and implementation:\n- AIMS 31, 33, 34, 39, 40, 42, 45, 57, 195\n\nDischarge planning:\n- AIMS 76, 79, 194",
+      },
+    ],
+    caseNote: "OT initial contact made [DATE]. Role explained ([OT / OTA]) and information leaflet offered. Leaflet [added to red folder / patient has no red folder]. ReQoL [initiated / to follow]. Physical health and equipment needs [checked, see below / none identified]. Next step: [OT priority checklist / OT initial assessment] by day 7.",
+    related: [
+      { label: "MOHOST (OT screening) explained", guideId: "mohost" },
+      { label: "My Care Plan", guideId: "care-plan" },
+      { label: "Admission Checklist", guideId: "admission-checklist" },
+    ],
+    sources: [
+      { n: 1, label: "Occupational Therapy Service Pathway, The Radbourne Unit - ward OT team document, supplied 2 August 2026. No version number, review date or owner on the copy held" },
+      { n: 2, label: "Priority Screening Prompt Sheet - ward OT team document, supplied 2 August 2026" },
+      { n: 3, label: "AIMS (Accreditation for Inpatient Mental Health Services), Royal College of Psychiatrists College Centre for Quality Improvement. The standard numbers quoted in this guide are the pathway document's own references and have not been checked against the published standards" },
+    ],
   },
   mohost: {
     id: "mohost",

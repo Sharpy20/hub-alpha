@@ -52,6 +52,7 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "roster": "red",                   // 13 Jul: split from pay-roster; Tess reviewed
   "leave-absence": "red",            // 13 Jul: new - absences section drafted from national baseline, trust-policy figures still to confirm
   "pay-roster-faq": "red",           // 14 Jul: new - FAQ + jargon pulled out of the 3 pay guides
+  "ot-pathway": "red",               // 2 Aug: new - restructure of the Radbourne Unit OT pathway. Georgia (OT) to review; source doc is unversioned and names one unit
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

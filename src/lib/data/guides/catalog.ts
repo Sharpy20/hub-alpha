@@ -67,6 +67,7 @@ export const ALL_GUIDES: GuideItem[] = [
   // Medics Tools (new group - build up over time)
   { id: "mental-state-exam", title: "Mental State Examination", description: "Interactive MSE builder - pick words per domain, copy to notes", icon: "🧠", gradient: "from-purple-500 to-purple-700", category: "Medics Tools", viewerPath: "/guides/mental-state-exam" },
   // OT Tools (new group - build up over time)
+  { id: "ot-pathway", title: "OT Pathway (inpatient)", description: "What OT does across an admission and when - contact by day 2, screening by day 7, care plan by day 10, then Hub referral, transfer and discharge", icon: "🗓️", gradient: "from-violet-600 to-indigo-800", category: "OT Tools", viewerPath: "/guides/ot-pathway" },
   { id: "mohost", title: "MOHOST (OT screening) explained", description: "What the MOHOST occupational-therapy screen covers, how it is rated, and where it feeds - explainer, not the licensed tool", icon: "🧩", gradient: "from-violet-500 to-purple-700", category: "OT Tools", viewerPath: "/guides/mohost" },
   // Restrictive Practice
   { id: "seclusion-support-plan", title: "Seclusion Support Plan", description: "Think-it-through guide for the seclusion support plan - safer, sooner out of seclusion", icon: "🚪", gradient: "from-rose-600 to-red-800", category: "Restrictive Practice", viewerPath: "/guides/seclusion-support-plan" },

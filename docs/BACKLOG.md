@@ -4,6 +4,10 @@
 > Started 4 Jul 2026. Work happens in focused sessions that read this file first.
 > Status: `[ ]` todo · `[~]` in progress · `[x]` done · `[BLOCKED]` needs Mike · `[PARK]` deferred
 
+> **⭐ THE LIVE LIST IS SECTION R (2 Aug).** Section P is the 30 Jul evaluation's open items and
+> is still valid, but R sits above it: it carries the medical device question, the Tier A/B guide
+> split, the trust-account handover and Mike's 2 Aug job list. Read R first.
+
 Related task docs (roll findings into here over time):
 - **⭐ `docs/evaluations/2026-07-30_project-evaluation.md`** - 13-hat review, 30 Jul, run against
   template v2.1. **This is THE evaluation record.** It carries the recommendation ledger, the
@@ -1756,3 +1760,189 @@ capacity-assessment, blanket-restrictions, abc-chart, no-smoking, informal-patie
 - [PARK] Tribunal/DST/OT-report combined builder - write tribunal on the new gov.uk template (also D).
 - [PARK] Formulation output rethink; Risk tool rethink; DoLS visual/interactive (also D).
 - [PARK] restraint-monitoring - reasonable-force image + law; core-skills hold images (Mike to supply); clickable "monitoring ceased" workflow that greens out.
+
+---
+
+## R. THE LIVE LIST (2 Aug 2026) - sessions 50-52 plus Mike's own job list
+
+**Why this section exists:** sessions 50, 51 and 52 (31 Jul to 2 Aug) never reached this file.
+The medical device question, the NHSmail SSO route, the Anthropic ask and the tiered-guide
+split lived only in memory files, which is the exact failure Session 45 wrote a rule about.
+Merged here with Mike's 2 Aug list so there is one place again.
+
+Context memories: `session-49-meeting-debrief-hazards`, `session-50-devpanel-governance-audit`,
+`session-51-anthropic-toggle-ai-policy-sso`, `session-52-full-transcript-roadmap`,
+`competitor-scan-and-mhra-test`.
+
+### R1. Medical device - open, and it gates the pilot
+
+Anne Munnien (Clinical Safety Officer) raised it on 30 Jul and never closed it. **Mike cannot
+close it and cannot self-certify** - MHRA p11: *"A manufacturer's stated view of their product
+is not solely determinative."* A withdrawn classification claim already cost a governance
+document its credibility (Session 50), so do not write another one.
+
+- [ ] **⭐ Anne asked for the hazard log to be rebuilt FROM SCRATCH** (missed from the meeting
+      notes, surfaced by Mike 2 Aug). HL-003 v0.3 exists but it was written by the software's
+      author and grew by accretion; Anne wants it built properly. Treat as a facilitated hazard
+      workshop, not a document edit - the point is who is in the room, not the file. Ask her what
+      format and what participation she expects before starting, and whether the existing 27
+      hazards are an input or are being set aside.
+- [ ] **Ask for Karina at the table yourself.** Anne asked at 49:39 whether Karina needs to be
+      involved, two people talked over it and it was never answered.
+- [ ] **Give Andy Wall the parameters he asked for** (53:40 "could bleed into decision support",
+      55:05 "put some parameters about functionality that you're deploying"). The boundary rule
+      is: **no calculation, no interpretation, source policy always visible.** Delivering this is
+      responsive to his request, not a confession.
+- [ ] **Audit the promotional surfaces, not just the guides.** MHRA p11: medical purpose is
+      determined by labelling, instructions for use and promotional materials, *"the landing
+      page"* named explicitly. So home, `/about`, the video script and the presentation pack are
+      all in scope. Same page: *"General disclaimers... are not acceptable if medical claims are
+      made or implied elsewhere"* - a disclaimer cannot fix wording elsewhere.
+- [ ] **Tighten the loose claims** (same family as the "no cookies" fix). 32:09 *"AI doesn't
+      touch that bit"* is not accurate; the true narrow version is **no patient data passes
+      through any AI system at runtime**.
+
+### R2. The Tier A / Tier B guide split - the biggest lever on the pilot date
+
+Mike's own idea, 2 Aug. Where a clear SOP already exists, build the guide from it **manually,
+no AI interpretation, no cross-referencing across policies** - a drag-and-drop restructure of
+one approved document.
+
+- [ ] **Sort the 68 guides into A and B.** Tier A = one approved SOP, restructured. Review is
+      "is this faithful?", which is minutes rather than an evening, and the provenance is clean
+      for the classification question. Tier B = synthesised across policies, needs real clinical
+      reading. **Do the sort before asking anyone to review anything.**
+- [ ] **Build the drag-and-drop SOP builder.** Paste or upload one SOP, drag its sections into
+      guide steps, no model in the loop. It is also the succession answer: someone who is not
+      Mike and not an AI can build guides with it.
+- [ ] This maps onto the MHRA safe side verbatim - p12: *"It just reproduces a paper document in
+      digital format. It is down to the health care professional to make the decisions based on
+      the advice displayed."* Worth quoting when the builder is described.
+
+### R3. Emails and chases (Mike, 2 Aug)
+
+- [ ] **Email Andy Wall.** The apology/reframe: aimed high on purpose, better to be pulled back
+      than to crawl up, and he had lost track of what stage the last conversation left things at.
+      Pair it with R1's parameters so the mail carries an action, not just an apology.
+- [ ] **Email Cris.** The offer was only ever "build it internally because people are scared of
+      AI". If risk tolerance on AI is improving he is happy to keep it AI-built. Ask: **2-3 Claude
+      Code seats for his team, £90/month to start, £20/month to maintain**, co-authoring through
+      a shared project file. No tenant change, no subprocessor question, no data boundary
+      argument - which is why this is the easier ask than the Anthropic toggle.
+- [ ] **Claude-in-Copilot request, framed as shoring up guide building.** Send it **after**
+      Anne's, because it asserts the guide work is non-clinical and that is the question under
+      assessment. Expect a no on EU Data Boundary grounds. Two toggles are needed (M365 admin
+      centre + Power Platform), and the six wH agents would need rebuilding, not upgrading.
+      ⚠ Note from the Session 51 test: **the gap in the Guide Builder is the prompt, not the
+      model** - retrieval was excellent and it invented nothing. So this is a nice-to-have.
+- [ ] **Chase Maria on the SOP builder she named** (transcript "Sephia" = **SOPHIA**, Carradale
+      Futures). Ask for a sales pitch or demo to watch. Known before you ask: **£60k-£120k/yr**,
+      live at **West London MH and Essex Partnership University Trust**, G-Cloud listed with a
+      3-month free trial. Its G-Cloud listing carries no clinical safety or medical device
+      statement, which is not evidence either way and not a precedent to lean on.
+- [ ] **Chase Lucy for the WAGOLL.** Folds into the standing "zero of 16 referral guides has a
+      worked example" item (Section A / Section O).
+- [ ] **Libby and Charlie - sort a time.**
+- [ ] **Send Maria the 68-guide list** so she can assign names (she said 58:32 all 68 must be
+      signed off before a pilot, 1:00:17 send the list). Ask for **one content owner per
+      specialty**, not one person reading 68 guides.
+- [ ] **NHSmail SSO.** Pre-populate the form (Mike changes only Application Name, Scope/Purpose,
+      Contact, Redirect URIs), send to **azeez.aina@nhs.net**, he raises a Stores Request, then a
+      call with Cris. **Register multiple redirect URIs** (production + Vercel + localhost) - the
+      queue ran two months for Cris's own request, so a second one is expensive.
+      **Cris is off in September**, so push the review to **w/c 31 Aug**.
+
+### R4. Handover to trust accounts - SEQUENCE MATTERS
+
+- [ ] **⛔ IP FIRST. Get the ownership position named in writing BEFORE transferring the domain,
+      the repo or the hosting.** Maria 1:03:04 *"keen to keep this in House"*; Mike replied the
+      Trust could one day sell it; it was left unresolved. Built on his own time, own
+      subscription, own hardware, outside employed nursing duties - arguable, but it needs
+      stating, not assuming. **The comparable number is £60k-£120k/yr per organisation** and it
+      is public on the Digital Marketplace, so the conversation is not hypothetical.
+- [ ] **Transfer the domain.** After the above.
+- [ ] **Set up GitHub and Supabase under trust accounts.** Note this ends the Sharpy20-only
+      isolation rule that CLAUDE.md currently states in bold, so that rule needs rewriting in the
+      same pass rather than left to contradict reality.
+- [ ] ⚠ **Terminology, and it matters in front of governance people: it is FICTIONAL DEMO DATA,
+      never "demo PII".** Fictional data is not personal data and is out of DPIA scope entirely,
+      which is precisely what makes a no-patient-data first phase possible with no IG sign-off.
+      Writing "demo PII" throws that unlock away in a sentence. Alex Rose proposed the
+      no-patient-data-first phasing himself (37:15), so agreeing with him costs nothing.
+
+### R5. Site glitches (Mike, 2 Aug)
+
+- [ ] **"Print all" on the patient leaflets does not print a lot of the leaflets.** Only some
+      make it into the output. Start at the patient-guides print path and `printDoc.ts`.
+- [ ] **Clicking a task in the EXPANDED day view of the diary no longer opens it.** Regression.
+      **Prime suspect: Session 46c**, which converted the expanded day view from a full-screen
+      `fixed` overlay into the shared `Modal`. A click handler or a stopPropagation almost
+      certainly did not survive the move. The same session already found one bug of this shape
+      (`handleToggleComplete` dropping its date argument inside the pop-out).
+
+### R6. To build (Mike, 2 Aug)
+
+- [ ] **Assign a job to a ROLE, not just a person: OT, Nursing, Medical, Admin.** Fits the
+      existing claim model (unclaimed jobs are already a pool) - a role tag narrows whose pool it
+      sits in without forcing a named owner. Decide whether role is a filter on My Diary, a
+      badge, or both, and whether a job can carry more than one.
+- [ ] **72-hour audit and weekly audit reports.** The 72-hour admission audit tasks already
+      generate; what is missing is the report. Depends on R7 being answered honestly.
+
+### R7. Overview and tasks - built, but not landing (Mike, 2 Aug)
+
+All three shipped in the last fortnight and all three read as unclear to the person they were
+built for. That is the finding, not the features.
+
+- [ ] **The waiting-only flag is not clear what it does.** Mike wants to think it through further
+      before it is changed - do not redesign it unprompted, ask him what he expected it to do.
+- [ ] **MDT / Rapid / Named nurse review stamps are not clear.** Section M item 5 predicted the
+      assurance metric would "fall out for free"; on screen it does not read that way. Likely a
+      wording and placement problem rather than a logic one - the spec itself left the exact stamp
+      wording open (Section M, "Open").
+- [ ] **The bed meeting print sheet is pretty useless as it stands. Needs exploring.** Built 30
+      Jul deliberately as "not a screenshot of /overview" - worst-first by days blocked, category
+      tag, age per barrier. Worth sitting with an actual bed meeting agenda before rebuilding it.
+
+### R8. ⚠ The audit-completeness risk (Mike, 2 Aug) - acknowledge it in writing
+
+If someone does not need the guide and does the job without logging it, the job is invisible to
+the audit. **Gaps then read as "work not done" rather than "work not logged"**, which is worse
+than having no report at all.
+
+- [ ] **Put the claim on the report itself, in writing:** *a record of tasks logged in wardHub,
+      not a complete record of ward activity.* One sentence, and it stops the report over-claiming.
+- [ ] **Then make wardHub the only route for 2-3 task types**, so those specific ones are complete
+      by construction and can be audited honestly. Mike's own framing: this is a big ask, it means
+      recording in wardHub as business as usual rather than a tool to dip in and out of.
+- [ ] **The payoff to lead with:** a named nurse seeing every one of their patients' documentation
+      reviews in one place, with reminders when they fall due. That is the reason to adopt it,
+      and the audit is the by-product.
+
+### R9. Explore: pull patient names from SystmOne instead of holding them (Mike, 2 Aug)
+
+**The question to test, not assume: is reading names from S1 at runtime a SMALLER ask than the
+one Alex is already worried about?** The pitch writes itself if it is - wardHub would hold no
+patient identifier at all, just a pointer, so there is nothing in it to leak, retain, or keep
+current. That answers Alex's concern and the "who keeps this up to date" objection in one move,
+and it is the same argument that got MHA status, alerts and diagnoses removed on 28 Jul.
+
+- [ ] **Establish what the integration would actually be**, before selling it. Start from
+      `docs/progress reviews/SystemOne-API-Guide.md` (the existing research doc) and check it
+      against reality - it predates the Nexus rename and may describe a route that was never
+      real. TPP integration options, what a read-only patient-list call needs, and whether the
+      Trust already has an S1 integration route that other tools ride on.
+- [ ] **Cost it in the currency governance actually spends.** The honest read is that this trades
+      an **IG ask** (store names, DPIA, retention, data controller) for a **vendor and access ask**
+      (TPP, an information sharing agreement, an interface request, IT ownership). Those queues
+      are measured in months and are not Mike's to expedite - the NHSmail SSO request has been
+      sitting since June. **It may well be a smaller governance ask and a much longer calendar
+      ask.** Say both when presenting it.
+- [ ] **Ask Cris first** - he owns Nexus and the integration relationships, so he will know
+      whether an S1 read route exists before anyone writes a form. One conversation probably
+      settles it either way.
+- [ ] ⚠ **Do not let this stall Phase 0.** Alex proposed the no-patient-data-first phasing
+      himself, and fictional demo data needs no approval from anyone. This explores what comes
+      *after* Phase 0; it is not a reason to wait before starting it.
+
+

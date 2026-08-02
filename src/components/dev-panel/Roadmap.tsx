@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui";
+import { ALL_GUIDES } from "@/lib/data/guides/catalog";
+import { GUIDE_APPROVAL, DEFAULT_APPROVAL } from "@/lib/data/approval-status";
 import {
   CheckCircle, MapPin, Sparkles, Lightbulb, HelpCircle, Lock, FlaskConical,
   ShieldCheck, Circle,
@@ -17,6 +19,15 @@ import {
 // achieved, and a gate only reads "agreed" when someone actually agreed it on
 // a date. An optimistic roadmap is worth less than no roadmap, because the
 // first person who checks one claim stops believing the rest.
+
+// Counted from the guide catalogue and the approval map, never typed in. The
+// page tells the reader these are counted rather than estimated, so they have
+// to be, and they move on their own as guides are added and signed off.
+const counts = (() => {
+  const tally = { green: 0, amber: 0, red: 0 };
+  for (const g of ALL_GUIDES) tally[GUIDE_APPROVAL[g.id] || DEFAULT_APPROVAL] += 1;
+  return { ...tally, total: ALL_GUIDES.length };
+})();
 
 type StageStatus = "done" | "current" | "next" | "later";
 type GateStatus = "agreed" | "open" | "closed";
@@ -56,7 +67,7 @@ const STAGES: Stage[] = [
       {
         title: "Built, and put in front of real staff",
         description:
-          "Online since January 2026. Six months of ward staff asking for the next thing they needed grew it to 68 step-by-step guides, a shared team diary, a 942-question quiz built from the Trust's own policy library, and a live view of what is blocking discharge. Nobody was assigned to write any of it, and that is the strongest evidence the project has.",
+          `Online since January 2026. Six months of ward staff asking for the next thing they needed grew it to ${counts.total} step-by-step guides, a shared team diary, a 942-question quiz built from the Trust's own policy library, and a live view of what is blocking discharge. Nobody was assigned to write any of it, and that is the strongest evidence the project has.`,
       },
       {
         title: "Sponsor session, 30 July 2026",
@@ -73,7 +84,7 @@ const STAGES: Stage[] = [
             ],
           },
           {
-            question: "Who signs off 68 guides? One person cannot read them all.",
+            question: `Who signs off ${counts.total} guides? One person cannot read them all.`,
             status: "agreed",
             on: "30 Jul 2026",
             points: [
@@ -152,7 +163,7 @@ const STAGES: Stage[] = [
       {
         title: "Content sign-off by specialty",
         description:
-          "The project's biggest open risk is the content, not the code. 68 guides exist; one is signed off. The next artefact is that list with a named owner against every line, so each specialty is asked for a quick expert eyeball rather than a rewrite.",
+          `The project's biggest open risk is the content, not the code. ${counts.total} guides exist and ${counts.green === 1 ? "one is" : `${counts.green} are`} signed off. The next artefact is that list with a named owner against every line, so each specialty is asked for a quick expert eyeball rather than a rewrite.`,
         gates: [
           {
             question: "Should a guide be allowed to go green with dead links in it?",
@@ -179,10 +190,10 @@ const STAGES: Stage[] = [
             ],
           },
           {
-            question: "Where does the drafting model run?",
+            question: "Which model does the drafting?",
             status: "open",
             points: [
-              "Being explored: the Claude model inside Microsoft 365. If the Trust enables it, drafting happens in-tenant and the question of what leaves the Trust largely closes itself.",
+              "Being explored: the Claude model inside Microsoft 365. Reasoning over a long policy document is the hard part of building a draft, and a stronger model produces a better first pass for the reviewer to work from.",
               "No commitment, and it is a Trust licensing decision rather than a project one.",
             ],
           },
@@ -329,7 +340,7 @@ const BOARD: { heading: string; tone: string; note: string; items: string[] }[] 
     tone: "border-blue-300 bg-blue-50",
     note: "Queued, not started",
     items: [
-      "The 68-guide list with a named owner against every line",
+      `The ${counts.total}-guide list with a named owner against every line`,
       "DPIA to Information Governance",
       "A named Clinical Safety Officer, and a position on the medical device question",
       "One line of guidance in the add-job box, because job titles are free text next to a patient name",
@@ -341,7 +352,7 @@ const BOARD: { heading: string; tone: string; note: string; items: string[] }[] 
     tone: "border-violet-300 bg-violet-50",
     note: "No commitment, and some of it will not happen",
     items: [
-      "The Claude model inside Microsoft 365, to bring drafting fully inside the tenant",
+      "The Claude model inside Microsoft 365, for stronger context reasoning when an agent builds a draft in the tenant",
       "A Trust-owned or self-hosted code repository",
       "The Nexus Assurance webhook for audit jobs",
       "An exploratory conversation with TPP about SystmOne",
@@ -415,16 +426,16 @@ export function Roadmap() {
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 border border-green-300">
-                1 signed off
+                {counts.green} signed off
               </span>
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                47 awaiting review
+                {counts.amber} awaiting review
               </span>
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300">
-                20 in development
+                {counts.red} in development
               </span>
               <span className="px-3 py-1 rounded-full text-xs font-bold bg-white text-nhs-dark-grey border border-gray-300">
-                68 guides
+                {counts.total} guides
               </span>
             </div>
             <p className="text-xs text-nhs-mid-grey">

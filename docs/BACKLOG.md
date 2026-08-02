@@ -29,6 +29,56 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ✅ DONE 2 Aug 2026 - Session 49: commit pathway jobs to the diary, roadmap rebuilt
+
+Three commits, pushed as Sharpy20, verified on the live site. Gates green throughout
+(tsc 0, eslint 0, 71 tests).
+
+### Commit a guide step's jobs to the diary (new pattern, reusable)
+- New optional `commitTasks` on `GuideStep` (`src/lib/data/guides/howto-guides.ts`). Any step
+  that sets out a dated task list gets a **"Commit these jobs to the diary"** button top right,
+  opening `src/components/modals/CommitTasksModal.tsx`.
+- The sheet: confirms the patient (uses the guide's linked patient, or pick one there),
+  asks **ward or me**, then a tick sheet of every job. Tick all or some.
+- **Dates count from the patient's admission date**, the way a pathway counts, with a switch to
+  today and a per-row date. Jobs the source gives no timescale for start unticked and show the
+  source's own wording instead of a day number.
+- Jobs already in that patient's diary from that guide read "Already in the diary" and cannot be
+  added twice (matched on title + patientId + linkedGuideId).
+- **First user: OT pathway step 2**, carrying the 14 jobs the Radbourne OT document lists.
+  Nothing invented - every title and day is from the document.
+- **Next candidates:** admission checklist, leave/discharge/transfer. Ask Mike before adding.
+
+### Roadmap rebuilt (dev panel)
+- Extracted from `dev-panel/page.tsx` (3,385 lines, 425 of them roadmap) into
+  `src/components/dev-panel/Roadmap.tsx`.
+- Five-stage track with a filled progress line and a "we are here" pin. Decision gates now read
+  **Agreed** + date, **Open**, or **Closed** with the reason not to re-propose.
+- **Phase 1 is done** (its purpose was proving it works and finding a sponsor; 30 Jul did that).
+  **Phase 2 = approval, data and authoring = where we are.** New Phase 5 for after the pilot.
+  The cold-ward demo moved from Phase 1 into the pilot - the agreed second ward IS that test.
+- New **"How a guide is made"** panel at the top: drafted from Trust policy, never live on the
+  draft, green only when a named person in the owning specialty signs it, and the live counts.
+- **⚠️ Deliberate wording, do not "fix" it back.** Mike asked for the page to say guides are made
+  with SharePoint agents. It does not say that, because it is not true of the existing guides and
+  this panel is read by IG and clinical safety - Sessions 43 and 47 both had to remove false
+  claims from it. What it says instead is that the **authoring route is moving inside the tenant
+  onto Copilot agents**, and that the sign-off gate is the same whoever wrote the draft. Claude is
+  not mentioned. If the M365 Claude item lands, the original sentence becomes true and can go in.
+- New in Exploring: **the Claude model inside Microsoft 365** (worded as stronger context
+  reasoning during draft building, NOT as relocating the work) and a **Trust-owned or self-hosted
+  repository**.
+- **Guide counts are now derived** from `ALL_GUIDES` + `GUIDE_APPROVAL` at module load, in all
+  five places they appear. They were hardcoded at 68/1/47/20 and already wrong. Now 69 guides:
+  1 signed off, 47 awaiting review, 21 in development.
+
+### Found, not fixed
+- The dev panel's own header row overflows slightly at 375px. Predates this session.
+- Mike counts 70 guides, the catalogue counts 69. Likely the roster guide, which is commented out
+  of `catalog.ts` (Session 36) so it renders nowhere. Worth confirming which number is right.
+
+---
+
 ## ✅ DONE 30 Jul 2026 - Session 48: free text out of jobs, bed-management barriers in
 
 Morning of the sponsor demo. Gates green throughout (tsc 0, eslint 0, 71 tests). **Nothing in

@@ -8,7 +8,7 @@ import { useApp } from "@/app/providers";
 import { useTasks } from "@/app/tasks-provider";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { PatientPickerModal } from "@/components/modals/PatientPickerModal";
-import { AddTaskModal, type AddTaskPrefill } from "@/components/modals";
+import { AddTaskModal, CommitTasksModal, type AddTaskPrefill } from "@/components/modals";
 import { Patient, DiaryTask } from "@/lib/types";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -17,6 +17,7 @@ import {
   CheckCircle, FileText, Eye, BookOpen, Send, Clipboard, ClipboardList,
   Calendar, Shield, ArrowLeft, ArrowRight, Check, Copy, Download,
   ExternalLink, Phone, Mail, Pencil, UserPlus, AlertCircle, Lightbulb, Info, Printer, Undo2,
+  CalendarPlus,
 } from "lucide-react";
 import {
   WORKFLOWS, DEFAULT_WORKFLOW, STEP_GRADIENTS, SECTION_OPTIONS, S117_OPTIONS, AREA_OPTIONS,
@@ -345,6 +346,11 @@ export default function UnifiedGuidePage() {
   const [showAddFollowUp, setShowAddFollowUp] = useState(false);
   const [showHandBack, setShowHandBack] = useState(false);
   const [followUpAdded, setFollowUpAdded] = useState(false);
+
+  // Committing a step's task list to the diary (pathway guides). committedCount
+  // drives the confirmation banner, which fades on its own.
+  const [showCommitTasks, setShowCommitTasks] = useState(false);
+  const [committedCount, setCommittedCount] = useState(0);
 
   // How-to specific state
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
@@ -1149,12 +1155,35 @@ export default function UnifiedGuidePage() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div className={`h-2 bg-gradient-to-r ${config.gradient}`} />
             <div className="p-6 md:p-8">
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-start gap-4 mb-6">
                 <div className={`w-12 h-12 bg-gradient-to-br ${config.gradient} rounded-xl flex items-center justify-center flex-shrink-0 shadow-md`}>
                   <span className="text-white font-bold text-lg">{currentStep + 1}</span>
                 </div>
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900">{hStep.title}</h2>
+                <h2 className="flex-1 text-xl md:text-2xl font-bold text-gray-900 self-center">{hStep.title}</h2>
+                {/* Steps that set out a dated task list can push the whole lot
+                    into the ward diary in one go, rather than the nurse
+                    re-typing the pathway a job at a time. */}
+                {!isV2 && hStep.commitTasks && hStep.commitTasks.length > 0 && (
+                  <button
+                    onClick={() => setShowCommitTasks(true)}
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-semibold shadow-sm hover:shadow-md transition-all"
+                  >
+                    <CalendarPlus className="w-4 h-4" />
+                    <span className="hidden sm:inline">Commit these jobs to the diary</span>
+                    <span className="sm:hidden">To diary</span>
+                  </button>
+                )}
               </div>
+              {committedCount > 0 && (
+                <div className="mb-5 flex items-start gap-2.5 px-4 py-3 bg-green-50 border border-green-300 rounded-xl text-sm text-green-900">
+                  <Check className="w-4 h-4 flex-shrink-0 mt-0.5 text-green-600" aria-hidden="true" />
+                  <p>
+                    {committedCount} {committedCount === 1 ? "job is" : "jobs are"} in the diary
+                    {linkedPatient ? ` for ${linkedPatient.name}` : ""}.{" "}
+                    <Link href={link("/tasks")} className="font-semibold underline">Open the Team Diary</Link>
+                  </p>
+                </div>
+              )}
               {hStep.tldr && (
                 <div className="mb-5 px-4 py-2.5 bg-indigo-50 border-l-4 border-indigo-400 rounded-r-lg text-sm text-indigo-900">
                   <strong>In a hurry:</strong> {hStep.tldr}
@@ -1483,6 +1512,35 @@ export default function UnifiedGuidePage() {
             setTimeout(() => setFollowUpAdded(false), 5000);
           }}
         />
+
+        {/* Commit a step's task list to the diary as one tick sheet */}
+        {hStep?.commitTasks && hStep.commitTasks.length > 0 && (
+          <CommitTasksModal
+            isOpen={showCommitTasks}
+            onClose={() => setShowCommitTasks(false)}
+            commitTasks={hStep.commitTasks}
+            guideId={guideId}
+            guideTitle={title}
+            patient={linkedPatient}
+            // Picking a patient here links the guide too, but must not go
+            // through handlePatientSelect - that creates its own guide job, and
+            // the commit sheet is about to create the real ones.
+            onPatientChange={setLinkedPatient}
+            activeWard={activeWard}
+            currentUserName={user?.name}
+            existingTasks={tasks}
+            onCommit={(newTasks) => {
+              newTasks.forEach((t, i) => {
+                addTask({
+                  ...t,
+                  id: `task-commit-${Date.now()}-${i}`,
+                } as DiaryTask);
+              });
+              setCommittedCount(newTasks.length);
+              setTimeout(() => setCommittedCount(0), 8000);
+            }}
+          />
+        )}
 
         {/* Second door onto the hand-back sheet - same component as the diary */}
         {linkedJob && (

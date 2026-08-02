@@ -1,3 +1,5 @@
+import type { PatientTaskCategory, TaskPriority } from "@/lib/types";
+
 // How-to guide data - extracted from how-to/[id]/page.tsx
 //
 // Rule 4: contacts that are not publicly findable display "Hidden in demo mode".
@@ -5,10 +7,34 @@
 // 27 July 2026 and are held outside the repo in E:\Hub\temp\internal-contacts.md,
 // keyed by guide id.
 
+// A job a guide step can offer to put in the ward diary. The wording, the day
+// and the order all come from the source pathway - nothing here is invented, so
+// a step only carries these where the document itself sets out a task list with
+// timescales attached.
+export interface CommitTask {
+  id: string;
+  title: string;
+  // Day of the admission the pathway puts this on (day 1 = admission day), used
+  // to date the job from the patient's admission. Left off where the pathway
+  // gives no timescale.
+  day?: number;
+  // What the pathway says about timing where it is not a plain day count, shown
+  // on the tick sheet instead of a day badge.
+  when?: string;
+  category: PatientTaskCategory;
+  priority?: TaskPriority;
+  // Starts unticked. For items the pathway gives no timescale for, or that only
+  // apply if something else happens (an internal transfer, a Hub referral).
+  optional?: boolean;
+}
+
 export interface GuideStep {
   id: string;
   title: string;
   content: string;
+  // Jobs this step can commit to the ward diary, ticked off individually. Adds
+  // a "Commit these jobs to the diary" button to the top of the step.
+  commitTasks?: CommitTask[];
   // One-line "in a hurry" summary shown in a banner above the step content.
   tldr?: string;
   tip?: string;
@@ -895,6 +921,26 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "timeline",
         title: "The pathway at a glance",
+        // Every job below is a line from the pathway document, with the day the
+        // document puts it on. The four with no day are the ones the pathway
+        // writes as "throughout" or ties to an event that may never happen, so
+        // they start unticked and carry the pathway's own wording instead.
+        commitTasks: [
+          { id: "contact", title: "OT initial contact - meet, greet and record on SystmOne", day: 2, category: "other", priority: "important" },
+          { id: "reqol", title: "ReQoL initiated (OTA)", day: 2, category: "assessment" },
+          { id: "physical", title: "Physical health and equipment needs checked", day: 2, category: "assessment", priority: "important" },
+          { id: "home", title: "Accommodation, home and equipment details gathered", day: 2, category: "discharge_planning", priority: "important" },
+          { id: "screening", title: "OT priority checklist, or OT initial assessment where need is high", day: 7, category: "assessment" },
+          { id: "signoff", title: "Screening signed off by a registered OT, level of intervention set", day: 7, category: "assessment", priority: "important" },
+          { id: "ward-round", title: "OT needs formulated for the first ward review", day: 7, category: "documentation" },
+          { id: "recreation", title: "Recreation team service introduced and leaflet offered", day: 7, category: "other" },
+          { id: "care-plan", title: "OT care plan completed with the patient", day: 10, category: "documentation", priority: "important" },
+          { id: "interventions", title: "Intervention planning and implementation begun", day: 10, category: "other" },
+          { id: "hub-referral", title: "Hope and Resilience Hub referral, based on identified need", when: "when the person is ready - Hub groups can be accessed at any point", category: "referral", optional: true },
+          { id: "transfer-review", title: "OT review after an internal ward transfer", when: "within 3 working days of the transfer", category: "assessment", priority: "important", optional: true },
+          { id: "discharge", title: "Review goals, support discharge planning, discharge report as appropriate", when: "at readiness for discharge", category: "discharge_planning", optional: true },
+          { id: "reqol-followup", title: "Follow-up ReQoL completed", when: "at discharge, timing at your discretion", category: "assessment", optional: true },
+        ],
         content: "Day 1 - ward admission.\n\nWithin 1-2 days:\n- Initial OT contact made\n- ReQoL initiated by the OTA\n- Physical health and equipment needs checked\n\nDays 3 to 7:\n- OT priority checklist, or an OT initial assessment where the need is clearly high\n- A registered OT signs off the screening and sets the level: high, medium or low\n\nDay 7:\n- OT attends the ward round, formulation of OT needs\n- The recreation team has introduced its service\n\nBy day 10 at the latest:\n- OT care plan completed at ward level, with the patient or as a best interests plan\n- Intervention planning and implementation\n\nThen, throughout:\n- Hub OTs review care plans and assessments and amend accordingly\n- Ward OTs review the needs of internal ward transfers, within 3 working days\n- Review goals, support discharge planning, discharge report as appropriate, ReQoL repeated",
         tip: "Only one timescale in the whole pathway is stated in working days: the 3 days after an internal ward transfer. The rest are written as plain days.",
       },

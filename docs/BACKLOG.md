@@ -2128,3 +2128,125 @@ Thank her, then ask:
 - [ ] Which three assessments do you spend the most time teaching new starters?
 - [ ] What can an OTA do alone versus what needs the registered OT? (Feeds S4.)
 - [ ] Does OT pick up every admission automatically, or is there a referral in?
+
+---
+
+## T. Mike's job list, 3 Aug 2026 (Session 54) - VERIFIED BEFORE PLANNING
+
+**Mike's instruction:** do not run these off independently. Plan collectively, split what needs
+Mike at a computer from what Claude can safely run alone. Live task list mirrors this section.
+
+**Numbering note:** Mike's original list had duplicate labels (two 2c, two 2d). Renumbered T1-T15
+here, original labels kept in brackets.
+
+### ⭐ Six things checked first, because they change the list
+
+1. **Patient status filters ARE built** (T5 / his item 6). `PatientStatus`, the filter counts and
+   `expectedDischargeDate` all exist. The reason Mike never sees them is in a code comment already:
+   `src/lib/data/tasks/index.ts` lines 65-70 - `PATIENT_STATUSES` is a 10-slot round-robin and with
+   only 5 patients per ward `i % 10` never reaches the non-active slots. **The comment even ends
+   "Mike's call."** So this is a one-line choice, not a build.
+2. **`CareReviewRollup` already exists and is imported NOWHERE.**
+   `src/components/reports/CareReviewRollup.tsx` calls itself *"Ward-level roll-up of the
+   care-review board - the weekly audit at a glance."* The component T7 asks for is built and
+   orphaned.
+3. **The CQC cadences are mostly already encoded.** `REVIEW_ITEMS` in
+   `src/lib/data/care-review.ts` has care plan 7d, care plan offered 7d, risk ax 7d, consent
+   re-ask 7d, HONOS 30d, safety plan 30d - six of Mike's list, correct. Admission-once items
+   (RMP, physical health, advocacy, read rights) are in `ADMISSION_GUIDE_MAP`.
+   **The real gaps are triggers, not intervals** - see T9.
+4. **9a is already done.** `STAFF_NAMES` holds full first and last names for all 25 staff.
+5. **Consultants are deliberately NOT a role.** `UserRole` is staff|lead|manager|ward_admin|
+   senior_admin; consultants are a separate name-per-ward map, and the code comment says
+   *"Consultants are separate so the ward staff list stays nurse/leadership only."* T13 reverses
+   a deliberate decision, so it needs a call not a patch.
+6. **The T4 dead end is navigation, not data loss.** `admission-checklist/page.tsx` offers only
+   `href={v2Href("/guides")}` as an exit, but `PatientLink` does persist ticks against the
+   patient. Less urgent than it looks, still a real break.
+
+### The split
+
+| # | Job | Who | Blocked by |
+|---|---|---|---|
+| T1 | Annotation / comment layer (2a) | Claude, after ONE storage decision | Mike |
+| T2 | Email Nat, housing pathway flow (2b) | **Mike at work** | - |
+| T3 | Email safeguarding lead re gaps (2c) | **Mike at work** | - |
+| T4 | Fix checklist navigation dead end (5) | **Claude alone** | nothing |
+| T5 | Consolidate patient list filter row (6) | Claude, one-line choice | Mike confirms |
+| T6 | Wire orphaned CareReviewRollup into /overview (4b) | **Claude alone** | nothing |
+| T7 | Care review reviews into diary (4a) | Claude | Mike decides auto vs manual |
+| T8 | 72hr + named nurse audit tool, CQC gaps (2e) | Claude, biggest build | design session |
+| T9 | SystmOne prompt + link audit across guides (2f) | **Claude audits alone**, Mike fills gaps | part-blocked |
+| T10 | "Add all to tasks" on checklists (2d) | Claude proposes, Mike confirms | - |
+| T11 | Walk-round printout per ward (2g) | Claude | **Mike supplies example** |
+| T12 | Interim Excel ward diary (3) | **Claude alone** | scope decision |
+| T13 | Consultant role + unward-linked staff (7a, 7b) | Claude | **Mike decides model** |
+| T14 | Consultant selector on ward allocation (8) | Claude | T13 |
+| T15 | Staff records linked to email (9b) | PARKED | NHSmail SSO (R3) |
+
+### T1. Annotation / comment layer (his 2a) - the centrepiece
+
+Admin-gated overlay: click any tile, text block or graphic, attach numbered prompts 1-2-3 plus
+notes, `(A)` marker changes colour once an element carries comments. Purpose is Mike commenting at
+work, then working through them with Claude at home.
+
+- **Do NOT hand-tag elements.** 197 files. Use a dev-mode overlay that derives a stable
+  selector plus a text fingerprint from whatever is clicked, so the feature costs zero edits
+  across the app and survives minor reshuffles.
+- ⛔ **Storage is the decision, and localStorage alone FAILS the actual use case** - he comments at
+  work and reads at home, different machines. Three options:
+  - **Recommended: localStorage + a "Copy all comments" button** that puts JSON on the clipboard.
+    He pastes it into chat at home. Zero infrastructure, zero governance change.
+  - Supabase. Would work, but it would be the **first live database use**, which falsifies
+    "there is no database in use" in `docs/assurance-sheet.md` and touches the DPIA. Not worth it
+    for UI comments.
+  - Export/import a JSON file. Same as option 1 with more friction.
+
+### T8. Audit tool + the CQC cadence gaps (his 2e)
+
+Six intervals already encoded (see finding 3). **What has no model at all:**
+
+- **Event-triggered reviews.** Risk ax and RMP "after any incident". Rights re-read on transfer
+  between wards, change of RC, or any change in capacity. The tracker only understands
+  `intervalDays`, so an event trigger is a new concept.
+- **One conditional.** *"If any needs are identified on the physical health ax, an interventions
+  care plan should be created."* A review that only exists if another one found something.
+- **A two-place requirement.** Consent to share must be documented **in both the care plan and the
+  SystmOne daily notes**. A single tick cannot express that honestly.
+- Plus: join up `DEMO_AUDIT_72HR_TASKS` so completed tasks sit with the patient and the audit
+  carries week to week.
+
+⚠ **Device-boundary note for this one.** An audit tool that says "this is overdue against the
+Trust's stated cadence" is reproducing a policy requirement - the safe side of the line. A tool
+that infers *clinical* priority, or interprets whether a review was adequate, is not. Keep it to
+dates against stated intervals.
+
+### The CQC / Trust cadence list as supplied (3 Aug, verbatim - do not paraphrase into a guide)
+
+- Care plans updated weekly with patient input
+- Risk assessments updated weekly minimum, or after any incidents
+- Care plans offered weekly
+- HONOS updated monthly unless significant changes
+- Safety plans updated monthly
+- Risk management plans completed on admission, updated after any incidents
+- Physical health assessment completed fully on admission, updated if significant changes
+- If needs identified on the physical health assessment, an interventions care plan created
+- Advocacy referrals completed once on admission
+- Rights read on admission, transfer from wards, change of RC, or changes in capacity
+- Consent to share asked on admission and re-asked weekly, documented in **both** the care plan
+  and SystmOne daily notes
+
+### T12. Interim Excel ward diary (his 3)
+
+⚠ **Scope warning before building.** If it holds real patient names it becomes a spreadsheet of
+personal data on a ward computer, which is the exact scatter wardHub exists to replace, and it
+would be quoted back at Mike in any IG conversation. Recommend **jobs-only**, or names optional
+with a warning sheet. Build in `E:\Hub`, outside the repo, so it cannot deploy.
+
+### Open questions for Mike (all in the live task list too)
+
+1. T1 storage - clipboard-copy, or Supabase and accept the governance consequence?
+2. T5 - remove the two filters as proposed, or reorder `PATIENT_STATUSES` so the demo shows them?
+3. T7 - manual "add review to diary" button, or automatic? Auto is 25 patients x 6 items = 150 tasks.
+4. T13 - consultant as a `UserRole`, or a separate directory section? Reverses a deliberate call.
+5. T12 - which task features carry into Excel, and does it hold patient names at all?

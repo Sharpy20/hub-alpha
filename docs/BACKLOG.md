@@ -2238,10 +2238,33 @@ dates against stated intervals.
 
 ### T12. Interim Excel ward diary (his 3)
 
-⚠ **Scope warning before building.** If it holds real patient names it becomes a spreadsheet of
-personal data on a ward computer, which is the exact scatter wardHub exists to replace, and it
-would be quoted back at Mike in any IG conversation. Recommend **jobs-only**, or names optional
-with a warning sheet. Build in `E:\Hub`, outside the repo, so it cannot deploy.
+⭐ **Identifier SETTLED 3 Aug: initials + NHS number. Mike's decision, and his reasoning is right -
+do not re-litigate.** Claude first argued an NHS number is *more* identifying than a name; Mike
+corrected it from IG training and won the point. **NHS number is the canonical pseudonymous key:**
+anyone able to resolve one already has legitimate record access, and a sheet found on a bus cannot
+be resolved by the finder, whereas a name identifies instantly. It is also the clinically safer
+identifier (the two-John-Smiths problem), which is why it is on wristbands and pathology requests.
+
+Two refinements that survive, and are worth **saying** rather than acting on:
+
+1. **Pseudonymised is still personal data** (UK GDPR Art 4(5) / Recital 26 - re-identification is
+   possible with the lookup). So the file is handled as a patient list, and **"not personal data"
+   is not a claim to make to IG.** Same discipline as the cookie and no-database lines.
+2. **The sensitive combination may not be the NHS number.** `initials + ward` on a five-bed ward is
+   often uniquely identifying to anyone who knows the ward, and because this is a mental health
+   unit the dataset discloses health status *by inference* even when nobody can be named. Task text
+   does the same work ("Section 3 papers due").
+
+Mitigation is deliberately cheap: **no ward name in the filename, one header line saying what the
+file is.** No warning sheet - he asked for quick and dirty.
+
+The realistic failure mode is not the bus. It is that the sheet never gets deleted, gets emailed
+on, and drifts - the exact scatter wardHub replaces. Worth saying out loud when it is retired.
+
+Build in `E:\Hub`, outside the repo, so it cannot deploy.
+
+**Still needed from Mike:** which task features carry over - claim / take over / drop, priority,
+recurring days, shifts, barrier-to-discharge flag, hand-back?
 
 ### Open questions for Mike (all in the live task list too)
 
@@ -2249,7 +2272,7 @@ with a warning sheet. Build in `E:\Hub`, outside the repo, so it cannot deploy.
 2. T5 - remove the two filters as proposed, or reorder `PATIENT_STATUSES` so the demo shows them?
 3. T7 - manual "add review to diary" button, or automatic? Auto is 25 patients x 6 items = 150 tasks.
 4. T13 - consultant as a `UserRole`, or a separate directory section? Reverses a deliberate call.
-5. T12 - which task features carry into Excel, and does it hold patient names at all?
+5. T12 - which task features carry into Excel? (Identifier SETTLED: initials + NHS number.)
 
 ### T9 AUDIT RESULT (done 3 Aug, Session 54) - SystmOne prompts across the 68 guides
 

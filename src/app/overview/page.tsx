@@ -15,6 +15,7 @@ import { TaskDetailModal, AddTaskModal } from "@/components/modals";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { daysBlocked, barrierAgeDays } from "@/lib/utils/barriers";
 import { BarrierBand } from "@/components/overview/BarrierBand";
+import { CareReviewRollup } from "@/components/reports/CareReviewRollup";
 import { BarrierCategoryChip } from "@/components/tasks/BarrierCategoryPicker";
 import { BARRIER_CATEGORIES, type BarrierCategory } from "@/lib/data/barrier-categories";
 import { printBedMeetingSheet } from "@/lib/utils/bedMeetingSheet";
@@ -1805,6 +1806,21 @@ export default function OverviewPage() {
             />
           </div>
         </div>
+
+        {/* Care review audit. Sits alongside the barriers band as its own tile: the
+            barriers band answers "what is stuck", this answers "which clinical
+            records are out of date against the Trust cadence". Scoped to the same
+            filtered set as everything else on the screen, so it never contradicts
+            the scope bar. Separate from the review STAMPS on each patient, which
+            attest the JOBS LIST is current rather than the records. */}
+        {filtered.length > 0 && (
+          <div className="print-hide">
+            <CareReviewRollup
+              patients={filtered.map((s) => s.patient)}
+              title={`Care Review Audit - ${scopeLabel}`}
+            />
+          </div>
+        )}
 
         {/* Scope bar - compact, because the list below is the point of the screen */}
         <Card className="print-hide">

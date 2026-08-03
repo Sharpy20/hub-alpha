@@ -3,28 +3,63 @@
 import { useEffect, useState } from "react";
 import { useApp } from "@/app/providers";
 import { DEMO_PATIENTS } from "@/lib/data/tasks";
+import { Patient } from "@/lib/types";
 import { toLocalDateStr } from "@/lib/utils/date";
 import {
-  CareTracker, REVIEW_ITEMS, loadTracker, daysUntilDue, reviewStatus, admissionProgress,
+  CareTracker, REVIEW_ITEMS, loadTracker, saveTracker, seedPatient,
+  daysUntilDue, reviewStatus, admissionProgress,
 } from "@/lib/data/care-review";
 import { AlertTriangle, Clock, CheckCircle2, ClipboardCheck } from "lucide-react";
 
 // Ward-level roll-up of the care-review board - the weekly audit at a glance.
 // Reads the same localStorage tracker the patient tiles use. Full build only.
-export function CareReviewRollup() {
+//
+// Distinct from the review STAMPS on /overview (src/lib/data/patient-review.ts):
+// stamps attest that the JOBS LIST is current (MDT / rapid / named nurse), this
+// tracks when each CLINICAL RECORD was last updated (care plan, risk, HONOS,
+// safety plan, consent). Different questions, deliberately separate.
+//
+// Pass `patients` to scope it to whatever the host screen is showing. Omit it and
+// it falls back to the active ward, which is what the patient list wants.
+export function CareReviewRollup({
+  patients,
+  title,
+}: {
+  patients?: Patient[];
+  title?: string;
+} = {}) {
   const { activeWard } = useApp();
   const [tracker, setTracker] = useState<CareTracker>({});
   const [today, setToday] = useState("");
 
+  // Seed as well as read. The patient list seeds the tracker on mount, so a
+  // read-only roll-up mounted on a page the user reached FIRST would report every
+  // admission as 0/25 - i.e. it would invent a failing audit. Same seed logic as
+  // the patient list, so both agree whichever screen you open first.
   useEffect(() => {
-    setToday(toLocalDateStr());
-    setTracker(loadTracker());
+    const t = toLocalDateStr();
+    setToday(t);
+    const loaded = loadTracker();
+    let changed = false;
+    for (const p of DEMO_PATIENTS) {
+      if (p.status === "discharged") continue;
+      if (!loaded[p.id]) {
+        loaded[p.id] = seedPatient(p.id, p.admissionDate, t);
+        changed = true;
+      }
+    }
+    if (changed) saveTracker(loaded);
+    setTracker(loaded);
   }, []);
 
   if (!today) return null;
 
-  const rows = DEMO_PATIENTS
-    .filter((p) => p.ward.toLowerCase() === activeWard.toLowerCase() && p.status !== "discharged")
+  const source = patients ?? DEMO_PATIENTS.filter(
+    (p) => p.ward.toLowerCase() === activeWard.toLowerCase()
+  );
+
+  const rows = source
+    .filter((p) => p.status !== "discharged")
     .map((p) => {
       const t = tracker[p.id];
       const adm = admissionProgress(t);
@@ -48,7 +83,7 @@ export function CareReviewRollup() {
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3 flex-wrap">
         <ClipboardCheck className="w-5 h-5 text-indigo-600" />
-        <h2 className="text-lg font-bold text-gray-800 flex-1">Care Review Audit - {activeWard} Ward</h2>
+        <h2 className="text-lg font-bold text-gray-800 flex-1">{title ?? `Care Review Audit - ${activeWard} Ward`}</h2>
         {allGood ? (
           <span className="text-sm font-semibold px-3 py-1 rounded-full bg-green-100 text-green-800 flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4" /> All up to date

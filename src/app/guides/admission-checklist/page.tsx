@@ -27,13 +27,19 @@ export default function AdmissionChecklistPage() {
   const v2Href = useV2Href();
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [patient, setPatient] = useState<Patient | null>(null);
+  // Set when we arrived from a patient's Care Review, so we can offer a way BACK
+  // there rather than stranding the user on the guides index.
+  const [fromPatientId, setFromPatientId] = useState<string | null>(null);
 
   // Auto-link a patient passed via ?patient=<id> (e.g. from the Care Review pop-up).
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("patient");
     if (id) {
       const p = DEMO_PATIENTS.find((x) => x.id === id);
-      if (p) setPatient(p);
+      if (p) {
+        setPatient(p);
+        setFromPatientId(p.id);
+      }
     }
   }, []);
 
@@ -114,11 +120,11 @@ export default function AdmissionChecklistPage() {
               </div>
             </div>
             <Link
-              href={v2Href("/guides")}
-              className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline print:hidden"
+              href={fromPatientId ? v2Href(`/patients?care=${fromPatientId}`) : v2Href("/guides")}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline print:hidden whitespace-nowrap"
             >
               <ArrowLeft className="w-4 h-4" />
-              All guides
+              {fromPatientId ? "Back to patient list" : "All guides"}
             </Link>
           </div>
           <PatientLink patient={patient} onChange={setPatient} guideTitle="Admission Checklist" note="Ticks save against this patient and update their Care Review admission badge" />
@@ -293,6 +299,39 @@ export default function AdmissionChecklistPage() {
           completed={ADMISSION_CHECKLIST.flatMap((g) => g.items).filter((i) => checked[i.id]).map((i) => i.text)}
           outstanding={ADMISSION_CHECKLIST.flatMap((g) => g.items).filter((i) => !checked[i.id]).map((i) => i.text)}
         />
+
+        {/* Way out. The header link is hidden on small screens and scrolls away on a
+            long list, so there is always an exit at the bottom too. Ticks are already
+            saved as you go - this button confirms that rather than doing the saving. */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex flex-wrap items-center gap-3 print:hidden">
+          <div className="flex-1 min-w-[12rem]">
+            <p className="font-semibold text-gray-800">
+              {patient ? `Saved against ${patient.name}` : "Finished for now?"}
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {patient
+                ? "Every tick is saved as you make it. You can leave and come back to the rest."
+                : "Link a patient above if you want these ticks to save against their record."}
+            </p>
+          </div>
+          {fromPatientId ? (
+            <Link
+              href={v2Href(`/patients?care=${fromPatientId}`)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-nhs-blue text-white rounded-lg font-semibold hover:bg-nhs-dark-blue transition-colors no-underline"
+            >
+              <Check className="w-4 h-4" />
+              Done, back to patient list
+            </Link>
+          ) : (
+            <Link
+              href={v2Href("/guides")}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-nhs-blue text-white rounded-lg font-semibold hover:bg-nhs-dark-blue transition-colors no-underline"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to guides
+            </Link>
+          )}
+        </div>
 
         {/* Footer cross-link */}
         <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 print:hidden">

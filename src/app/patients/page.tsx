@@ -121,6 +121,19 @@ export default function PatientsPage() {
     }
     if (changed) saveTracker(tracker);
     setCareTracker(tracker);
+
+    // Coming back from a checklist opened out of a Care Review (?care=<id>) - reopen
+    // that patient's review so the updated badges are visible, rather than dropping
+    // the user on a cold list. Strip the param so a refresh does not reopen it.
+    const careId = new URLSearchParams(window.location.search).get("care");
+    if (careId) {
+      const p = DEMO_PATIENTS.find((x) => x.id === careId);
+      if (p) {
+        setCareReviewPatient(p);
+        setIsCareReviewOpen(true);
+      }
+      window.history.replaceState({}, "", window.location.pathname);
+    }
   }, []);
 
   const updatePatientTracker = (patientId: string, next: PatientTracker) => {

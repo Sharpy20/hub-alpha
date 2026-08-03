@@ -2250,3 +2250,41 @@ with a warning sheet. Build in `E:\Hub`, outside the repo, so it cannot deploy.
 3. T7 - manual "add review to diary" button, or automatic? Auto is 25 patients x 6 items = 150 tasks.
 4. T13 - consultant as a `UserRole`, or a separate directory section? Reverses a deliberate call.
 5. T12 - which task features carry into Excel, and does it hold patient names at all?
+
+### T9 AUDIT RESULT (done 3 Aug, Session 54) - SystmOne prompts across the 68 guides
+
+Counted in code, including the builder guides and the static routes that call `FocusLinks`
+inline (an earlier per-id scan missed both, so the first number was too low - recount before
+trusting any figure here).
+
+**12 of 68 carry a "record it on SystmOne" how-to link:**
+`capacity-assessment` · `honos` · `news2` · `section-132` · `section-17` ·
+`seclusion-support-plan` · `restraint-monitoring` · `observation-engagement` · `safety-plan` ·
+`care-plan` · `risk-assessment` · `leave-discharge-transfer`
+
+**7 have a FOCUS block but POLICY ONLY, no S1 how-to:**
+`awol` · `blanket-restrictions` · `dols` · `section-136` · `tribunal-report` ·
+`admission-checklist` · `mha-checker`
+
+**49 have no FOCUS block at all** - and these are disproportionately the light guides and the
+referral workflows, which is exactly the group Mike named as the priority.
+
+⛔ **Why the remaining 49 were NOT filled in overnight.** The missing piece is *where in
+SystmOne* each task is recorded, which is ward knowledge held by Mike, not something in any
+document Claude can read. Inventing plausible FOCUS `download_file` URLs is the same failure
+mode as the 15 invented contact values fixed on 28 Jul - they rendered indistinguishably from
+the verified ones. **A fabricated S1 link is worse than no link**, because a nurse who follows
+it and finds nothing stops trusting the ones that are real.
+
+**Two separable jobs, and only the first needs Mike:**
+1. **Needs Mike:** the S1 location per task for the 49. Fastest route is probably the FOCUS
+   SystmOne user-guide map already harvested at `E:\Hub\tmp-mha\systmone-clinical-guides.txt`
+   (264 guides) - Claude can match them to guides where the name is unambiguous, and Mike
+   confirms. That is a session, not an overnight job.
+2. **Claude alone, safe:** a link-free prompt ("record this on SystmOne") where a guide has no
+   link at all. Deliberately NOT done unsupervised - it is a wording change across 49 guides,
+   and several referral workflows already say it in prose in their case-note or diary-reminder
+   step, so it would duplicate. Needs one pass with Mike to agree the wording and skip the
+   guides that already cover it.
+
+Feed the outcome back into the Guide Builder agent instructions so new guides arrive with it.

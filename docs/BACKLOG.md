@@ -2179,7 +2179,7 @@ here, original labels kept in brackets.
 | T9 | SystmOne prompt + link audit across guides (2f) | **Claude audits alone**, Mike fills gaps | part-blocked |
 | T10 | "Add all to tasks" on checklists (2d) | Claude proposes, Mike confirms | - |
 | T11 | Walk-round printout per ward (2g) | Claude | **Mike supplies example** |
-| T12 | Interim Excel ward diary (3) | **Claude alone** | scope decision |
+| T12 | Interim Excel ward diary (3) | **DONE 3 Aug** | - |
 | T13 | Consultant role + unward-linked staff (7a, 7b) | Claude | **Mike decides model** |
 | T14 | Consultant selector on ward allocation (8) | Claude | T13 |
 | T15 | Staff records linked to email (9b) | PARKED | NHSmail SSO (R3) |
@@ -2263,8 +2263,40 @@ on, and drifts - the exact scatter wardHub replaces. Worth saying out loud when 
 
 Build in `E:\Hub`, outside the repo, so it cannot deploy.
 
-**Still needed from Mike:** which task features carry over - claim / take over / drop, priority,
-recurring days, shifts, barrier-to-discharge flag, hand-back?
+**BUILT 3 Aug 2026.** `E:\Hub\interim-diary\ward-task-diary.xlsx` (outside the repo, cannot deploy).
+Rebuild script kept beside it: `build_diary.py` (needs `py -3 -m pip install openpyxl`).
+
+Seven sheets: **Read me · Jobs · Dashboard · Patients · Staff · Repeats · Lists.** Opens on Jobs.
+
+**Features carried over from wardHub:** claim (Claimed by, dropdown off the Staff sheet) · take
+over (overwrite the name) · drop (clear it) · hand-back (Status "Handed back" + a 7-option reason
+dropdown) · waiting-on + chase date, with a live "chase in (days)" that goes red when it passes ·
+priority (4 levels, Urgent and High colour their own cell) · shift · type (Team/Patient/Appointment)
+· barrier-to-discharge flag (amber, and its own Dashboard block) · age in days, freezing when done ·
+an OVERDUE flag that tints the whole row · Done and Handed back grey the row out · autofilter on all
+20 columns · patient initials and NHS number driven off a Patients sheet so nothing is retyped ·
+a Repeats sheet holding the weekly team-job pattern · a Dashboard of 20 counters including a
+pick-your-name "My jobs" block.
+
+**Deliberately NOT faked:** append-only task history. Excel cannot do it, so when a job is taken
+over the previous owner is simply overwritten. **That is the honest argument for wardHub** and the
+Read me sheet says so in as many words - it is also why Excel cannot generate the repeats, warn on
+concurrent edits, or keep free text out of the wrong column.
+
+**Verified, not assumed:** opened through Excel COM, full rebuild, **1,220 formulas and 0 error
+cells**; every dropdown, defined name and conditional-format rule confirmed present after a native
+Excel re-save; and a live test (claim a job, pick the name) moved "My open jobs" to 1 and dropped
+"Unclaimed" from 3 to 2. Formulas are deliberately pre-2010 only (COUNTIFS / IF / TODAY) - no
+FILTER, XLOOKUP or dynamic arrays.
+
+Three example rows are marked EXAMPLE and use the **999 000 0000 NHS test range**, which is
+reserved nationally and cannot belong to a real patient. Read me tells the user to delete them.
+The print header on every sheet carries the "contains patient identifiers" warning, since the
+printout is the actual exposure route.
+
+**Still open for Mike:** add your real staff to Staff and current patients to Patients (both feed
+the dropdowns). Tune the Repeats list to the ward's actual pattern - it is currently seeded from
+wardHub's team-job templates.
 
 ### Open questions for Mike (all in the live task list too)
 

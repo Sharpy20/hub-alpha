@@ -51,6 +51,15 @@ skipped and is flagged below.
   which reader-modes the page and can drop most of a multi-article document - not fixable
   from our side, just turn it off in the print dialog.
 
+### Follow-up (Mike, same evening): the BLANK tick sheet printed empty
+The mechanism the morning fix missed: the tick sheet rows are `<button>`s, and the global
+print CSS (`globals.css`) hides every button not marked `.print-include` - so "Print blank
+tick sheet" printed the card header and zero rows. Rows now carry `.print-include`; their
+`print:` classes (compact spacing, ticks always hidden so the sheet prints blank) were
+already in place waiting. "Print blank tick sheet" also moved to the top control row
+beside Select all / Clear all, per Mike - no more scrolling past 29 rows to reach it.
+Verified via CDP print of the open tick sheet: 29 rows, empty boxes, two A4 pages.
+
 ### R5 glitch: expanded day view task click - fixed and verified
 - Session 46c regression, mechanism confirmed: the shared `Modal` and `TaskDetailModal`
   both sit at z-50, so DOM order decides who paints on top. In `/tasks` the detail modal
@@ -1949,6 +1958,14 @@ one approved document.
 - [ ] This maps onto the MHRA safe side verbatim - p12: *"It just reproduces a paper document in
       digital format. It is down to the health care professional to make the decisions based on
       the advice displayed."* Worth quoting when the builder is described.
+- [ ] **Agent guardrail block (Mike, 6 Aug - deliberately deferred).** Draft a clinical-boundary
+      block for the wH agent instructions (the R1 parameters: no calculation, no interpretation,
+      source policy always visible) so future guides cannot drift into decision support. NOT
+      written yet on Mike's call: nobody can access the live agents at the moment, and if the
+      Anthropic/Claude toggle is approved the agents get rebuilt anyway, so the text would be
+      written twice. Write it when agent access returns or the toggle decision lands, and fold it
+      into the standing Guide Builder re-paste chase ([[chase-guide-builder-repaste]]) so both
+      land in one paste.
 
 ### R3. Emails and chases (Mike, 2 Aug)
 

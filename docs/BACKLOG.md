@@ -106,6 +106,14 @@ source of truth. The stale-warning table at the top went with the staleness.
   `docs/All guides state of play 31-07-26.docx`. Not committed - Mike to say whether it
   belongs in the repo, in `E:\Hub\temp\`, or gitignored like the other doc dumps.
 
+### ⚠ Do not chase: no CI runs on today's pushes
+None of this session's pushes triggered a CI run - because **GitHub had a critical Actions
+incident live at the time** (started 15:22 UTC, 6 Aug), not because anything here broke.
+Verified: push events registered, workflow active, and a manual `gh workflow run ci.yml`
+dispatch ran and PASSED on HEAD (3ef4121), so the required `checks` status is green. If
+push-triggered runs are still absent next session after the incident resolves, then it
+becomes worth investigating.
+
 ---
 
 ## ✅ DONE 2 Aug 2026 - Session 49: commit pathway jobs to the diary, roadmap rebuilt

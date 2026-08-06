@@ -337,6 +337,11 @@ export function AddTaskModal({
               className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none"
             />
           )}
+          {/* The title is the one free-text field on a job, so the control on what
+              goes in it is wording and training, not schema (30 Jul evaluation). */}
+          <p className="text-xs text-gray-400 mt-1">
+            Keep titles factual - what needs doing, not clinical details or opinions about a patient.
+          </p>
         </div>
 
         {(taskType === "patient" || taskType === "appointment") && (

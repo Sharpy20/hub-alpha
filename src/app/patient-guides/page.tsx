@@ -111,12 +111,21 @@ export default function PatientGuidesIndex() {
             </div>
 
             {/* Select all / none buttons (hidden on print) */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 print:hidden">
+            <div className="flex flex-wrap items-center justify-between gap-2 px-5 py-3 border-b border-gray-100 print:hidden">
               <div className="flex items-center gap-2">
                 <button onClick={selectAll} className="text-xs px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 font-medium">Select all</button>
                 <button onClick={selectNone} className="text-xs px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 font-medium">Clear all</button>
               </div>
-              <span className="text-xs text-gray-500">{selectedGuides.size} of {PATIENT_GUIDES.length} selected</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-gray-500">{selectedGuides.size} of {PATIENT_GUIDES.length} selected</span>
+                <button
+                  onClick={handlePrintTickSheet}
+                  className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 border border-gray-300 bg-white text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  Print blank tick sheet
+                </button>
+              </div>
             </div>
 
             {/* Tick list */}
@@ -127,7 +136,7 @@ export default function PatientGuidesIndex() {
                   <button
                     key={guide.id}
                     onClick={() => toggleGuide(guide.id)}
-                    className={`w-full flex items-center gap-3 px-5 py-3 text-left transition-colors ${
+                    className={`print-include w-full flex items-center gap-3 px-5 py-3 text-left transition-colors ${
                       isSelected ? "bg-indigo-50" : "hover:bg-gray-50"
                     } print:bg-transparent print:py-1.5`}
                   >
@@ -156,14 +165,7 @@ export default function PatientGuidesIndex() {
             </div>
 
             {/* Action buttons (hidden on print) */}
-            <div className="flex items-center justify-between gap-3 p-5 border-t border-gray-200 bg-gray-50 print:hidden">
-              <button
-                onClick={handlePrintTickSheet}
-                className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 bg-white text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors text-sm"
-              >
-                <Printer className="w-4 h-4" />
-                Print blank tick sheet
-              </button>
+            <div className="flex items-center justify-end gap-3 p-5 border-t border-gray-200 bg-gray-50 print:hidden">
               <button
                 onClick={handlePrintSelected}
                 disabled={selectedGuides.size === 0}

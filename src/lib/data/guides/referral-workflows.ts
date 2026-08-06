@@ -1169,6 +1169,96 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
       },
     ],
   },
+  "cmht-referral": {
+    id: "cmht-referral",
+    title: "CMHT / EI Referral",
+    description: "Handing over to the community team on discharge - what to include, with a worked example",
+    icon: "🏡",
+    gradient: "from-teal-500 to-teal-700",
+    steps: [
+      {
+        id: "criteria",
+        type: "criteria",
+        title: "Confirm Criteria",
+        content: "The patient is being discharged and needs ongoing input from the community team - follow-up, medication monitoring, depot administration or care coordination.\n\nIf they have never had psychosis before, check the Early Intervention section below first. EI and CMHT are not interchangeable.",
+        checkboxLabel: "I confirm the patient needs community follow-up on discharge",
+      },
+      {
+        id: "whats-needed",
+        type: "info",
+        title: "What to include",
+        progressive: true,
+        content:
+          "Diagnosis:\nWhat they are diagnosed with, and how long standing it is.\n\n" +
+          "Circumstances of admission:\nWhat led to this admission and how they came in.\n\n" +
+          "Presentation on admission, and now:\nHow they presented when they arrived, and how they present today. The contrast is the point - it shows what changed and what did it.\n\n" +
+          "Treatment now, and planned treatment for the community:\nWhat they are on, and what the community team will need to carry on. Are they on a depot? Was compliance poor in the community, and does it need monitoring?\n\n" +
+          "Why they need the team:\nSay plainly what CMHT, a CPN or the Living Well team is actually for in this case. \"Needs follow-up\" is not a reason. \"Needs a CPN to administer a 4-weekly depot, because non-compliance is the known relapse driver\" is.\n\n" +
+          "Risks:\nRisk to self and risk to others as they look when the person is unwell, not as they look on a settled ward on discharge day.",
+      },
+      {
+        id: "wagoll",
+        type: "info",
+        title: "What a good one looks like",
+        content:
+          "A worked example. Fictional patient.\n\n" +
+          "John is a 45-year-old man with a long-standing diagnosis of paranoid schizophrenia. He has had multiple inpatient admissions in the past, where he has been treated and discharged back home to family. John was brought to A&E by his wife who was concerned about his mental health presentation. It is reported that John had become suspicious of his parents and brother and that he was experiencing persecutory delusions about them. John's wife reported that she thinks he had stopped taking his medication about 2 months prior to relapse. During this admission, John has become more settled and has been able to rebuild his relationship with family. He does not experience the persecutory delusions that they were plotting against him anymore. Due to previous non-compliance in the community, which usually ends with a relapse of his mental health, John has been started on a depot injection on the ward. He is prescribed 200mg Zuclopenthixol Decanoate every 4 weeks, and this will need to be continued in the community, requiring a CPN for administration and ensuring medication compliance, as this has been assessed as the root cause for relapses in the past. John will be returning home to his wife; his children are adults and have moved out of the family home, and while they visit often, they are not at immediate risk should John relapse again. John's wife feels that she can manage his risks at home and knows what to do should she or John need support in the future. When unwell, John's risks include risk to himself (poor medication compliance leading to relapses, poor diet and fluid intake, poor self-care) and risk to others (normally parents and brother, who he usually believes are working with the police to plot against him).\n\n" +
+          "Read it back against the list above. Every heading is answered, in order, and the reason for referral is a specific job the community team has to do - not a category.",
+      },
+      {
+        id: "ei",
+        type: "info",
+        title: "Early Intervention (EI) referrals",
+        progressive: true,
+        content:
+          "Very similar to a CMHT referral, with two differences.\n\n" +
+          "Be specific about the psychosis:\nDescribe the hallucinations and their nature - auditory, visual, tactile. Are the voices friendly or distressing? Are they familiar, or voices the person has not heard before? Is the person openly responding, or only responding when they do not think anyone can see them? What is the intensity, and is there a time of day when it is more prevalent?\n\n" +
+          "Check they are eligible before you write it:\nEarly Intervention is for first-episode psychosis, and they only keep people on their caseload for 2 years before handing over to CMHT. If someone has already been discharged from EI, it is unlikely they will be accepted again - refer to CMHT instead.",
+      },
+      {
+        id: "forms",
+        type: "forms",
+        title: "Forms & Guides",
+        content: "The EI team have their own template. CMHT referrals are written to the headings above.",
+        forms: {
+          blank: [
+            { label: "Early Intervention for Psychosis referral template", url: "#", icon: "📄" },
+          ],
+          wagoll: [],
+          otherGuides: [
+            { label: "S117 Meeting Request", url: "/guides/s117-meeting", note: "If they have ever been detained under Section 3" },
+            { label: "Early Discharge Team", url: "/guides/edt" },
+          ],
+        },
+      },
+      {
+        id: "submission",
+        type: "info",
+        title: "Where it goes",
+        content: "Submission route to confirm. [confirm]\n\nUntil that is checked, follow your ward's usual route and record where you sent it in the case note below.",
+      },
+      {
+        id: "casenote",
+        type: "casenote",
+        title: "Case Note Entry",
+        content: "Document the referral:",
+        clipboardText: "CMHT / EI referral completed on [DATE] for ongoing community follow-up after discharge. Diagnosis: [DIAGNOSIS]. Planned community treatment: [TREATMENT]. Reason for referral: [WHAT THE TEAM NEEDS TO DO]. Risks shared: [RISKS]. Sent via [METHOD].",
+      },
+      {
+        id: "reminder",
+        type: "reminder",
+        title: "Follow-up Task",
+        content: "Add the referral to your job diary and mark it complete once acceptance is confirmed.",
+        checkboxLabel: "",
+      },
+      {
+        id: "gdpr",
+        type: "gdpr",
+        title: "GDPR Reminder",
+        content: "Delete the completed referral from your computer once it has been sent.",
+      },
+    ],
+  },
   "erp": {
     id: "erp",
     title: "Emotional Regulation (ERP/DBT)",

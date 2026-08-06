@@ -111,6 +111,7 @@ export const ALL_GUIDES: GuideItem[] = [
   { id: "dental", title: "Dental Referral", description: "Dental care access for inpatients", icon: "🦷", gradient: "from-cyan-500 to-cyan-700", category: "Physical Health", viewerPath: "/guides/dental" },
   // Specialist Pathways
   { id: "edt", title: "Early Discharge Team", description: "EDT referral for discharge planning support", icon: "🚪", gradient: "from-sky-500 to-sky-700", category: "Specialist Pathways", viewerPath: "/guides/edt" },
+  { id: "cmht-referral", title: "CMHT / EI Referral", description: "Handing over to the community team on discharge - what to include, with a worked example", icon: "🏡", gradient: "from-teal-500 to-teal-700", category: "Specialist Pathways", viewerPath: "/guides/cmht-referral" },
   { id: "erp", title: "Emotional Regulation (ERP/DBT)", description: "DBT skills and emotional regulation pathway", icon: "🧠", gradient: "from-fuchsia-500 to-fuchsia-700", category: "Specialist Pathways", viewerPath: "/guides/erp" },
   { id: "ctr-dsp", title: "CTR / DSP Review", description: "Care Treatment Review for ASD/LD patients (mandatory)", icon: "📋", gradient: "from-lime-600 to-lime-800", category: "Specialist Pathways", viewerPath: "/guides/ctr-dsp" },
   // Learning & Development

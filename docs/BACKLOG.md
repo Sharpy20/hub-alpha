@@ -29,6 +29,85 @@ Session 43 for the reasoning, which is Mike's and should be quoted rather than r
 
 ---
 
+## ✅ DONE 6 Aug 2026 - Session 55: the "Claude can do alone" list (Mike away)
+
+Four commits pushed as Sharpy20 (3e80b2c, e73a141, 9ad907b, 06a6f18), gates green at every
+step (tsc 0, eslint 0, 71 tests). Mike was not available; anything needing his input was
+skipped and is flagged below.
+
+### R5 glitch: "Print all" patient leaflets - fixed what was reproducible
+- **What reproduced:** print dialogs default to "Background graphics off", which stripped
+  the coloured header behind every leaflet's white title - titles printed as faint grey on
+  white, so leaflets were unidentifiable in the printed stack (breathing step numbers and
+  grounding circles vanished the same way). Fixed with `print-color-adjust: exact` on
+  those elements in `public/patient-guides.html` - the same technique `printDoc.ts` already
+  uses for checklist tick boxes. Verified by printing to PDF via CDP with
+  printBackground:false, before and after: all 29 leaflets, 104 A4 pages, headers legible.
+- **What did NOT reproduce:** whole leaflets missing. Chromium prints all 29 from both the
+  "Print all guides" link and the tick sheet's "Print N selected" (verified headless AND
+  the app wiring in-browser - select-all passes all 29 ids). The live file is
+  byte-identical to the repo copy. ⚠ **If Mike still sees whole leaflets missing:** ask
+  for his exact route and browser. Prime suspect is Edge's "clutter-free printing" toggle,
+  which reader-modes the page and can drop most of a multi-article document - not fixable
+  from our side, just turn it off in the print dialog.
+
+### R5 glitch: expanded day view task click - fixed and verified
+- Session 46c regression, mechanism confirmed: the shared `Modal` and `TaskDetailModal`
+  both sit at z-50, so DOM order decides who paints on top. In `/tasks` the detail modal
+  rendered BEFORE the expanded-day pop-out, so clicking a task opened the detail modal
+  invisibly BEHIND it. `TaskDetailModal` now renders last (the ordering `/overview`
+  already used for the identical pairing). Verified in the browser: expanded a day,
+  clicked a task, the detail dialog is the topmost element. Comment left in the JSX so
+  the next reshuffle does not undo it.
+
+### T4 and T6: found ALREADY DONE, not re-done
+Both were built 3 Aug in commit 747fe59 ("Close the checklist dead end, surface the care
+review audit on /overview") - after the Section T list was drafted. Verified live this
+session rather than trusted: the checklist arrives with `?patient=<id>` and both exits
+("Back to patient list", top and bottom) return to `/patients?care=<id>`; the Care Review
+Audit tile renders on `/overview` scoped to the filtered patient set. Section T's table is
+right that they were "Claude alone" jobs - they were just already finished.
+
+### Section P housekeeping
+- **Branch protection on `main` is ON** (GitHub API): the CI `checks` run is a required
+  status check, force pushes and branch deletion blocked. ⚠ `enforce_admins` is OFF,
+  deliberately: with it on, every direct push to main is rejected until CI passes on that
+  exact SHA, which bricks the solo push-to-main workflow this project runs on. So today it
+  protects against non-admin pushes and gates any PR, but an owner push still deploys red.
+  **Decision for Mike:** flip `enforce_admins` on and move to a PR-or-wait flow, or accept
+  the current halfway house.
+- **HAZ-020 was already closed** - Session 50 (31 Jul) closed it in the current hazard log
+  (`docs/clinical-safety/DCB0129-Hazard-Log.md`, HL-003 v0.3, "verified absent from the
+  codebase") and the superseded 03b file's banner says so. The P item predates that. No
+  edit made: 03b is kept for traceability, so rewriting its historical body would be wrong.
+- **`package.json` next floor bumped** `^16.1.6` -> `^16.2.12` to match installed.
+- **Job title guidance sentence added** to the add-task modal, under the Title field:
+  "Keep titles factual - what needs doing, not clinical details or opinions about a
+  patient." ⚠ This consciously reverses Session 48's "do not re-propose it" note - Mike's
+  6 Aug job list asked for it explicitly, citing P's "the control is wording and training,
+  not schema". No new fields; the PII scope (name, job title, ward, date) is untouched.
+
+### CLAUDE.md rewritten (P item)
+231 lines, was ~1,600. Version system, 100-patient claims, snag lists and session notes
+gone; project isolation, gates, NHS styling, workflow template, placeholder conventions,
+demo-data shape and the recurring gotchas kept and corrected; BACKLOG.md named as the
+source of truth. The stale-warning table at the top went with the staleness.
+
+### Skipped, and why
+- **`overview/page.tsx` split (P):** everything above was done and verified, but an
+  extraction-only split of a 2,228-line file deserves a fresh session with a full context
+  budget, and the instruction was not to rush it. Untouched.
+- **Uptime monitoring (P):** needs an account, so per instruction nothing was signed up
+  for. Options to pick from, all with a free tier that covers one site: UptimeRobot
+  (5-min checks, simplest), Better Stack (30-s checks, nicer alerts), or a GitHub Actions
+  scheduled curl (no new account at all, but alerts are just email from a failed run).
+  One decision + ten minutes whenever Mike picks.
+- **Found in the working tree, not touched:** an untracked file
+  `docs/All guides state of play 31-07-26.docx`. Not committed - Mike to say whether it
+  belongs in the repo, in `E:\Hub\temp\`, or gitignored like the other doc dumps.
+
+---
+
 ## ✅ DONE 2 Aug 2026 - Session 49: commit pathway jobs to the diary, roadmap rebuilt
 
 Three commits, pushed as Sharpy20, verified on the live site. Gates green throughout
@@ -1706,43 +1785,37 @@ work. Everything the 28 Jul pass left open is carried in its recommendation ledg
 below is now history rather than a live list - the live list is here.
 
 **New findings, never raised in any previous evaluation:**
-- [ ] **`main` has NO branch protection.** Confirmed via `gh api repos/Sharpy20/hub-alpha/branches/main/protection`
-      (404, "Branch not protected"). CI runs typecheck, lint, test and build on every push but
-      **does not gate the deploy**, and Vercel builds straight from `main`, so a red build still
-      ships. The dev panel used to list "branch protection on main" as a CI/CD feature, which was
-      simply untrue. **Do this on 31 Jul alongside the password hardening.**
+- [x] **DONE 6 Aug (Session 55).** `main` now requires the CI `checks` status; force pushes and
+      deletion blocked. `enforce_admins` left OFF so the solo push-to-main flow still works -
+      an owner push still deploys red. Tightening that (PR-or-wait flow) is Mike's decision;
+      see the Session 55 block at the top.
 - [ ] **`E:\Hub\temp\internal-contacts.md` exists exactly once, on one drive, with no backup.**
       It holds every real internal contact keyed by entry id and it is the only copy, by design,
       because the values were stripped out of the repo on 27 Jul. If that drive fails they are
       unrecoverable. Highest-consequence single file in the project. **Mike: put a copy somewhere
       else.** Same applies to `E:\Hub\printable-guides\`, `E:\Hub\wardhub-video\` (whose `src/`
       cannot reproduce the rendered reel) and the 483-document policy dump.
-- [ ] **CLAUDE.md is materially stale and says so nowhere.** It still documents the
-      Light/Medium/Max/Max+ version system as live (removed Session 9), claims 100 patients and
-      100 staff (it is 5 patients and 20 staff per ward), and its snag list stops at #219. The
-      BACKLOG has silently become the source of truth. **It is the first file a new session
-      reads, so a new contributor would build the wrong thing.** Highest-value documentation fix
-      available.
+- [x] **DONE 6 Aug (Session 55).** CLAUDE.md rewritten - 231 lines of current fact, stale
+      version system / demo-data claims / snag lists gone, BACKLOG.md named as source of truth.
 - [ ] **A scheduled GitHub Action queries Supabase daily.**
       `.github/workflows/supabase-keepalive.yml` runs a `SELECT id LIMIT 1` against
       `feedback_posts` with a **service key** from GitHub secrets, to stop the free tier being
       paused. The app itself never queries Supabase, so "wired but dormant" was true but not the
       whole picture. Now disclosed in the dev panel Q&A, the DPIA data flows and on `/gdpr`.
       Rotate the key once the keep-alive is no longer needed.
-- [ ] **HAZ-020 in the hazard log is a go-live blocker for a feature that no longer exists.** Its
-      subject is the chase log, retired entirely in Session 42. A hazard log carrying a blocker
-      for a retired feature undermines the rest of it. ~5 minutes in
-      `docs/nhs-ready/03b-clinical-safety-hazard-log.md`.
+- [x] **Was already done - Session 50 (31 Jul) closed HAZ-020** in the current hazard log
+      (HL-003 v0.3, "verified absent from the codebase"); the superseded 03b file's banner
+      records the closure. Confirmed 6 Aug, no further edit needed.
 - [ ] **`overview/page.tsx` is now 2,228 lines** - the same size `tasks/page.tsx` was criticised
       for, and it grew without anyone noticing. Split it.
-- [ ] **Task titles are free text attached to a named patient.** Nothing prevents a member of
-      staff typing clinical or judgemental content into one, which is the single hole in the
-      no-clinical-data position. The control is wording and training, not schema. **One sentence
-      of guidance in the add-job modal, before any pilot.**
-- [ ] **`package.json` pins `next: ^16.1.6`** while 16.2.12 is installed. The caret makes it
-      harmless, but the declared floor sits below a security fix. Bump it.
+- [x] **DONE 6 Aug (Session 55).** One sentence under the add-task Title field: "Keep titles
+      factual - what needs doing, not clinical details or opinions about a patient." Requested
+      explicitly by Mike's 6 Aug list, which supersedes Session 48's "do not re-propose" note.
+      No new fields, PII scope untouched.
+- [x] **DONE 6 Aug (Session 55).** next floor bumped to `^16.2.12`.
 - [ ] Basic uptime monitoring. Free, ten minutes, and right now nobody would know if the site
-      broke overnight.
+      broke overnight. **Needs an account, so it waits for Mike** - options flagged in the
+      Session 55 block (UptimeRobot / Better Stack / a scheduled-curl Action).
 
 **BACKLOG items no evaluation has ever assessed** (raised by the v2.1 cross-check):
 - [ ] **Section A's eight "NEW GUIDE needed" items** (autism, CAMHS, ECT, perinatal, day
@@ -1922,13 +1995,16 @@ one approved document.
 
 ### R5. Site glitches (Mike, 2 Aug)
 
-- [ ] **"Print all" on the patient leaflets does not print a lot of the leaflets.** Only some
-      make it into the output. Start at the patient-guides print path and `printDoc.ts`.
-- [ ] **Clicking a task in the EXPANDED day view of the diary no longer opens it.** Regression.
-      **Prime suspect: Session 46c**, which converted the expanded day view from a full-screen
-      `fixed` overlay into the shared `Modal`. A click handler or a stopPropagation almost
-      certainly did not survive the move. The same session already found one bug of this shape
-      (`handleToggleComplete` dropping its date argument inside the pop-out).
+- [x] **DONE 6 Aug (Session 55), with a caveat.** The reproducible defect was leaflet headers
+      printing white-on-white when the print dialog's "background graphics" default stripped
+      them; fixed with `print-color-adjust: exact`. Whole-leaflet loss did NOT reproduce in
+      Chromium (all 29 print, both routes, live file matches repo). If Mike still sees missing
+      leaflets, ask his route + browser - suspect Edge's "clutter-free printing". Details in
+      the Session 55 block.
+- [x] **DONE 6 Aug (Session 55).** Session 46c confirmed as the culprit, but not via a lost
+      handler: `TaskDetailModal` and the shared `Modal` both sit at z-50 and the detail modal
+      rendered first in the DOM, so it opened invisibly BEHIND the expanded-day pop-out. It now
+      renders last, matching `/overview`. Verified in the browser.
 
 ### R6. To build (Mike, 2 Aug)
 
@@ -2171,9 +2247,9 @@ here, original labels kept in brackets.
 | T1 | Annotation / comment layer (2a) | Claude, after ONE storage decision | Mike |
 | T2 | Email Nat, housing pathway flow (2b) | **Mike at work** | - |
 | T3 | Email safeguarding lead re gaps (2c) | **Mike at work** | - |
-| T4 | Fix checklist navigation dead end (5) | **Claude alone** | nothing |
+| T4 | Fix checklist navigation dead end (5) | **DONE 3 Aug** (747fe59), verified 6 Aug | - |
 | T5 | Consolidate patient list filter row (6) | Claude, one-line choice | Mike confirms |
-| T6 | Wire orphaned CareReviewRollup into /overview (4b) | **Claude alone** | nothing |
+| T6 | Wire orphaned CareReviewRollup into /overview (4b) | **DONE 3 Aug** (747fe59), verified 6 Aug | - |
 | T7 | Care review reviews into diary (4a) | Claude | Mike decides auto vs manual |
 | T8 | 72hr + named nurse audit tool, CQC gaps (2e) | Claude, biggest build | design session |
 | T9 | SystmOne prompt + link audit across guides (2f) | **Claude audits alone**, Mike fills gaps | part-blocked |

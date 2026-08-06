@@ -508,6 +508,16 @@ body {
     page-break-after: always;
     break-after: page;
     page-break-inside: auto;
+    overflow: visible;
+  }
+
+  /* Print dialogs default to "background graphics off", which strips the coloured
+     header behind each leaflet's white title - the title then prints near-invisible
+     and the leaflet is unidentifiable in the stack. print-color-adjust: exact keeps
+     these specific backgrounds regardless of that setting. */
+  .guide-header, .step-num, .sense-circle {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .guide-header { padding: 32px 40px 28px; page-break-after: avoid; break-after: avoid; }

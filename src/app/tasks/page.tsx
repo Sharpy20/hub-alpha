@@ -2227,21 +2227,6 @@ function TasksPageInner() {
         ward={activeWard}
       />
 
-      {/* Read the task back out of the live list rather than the snapshot taken
-          when it was clicked - claiming or handing back from inside the modal
-          used to leave it showing the old state until you closed and reopened. */}
-      <TaskDetailModal
-        isOpen={!!selectedTask}
-        onClose={() => { setSelectedTask(null); setOpenHandBack(false); }}
-        task={selectedTask ? tasks.find((t) => t.id === selectedTask.id) ?? selectedTask : null}
-        currentUserName={user?.name || "Unknown"}
-        onClaim={handleClaim}
-        onSteal={handleSteal}
-        onToggleComplete={handleToggleComplete}
-        onUpdate={handleUpdateTask}
-        openHandBack={openHandBack}
-      />
-
       <RepeatWardTasksModal
         isOpen={showRepeatTasksModal}
         onClose={() => setShowRepeatTasksModal(false)}
@@ -2272,6 +2257,25 @@ function TasksPageInner() {
           onShowWardTasksChange={setShowWardTasksSetting}
         />
       )}
+
+      {/* Read the task back out of the live list rather than the snapshot taken
+          when it was clicked - claiming or handing back from inside the modal
+          used to leave it showing the old state until you closed and reopened.
+          Rendered LAST deliberately: it shares z-50 with the shared Modal, so
+          DOM order decides who paints on top. When it sat above ExpandedDayView
+          it opened invisibly BEHIND the expanded day pop-out (the Session 46c
+          regression). /overview orders these the same way. */}
+      <TaskDetailModal
+        isOpen={!!selectedTask}
+        onClose={() => { setSelectedTask(null); setOpenHandBack(false); }}
+        task={selectedTask ? tasks.find((t) => t.id === selectedTask.id) ?? selectedTask : null}
+        currentUserName={user?.name || "Unknown"}
+        onClaim={handleClaim}
+        onSteal={handleSteal}
+        onToggleComplete={handleToggleComplete}
+        onUpdate={handleUpdateTask}
+        openHandBack={openHandBack}
+      />
 
     </MainLayout>
   );

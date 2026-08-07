@@ -189,6 +189,18 @@ export function GuidePrompts({ config }: { config: GuidePromptConfig }) {
           </div>
         )}
 
+        {/* Printable blank forms and worked examples */}
+        {config.downloads && config.downloads.length > 0 && (
+          <div className="bg-sky-50 border border-sky-100 rounded-xl p-4">
+            <p className="text-sm font-bold text-sky-900 mb-2">Printable forms and examples</p>
+            <div className="flex flex-wrap gap-2">
+              {config.downloads.map((d, i) => (
+                <a key={i} href={d.url} target="_blank" rel="noopener noreferrer" title={d.note} className="inline-flex items-center px-3 py-1.5 bg-white border border-sky-200 rounded-lg text-sm font-medium text-sky-700 hover:bg-sky-100 no-underline">{d.label}</a>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Expand all toggle */}
         <div className="flex justify-end">
           <button

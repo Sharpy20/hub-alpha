@@ -31,4 +31,7 @@ export interface GuidePromptConfig {
   sections: GuidePromptSection[];
   footer?: string; // small-print grounding line
   focus?: { label: string; url: string }[]; // SystmOne how-to guides on FOCUS (trust login)
+  // Printable blank forms and worked examples served from /forms/. Same idea as
+  // the referral workflows' forms step, but these guides have no step machinery.
+  downloads?: { label: string; url: string; note?: string }[];
 }

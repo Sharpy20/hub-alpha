@@ -35,6 +35,9 @@ export const SECLUSION_BUILDER: GuidePromptConfig = {
     { label: "Seclusion & Long Term Segregation (Trust policy)", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/1858/2454" },
     { label: "Segregation, Seclusion & Isolation SOP", url: "https://focus.derbyshirehealthcareft.nhs.uk/download_file/3493/2456" },
   ],
+  downloads: [
+    { label: "PEEP - worked example", url: "/forms/peep-wagoll.html", note: "A PEEP written for poor mobility, in care plan format. Example only - fictional patient." },
+  ],
   sections: [
     {
       id: "risk",

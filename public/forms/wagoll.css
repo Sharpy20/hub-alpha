@@ -1,0 +1,151 @@
+/* Shared styling for the printable blank forms and worked examples under /forms/.
+   Matches the house style set by /abc-wagoll.html - NHS colours, A4-ish column,
+   banner and back link hidden on print. */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Arial, "Source Sans 3", sans-serif;
+  background: #f3f4f6;
+  color: #212B32;
+  padding: 16px;
+  line-height: 1.5;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #005EB8;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.back-link:hover { text-decoration: underline; }
+
+.banner {
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.banner small { font-weight: 400; display: block; margin-top: 4px; }
+.banner.example { background: #FFB81C; color: #212B32; }
+.banner.blank { background: #E8EDEE; color: #425563; }
+
+.print-btn {
+  display: block;
+  background: #005EB8;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0 auto 16px;
+}
+.print-btn:hover { background: #003087; }
+
+.form-container {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  max-width: 860px;
+  margin: 0 auto;
+  font-size: 13px;
+}
+
+.form-header {
+  background: #f9fafb;
+  padding: 14px 18px;
+  border-bottom: 2px solid #005EB8;
+}
+.form-header h1 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+.form-header .meta { font-size: 11px; color: #6b7280; }
+.form-header .confidential { font-size: 11px; color: #DA291C; font-weight: 600; }
+
+.section-heading {
+  background: #e5e7eb;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 13px;
+  border-top: 1px solid #d1d5db;
+  border-bottom: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.body-pad { padding: 12px 18px; }
+.body-pad p { margin-bottom: 10px; }
+.body-pad ul, .body-pad ol { margin: 0 0 10px 22px; }
+.body-pad li { margin-bottom: 5px; }
+.body-pad h3 { font-size: 13px; font-weight: 700; margin: 14px 0 6px; color: #005EB8; }
+
+table { width: 100%; border-collapse: collapse; }
+table td, table th {
+  padding: 8px 18px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+  text-align: left;
+}
+table td.label {
+  width: 250px;
+  font-weight: 600;
+  color: #374151;
+  background: #f9fafb;
+}
+.grid-table td, .grid-table th {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  font-size: 12px;
+}
+.grid-table th { background: #f9fafb; font-weight: 700; }
+.grid-table td.tick { text-align: center; font-weight: 700; color: #007F3B; width: 70px; }
+
+.answer { white-space: pre-line; }
+.fill {
+  display: block;
+  min-height: 26px;
+  border-bottom: 1px solid #cbd5e1;
+}
+.fill.tall { min-height: 78px; }
+.hint { color: #6b7280; font-style: italic; font-size: 12px; }
+.note {
+  background: #eff6ff;
+  border-left: 3px solid #005EB8;
+  padding: 10px 14px;
+  margin: 10px 18px;
+  font-size: 12px;
+}
+.warn {
+  background: #fef3c7;
+  border-left: 3px solid #ED8B00;
+  padding: 10px 14px;
+  margin: 10px 18px;
+  font-size: 12px;
+}
+.prompt { color: #92400e; font-weight: 600; }
+
+.form-footer {
+  padding: 10px 18px;
+  font-size: 11px;
+  color: #6b7280;
+  border-top: 1px solid #d1d5db;
+  text-align: right;
+}
+
+@media print {
+  body { background: #fff; padding: 0; font-size: 11px; }
+  .banner, .back-link, .print-btn { display: none; }
+  .form-container { border: none; max-width: none; }
+  .section-heading, .grid-table th, table td.label {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

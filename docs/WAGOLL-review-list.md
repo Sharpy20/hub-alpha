@@ -2,7 +2,39 @@
 
 **Date:** 6 August 2026
 **Source files:** `E:\Hub\WAGOLL` (12 files, moved out of `docs/` so they cannot reach a commit)
-**Status:** all 12 placed, content wired, three gates green, pushed.
+**Status:** all 12 placed. Nine built as printable HTML pages under `/forms/` and linked
+from their guides. Tribunal report held back at Mike's request. Authoring metadata cleared
+from all 12 source files. Three gates green, pushed.
+
+## Update - HTML pages built
+
+| Page | Linked from |
+|------|-------------|
+| `/forms/kingfisher-picu-blank.html` | PICU - blank form |
+| `/forms/kingfisher-picu-wagoll.html` | PICU - worked example |
+| `/forms/derby-social-care-blank.html` | Social Care - blank form |
+| `/forms/derby-social-care-wagoll.html` | Social Care - worked example |
+| `/forms/ei-psychosis-template.html` | CMHT / EI - blank template |
+| `/forms/stepdown-referral-wagoll.html` | Step Down - worked example |
+| `/forms/homelessness-referral-s1.html` | Housing / Duty to Refer - prep sheet |
+| `/forms/peep-wagoll.html` | Seclusion Support Plan - worked example |
+| `/forms/safeguarding-good-referral.html` | Safeguarding Adults - guidance |
+
+All share `/forms/wagoll.css` (NHS colours, print stylesheet, banner and back link hidden
+on print). Completed examples carry an amber "EXAMPLE ONLY - do not submit" banner.
+
+**Metadata cleared.** The six `.docx` files had `docProps/core.xml` and `app.xml` replaced;
+the four `.pdf` files only carried Canon scanner strings; `PEEP.rtf` had its `\author` and
+`\operator` values emptied; the `.doc` carried **two** author strings in its legacy OLE
+summary stream (a second name I had not spotted) - both blanked in place, and the file was
+re-opened in Word afterwards to confirm it still parses.
+
+**Not built:** the Nursing Tribunal Report, blank and completed, held pending your check.
+The `tribunal-report` guide keeps the T134 question list, which came from the blank form -
+that is the public HMCTS template, not the completed one.
+
+**Still a gap:** there is no blank Step Down form in the folder, only the completed one, so
+that entry still reads "Blank form to confirm".
 
 Work through the numbered items when you have time. Each one says what I did, and the
 last column is what I need from you. Nothing here is signed off - every guide touched is

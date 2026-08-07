@@ -264,10 +264,10 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Download the appropriate forms and guides for your referral.",
         forms: {
           blank: [
-            { label: "Kingfisher House (Interim) Referral Form", url: "#", icon: "📄", note: "Held locally - to be wired in" },
+            { label: "Kingfisher House (Interim) Referral Form", url: "/forms/kingfisher-picu-blank.html", icon: "📄" },
           ],
           wagoll: [
-            { label: "Kingfisher House Referral Example (WAGOLL)", url: "#", note: "Example to add - shows the level of dated, incident-by-incident detail expected" },
+            { label: "Kingfisher House Referral Example (WAGOLL)", url: "/forms/kingfisher-picu-wagoll.html", note: "Shows the level of dated, incident-by-incident detail expected" },
           ],
           otherGuides: [
             { label: "NAPICU guidance (full inclusion / exclusion criteria)", url: "#" },
@@ -383,7 +383,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
             { label: "Derbyshire County SAR Form", url: "#", icon: "📄", area: "county" },
           ],
           wagoll: [
-            { label: "What a 'Good' Safeguarding Referral Looks Like", url: "#", note: "Local safeguarding team guidance - held locally, to be wired in" },
+            { label: "What a 'Good' Safeguarding Referral Looks Like", url: "/forms/safeguarding-good-referral.html", note: "Local safeguarding team guidance" },
           ],
           otherGuides: [
             { label: "Types of Abuse Guide", url: "#" },
@@ -657,7 +657,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
             { label: "Derbyshire County Duty to Refer", url: "#", icon: "📄", area: "county" },
           ],
           wagoll: [
-            { label: "Homelessness Referral (SystmOne) - completed example", url: "#", note: "Held locally - to be wired in" },
+            { label: "Homelessness Referral (SystmOne) - question list", url: "/forms/homelessness-referral-s1.html", note: "Prep sheet - fill in before you open SystmOne" },
           ],
           otherGuides: [
             { label: "Duty to Refer Guidance", url: "#" },
@@ -748,12 +748,12 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Download the relevant referral forms. The Enablement referral form is embedded within the social care referral form – you do not need to complete the full referral form if your request is solely for Enablement input.",
         forms: {
           blank: [
-            { label: "Derby City Social Care / S117 Referral Form", url: "#", icon: "📄", note: "Includes embedded Enablement referral section" },
+            { label: "Derby City Social Care / S117 Referral Form", url: "/forms/derby-social-care-blank.html", icon: "📄", note: "Includes embedded Enablement referral section" },
             { label: "S117 Meeting Request Form (7 days notice)", url: "#", icon: "📋", note: "Updated: Now requires 7 days notice (reduced from 14)" },
             { label: "Derbyshire County ASC Referral", url: "#", icon: "📄", area: "county" },
           ],
           wagoll: [
-            { label: "Derby City Social Care Referral - completed example", url: "#", note: "Held locally - to be wired in. Attach care plan, risk assessment and OT assessment" },
+            { label: "Derby City Social Care Referral - completed example", url: "/forms/derby-social-care-wagoll.html", note: "Example only. Attach care plan, risk assessment and OT assessment" },
           ],
           otherGuides: [
             { label: "Care Act Eligibility Guide", url: "#" },
@@ -1315,10 +1315,10 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "The step down referral form and a completed example.",
         forms: {
           blank: [
-            { label: "Step Down Referral Form (V2, May 2023)", url: "#", icon: "📄", note: "Held locally - to be wired in" },
+            { label: "Step Down Referral Form (V2, May 2023)", url: "#", icon: "📄", note: "Blank form to confirm - only the completed example is held" },
           ],
           wagoll: [
-            { label: "Step Down Referral - completed example", url: "#", note: "Held locally - to be wired in" },
+            { label: "Step Down Referral - completed example", url: "/forms/stepdown-referral-wagoll.html", note: "Example only - do not submit" },
           ],
           otherGuides: [
             { label: "Social Care (Derby City)", url: "/guides/social-care" },
@@ -1437,7 +1437,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "The EI team have their own template. CMHT referrals are written to the headings above.",
         forms: {
           blank: [
-            { label: "Derbyshire EI in Psychosis Service (City and South) referral template", url: "#", icon: "📄", note: "Held locally - to be wired in" },
+            { label: "Derbyshire EI in Psychosis Service (City and South) referral template", url: "/forms/ei-psychosis-template.html", icon: "📄" },
           ],
           wagoll: [],
           otherGuides: [

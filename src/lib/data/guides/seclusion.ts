@@ -113,8 +113,11 @@ export const SECLUSION_BUILDER: GuidePromptConfig = {
         "Consider known risks (violence / absconding / mobility)",
         "Ensure a clear route and use of the alarm",
         "Equipment required (e.g. wheelchair if mobility impaired)",
+        "Alerting the patient: staff will calmly inform the patient of the emergency and the need to evacuate",
+        "Clear instructions: simple, clear instructions, and access to mobility aids (walking stick, wheelchair) if a quick evacuation is needed",
+        "Safe transfer techniques: staff stay with the patient to lead them to the exit, give encouragement and reassurance, and clear obstacles from the route",
       ],
-      tip: "Picture it really happening - who does what, the route, and how many staff.",
+      tip: "Picture it really happening - who does what, the route, and how many staff. Where the reason for the PEEP is poor mobility rather than risk, write it as three things: how the patient is alerted, what instructions they are given, and how they are physically supported out.",
     },
     {
       id: "communication",

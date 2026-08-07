@@ -233,8 +233,29 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "criteria",
         type: "criteria",
         title: "Confirm Criteria",
-        content: "The patient presents a significant risk that cannot be safely managed on an open/acute ward. Consider: severe aggression, absconding risk, self-harm requiring enhanced observation.",
+        content: "The patient presents a significant risk that cannot be safely managed on an open/acute ward. Consider: severe aggression, absconding risk, self-harm requiring enhanced observation.\n\nKingfisher House takes males. Check the full inclusion and exclusion criteria in the next step before you write anything.",
         checkboxLabel: "I confirm the patient meets PICU referral criteria",
+      },
+      {
+        id: "napicu-criteria",
+        type: "info",
+        title: "Inclusion and exclusion criteria",
+        progressive: true,
+        content:
+          "From the Kingfisher House referral form, which follows NAPICU guidance. See the NAPICU guidance for the full explanation.\n\n" +
+          "Key indicators for a referral:\n" +
+          "• Externally directed aggression. The patient is assessed as posing a significant risk of harm to others, or extreme aggression towards property, as a result of their current mental health presentation.\n" +
+          "• Internally directed aggression. The patient is assessed as posing a significant risk of suicide and is unresponsive to the preventative measures available.\n" +
+          "• Absconding. Patients detained under the MHA 1983 for whom the consequences of persistent absconding are serious enough to warrant treatment in the PICU. The PICU should not provide security for its own sake - there should always be a primary clinical reason for admission.\n" +
+          "• Unpredictability. Unpredictable patients potentially posing a significant risk to self or others and requiring further assessment.\n\n" +
+          "Key exclusions:\n" +
+          "• The presenting risk is too high for a PICU and would need medium or high secure.\n" +
+          "• Primary diagnosis of substance misuse, where the sole purpose of admission is to prevent access to substances.\n" +
+          "• The patient is too physically frail to be safely managed in a PICU.\n" +
+          "• The patient is restricted (courts, prisons or Ministry of Justice) with no clear pathway out of the PICU once clinically warranted.\n" +
+          "• Primary diagnosis of dementia, or learning disability requiring a specialist LD facility.\n\n" +
+          "Before you send it:\n" +
+          "Call the ward and speak to the Nurse in Charge to let them know a referral is coming. Safety Assessment, Risk Screening Tool, Risk Management Plan, care plan and MHA information (including the AMHP report) all need to be up to date on SystmOne first - the form asks you to confirm this.",
       },
       {
         id: "forms",
@@ -243,14 +264,13 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Download the appropriate forms and guides for your referral.",
         forms: {
           blank: [
-            { label: "PICU Bed Request Form", url: "#", icon: "📄" },
-            { label: "DHCFT PICU Referral", url: "#", icon: "📄" },
+            { label: "Kingfisher House (Interim) Referral Form", url: "#", icon: "📄", note: "Held locally - to be wired in" },
           ],
           wagoll: [
-            { label: "PICU Referral Example (WAGOLL)", url: "#", note: "Example - shows required detail level" },
+            { label: "Kingfisher House Referral Example (WAGOLL)", url: "#", note: "Example to add - shows the level of dated, incident-by-incident detail expected" },
           ],
           otherGuides: [
-            { label: "PICU Admission Criteria", url: "#" },
+            { label: "NAPICU guidance (full inclusion / exclusion criteria)", url: "#" },
             { label: "Transfer Checklist", url: "#" },
           ],
         },
@@ -325,17 +345,45 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Which local authority area is the patient from? This determines where to send the safeguarding referral.",
       },
       {
+        id: "writing-it",
+        type: "info",
+        title: "Writing a good referral",
+        progressive: true,
+        content:
+          "Read the questions on the form carefully and answer every one as fully as you can. These pointers come from the local safeguarding team's own \"what a good referral looks like\" guidance.\n\n" +
+          "What to cover:\n" +
+          "• What have you seen (where, when)? What have you heard (when, who from)?\n" +
+          "• Basic information about the adult at risk. What care and support needs do they have? Why are they unable to protect themselves from the abuse or neglect? Do they have capacity to make decisions about keeping themselves safe?\n" +
+          "• Basic information about the person alleged to be causing the harm. Do they have care and support needs of their own? Do they work with children or vulnerable adults? Are they in a position of trust? Any history of posing a risk?\n" +
+          "• Why are you worried, and what type of abuse or neglect is it - physical, emotional, sexual, neglect, financial, organisational, self-neglect, modern slavery, exploitation or discrimination? Has a crime been committed? Was the harm intended or ill-informed?\n" +
+          "• What is the impact on the adult now, and what is it likely to be if agencies do not become involved?\n" +
+          "• What have you already tried to reduce the risk? Include outcomes of any referrals to other services, and what protective factors are in place.\n" +
+          "• What does the adult want to happen as a result? Enquiries work better when they are person-centred and led by the adult at risk.\n" +
+          "• Who is in their professional and informal support network? If they would have substantial difficulty taking part themselves, who could represent them - consider an advocacy referral.\n\n" +
+          "Separate fact from opinion:\n" +
+          "You can give a professional opinion, but say clearly that it is one. For example: the adult said \"I wanted to give the person money\", however in my view they were coerced into that decision because... then list the evidence - use of substances, witnessed control or coercion, impairment of mind or brain.\n\n" +
+          "Pitfalls that weaken a referral:\n" +
+          "• Answering \"Unknown\" or leaving blanks. Say why you do not know.\n" +
+          "• Formalising or sanitising the language used. Quote people's actual words, including swearing and slang, and add clarification of what they meant. This can become evidence in court - do not leave room for dispute.\n" +
+          "• Too little detail on the concern or its impact. A good referral does not say someone has \"a chaotic lifestyle\" - it evidences the lived experience. Missed their last four appointments in six months. Homeless - sleeping on the street, or staying with friends, and which friends? Not in work, education or training. Poor home conditions - damp, refuse piling up, flies, animal waste on carpets. One litre of vodka a day, on a methadone programme. Said they would kick their head in if they told anyone.\n" +
+          "• Writing it in a way that is not for sharing. Would you be happy for the person you are writing about to read it over your shoulder? Never imply the adult is complicit in or responsible for the abuse. Victim-blaming language normalises and minimises what happened, and gets a weaker response.\n" +
+          "• Delay. If you are worried, the referral is a priority.\n\n" +
+          "The top tip:\n" +
+          "You are not telling a story, you are sharing concerns about an adult at risk. Keep them at the centre. What is a day in their life like? What are you worried about? What needs to happen for things to get better?\n\n" +
+          "A safeguarding enquiry is not the finish line. Safeguarding stays everybody's responsibility, including for adults who have already been through an enquiry.",
+      },
+      {
         id: "forms",
         type: "forms",
         title: "Download Forms & Guides",
-        content: "Download the appropriate referral form for your area. Read the form questions carefully and answer as fully as possible.\n\nInclude: What have you seen/heard? When, where, who from? Basic info about the adult and the person causing harm. Why are you worried? What type of abuse? What is the impact now? What have you tried already? Separate facts from opinions. What does the adult want to happen?\n\nAvoid: using 'Unknown' or leaving blanks, sanitising language (use actual words), vague descriptions ('chaotic lifestyle'), victim-blaming language, and delays.",
+        content: "Download the appropriate referral form for your area.",
         forms: {
           blank: [
             { label: "Derby City SAR Form", url: "#", icon: "📄", area: "city" },
             { label: "Derbyshire County SAR Form", url: "#", icon: "📄", area: "county" },
           ],
           wagoll: [
-            { label: "Safeguarding Referral Example", url: "#", note: "Example - note the level of detail required" },
+            { label: "What a 'Good' Safeguarding Referral Looks Like", url: "#", note: "Local safeguarding team guidance - held locally, to be wired in" },
           ],
           otherGuides: [
             { label: "Types of Abuse Guide", url: "#" },
@@ -576,6 +624,29 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Which local authority area does the patient need housing support from?",
       },
       {
+        id: "s1-questions",
+        type: "info",
+        title: "The SystmOne questionnaire",
+        progressive: true,
+        content:
+          "The Homelessness Referral on SystmOne is two short sections. Have the answers ready before you open it.\n\n" +
+          "Patient details:\n" +
+          "• Date of referral\n" +
+          "• Reason for referral. Give details such as the dates of being homeless, where the patient was staying prior to admission, and what steps they have taken to prevent homelessness - contacted council services, engaging with a social worker, and so on.\n" +
+          "• Last known address\n" +
+          "• NHS number\n" +
+          "• Current ward\n" +
+          "• What benefits does the patient receive, and the total amount of payments received per month?\n\n" +
+          "Patient circumstance:\n" +
+          "• Is the patient homeless?\n" +
+          "• Do they have any criminal convictions - arson, GBH, sex offender and so on?\n" +
+          "• Is the patient fleeing domestic abuse?\n" +
+          "• What current community support does the patient have in place on discharge - social worker, CPN, Enablement? Give contact details where you have them.\n" +
+          "• Current diagnosis and medication, and can the patient administer their own medication?\n\n" +
+          "Why the detail matters:\n" +
+          "The convictions and domestic abuse questions decide what accommodation the council can safely offer. The benefits figure decides what they can afford. Depot arrangements and self-administration decide whether the placement can support the medication. A blank here means a slower placement, not a kinder one.",
+      },
+      {
         id: "forms",
         type: "forms",
         title: "Download Forms & Guides",
@@ -586,7 +657,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
             { label: "Derbyshire County Duty to Refer", url: "#", icon: "📄", area: "county" },
           ],
           wagoll: [
-            { label: "Housing Referral Example", url: "#", note: "Include discharge date and needs" },
+            { label: "Homelessness Referral (SystmOne) - completed example", url: "#", note: "Held locally - to be wired in" },
           ],
           otherGuides: [
             { label: "Duty to Refer Guidance", url: "#" },
@@ -648,6 +719,29 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "Is the patient under Section 3, or have they been on a Section 3 in this or a previous admission?\n\nThis determines the referral pathway:\n• S117 patients – require both a Care Act/S117 referral AND a S117 aftercare meeting before discharge\n• Non-S117 patients – follow the standard Care Act referral process\n\n⚠️ IMPORTANT: don't confuse the two meetings. Every patient should have a discharge planning meeting before they leave, whatever their section. The S117 aftercare meeting is a separate requirement that ONLY applies to patients with S117 entitlement – triggered by a Section 3 in this OR any previous admission. S117 status survives readmission, so a patient readmitted informally or under Section 2 who still holds S117 status DOES need one. A patient with no qualifying section in any admission does not. For S117 patients the two are often held as a single combined meeting.",
       },
       {
+        id: "what-it-asks",
+        type: "info",
+        title: "What the form asks for",
+        progressive: true,
+        content:
+          "All answers are based on the patient's position and identified needs on the date of referral, not on how they were on admission.\n\n" +
+          "Before the needs section:\n" +
+          "Customer details, GP, next of kin and whether an LPA is in place. Then three that people skip: is the customer aware of the referral, do they have capacity to consent to it, and who else is currently involved (CPN, consultant psychiatrist, ward team). Say what the preferred contact arrangements are - if it is the ward for now, say so.\n\n" +
+          "Reason for referral:\n" +
+          "Presenting problems, relevant history, physical illness or disability. A brief overview is acceptable, but it has to explain why they cannot go back to where they came from.\n\n" +
+          "The questions that route the referral:\n" +
+          "• Has an OT assessment been completed? Initial screening counts - give the date and what it found.\n" +
+          "• Would a period of Enablement (6 weeks) be suitable? If not, say why not. \"Needs longer-term support\" is a rationale; a blank is not.\n" +
+          "• Would they be suitable for Talking Point, or for a Local Area Coordinator? Could a Personal Health Budget be considered?\n\n" +
+          "The eight outcome areas:\n" +
+          "Personal care · eating and drinking · maintaining the home environment · making decisions · being part of the community · managing their behaviour · being a parent or carer · any unpaid carer's needs and whether a carer's assessment is needed.\n\n" +
+          "For each one, answer Yes / No / Don't know AND write what the patient actually needs. The pattern that works is: what they are like now, and what they are like when unwell. \"Currently no concerns. When unwell, has been known to stop eating and drinking due to paranoid beliefs about contamination\" tells social care something. \"No\" does not.\n\n" +
+          "Risk factors:\n" +
+          "A past / present grid across violence, suicide, self-harm, self-neglect, exploitation or abuse, and risk to children, plus whether the patient lives alone. Then details of the risk underneath - the grid alone is not enough.\n\n" +
+          "Attach before you send:\n" +
+          "Current CPA care plan, risk assessment and the recent outpatients review letter.",
+      },
+      {
         id: "forms",
         type: "forms",
         title: "Download Forms & Guides",
@@ -659,7 +753,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
             { label: "Derbyshire County ASC Referral", url: "#", icon: "📄", area: "county" },
           ],
           wagoll: [
-            { label: "Social Care Referral Example", url: "#", note: "Include care plan, risk assessment & OT assessments (if completed)" },
+            { label: "Derby City Social Care Referral - completed example", url: "#", note: "Held locally - to be wired in. Attach care plan, risk assessment and OT assessment" },
           ],
           otherGuides: [
             { label: "Care Act Eligibility Guide", url: "#" },
@@ -1169,6 +1263,98 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
       },
     ],
   },
+  "stepdown-referral": {
+    id: "stepdown-referral",
+    title: "Step Down Referral",
+    description: "Referring to a step down placement when someone is clinically ready to leave but not ready for home",
+    icon: "🪜",
+    gradient: "from-cyan-500 to-cyan-700",
+    steps: [
+      {
+        id: "criteria",
+        type: "criteria",
+        title: "Confirm Criteria",
+        content: "The patient no longer needs an acute inpatient bed, but going straight home would not be safe or would set up a readmission. Typical picture: repeated admissions with short gaps, a long admission, no accommodation in place, or skills that have not been tested outside hospital.\n\nStep down is time-limited. The maximum is 12 weeks, and the form asks you to commit to a duration up front.",
+        checkboxLabel: "I confirm the patient is clinically ready to leave but not ready to go straight home",
+      },
+      {
+        id: "what-it-asks",
+        type: "info",
+        title: "What the form asks for",
+        progressive: true,
+        content:
+          "Step Down Referral Form, V2 May 2023.\n\n" +
+          "Personal details:\n" +
+          "Name, DOB, NHS number, address (NFA if they have none), postcode, mobile, preferred name, first language - and if it is not English, whether an interpreter is required and whether written information is needed in that language. Then ethnic origin, religion, dietary preferences and allergies.\n\n" +
+          "Diagnoses:\n" +
+          "Primary diagnosis, then other diagnoses including physical health. Do not leave the physical ones out - they affect what a placement can take.\n\n" +
+          "Presentation grid:\n" +
+          "A current / history / none known grid with an additional detail column, covering behaviour, self-harm, physical aggression, AWOL or wandering, destruction of property, inappropriate sexual behaviour, arson or fire setting, non-compliance with treatment, forensic history, substance misuse, self-isolation or withdrawal, and suicidal thoughts or actions.\n\n" +
+          "Tick the column, then use the detail box. \"Previously convicted (1996) for ABH\" or \"describes family as protective factors for staying clean\" is what makes the grid usable.\n\n" +
+          "MHA / MCA position:\n" +
+          "Their legal status and capacity position on the date of referral.\n\n" +
+          "Emotional and physical needs, including interests and activities:\n" +
+          "This is the section that gets a person a placement rather than a bed. What are they like day to day, what do they enjoy, who matters to them, what do they do with their leave, what physical health appointments do they keep?\n\n" +
+          "Documentation to support the referral:\n" +
+          "Tick what is attached: care plan, OT assessment, psychiatric or forensic assessment, CPA assessment, social care assessment, risk assessment. Then allocated professionals (CMHT, social worker, other) and whether they are housing benefit entitled.\n\n" +
+          "Reason for referral:\n" +
+          "Why step down rather than home. Include the admission pattern and what social care has already decided - if they assessed on the ward and found no eligible needs, say so, and say what will be reassessed at step down.\n\n" +
+          "Programme of care and duration:\n" +
+          "Pick one: combined clinical and community support, community programme of care, accommodation only, or other. Then the duration - 4 weeks, 6 weeks, up to a maximum of 12.\n\n" +
+          "Goal based outcomes:\n" +
+          "Each goal gets a duration and an achieved yes/no. Write goals someone can actually mark off - \"support John to be assessed by social care in order to identify housing needs, 12 weeks\" works; \"improve independence\" does not.\n\n" +
+          "Exit plan:\n" +
+          "Where they go afterwards. The form asks for a destination, not an intention, so if the plan is to present to the council for accommodation, write that.\n\n" +
+          "Key dates and outcome:\n" +
+          "Referral date, step down start date, discharge notification to GP, exit date. The provider completes the accept / reject outcome and date.",
+      },
+      {
+        id: "forms",
+        type: "forms",
+        title: "Forms & Guides",
+        content: "The step down referral form and a completed example.",
+        forms: {
+          blank: [
+            { label: "Step Down Referral Form (V2, May 2023)", url: "#", icon: "📄", note: "Held locally - to be wired in" },
+          ],
+          wagoll: [
+            { label: "Step Down Referral - completed example", url: "#", note: "Held locally - to be wired in" },
+          ],
+          otherGuides: [
+            { label: "Social Care (Derby City)", url: "/guides/social-care" },
+            { label: "Housing / Duty to Refer", url: "/guides/homeless-discharge" },
+            { label: "Early Discharge Team", url: "/guides/edt" },
+          ],
+        },
+      },
+      {
+        id: "submission",
+        type: "info",
+        title: "Where it goes",
+        content: "Submission route to confirm. [confirm]\n\nThe form has a \"referral to - step down provider\" box, so the provider is named on the referral itself. Follow your ward's usual route and record where you sent it in the case note below.",
+      },
+      {
+        id: "casenote",
+        type: "casenote",
+        title: "Case Note Entry",
+        content: "Document the referral:",
+        clipboardText: "Step down referral completed on [DATE] and sent to [PROVIDER]. Programme of care: [COMBINED / COMMUNITY / ACCOMMODATION ONLY]. Duration requested: [WEEKS, max 12]. Goals: [GOALS]. Exit plan: [DESTINATION]. Supporting documents attached: [CARE PLAN / RISK ASSESSMENT / OT / SOCIAL CARE]. Sent via [METHOD].",
+      },
+      {
+        id: "reminder",
+        type: "reminder",
+        title: "Follow-up Task",
+        content: "Add the referral to your job diary. Chase the accept / reject outcome - the exit date depends on it.",
+        checkboxLabel: "",
+      },
+      {
+        id: "gdpr",
+        type: "gdpr",
+        title: "GDPR Reminder",
+        content: "Delete the completed referral from your computer once it has been sent.",
+      },
+    ],
+  },
   "cmht-referral": {
     id: "cmht-referral",
     title: "CMHT / EI Referral",
@@ -1213,7 +1399,36 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content:
           "Very similar to a CMHT referral, with two differences.\n\n" +
           "Be specific about the psychosis:\nDescribe the hallucinations and their nature - auditory, visual, tactile. Are the voices friendly or distressing? Are they familiar, or voices the person has not heard before? Is the person openly responding, or only responding when they do not think anyone can see them? What is the intensity, and is there a time of day when it is more prevalent?\n\n" +
-          "Check they are eligible before you write it:\nEarly Intervention is for first-episode psychosis, and they only keep people on their caseload for 2 years before handing over to CMHT. If someone has already been discharged from EI, it is unlikely they will be accepted again - refer to CMHT instead.",
+          "Check they are eligible before you write it:\nEarly Intervention is for first-episode psychosis, and they only keep people on their caseload for 2 years before handing over to CMHT. If someone has already been discharged from EI, it is unlikely they will be accepted again - refer to CMHT instead.\n\n" +
+          "Criteria on the service's own template:\n" +
+          "• Aged 14 to 64.\n" +
+          "• First episode of psychosis; prior treatment not exceeding 12 months in secondary care, or 3 years post initial treatment.\n" +
+          "• Co-morbid substance misuse, personality disorders, or a forensic / offending history are NOT grounds for exclusion.\n" +
+          "• Drug-induced psychosis is not excluded, but ongoing psychosis must be differentiated from intoxication.",
+      },
+      {
+        id: "ei-template",
+        type: "info",
+        title: "EI template - what it asks",
+        progressive: true,
+        content:
+          "The Derbyshire Early Intervention in Psychosis Service (City and South) template asks for the following. Work through it in order.\n\n" +
+          "1. Symptoms suggestive of a first episode psychosis:\n" +
+          "For each of the four, say whether it is present and, if it is, describe what you see including frequency, intensity and distress.\n" +
+          "• Thought disorder - jumbled speech, rapid topic changes, making up words, strange ideas, difficulty concentrating or misunderstanding questions, thought block. If yes, how do they present?\n" +
+          "• Delusional beliefs - deeply held convictions that significantly affect behaviour and perception of reality. Note whether they are transient, and note insight.\n" +
+          "• Paranoia - intense distrust, suspicion or fear of harm to themselves or others.\n" +
+          "• Hallucinations - auditory, visual, tactile, olfactory, gustatory. Excluding those attributed to dissociative features related to trauma, autistic overwhelm and sensory overload.\n\n" +
+          "The other nine questions:\n" +
+          "2. Do they have insight into their experiences?\n" +
+          "3. What is the duration of their symptoms?\n" +
+          "4. Is there an impact on social, occupational and personal functioning?\n" +
+          "5. A brief summary of risk, history and current.\n" +
+          "6. Any family history of mental illness?\n" +
+          "7. Any relevant treatment history - psychotropics, mood stabilisers, steroids, antidepressants?\n" +
+          "8. Any other mental health or neurodevelopmental diagnoses - anxiety, depression, personality disorder, bipolar disorder, autism, learning disability, ADHD, PTSD?\n" +
+          "9. Has there been any drug and alcohol misuse?\n" +
+          "10. Any other relevant background - trauma, organic, genetic or acquired brain injury?",
       },
       {
         id: "forms",
@@ -1222,7 +1437,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         content: "The EI team have their own template. CMHT referrals are written to the headings above.",
         forms: {
           blank: [
-            { label: "Early Intervention for Psychosis referral template", url: "#", icon: "📄" },
+            { label: "Derbyshire EI in Psychosis Service (City and South) referral template", url: "#", icon: "📄", note: "Held locally - to be wired in" },
           ],
           wagoll: [],
           otherGuides: [

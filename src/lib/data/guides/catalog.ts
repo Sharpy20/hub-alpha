@@ -97,6 +97,7 @@ export const ALL_GUIDES: GuideItem[] = [
   // Social & Housing
   { id: "homeless-discharge", title: "Housing / Duty to Refer", description: "Homeless discharge and accommodation support", icon: "🏠", gradient: "from-orange-500 to-orange-700", category: "Social & Housing", viewerPath: "/guides/homeless-discharge" },
   { id: "social-care", title: "Social Care (Derby City)", description: "Care Act assessment, S117 referrals & Enablement", icon: "👥", gradient: "from-amber-500 to-amber-700", category: "Social & Housing", viewerPath: "/guides/social-care" },
+  { id: "stepdown-referral", title: "Step Down Referral", description: "Referring to a step down placement when someone is ready to leave but not ready for home", icon: "🪜", gradient: "from-cyan-500 to-cyan-700", category: "Social & Housing", viewerPath: "/guides/stepdown-referral" },
   { id: "benefits-review", title: "Benefits Review", description: "DWP benefits review and welfare rights support", icon: "💷", gradient: "from-yellow-600 to-yellow-800", category: "Social & Housing", viewerPath: "/guides/benefits-review" },
   // Allied Health
   { id: "dietitian", title: "Dietitian Referral", description: "Nutritional assessment and support", icon: "🥗", gradient: "from-green-500 to-green-700", category: "Allied Health", viewerPath: "/guides/dietitian" },

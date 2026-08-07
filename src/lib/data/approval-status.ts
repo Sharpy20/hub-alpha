@@ -54,6 +54,7 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "pay-roster-faq": "red",           // 14 Jul: new - FAQ + jargon pulled out of the 3 pay guides
   "ot-pathway": "red",               // 2 Aug: new - restructure of the Radbourne Unit OT pathway. Georgia (OT) to review; source doc is unversioned and names one unit
   "cmht-referral": "red",            // 6 Aug: new from the CMHT/EI WAGOLL doc. Submission route unconfirmed and the EI template is not wired yet
+  "stepdown-referral": "red",        // 6 Aug: new from the Step Down Referral form (V2 May 2023). Submission route unconfirmed
   // Everything else falls back to "amber" (awaiting approval) until signed off.
 };
 

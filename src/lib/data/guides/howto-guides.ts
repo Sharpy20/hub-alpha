@@ -1362,7 +1362,37 @@ export const GUIDES: Record<string, GuideData> = {
       {
         id: "4",
         title: "Write it on the correct template",
-        content: "Use the current nursing report template (on the MHA intranet page), written in line with the Senior President's Practice Direction (2013). Keep it clear, concise and up to date - cover the patient's presentation, engagement, risk and progress on the ward.",
+        content: "The template is form T134 - In-Patient: Nursing Report, HMCTS, Crown copyright 2018. Use the current version from the MHA intranet page, written in line with the Senior President's Practice Direction. Keep it clear, concise and up to date.\n\nThe form itself says: the report must be prepared specifically for the tribunal, be signed and dated, and make clear the sources of information for the events and incidents described. It should NOT recite medical records or reproduce extensive detail from previous reports, although the patient's current nursing plan should be attached.",
+        tip: "Report on the current in-patient episode. If you are quoting a note, say so and date it - the form asks for your sources.",
+      },
+      {
+        id: "4b",
+        title: "The 16 questions on T134",
+        progressive: true,
+        content:
+          "Work through them in order. Several are Yes/No with a box that only opens if you say Yes - do not leave those blank.\n\n" +
+          "Patient and hearing:\n" +
+          "1. Patient details - full name, date of birth, usual place of residence.\n" +
+          "2. Any factors that may affect the patient's understanding or ability to cope with a hearing? Think hearing or sight impairment, autism, anything else needing an adjustment.\n" +
+          "3. Any adjustments the tribunal should consider in order to deal with the case fairly and justly?\n\n" +
+          "Care and daily presentation:\n" +
+          "4. The nature of nursing care and medication currently being made available.\n" +
+          "5. The level of observation the patient is currently subject to.\n" +
+          "6. Contact with relatives, friends or other patients, and the nature of that interaction.\n" +
+          "7. What community support the patient has.\n" +
+          "8. Strengths and positive factors relating to the patient.\n" +
+          "9. A summary of current progress, engagement with nursing staff, behaviour, cooperation, activities, self-care and insight.\n\n" +
+          "Incidents and compliance:\n" +
+          "10. Any occasions absent without leave while liable to be detained, or failures to return after leave.\n" +
+          "11. Understanding of, compliance with, and likely future willingness to accept prescribed medication or treatment.\n" +
+          "12. Incidents in hospital where the patient has harmed themselves or others, or threatened harm to others.\n" +
+          "13. Incidents where the patient has damaged property, or threatened to.\n" +
+          "14. Any occasions of seclusion or restraint, and why each was necessary.\n\n" +
+          "The judgement questions:\n" +
+          "15. For Section 2 - is detention justified or necessary in the interests of the patient's health or safety, or for the protection of others? For all other cases - is the provision of medical treatment in hospital justified or necessary on those grounds? Then: if discharged, would they be likely to act in a manner dangerous to themselves or others, and how could risks be managed effectively in the community, including any lawful conditions or recall powers?\n" +
+          "16. Any other relevant information, and any recommendations to the tribunal with your reasons.\n\n" +
+          "Then sign and date it:\n" +
+          "There is a signature box that takes a scanned signature. An unsigned report is not a finished report.",
       },
       {
         id: "5",

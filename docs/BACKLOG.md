@@ -2444,3 +2444,42 @@ it and finds nothing stops trusting the ones that are real.
    guides that already cover it.
 
 Feed the outcome back into the Guide Builder agent instructions so new guides arrive with it.
+
+---
+
+## U. WAGOLL folder (6 Aug 2026, Session 57)
+
+Twelve source documents from `E:\Hub\WAGOLL` (kept OUTSIDE the repo - Mike's call). Full
+placement table and the reasoning are in `docs/WAGOLL-review-list.md`. Nine are now
+printable HTML pages under `public/forms/`, linked from their guides.
+
+**Built and pushed:**
+- **NEW** `/guides/cmht-referral` (Specialist Pathways) - CMHT + EI, worked example printed
+  in full, real EI criteria and the 10 template questions.
+- **NEW** `/guides/stepdown-referral` (Social & Housing) - from the Step Down form V2 May 2023.
+- New content steps on `picu` (NAPICU inclusion/exclusion), `safeguarding` (pointers, the
+  fact-vs-opinion rule, the five pitfalls), `homeless-discharge` (SystmOne questionnaire),
+  `social-care` (the eight outcome areas), `tribunal-report` (the 16 T134 questions).
+- `GuidePromptConfig` gained an optional `downloads` field; used by the seclusion support plan.
+- Authoring metadata cleared from all 12 source files (the legacy `.doc` held two staff names
+  in its OLE summary stream).
+
+**Open, needs Mike:**
+- [BLOCKED] **Nursing Tribunal Report - Completed.pdf.** Mike is digging into whether the
+  narrative was rewritten or lifted from real notes (dated entries, staff initials, a Datix-
+  looking ref). Neither tribunal file is built. Nothing from it is in the repo.
+- [BLOCKED] Submission routes for `cmht-referral` and `stepdown-referral` - both say
+  "Submission route to confirm [confirm]". Both guides are RED until these land.
+- [BLOCKED] Kingfisher House email + phone are printed on the referral form. The guide and
+  the HTML page both show "Hidden in demo mode". If they are publicly listed they can go in;
+  if not they belong in `E:\Hub\temp\internal-contacts.md` keyed to `picu`.
+- [ ] **No blank Step Down form exists** in the folder, only the completed one. That entry
+  reads "Blank form to confirm".
+- [ ] EI: Mike's CMHT doc says EI hold someone 2 years then hand to CMHT; the EI service
+  template says "prior treatment not exceeding 12 months in secondary care or 3 years post
+  initial treatment". Read as caseload duration vs entry window - both are printed, sitting
+  next to each other. Worth one line confirming.
+- [ ] PEEP currently lives inside the seclusion support plan, the only place a PEEP exists.
+  If PEEPs are written for mobility as often as for seclusion it wants its own small guide.
+- [ ] Two typos corrected in the CMHT worked example ("ever 4 weeks" to "every", "route cause"
+  to "root cause"). Revert if Mike wants it verbatim.

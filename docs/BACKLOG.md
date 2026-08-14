@@ -7,6 +7,11 @@
 > **⭐ THE LIVE LIST IS SECTION R (2 Aug).** Section P is the 30 Jul evaluation's open items and
 > is still valid, but R sits above it: it carries the medical device question, the Tier A/B guide
 > split, the trust-account handover and Mike's 2 Aug job list. Read R first.
+>
+> **⭐ SECTION V (6 Aug) is the hosting/trial/handover direction - the sandbox plan.** Read it
+> before any work on hosting, persistence, guide data formats or the SSO application. It
+> supersedes R4's "same stack on trust accounts" assumption: the destination is the Trust's
+> ASP.NET / Azure standard, reached by Mike porting the app inside Cris's pipeline.
 
 Related task docs (roll findings into here over time):
 - **⭐ `docs/evaluations/2026-07-30_project-evaluation.md`** - 13-hat review, 30 Jul, run against
@@ -2483,3 +2488,64 @@ printable HTML pages under `public/forms/`, linked from their guides.
   If PEEPs are written for mobility as often as for seclusion it wants its own small guide.
 - [ ] Two typos corrected in the CMHT worked example ("ever 4 weeks" to "every", "route cause"
   to "root cause"). Revert if Mike wants it verbatim.
+
+---
+
+## V. THE SANDBOX PLAN (6 Aug 2026, Session 56) - hosting, trial and handover direction
+
+**Where it came from:** the post-presentation reply-all (roadmap, SENT 6 Aug) led to a direct
+thread with Cris, who put his team's standard stack in writing and agreed the phased approach.
+Full context in memory `session-56-replyall-and-claude-request`.
+
+### The Trust standard stack (Cris, 6 Aug, in writing)
+
+ASP.NET Core MVC · Azure App Service · Azure SQL Database · UK Azure regions · NHSmail
+authentication + app-level access controls · custom domain purchased through Azure (Web Team
+managed, auto-renewing TLS) · Git · CI/CD with dev/test vs production separation · logging,
+monitoring, backup and retention as standard practice · internal governance approval before
+ANY app goes live · **DPIA required for EVERY application - fictional-data demos included.**
+The DPIA for a no-personal-data app will be short, but stop claiming the hosted phase needs
+no sign-off; the process runs regardless.
+
+Cris also stated plainly: his team cannot adopt or maintain the existing Next.js codebase.
+For them to ever own it, it has to be on their stack. That is what makes the plan below the
+plan.
+
+### The plan
+
+1. [ ] **Email to Cris - drafted, Mike holding it over the weekend.** The ask: his team
+      stands up a **"sandbox"** (their standard setup, dev/test only, nothing live) with Git
+      access for Mike. Env settings go through their secrets process, never email. Cris may
+      monitor PRs as much or little as he likes; development and maintenance stay with Mike.
+2. [ ] **Mike ports wardHub from Next.js to ASP.NET Core MVC** (Claude-assisted, evenings).
+      The port lives in THEIR pipeline from day one, so the eventual handover is a hardening
+      pass and a change of maintainer, not a third build.
+3. [ ] **In the sandbox:** DPIA and governance paperwork completed WITH Cris against the
+      real target system (written once, never redone); guides signed off; the NHSmail SSO
+      application goes in once the Azure domain exists (the redirect URI needs it - which is
+      why deferring the SSO application was right).
+4. [ ] **The trial runs on the PORTED app.** The thing being trialled is the thing that goes
+      live. Accepted consequence: the trial slips later - present that as a deliberate trade
+      in September, with rough dates, not as an emerging delay.
+5. [ ] **After a successful trial the two wards keep access** while the trust-wide version /
+      handover is prepared. Mike maintains during that extension, with agreed limits - say
+      so in the plan before Cris has to raise his operational-reliance point.
+
+### Build implications - read before ANY session touches hosting, persistence or guide data
+
+- [ ] ⭐ **Highest-leverage prep job: export guide content to a stack-neutral data format**
+      that both apps consume. Sign-offs then attach to content versions and SURVIVE the port
+      (otherwise porting invalidates all 68 signatures and nobody re-reads them twice), and
+      the automated Guide Builder's target becomes "produce valid guide-data" - testable the
+      moment the M365 agents are accessible again, independent of the port.
+- ⛔ **Feature-freeze the Next.js build once the port starts.** Content changes are fine.
+      Two diverging codebases is the failure mode.
+- **Persistence targets Azure SQL, never Supabase.** Nothing is built on Supabase (dormant,
+      no DB in use), so switching the target costs nothing today. On this path the
+      Supabase-region chase is moot.
+- **Do not transfer wardhub.live.** The Trust buys its own domain through Azure per their
+      standard, which keeps the domain - and the IP question (Section R4) - untangled.
+- Terminology: **"sandbox"** = the fictional-data-on-Trust-infra stage. Never "fake PII" in
+      writing; fictional demo data is not personal data.
+- The Claude Code seats / AI-tooling-in-their-repo conversation belongs at the moment port
+      work starts inside their pipeline, not before.

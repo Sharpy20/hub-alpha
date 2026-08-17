@@ -2511,25 +2511,35 @@ Cris also stated plainly: his team cannot adopt or maintain the existing Next.js
 For them to ever own it, it has to be on their stack. That is what makes the plan below the
 plan.
 
-### The plan
+### The plan - FINAL SEQUENCE (settled 17 Aug 2026)
 
-1. [ ] **Email to Cris - drafted, Mike holding it over the weekend.** The ask: his team
-      stands up a **"sandbox"** (their standard setup, dev/test only, nothing live) with Git
-      access for Mike. Env settings go through their secrets process, never email. Cris may
-      monitor PRs as much or little as he likes; development and maintenance stay with Mike.
-2. [ ] **Mike ports wardHub from Next.js to ASP.NET Core MVC** (Claude-assisted, evenings).
-      The port lives in THEIR pipeline from day one, so the eventual handover is a hardening
-      pass and a change of maintainer, not a third build.
+1. [ ] **Send Cris the sandbox proposal** (redrafted and polished 17 Aug, ready). Send it
+      BEFORE the group catch-up email, so Cris isn't introduced to his own starring role via
+      the group. The ask: his team stands up a **"sandbox"** (their standard setup - App
+      Service, Azure SQL, UK regions - dev/test only, nothing live) with Git access for
+      Mike. Env settings via their secrets process, never email. Cris may monitor PRs as
+      much or little as he likes; development and maintenance stay with Mike, no commitment
+      from his team beyond the setup.
+2. [ ] **Mike ports wardHub from Next.js to ASP.NET Core MVC** (Claude-assisted, evenings),
+      inside THEIR pipeline from day one - so the eventual handover is a hardening pass and
+      a change of maintainer, not a third build. The sandbox's job is to prove the
+      infrastructure works.
 3. [ ] **In the sandbox:** DPIA and governance paperwork completed WITH Cris against the
-      real target system (written once, never redone); guides signed off; the NHSmail SSO
-      application goes in once the Azure domain exists (the redirect URI needs it - which is
-      why deferring the SSO application was right).
-4. [ ] **The trial runs on the PORTED app.** The thing being trialled is the thing that goes
-      live. Accepted consequence: the trial slips later - present that as a deliberate trade
-      in September, with rough dates, not as an emerging delay.
-5. [ ] **After a successful trial the two wards keep access** while the trust-wide version /
-      handover is prepared. Mike maintains during that extension, with agreed limits - say
-      so in the plan before Cris has to raise his operational-reliance point.
+      real target system (written once, never redone); **guides REBUILT through the agent
+      pipeline, THEN signed off** - sign-offs attach to the rebuilt generation only, since
+      signing the old generation first would be invalidated by the rebuild; the NHSmail SSO
+      application goes in once the Azure domain exists (the redirect URI needs it).
+4. [ ] **Promote sandbox -> live environment, still on fictional data.** The PII decision
+      does NOT gate this move - the live environment stands up and soaks with fictional
+      data.
+5. [ ] **The PII decision gates WARD ACCESS, not the build.** Decision lands (full name /
+      initials + NHS number / SystmOne sync) -> the two wards get access -> the trial
+      starts, on the ported app in the live environment. Nothing to rebuild between a
+      successful trial and rolling out. The September line, verbatim: *"The trial runs on
+      the same build, on the same infrastructure, that would carry on afterwards."*
+6. [ ] **After a successful trial the two wards keep access** (Mike maintains, with agreed
+      limits - say so before Cris has to raise his operational-reliance point). No decision
+      on if or how his team takes over unless the trial proves a success.
 
 ### Build implications - read before ANY session touches hosting, persistence or guide data
 
@@ -2549,3 +2559,15 @@ plan.
       writing; fictional demo data is not personal data.
 - The Claude Code seats / AI-tooling-in-their-repo conversation belongs at the moment port
       work starts inside their pipeline, not before.
+- [ ] ⭐ **Prep that waits for nobody: schema -> validator -> agent instruction block** (output
+      format + guardrails), all buildable and testable against the CURRENT Next.js site
+      before the port exists or Cris replies - both generations consume the same guide-data.
+      The agent pipeline is the least-proven link in the whole pitch (session 51 test:
+      retrieval excellent, output format unusable and resistant to correction) and is
+      blocked on agent access - prove it early, not after the port.
+- **The existing 68 guides are the MARK SCHEME** for agent rebuilds: compare every rebuild
+      against the known-good version (the session-51 blind test, designed and still unrun).
+- **Pitch honesty:** uniform LOOK comes free from rendering guide-data - the rebuild buys
+      PROVENANCE (source doc -> tenant agent -> valid data -> render -> sign-off, no "Mike
+      at home" link). Agents cover Tier A (single-SOP restructure); Tier B synthesis stays a
+      human+AI editorial job outputting the same format.

@@ -10,14 +10,17 @@
 // (The risk-assessment page still has its own in-file copy for now; this module
 // is the de-duplicated home going forward - wire that page to it in a later pass.)
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FORMULATION_SECTIONS, RMP_SECTIONS, MANDATORY_MDT_LINE,
   RMP_RISK_CHIPS, FORMULATION_RISK_CHIPS,
-  type RiskSection, type RiskChipGroup, type RmpSectionId, type FormulationSectionId,
+  type RiskSection, type RiskChipGroup, type ChipSource, type RmpSectionId, type FormulationSectionId,
 } from "@/lib/data/guides/risk";
 import {
-  ChevronDown, ChevronRight, Info, Sparkles, AlertTriangle, Plus, X,
+  loadUserChips, addUserChip, removeUserChip, bankKey as bankKeyFor,
+} from "@/lib/data/guides/user-chips";
+import {
+  ChevronDown, ChevronRight, Info, Sparkles, AlertTriangle, Plus, X, UserPen,
 } from "lucide-react";
 
 // ---- state ----
@@ -125,14 +128,25 @@ export function rmpSectionForRisk(sec: RiskSection, risk: string): RiskSection {
 
 // ---- the editor (chips + free text + na + optional dated examples) ----
 export function SectionEditor({
-  section, state, onChange, accent = "rose",
+  section, state, onChange, accent = "rose", bank,
 }: {
   section: RiskSection;
   state: SecState;
   onChange: (next: SecState) => void;
   accent?: "rose" | "violet";
+  // Identifies this question's chip bank so words the user adds come back next
+  // time they plan the same risk. Omit to hide "add your own".
+  bank?: { risk: string; questionId: string };
 }) {
   const [open, setOpen] = useState(false);
+  const [userChips, setUserChips] = useState<string[]>([]);
+  const [newChip, setNewChip] = useState("");
+
+  // Read the user's own words for this bank once the section is opened.
+  useEffect(() => {
+    if (!open || !bank) return;
+    setUserChips(loadUserChips()[bankKeyFor(bank.risk, bank.questionId)] || []);
+  }, [open, bank?.risk, bank?.questionId]); // eslint-disable-line react-hooks/exhaustive-deps
   const A = accent === "violet"
     ? { on: "bg-violet-600 border-violet-600", hover: "hover:border-violet-300 hover:bg-violet-50", ring: "focus:ring-violet-400 focus:border-violet-400", badge: "text-violet-700 bg-violet-100", spark: "text-violet-700/80", chipText: "text-violet-800", chipBg: "bg-violet-50 border-violet-200" }
     : { on: "bg-rose-600 border-rose-600", hover: "hover:border-rose-300 hover:bg-rose-50", ring: "focus:ring-rose-400 focus:border-rose-400", badge: "text-rose-700 bg-rose-100", spark: "text-rose-700/80", chipText: "text-rose-800", chipBg: "bg-rose-50 border-rose-200" };
@@ -140,6 +154,20 @@ export function SectionEditor({
   const toggleChip = (w: string) => {
     const has = state.chips.includes(w);
     onChange({ ...state, na: false, chips: has ? state.chips.filter((c) => c !== w) : [...state.chips, w] });
+  };
+
+  // Trust wording is plain; anything wardHub wrote carries a purple ring so the
+  // two layers are never mistaken for each other.
+  const renderChip = (w: string, source: ChipSource) => {
+    const on = state.chips.includes(w);
+    const ring = source === "trust" ? "" : "ring-1 ring-purple-300";
+    return (
+      <button key={w} onClick={() => toggleChip(w)} aria-pressed={on}
+        title={source === "trust" ? undefined : "wardHub prompt, not trust wording"}
+        className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ${ring} ${on ? `${A.on} text-white font-medium` : `bg-white border-gray-200 text-gray-600 ${A.hover}`}`}>
+        {w}
+      </button>
+    );
   };
   const examples = state.examples || [];
   const setExamples = (next: DatedExample[]) => onChange({ ...state, na: false, examples: next });
@@ -172,18 +200,59 @@ export function SectionEditor({
             <div key={gi}>
               {g.label && <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">{g.label}</p>}
               <div className="flex flex-wrap gap-1.5">
-                {g.words.map((w) => {
-                  const on = state.chips.includes(w);
-                  return (
-                    <button key={w} onClick={() => toggleChip(w)} aria-pressed={on}
-                      className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ${on ? `${A.on} text-white font-medium` : `bg-white border-gray-200 text-gray-600 ${A.hover}`}`}>
-                      {w}
-                    </button>
-                  );
-                })}
+                {g.words.map((w) => renderChip(w, g.source || "wardhub"))}
               </div>
             </div>
           ))}
+
+          {/* The user's own words for this bank, plus the box to add more. */}
+          {bank && (
+            <div>
+              <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">Your words</p>
+              <div className="flex flex-wrap gap-1.5">
+                {userChips.map((w) => (
+                  <span key={w} className={`inline-flex items-center rounded-lg border text-sm transition-all ring-1 ring-purple-400 ${state.chips.includes(w) ? `${A.on} text-white` : "bg-white border-purple-200 text-gray-600"}`}>
+                    <UserPen className={`w-3 h-3 ml-2 flex-shrink-0 ${state.chips.includes(w) ? "text-white/80" : "text-purple-500"}`} />
+                    <button onClick={() => toggleChip(w)} aria-pressed={state.chips.includes(w)} className="pl-1.5 pr-1 py-1.5 font-medium text-left">{w}</button>
+                    <button
+                      onClick={() => { setUserChips((c) => c.filter((x) => x !== w)); removeUserChip(bank.risk, bank.questionId, w); if (state.chips.includes(w)) toggleChip(w); }}
+                      aria-label={`Delete your word ${w}`}
+                      className={`pr-2 pl-0.5 py-1.5 ${state.chips.includes(w) ? "text-white/80 hover:text-white" : "text-gray-400 hover:text-red-600"}`}
+                    ><X className="w-3.5 h-3.5" /></button>
+                  </span>
+                ))}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const w = newChip.trim();
+                    if (!w || userChips.some((x) => x.toLowerCase() === w.toLowerCase())) { setNewChip(""); return; }
+                    addUserChip(bank.risk, bank.questionId, w);
+                    setUserChips((c) => [...c, w]);
+                    onChange({ ...state, na: false, chips: [...state.chips, w] }); // added means you meant it
+                    setNewChip("");
+                  }}
+                  className="inline-flex items-center gap-1"
+                >
+                  <input
+                    value={newChip}
+                    onChange={(e) => setNewChip(e.target.value)}
+                    placeholder="add your own..."
+                    aria-label="Add your own suggestion word"
+                    autoComplete="off"
+                    className={`text-sm border border-dashed border-purple-300 rounded-lg px-2.5 py-1.5 w-40 ${A.ring}`}
+                  />
+                  <button type="submit" aria-label="Add word" className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-purple-300 text-purple-600 hover:bg-purple-50 transition-colors">
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
+
+          <p className="flex items-center gap-1.5 text-[11px] text-gray-400">
+            <span className="inline-block w-3 h-3 rounded border border-gray-200 ring-1 ring-purple-400 flex-shrink-0" />
+            Purple = a wardHub prompt or your own word, not wording from the trust form.
+          </p>
 
           {section.gap && <p className={`flex items-start gap-1.5 text-xs ${A.spark}`}><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />Gap prompt: {section.gap}</p>}
 

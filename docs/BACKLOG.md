@@ -2571,3 +2571,77 @@ plan.
       PROVENANCE (source doc -> tenant agent -> valid data -> render -> sign-off, no "Mike
       at home" link). Agents cover Tier A (single-SOP restructure); Tier B synthesis stays a
       human+AI editorial job outputting the same format.
+
+---
+
+## W. Risk tool rebuild (20 Aug 2026, Session 58)
+
+`/guides/risk-assessment` reworked against the SystmOne risk screen screenshots Mike
+supplied on the day. All seven domains, their sub-domains, the `Display clinical
+indicators for ...?` prompts and the `No evidence ...` lines were already verbatim and
+were re-verified against the source. Three real deltas fixed, plus the layout rebuild.
+
+### Done
+- **Domain 5 clinical indicators added (27 items).** Physical health / frailty was the
+  only domain with no `5a.i` list in the app. Now transcribed verbatim, including the
+  form's own `Crital meds (warfarin, Parkinson's)` typo and the open-ended `High BMI >`
+  (Rule 7 - trust wording is not tidied up).
+- **Question 8 wording corrected.** Was "Do you, or has anyone else, expressed concerns?";
+  the form says **"Do you have or has anyone else expressed concerns?"**. It was wrong in
+  the generated risk-screen text too, which is what gets pasted into a case note.
+- **The tail of the form is now modelled** (`SCREEN_TAIL` in `risk-screen.ts`): field 9 is
+  the single **Risk Formulation** free-text box, followed by the mandatory gate *"If any
+  Risks have been identified you must select YES below and complete a Risk Management
+  Plan"* and the single **Risk Management Plan** box. The tool's two documents paste into
+  exactly those two fields - shown on screen so people know where the output goes.
+- **Wizard replaced by a top-down accordion.** Seven domain rows, always visible, each
+  showing its own state (Not started / in progress / n risks, n indicators, n/13 answered
+  / No evidence confirmed). Click to open, others collapse. No Back/Next march - jump in
+  and out in any order, which is how the job is actually done.
+- **Quick capture.** Paste a line spotted in an old risk tool, AMHP report, section papers
+  or case notes, pick the domain, add a date if known, and it lands in that domain's
+  examples. Undated lines sink to the bottom, the rest sort most recent first. Anything
+  dated before this year defaults to Historical unless you say otherwise.
+- **Generate guard.** A domain nobody opened is not the same as a domain with no risks.
+  Generating with untouched domains opens a modal listing them, each with "Confirm no
+  risks known in this domain"; confirming writes that domain's exact "No evidence ..."
+  line into the risk screen output. Nothing generates until every one is confirmed.
+- **Chip provenance, three tiers** (Mike's call, 20 Aug). Trust wording is plain; anything
+  wardHub wrote carries a **purple ring**; words the user adds carry the ring plus a
+  marker. `ChipSource` on `RiskChipGroup`; a legend sits under every chip bank. This is
+  what lets the trust layer and the wardHub layer be signed off separately.
+- **Add your own words**, per chip bank, keyed `${risk}::${questionId}` so a word added
+  under "early warning signs" for violence comes back next time violence is planned, and
+  does not leak into unrelated risks. `src/lib/data/guides/user-chips.ts`, localStorage
+  `wardhub_user_chips`. Deliberately a flat string-array-per-bank so it moves to a user
+  profile row when accounts exist, with no migration.
+
+Gates green: `tsc` 0 errors, `eslint src` 0 errors (7 pre-existing warnings in older
+files), 71 tests pass. Verified in the browser: all 27 domain-5 indicators render, capture
+routes and date-sorts, guard blocks and writes the right lines, user chip persists.
+
+### Open - needs Mike
+- [ ] **Is the domain 5 indicator list complete?** The screenshot ends at "Hospital
+      admission linked to eating disorder" with no visible cut, but confirm nothing sits
+      below it on the real screen.
+- [ ] **Spot-check the domain 5 indicator routing.** `INDICATOR_BACKGROUND["physical-health"]`
+      decides which ticked indicators read as background (into the formulation) and which
+      are things you watch for (into the plan). Standing conditions and long-term
+      medication factors were put on the background side; delirium, vomiting, swallowing
+      and concordance on the watch-for side. This joins the same open spot-check from
+      8 Jul for the other six domains.
+- [ ] **The 13 questions are wardHub's, not the form's.** The screenshots confirm the S1
+      screen has no extra per-domain questions beyond a/b/c - so the question set that
+      builds the formulation and plan is entirely our authoring. It currently reads like
+      part of the form. Decide whether it should be visually marked as the wardHub layer
+      the way the chips now are.
+- [ ] **12 of the 37 sub-domains still map to no tailored chip bank** - all nine of domain
+      6 (children) plus "Domestic appliance issues" and "Lack of social stimulation /
+      activities". They fall back to generic chips. Needs new chip banks, which is content
+      Mike has to approve.
+- [ ] **Tailored chips cover only 4 of the 9 formulation sections** (predisposing,
+      precipitating, perpetuating, dynamic). Protective factors, pattern, engagement and
+      judgement are generic for all 28 risks. Protective is the one NICE NG225 leans on.
+- [ ] **Still RED.** Nothing here flips it - that is Mike's editorial call, and the
+      proofreading pack (every domain, question, chip and template in one printable
+      document) is the thing that would make the sign-off doable.

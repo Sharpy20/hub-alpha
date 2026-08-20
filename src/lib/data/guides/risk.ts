@@ -10,9 +10,19 @@
 // dynamic / judgement) is standard best practice, not a specific trust document.
 // It matches the brief Mike supplied. Labelled as such in the UI.
 
+// Where a group of suggestion words came from. This drives how they are shown:
+//   trust   - lifted from an approved trust form or policy (plain, no ring)
+//   wardhub - written for wardHub as a prompt, not trust-approved (purple ring)
+//   user    - typed in by the person using the tool (purple ring + marker)
+// Everything in RMP_RISK_CHIPS and FORMULATION_RISK_CHIPS is "wardhub": useful
+// clinical vocabulary, but not traceable to a trust document. It must stay
+// visually separate so the two layers can be signed off separately.
+export type ChipSource = "trust" | "wardhub" | "user";
+
 export interface RiskChipGroup {
   label?: string;
   words: string[];
+  source?: ChipSource; // defaults to "wardhub"
 }
 
 export interface RiskSection {

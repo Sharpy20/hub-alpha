@@ -180,7 +180,8 @@ export const SUBTYPE_RISK: Record<string, string> = {
 
 // Clinical indicators per domain - the approved S1 lists shown when "Display
 // clinical indicators for risk of ...?" is answered Yes (Xb.i / Xa.i). Verbatim
-// trust wording. Domain 5 (physical health) has no indicator sub-list on the form.
+// trust wording, transcribed from the SystmOne screens (20 Aug 2026) - typos and
+// inconsistent capitalisation are the form's own and are kept deliberately.
 export const CLINICAL_INDICATORS: Record<string, string[]> = {
   "self-harm": [
     "Expressing suicidal ideas", "Considered / planned intent", "Accidental overdose",
@@ -214,6 +215,21 @@ export const CLINICAL_INDICATORS: Record<string, string[]> = {
   "harm-by-others": [
     "Safeguarding", "FGM", "Radicalisation / prevent", "Forced marriage", "Discriminatory abuse",
     "Relating to internet", "Coercive control", "Carer stress / burnout", "Patient is carer and or parent",
+  ],
+  // 5a.i - "Clinical indicators for risk to physical health including frailty;"
+  // "Crital meds" and the open-ended "High BMI >" are the form's own wording.
+  "physical-health": [
+    "Delirium", "Susceptibility to infections", "Tissue viability", "Incontinence",
+    "Sensory impairment", "Mobility", "Swallowing issues",
+    "Medication risks - Specialist monitoring required (lithium, clozapine, HDAT etc)",
+    "Medication Administration / timing issues", "Poly pharmacy",
+    "Difficulties in accessing medication (dexterity problems, requires delivery, carer to arrange medication)",
+    "Crital meds (warfarin, Parkinson's)", "Compliance aids (MARs/blister pack, pill boxes)",
+    "Concordance issues", "Major physical illness/disability/significant and serious constant pain",
+    "Issues with diet, nutrition and hydration", "Behaviour changes that may indicate physical illness",
+    "Sensory processing difficulties", "Epilepsy", "Difficulties accessing screening tests",
+    "Difficulties with sexual wellbeing", "Low weight BMI < 15", "High BMI >", "Vomiting",
+    "Rapid weight change", "Low Potassium (hypokalaemia)", "Hospital admission linked to eating disorder",
   ],
   "children": [
     "Admission to inpatient setting", "Looked after child (Child in care of local authority)",
@@ -263,6 +279,18 @@ export const INDICATOR_BACKGROUND: Record<string, string[]> = {
   "harm-by-others": [
     "Carer stress / burnout", "Patient is carer and or parent",
   ],
+  // Standing conditions and long-term medication factors read as background; the
+  // rest (delirium, vomiting, swallowing, concordance) are things you watch for.
+  "physical-health": [
+    "Sensory impairment", "Mobility", "Sensory processing difficulties", "Epilepsy",
+    "Medication risks - Specialist monitoring required (lithium, clozapine, HDAT etc)",
+    "Poly pharmacy",
+    "Difficulties in accessing medication (dexterity problems, requires delivery, carer to arrange medication)",
+    "Crital meds (warfarin, Parkinson's)", "Compliance aids (MARs/blister pack, pill boxes)",
+    "Major physical illness/disability/significant and serious constant pain",
+    "Difficulties accessing screening tests", "Difficulties with sexual wellbeing",
+    "Low weight BMI < 15", "High BMI >", "Hospital admission linked to eating disorder",
+  ],
   "children": [
     "Admission to inpatient setting", "Looked after child (Child in care of local authority)",
     "Parental/Family/Carer significant psychiatric illness",
@@ -274,6 +302,18 @@ export const INDICATOR_BACKGROUND: Record<string, string[]> = {
     "Loss of home or eviction", "Inadequate staffing levels", "Inadequate staffing skill set",
     "Lack of appropriate equipment /recourses/ care package", "Inappropriate environment",
   ],
+};
+
+// The tail of the S1 risk screen, after the seven domains. Verbatim form wording.
+// Question 9 is the single free-text Risk Formulation field; the gate below it is
+// mandatory, and answering Yes opens the single Risk Management Plan field. Those
+// two fields are what this tool's Formulation and Management Plan outputs paste
+// into - there is nowhere else on the form for them to go.
+export const SCREEN_TAIL = {
+  q8: "Do you have or has anyone else expressed concerns?",
+  q9Label: "Risk Formulation",
+  rmpGate: "If any Risks have been identified you must select YES below and complete a Risk Management Plan",
+  rmpLabel: "Risk Management Plan",
 };
 
 // Where a ticked clinical indicator flows: "formulation" (background) or "present"

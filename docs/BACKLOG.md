@@ -2621,27 +2621,52 @@ files), 71 tests pass. Verified in the browser: all 27 domain-5 indicators rende
 routes and date-sorts, guard blocks and writes the right lines, user chip persists.
 
 ### Open - needs Mike
-- [ ] **Is the domain 5 indicator list complete?** The screenshot ends at "Hospital
-      admission linked to eating disorder" with no visible cut, but confirm nothing sits
-      below it on the real screen.
+- [x] **Domain 5 indicator list is complete** - Mike confirmed 20 Aug that "Hospital
+      admission linked to eating disorder" is the last one. 27 items, all in.
 - [ ] **Spot-check the domain 5 indicator routing.** `INDICATOR_BACKGROUND["physical-health"]`
       decides which ticked indicators read as background (into the formulation) and which
       are things you watch for (into the plan). Standing conditions and long-term
       medication factors were put on the background side; delirium, vomiting, swallowing
       and concordance on the watch-for side. This joins the same open spot-check from
       8 Jul for the other six domains.
-- [ ] **The 13 questions are wardHub's, not the form's.** The screenshots confirm the S1
-      screen has no extra per-domain questions beyond a/b/c - so the question set that
-      builds the formulation and plan is entirely our authoring. It currently reads like
-      part of the form. Decide whether it should be visually marked as the wardHub layer
-      the way the chips now are.
-- [ ] **12 of the 37 sub-domains still map to no tailored chip bank** - all nine of domain
+- [x] **The 13 questions now fit their domain** (20 Aug, second pass). They are still
+      wardHub authoring, not form wording - the proofreading pack labels them as such.
+- [ ] **11 of the 36 sub-domains still map to no tailored chip bank** - all nine of domain
       6 (children) plus "Domestic appliance issues" and "Lack of social stimulation /
       activities". They fall back to generic chips. Needs new chip banks, which is content
-      Mike has to approve.
+      Mike has to approve. (Part 4 of the proofreading pack lists them in red.)
 - [ ] **Tailored chips cover only 4 of the 9 formulation sections** (predisposing,
       precipitating, perpetuating, dynamic). Protective factors, pattern, engagement and
       judgement are generic for all 28 risks. Protective is the one NICE NG225 leans on.
 - [ ] **Still RED.** Nothing here flips it - that is Mike's editorial call, and the
       proofreading pack (every domain, question, chip and template in one printable
       document) is the thing that would make the sign-off doable.
+
+### W2. Second pass, same day (Mike's three notes + the pack)
+
+- **The questions now fit the domain they sit under.** They were one generic run of 13
+  shown identically under all seven domains, which read as though the patient is the
+  source of every risk. Wrong for half of them: in domain 4 the patient is the one being
+  harmed, in domain 6 the person at risk is a child, and in domain 7 the risk is a
+  situation rather than a behaviour. Those three are reworded throughout, the other four
+  sharpened so each question names the actual risk. Routing is untouched, so an answer
+  still lands in the same output section whichever domain asked for it.
+  New file `src/lib/data/guides/risk-questions.ts` - the question set moved out of the
+  page component, which also serves the stack-neutral export job in Section V.
+- **"Display clinical indicators ...?" is out of the grey box and required.** It has its
+  own bordered card per domain, amber with a "Needs an answer" badge until answered. The
+  generate guard now blocks on any worked domain where it is still blank, and offers the
+  Yes/No inline so it can be answered without leaving the modal. Domain 1's `1a` safety
+  question got the same treatment.
+- **Current and historical no longer look identical.** Two distinct cards: rose "Now -
+  current concerns / What is happening at the moment", slate "Before - historical risk /
+  What has happened in the past". Separate gap prompts, and the dated-example boxes are
+  headed "Recent examples" and "Past events" in matching colours.
+- ⭐ **The proofreading pack is built** - `src/lib/utils/riskProofreadPack.ts`, printed
+  from the "Proofreading pack" button on the tool. Seven parts and a sign-off sheet,
+  ~17,800 words, 21 tick-box sign-off blocks, rendered from the SAME data the tool uses
+  so it cannot drift. Every section is badged **Trust form** or **wardHub**, because they
+  need two different jobs doing to them: the trust half is a word-for-word transcription
+  check, the wardHub half needs clinical judgement and has never been approved by anyone.
+  Part 4 is the sub-domain to chip-bank table with the 11 unmapped ones in red.
+  **This is the thing that makes the RED sign-off doable - it is now on Mike.**

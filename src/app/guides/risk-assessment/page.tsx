@@ -30,6 +30,9 @@ import {
   type RiskSection, type RiskChipGroup,
 } from "@/lib/data/guides/risk";
 import {
+  UNIFIED_QUESTIONS, questionsForDomain, type UnifiedQuestion,
+} from "@/lib/data/guides/risk-questions";
+import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, SCREEN_TAIL, indicatorRoute,
 } from "@/lib/data/welcome/risk-screen";
 import {
@@ -44,10 +47,11 @@ import { Patient } from "@/lib/types";
 import { loadTracker, saveTracker, seedPatient } from "@/lib/data/care-review";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { printClinicalDoc } from "@/lib/utils/printDoc";
+import { printRiskProofreadPack } from "@/lib/utils/riskProofreadPack";
 import {
   ArrowLeft, Copy, Check, CheckCircle2, RotateCcw, ChevronDown,
   ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
-  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star, Printer,
+  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star, Printer, Clock, History as HistoryIcon,
 } from "lucide-react";
 
 type YN = "" | "yes" | "no";
@@ -66,38 +70,7 @@ const emptyDomain = (): DomainState => ({
   noEvidence: false, risks: [], customSubs: [], customIndicators: [], ownRmp: [], currentExamples: [], historicalExamples: [],
 });
 
-interface RiskRef { key: string; label: string; chipRisk: string }
-
-// ---- The one ordered question set (per risk) --------------------------------
-// The nurse answers these in order; each maps to ONE output section so the answer
-// flows straight into the Formulation (doc "f") or the Management Plan (doc "r").
-// `chip` says where the suggestion chips come from: "generic" = the section's own
-// chips; "f"/"r" = that risk's tailored formulation / RMP chips. No section's
-// chips appear under more than one question, so nothing is duplicated.
-interface UnifiedQuestion {
-  id: string;
-  question: string;
-  hint: string;
-  gap?: string;
-  examples?: boolean;
-  chip: { doc: "generic" | "f" | "r"; id: string };
-  writes: { doc: "f" | "r"; id: string };
-}
-const UNIFIED_QUESTIONS: UnifiedQuestion[] = [
-  { id: "q_seen", question: "What is the risk, and what have you seen or heard recently?", hint: "The events that bring this risk to attention now.", gap: "What has happened recently?", chip: { doc: "generic", id: "presenting" }, writes: { doc: "f", id: "presenting" } },
-  { id: "q_signs", question: "What are the early warning signs it is building or happening?", hint: "The specific, observable signs to watch for in THIS patient.", gap: "What are the early warning signs?", examples: true, chip: { doc: "r", id: "present" }, writes: { doc: "r", id: "present" } },
-  { id: "q_history", question: "What in their history makes this more likely?", hint: "Longer-term background - trauma, diagnosis, past attempts, admissions.", gap: "What raises the baseline risk?", chip: { doc: "f", id: "predisposing" }, writes: { doc: "f", id: "predisposing" } },
-  { id: "q_trigger", question: "What has happened recently to trigger it?", hint: "Recent events or stressors that set it off.", gap: "What triggers the risk?", chip: { doc: "f", id: "precipitating" }, writes: { doc: "f", id: "precipitating" } },
-  { id: "q_keeps", question: "What is keeping it going?", hint: "What sustains the risk once it has started.", gap: "What keeps it going?", chip: { doc: "f", id: "perpetuating" }, writes: { doc: "f", id: "perpetuating" } },
-  { id: "q_pattern", question: "Is it escalating, repeating, or new?", hint: "How it has changed over days, weeks or admissions.", gap: "What is the pattern over time?", chip: { doc: "f", id: "pattern" }, writes: { doc: "f", id: "pattern" } },
-  { id: "q_when", question: "When and where is the risk highest?", hint: "Times, situations or people that make the risk rise.", gap: "When is the risk highest?", chip: { doc: "f", id: "dynamic" }, writes: { doc: "f", id: "dynamic" } },
-  { id: "q_helps", question: "What helps - their strengths and what keeps them safe?", hint: "Protective factors, and how stable or fragile they are right now.", gap: "What is protective, and how steady is it?", chip: { doc: "f", id: "protective" }, writes: { doc: "f", id: "protective" } },
-  { id: "q_engage", question: "How engaged are they, and do they recognise the risk?", hint: "Engagement and insight.", gap: "What helps them engage?", chip: { doc: "f", id: "engagement" }, writes: { doc: "f", id: "engagement" } },
-  { id: "q_do", question: "What will we do to manage, prevent or reduce the risk?", hint: "What to do when it happens, and what prevents or reduces it. Say why where it helps.", gap: "What specifically helps this patient?", chip: { doc: "r", id: "prevent" }, writes: { doc: "r", id: "prevent" } },
-  { id: "q_working", question: "How will we know it is working?", hint: "Measurable change - avoid vague. How will you KNOW the risk is reducing?", gap: "What measurable change shows the risk is reducing?", chip: { doc: "r", id: "evaluate" }, writes: { doc: "r", id: "evaluate" } },
-  { id: "q_escalate", question: "What if the plan is not working - when and how do we escalate?", hint: "Escalation thresholds. The mandatory MDT line is added for you.", gap: "When and how do you escalate?", chip: { doc: "r", id: "next" }, writes: { doc: "r", id: "next" } },
-  { id: "q_judgement", question: "Overall, what is your clinical judgement of the risk?", hint: "Short and medium term. Pull the threads together.", gap: "What is your overall judgement?", chip: { doc: "f", id: "judgement" }, writes: { doc: "f", id: "judgement" } },
-];
+interface RiskRef { key: string; label: string; chipRisk: string; domainId: string }
 
 const F_SECTION = (id: string) => FORMULATION_SECTIONS.find((s) => s.id === id)!;
 const R_SECTION = (id: string) => RMP_SECTIONS.find((s) => s.id === id)!;
@@ -214,18 +187,28 @@ function YNToggle({ value, onChange }: { value: YN; onChange: (v: YN) => void })
 }
 
 // Dated specific-examples list under a narrative field (date optional).
-function DatedExamples({ examples, onChange }: { examples?: DatedExample[]; onChange: (next: DatedExample[]) => void }) {
+// `tone` keeps the two narrative boxes visually apart: rose for what is happening
+// now, slate for what happened before. `title` names what the examples are for.
+function DatedExamples({ examples, onChange, tone = "rose", title }: {
+  examples?: DatedExample[];
+  onChange: (next: DatedExample[]) => void;
+  tone?: "rose" | "slate";
+  title?: string;
+}) {
   const list = examples || [];
   const upd = (i: number, patch: Partial<DatedExample>) => onChange(list.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
-  const selCls = "text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:ring-2 focus:ring-rose-400 focus:border-rose-400";
+  const T = tone === "slate"
+    ? { box: "border-slate-200 bg-slate-50/60", head: "text-slate-600", ring: "focus:ring-slate-400 focus:border-slate-400", link: "text-slate-700 hover:text-slate-900" }
+    : { box: "border-rose-100 bg-rose-50/40", head: "text-rose-700", ring: "focus:ring-rose-400 focus:border-rose-400", link: "text-rose-700 hover:text-rose-900" };
+  const selCls = `text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${T.ring}`;
   // Only rendered after the user adds an example (client-side), so new Date() here
   // is safe from hydration mismatch.
   const thisYear = new Date().getFullYear();
   const years = Array.from({ length: 71 }, (_, i) => thisYear - i);
   return (
-    <div className="mt-2 rounded-lg border border-rose-100 bg-rose-50/40 p-2.5 space-y-2">
-      <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700">
-        Give dated examples (date optional - just the year, the month and year, or the full date)
+    <div className={`mt-2 rounded-lg border ${T.box} p-2.5 space-y-2`}>
+      <p className={`text-[10px] font-mono uppercase tracking-wider ${T.head}`}>
+        {title || "Give dated examples"} (date optional - just the year, the month and year, or the full date)
       </p>
       {list.map((ex, i) => (
         <div key={i} className="space-y-1.5">
@@ -244,10 +227,10 @@ function DatedExamples({ examples, onChange }: { examples?: DatedExample[]; onCh
             </select>
             <button onClick={() => onChange(list.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-500 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
           </div>
-          <input type="text" value={ex.text} placeholder="what happened" aria-label="What happened" onChange={(e) => upd(i, { text: e.target.value })} className="w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400" />
+          <input type="text" value={ex.text} placeholder="what happened" aria-label="What happened" onChange={(e) => upd(i, { text: e.target.value })} className={`w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${T.ring}`} />
         </div>
       ))}
-      <button onClick={() => onChange([...list, { day: "", month: "", year: "", text: "" }])} className="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 hover:text-rose-900 transition-colors">
+      <button onClick={() => onChange([...list, { day: "", month: "", year: "", text: "" }])} className={`inline-flex items-center gap-1 text-xs font-semibold ${T.link} transition-colors`}>
         <Plus className="w-3.5 h-3.5" /> Add example
       </button>
     </div>
@@ -497,6 +480,12 @@ export default function RiskAssessmentPage() {
 
   // Domains the nurse never touched - the generate guard asks about these.
   const untouchedDomains = RISK_DOMAINS.filter((dm) => domainStatus(dm) === "untouched");
+  // "Display clinical indicators ...?" is on the form for every domain and has to
+  // be answered on any domain being worked. The guard collects the ones still blank.
+  const missingIndicators = RISK_DOMAINS.filter((dm) => {
+    const st = getDomain(dm.id);
+    return !st.noEvidence && isEngaged(st) && st.indicators === "";
+  });
   // Ticking the confirmation writes the exact S1 "No evidence ..." line for that domain.
   const confirmNil = (domainId: string, on: boolean) => {
     const st = getDomain(domainId);
@@ -512,7 +501,7 @@ export default function RiskAssessmentPage() {
     const out: RiskRef[] = [];
     for (const dm of RISK_DOMAINS) for (const label of getDomain(dm.id).risks) {
       const key = `${dm.id}::${label}`;
-      out.push({ key, label, chipRisk: SUBTYPE_RISK[key] || "" });
+      out.push({ key, label, chipRisk: SUBTYPE_RISK[key] || "", domainId: dm.id });
     }
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -589,6 +578,7 @@ export default function RiskAssessmentPage() {
   const spinUnitsFor = (dm: typeof RISK_DOMAINS[number]): RiskRef[] =>
     getDomain(dm.id).ownRmp.map((label) => ({
       key: `${dm.id}::own::${label}`,
+      domainId: dm.id,
       label,
       chipRisk: SUBTYPE_RISK[`${dm.id}::${label}`] || domainDefaultRisk(dm) || "",
     }));
@@ -679,7 +669,7 @@ export default function RiskAssessmentPage() {
   // A domain you never opened is not the same as a domain with no risks in it.
   // Anything untouched has to be confirmed nil before the documents are built.
   const doGenerate = () => {
-    if (untouchedDomains.length) { setGuardOpen(true); return; }
+    if (untouchedDomains.length || missingIndicators.length) { setGuardOpen(true); return; }
     runGenerate();
   };
 
@@ -708,7 +698,7 @@ export default function RiskAssessmentPage() {
               Answer these in your own words - it builds this risk&apos;s formulation and management plan for you. The
               headings are added when you generate.
             </p>
-            {UNIFIED_QUESTIONS.map((q) => (
+            {questionsForDomain(r.domainId).map((q) => (
               <SectionEditor key={q.id} section={questionSectionFor(q, r.chipRisk)} state={cGet(r.key, q.id)} onChange={(n) => cSet(r.key, q.id, n)} bank={{ risk: r.chipRisk, questionId: q.id }} />
             ))}
           </div>
@@ -755,7 +745,7 @@ export default function RiskAssessmentPage() {
               Answer these for the domain as a whole - it builds this domain&apos;s formulation and its single management plan.
               The headings are added when you generate.
             </p>
-            {UNIFIED_QUESTIONS.map((q) => (
+            {questionsForDomain(dm.id).map((q) => (
               <SectionEditor key={q.id} section={questionSectionForDomain(q, chipRisks)} state={cGet(key, q.id)} onChange={(n) => cSet(key, q.id, n)} bank={{ risk: chipRisks[0]?.risk || dm.id, questionId: q.id }} />
             ))}
           </div>
@@ -803,18 +793,39 @@ export default function RiskAssessmentPage() {
         )}
 
         {!st.noEvidence && (
-          <div className="space-y-3 rounded-lg bg-gray-50 p-3">
+          <div className="space-y-3">
+            {/* 1a - domain 1 only. A required answer, so it sits out in the open. */}
             {dm.safetyPrompt && (
-              <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.safetyPrompt)}</span><YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} /></div>
+              <div className={`rounded-xl border-2 p-3 ${st.safety === "" ? "border-amber-400 bg-amber-50/60" : "border-rose-200 bg-white"}`}>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <ShieldAlert className={`w-5 h-5 flex-shrink-0 ${st.safety === "" ? "text-amber-600" : "text-rose-600"}`} />
+                  <span className="text-sm font-bold text-gray-800 flex-1 min-w-[200px]">{personalise(dm.safetyPrompt)}</span>
+                  {st.safety === "" && <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700 bg-amber-100 px-2 py-1 rounded-full">Needs an answer</span>}
+                  <YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} />
+                </div>
+              </div>
             )}
-            {/* "Display clinical indicators?" shows on every domain (indicatorsPrompt
-                is always set). The chip list only appears once answered Yes; domain 5
-                (physical health) has no S1 chip list, so only "add your own" shows. */}
+
+            {/* Xa - "Display clinical indicators ...?" This is a required field on
+                SystmOne, so it gets its own bordered card rather than sitting in
+                with the narratives. Amber until it is answered. The chip list only
+                appears on Yes. */}
             {dm.indicatorsPrompt && (
-              <div>
-                <div className="flex items-center gap-3 flex-wrap"><span className="text-sm text-gray-600 flex-1 min-w-[180px]">{personalise(dm.indicatorsPrompt)}</span><YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} /></div>
+              <div className={`rounded-xl border-2 p-3 space-y-3 ${st.indicators === "" ? "border-amber-400 bg-amber-50/60" : "border-rose-300 bg-white"}`}>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <ListChecks className={`w-5 h-5 flex-shrink-0 ${st.indicators === "" ? "text-amber-600" : "text-rose-600"}`} />
+                  <span className="text-base font-bold text-gray-800 flex-1 min-w-[220px]">{personalise(dm.indicatorsPrompt)}</span>
+                  {st.indicators === "" && <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700 bg-amber-100 px-2 py-1 rounded-full">Needs an answer</span>}
+                  <YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} />
+                </div>
+                {st.indicators === "" && (
+                  <p className="text-xs text-amber-800">Answer this before you generate. It is on the form for every domain, and Yes opens the indicator list.</p>
+                )}
                 {st.indicators === "yes" && (
-                  <div className="mt-2 space-y-2">
+                  <div className="space-y-2 border-t border-rose-100 pt-3">
+                    <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700">
+                      Clinical indicators {CLINICAL_INDICATORS[dm.id]?.length ? `(${CLINICAL_INDICATORS[dm.id].length} on the form)` : ""}
+                    </p>
                     <div className="flex flex-wrap gap-1.5">
                       {(CLINICAL_INDICATORS[dm.id] || []).map((ind) => {
                         const on = st.indicatorList.includes(ind);
@@ -829,7 +840,7 @@ export default function RiskAssessmentPage() {
                       {st.customIndicators.map((ind) => {
                         const on = st.indicatorList.includes(ind);
                         return (
-                          <span key={ind} className={`inline-flex items-center rounded-lg border text-xs transition-all ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600"}`}>
+                          <span key={ind} className={`inline-flex items-center rounded-lg border text-xs transition-all ring-1 ring-purple-400 ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600"}`}>
                             <button type="button" aria-pressed={on}
                               onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
                               className="pl-2 pr-1 py-1 text-left">{ind}</button>
@@ -843,23 +854,43 @@ export default function RiskAssessmentPage() {
                 )}
               </div>
             )}
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
-              <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what has happened recently.</p>
-              <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} aria-label={personalise(dm.currentPrompt)} className={inputCls} />
-              <DatedExamples examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
-              <S1CopyBox text={withExamples(st.current, st.currentExamples)} />
+
+            {/* The two narratives. They are different questions and used to look
+                identical, so each gets its own colour, heading and wording: rose
+                for what is happening now, slate for what happened before. */}
+            <div className="rounded-xl border-2 border-rose-200 bg-white overflow-hidden">
+              <div className="flex items-center gap-2 bg-rose-600 px-3 py-2">
+                <Clock className="w-4 h-4 text-white flex-shrink-0" />
+                <span className="text-sm font-bold text-white">Now - current concerns</span>
+                <span className="ml-auto text-[11px] text-rose-100">What is happening at the moment</span>
+              </div>
+              <div className="p-3">
+                <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
+                <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what is going on now, and what has happened in the last few days or weeks.</p>
+                <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} aria-label={personalise(dm.currentPrompt)} className={inputCls} />
+                <DatedExamples tone="rose" title="Recent examples" examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
+                <S1CopyBox text={withExamples(st.current, st.currentExamples)} />
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
-              {dm.historicalSubPrompts && (
-                <ul className="mb-1.5 ml-1 space-y-0.5">
-                  {dm.historicalSubPrompts.map((sp) => <li key={sp} className="text-xs text-gray-600">- {personalise(sp)}</li>)}
-                </ul>
-              )}
-              <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} aria-label={personalise(dm.historicalPrompt)} className={inputCls} />
-              <DatedExamples examples={st.historicalExamples} onChange={(next) => setDomain(dm.id, { ...st, historicalExamples: next })} />
-              <S1CopyBox text={withExamples(st.historical, st.historicalExamples)} />
+
+            <div className="rounded-xl border-2 border-slate-300 bg-white overflow-hidden">
+              <div className="flex items-center gap-2 bg-slate-700 px-3 py-2">
+                <HistoryIcon className="w-4 h-4 text-white flex-shrink-0" />
+                <span className="text-sm font-bold text-white">Before - historical risk</span>
+                <span className="ml-auto text-[11px] text-slate-200">What has happened in the past</span>
+              </div>
+              <div className="p-3">
+                <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
+                {dm.historicalSubPrompts && (
+                  <ul className="mb-1.5 ml-1 space-y-0.5">
+                    {dm.historicalSubPrompts.map((sp) => <li key={sp} className="text-xs text-gray-600">- {personalise(sp)}</li>)}
+                  </ul>
+                )}
+                <p className="flex items-start gap-1.5 text-xs text-slate-600 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what happened before this admission, and how long it has been going on.</p>
+                <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} aria-label={personalise(dm.historicalPrompt)} className={inputCls} />
+                <DatedExamples tone="slate" title="Past events" examples={st.historicalExamples} onChange={(next) => setDomain(dm.id, { ...st, historicalExamples: next })} />
+                <S1CopyBox text={withExamples(st.historical, st.historicalExamples)} />
+              </div>
             </div>
           </div>
         )}
@@ -1041,6 +1072,13 @@ export default function RiskAssessmentPage() {
               aid - the words are yours and you stay responsible for the final entry. Nothing is saved.
             </p>
           </div>
+          <button
+            onClick={printRiskProofreadPack}
+            title="Every domain, question, chip and template in one printable document, split into trust wording and wardHub wording"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-purple-50 border border-purple-300 text-purple-700 hover:bg-purple-100 transition-colors"
+          >
+            <Printer className="w-4 h-4" /> Proofreading pack
+          </button>
           <button onClick={reset} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
             <RotateCcw className="w-4 h-4" /> Reset
           </button>
@@ -1276,6 +1314,25 @@ export default function RiskAssessmentPage() {
         {/* Generate guard - confirm the domains that were never opened */}
         <Modal isOpen={guardOpen} onClose={() => setGuardOpen(false)} title="Before the documents are built" size="md">
           <div className="space-y-4">
+            {missingIndicators.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">
+                  <strong>Still to answer.</strong>{" "}&quot;Display clinical indicators&quot; is on the form for every
+                  domain, so it needs a Yes or No on any domain you have worked.
+                </p>
+                {missingIndicators.map((dm) => (
+                  <div key={dm.id} className="flex items-center gap-3 flex-wrap rounded-xl border-2 border-amber-300 bg-amber-50/60 p-3">
+                    <span className="flex-1 min-w-[200px]">
+                      <span className="block text-sm font-bold text-gray-800">{dm.number}. {dm.title}</span>
+                      <span className="block text-xs text-gray-600 mt-0.5">{personalise(dm.indicatorsPrompt)}</span>
+                    </span>
+                    <YNToggle value={getDomain(dm.id).indicators} onChange={(v) => setDomain(dm.id, { ...getDomain(dm.id), indicators: v })} />
+                  </div>
+                ))}
+              </div>
+            )}
+            {untouchedDomains.length > 0 && (
+            <div className="space-y-2">
             <p className="text-sm text-gray-600">
               These domains have nothing in them. Confirm there are no known risks in each one and the exact
               &quot;no evidence&quot; wording goes into the risk screen for you.
@@ -1296,13 +1353,15 @@ export default function RiskAssessmentPage() {
                 </label>
               ))}
             </div>
+            </div>
+            )}
             <div className="flex flex-wrap items-center justify-end gap-2">
               <button onClick={() => setGuardOpen(false)} className="px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
                 Go back and fill them in
               </button>
               <button
                 onClick={runGenerate}
-                disabled={untouchedDomains.length > 0}
+                disabled={untouchedDomains.length > 0 || missingIndicators.length > 0}
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Sparkles className="w-4 h-4" /> Confirm and generate

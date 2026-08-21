@@ -2739,3 +2739,43 @@ were presented as one undifferentiated run.
 Still open from this pass: the chip deep dive (Mike chose the full scope - the 11 unmapped
 sub-domains, the four missing formulation sections across all risks, and a specificity
 pass over the existing banks).
+
+### W5. The chip deep dive (20 Aug) - Mike chose the full scope
+
+**1. The 11 sub-domains with no bank.** All nine of domain 6 (foetus, infant, child
+under 18) plus "Domestic appliance issues" and "Lack of social stimulation/activities".
+Domain 6 offered nothing tailored at all, which is the worst place for it. Eleven new
+risk types with full RMP and formulation banks. The child set holds one line throughout:
+**the person at risk is the CHILD, not the patient** - so the plan is about what we
+observe, what we restrict (contact, leave, discharge home) and who we refer to, and the
+formulation is about the adult's history and circumstances. Referral routes are named,
+because "make a referral" is not a plan.
+**All 36 sub-domains now map, and all 39 risks have both banks.**
+
+**2. The four missing formulation sections.** Pattern, protective and engagement were
+generic for every risk, so planning child protection offered self-harm's protective
+factors ("no current access to means", "future-oriented thinking"). Now tailored across
+all 39 - seven formulation banks each instead of four.
+
+⭐ **Judgement was deliberately left generic, and the reason is in the file.** Its chips
+are severity labels (low / moderate / high, short and medium term) that the clinician
+picks for themselves. Writing per-risk versions would mean the tool suggesting a risk
+LEVEL for a named risk. The tool offers vocabulary; it never rates or stratifies risk,
+and that line is what keeps it a drafting aid rather than something that interprets.
+
+**3. The specificity pass - what the audit actually found.** Mike asked for a rewrite of
+the existing banks. Auditing first rather than rewriting blind: across **429 risk/section
+banks and 2,591 distinct chip words, only 8 words appear under five or more risk/section
+pairs** - and every one is a genuinely cross-cutting action ("inform the ward safeguarding
+lead", "increase observation level", "refer to children's social care", "MDT review",
+"offer PRN"). Sixteen banks hold fewer than five words, and fifteen of those are the rare
+child sub-domains written today, where four honest options beats padding.
+
+**So the banks were already specific and a blanket rewrite would have been churn.** The
+one real fault found was inconsistent phrasing: `MDT / risk strategy review` in ten places
+against `MDT review` in seven, for what the trust guide treats as two separate actions.
+Normalised to the guide's own words - "MDT review" and "arrange a risk strategy meeting"
+as distinct chips. No duplicate words within any single bank.
+
+**All of it is wardHub wording carrying the purple ring, and none of it is approved.** It
+lands in Part 5 of the proofreading pack, which is now considerably longer.

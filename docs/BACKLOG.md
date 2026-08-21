@@ -2670,3 +2670,33 @@ routes and date-sorts, guard blocks and writes the right lines, user chip persis
   check, the wardHub half needs clinical judgement and has never been approved by anyone.
   Part 4 is the sub-domain to chip-bank table with the 11 unmapped ones in red.
   **This is the thing that makes the RED sign-off doable - it is now on Mike.**
+
+### W3. Tester feedback, 20 Aug (evening)
+
+Fed back by someone else using it on the ward, not Mike.
+
+- **Captured events could not be removed, and only fitted one domain.** Technically each
+  example always had an X, but only inside the domain, buried in the right narrative card
+  - from the capture box where you added it there was no record, no trace and no undo.
+  Now: the domain picker is multi-select (one event files under as many domains as it
+  fits, in a single add), and a **Captured so far** list sits under the box showing every
+  captured event with its date and which domains it went to. Removing asks which domains
+  to take it out of - Mike's call over removing everywhere - so a copy can be kept in one
+  domain and dropped from another.
+  The list is **derived** from the domains rather than tracked alongside them, so deleting
+  an example inside a domain can never leave a stale row behind. Captured examples carry
+  an `id`; ones typed straight into a domain do not, and never appear in the list.
+- **Found while testing:** the capture panel spread stale state (`{...capture}`), so two
+  quick clicks on different domain chips lost one. Switched to functional updates.
+- **"Not yet established" came out as a bare repeated sentence.** The formulation runs as
+  prose with no section headings (deliberate), so every unanswered section dropped in the
+  literal words with nothing to say WHAT was not established - four in a row was real.
+  Now the gaps come out of the prose and are named once at the end:
+  *"Not yet established: pattern over time, predisposing factors, perpetuating factors and
+  protective factors."* Still meets the trust rule about recording what could not be
+  established rather than leaving a blank, and it tells the reader which gaps are open.
+  The management plan is unchanged - each section has a heading above it, so
+  "Not yet established." reads correctly there.
+
+Checked and NOT a bug: the plan's WHAT IS THE RISK carries the `q_seen` answer as well as
+the formulation's presenting risk. That is deliberate and commented in `deriveRmp`.

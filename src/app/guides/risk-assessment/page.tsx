@@ -72,6 +72,20 @@ const emptyDomain = (): DomainState => ({
 
 interface RiskRef { key: string; label: string; chipRisk: string; domainId: string }
 
+// One captured event, as it currently sits in the domains. Derived from state
+// rather than tracked alongside it, so removing an example inside a domain can
+// never leave a stale row in the captured list.
+interface CapturedRow {
+  id: string;
+  text: string;
+  day: string; month: string; year: string;
+  places: { domainId: string; when: "current" | "historical" }[];
+}
+
+// Ids for captured events. A plain counter - no dates or randomness, so it cannot
+// differ between server and client render.
+let captureSeq = 0;
+
 const F_SECTION = (id: string) => FORMULATION_SECTIONS.find((s) => s.id === id)!;
 const R_SECTION = (id: string) => RMP_SECTIONS.find((s) => s.id === id)!;
 
@@ -356,9 +370,16 @@ export default function RiskAssessmentPage() {
   // Accordion: one domain open at a time, jump in and out in any order.
   const [openDomain, setOpenDomain] = useState<string | null>(null);
   const [guardOpen, setGuardOpen] = useState(false);
-  const [capture, setCapture] = useState({ text: "", domain: "", day: "", month: "", year: "" });
+  // One spotted event can belong to more than one domain (rare, but a fire-setting
+  // incident that is also domestic abuse is exactly the case), so the picker is
+  // multi-select and the same entry is filed under each.
+  const [capture, setCapture] = useState<{ text: string; domains: string[]; day: string; month: string; year: string }>(
+    { text: "", domains: [], day: "", month: "", year: "" }
+  );
   const [captureWhen, setCaptureWhen] = useState<"current" | "historical" | "">("");
   const [captureNote, setCaptureNote] = useState("");
+  const [removing, setRemoving] = useState<CapturedRow | null>(null);
+  const [removeSel, setRemoveSel] = useState<string[]>([]);
   const [introOpen, setIntroOpen] = useState(true);
   // Filled after mount so the year list never differs between server and client.
   const [captureYears, setCaptureYears] = useState<number[]>([]);
@@ -459,23 +480,68 @@ export default function RiskAssessmentPage() {
   // sink to the bottom, everything else sorts most recent first when it's copied.
   const addCapture = () => {
     const text = capture.text.trim();
-    if (!text || !capture.domain) return;
-    const dm = RISK_DOMAINS.find((d) => d.id === capture.domain);
-    if (!dm) return;
+    const picked = RISK_DOMAINS.filter((d) => capture.domains.includes(d.id));
+    if (!text || !picked.length) return;
     const yr = Number(capture.year);
     // Nothing older than last year belongs under "current concerns" by default.
     const when = captureWhen || (yr && yr < new Date().getFullYear() ? "historical" : "current");
-    const st = getDomain(dm.id);
-    const entry: DatedExample = { day: capture.day, month: capture.month, year: capture.year, text };
-    setDomain(dm.id, {
-      ...st,
-      noEvidence: false, // something was found, so the domain is no longer nil
-      currentExamples: when === "current" ? [...(st.currentExamples || []), entry] : st.currentExamples,
-      historicalExamples: when === "historical" ? [...(st.historicalExamples || []), entry] : st.historicalExamples,
+    const entry: DatedExample = { day: capture.day, month: capture.month, year: capture.year, text, id: `cap-${++captureSeq}` };
+    // One setDomains pass so filing under several domains is a single update.
+    setDomains((all) => {
+      const next = { ...all };
+      for (const dm of picked) {
+        const st = { ...emptyDomain(), ...(next[dm.id] || {}) };
+        next[dm.id] = {
+          ...st,
+          noEvidence: false, // something was found, so the domain is no longer nil
+          currentExamples: when === "current" ? [...(st.currentExamples || []), entry] : st.currentExamples,
+          historicalExamples: when === "historical" ? [...(st.historicalExamples || []), entry] : st.historicalExamples,
+        };
+      }
+      return next;
     });
-    setCapture({ text: "", domain: capture.domain, day: "", month: "", year: "" });
+    setCapture((c) => ({ ...c, text: "", day: "", month: "", year: "" }));
     setCaptureWhen("");
-    setCaptureNote(`Added to ${dm.number}. ${dm.short} (${when === "current" ? "current concerns" : "historical"}).`);
+    setCaptureNote(`Added to ${naturalList(picked.map((d) => `${d.number}. ${d.short}`))} (${when === "current" ? "current concerns" : "historical"}).`);
+  };
+
+  // Every captured event still present in the domains, oldest first.
+  const capturedRows = useMemo<CapturedRow[]>(() => {
+    const byId = new Map<string, CapturedRow>();
+    for (const dm of RISK_DOMAINS) {
+      const st = domains[dm.id];
+      if (!st) continue;
+      for (const when of ["current", "historical"] as const) {
+        const list = (when === "current" ? st.currentExamples : st.historicalExamples) || [];
+        for (const ex of list) {
+          if (!ex.id) continue; // typed straight into the domain, not a capture
+          const row = byId.get(ex.id);
+          if (row) row.places.push({ domainId: dm.id, when });
+          else byId.set(ex.id, { id: ex.id, text: ex.text, day: ex.day, month: ex.month, year: ex.year, places: [{ domainId: dm.id, when }] });
+        }
+      }
+    }
+    return [...byId.values()].sort((a, b) => Number(a.id.slice(4)) - Number(b.id.slice(4)));
+  }, [domains]);
+
+  // Pull a captured event out of the domains the user picked. Anywhere it was
+  // filed but not picked keeps its copy.
+  const removeCapture = (id: string, domainIds: string[]) => {
+    setDomains((all) => {
+      const next = { ...all };
+      for (const domainId of domainIds) {
+        const st = next[domainId];
+        if (!st) continue;
+        next[domainId] = {
+          ...st,
+          currentExamples: (st.currentExamples || []).filter((e) => e.id !== id),
+          historicalExamples: (st.historicalExamples || []).filter((e) => e.id !== id),
+        };
+      }
+      return next;
+    });
+    setRemoving(null);
+    setCaptureNote("");
   };
 
   // Domains the nurse never touched - the generate guard asks about these.
@@ -599,10 +665,22 @@ export default function RiskAssessmentPage() {
     for (const dm of planDomains) {
       const secs = deriveForm(capByRisk[dm.id]);
       secs["predisposing"] = foldChips(secs["predisposing"], routedIndicators(dm, "formulation"));
-      const bodies = FORMULATION_SECTIONS.map((sec) => buildContent(secs[sec.id])).filter(Boolean);
-      if (!bodies.length) continue;
+      // The formulation runs as prose with no section headings, so a bare "Not yet
+      // established." lands with nothing to say WHAT is not established - four of
+      // them in a row was the result. Gaps come out of the prose and are named
+      // once at the end instead, which still meets the trust rule about recording
+      // what could not be established rather than leaving a blank.
+      const bodies: string[] = [];
+      const gaps: string[] = [];
+      for (const sec of FORMULATION_SECTIONS) {
+        if (secs[sec.id]?.na) { gaps.push(sec.heading.toLowerCase()); continue; }
+        const body = buildContent(secs[sec.id]);
+        if (body) bodies.push(body);
+      }
+      if (!bodies.length && !gaps.length) continue;
       const paras: string[] = [];
       for (let i = 0; i < bodies.length; i += 3) paras.push(bodies.slice(i, i + 3).join(" "));
+      if (gaps.length) paras.push(`Not yet established: ${naturalList(gaps)}.`);
       perDomain.push([TXT_BAR, dm.title, TXT_BAR, paras.join("\n\n")].join("\n"));
     }
     if (!perDomain.length) return "";
@@ -1116,32 +1194,38 @@ export default function RiskAssessmentPage() {
           </div>
           <textarea
             value={capture.text}
-            onChange={(e) => { setCapture({ ...capture, text: e.target.value }); setCaptureNote(""); }}
+            onChange={(e) => { setCapture((c) => ({ ...c, text: e.target.value })); setCaptureNote(""); }}
             rows={2}
             placeholder="Paste or type what you spotted..."
             aria-label="What you spotted"
             autoComplete="off"
             className={inputCls}
           />
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700 mb-1.5">Which domain? Pick as many as it fits</p>
+            <div className="flex flex-wrap gap-1.5">
+              {RISK_DOMAINS.map((dm) => {
+                const on = capture.domains.includes(dm.id);
+                return (
+                  <button key={dm.id} type="button" aria-pressed={on}
+                    onClick={() => setCapture((c) => ({ ...c, domains: on ? c.domains.filter((x) => x !== dm.id) : [...c.domains, dm.id] }))}
+                    className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
+                    {dm.number}. {dm.short}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           <div className="flex flex-wrap items-center gap-2">
-            <select
-              value={capture.domain}
-              onChange={(e) => setCapture({ ...capture, domain: e.target.value })}
-              aria-label="Which domain"
-              className="text-sm border border-gray-200 rounded-lg px-2.5 py-2 bg-white focus:ring-2 focus:ring-rose-400 focus:border-rose-400 flex-1 min-w-[220px]"
-            >
-              <option value="">Which domain?</option>
-              {RISK_DOMAINS.map((dm) => <option key={dm.id} value={dm.id}>{dm.number}. {dm.short}</option>)}
-            </select>
-            <select value={capture.day} onChange={(e) => setCapture({ ...capture, day: e.target.value })} aria-label="Day" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
+            <select value={capture.day} onChange={(e) => setCapture((c) => ({ ...c, day: e.target.value }))} aria-label="Day" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
               <option value="">Day</option>
               {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
             </select>
-            <select value={capture.month} onChange={(e) => setCapture({ ...capture, month: e.target.value })} aria-label="Month" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
+            <select value={capture.month} onChange={(e) => setCapture((c) => ({ ...c, month: e.target.value }))} aria-label="Month" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
               <option value="">Month</option>
               {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
             </select>
-            <select value={capture.year} onChange={(e) => setCapture({ ...capture, year: e.target.value })} aria-label="Year" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
+            <select value={capture.year} onChange={(e) => setCapture((c) => ({ ...c, year: e.target.value }))} aria-label="Year" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
               <option value="">Year</option>
               {captureYears.map((y) => <option key={y} value={String(y)}>{y}</option>)}
             </select>
@@ -1155,10 +1239,10 @@ export default function RiskAssessmentPage() {
             </div>
             <button
               onClick={addCapture}
-              disabled={!capture.text.trim() || !capture.domain}
+              disabled={!capture.text.trim() || !capture.domains.length}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              <Plus className="w-4 h-4" /> Add to domain
+              <Plus className="w-4 h-4" /> Add{capture.domains.length > 1 ? ` to ${capture.domains.length} domains` : " to domain"}
             </button>
           </div>
           {captureNote && (
@@ -1166,7 +1250,90 @@ export default function RiskAssessmentPage() {
               <CheckCircle2 className="w-4 h-4" /> {captureNote}
             </p>
           )}
+
+          {/* What has been captured so far, so it can be found and taken back out
+              without hunting through the domains for it. */}
+          {capturedRows.length > 0 && (
+            <div className="rounded-xl border border-rose-200 bg-white p-3 space-y-2">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700">
+                Captured so far ({capturedRows.length})
+              </p>
+              {capturedRows.map((row) => {
+                const dated = formatPartialDate(row);
+                return (
+                  <div key={row.id} className="flex items-start gap-2 border-b border-gray-100 last:border-0 pb-2 last:pb-0">
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-sm text-gray-800">
+                        {dated && <span className="font-semibold text-gray-500">{dated} - </span>}{row.text}
+                      </span>
+                      <span className="block text-xs text-gray-500 mt-0.5">
+                        {naturalList(row.places.map((p) => {
+                          const dm = RISK_DOMAINS.find((d) => d.id === p.domainId);
+                          return `${dm?.number}. ${dm?.short} (${p.when === "current" ? "now" : "before"})`;
+                        }))}
+                      </span>
+                    </span>
+                    <button
+                      onClick={() => { setRemoving(row); setRemoveSel(row.places.map((p) => p.domainId)); }}
+                      aria-label={`Remove "${row.text}"`}
+                      className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0 p-1"
+                    ><X className="w-4 h-4" /></button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
+
+        {/* Removing a captured event - it may sit in more than one domain, so ask
+            which ones to take it out of rather than guessing. */}
+        <Modal isOpen={!!removing} onClose={() => setRemoving(null)} title="Remove this event" size="sm">
+          {removing && (
+            <div className="space-y-4">
+              <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">
+                {formatPartialDate(removing) && <span className="font-semibold text-gray-500">{formatPartialDate(removing)} - </span>}
+                {removing.text}
+              </p>
+              <p className="text-sm text-gray-600">
+                {removing.places.length > 1
+                  ? "This event is filed under more than one domain. Take it out of the ones you tick."
+                  : "Take this event out of:"}
+              </p>
+              <div className="space-y-2">
+                {removing.places.map((p) => {
+                  const dm = RISK_DOMAINS.find((d) => d.id === p.domainId);
+                  const on = removeSel.includes(p.domainId);
+                  return (
+                    <label key={p.domainId} className="flex items-center gap-3 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-rose-300 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={on}
+                        onChange={() => setRemoveSel(on ? removeSel.filter((x) => x !== p.domainId) : [...removeSel, p.domainId])}
+                        className="rounded border-gray-300 text-rose-600 w-4 h-4 flex-shrink-0"
+                      />
+                      <span className="text-sm font-semibold text-gray-800">
+                        {dm?.number}. {dm?.title}
+                        <span className="block text-xs font-normal text-gray-500">{p.when === "current" ? "Current concerns" : "Historical"}</span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+              <div className="flex flex-wrap items-center justify-end gap-2">
+                <button onClick={() => setRemoving(null)} className="px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                  Keep it
+                </button>
+                <button
+                  onClick={() => removeCapture(removing.id, removeSel)}
+                  disabled={!removeSel.length}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold bg-red-600 text-white hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                >
+                  <X className="w-4 h-4" /> Remove from {removeSel.length === removing.places.length && removing.places.length > 1 ? "all" : removeSel.length === 1 ? "1 domain" : `${removeSel.length} domains`}
+                </button>
+              </div>
+            </div>
+          )}
+        </Modal>
 
         {/* The seven domains, top down. Click one to open it, others close. */}
         <div className="space-y-3">

@@ -24,7 +24,10 @@ import {
 } from "lucide-react";
 
 // ---- state ----
-export interface DatedExample { day: string; month: string; year: string; text: string }
+// `id` is set only on examples added through the risk tool's quick capture, so
+// one event can be traced across every domain it was filed under and pulled back
+// out again. Examples typed straight into a domain have no id.
+export interface DatedExample { day: string; month: string; year: string; text: string; id?: string }
 export interface SecState { chips: string[]; text: string; na: boolean; examples?: DatedExample[] }
 export type AllState = Record<string, SecState>;
 export const EMPTY: SecState = { chips: [], text: "", na: false };

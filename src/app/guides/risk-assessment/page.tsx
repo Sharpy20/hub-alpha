@@ -213,7 +213,7 @@ function YNToggle({ value, onChange }: { value: YN; onChange: (v: YN) => void })
     <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
       {(["yes", "no"] as const).map((v) => (
         <button key={v} type="button" onClick={() => onChange(value === v ? "" : v)} aria-pressed={value === v}
-          className={`px-3 py-1.5 text-sm font-semibold transition-colors ${value === v ? (v === "yes" ? "bg-rose-600 text-white" : "bg-emerald-600 text-white") : "bg-white text-gray-500 hover:bg-gray-50"}`}>
+          className={`px-3 py-1.5 text-sm font-semibold transition-colors ${value === v ? (v === "yes" ? "bg-sky-700 text-white" : "bg-emerald-600 text-white") : "bg-white text-gray-500 hover:bg-gray-50"}`}>
           {v === "yes" ? "Yes" : "No"}
         </button>
       ))}
@@ -233,8 +233,8 @@ function DatedExamples({ examples, onChange, tone = "rose", title }: {
   const list = examples || [];
   const upd = (i: number, patch: Partial<DatedExample>) => onChange(list.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
   const T = tone === "slate"
-    ? { box: "border-slate-200 bg-slate-50/60", head: "text-slate-600", ring: "focus:ring-slate-400 focus:border-slate-400", link: "text-slate-700 hover:text-slate-900" }
-    : { box: "border-rose-100 bg-rose-50/40", head: "text-rose-700", ring: "focus:ring-rose-400 focus:border-rose-400", link: "text-rose-700 hover:text-rose-900" };
+    ? { box: "border-slate-200 bg-slate-50/60", head: "text-slate-500", ring: "focus:ring-slate-400 focus:border-slate-400", link: "text-slate-700 hover:text-slate-900" }
+    : { box: "border-sky-200 bg-sky-50/60", head: "text-sky-800", ring: "focus:ring-sky-500 focus:border-sky-500", link: "text-sky-800 hover:text-sky-900" };
   const selCls = `text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${T.ring}`;
   // Only rendered after the user adds an example (client-side), so new Date() here
   // is safe from hydration mismatch.
@@ -330,12 +330,12 @@ function AddSubDomain({ onAdd, placeholder = "add another sub-domain..." }: { on
         onChange={(e) => setVal(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); submit(); } }}
         placeholder={placeholder}
-        className="flex-1 min-w-0 text-sm border border-dashed border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-rose-400 focus:border-rose-400"
+        className="flex-1 min-w-0 text-sm border border-dashed border-gray-300 rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
       />
       <button
         onClick={submit}
         disabled={!val.trim()}
-        className="inline-flex items-center gap-1 text-xs font-semibold text-rose-700 hover:text-rose-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0 px-2 py-1.5"
+        className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex-shrink-0 px-2 py-1.5"
       >
         <Plus className="w-3.5 h-3.5" /> Add
       </button>
@@ -370,7 +370,7 @@ function Collapse({ icon: Icon, title, children, tone = "gray" }: {
   return (
     <div className="rounded-xl border border-gray-100 bg-white overflow-hidden">
       <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
-        <Icon className={`w-4 h-4 ${tone === "rose" ? "text-rose-500" : "text-gray-500"}`} />
+        <Icon className={`w-4 h-4 ${tone === "rose" ? "text-slate-400" : "text-gray-500"}`} />
         <span className="font-bold text-gray-800 flex-1">{title}</span>
         {open ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
       </button>
@@ -379,7 +379,7 @@ function Collapse({ icon: Icon, title, children, tone = "gray" }: {
   );
 }
 
-const inputCls = "w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-rose-400 focus:border-rose-400";
+const inputCls = "w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:border-sky-500";
 
 export default function RiskAssessmentPage() {
   const v2Href = useV2Href();
@@ -785,18 +785,18 @@ export default function RiskAssessmentPage() {
     const open = openRisks.has(r.key);
     const done = UNIFIED_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[r.key]?.[q.id]) ? 1 : 0), 0);
     return (
-      <div key={r.key} className="rounded-xl border border-rose-200 bg-white">
+      <div key={r.key} className="rounded-xl border border-slate-200 bg-white">
         {/* Header styled like a selected chip; sticks below the app header (top-16)
             so you always see which risk you're on while scrolling its questions. */}
         <button
           onClick={() => toggleOpenRisk(r.key)}
           className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${
-            open ? "bg-rose-600 text-white shadow-sm" : "bg-rose-50 text-rose-900 hover:bg-rose-100"
+            open ? "bg-slate-700 text-white shadow-sm" : "bg-slate-100 text-slate-800 hover:bg-slate-200"
           }`}
         >
           <span className="font-bold text-sm flex-1">{r.label}</span>
-          <span className={`text-[10px] ${open ? "text-rose-100" : "text-rose-600"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
-          {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-rose-400" />}
+          <span className={`text-[10px] ${open ? "text-slate-200" : "text-slate-500"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
+          {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
         </button>
         {open && (
           <div className="p-3 space-y-2">
@@ -836,24 +836,24 @@ export default function RiskAssessmentPage() {
     const open = openRisks.has(key);
     const done = UNIFIED_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[key]?.[q.id]) ? 1 : 0), 0);
     return (
-      <div key={key} className="rounded-xl border border-rose-200 bg-white">
+      <div key={key} className="rounded-xl border border-slate-200 bg-white">
         <button
           onClick={() => toggleOpenRisk(key)}
-          className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${open ? "bg-rose-600 text-white shadow-sm" : "bg-rose-50 text-rose-900 hover:bg-rose-100"}`}
+          className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${open ? "bg-slate-700 text-white shadow-sm" : "bg-slate-100 text-slate-800 hover:bg-slate-200"}`}
         >
           <span className="font-bold text-sm flex-1">Build the plan for: {planTitle(dm)}</span>
-          <span className={`text-[10px] ${open ? "text-rose-100" : "text-rose-600"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
-          {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-rose-400" />}
+          <span className={`text-[10px] ${open ? "text-slate-200" : "text-slate-500"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
+          {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
         </button>
         {open && (
           <div className="p-3 space-y-2">
             {/* Why anyone is answering these at all. The trust guidance covers the
                 management plan only - the formulation half is best practice with
                 no trust template, which is worth being straight about. */}
-            <div className="rounded-lg border border-rose-200 bg-rose-50/50 p-3 space-y-1.5 text-xs text-gray-700">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-1.5 text-xs text-gray-700">
               <p className="font-bold text-gray-800">Why you are answering these</p>
               <p>
-                <span className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-700">Plan</span>{" "}
+                <span className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">Plan</span>{" "}
                 Six of them build the <strong>Risk Management Plan</strong> for {planTitle(dm)}. Every patient must have one
                 within 24 hours of admission, and it has a fixed trust template - these questions are its five headings.
               </p>
@@ -883,7 +883,7 @@ export default function RiskAssessmentPage() {
             const on = st.risks.includes(label);
             return (
               <button key={label} onClick={() => toggleSub(dm.id, label)} aria-pressed={on}
-                className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
+                className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all text-left ${on ? "bg-sky-700 border-sky-700 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-slate-400 hover:bg-slate-50"}`}>
                 {label}
               </button>
             );
@@ -891,7 +891,7 @@ export default function RiskAssessmentPage() {
           {st.customSubs.map((label) => {
             const on = st.risks.includes(label);
             return (
-              <span key={label} className={`inline-flex items-center rounded-lg border text-sm transition-all ${on ? "bg-rose-600 border-rose-600 text-white" : "bg-white border-gray-200 text-gray-600"}`}>
+              <span key={label} className={`inline-flex items-center rounded-lg border text-sm transition-all ${on ? "bg-sky-700 border-sky-700 text-white" : "bg-white border-gray-200 text-gray-600"}`}>
                 <button onClick={() => toggleSub(dm.id, label)} aria-pressed={on} className="pl-2.5 pr-1 py-1.5 font-medium text-left">{label}</button>
                 <button onClick={() => removeCustomSub(dm.id, label)} aria-label={`Remove ${label}`} className={`pr-2 pl-0.5 py-1.5 ${on ? "text-white/80 hover:text-white" : "text-gray-500 hover:text-red-600"}`}><X className="w-3.5 h-3.5" /></button>
               </span>
@@ -915,9 +915,9 @@ export default function RiskAssessmentPage() {
           <div className="space-y-3">
             {/* 1a - domain 1 only. A required answer, so it sits out in the open. */}
             {dm.safetyPrompt && (
-              <div className={`rounded-xl border-2 p-3 ${st.safety === "" ? "border-amber-400 bg-amber-50/60" : "border-rose-200 bg-white"}`}>
+              <div className={`rounded-xl border-2 p-3 ${st.safety === "" ? "border-amber-400 bg-amber-50/60" : "border-slate-200 bg-white"}`}>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <ShieldAlert className={`w-5 h-5 flex-shrink-0 ${st.safety === "" ? "text-amber-600" : "text-rose-600"}`} />
+                  <ShieldAlert className={`w-5 h-5 flex-shrink-0 ${st.safety === "" ? "text-amber-600" : "text-slate-500"}`} />
                   <span className="text-sm font-bold text-gray-800 flex-1 min-w-[200px]">{personalise(dm.safetyPrompt)}</span>
                   {st.safety === "" && <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700 bg-amber-100 px-2 py-1 rounded-full">Needs an answer</span>}
                   <YNToggle value={st.safety} onChange={(v) => updateDomain(dm.id, (d) => ({ ...d, safety: v }))} />
@@ -930,9 +930,9 @@ export default function RiskAssessmentPage() {
                 with the narratives. Amber until it is answered. The chip list only
                 appears on Yes. */}
             {dm.indicatorsPrompt && (
-              <div className={`rounded-xl border-2 p-3 space-y-3 ${st.indicators === "" ? "border-amber-400 bg-amber-50/60" : "border-rose-300 bg-white"}`}>
+              <div className={`rounded-xl border-2 p-3 space-y-3 ${st.indicators === "" ? "border-amber-400 bg-amber-50/60" : "border-slate-300 bg-white"}`}>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <ListChecks className={`w-5 h-5 flex-shrink-0 ${st.indicators === "" ? "text-amber-600" : "text-rose-600"}`} />
+                  <ListChecks className={`w-5 h-5 flex-shrink-0 ${st.indicators === "" ? "text-amber-600" : "text-slate-500"}`} />
                   <span className="text-base font-bold text-gray-800 flex-1 min-w-[220px]">{personalise(dm.indicatorsPrompt)}</span>
                   {st.indicators === "" && <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700 bg-amber-100 px-2 py-1 rounded-full">Needs an answer</span>}
                   <YNToggle value={st.indicators} onChange={(v) => updateDomain(dm.id, (d) => ({ ...d, indicators: v }))} />
@@ -941,8 +941,8 @@ export default function RiskAssessmentPage() {
                   <p className="text-xs text-amber-800">Answer this before you generate. It is on the form for every domain, and Yes opens the indicator list.</p>
                 )}
                 {st.indicators === "yes" && (
-                  <div className="space-y-2 border-t border-rose-100 pt-3">
-                    <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700">
+                  <div className="space-y-2 border-t border-slate-200 pt-3">
+                    <p className="text-[10px] font-mono uppercase tracking-wider text-slate-600">
                       Clinical indicators {CLINICAL_INDICATORS[dm.id]?.length ? `(${CLINICAL_INDICATORS[dm.id].length} on the form)` : ""}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
@@ -951,7 +951,7 @@ export default function RiskAssessmentPage() {
                         return (
                           <button key={ind} type="button" aria-pressed={on}
                             onClick={() => updateDomain(dm.id, (d) => ({ ...d, indicatorList: d.indicatorList.includes(ind) ? d.indicatorList.filter((x) => x !== ind) : [...d.indicatorList, ind] }))}
-                            className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
+                            className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-sky-700 border-sky-700 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-slate-400 hover:bg-slate-50"}`}>
                             {ind}
                           </button>
                         );
@@ -959,7 +959,7 @@ export default function RiskAssessmentPage() {
                       {st.customIndicators.map((ind) => {
                         const on = st.indicatorList.includes(ind);
                         return (
-                          <span key={ind} className={`inline-flex items-center rounded-lg border text-xs transition-all ring-1 ring-purple-400 ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600"}`}>
+                          <span key={ind} className={`inline-flex items-center rounded-lg border text-xs transition-all ring-1 ring-purple-400 ${on ? "bg-sky-700 border-sky-700 text-white font-medium" : "bg-white border-gray-200 text-gray-600"}`}>
                             <button type="button" aria-pressed={on}
                               onClick={() => updateDomain(dm.id, (d) => ({ ...d, indicatorList: d.indicatorList.includes(ind) ? d.indicatorList.filter((x) => x !== ind) : [...d.indicatorList, ind] }))}
                               className="pl-2 pr-1 py-1 text-left">{ind}</button>
@@ -977,15 +977,15 @@ export default function RiskAssessmentPage() {
             {/* The two narratives. They are different questions and used to look
                 identical, so each gets its own colour, heading and wording: rose
                 for what is happening now, slate for what happened before. */}
-            <div className="rounded-xl border-2 border-rose-200 bg-white overflow-hidden">
-              <div className="flex items-center gap-2 bg-rose-600 px-3 py-2">
+            <div className="rounded-xl border-2 border-slate-200 bg-white overflow-hidden">
+              <div className="flex items-center gap-2 bg-sky-700 px-3 py-2">
                 <Clock className="w-4 h-4 text-white flex-shrink-0" />
                 <span className="text-sm font-bold text-white">Now - current concerns</span>
-                <span className="ml-auto text-[11px] text-rose-100">What is happening at the moment</span>
+                <span className="ml-auto text-[11px] text-slate-200">What is happening at the moment</span>
               </div>
               <div className="p-3">
                 <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
-                <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what is going on now, and what has happened in the last few days or weeks.</p>
+                <p className="flex items-start gap-1.5 text-xs text-slate-600 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what is going on now, and what has happened in the last few days or weeks.</p>
                 <textarea value={st.current} onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, current: e.target.value }))} rows={2} aria-label={personalise(dm.currentPrompt)} className={inputCls} />
                 <DatedExamples tone="rose" title="Recent examples" examples={st.currentExamples} onChange={(next) => updateDomain(dm.id, (d) => ({ ...d, currentExamples: next }))} />
                 <S1CopyBox text={withExamples(st.current, st.currentExamples)} />
@@ -993,7 +993,7 @@ export default function RiskAssessmentPage() {
             </div>
 
             <div className="rounded-xl border-2 border-slate-300 bg-white overflow-hidden">
-              <div className="flex items-center gap-2 bg-slate-700 px-3 py-2">
+              <div className="flex items-center gap-2 bg-slate-500 px-3 py-2">
                 <HistoryIcon className="w-4 h-4 text-white flex-shrink-0" />
                 <span className="text-sm font-bold text-white">Before - historical risk</span>
                 <span className="ml-auto text-[11px] text-slate-200">What has happened in the past</span>
@@ -1039,7 +1039,7 @@ export default function RiskAssessmentPage() {
         {/* The ONE domain question set. */}
         {!st.noEvidence && (st.risks.length > 0 || st.indicatorList.length > 0 || st.current.trim() !== "" || st.historical.trim() !== "") && (
           <div className="space-y-2">
-            <p className="text-[11px] font-mono uppercase tracking-wider text-rose-700">Answer the questions for this domain</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-slate-600">Answer the questions for this domain</p>
             {renderFoldNote(dm)}
             {renderDomainCapture(dm)}
           </div>
@@ -1113,9 +1113,9 @@ export default function RiskAssessmentPage() {
         </div>
 
         {/* Intro / explainer */}
-        <div className="rounded-2xl border border-rose-100 bg-white overflow-hidden">
+        <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden">
           <button onClick={() => setIntroOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
-            <Info className="w-4 h-4 text-rose-500 flex-shrink-0" />
+            <Info className="w-4 h-4 text-slate-400 flex-shrink-0" />
             <span className="font-bold text-gray-800 flex-1">New to this? How the tool works</span>
             {introOpen ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
           </button>
@@ -1128,17 +1128,17 @@ export default function RiskAssessmentPage() {
               </p>
 
               {/* Flow visual */}
-              <div className="rounded-xl border border-rose-100 bg-rose-50/40 p-3">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
                 <div className="grid sm:grid-cols-3 gap-2">
                   {[
                     { n: 1, icon: ShieldAlert, title: "Screen with the patient", body: "Work the seven SystmOne risk domains together, ticking what applies." },
                     { n: 2, icon: ListChecks, title: "Answer the questions", body: "For each domain, answer a short set of plain questions in the patient's words." },
                     { n: 3, icon: Sparkles, title: "Generate", body: "One click turns your answers into three documents to copy across." },
                   ].map((s) => (
-                    <div key={s.n} className="rounded-lg bg-white border border-rose-100 p-3">
+                    <div key={s.n} className="rounded-lg bg-white border border-slate-200 p-3">
                       <div className="flex items-center gap-2 mb-1.5">
-                        <span className="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">{s.n}</span>
-                        <s.icon className="w-4 h-4 text-rose-500" />
+                        <span className="w-6 h-6 rounded-full bg-sky-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">{s.n}</span>
+                        <s.icon className="w-4 h-4 text-slate-400" />
                       </div>
                       <p className="text-sm font-bold text-gray-800">{s.title}</p>
                       <p className="text-xs text-gray-500 mt-0.5">{s.body}</p>
@@ -1147,9 +1147,9 @@ export default function RiskAssessmentPage() {
                 </div>
                 <div className="flex items-center justify-center flex-wrap gap-1.5 mt-3">
                   <span className="text-xs font-semibold text-gray-500">Generates</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-rose-400" />
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                   {["Risk Screen", "Formulation", "Risk Management Plan"].map((d) => (
-                    <span key={d} className="text-xs font-semibold text-rose-700 bg-rose-100 px-2 py-1 rounded-full">{d}</span>
+                    <span key={d} className="text-xs font-semibold text-slate-600 bg-slate-100 px-2 py-1 rounded-full">{d}</span>
                   ))}
                 </div>
                 <p className="text-center text-[11px] text-gray-500 mt-2">Copy each one into SystmOne and tick it off as you go.</p>
@@ -1157,7 +1157,7 @@ export default function RiskAssessmentPage() {
 
               {/* Before you start */}
               <div>
-                <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700 mb-1.5">Before you start</p>
+                <p className="text-[10px] font-mono uppercase tracking-wider text-slate-600 mb-1.5">Before you start</p>
                 <ul className="space-y-1.5">
                   {[
                     "If a risk screen already exists in the patient's record, open it and use that information.",
@@ -1213,7 +1213,7 @@ export default function RiskAssessmentPage() {
                   <ul className="space-y-1">
                     {blk.points.map((p, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                        <span className="w-1.5 h-1.5 rounded-full bg-rose-300 mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-1.5 flex-shrink-0" />
                         <span>{p}</span>
                       </li>
                     ))}
@@ -1225,9 +1225,9 @@ export default function RiskAssessmentPage() {
         </div>
 
         {/* Quick capture - drop a risk you spotted straight into a domain */}
-        <div className="rounded-2xl border-2 border-dashed border-rose-200 bg-rose-50/30 p-4 space-y-3">
+        <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-4 space-y-3">
           <div className="flex items-center gap-2">
-            <ClipboardCheck className="w-5 h-5 text-rose-600 flex-shrink-0" />
+            <ClipboardCheck className="w-5 h-5 text-slate-500 flex-shrink-0" />
             <div className="flex-1">
               <h2 className="font-bold text-gray-800">Spotted a risk? Drop it here</h2>
               <p className="text-xs text-gray-500">Reading an old risk tool, an AMHP report, section papers or case notes? Paste what you found, say which domain it belongs to, and it lands there. Dates are optional and it sorts them for you.</p>
@@ -1243,14 +1243,14 @@ export default function RiskAssessmentPage() {
             className={inputCls}
           />
           <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700 mb-1.5">Which domain? Pick as many as it fits</p>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-slate-600 mb-1.5">Which domain? Pick as many as it fits</p>
             <div className="flex flex-wrap gap-1.5">
               {RISK_DOMAINS.map((dm) => {
                 const on = capture.domains.includes(dm.id);
                 return (
                   <button key={dm.id} type="button" aria-pressed={on}
                     onClick={() => setCapture((c) => ({ ...c, domains: on ? c.domains.filter((x) => x !== dm.id) : [...c.domains, dm.id] }))}
-                    className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
+                    className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ${on ? "bg-sky-700 border-sky-700 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-slate-400 hover:bg-slate-50"}`}>
                     {dm.number}. {dm.short}
                   </button>
                 );
@@ -1258,22 +1258,22 @@ export default function RiskAssessmentPage() {
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <select value={capture.day} onChange={(e) => setCapture((c) => ({ ...c, day: e.target.value }))} aria-label="Day" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
+            <select value={capture.day} onChange={(e) => setCapture((c) => ({ ...c, day: e.target.value }))} aria-label="Day" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-sky-500">
               <option value="">Day</option>
               {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
             </select>
-            <select value={capture.month} onChange={(e) => setCapture((c) => ({ ...c, month: e.target.value }))} aria-label="Month" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
+            <select value={capture.month} onChange={(e) => setCapture((c) => ({ ...c, month: e.target.value }))} aria-label="Month" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-sky-500">
               <option value="">Month</option>
               {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
             </select>
-            <select value={capture.year} onChange={(e) => setCapture((c) => ({ ...c, year: e.target.value }))} aria-label="Year" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-rose-400">
+            <select value={capture.year} onChange={(e) => setCapture((c) => ({ ...c, year: e.target.value }))} aria-label="Year" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-sky-500">
               <option value="">Year</option>
               {captureYears.map((y) => <option key={y} value={String(y)}>{y}</option>)}
             </select>
             <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
               {([["current", "Current"], ["historical", "Historical"]] as const).map(([v, label]) => (
                 <button key={v} type="button" onClick={() => setCaptureWhen(captureWhen === v ? "" : v)} aria-pressed={captureWhen === v}
-                  className={`px-3 py-2 text-sm font-semibold transition-colors ${captureWhen === v ? "bg-rose-600 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}>
+                  className={`px-3 py-2 text-sm font-semibold transition-colors ${captureWhen === v ? "bg-sky-700 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}>
                   {label}
                 </button>
               ))}
@@ -1281,7 +1281,7 @@ export default function RiskAssessmentPage() {
             <button
               onClick={addCapture}
               disabled={!capture.text.trim() || !capture.domains.length}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold bg-sky-700 text-white hover:bg-sky-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <Plus className="w-4 h-4" /> Add{capture.domains.length > 1 ? ` to ${capture.domains.length} domains` : " to domain"}
             </button>
@@ -1295,8 +1295,8 @@ export default function RiskAssessmentPage() {
           {/* What has been captured so far, so it can be found and taken back out
               without hunting through the domains for it. */}
           {capturedRows.length > 0 && (
-            <div className="rounded-xl border border-rose-200 bg-white p-3 space-y-2">
-              <p className="text-[10px] font-mono uppercase tracking-wider text-rose-700">
+            <div className="rounded-xl border border-slate-200 bg-white p-3 space-y-2">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-slate-600">
                 Captured so far ({capturedRows.length})
               </p>
               {capturedRows.map((row) => {
@@ -1345,12 +1345,12 @@ export default function RiskAssessmentPage() {
                   const dm = RISK_DOMAINS.find((d) => d.id === p.domainId);
                   const on = removeSel.includes(p.domainId);
                   return (
-                    <label key={p.domainId} className="flex items-center gap-3 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-rose-300 transition-colors">
+                    <label key={p.domainId} className="flex items-center gap-3 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-slate-400 transition-colors">
                       <input
                         type="checkbox"
                         checked={on}
                         onChange={() => setRemoveSel(on ? removeSel.filter((x) => x !== p.domainId) : [...removeSel, p.domainId])}
-                        className="rounded border-gray-300 text-rose-600 w-4 h-4 flex-shrink-0"
+                        className="rounded border-gray-300 text-slate-500 w-4 h-4 flex-shrink-0"
                       />
                       <span className="text-sm font-semibold text-gray-800">
                         {dm?.number}. {dm?.title}
@@ -1379,7 +1379,7 @@ export default function RiskAssessmentPage() {
         {/* The seven domains, top down. Click one to open it, others close. */}
         <div className="space-y-3">
           <div className="flex items-center gap-3 flex-wrap">
-            <h2 className="font-bold text-gray-800 flex items-center gap-2"><ShieldAlert className="w-5 h-5 text-rose-600" /> The seven risk domains</h2>
+            <h2 className="font-bold text-gray-800 flex items-center gap-2"><ShieldAlert className="w-5 h-5 text-slate-500" /> The seven risk domains</h2>
             <div className="flex items-center gap-1.5 flex-1 min-w-[180px]">
               {RISK_DOMAINS.map((dm) => {
                 const s = domainStatus(dm);
@@ -1419,13 +1419,13 @@ export default function RiskAssessmentPage() {
                 `${ans}/${UNIFIED_QUESTIONS.length} answered`,
               ].filter(Boolean).join("  ·  ");
             return (
-              <div key={dm.id} className={`rounded-2xl border-2 bg-white transition-all ${tone} ${open ? "shadow-lg" : "hover:border-rose-300"}`}>
+              <div key={dm.id} className={`rounded-2xl border-2 bg-white transition-all ${tone} ${open ? "shadow-lg" : "hover:border-slate-400"}`}>
                 <button
                   onClick={() => setOpenDomain(open ? null : dm.id)}
                   aria-expanded={open}
-                  className={`w-full flex items-center gap-3 p-4 text-left rounded-2xl transition-colors ${open ? "bg-gradient-to-r from-rose-600 to-red-700 text-white rounded-b-none" : "hover:bg-rose-50/40"}`}
+                  className={`w-full flex items-center gap-3 p-4 text-left rounded-2xl transition-colors ${open ? "bg-slate-700 text-white rounded-b-none" : "hover:bg-slate-50"}`}
                 >
-                  <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 ${open ? "bg-white/20 text-white" : "bg-rose-50 text-rose-700"}`}>
+                  <span className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg flex-shrink-0 ${open ? "bg-white/20 text-white" : "bg-slate-50 text-slate-600"}`}>
                     {dm.number}
                   </span>
                   <span className="flex-1 min-w-0">
@@ -1439,7 +1439,7 @@ export default function RiskAssessmentPage() {
                   {open ? <ChevronDown className="w-5 h-5 flex-shrink-0" /> : <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                 </button>
                 {open && (
-                  <div className="p-4 space-y-3 border-t border-rose-100">
+                  <div className="p-4 space-y-3 border-t border-slate-200">
                     <p className="text-xs text-gray-500">
                       This section is the SystmOne risk screen for this domain. Tick the sub-domains and clinical
                       indicators on SystmOne as you go (or tick &quot;no evidence&quot; and move on), type the two narratives,
@@ -1460,11 +1460,11 @@ export default function RiskAssessmentPage() {
         </div>
 
         {/* Questions 8 and 9 - the tail of the S1 form, after the seven domains */}
-        <div className="bg-white rounded-2xl border-2 border-rose-200 p-4 space-y-3">
+        <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 space-y-3">
           <div className="flex items-center gap-2">
-            <ListChecks className="w-5 h-5 text-rose-600" />
+            <ListChecks className="w-5 h-5 text-slate-500" />
             <div>
-              <p className="text-[11px] font-mono uppercase tracking-wider text-rose-700">Questions 8 and 9</p>
+              <p className="text-[11px] font-mono uppercase tracking-wider text-slate-600">Questions 8 and 9</p>
               <h2 className="font-bold text-gray-800">The last part of the risk screen</h2>
             </div>
           </div>
@@ -1477,7 +1477,7 @@ export default function RiskAssessmentPage() {
             <label className="block text-sm font-semibold text-gray-700 mb-1">{SCREEN_TAIL.q9Label}</label>
             <p className="text-xs text-gray-500 mb-1.5">Built from the risks you identified and the answers you gave. Add anything else below.</p>
             {overallSummary ? (
-              <div className="rounded-lg border border-rose-200 bg-rose-50/50 px-3 py-2 text-sm text-gray-700 whitespace-pre-wrap mb-2">{overallSummary}</div>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-gray-700 whitespace-pre-wrap mb-2">{overallSummary}</div>
             ) : (
               <p className="text-xs text-gray-600 italic mb-2">Work through the domains and answer their questions - this builds itself.</p>
             )}
@@ -1490,7 +1490,7 @@ export default function RiskAssessmentPage() {
         </div>
 
         {/* Generate */}
-        <div className="rounded-2xl border-2 border-rose-300 bg-gradient-to-br from-rose-50 to-white p-5 text-center space-y-3">
+        <div className="rounded-2xl border-2 border-slate-300 bg-gradient-to-br from-rose-50 to-white p-5 text-center space-y-3">
           <p className="text-sm text-gray-600">
             {planDomains.length} {planDomains.length === 1 ? "domain has" : "domains have"} risks to plan for, and you have identified{" "}
             {allRisks.length} {allRisks.length === 1 ? "risk" : "risks"}.
@@ -1547,7 +1547,7 @@ export default function RiskAssessmentPage() {
             </p>
             <div className="space-y-2">
               {untouchedDomains.map((dm) => (
-                <label key={dm.id} className="flex items-start gap-3 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-rose-300 transition-colors">
+                <label key={dm.id} className="flex items-start gap-3 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-slate-400 transition-colors">
                   <input
                     type="checkbox"
                     checked={getDomain(dm.id).noEvidence}
@@ -1570,7 +1570,7 @@ export default function RiskAssessmentPage() {
               <button
                 onClick={runGenerate}
                 disabled={untouchedDomains.length > 0 || missingIndicators.length > 0}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold bg-sky-700 text-white hover:bg-sky-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <Sparkles className="w-4 h-4" /> Confirm and generate
               </button>
@@ -1580,24 +1580,24 @@ export default function RiskAssessmentPage() {
 
         {/* Outputs */}
         {generated && (
-          <div id="risk-output" className="rounded-2xl border-2 border-rose-300 bg-gradient-to-br from-rose-50 to-white p-4 space-y-4 scroll-mt-20">
+          <div id="risk-output" className="rounded-2xl border-2 border-slate-300 bg-gradient-to-br from-rose-50 to-white p-4 space-y-4 scroll-mt-20">
             <div className="flex items-center gap-2">
-              <ClipboardCheck className="w-5 h-5 text-rose-600" /><h2 className="font-bold text-gray-800 flex-1">Copy into SystmOne</h2>
+              <ClipboardCheck className="w-5 h-5 text-slate-500" /><h2 className="font-bold text-gray-800 flex-1">Copy into SystmOne</h2>
               <button
                 onClick={() => printClinicalDoc({ title: patient ? `Risk Assessment - ${patient.name}` : "Risk Assessment", sections: [
                   { heading: "Risk screen summary", text: fullScreenText },
                   { heading: "Formulation", text: buildFormulationText() },
                   { heading: "Management plans (RMP)", text: buildRmpText() },
                 ] })}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-600 text-white hover:bg-rose-500 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-700 text-white hover:bg-slate-500 transition-colors"
               >
                 <Printer className="w-3.5 h-3.5" /> Print all
               </button>
             </div>
             <p className="text-xs text-gray-500">Tick each block as you paste it across, so you know what&apos;s done. Or use <strong>Print all</strong> to print the screen, formulation and plans together.</p>
-            <div className="inline-flex bg-rose-100 rounded-full p-1 flex-wrap">
+            <div className="inline-flex bg-slate-100 rounded-full p-1 flex-wrap">
               {([{ k: "screen", label: "Risk Screen" }, { k: "formulation", label: "Formulation" }, { k: "rmp", label: "Management Plan" }] as const).map((t) => (
-                <button key={t.k} onClick={() => setTab(t.k)} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${tab === t.k ? "bg-rose-600 text-white shadow" : "text-rose-700 hover:bg-white/60"}`}>{t.label}</button>
+                <button key={t.k} onClick={() => setTab(t.k)} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${tab === t.k ? "bg-sky-700 text-white shadow" : "text-slate-600 hover:bg-white/60"}`}>{t.label}</button>
               ))}
             </div>
 

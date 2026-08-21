@@ -163,7 +163,9 @@ export function SectionEditor({
   }, [open, bank?.risk, bank?.questionId]); // eslint-disable-line react-hooks/exhaustive-deps
   const A = accent === "violet"
     ? { on: "bg-violet-600 border-violet-600", hover: "hover:border-violet-300 hover:bg-violet-50", ring: "focus:ring-violet-400 focus:border-violet-400", badge: "text-violet-700 bg-violet-100", spark: "text-violet-700/80", chipText: "text-violet-800", chipBg: "bg-violet-50 border-violet-200" }
-    : { on: "bg-rose-600 border-rose-600", hover: "hover:border-rose-300 hover:bg-rose-50", ring: "focus:ring-rose-400 focus:border-rose-400", badge: "text-rose-700 bg-rose-100", spark: "text-rose-700/80", chipText: "text-rose-800", chipBg: "bg-rose-50 border-rose-200" };
+    // Calm by default. A selected chip is "chosen", not "urgent" - bright red here
+    // made every picked word look like an alert (Mike, 20 Aug 2026).
+    : { on: "bg-sky-700 border-sky-700", hover: "hover:border-slate-400 hover:bg-slate-50", ring: "focus:ring-sky-500 focus:border-sky-500", badge: "text-slate-600 bg-slate-100", spark: "text-slate-600", chipText: "text-slate-700", chipBg: "bg-slate-50 border-slate-200" };
 
   const toggleChip = (w: string) => {
     const has = state.chips.includes(w);

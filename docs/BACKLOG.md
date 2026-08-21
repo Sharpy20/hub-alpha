@@ -2811,3 +2811,37 @@ Mike's correction. Acting on it turned up more than the one phrasing already fix
 added.** The remaining 21 do not carry it - including all the child sub-domains, which
 carry the safeguarding strategy meeting instead. Widen further if it does not match the
 ward.
+
+### W7. Softening the palette + widening the risk strategy set (20 Aug, late)
+
+**Risk strategy meeting set widened to 23** on Mike's instruction: self-neglect / ADLs
+(his call), then continued on my judgement to medication non-concordance, refusal to
+engage, boundary violations and observations / refusal of obs - all cases where
+persistent, escalating risk is a plausible reason to convene one. Both slots as always.
+
+Deliberately **not** added, for review: physical health deterioration, cognitive
+impairment / confusion, infection / delirium (medical escalation is the route, not a risk
+meeting); homelessness / housing instability and unsafe home / appliances (discharge
+planning); sleep disturbance and social isolation (not the right forum); and the nine
+child sub-domains, which carry the **safeguarding strategy meeting** instead.
+
+**The palette.** Mike: "lots of bright red on this - makes the viewer jump to the red bits
+thinking they are more important when actually sometimes it's just a heading." True: 62
+red/rose usages in the page, most of them structural. The rule now applied:
+
+- **RED means "this needs your attention", and nothing else may use it.** What kept it:
+  the page header (the guide's identity, one element), the Generate button (the primary
+  action), the destructive Remove button, the weak-example label, and the amber warnings.
+- **SKY** = chosen or active: selected chips, the "Now - current concerns" narrative.
+- **SLATE** = structure: open panels, sticky headers, section labels, borders, tints.
+
+99 replacements in the page, plus the SectionEditor's rose accent in `risk-capture.tsx`
+(a selected chip is "chosen", not "urgent"). Focus rings moved from rose to sky, which
+also reads better as a focus indicator. The Now/Before distinction is preserved - sky for
+now, muted slate for the past - including in their dated-example boxes.
+
+⚠ **Not visually confirmed:** the open-domain accordion header. The CSS is provably
+correct (an identical clone in the same parent, same position, same attributes paints
+`bg-slate-700` correctly) but the live node would not repaint in the automated browser
+session even after reloads - a style-recalc artefact of that environment. **Worth an
+eyeball on a real browser.** Everything else was measured on the live page.

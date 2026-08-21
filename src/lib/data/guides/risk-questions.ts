@@ -17,9 +17,17 @@ export interface UnifiedQuestion {
   hint: string;
   gap?: string;
   examples?: boolean;
-  chip: { doc: "generic" | "f" | "r"; id: string };
-  writes: { doc: "f" | "r"; id: string };
+  // `group` narrows the chips to one labelled group of the section, so the two
+  // halves of HOW TO PREVENT / REDUCE each show only their own words.
+  chip: { doc: "generic" | "f" | "r"; id: string; group?: string };
+  // `part` lets two questions feed one output section without overwriting each
+  // other - used for the manage / prevent split.
+  writes: { doc: "f" | "r"; id: string; part?: "manage" | "reduce" };
 }
+
+// The two group labels inside HOW TO PREVENT / REDUCE. Must match risk.ts.
+export const MANAGE_GROUP = "When it happens (manage)";
+export const REDUCE_GROUP = "Prevent / reduce";
 
 // The generic run, used where a domain has nothing more specific to say.
 export const UNIFIED_QUESTIONS: UnifiedQuestion[] = [
@@ -32,7 +40,11 @@ export const UNIFIED_QUESTIONS: UnifiedQuestion[] = [
   { id: "q_when", question: "When and where is the risk highest?", hint: "Times, situations or people that make the risk rise.", gap: "When is the risk highest?", chip: { doc: "f", id: "dynamic" }, writes: { doc: "f", id: "dynamic" } },
   { id: "q_helps", question: "What helps - their strengths and what keeps them safe?", hint: "Protective factors, and how stable or fragile they are right now.", gap: "What is protective, and how steady is it?", chip: { doc: "f", id: "protective" }, writes: { doc: "f", id: "protective" } },
   { id: "q_engage", question: "How engaged are they, and do they recognise the risk?", hint: "Engagement and insight.", gap: "What helps them engage?", chip: { doc: "f", id: "engagement" }, writes: { doc: "f", id: "engagement" } },
-  { id: "q_do", question: "What will we do to manage, prevent or reduce the risk?", hint: "What to do when it happens, and what prevents or reduces it. Say why where it helps.", gap: "What specifically helps this patient?", chip: { doc: "r", id: "prevent" }, writes: { doc: "r", id: "prevent" } },
+  // The trust guide lists managing it when it happens and preventing it as two
+  // separate content requirements, under one template heading. Asked separately,
+  // printed together - the "manage" half was the one people kept missing.
+  { id: "q_manage", question: "What do we do when it happens?", hint: "The response at the time. The trust guide gives 1:1 time, the patient handing over risk items with a full search, PRN offered, time off the ward, a medical review, and arranging a risk strategy meeting.", gap: "What happens in the moment?", chip: { doc: "r", id: "prevent", group: MANAGE_GROUP }, writes: { doc: "r", id: "prevent", part: "manage" } },
+  { id: "q_prevent", question: "What prevents it, or reduces how often it happens?", hint: "The day-to-day things that stop it building. The trust guide gives de-escalation techniques and structured activity.", gap: "What reduces the risk for this patient?", chip: { doc: "r", id: "prevent", group: REDUCE_GROUP }, writes: { doc: "r", id: "prevent", part: "reduce" } },
   { id: "q_working", question: "How will we know it is working?", hint: "Measurable change - avoid vague. How will you KNOW the risk is reducing?", gap: "What measurable change shows the risk is reducing?", chip: { doc: "r", id: "evaluate" }, writes: { doc: "r", id: "evaluate" } },
   { id: "q_escalate", question: "What if the plan is not working - when and how do we escalate?", hint: "Escalation thresholds. The mandatory MDT line is added for you.", gap: "When and how do you escalate?", chip: { doc: "r", id: "next" }, writes: { doc: "r", id: "next" } },
   { id: "q_judgement", question: "Overall, what is your clinical judgement of the risk?", hint: "Short and medium term. Pull the threads together.", gap: "What is your overall judgement?", chip: { doc: "f", id: "judgement" }, writes: { doc: "f", id: "judgement" } },
@@ -60,7 +72,8 @@ export const DOMAIN_QUESTIONS: Record<string, Record<string, QuestionOverride>> 
     q_when: { question: "When is the risk highest - times of day, places, or after certain contact?" },
     q_helps: { question: "What helps them stay safe, and how steady is it right now?" },
     q_engage: { question: "How engaged are they, and can they tell you when they feel unsafe?", hint: "Whether they will seek help before acting is the part that matters most here." },
-    q_do: { question: "What will we do to keep them safe, and what reduces the risk?" },
+    q_manage: { question: "What do we do when they self-harm, or are about to?" },
+    q_prevent: { question: "What reduces the risk day to day?" },
     q_working: { question: "How will we know they are safer?" },
     q_escalate: { question: "What if they are not getting safer - when and how do we escalate?" },
     q_judgement: { question: "Overall, what is your clinical judgement of the risk of self harm or suicide?" },
@@ -75,7 +88,8 @@ export const DOMAIN_QUESTIONS: Record<string, Record<string, QuestionOverride>> 
     q_when: { question: "Which parts of daily life are hardest, and when?", hint: "Eating, hygiene, money, medication, keeping the home safe." },
     q_helps: { question: "What can they still manage well, and who helps?" },
     q_engage: { question: "How engaged are they, and do they see it as a problem?" },
-    q_do: { question: "What will we do to support them, and what reduces the risk?" },
+    q_manage: { question: "What do we do when we find they are not managing?" },
+    q_prevent: { question: "What support stops it getting worse?" },
     q_working: { question: "How will we know they are managing better?" },
     q_escalate: { question: "What if they are not managing - when and how do we escalate?" },
     q_judgement: { question: "Overall, what is your clinical judgement of the risk to self?" },
@@ -88,7 +102,8 @@ export const DOMAIN_QUESTIONS: Record<string, Record<string, QuestionOverride>> 
     q_when: { question: "When, where, and towards whom is the risk highest?", hint: "Named people, times, and situations that make it rise." },
     q_helps: { question: "What calms them, and what are their strengths?" },
     q_engage: { question: "How engaged are they, and do they recognise the effect on others?" },
-    q_do: { question: "What will we do to keep other people safe, and what reduces the risk?" },
+    q_manage: { question: "What do we do when they become aggressive or unsafe?" },
+    q_prevent: { question: "What stops it escalating in the first place?" },
     q_judgement: { question: "Overall, what is your clinical judgement of the risk to others?" },
   },
   "harm-by-others": {
@@ -101,7 +116,8 @@ export const DOMAIN_QUESTIONS: Record<string, Record<string, QuestionOverride>> 
     q_when: { question: "Who is the risk from, and when is it highest?", hint: "Visits, phone contact, leave, and discharge home." },
     q_helps: { question: "Who is safe around them, and what protects them?" },
     q_engage: { question: "How do they see the relationship, and what do they want to happen?", hint: "Making Safeguarding Personal - their wishes come first, and are recorded even if we must act anyway." },
-    q_do: { question: "What will we do to protect them, and what reduces the risk?", hint: "Include consent, what we must share regardless, and any safeguarding referral." },
+    q_manage: { question: "What do we do when we find they have been harmed?", hint: "Include consent, and what we must share regardless of what they want." },
+    q_prevent: { question: "What reduces their exposure to it?" },
     q_working: { question: "How will we know they are safer?" },
     q_escalate: { question: "What if they are not safer - when do we escalate, and does this need a safeguarding referral?" },
     q_judgement: { question: "Overall, what is your clinical judgement of the risk of harm by others?" },
@@ -116,7 +132,8 @@ export const DOMAIN_QUESTIONS: Record<string, Record<string, QuestionOverride>> 
     q_when: { question: "When is the risk highest - at night, on the move, after medication?" },
     q_helps: { question: "What are they managing well, and what support is already in place?" },
     q_engage: { question: "How engaged are they with physical health care and medication?" },
-    q_do: { question: "What will we do - monitoring, treatment, and referrals?", hint: "Say who does what. Scored tools such as NEWS2, MUST and Waterlow stay on SystmOne." },
+    q_manage: { question: "What do we do when their physical health deteriorates?", hint: "Say who does what. Scored tools such as NEWS2, MUST and Waterlow stay on SystmOne." },
+    q_prevent: { question: "What keeps their physical health stable?" },
     q_working: { question: "How will we know it is improving?" },
     q_escalate: { question: "What if it is not improving - when do we escalate, and to whom?" },
     q_judgement: { question: "Overall, what is your clinical judgement of the physical health risk?" },
@@ -131,7 +148,8 @@ export const DOMAIN_QUESTIONS: Record<string, Record<string, QuestionOverride>> 
     q_when: { question: "When is the risk highest - contact, leave, or discharge home?" },
     q_helps: { question: "Who is protective around the child, and what is working?" },
     q_engage: { question: "How does the patient see it, and what support do they want?" },
-    q_do: { question: "What will we do to protect the child, and who else must be involved?", hint: "Children's social care and Starting Point sit outside the ward - name who is referring and when." },
+    q_manage: { question: "What do we do when a concern is raised?", hint: "Children's social care and Starting Point sit outside the ward - name who refers and when." },
+    q_prevent: { question: "What reduces the risk to the child?" },
     q_working: { question: "How will we know the child is safer?" },
     q_escalate: { question: "What if the risk continues - when do we escalate, and has a referral been made?" },
     q_judgement: { question: "Overall, what is your clinical judgement of the risk to the child or unborn baby?" },
@@ -146,7 +164,8 @@ export const DOMAIN_QUESTIONS: Record<string, Record<string, QuestionOverride>> 
     q_when: { question: "When does it matter most - on leave, at discharge, or at home?" },
     q_helps: { question: "What is stable, and who is helping?" },
     q_engage: { question: "How does the patient see it, and what do they want to change?" },
-    q_do: { question: "What will we do, and which services need involving?", hint: "Housing, social care and benefits sit outside the ward - name who is doing what." },
+    q_manage: { question: "What do we do when it becomes a problem?", hint: "Housing, social care and benefits sit outside the ward - name who is doing what." },
+    q_prevent: { question: "What stops the situation getting worse?" },
     q_working: { question: "How will we know the situation is improving?" },
     q_escalate: { question: "What if it is not resolved - when do we escalate, and does it hold up discharge?" },
     q_judgement: { question: "Overall, what is your clinical judgement of the environmental risk?" },

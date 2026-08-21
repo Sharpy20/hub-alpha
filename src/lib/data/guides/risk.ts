@@ -38,6 +38,10 @@ export interface RiskSection {
   placeholder?: string;
   // Adds a "specific examples (with dates)" sub-section to this editor.
   examples?: boolean;
+  // Which document this answer ends up in. Shown as a badge on the question, so
+  // people can see that some questions build the plan the trust mandates and
+  // others build the formulation field.
+  dest?: "formulation" | "plan" | "both";
 }
 
 // ---- Exact mandatory final line (generic version of the RMP guide wording) ----

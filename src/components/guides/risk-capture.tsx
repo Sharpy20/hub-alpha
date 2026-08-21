@@ -102,6 +102,17 @@ export function buildOneRmp(risk: string, secs: AllState, displayName?: string, 
       const n = buildContent(secs["next"]);
       return n ? `${ensureStop(n)} ${MANDATORY_MDT_LINE}` : MANDATORY_MDT_LINE;
     }
+    // The trust guide asks for two things under this one heading - what we do
+    // when it happens, and what prevents it. They are captured as two answers
+    // and printed as two labelled lines so neither half can be lost.
+    if (id === "prevent" && (secs["prevent__manage"] || secs["prevent__reduce"])) {
+      const manage = buildContent(secs["prevent__manage"]);
+      const reduce = buildContent(secs["prevent__reduce"]);
+      const lines: string[] = [];
+      if (manage) lines.push(`When it happens: ${manage}`);
+      if (reduce) lines.push(`To prevent or reduce: ${reduce}`);
+      return lines.length ? lines.join("\n") : "Not yet established.";
+    }
     return buildContent(secs[id]) || "Not yet established.";
   };
   const blocks: string[] = [TXT_BAR, name.toUpperCase(), ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
@@ -185,6 +196,22 @@ export function SectionEditor({
     <div className="rounded-xl border border-gray-100 bg-white overflow-hidden">
       <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-3.5 py-2.5 hover:bg-gray-50 transition-colors text-left">
         <span className="font-semibold text-gray-800 text-sm flex-1">{section.heading}</span>
+        {section.dest && (
+          <span
+            title={section.dest === "plan"
+              ? "This answer goes into the risk management plan - the document the trust requires within 24 hours"
+              : section.dest === "formulation"
+                ? "This answer goes into the risk formulation, field 9 on SystmOne"
+                : "This answer goes into both the formulation and the plan"}
+            className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full flex-shrink-0 ${
+              section.dest === "plan" ? "bg-rose-100 text-rose-700"
+                : section.dest === "formulation" ? "bg-indigo-100 text-indigo-700"
+                  : "bg-gradient-to-r from-indigo-100 to-rose-100 text-gray-700"
+            }`}
+          >
+            {section.dest === "plan" ? "Plan" : section.dest === "formulation" ? "Formulation" : "Both"}
+          </span>
+        )}
         {count > 0 && <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${A.badge}`}>{state.na ? "n/a" : count}</span>}
         {open ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
       </button>

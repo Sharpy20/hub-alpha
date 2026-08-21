@@ -89,20 +89,36 @@ let captureSeq = 0;
 const F_SECTION = (id: string) => FORMULATION_SECTIONS.find((s) => s.id === id)!;
 const R_SECTION = (id: string) => RMP_SECTIONS.find((s) => s.id === id)!;
 
+// Narrow a section's chips to one labelled group. Used by the two halves of HOW
+// TO PREVENT / REDUCE so each question shows only its own words. Falls back to
+// everything if a risk's bank does not use the labels.
+function pickGroup(groups: RiskChipGroup[], label?: string): RiskChipGroup[] {
+  if (!label) return groups;
+  const hit = groups.filter((g) => g.label === label);
+  return hit.length ? hit : groups;
+}
+
+// Which document a question's answer ends up in. q_seen feeds both: the
+// formulation's presenting risk and the plan's opening line.
+function destOf(q: UnifiedQuestion): "formulation" | "plan" | "both" {
+  if (q.id === "q_seen") return "both";
+  return q.writes.doc === "r" ? "plan" : "formulation";
+}
+
 // Build the display section for one question against a given risk's chip bank.
 function questionSectionFor(q: UnifiedQuestion, risk: string): RiskSection {
   let src: RiskSection;
   if (q.chip.doc === "generic") src = F_SECTION(q.chip.id);
   else if (q.chip.doc === "f") src = formulationSectionForRisk(F_SECTION(q.chip.id), risk);
   else src = rmpSectionForRisk(R_SECTION(q.chip.id), risk);
-  return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups: src.groups, examples: q.examples };
+  return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups: pickGroup(src.groups, q.chip.group), examples: q.examples, dest: destOf(q) };
 }
 
 // Merge the chip banks of several ticked sub-domains into ONE domain question set
 // (decision 2 - merged, but each risk's chips kept as separate labelled groups).
 // The generic base groups are included once when any contributor has no tailored
 // chips; tailored groups are labelled with the sub-domain when there's more than one.
-function mergeGroupsForRisks(kind: "f" | "r", sectionId: string, chipRisks: { label: string; risk: string }[]): RiskChipGroup[] {
+function mergeGroupsForRisks(kind: "f" | "r", sectionId: string, chipRisks: { label: string; risk: string }[], group?: string): RiskChipGroup[] {
   const base = kind === "f" ? F_SECTION(sectionId) : R_SECTION(sectionId);
   const specifics: { label: string; groups: RiskChipGroup[] }[] = [];
   const seen = new Set<string>();
@@ -112,10 +128,10 @@ function mergeGroupsForRisks(kind: "f" | "r", sectionId: string, chipRisks: { la
     seen.add(risk);
     const resolved = kind === "f" ? formulationSectionForRisk(base, risk) : rmpSectionForRisk(base, risk);
     if (resolved === base) anyBaseOnly = true;             // no tailored chips for this risk
-    else specifics.push({ label, groups: resolved.groups });
+    else specifics.push({ label, groups: pickGroup(resolved.groups, group) });
   }
   const out: RiskChipGroup[] = [];
-  if (anyBaseOnly || !specifics.length) out.push(...base.groups);
+  if (anyBaseOnly || !specifics.length) out.push(...pickGroup(base.groups, group));
   const multi = specifics.length > 1;
   for (const s of specifics) for (const g of s.groups) {
     out.push(multi ? { label: g.label ? `${s.label} - ${g.label}` : s.label, words: g.words } : g);
@@ -127,10 +143,10 @@ function mergeGroupsForRisks(kind: "f" | "r", sectionId: string, chipRisks: { la
 // sub-domains. Generic questions keep their generic chips.
 function questionSectionForDomain(q: UnifiedQuestion, chipRisks: { label: string; risk: string }[]): RiskSection {
   let groups: RiskChipGroup[];
-  if (q.chip.doc === "generic") groups = F_SECTION(q.chip.id).groups;
-  else if (!chipRisks.length) groups = (q.chip.doc === "f" ? F_SECTION(q.chip.id) : R_SECTION(q.chip.id)).groups;
-  else groups = mergeGroupsForRisks(q.chip.doc, q.chip.id, chipRisks);
-  return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups, examples: q.examples };
+  if (q.chip.doc === "generic") groups = pickGroup(F_SECTION(q.chip.id).groups, q.chip.group);
+  else if (!chipRisks.length) groups = pickGroup((q.chip.doc === "f" ? F_SECTION(q.chip.id) : R_SECTION(q.chip.id)).groups, q.chip.group);
+  else groups = mergeGroupsForRisks(q.chip.doc, q.chip.id, chipRisks, q.chip.group);
+  return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups, examples: q.examples, dest: destOf(q) };
 }
 // Split one risk's unified answers into formulation-section and RMP-section states.
 function deriveForm(cap: AllState | undefined): AllState {
@@ -140,7 +156,12 @@ function deriveForm(cap: AllState | undefined): AllState {
 }
 function deriveRmp(cap: AllState | undefined): AllState {
   const out: AllState = {};
-  for (const q of UNIFIED_QUESTIONS) if (q.writes.doc === "r") out[q.writes.id] = cap?.[q.id] || EMPTY;
+  for (const q of UNIFIED_QUESTIONS) {
+    if (q.writes.doc !== "r") continue;
+    // Two questions feed HOW TO PREVENT / REDUCE, so they are kept apart here and
+    // printed as two labelled lines by buildOneRmp.
+    out[q.writes.part ? `${q.writes.id}__${q.writes.part}` : q.writes.id] = cap?.[q.id] || EMPTY;
+  }
   // WHAT IS THE RISK also carries the "what have you seen or heard" answer (q_seen).
   out["what"] = cap?.["q_seen"] || EMPTY;
   return out;
@@ -400,19 +421,23 @@ export default function RiskAssessmentPage() {
   // Merge over a fresh empty domain so every field is always present (guards
   // against any partially-shaped state, e.g. after a field is added).
   const getDomain = (id: string): DomainState => (domains[id] ? { ...emptyDomain(), ...domains[id] } : emptyDomain());
-  const setDomain = (id: string, next: DomainState) => setDomains((s) => ({ ...s, [id]: next }));
+  // Read-then-write against `domains` loses an update when two clicks land in the
+  // same tick - ticking two sub-domains quickly dropped one. Everything that
+  // changes a domain goes through this instead, so the update always sees the
+  // latest state. Merging over emptyDomain() keeps every field defined.
+  const updateDomain = (id: string, fn: (d: DomainState) => DomainState) =>
+    setDomains((s) => ({ ...s, [id]: fn({ ...emptyDomain(), ...(s[id] || {}) }) }));
   const cGet = (key: string, qid: string): SecState => capByRisk[key]?.[qid] || EMPTY;
   const cSet = (key: string, qid: string, v: SecState) => setCapByRisk((s) => ({ ...s, [key]: { ...s[key], [qid]: v } }));
   const toggleCopied = (id: string, on: boolean) => setCopied((s) => { const n = new Set(s); if (on) n.add(id); else n.delete(id); return n; });
 
   const toggleSub = (domainId: string, label: string) => {
-    const d = getDomain(domainId);
-    const has = d.risks.includes(label);
-    setDomain(domainId, {
+    const has = getDomain(domainId).risks.includes(label);
+    updateDomain(domainId, (d) => ({
       ...d, noEvidence: false,
-      risks: has ? d.risks.filter((r) => r !== label) : [...d.risks, label],
-      ownRmp: has ? d.ownRmp.filter((x) => x !== label) : d.ownRmp, // dropping a sub-domain drops its own-plan flag
-    });
+      risks: d.risks.includes(label) ? d.risks.filter((r) => r !== label) : [...d.risks, label],
+      ownRmp: d.risks.includes(label) ? d.ownRmp.filter((x) => x !== label) : d.ownRmp, // dropping a sub-domain drops its own-plan flag
+    }));
     if (!has) setOpenRisks((s) => new Set(s).add(domainId)); // open the domain question set
   };
   const toggleOpenRisk = (key: string) => setOpenRisks((s) => { const n = new Set(s); if (n.has(key)) n.delete(key); else n.add(key); return n; });
@@ -420,9 +445,8 @@ export default function RiskAssessmentPage() {
   // "Requires own RMP" - flag a selected sub-domain or clinical indicator so it
   // spins off its OWN management plan (formulation stays one-per-domain).
   const toggleOwnRmp = (domainId: string, label: string) => {
-    const d = getDomain(domainId);
-    const has = d.ownRmp.includes(label);
-    setDomain(domainId, { ...d, ownRmp: has ? d.ownRmp.filter((x) => x !== label) : [...d.ownRmp, label] });
+    const has = getDomain(domainId).ownRmp.includes(label);
+    updateDomain(domainId, (d) => ({ ...d, ownRmp: d.ownRmp.includes(label) ? d.ownRmp.filter((x) => x !== label) : [...d.ownRmp, label] }));
     if (!has) setOpenRisks((s) => new Set(s).add(`${domainId}::own::${label}`));
   };
 
@@ -431,27 +455,23 @@ export default function RiskAssessmentPage() {
   const addCustomSub = (domainId: string, rawName: string) => {
     const name = rawName.trim();
     if (!name) return;
-    const d = getDomain(domainId);
-    if (d.customSubs.includes(name) || d.risks.includes(name)) return;
-    setDomain(domainId, { ...d, noEvidence: false, customSubs: [...d.customSubs, name], risks: [...d.risks, name] });
+    if (getDomain(domainId).customSubs.includes(name) || getDomain(domainId).risks.includes(name)) return;
+    updateDomain(domainId, (d) => ({ ...d, noEvidence: false, customSubs: [...d.customSubs, name], risks: [...d.risks, name] }));
     setOpenRisks((s) => new Set(s).add(domainId));
   };
   const removeCustomSub = (domainId: string, name: string) => {
-    const d = getDomain(domainId);
-    setDomain(domainId, { ...d, customSubs: d.customSubs.filter((x) => x !== name), risks: d.risks.filter((x) => x !== name), ownRmp: d.ownRmp.filter((x) => x !== name) });
+    updateDomain(domainId, (d) => ({ ...d, customSubs: d.customSubs.filter((x) => x !== name), risks: d.risks.filter((x) => x !== name), ownRmp: d.ownRmp.filter((x) => x !== name) }));
   };
 
   // Add a nurse-named clinical indicator (added to the domain's chip set + selected).
   const addCustomIndicator = (domainId: string, rawName: string) => {
     const name = rawName.trim();
     if (!name) return;
-    const d = getDomain(domainId);
-    if (d.customIndicators.includes(name) || (CLINICAL_INDICATORS[domainId] || []).includes(name)) return;
-    setDomain(domainId, { ...d, customIndicators: [...d.customIndicators, name], indicatorList: [...d.indicatorList, name] });
+    if (getDomain(domainId).customIndicators.includes(name) || (CLINICAL_INDICATORS[domainId] || []).includes(name)) return;
+    updateDomain(domainId, (d) => ({ ...d, customIndicators: [...d.customIndicators, name], indicatorList: [...d.indicatorList, name] }));
   };
   const removeCustomIndicator = (domainId: string, name: string) => {
-    const d = getDomain(domainId);
-    setDomain(domainId, { ...d, customIndicators: d.customIndicators.filter((x) => x !== name), indicatorList: d.indicatorList.filter((x) => x !== name), ownRmp: d.ownRmp.filter((x) => x !== name) });
+    updateDomain(domainId, (d) => ({ ...d, customIndicators: d.customIndicators.filter((x) => x !== name), indicatorList: d.indicatorList.filter((x) => x !== name), ownRmp: d.ownRmp.filter((x) => x !== name) }));
   };
 
   const reset = () => {
@@ -553,10 +573,8 @@ export default function RiskAssessmentPage() {
     return !st.noEvidence && isEngaged(st) && st.indicators === "";
   });
   // Ticking the confirmation writes the exact S1 "No evidence ..." line for that domain.
-  const confirmNil = (domainId: string, on: boolean) => {
-    const st = getDomain(domainId);
-    setDomain(domainId, { ...st, noEvidence: on, risks: on ? [] : st.risks });
-  };
+  const confirmNil = (domainId: string, on: boolean) =>
+    updateDomain(domainId, (d) => ({ ...d, noEvidence: on, risks: on ? [] : d.risks }));
 
   const personalise = (s: string) => {
     const nm = patientName;
@@ -649,6 +667,16 @@ export default function RiskAssessmentPage() {
       chipRisk: SUBTYPE_RISK[`${dm.id}::${label}`] || domainDefaultRisk(dm) || "",
     }));
 
+  // What the plan is called. The trust guide's own examples name the risk itself
+  // ("self harm / risk to others / violence and aggression"), not the SystmOne
+  // domain heading, so the plan is titled by the sub-domains actually ticked and
+  // falls back to the domain title only when nothing is ticked.
+  const planTitle = (dm: typeof RISK_DOMAINS[number]): string => {
+    const st = getDomain(dm.id);
+    const named = st.risks.filter((r) => !st.ownRmp.includes(r)); // spun-off ones head their own plan
+    return named.length ? named.join(", ") : dm.title;
+  };
+
   // Merge extra chip words into a section state (used to fold indicators in).
   const foldChips = (sec: SecState | undefined, extra: string[]): SecState => {
     const base = sec || EMPTY;
@@ -696,7 +724,7 @@ export default function RiskAssessmentPage() {
     for (const dm of planDomains) {
       const secs = deriveRmp(capByRisk[dm.id]);
       secs["present"] = foldChips(secs["present"], routedIndicators(dm, "present"));
-      plans.push(buildOneRmp("", secs, dm.title));            // one plan per domain, titled by the domain
+      plans.push(buildOneRmp("", secs, planTitle(dm)));       // one plan per domain, named by the risks ticked
       for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label));
     }
     if (!plans.length) return "";
@@ -813,16 +841,29 @@ export default function RiskAssessmentPage() {
           onClick={() => toggleOpenRisk(key)}
           className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${open ? "bg-rose-600 text-white shadow-sm" : "bg-rose-50 text-rose-900 hover:bg-rose-100"}`}
         >
-          <span className="font-bold text-sm flex-1">{dm.short} - whole-domain plan</span>
+          <span className="font-bold text-sm flex-1">Build the plan for: {planTitle(dm)}</span>
           <span className={`text-[10px] ${open ? "text-rose-100" : "text-rose-600"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
           {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-rose-400" />}
         </button>
         {open && (
           <div className="p-3 space-y-2">
-            <p className="text-xs text-gray-500">
-              Answer these for the domain as a whole - it builds this domain&apos;s formulation and its single management plan.
-              The headings are added when you generate.
-            </p>
+            {/* Why anyone is answering these at all. The trust guidance covers the
+                management plan only - the formulation half is best practice with
+                no trust template, which is worth being straight about. */}
+            <div className="rounded-lg border border-rose-200 bg-rose-50/50 p-3 space-y-1.5 text-xs text-gray-700">
+              <p className="font-bold text-gray-800">Why you are answering these</p>
+              <p>
+                <span className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-700">Plan</span>{" "}
+                Six of them build the <strong>Risk Management Plan</strong> for {planTitle(dm)}. Every patient must have one
+                within 24 hours of admission, and it has a fixed trust template - these questions are its five headings.
+              </p>
+              <p>
+                <span className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700">Formulation</span>{" "}
+                The rest build the <strong>Risk Formulation</strong>, field 9 on SystmOne. There is no trust template for it,
+                so these follow the standard framework: what raises the risk, what sets it off, what keeps it going, what helps.
+              </p>
+              <p className="text-gray-500">Each question is badged, so you can see where your answer lands. Headings are added when you generate.</p>
+            </div>
             {questionsForDomain(dm.id).map((q) => (
               <SectionEditor key={q.id} section={questionSectionForDomain(q, chipRisks)} state={cGet(key, q.id)} onChange={(n) => cSet(key, q.id, n)} bank={{ risk: chipRisks[0]?.risk || dm.id, questionId: q.id }} />
             ))}
@@ -860,7 +901,7 @@ export default function RiskAssessmentPage() {
         <AddSubDomain onAdd={(name) => addCustomSub(dm.id, name)} />
 
         <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-          <input type="checkbox" checked={st.noEvidence} onChange={(e) => setDomain(dm.id, { ...st, noEvidence: e.target.checked, risks: e.target.checked ? [] : st.risks })} className="rounded border-gray-300 text-emerald-600 w-4 h-4" />
+          <input type="checkbox" checked={st.noEvidence} onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, noEvidence: e.target.checked, risks: e.target.checked ? [] : d.risks }))} className="rounded border-gray-300 text-emerald-600 w-4 h-4" />
           {dm.noEvidence}
         </label>
 
@@ -879,7 +920,7 @@ export default function RiskAssessmentPage() {
                   <ShieldAlert className={`w-5 h-5 flex-shrink-0 ${st.safety === "" ? "text-amber-600" : "text-rose-600"}`} />
                   <span className="text-sm font-bold text-gray-800 flex-1 min-w-[200px]">{personalise(dm.safetyPrompt)}</span>
                   {st.safety === "" && <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700 bg-amber-100 px-2 py-1 rounded-full">Needs an answer</span>}
-                  <YNToggle value={st.safety} onChange={(v) => setDomain(dm.id, { ...st, safety: v })} />
+                  <YNToggle value={st.safety} onChange={(v) => updateDomain(dm.id, (d) => ({ ...d, safety: v }))} />
                 </div>
               </div>
             )}
@@ -894,7 +935,7 @@ export default function RiskAssessmentPage() {
                   <ListChecks className={`w-5 h-5 flex-shrink-0 ${st.indicators === "" ? "text-amber-600" : "text-rose-600"}`} />
                   <span className="text-base font-bold text-gray-800 flex-1 min-w-[220px]">{personalise(dm.indicatorsPrompt)}</span>
                   {st.indicators === "" && <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700 bg-amber-100 px-2 py-1 rounded-full">Needs an answer</span>}
-                  <YNToggle value={st.indicators} onChange={(v) => setDomain(dm.id, { ...st, indicators: v })} />
+                  <YNToggle value={st.indicators} onChange={(v) => updateDomain(dm.id, (d) => ({ ...d, indicators: v }))} />
                 </div>
                 {st.indicators === "" && (
                   <p className="text-xs text-amber-800">Answer this before you generate. It is on the form for every domain, and Yes opens the indicator list.</p>
@@ -909,7 +950,7 @@ export default function RiskAssessmentPage() {
                         const on = st.indicatorList.includes(ind);
                         return (
                           <button key={ind} type="button" aria-pressed={on}
-                            onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
+                            onClick={() => updateDomain(dm.id, (d) => ({ ...d, indicatorList: d.indicatorList.includes(ind) ? d.indicatorList.filter((x) => x !== ind) : [...d.indicatorList, ind] }))}
                             className={`px-2 py-1 rounded-lg text-xs border transition-all text-left ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:bg-rose-50"}`}>
                             {ind}
                           </button>
@@ -920,7 +961,7 @@ export default function RiskAssessmentPage() {
                         return (
                           <span key={ind} className={`inline-flex items-center rounded-lg border text-xs transition-all ring-1 ring-purple-400 ${on ? "bg-rose-600 border-rose-600 text-white font-medium" : "bg-white border-gray-200 text-gray-600"}`}>
                             <button type="button" aria-pressed={on}
-                              onClick={() => setDomain(dm.id, { ...st, indicatorList: on ? st.indicatorList.filter((x) => x !== ind) : [...st.indicatorList, ind] })}
+                              onClick={() => updateDomain(dm.id, (d) => ({ ...d, indicatorList: d.indicatorList.includes(ind) ? d.indicatorList.filter((x) => x !== ind) : [...d.indicatorList, ind] }))}
                               className="pl-2 pr-1 py-1 text-left">{ind}</button>
                             <button type="button" onClick={() => removeCustomIndicator(dm.id, ind)} aria-label={`Remove ${ind}`} className={`pr-1.5 pl-0.5 py-1 ${on ? "text-white/80 hover:text-white" : "text-gray-500 hover:text-red-600"}`}><X className="w-3 h-3" /></button>
                           </span>
@@ -945,8 +986,8 @@ export default function RiskAssessmentPage() {
               <div className="p-3">
                 <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
                 <p className="flex items-start gap-1.5 text-xs text-rose-700/80 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what is going on now, and what has happened in the last few days or weeks.</p>
-                <textarea value={st.current} onChange={(e) => setDomain(dm.id, { ...st, current: e.target.value })} rows={2} aria-label={personalise(dm.currentPrompt)} className={inputCls} />
-                <DatedExamples tone="rose" title="Recent examples" examples={st.currentExamples} onChange={(next) => setDomain(dm.id, { ...st, currentExamples: next })} />
+                <textarea value={st.current} onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, current: e.target.value }))} rows={2} aria-label={personalise(dm.currentPrompt)} className={inputCls} />
+                <DatedExamples tone="rose" title="Recent examples" examples={st.currentExamples} onChange={(next) => updateDomain(dm.id, (d) => ({ ...d, currentExamples: next }))} />
                 <S1CopyBox text={withExamples(st.current, st.currentExamples)} />
               </div>
             </div>
@@ -965,8 +1006,8 @@ export default function RiskAssessmentPage() {
                   </ul>
                 )}
                 <p className="flex items-start gap-1.5 text-xs text-slate-600 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what happened before this admission, and how long it has been going on.</p>
-                <textarea value={st.historical} onChange={(e) => setDomain(dm.id, { ...st, historical: e.target.value })} rows={2} aria-label={personalise(dm.historicalPrompt)} className={inputCls} />
-                <DatedExamples tone="slate" title="Past events" examples={st.historicalExamples} onChange={(next) => setDomain(dm.id, { ...st, historicalExamples: next })} />
+                <textarea value={st.historical} onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, historical: e.target.value }))} rows={2} aria-label={personalise(dm.historicalPrompt)} className={inputCls} />
+                <DatedExamples tone="slate" title="Past events" examples={st.historicalExamples} onChange={(next) => updateDomain(dm.id, (d) => ({ ...d, historicalExamples: next }))} />
                 <S1CopyBox text={withExamples(st.historical, st.historicalExamples)} />
               </div>
             </div>
@@ -1493,7 +1534,7 @@ export default function RiskAssessmentPage() {
                       <span className="block text-sm font-bold text-gray-800">{dm.number}. {dm.title}</span>
                       <span className="block text-xs text-gray-600 mt-0.5">{personalise(dm.indicatorsPrompt)}</span>
                     </span>
-                    <YNToggle value={getDomain(dm.id).indicators} onChange={(v) => setDomain(dm.id, { ...getDomain(dm.id), indicators: v })} />
+                    <YNToggle value={getDomain(dm.id).indicators} onChange={(v) => updateDomain(dm.id, (d) => ({ ...d, indicators: v }))} />
                   </div>
                 ))}
               </div>

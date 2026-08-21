@@ -2700,3 +2700,42 @@ Fed back by someone else using it on the ward, not Mike.
 
 Checked and NOT a bug: the plan's WHAT IS THE RISK carries the `q_seen` answer as well as
 the formulation's presenting risk. That is deliberate and commented in `deriveRmp`.
+
+### W4. Answering the trust RMP guidance (20 Aug, fourth pass)
+
+Mike supplied **"RISK MANAGEMENT PLANS 18/04/24"** - the only trust document written for
+this task. Checked the tool against it line by line.
+
+**What the guide says, and what it does not.** It is entirely about the *management plan*:
+the title, the six content requirements, the five template headings, the mandatory MDT
+closing line, the 24-hour rule. **It says nothing about a formulation.** The formulation
+exists only as field 9 on SystmOne with no template and no content rules.
+
+That is why people did not know why they were answering the questions: **six of them build
+the document the trust mandates and eight build a field with no trust template**, and they
+were presented as one undifferentiated run.
+
+- **The manage / prevent split.** The guide lists "how we should manage this risk when it
+  occurs" and "how to try to prevent or reduce it" as two separate content requirements
+  under the one heading HOW TO PREVENT / REDUCE. We asked them as one question, and the
+  manage half kept getting missed. Now two questions - "What do we do when it happens?"
+  and "What prevents it, or reduces how often it happens?" - each showing only its own
+  chips, printing as two labelled lines under the one heading:
+  `When it happens: ...` / `To prevent or reduce: ...`. `writes.part` on the question and
+  `prevent__manage` / `prevent__reduce` in the derived state carry it.
+- **Every question is badged Plan, Formulation or Both**, with a "Why you are answering
+  these" panel at the top of each question set that says plainly which half is the
+  mandated document and which is best practice with no trust template.
+- **The plan is named after the risks ticked, not the domain.** The guide's own examples
+  are "self harm / risk to others / violence and aggression" - that last one is a domain 3
+  sub-domain. The plan now heads `VIOLENCE AND AGGRESSION, DAMAGE TO PROPERTY, FIRE
+  SETTING` instead of `RISK OF HARM OR NEGLECT TO OTHERS`, and the on-screen header reads
+  "Build the plan for: ..." instead of the meaningless "whole-domain plan".
+- ⚠ **Bug found while testing: the same stale-state pattern as the capture panel, across
+  every domain handler.** Ticking three sub-domains quickly registered one. Every write to
+  a domain now goes through `updateDomain(id, fn)` using the functional form - 16 call
+  sites converted, `setDomain` deleted. This was silently losing ward staff's clicks.
+
+Still open from this pass: the chip deep dive (Mike chose the full scope - the 11 unmapped
+sub-domains, the four missing formulation sections across all risks, and a specificity
+pass over the existing banks).

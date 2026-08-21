@@ -2845,3 +2845,26 @@ correct (an identical clone in the same parent, same position, same attributes p
 `bg-slate-700` correctly) but the live node would not repaint in the automated browser
 session even after reloads - a style-recalc artefact of that environment. **Worth an
 eyeball on a real browser.** Everything else was measured on the live page.
+
+### W8. Proofreading pack brought up to date (20 Aug, session close)
+
+The pack renders from the same data as the tool, so today's content was already in it
+automatically - the 27 domain 5 indicators, the 11 new chip banks, the three new
+formulation sections, the reworded per-domain questions, the manage/prevent split. What it
+did **not** carry was the *reasoning* behind three decisions, which is exactly what a
+reviewer needs in order to sign off rather than just proofread. Added:
+
+- **Why the overall risk judgement has no per-risk words.** Flagged in Part 5 as a
+  deliberate decision, not an oversight: per-risk versions would mean the tool suggesting
+  a risk level for a named risk, and it offers vocabulary rather than rating risk.
+- **The three meetings, named and separated** - MDT review, risk strategy meeting,
+  safeguarding strategy meeting - so nobody reading the banks merges them again.
+- **The two places output differs from input** (Part 6): HOW TO PREVENT / REDUCE printing
+  as two labelled lines, and the plan being named after the risks ticked rather than the
+  domain. Plus how unanswered sections print differently in the plan and the formulation.
+
+**Pack is now ~26,500 words, 21 sign-off blocks, every part badged Trust form or wardHub.**
+Verified end to end: all 27 domain 5 indicators, zero unmapped sub-domains in the Part 4
+table, the child banks, the new sections, and all three new explanations render.
+
+**This is where the session ends. RED is blocked on Mike reading the pack, nothing else.**

@@ -141,6 +141,11 @@ export function printRiskProofreadPack() {
   // ---- Part 5: the chip banks --------------------------------------------
   parts.push(`<h2>Part 5. The suggestion words ${WH}</h2>`);
   parts.push(`<p class="lead">None of this is trust wording. It is clinical vocabulary written to save typing, and it shows on screen with a purple ring so nobody mistakes it for the form. Strike out anything wrong or unsafe.</p>`);
+  parts.push(`<div class="note">
+    <p style="margin:0 0 2mm"><strong>Two deliberate decisions to check, not oversights.</strong></p>
+    <p style="margin:0 0 2mm"><strong>The overall risk judgement has no per-risk words.</strong> Its only chips are the short and medium term severity labels the clinician picks for themselves. Writing risk-specific versions would mean the tool suggesting a risk <em>level</em> for a named risk. The tool offers vocabulary; it does not rate or stratify risk, and that is what keeps it a drafting aid.</p>
+    <p style="margin:0"><strong>Three different meetings appear below and must not be merged.</strong> An <strong>MDT review</strong> is the trust's mandatory closing line on every plan. A <strong>risk strategy meeting</strong> is the trust's own risk process, and can be called either while managing an incident or as escalation. A <strong>safeguarding strategy meeting</strong> is the statutory discussion for children, and appears only in the domain 6 banks.</p>
+  </div>`);
 
   parts.push(`<h3>Generic banks (used when a risk has no tailored set)</h3>`);
   for (const sec of [...FORMULATION_SECTIONS, ...RMP_SECTIONS]) {
@@ -170,7 +175,13 @@ export function printRiskProofreadPack() {
   parts.push(`<h3>Formulation headings, in order</h3><ul>${FORMULATION_SECTIONS.map((s) => `<li><strong>${esc(s.heading)}</strong> - ${esc(s.hint)}</li>`).join("")}</ul>`);
   parts.push(`<h3>Management plan headings, in order</h3><ul>${RMP_SECTIONS.map((s) => `<li><strong>${esc(s.heading)}</strong> - ${esc(s.hint)}</li>`).join("")}</ul>`);
   parts.push(`<h3>Mandatory closing line, added to every plan</h3><p>${esc(MANDATORY_MDT_LINE)}</p>`);
-  parts.push(`<p class="lead">An unanswered section prints as "Not yet established." rather than being left blank, per the trust care planning guidance.</p>`);
+  parts.push(`<h3>Two things print differently from how they are asked</h3>
+    <p><strong>HOW TO PREVENT / REDUCE holds two answers.</strong> The trust guide lists managing the risk when it occurs and preventing it as separate content requirements, under this one heading. They are asked as two questions and print as two labelled lines:</p>
+    <pre>HOW TO PREVENT / REDUCE
+When it happens: ...
+To prevent or reduce: ...</pre>
+    <p><strong>The plan is named after the risks that were ticked</strong>, not the SystmOne domain, because the guide's own examples name the risk itself ("self harm / risk to others / violence and aggression"). So a plan heads <em>VIOLENCE AND AGGRESSION, DAMAGE TO PROPERTY</em> rather than <em>Risk of harm or neglect to others</em>.</p>`);
+  parts.push(`<p class="lead">In the plan, an unanswered section prints as "Not yet established." under its heading, per the trust care planning guidance. The formulation runs as prose with no headings, so unanswered sections there are gathered into one closing line instead - "Not yet established: pattern over time, protective factors." - rather than repeating the bare phrase with nothing to say what is missing.</p>`);
   parts.push(signoff("Output structure and the mandatory line - correct?"));
 
   // ---- Part 7: teaching ---------------------------------------------------

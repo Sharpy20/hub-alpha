@@ -484,11 +484,11 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "falls": {
     present: [{ words: ["unsteady gait / poor balance", "recent falls or near-misses", "dizziness on standing", "weakness or reduced mobility", "confusion / disorientation", "rushing or not using aids", "sedation from medication", "getting up unaided at night"] }],
     prevent: [
-      { label: MANAGE, words: ["complete a falls risk assessment", "call bell and aids within reach", "clear hazards / non-slip footwear", "assist with mobility and transfers", "physical / medical review", "review sedating medication", "post-fall checks and observations"] },
+      { label: MANAGE, words: ["complete a falls risk assessment", "call bell and aids within reach", "clear hazards / non-slip footwear", "assist with mobility and transfers", "physical / medical review", "review sedating medication", "post-fall checks and observations", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["falls care plan with MDT input", "physiotherapy / mobility support", "medication review (sedation, postural BP)", "lying and standing BP", "adequate lighting and clear environment", "regular toileting / night-time support", "bed and chair at a safe height"] },
     ],
     evaluate: [{ words: ["no further falls", "improved steadiness / mobility", "using aids and call bell", "stable lying / standing BP", "reduced sedation"] }],
-    next: [{ words: ["medical review post-fall", "physiotherapy / OT referral", "review medication", "enhanced support at night", "investigate cause (infection, postural BP)"] }],
+    next: [{ words: ["medical review post-fall", "physiotherapy / OT referral", "review medication", "enhanced support at night", "investigate cause (infection, postural BP)", "arrange a risk strategy meeting"] }],
   },
   "vulnerability / exploitation": {
     present: [{ words: ["easily led by others", "giving away money, items or food", "befriended by predatory peers", "isolation or mood change after contact", "unexplained loss of belongings", "difficulty saying no", "naive about others' intentions"] }],
@@ -538,11 +538,11 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "hoarding": {
     present: [{ words: ["accumulating items in room / bed area", "reluctance to discard anything", "blocking access or exits with belongings", "food or rubbish stored in room", "distress when items are moved", "fire / infection risk from clutter"] }],
     prevent: [
-      { label: MANAGE, words: ["agree limits collaboratively", "remove perishable / hazardous items with consent", "keep exits and walkways clear", "infection prevention checks", "support, not force, decluttering", "document and monitor"] },
+      { label: MANAGE, words: ["agree limits collaboratively", "remove perishable / hazardous items with consent", "keep exits and walkways clear", "infection prevention checks", "support, not force, decluttering", "document and monitor", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["hoarding care plan / graded approach", "OT and psychology input", "address underlying anxiety / meaning", "regular supportive room reviews", "fire and infection safety checks", "respectful collaborative approach"] },
     ],
     evaluate: [{ words: ["room safe and accessible", "exits clear", "accepting support to declutter", "less distress around items", "no fire or infection hazard"] }],
-    next: [{ words: ["OT / psychology referral", "infection prevention / estates input", "fire-safety review", "capacity assessment if safety is at risk"] }],
+    next: [{ words: ["OT / psychology referral", "infection prevention / estates input", "fire-safety review", "capacity assessment if safety is at risk", "arrange a risk strategy meeting"] }],
   },
   "financial exploitation": {
     present: [{ words: ["giving money or PIN to others", "unexplained spending or withdrawals", "pressured for money by peers or contacts", "loss of bank cards or cash", "distress about money", "new 'friends' interested in finances"] }],
@@ -574,11 +574,11 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "discharge risk": {
     present: [{ words: ["anxiety or distress about leaving", "symptoms increasing near discharge", "lack of community support in place", "reluctance to engage with the discharge plan", "previous early readmission", "no clear crisis plan"] }],
     prevent: [
-      { label: MANAGE, words: ["review readiness for discharge with MDT", "ensure community follow-up is in place", "complete a crisis / safety plan", "involve care coordinator and family", "phased / supported discharge", "do not discharge without a plan"] },
+      { label: MANAGE, words: ["review readiness for discharge with MDT", "ensure community follow-up is in place", "complete a crisis / safety plan", "involve care coordinator and family", "phased / supported discharge", "do not discharge without a plan", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["discharge planning from admission", "CPA / follow-up within 72 hours", "relapse and crisis planning", "medication and appointments arranged", "involve community team and supports", "graded leave before discharge"] },
     ],
     evaluate: [{ words: ["discharge plan agreed and in place", "community follow-up confirmed", "crisis plan completed", "reduced anxiety about discharge", "using leave successfully"] }],
-    next: [{ words: ["request an urgent MDT review", "review at a discharge planning meeting", "delay discharge if unsafe", "escalate to the community team", "ensure 72-hour follow-up", "review the crisis plan"] }],
+    next: [{ words: ["request an urgent MDT review", "review at a discharge planning meeting", "delay discharge if unsafe", "escalate to the community team", "ensure 72-hour follow-up", "review the crisis plan", "arrange a risk strategy meeting"] }],
   },
   "sleep disturbance": {
     present: [{ words: ["not sleeping / awake through the night", "disturbing peers at night", "daytime exhaustion", "more agitated when tired", "reversed sleep pattern", "early waking linked to low mood"] }],

@@ -2807,7 +2807,7 @@ Mike's correction. Acting on it turned up more than the one phrasing already fix
 - Wording: the escalation question now says the two are different processes and asks which
   one you mean; the manage question notes it is the same meeting reached either way.
 
-Open for Mike: the 15 risks carrying a risk strategy meeting are the 12 that already had
-it plus those three omissions. The other 24 (including all the child sub-domains, which
-carry the safeguarding strategy meeting instead) do not. Widen or narrow that set if it
-does not match how it works on the ward.
+**Set widened to 18 on Mike's instruction (20 Aug): falls, hoarding and discharge risk
+added.** The remaining 21 do not carry it - including all the child sub-domains, which
+carry the safeguarding strategy meeting instead. Widen further if it does not match the
+ward.

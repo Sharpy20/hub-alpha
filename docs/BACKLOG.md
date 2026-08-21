@@ -116,9 +116,10 @@ source of truth. The stale-warning table at the top went with the staleness.
   (5-min checks, simplest), Better Stack (30-s checks, nicer alerts), or a GitHub Actions
   scheduled curl (no new account at all, but alerts are just email from a failed run).
   One decision + ten minutes whenever Mike picks.
-- **Found in the working tree, not touched:** an untracked file
-  `docs/All guides state of play 31-07-26.docx`. Not committed - Mike to say whether it
-  belongs in the repo, in `E:\Hub\temp\`, or gitignored like the other doc dumps.
+- [x] **The stray guides state-of-play docx is out of the repo** (20 Aug, Mike's call).
+  Moved to `E:\Hub\All guides state of play 31-07-26.docx`. It had been committed once
+  (a9b120c) and untracked again (a4b7f1a) but left sitting in the working tree, so this
+  finishes the job off. Note it still exists in git history from that first commit.
 
 ### ⚠ Do not chase: no CI runs on today's pushes
 None of this session's pushes triggered a CI run - because **GitHub had a critical Actions

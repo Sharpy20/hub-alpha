@@ -298,7 +298,7 @@ export const RMP_SECTIONS: RiskSection[] = [
     id: "prevent",
     heading: "HOW TO PREVENT / REDUCE",
     hint: "Two parts: how to MANAGE it when it happens, and how to PREVENT or reduce it. Say why where it helps.",
-    trustExamples: "manage: 1:1 time, hand over risk items + full search, PRN, time off the ward, medical review, risk strategy meeting. prevent: de-escalation, structured activity.",
+    trustExamples: "manage: 1:1 time, hand over risk items + full search, PRN, time off the ward, medical review, arrange a risk strategy meeting. prevent: de-escalation, structured activity.",
     gap: "What specifically helps this patient, and what makes it worse?",
     groups: [
       {
@@ -385,7 +385,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "self-harm": {
     present: [{ words: ["fresh cuts or scratches", "sourcing sharps or blades", "concealing items in room or clothing", "isolating in bedroom or bathroom", "covering arms / long sleeves in heat", "sudden calm after distress", "asking about ligature points", "declining to hand items over"] }],
     prevent: [
-      { label: MANAGE, words: ["offer 1:1 time", "patient to hand over items", "complete a room and personal search", "offer PRN", "wound care / first aid", "request a medical review", "increase observation level"] },
+      { label: MANAGE, words: ["offer 1:1 time", "patient to hand over items", "complete a room and personal search", "offer PRN", "wound care / first aid", "request a medical review", "increase observation level", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["agree a safety / coping plan", "harm-minimisation discussion", "distraction / sensory box", "named-nurse 1:1s at difficult times", "remove access to sharps and ligature points", "structured activity to reduce idle time"] },
     ],
     evaluate: [{ words: ["reduced frequency / severity of self-harm", "using coping strategies instead of harming", "handing items over voluntarily", "voicing urges before acting", "engaging with named nurse", "wounds healing, no new injuries"] }],
@@ -394,34 +394,34 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "suicide": {
     present: [{ words: ["expressing hopelessness / no future", "giving belongings away / saying goodbye", "researching or asking about methods", "sudden calm after distress", "writing notes or messages", "withdrawing from staff and peers", "declining food, fluids or medication", "seeking ligature points or heights"] }],
     prevent: [
-      { label: MANAGE, words: ["offer 1:1 / constant engagement", "remove access to means", "increase observation level", "complete a search", "offer PRN", "urgent psychiatric review", "stay with the patient"] },
+      { label: MANAGE, words: ["offer 1:1 / constant engagement", "remove access to means", "increase observation level", "complete a search", "offer PRN", "urgent psychiatric review", "stay with the patient", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["collaborative safety planning", "reduce access to means", "named-nurse 1:1s", "build hope / future-focused talk", "involve family / supports", "predictable routine and check-ins"] },
     ],
     evaluate: [{ words: ["voicing they feel safer", "reduction in suicidal ideation", "future-oriented talk / plans", "accepting support and PRN", "improved engagement", "eating, drinking and taking medication"] }],
-    next: [{ words: ["increase to 1:1 / eyesight obs", "urgent psychiatric review", "review medication", "risk strategy / MDT review", "consider PICU", "review leave status"] }],
+    next: [{ words: ["increase to 1:1 / eyesight obs", "urgent psychiatric review", "review medication", "arrange a risk strategy meeting", "request an urgent MDT review", "consider PICU", "review leave status"] }],
   },
   "violence and aggression": {
     present: [{ words: ["raised voice / shouting", "clenched fists / pacing", "invading personal space", "verbal threats to staff or peers", "throwing or banging objects", "refusing boundaries", "targeting a specific person", "escalating irritability"] }],
     prevent: [
-      { label: MANAGE, words: ["de-escalate / lower stimulation", "offer PRN", "create space / move others away", "set clear boundaries calmly", "offer time off the ward / quiet area", "request urgent staff support", "follow PMVA policy as a last resort"] },
+      { label: MANAGE, words: ["de-escalate / lower stimulation", "offer PRN", "create space / move others away", "set clear boundaries calmly", "offer time off the ward / quiet area", "request urgent staff support", "follow PMVA policy as a last resort", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["identify and avoid known triggers", "structured, meaningful activity", "consistent calm non-confrontational approach", "reduce noise and crowding", "early PRN before escalation", "de-escalation preferences / advance statement", "separate from specific peer"] },
     ],
     evaluate: [{ words: ["fewer aggressive incidents", "responding to de-escalation", "using time-out voluntarily", "fewer threats / settled interactions", "accepting PRN early", "stable mental state"] }],
-    next: [{ words: ["increase observation level", "urgent medical review", "review medication / regular PRN", "risk strategy / MDT review", "Datix and review triggers", "consider transfer / PICU"] }],
+    next: [{ words: ["increase observation level", "urgent medical review", "review medication / regular PRN", "arrange a risk strategy meeting", "request an urgent MDT review", "Datix and review triggers", "consider transfer / PICU"] }],
   },
   "risk to others": {
     present: [{ words: ["threats or intimidation towards others", "fixation on a particular person", "boundary-testing behaviour", "concealing items usable as weapons", "agitation around specific individuals", "verbal hostility", "predatory / targeting behaviour"] }],
     prevent: [
-      { label: MANAGE, words: ["maintain safe staffing and observation", "separate from the person at risk", "remove potential weapons / items", "de-escalate", "offer PRN", "clear consistent boundaries", "request urgent staff support"] },
+      { label: MANAGE, words: ["maintain safe staffing and observation", "separate from the person at risk", "remove potential weapons / items", "de-escalate", "offer PRN", "clear consistent boundaries", "request urgent staff support", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["risk-aware care plan shared with MDT", "supervised contact where needed", "address underlying drivers (psychosis, etc.)", "structured supervised activity", "consistent staff approach", "safeguarding awareness for the person at risk"] },
     ],
     evaluate: [{ words: ["no incidents towards others", "reduced hostility / threats", "appropriate boundaries maintained", "engaging safely with peers", "stable presentation"] }],
-    next: [{ words: ["increase observation level", "urgent MDT / risk strategy review", "safeguarding referral", "review medication", "consider transfer / PICU", "police involvement if a crime occurs"] }],
+    next: [{ words: ["increase observation level", "request an urgent MDT review", "arrange a risk strategy meeting", "safeguarding referral", "review medication", "consider transfer / PICU", "police involvement if a crime occurs"] }],
   },
   "AWOL / absconsion": {
     present: [{ words: ["loitering near exits / doors", "asking about leave or discharge repeatedly", "watching staff and door routines", "expressing intent to leave", "agitation / restlessness", "trying to follow others through doors", "dressed to leave / gathering belongings"] }],
     prevent: [
-      { label: MANAGE, words: ["confirm legal status and leave", "increase observation level", "alert the team and door security", "engage and de-escalate", "offer escorted time off the ward", "inform nurse in charge", "follow AWOL policy if missing"] },
+      { label: MANAGE, words: ["confirm legal status and leave", "increase observation level", "alert the team and door security", "engage and de-escalate", "offer escorted time off the ward", "inform nurse in charge", "follow AWOL policy if missing", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["address reasons for wanting to leave", "agree structured escorted leave", "meaningful activity on the ward", "regular orientation and reassurance", "named-nurse 1:1s", "involve family / supports"] },
     ],
     evaluate: [{ words: ["no absconsion attempts", "using leave appropriately and returning", "voicing intent rather than acting", "settled on the ward", "engaging with the leave plan"] }],
@@ -439,7 +439,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "substance misuse": {
     present: [{ words: ["appearing intoxicated or withdrawn", "smell of substances", "paraphernalia found", "secretive behaviour / unexplained absences", "requests for frequent leave", "physical signs (pupils, tremor)", "mood change after leave or visits", "associating with supplying peers"] }],
     prevent: [
-      { label: MANAGE, words: ["physical observations (NEWS2)", "manage withdrawal as prescribed", "search per policy if indicated", "medical review", "drug screen where appropriate", "remove substances / paraphernalia", "review leave and visitors"] },
+      { label: MANAGE, words: ["physical observations (NEWS2)", "manage withdrawal as prescribed", "search per policy if indicated", "medical review", "drug screen where appropriate", "remove substances / paraphernalia", "review leave and visitors", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["substance-misuse care plan / brief intervention", "refer to / liaise with drug and alcohol services", "psychoeducation on risks", "structured activity to reduce boredom", "risk-assess and review leave", "relapse-prevention planning"] },
     ],
     evaluate: [{ words: ["negative drug screens", "no signs of intoxication", "engaging with substance services", "using leave without use", "stable physical observations"] }],
@@ -448,7 +448,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "paranoia / persecutory beliefs": {
     present: [{ words: ["suspicion / mistrust of staff or peers", "accusing others of plotting or poisoning", "guarded, hypervigilant behaviour", "refusing food, drink or medication", "barricading or hiding", "hostility linked to beliefs", "misreading neutral actions as threats"] }],
     prevent: [
-      { label: MANAGE, words: ["calm non-confrontational approach", "neither collude with nor directly challenge beliefs", "offer reassurance and space", "offer PRN", "consistent trusted staff", "reduce perceived threats / stimulation", "medical review"] },
+      { label: MANAGE, words: ["calm non-confrontational approach", "neither collude with nor directly challenge beliefs", "offer reassurance and space", "offer PRN", "consistent trusted staff", "reduce perceived threats / stimulation", "medical review", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["build trust with consistent named staff", "validate the feeling not the belief", "antipsychotic review / optimisation", "predictable routine and clear communication", "reduce stimulation and crowding", "grounding / occupational activity"] },
     ],
     evaluate: [{ words: ["reduced suspiciousness", "accepting food, drink and medication", "engaging with trusted staff", "less hostility linked to beliefs", "improved reality testing"] }],
@@ -457,7 +457,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "mania / impulsivity": {
     present: [{ words: ["pressured speech / flight of ideas", "reduced need for sleep", "overactive / unable to settle", "disinhibited or reckless behaviour", "grandiosity", "irritable when thwarted", "overspending / giving items away", "intrusive with peers"] }],
     prevent: [
-      { label: MANAGE, words: ["reduce stimulation / low-stimulus area", "offer PRN", "clear simple boundaries", "limit access to means of harm / overspending", "redirect energy to safe activity", "protect sleep", "medical review"] },
+      { label: MANAGE, words: ["reduce stimulation / low-stimulus area", "offer PRN", "clear simple boundaries", "limit access to means of harm / overspending", "redirect energy to safe activity", "protect sleep", "medical review", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["mood-stabiliser / medication optimisation", "structured low-stimulus routine", "sleep-hygiene support", "consistent limit-setting across the team", "safeguard finances and valuables", "monitor for exhaustion / dehydration"] },
     ],
     evaluate: [{ words: ["improved sleep", "less pressured / settled speech", "fewer impulsive incidents", "accepting boundaries", "stable mood", "eating and drinking adequately"] }],
@@ -475,7 +475,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "diet and nutrition": {
     present: [{ words: ["declining meals and snacks", "restricting or skipping food", "minimal fluid intake / signs of dehydration", "weight loss", "hiding or disposing of food", "rules or rituals around eating", "avoiding the dining room", "low energy / physical signs of poor intake"] }],
     prevent: [
-      { label: MANAGE, words: ["monitor and record food and fluid intake", "offer preferred foods and supplements", "supportive mealtime presence / supervision", "regular weights and physical observations", "dietitian and medical review", "offer fortified drinks / snacks", "manage refeeding risk as prescribed"] },
+      { label: MANAGE, words: ["monitor and record food and fluid intake", "offer preferred foods and supplements", "supportive mealtime presence / supervision", "regular weights and physical observations", "dietitian and medical review", "offer fortified drinks / snacks", "manage refeeding risk as prescribed", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["individualised nutrition / eating care plan", "dietitian-led plan and supplements", "post-meal support where needed", "address underlying cause (mood, psychosis, eating disorder)", "structured mealtimes and routine", "involve family / supports", "MEED / refeeding monitoring where indicated"] },
     ],
     evaluate: [{ words: ["improved oral intake", "stable or improving weight", "adequate hydration / bloods", "eating in the dining room", "less food avoidance or restriction", "stable physical observations"] }],
@@ -493,7 +493,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "vulnerability / exploitation": {
     present: [{ words: ["easily led by others", "giving away money, items or food", "befriended by predatory peers", "isolation or mood change after contact", "unexplained loss of belongings", "difficulty saying no", "naive about others' intentions"] }],
     prevent: [
-      { label: MANAGE, words: ["supervise peer interactions", "safeguard money and valuables", "separate from the exploiting peer", "1:1 support and reassurance", "remove access to the person exploiting them", "raise a safeguarding concern"] },
+      { label: MANAGE, words: ["supervise peer interactions", "safeguard money and valuables", "separate from the exploiting peer", "1:1 support and reassurance", "remove access to the person exploiting them", "raise a safeguarding concern", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["risk-aware care plan", "assertiveness / boundaries work", "supervised, structured social activity", "safeguard finances and property", "consistent protective staffing", "education about healthy relationships"] },
     ],
     evaluate: [{ words: ["no exploitation incidents", "retaining belongings and money", "setting boundaries with peers", "appropriate peer relationships", "voicing concerns to staff"] }],
@@ -502,7 +502,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "sexual disinhibition": {
     present: [{ words: ["sexually inappropriate comments or gestures", "exposing / undressing in public areas", "intrusive approaches to peers or staff", "inappropriate touching", "misreading social cues", "fixation on a particular person", "disinhibition linked to mania or illness"] }],
     prevent: [
-      { label: MANAGE, words: ["calm clear boundaries and redirection", "maintain personal space / protect others", "same-gender care where appropriate", "remove from the situation / offer privacy", "offer PRN if agitated", "document and Datix incidents"] },
+      { label: MANAGE, words: ["calm clear boundaries and redirection", "maintain personal space / protect others", "same-gender care where appropriate", "remove from the situation / offer privacy", "offer PRN if agitated", "document and Datix incidents", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["address underlying cause (mania, dementia, illness)", "consistent boundary-setting across the team", "structured supervised activity", "protect vulnerable peers", "care plan covering dignity and others' safety", "medication review where illness-driven"] },
     ],
     evaluate: [{ words: ["fewer disinhibited incidents", "maintaining appropriate boundaries", "responding to redirection", "peers feeling safe", "stable mental state"] }],
@@ -524,12 +524,12 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["regular physical health monitoring", "physical health care plan", "manage long-term conditions / medication", "encourage diet, fluids and mobility", "infection prevention measures", "GP / acute liaison as needed"] },
     ],
     evaluate: [{ words: ["observations within normal range", "improving symptoms", "eating, drinking and mobilising", "no signs of infection", "stable NEWS2"] }],
-    next: [{ words: ["escalate per NEWS2 / sepsis protocol", "urgent medical review or 999", "transfer to acute care if needed", "MDT / duty doctor review", "increase observation level"] }],
+    next: [{ words: ["escalate per NEWS2 / sepsis protocol", "urgent medical review or 999", "transfer to acute care if needed", "request an urgent MDT review", "request a duty doctor review", "increase observation level"] }],
   },
   "fire risk": {
     present: [{ words: ["requests for lighters / matches", "concealing igniters or flammables", "talk of setting fires", "previous fire-setting history", "hoarding flammable materials", "smoking in unauthorised areas", "fascination with fire"] }],
     prevent: [
-      { label: MANAGE, words: ["remove lighters, matches and flammables", "search per policy", "supervise any sanctioned smoking", "alert the team and document", "increase observation level", "keep fire exits and alarms clear"] },
+      { label: MANAGE, words: ["remove lighters, matches and flammables", "search per policy", "supervise any sanctioned smoking", "alert the team and document", "increase observation level", "keep fire exits and alarms clear", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["fire-risk care plan shared with the team", "remove access to ignition sources", "address underlying drivers", "supervised structured activity", "environmental fire-safety checks", "liaise with the fire-safety lead"] },
     ],
     evaluate: [{ words: ["no fire-setting behaviour", "not seeking ignition sources", "handing items over", "engaging with the safety plan", "stable presentation"] }],
@@ -547,7 +547,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "financial exploitation": {
     present: [{ words: ["giving money or PIN to others", "unexplained spending or withdrawals", "pressured for money by peers or contacts", "loss of bank cards or cash", "distress about money", "new 'friends' interested in finances"] }],
     prevent: [
-      { label: MANAGE, words: ["safeguard cards, cash and valuables", "supervise / limit access to finances", "separate from the person exploiting them", "raise a safeguarding concern", "document concerns", "involve appointee / family where appropriate"] },
+      { label: MANAGE, words: ["safeguard cards, cash and valuables", "supervise / limit access to finances", "separate from the person exploiting them", "raise a safeguarding concern", "document concerns", "involve appointee / family where appropriate", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["financial safeguarding care plan", "support with money management / appointee", "education on financial safety", "supervised peer interactions", "consistent protective staffing", "liaise with safeguarding / social care"] },
     ],
     evaluate: [{ words: ["no further financial loss", "finances secured", "setting boundaries about money", "voicing concerns to staff", "appropriate peer relationships"] }],
@@ -560,7 +560,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["discharge planning from admission", "housing and benefits support", "involve family / supports", "Duty to Refer (Homelessness Reduction Act)", "secure accommodation before discharge", "link to community / third-sector support"] },
     ],
     evaluate: [{ words: ["housing plan in place", "accommodation secured for discharge", "reduced anxiety about discharge", "engaging with housing support", "benefits / finances arranged"] }],
-    next: [{ words: ["escalate to social work / housing team", "Duty to Refer if not already done", "MDT / discharge planning review", "delay discharge until housing is safe", "involve local authority / commissioners"] }],
+    next: [{ words: ["escalate to social work / housing team", "Duty to Refer if not already done", "request an urgent MDT review", "review at a discharge planning meeting", "delay discharge until housing is safe", "involve local authority / commissioners"] }],
   },
   "cognitive impairment / confusion": {
     present: [{ words: ["disorientation to time, place or person", "memory difficulties / repetitive questions", "wandering or getting lost on the ward", "fluctuating confusion (?delirium)", "difficulty following routines", "agitation when confused", "not recognising hazards"] }],
@@ -578,7 +578,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["discharge planning from admission", "CPA / follow-up within 72 hours", "relapse and crisis planning", "medication and appointments arranged", "involve community team and supports", "graded leave before discharge"] },
     ],
     evaluate: [{ words: ["discharge plan agreed and in place", "community follow-up confirmed", "crisis plan completed", "reduced anxiety about discharge", "using leave successfully"] }],
-    next: [{ words: ["MDT / discharge planning review", "delay discharge if unsafe", "escalate to the community team", "ensure 72-hour follow-up", "review the crisis plan"] }],
+    next: [{ words: ["request an urgent MDT review", "review at a discharge planning meeting", "delay discharge if unsafe", "escalate to the community team", "ensure 72-hour follow-up", "review the crisis plan"] }],
   },
   "sleep disturbance": {
     present: [{ words: ["not sleeping / awake through the night", "disturbing peers at night", "daytime exhaustion", "more agitated when tired", "reversed sleep pattern", "early waking linked to low mood"] }],
@@ -596,12 +596,12 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["infection prevention measures", "treat infection promptly as prescribed", "maintain hydration and nutrition", "delirium-aware care plan", "regular physical monitoring", "reorientation and consistent staff"] },
     ],
     evaluate: [{ words: ["observations normalising", "confusion resolving", "infection markers improving", "eating, drinking and mobilising", "stable NEWS2"] }],
-    next: [{ words: ["escalate per NEWS2 / sepsis protocol", "urgent medical review or 999", "transfer to acute care if needed", "MDT / duty doctor review", "isolate / IPC measures if required"] }],
+    next: [{ words: ["escalate per NEWS2 / sepsis protocol", "urgent medical review or 999", "transfer to acute care if needed", "request an urgent MDT review", "request a duty doctor review", "isolate / IPC measures if required"] }],
   },
   "risk to family": {
     present: [{ words: ["hostility or threats towards a family member", "fixation or blame towards family", "distress or escalation after family contact", "history of harm to family", "intent to harm a relative", "agitation around visits or leave"] }],
     prevent: [
-      { label: MANAGE, words: ["risk-assess and review leave and visits", "supervised or restricted contact where needed", "safety planning with the family", "de-escalate around contact", "inform and involve safeguarding", "document and share risk"] },
+      { label: MANAGE, words: ["risk-assess and review leave and visits", "supervised or restricted contact where needed", "safety planning with the family", "de-escalate around contact", "inform and involve safeguarding", "document and share risk", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["care plan covering leave and visits", "address underlying drivers (psychosis, conflict)", "family work / mediated contact", "safeguarding (adults and children) input", "review leave collaboratively with the MDT", "support the family with a safety plan"] },
     ],
     evaluate: [{ words: ["no incidents towards family", "safe, settled contact / visits", "reduced hostility towards family", "using leave safely", "stable mental state"] }],
@@ -610,7 +610,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
   "weapon access": {
     present: [{ words: ["concealing sharp or makeshift weapons", "making or adapting items into weapons", "talk of using a weapon", "history of weapon use", "guarding a hidden item", "searching for items usable as weapons"] }],
     prevent: [
-      { label: MANAGE, words: ["remove the item and any weapons", "complete a personal and environmental search", "increase observation level", "maintain safe distance and staffing", "de-escalate", "document and Datix", "police if a serious weapon / offence"] },
+      { label: MANAGE, words: ["remove the item and any weapons", "complete a personal and environmental search", "increase observation level", "maintain safe distance and staffing", "de-escalate", "document and Datix", "police if a serious weapon / offence", "arrange a risk strategy meeting"] },
       { label: REDUCE, words: ["search and environmental safety checks", "remove access to potential weapons", "risk-aware care plan shared with the team", "address underlying intent / drivers", "structured supervised activity", "consistent staffing and boundaries"] },
     ],
     evaluate: [{ words: ["no weapons found or made", "handing items over", "no threats involving weapons", "engaging with the safety plan", "stable presentation"] }],
@@ -623,7 +623,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["behavioural care plan with clear limits", "whole-team consistency", "reinforce appropriate behaviour positively", "address underlying cause (illness, attachment)", "meaningful occupation", "regular review of boundaries"] },
     ],
     evaluate: [{ words: ["respecting others' space and rules", "fewer boundary incidents", "responding to redirection", "appropriate interactions", "peers feeling safe and respected"] }],
-    next: [{ words: ["MDT / behavioural review", "consistent team approach / care plan update", "psychology input", "review for underlying illness", "safeguarding if a peer is affected"] }],
+    next: [{ words: ["request an urgent MDT review", "behavioural review", "consistent team approach / care plan update", "psychology input", "review for underlying illness", "safeguarding if a peer is affected"] }],
   },
   "observations / refusal of obs": {
     present: [{ words: ["declining physical health observations", "resisting or avoiding enhanced obs", "hostility when observed", "hiding from observing staff", "refusing to be in line of sight", "distress about being watched"] }],
@@ -663,7 +663,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["no unsupervised contact with any child", "check every leave request against the safeguarding plan", "agree visiting arrangements in writing", "children's services to lead on contact decisions", "brief the whole team on the restrictions", "review restrictions only at the MDT"] },
     ],
     evaluate: [{ words: ["restrictions being kept to", "children's services satisfied with the arrangements", "no attempts at unsupervised contact", "engaging with the safeguarding process", "no further concerns raised"] }],
-    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "police referral where advised", "strategy meeting", "MDT review of all leave and contact"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "police referral where advised", "safeguarding strategy meeting", "MDT review of all leave and contact"] }],
   },
   "child physical abuse": {
     present: [{ words: ["unexplained or inconsistent injuries to a child", "harsh or frightening discipline described", "the child appearing wary of the adult", "explanations that change or do not fit", "another adult raising a worry", "escalating conflict in the household"] }],
@@ -672,7 +672,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["supervised contact only until reviewed", "parenting support through children's services", "address the stressors in the household", "plan discharge home with children's services", "agree what the ward will share and when", "consistent named nurse for these conversations"] },
     ],
     evaluate: [{ words: ["children's services satisfied with the arrangements", "contact happening as agreed", "no further injuries or concerns", "engaging with parenting support", "less conflict described at home"] }],
-    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "strategy meeting", "police referral where advised", "MDT review before any discharge home"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "safeguarding strategy meeting", "police referral where advised", "MDT review before any discharge home"] }],
   },
   "child organisational abuse": {
     present: [{ words: ["concerns about a placement or setting", "the child not being seen alone by professionals", "restrictions the setting cannot explain", "several children affected by the same practice", "complaints not being taken up", "the setting resisting outside contact"] }],
@@ -681,7 +681,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["children's services to lead on the setting", "support the family to raise a formal complaint", "check the child is seen alone by a professional", "keep a written record of what is reported", "review at the MDT until it is resolved"] },
     ],
     evaluate: [{ words: ["children's services taking the concern up", "the child being seen alone", "the setting's practice reviewed", "the family supported through the complaint", "no further concerns reported"] }],
-    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "raise with the local authority designated officer", "strategy meeting", "escalate through the trust safeguarding team"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "raise with the local authority designated officer", "safeguarding strategy meeting", "escalate through the trust safeguarding team"] }],
   },
   "child emotional abuse": {
     present: [{ words: ["the child described in hostile or rejecting terms", "the child blamed for adult problems", "witnessing frightening adult behaviour", "the child used to carry messages in a conflict", "isolation of the child from other family", "the child's needs consistently coming last"] }],
@@ -699,7 +699,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["MARAC referral where the risk is high", "specialist domestic abuse support for the adult", "safety planning that includes the child", "children's services to lead on contact", "plan discharge address with the safeguarding team", "keep the perpetrator out of ward contact arrangements"] },
     ],
     evaluate: [{ words: ["the child no longer present at incidents", "engaging with domestic abuse support", "contact happening safely and as agreed", "children's services satisfied with the plan", "a safe discharge address agreed"] }],
-    next: [{ words: ["refer to children's social care", "MARAC referral", "inform the ward safeguarding lead", "strategy meeting", "review discharge address at the MDT"] }],
+    next: [{ words: ["refer to children's social care", "MARAC referral", "inform the ward safeguarding lead", "safeguarding strategy meeting", "review discharge address at the MDT"] }],
   },
   "child financial abuse": {
     present: [{ words: ["money meant for the child used elsewhere", "the child's benefits or savings unaccounted for", "the child going without essentials", "an adult controlling the child's money or accounts", "debts run up in the child's name", "the child pressured to hand money over"] }],
@@ -717,7 +717,7 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
       { label: REDUCE, words: ["children's services to assess the child's needs", "family support or early help package", "treat the parent's own mental health and substance use", "practical help with the home before discharge", "plan discharge home with children's services", "agree what the ward will report and when"] },
     ],
     evaluate: [{ words: ["the child seen and their needs being met", "engaging with family support", "appointments being kept", "the home safe enough for the child", "children's services satisfied with progress"] }],
-    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "strategy meeting", "escalate out of hours to the emergency duty team", "MDT review before discharge home"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "safeguarding strategy meeting", "escalate out of hours to the emergency duty team", "MDT review before discharge home"] }],
   },
   // ---- Domain 7 gaps --------------------------------------------------------
   "unsafe home / appliances": {

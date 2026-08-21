@@ -2779,3 +2779,35 @@ as distinct chips. No duplicate words within any single bank.
 
 **All of it is wardHub wording carrying the purple ring, and none of it is approved.** It
 lands in Part 5 of the proofreading pack, which is now considerably longer.
+
+### W6. MDT review vs risk strategy meeting (Mike, 20 Aug) - they are different processes
+
+Mike's correction. Acting on it turned up more than the one phrasing already fixed.
+
+- **The bare "MDT review" chip duplicated the mandatory line.** It sat in 17 NEXT STEPS
+  banks, where the trust's closing line is appended automatically. Picking it made the
+  plan say the same thing twice. Removed; the specific variants that say something
+  different ("MDT review of observation level", "MDT review before discharge home") stay.
+- **More combined chips found.** The first normalisation only caught one word order.
+  Also present: `risk strategy / MDT review` (x2), `urgent MDT / risk strategy review`,
+  and the same fault in three other pairs - `MDT / duty doctor review`,
+  `MDT / discharge planning review`, `MDT / behavioural review`. All nine split into
+  separately named actions. **No combined phrasing remains.**
+- ⚠ **A third meeting was being confused.** The domain 6 banks written earlier used
+  "strategy meeting" for the statutory s47 safeguarding strategy discussion - a different
+  process again from a trust risk strategy meeting. Renamed to
+  **"safeguarding strategy meeting"** (5 chips) so the two cannot be read as the same.
+- **Placement: Mike's call was "both, because it is genuinely both."** A risk strategy
+  meeting can be called while managing an incident (where the trust guide lists it) or as
+  escalation when the plan is not holding. It now appears in **both** slots for the 15
+  risks where it applies, and in neither for the rest. Before this it was in NEXT only for
+  12 risks, MANAGE for none, and - the giveaway that the distribution was arbitrary -
+  **suicide, violence and aggression and risk to others had it in neither**, which are the
+  three where it is most obviously indicated.
+- Wording: the escalation question now says the two are different processes and asks which
+  one you mean; the manage question notes it is the same meeting reached either way.
+
+Open for Mike: the 15 risks carrying a risk strategy meeting are the 12 that already had
+it plus those three omissions. The other 24 (including all the child sub-domains, which
+carry the safeguarding strategy meeting instead) do not. Widen or narrow that set if it
+does not match how it works on the ward.

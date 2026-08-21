@@ -175,7 +175,21 @@ export const SUBTYPE_RISK: Record<string, string> = {
   "physical-health::Sensory difficulties": "physical health deterioration",
   "physical-health::Falls": "falls",
 
+  "environmental::Domestic appliance issues": "unsafe home / appliances",
   "environmental::Housing issues": "homelessness / housing instability",
+  "environmental::Lack of social stimulation/activities": "social isolation",
+
+  // Domain 6. The sub-domain names repeat domain 4's, but the person at risk is
+  // the child, so they map to their own banks - the composite key keeps them apart.
+  "children::Looked after children (Child in care of local authority)": "child in care",
+  "children::Child Protection": "child protection plan",
+  "children::Sexual abuse": "child sexual abuse",
+  "children::Physical abuse": "child physical abuse",
+  "children::Organisational abuse (including care provided in own home)": "child organisational abuse",
+  "children::Psychological abuse": "child emotional abuse",
+  "children::Domestic abuse": "child exposure to domestic abuse",
+  "children::Financial abuse": "child financial abuse",
+  "children::Neglect / acts of omission": "child neglect",
 };
 
 // Clinical indicators per domain - the approved S1 lists shown when "Display

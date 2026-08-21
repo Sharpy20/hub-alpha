@@ -84,6 +84,20 @@ export const RISK_TYPES: string[] = [
   "weapon access",
   "boundary violations",
   "observations / refusal of obs",
+  // Domain 6 (foetus, infant, child u18) and the two domain 7 sub-domains that had
+  // no bank of their own. The person at risk in the child set is the CHILD, not
+  // the patient - the wording has to hold that line.
+  "child in care",
+  "child protection plan",
+  "child sexual abuse",
+  "child physical abuse",
+  "child organisational abuse",
+  "child emotional abuse",
+  "child exposure to domestic abuse",
+  "child financial abuse",
+  "child neglect",
+  "unsafe home / appliances",
+  "social isolation",
 ];
 
 // ---- The 7 SystmOne risk-screen domains ----
@@ -617,6 +631,110 @@ export const RMP_RISK_CHIPS: Record<string, Partial<Record<RmpSectionId, RiskChi
     evaluate: [{ words: ["accepting observations", "allowing physical health checks", "less distress about being observed", "engaging with observing staff", "stable mental and physical state"] }],
     next: [{ words: ["MDT review of observation level", "medical review if refusing physical obs", "capacity assessment if refusing essential checks", "least-restrictive review", "psychiatric review"] }],
   },
+  // ---- Domain 6: the person at risk is the CHILD ----------------------------
+  // Ward staff cannot safeguard a child directly, so the plan is about what we
+  // observe, what we restrict (contact, leave, discharge home) and who we refer
+  // to. Referral routes stay named because "make a referral" is not a plan.
+  "child in care": {
+    present: [{ words: ["distress before or after contact", "contact arrangements not being kept to", "unplanned attempts to contact the child", "conflict with the local authority or foster carer", "raising the child during leave planning", "hopelessness about ever getting the child back"] }],
+    prevent: [
+      { label: MANAGE, words: ["offer 1:1 time around contact", "check what the current court or care plan allows", "contact the allocated social worker", "support them to use the agreed contact route", "inform the ward safeguarding lead", "record what was said and what was agreed"] },
+      { label: REDUCE, words: ["plan support before and after every contact", "clarify the contact arrangements in writing", "invite the social worker to the ward round", "support with letters or life-story work", "advocacy or legal advice about the care proceedings", "keep the team consistent around contact"] },
+    ],
+    evaluate: [{ words: ["contact happening as arranged", "less distress around contact", "working with the social worker", "realistic about the current arrangements", "no unplanned attempts at contact"] }],
+    next: [{ words: ["speak to the allocated social worker", "raise with the ward safeguarding lead", "MDT review before any leave involving the child", "professionals meeting", "review leave and discharge planning"] }],
+  },
+  "child protection plan": {
+    present: [{ words: ["plan requirements not being followed", "missed or refused professional visits", "minimising the concerns that led to the plan", "hostility towards children's services", "unclear about who is caring for the child now", "changes in the household not shared with professionals"] }],
+    prevent: [
+      { label: MANAGE, words: ["check the current plan and who holds it", "contact the allocated social worker the same day", "inform the ward safeguarding lead", "clarify who is caring for the child right now", "record the concern and who it was shared with", "do not delay a referral for consent"] },
+      { label: REDUCE, words: ["invite children's services to the ward round", "make the plan's requirements explicit with the patient", "agree what the ward tells the local authority and when", "support attendance at core group meetings", "plan leave and discharge with children's services", "keep the named nurse consistent for these conversations"] },
+    ],
+    evaluate: [{ words: ["engaging with the allocated social worker", "attending core group or review meetings", "the plan's requirements being met", "professionals able to see the child", "honest about who is in the household"] }],
+    next: [{ words: ["contact children's social care", "raise with the ward safeguarding lead", "professionals or strategy meeting", "escalate to the safeguarding team out of hours", "MDT review before leave or discharge"] }],
+  },
+  "child sexual abuse": {
+    present: [{ words: ["disclosure by the child or another adult", "unexplained knowledge or behaviour in the child", "unsupervised access being sought", "grooming behaviour towards a child", "images or messages of concern", "another adult raising a worry about contact"] }],
+    prevent: [
+      { label: MANAGE, words: ["refer to children's social care the same day", "do not question the child yourself", "record the exact words used, at the time", "inform the ward safeguarding lead immediately", "suspend contact and leave pending advice", "preserve anything shown to you and tell police if advised"] },
+      { label: REDUCE, words: ["no unsupervised contact with any child", "check every leave request against the safeguarding plan", "agree visiting arrangements in writing", "children's services to lead on contact decisions", "brief the whole team on the restrictions", "review restrictions only at the MDT"] },
+    ],
+    evaluate: [{ words: ["restrictions being kept to", "children's services satisfied with the arrangements", "no attempts at unsupervised contact", "engaging with the safeguarding process", "no further concerns raised"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "police referral where advised", "strategy meeting", "MDT review of all leave and contact"] }],
+  },
+  "child physical abuse": {
+    present: [{ words: ["unexplained or inconsistent injuries to a child", "harsh or frightening discipline described", "the child appearing wary of the adult", "explanations that change or do not fit", "another adult raising a worry", "escalating conflict in the household"] }],
+    prevent: [
+      { label: MANAGE, words: ["refer to children's social care the same day", "record what was seen or said, at the time", "inform the ward safeguarding lead", "review contact and leave arrangements", "seek advice before speaking to the family", "do not delay a referral for consent"] },
+      { label: REDUCE, words: ["supervised contact only until reviewed", "parenting support through children's services", "address the stressors in the household", "plan discharge home with children's services", "agree what the ward will share and when", "consistent named nurse for these conversations"] },
+    ],
+    evaluate: [{ words: ["children's services satisfied with the arrangements", "contact happening as agreed", "no further injuries or concerns", "engaging with parenting support", "less conflict described at home"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "strategy meeting", "police referral where advised", "MDT review before any discharge home"] }],
+  },
+  "child organisational abuse": {
+    present: [{ words: ["concerns about a placement or setting", "the child not being seen alone by professionals", "restrictions the setting cannot explain", "several children affected by the same practice", "complaints not being taken up", "the setting resisting outside contact"] }],
+    prevent: [
+      { label: MANAGE, words: ["record the concern in the child's and patient's words", "inform the ward safeguarding lead", "refer to children's social care", "check whether other children are affected", "advise on the complaints route", "do not raise it with the setting first"] },
+      { label: REDUCE, words: ["children's services to lead on the setting", "support the family to raise a formal complaint", "check the child is seen alone by a professional", "keep a written record of what is reported", "review at the MDT until it is resolved"] },
+    ],
+    evaluate: [{ words: ["children's services taking the concern up", "the child being seen alone", "the setting's practice reviewed", "the family supported through the complaint", "no further concerns reported"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "raise with the local authority designated officer", "strategy meeting", "escalate through the trust safeguarding team"] }],
+  },
+  "child emotional abuse": {
+    present: [{ words: ["the child described in hostile or rejecting terms", "the child blamed for adult problems", "witnessing frightening adult behaviour", "the child used to carry messages in a conflict", "isolation of the child from other family", "the child's needs consistently coming last"] }],
+    prevent: [
+      { label: MANAGE, words: ["refer to children's social care", "record the exact words used", "inform the ward safeguarding lead", "reflect back what was said without confrontation", "review contact and leave arrangements", "seek safeguarding advice before family contact"] },
+      { label: REDUCE, words: ["parenting support through children's services", "family therapy or family work where offered", "treat the parent's own mental health needs", "plan contact so the child is not caught in adult conflict", "agree with children's services what changes are needed", "review at every MDT"] },
+    ],
+    evaluate: [{ words: ["the child spoken about warmly and separately", "engaging with family work", "children's services satisfied with progress", "contact arranged around the child's needs", "no further concerns raised"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "professionals meeting", "MDT review of contact and leave", "review before discharge home"] }],
+  },
+  "child exposure to domestic abuse": {
+    present: [{ words: ["the child present during incidents", "the child intervening between adults", "police attendance at the home", "the child described as frightened of an adult", "contact arrangements used to continue the abuse", "the child asked to keep what happens secret"] }],
+    prevent: [
+      { label: MANAGE, words: ["refer to children's social care", "inform the ward safeguarding lead", "do not contact the alleged perpetrator", "check whether police are already involved", "record what was said in their words", "review visiting so the child is not exposed"] },
+      { label: REDUCE, words: ["MARAC referral where the risk is high", "specialist domestic abuse support for the adult", "safety planning that includes the child", "children's services to lead on contact", "plan discharge address with the safeguarding team", "keep the perpetrator out of ward contact arrangements"] },
+    ],
+    evaluate: [{ words: ["the child no longer present at incidents", "engaging with domestic abuse support", "contact happening safely and as agreed", "children's services satisfied with the plan", "a safe discharge address agreed"] }],
+    next: [{ words: ["refer to children's social care", "MARAC referral", "inform the ward safeguarding lead", "strategy meeting", "review discharge address at the MDT"] }],
+  },
+  "child financial abuse": {
+    present: [{ words: ["money meant for the child used elsewhere", "the child's benefits or savings unaccounted for", "the child going without essentials", "an adult controlling the child's money or accounts", "debts run up in the child's name", "the child pressured to hand money over"] }],
+    prevent: [
+      { label: MANAGE, words: ["refer to children's social care", "record what is known about the money", "inform the ward safeguarding lead", "check the child has what they need day to day", "seek advice before raising it with the family", "do not delay a referral for consent"] },
+      { label: REDUCE, words: ["children's services to review the child's needs", "benefits and appointeeship advice", "money advice for the household", "check who controls the child's accounts", "review at the MDT until it is resolved"] },
+    ],
+    evaluate: [{ words: ["the child's needs being met day to day", "money arrangements reviewed", "children's services satisfied", "engaging with money advice", "no further concerns reported"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "benefits or appointeeship review", "professionals meeting", "MDT review"] }],
+  },
+  "child neglect": {
+    present: [{ words: ["the child not being fed, clothed or kept clean", "the child left alone or with unsuitable adults", "missed health or school appointments", "the home unsafe or unheated", "the child not registered with a GP or school", "the child's needs not recognised by the adult"] }],
+    prevent: [
+      { label: MANAGE, words: ["refer to children's social care the same day", "check who is caring for the child right now", "inform the ward safeguarding lead", "record what is known about the child's day to day care", "check the child has been seen recently", "do not delay a referral for consent"] },
+      { label: REDUCE, words: ["children's services to assess the child's needs", "family support or early help package", "treat the parent's own mental health and substance use", "practical help with the home before discharge", "plan discharge home with children's services", "agree what the ward will report and when"] },
+    ],
+    evaluate: [{ words: ["the child seen and their needs being met", "engaging with family support", "appointments being kept", "the home safe enough for the child", "children's services satisfied with progress"] }],
+    next: [{ words: ["refer to children's social care", "inform the ward safeguarding lead", "strategy meeting", "escalate out of hours to the emergency duty team", "MDT review before discharge home"] }],
+  },
+  // ---- Domain 7 gaps --------------------------------------------------------
+  "unsafe home / appliances": {
+    present: [{ words: ["cooker, heater or electrics left unsafe", "smoke alarm missing or not working", "scorch marks or evidence of a previous fire", "appliances used in a way they are not meant for", "no heating or hot water", "not recognising the danger when it is described"] }],
+    prevent: [
+      { label: MANAGE, words: ["ask what is actually in the home and what works", "raise with the care coordinator or social worker", "request a home safety check", "involve the landlord or housing officer", "consider a fire service safe and well visit", "record what has been reported and to whom"] },
+      { label: REDUCE, words: ["fire service safe and well visit before discharge", "repairs agreed with the landlord in writing", "replace or make safe the unsafe appliance", "occupational therapy home assessment", "practical support with using appliances safely", "check the home before discharge, not after"] },
+    ],
+    evaluate: [{ words: ["repairs completed", "working smoke alarm in place", "safe and well visit done", "using appliances safely on leave", "home assessed as safe for discharge"] }],
+    next: [{ words: ["escalate to housing or the landlord", "fire service referral", "occupational therapy home assessment", "raise as a barrier to discharge at the MDT", "adult social care referral"] }],
+  },
+  "social isolation": {
+    present: [{ words: ["no visitors or contact from outside", "declining every group and activity", "days spent alone in their room", "no routine or structure to the day", "no contact with services between admissions", "low mood linked to being alone"] }],
+    prevent: [
+      { label: MANAGE, words: ["offer 1:1 time rather than a group first", "sit with them without an agenda", "find one activity they used to enjoy", "invite them to a short group with a familiar member of staff", "ask what they would actually like to do", "note what they engaged with and repeat it"] },
+      { label: REDUCE, words: ["build a daily routine with them", "occupational therapy assessment", "reconnect them with family or friends they want contact with", "community groups or befriending before discharge", "peer support", "plan what the first week after discharge looks like"] },
+    ],
+    evaluate: [{ words: ["attending activities", "out of their room more", "contact re-established with someone outside", "a routine they keep to", "saying they feel less alone"] }],
+    next: [{ words: ["occupational therapy referral", "social prescribing or community connector", "review with the care coordinator", "raise at the MDT as a discharge risk", "voluntary sector referral"] }],
+  },
 };
 
 // ---- Risk-specific chips for the FORMULATION (the WHY) ----------------------
@@ -798,6 +916,75 @@ export const FORMULATION_RISK_CHIPS: Record<string, Partial<Record<FormulationSe
     precipitating: [{ words: ["increase in observation level perceived as punitive", "acute paranoia that observation is a threat", "distress or anger following a specific incident or boundary", "change in observation level not explained or agreed", "unfamiliar staff carrying out observations", "refusal linked to wider disengagement from care", "religious or cultural concerns about observation"] }],
     perpetuating: [{ words: ["ongoing paranoia about the purpose of observation", "mistrust of staff not resolved", "no agreed approach or explanation given", "observation level not reviewed to the least restrictive option", "distress being maintained by the manner of observation", "no advance preference or agreement documented", "observation reinforcing a power imbalance in the relationship"] }],
     dynamic: [{ words: ["refusal higher at night when privacy feels most important", "more resistant with unfamiliar or less trusted staff", "worse when paranoia is at its highest", "linked to recent incidents or feeling controlled", "better when the same trusted staff do observations", "improves when the reason and review plan are clearly explained", "varies with overall therapeutic relationship quality"] }],
+  },
+  // ---- Domain 6 and the domain 7 gaps ---------------------------------------
+  // The formulation explains WHY the risk to the child exists. It is about the
+  // adult's history and circumstances - the child is who it lands on.
+  "child in care": {
+    predisposing: [{ words: ["own experience of being in care", "long-standing mental illness affecting parenting", "previous care proceedings", "domestic abuse in the relationship", "substance misuse history", "no support network of their own", "trauma or loss in their own childhood"] }],
+    precipitating: [{ words: ["a change to contact arrangements", "a court date or hearing", "a contact session that went badly", "the child's birthday or an anniversary", "hearing about the child from someone else", "a placement move"] }],
+    perpetuating: [{ words: ["grief and shame about the separation", "hopelessness about the outcome", "conflict with the local authority", "unstable housing blocking any progress", "ongoing substance misuse", "avoiding the professionals involved"] }],
+    dynamic: [{ words: ["around contact sessions", "before and after court dates", "at anniversaries and birthdays", "when contact is cancelled at short notice", "when leave brings them near the child", "as discharge approaches"] }],
+  },
+  "child protection plan": {
+    predisposing: [{ words: ["previous children's services involvement", "own history of childhood abuse or neglect", "long-standing mental illness affecting parenting", "domestic abuse in the household", "substance misuse", "learning disability without the right support", "isolation from family and services"] }],
+    precipitating: [{ words: ["a new incident in the household", "a professional visit that was refused", "a review conference", "a change in who is living there", "relapse of mental illness", "a change in the child's presentation at school"] }],
+    perpetuating: [{ words: ["not accepting the reasons for the plan", "hostility towards children's services", "the same stressors continuing at home", "an unresolved relationship with a risky adult", "untreated mental illness or substance use", "avoiding appointments and visits"] }],
+    dynamic: [{ words: ["around review conferences", "when a professional visit is due", "on leave and at discharge home", "when household membership changes", "when mental state deteriorates"] }],
+  },
+  "child sexual abuse": {
+    predisposing: [{ words: ["previous concerns or convictions", "own experience of childhood abuse", "previous restrictions on contact with children", "a pattern of seeking access to children", "distorted beliefs about children", "internet-related concerns"] }],
+    precipitating: [{ words: ["a disclosure by the child", "a new relationship giving access to a child", "an unsupervised contact opportunity", "images or messages coming to light", "another adult raising a concern", "a change in living arrangements"] }],
+    perpetuating: [{ words: ["denial or minimising of the concern", "no restrictions in place", "continued unsupervised access", "the household not accepting the concern", "avoiding the professionals involved"] }],
+    dynamic: [{ words: ["when leave or contact is requested", "when visiting is unsupervised", "at discharge to an address with children", "when the household changes", "when restrictions are not known to the whole team"] }],
+  },
+  "child physical abuse": {
+    predisposing: [{ words: ["own experience of harsh discipline", "previous children's services involvement", "long-standing difficulty managing anger", "domestic abuse in the household", "substance misuse", "unrealistic expectations of the child", "isolation and no respite"] }],
+    precipitating: [{ words: ["a specific incident at home", "escalating conflict in the household", "financial or housing pressure", "relapse of mental illness", "the child's behaviour experienced as provocation", "loss of support or childcare"] }],
+    perpetuating: [{ words: ["not seeing the discipline as harmful", "the same stressors continuing", "no parenting support in place", "untreated mental illness or substance use", "conflict with the other parent", "avoiding professional contact"] }],
+    dynamic: [{ words: ["on leave and at discharge home", "at times of household stress", "when the child is alone with them", "when mental state deteriorates", "when other support falls away"] }],
+  },
+  "child organisational abuse": {
+    predisposing: [{ words: ["the child placed in a setting with previous concerns", "the child unable to report what is happening", "the family isolated from other professionals", "a setting resistant to outside scrutiny", "previous complaints not followed up"] }],
+    precipitating: [{ words: ["a disclosure about the setting", "a change of staff or placement", "a complaint being raised", "another family raising the same concern", "a professional visit being refused"] }],
+    perpetuating: [{ words: ["the concern not being escalated", "the family not supported to complain", "the child not seen alone by anyone", "the setting managing the response itself"] }],
+    dynamic: [{ words: ["while the placement continues", "when the family tries to raise it", "when professional visits are due", "when staffing changes"] }],
+  },
+  "child emotional abuse": {
+    predisposing: [{ words: ["own experience of rejection in childhood", "long-standing mental illness affecting the relationship", "the child born into a difficult period", "conflict with the other parent", "no support network", "unrealistic expectations of the child"] }],
+    precipitating: [{ words: ["escalating conflict between the adults", "separation or contact dispute", "relapse of mental illness", "financial or housing pressure", "the child's behaviour experienced as rejection"] }],
+    perpetuating: [{ words: ["the pattern not recognised as harmful", "ongoing adult conflict the child sits inside", "untreated mental illness", "no family work in place", "isolation of the child from other adults"] }],
+    dynamic: [{ words: ["during contact and at handovers", "when the adults are in conflict", "on leave and at discharge home", "when mental state deteriorates"] }],
+  },
+  "child exposure to domestic abuse": {
+    predisposing: [{ words: ["a long-standing abusive relationship", "own childhood exposure to domestic abuse", "previous police or MARAC involvement", "financial dependence on the abusive adult", "isolation from family and friends", "substance misuse in the household"] }],
+    precipitating: [{ words: ["a recent incident", "separation or an attempt to leave", "a contact handover", "police attendance", "financial or housing pressure", "the abusive adult finding the address"] }],
+    perpetuating: [{ words: ["the relationship continuing", "fear of what leaving would mean", "nowhere safe to go", "contact arrangements used to continue the abuse", "the abuse minimised by the household", "no specialist support in place"] }],
+    dynamic: [{ words: ["at contact handovers", "when leaving is being planned", "on leave and at discharge", "when the abusive adult has the address", "after police involvement"] }],
+  },
+  "child financial abuse": {
+    predisposing: [{ words: ["an adult in control of the child's money", "household debt", "substance misuse in the household", "the child's benefits paid to another adult", "no oversight of the child's accounts"] }],
+    precipitating: [{ words: ["a change in household income", "a new adult in the household", "debt or eviction pressure", "a lump sum arriving for the child"] }],
+    perpetuating: [{ words: ["the arrangement not being questioned", "the child unaware or unable to challenge it", "ongoing debt", "no money advice in place"] }],
+    dynamic: [{ words: ["when benefits are paid", "at times of household financial pressure", "when a new adult joins the household", "at discharge home"] }],
+  },
+  "child neglect": {
+    predisposing: [{ words: ["long-standing mental illness affecting parenting", "own experience of neglect", "substance misuse", "learning disability without the right support", "poverty and unstable housing", "no support network", "previous children's services involvement"] }],
+    precipitating: [{ words: ["relapse of mental illness", "admission itself leaving care unarranged", "loss of a support or childcare arrangement", "a household member leaving", "financial crisis or eviction"] }],
+    perpetuating: [{ words: ["the child's needs not recognised", "ongoing substance misuse", "untreated mental illness", "no family support in place", "the home unfit and unrepaired", "avoiding professional contact"] }],
+    dynamic: [{ words: ["during this admission, with care unarranged", "on leave and at discharge home", "when mental state deteriorates", "when support falls away", "at times of financial crisis"] }],
+  },
+  "unsafe home / appliances": {
+    predisposing: [{ words: ["long-standing poor housing", "an unresponsive landlord", "no money for repairs or replacement", "cognitive or physical difficulty using appliances", "hoarding reducing safe space", "living alone with no one to notice"] }],
+    precipitating: [{ words: ["an appliance breaking", "utilities cut off", "a near-miss or small fire", "a change in physical or cognitive ability", "moving to a new address"] }],
+    perpetuating: [{ words: ["repairs not being chased", "no money to replace the appliance", "the danger not recognised", "no one visiting to see it", "landlord not acting"] }],
+    dynamic: [{ words: ["on leave at the property", "at discharge", "in cold weather", "when cooking or heating is needed most", "when living alone again"] }],
+  },
+  "social isolation": {
+    predisposing: [{ words: ["long-standing withdrawal", "loss of family or friends", "negative symptoms of psychosis", "social anxiety", "no work or routine for a long time", "bereavement", "moving away from a known area"] }],
+    precipitating: [{ words: ["admission itself cutting existing contact", "a bereavement or relationship ending", "losing a job or a placement", "a service closing or ending", "worsening mood or anxiety"] }],
+    perpetuating: [{ words: ["avoidance making it harder each time", "no routine to the day", "low confidence after a long gap", "no local connections to return to", "hopelessness that anything would help"] }],
+    dynamic: [{ words: ["at weekends and in the evenings", "after discharge, in the first weeks", "when a service ends", "at anniversaries and holidays", "when others around them have visitors"] }],
   },
 };
 

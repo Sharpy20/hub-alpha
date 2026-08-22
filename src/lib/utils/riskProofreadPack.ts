@@ -20,6 +20,9 @@ import { questionsForDomain } from "@/lib/data/guides/risk-questions";
 import {
   WHAT_IS_THE_RISK, INCOMPLETE_OPTIONS,
   UNIVERSAL_IMMEDIATE, UNIVERSAL_PREVENTION, UNIVERSAL_REDUCTION_SIGNS, UNIVERSAL_ESCALATION,
+  WHAT_HELPS, WHAT_HELPS_LABEL, REDUCTION_TIMEFRAMES, TIMEFRAME_LABEL, NOT_ASSESSED, NOT_APPLICABLE,
+  PATIENT_INVOLVEMENT, PATIENT_INVOLVEMENT_LABEL,
+  REVIEW_BY, REVIEW_BY_LABEL, REVIEW_WHEN, REVIEW_WHEN_LABEL, REVIEW_TRIGGERS, REVIEW_TRIGGER_LABEL,
 } from "@/lib/data/guides/rmp-chips";
 import {
   RMP_SECTIONS, MANDATORY_MDT_LINE,
@@ -182,9 +185,25 @@ export function printRiskProofreadPack() {
   parts.push(`<h4>6. What further action, and when should the plan be escalated?</h4>${chipList([{ words: UNIVERSAL_ESCALATION }])}`);
   parts.push(signoff("The general library - safe and appropriate on any domain?"));
 
+  parts.push(`<h3>${esc(WHAT_HELPS_LABEL)}</h3>`);
+  parts.push(`<p class="lead">Offered inside questions 3 and 4. Every other bank describes what STAFF do; this is the only one carrying the person's own account of what works, which is the half a plan most often misses. It is deliberately not a seventh question. The unhelpful half matters as much as the helpful half.</p>`);
+  parts.push(chipList([{ words: WHAT_HELPS }]));
+  parts.push(signoff("The person's own preferences - right options, right place?"));
+
+  parts.push(`<h3>${esc(TIMEFRAME_LABEL)} (question 5)</h3>`);
+  parts.push(`<p class="lead">"No further incidents" on its own is not a measure - it does not say over what period, and an absence of incidents is not proof the underlying risk has gone. The tool warns before copying if an absence claim carries no period.</p>`);
+  parts.push(chipList([{ words: REDUCTION_TIMEFRAMES }]));
+  parts.push(signoff("Timeframes - are these the right periods for a ward?"));
+
   parts.push(`<h3>Recording a gap honestly</h3>`);
-  parts.push(`<p class="lead">A section with nothing in it prints "This section has not yet been completed." The options below are different: the nurse chose them deliberately to record that the patient-specific detail is not established yet. Neither is reassurance, and neither should be read as "there is nothing to find".</p>`);
-  parts.push(`<ul>${Object.entries(INCOMPLETE_OPTIONS).map(([, v]) => `<li>${esc(v)}</li>`).join("")}</ul>`);
+  parts.push(`<p class="lead">A section with nothing in it prints "This section has not yet been completed." The options below are different: the nurse chose one deliberately. None of them is reassurance, and none should be read as "there is nothing to find".</p>`);
+  parts.push(`<div class="note">
+    <p style="margin:0 0 2mm"><strong>Four different things, and they are not interchangeable.</strong></p>
+    <p style="margin:0 0 2mm"><strong>Not yet established</strong> - staff have not worked out the patient-specific detail. <strong>${esc(NOT_ASSESSED)}</strong> - it was not looked at, or the information was not available. <strong>${esc(NOT_APPLICABLE)}</strong> - it does not apply in the current circumstances.</p>
+    <p style="margin:0">The fourth is the domain's own <strong>"No evidence ... reported during assessment"</strong> line, and that one is different in kind: it IS a finding, it is the Trust's own wording, and it lives on the risk screen rather than in a plan.</p>
+  </div>`);
+  parts.push(`<p>Per question:</p><ul>${Object.entries(INCOMPLETE_OPTIONS).map(([, v]) => `<li>${esc(v)}</li>`).join("")}</ul>`);
+  parts.push(`<p>Plus, on every question: ${esc(NOT_ASSESSED)} &middot; ${esc(NOT_APPLICABLE)}</p>`);
   parts.push(signoff("The not-established options - do these read as gaps rather than findings?"));
 
   parts.push(`<h3>The tailored banks, per risk (questions 2 to 6)</h3>`);
@@ -215,6 +234,24 @@ export function printRiskProofreadPack() {
   parts.push(`<p><strong>The ticked clinical indicators are named here too.</strong> They are static risk factors the trust asks you to identify - "Male gender, under 35 years", "Involvement in Criminal Justice", "Trauma" - and they used to feed the old formulation's "what raises the baseline risk" section. With that gone they had nowhere left to land, so listing them here stops the tool discarding something the form asks for. It stays pure transcription: the trust's words, the nurse's ticks, nothing weighted, ordered by severity or interpreted. A domain confirmed nil carries none by definition.</p>`);
   parts.push(`<p>On screen it carries this note: "${esc(FORMULATION_SUMMARY_NOTE)}" It is editable, and regenerating it warns first that manual edits will be lost.</p>`);
   parts.push(`<div class="note"><p style="margin:0">This is a <strong>summary of which risk types were identified</strong>, not a psychological formulation and not a predictive judgement - which is why the heading says SUMMARY. It is the one place the tool assembles text without the nurse selecting each part, and it can do that safely precisely because every word in it is either the trust's own wording or a sub-domain the nurse ticked.</p></div>`);
+  parts.push(`<h3>The plan header</h3>`);
+  parts.push(`<p class="lead">Four facts <em>about</em> the plan, printed above the bar and deliberately OUTSIDE the five Trust headings - adding a heading of our own to a mandated template is the thing not to do.</p>`);
+  parts.push(`<pre>========================================
+FIRE SETTING
+Person involved in this plan: Involved but did not agree with all elements
+Review: The named nurse, At the next MDT
+Review sooner if: Any relevant incident; A change in observation level
+========================================</pre>`);
+  parts.push(`<h4>${esc(PATIENT_INVOLVEMENT_LABEL)}</h4>${chipList([{ words: PATIENT_INVOLVEMENT }])}`);
+  parts.push(`<p><strong>Deliberately not a "patient agreed" tick.</strong> A plan the person disagreed with, or could not take part in, is a normal and recordable outcome; a yes/no makes the honest answers unsayable and the audit trail worthless.</p>`);
+  parts.push(`<h4>${esc(REVIEW_BY_LABEL)}</h4>${chipList([{ words: REVIEW_BY }])}`);
+  parts.push(`<p><strong>A role, never a name.</strong> wardHub holds no staff names in a plan, and a role survives the person going on annual leave.</p>`);
+  parts.push(`<h4>${esc(REVIEW_WHEN_LABEL)}</h4>${chipList([{ words: REVIEW_WHEN }])}`);
+  parts.push(`<p>Intervals rather than a date picker: a date typed here is stale the moment the plan is pasted, and the ward speaks in shifts and MDTs.</p>`);
+  parts.push(`<h4>${esc(REVIEW_TRIGGER_LABEL)}</h4>${chipList([{ words: REVIEW_TRIGGERS }])}`);
+  parts.push(`<p>The important one. A plan can be sound when it is written and out of date within a shift, and it is usually an event rather than the calendar that makes it stale.</p>`);
+  parts.push(signoff("The plan header - are these the right options, and is the header the right place for them?"));
+
   parts.push(`<h3>Management plan headings, in order</h3><ul>${RMP_SECTIONS.map((s) => `<li><strong>${esc(s.heading)}</strong> - ${esc(s.hint)}</li>`).join("")}</ul>`);
   parts.push(`<h3>Mandatory closing line, added to every plan</h3><p>${esc(MANDATORY_MDT_LINE)}</p>`);
   parts.push(`<h3>Two things print differently from how they are asked</h3>

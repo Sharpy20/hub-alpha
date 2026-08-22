@@ -123,12 +123,20 @@ export function buildFormulation(state: AllState, title = "RISK FORMULATION", pa
 // this is what the first says.
 export const NOT_COMPLETED = "This section has not yet been completed.";
 
+// Facts ABOUT the plan, printed in its header above the bar. Deliberately not
+// sections of the plan: the Trust template has five headings and adding one of
+// our own to a mandated document is the thing not to do.
+export interface PlanHeader {
+  involvement?: string;
+  /** A role, never a name - see REVIEW_BY. */
+  reviewBy?: string;
+  reviewWhen?: string;
+  reviewTriggers?: string[];
+}
+
 export function buildOneRmp(
   risk: string, secs: AllState, displayName?: string, patientName?: string,
-  // Printed in the plan's HEADER, above the bar - deliberately outside the five
-  // Trust headings, because it is a fact about the plan rather than a section of
-  // it. Adding a heading of our own to a mandated template is the thing not to do.
-  involvement?: string,
+  header?: PlanHeader,
 ): string {
   const name = (displayName && displayName.trim()) || risk;
   const body = (id: string): string => {
@@ -155,10 +163,16 @@ export function buildOneRmp(
     }
     return buildContent(secs[id]) || NOT_COMPLETED;
   };
+  // Who and when go on one line - two half-empty lines read worse than one, and
+  // either half is useful on its own.
+  const reviewLine = [header?.reviewBy, header?.reviewWhen].filter(Boolean).join(", ");
+  const triggers = (header?.reviewTriggers || []).filter(Boolean);
   const blocks: string[] = [
     TXT_BAR, name.toUpperCase(),
     ...(patientName ? [`Patient: ${patientName}`] : []),
-    ...(involvement ? [`Person involved in this plan: ${involvement}`] : []),
+    ...(header?.involvement ? [`Person involved in this plan: ${header.involvement}`] : []),
+    ...(reviewLine ? [`Review: ${reviewLine}`] : []),
+    ...(triggers.length ? [`Review sooner if: ${triggers.join("; ")}`] : []),
     TXT_BAR,
   ];
   RMP_SECTIONS.forEach((sec, i) => {

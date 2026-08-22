@@ -191,6 +191,56 @@ export const PATIENT_INVOLVEMENT: string[] = [
   "Not yet discussed",
 ];
 
+// ---- Keeping the plan current ----------------------------------------------
+//
+// A plan can be sound when it is written and out of date within a shift. The
+// Trust template has no review heading, so these print in the plan HEADER
+// alongside involvement - metadata about the plan, never a heading of our own
+// inside a mandated template.
+//
+// ⛔ WHO reviews it is a ROLE, not a name. wardHub holds no staff names in a
+// plan and never will (see the no-special-category-data rule); a role also
+// survives the person going on annual leave, which a name does not.
+export const REVIEW_BY_LABEL = "Who will review this plan?";
+export const REVIEW_BY: string[] = [
+  "The named nurse",
+  "The nurse in charge",
+  "The MDT",
+  "The responsible clinician",
+  "The ward manager",
+  "The safeguarding lead",
+  "Not yet agreed",
+];
+
+// Intervals rather than a date picker: a date typed here would be stale the
+// moment the plan is pasted, and the ward speaks in shifts and MDTs anyway.
+export const REVIEW_WHEN_LABEL = "When will it be reviewed?";
+export const REVIEW_WHEN: string[] = [
+  "Every shift",
+  "Daily",
+  "Twice weekly",
+  "Weekly",
+  "At the next MDT",
+  "Before any leave",
+  "Before discharge",
+  "Date to be agreed at the MDT",
+];
+
+// The important one. Most plans go stale between scheduled reviews, and it is
+// an event that makes them stale rather than the calendar.
+export const REVIEW_TRIGGER_LABEL = "What would mean reviewing it sooner?";
+export const REVIEW_TRIGGERS: string[] = [
+  "Any relevant incident",
+  "A significant change in mental state",
+  "A change in observation level",
+  "Leave or discharge planning",
+  "A legal or safeguarding development",
+  "Physical health deterioration",
+  "A change in medication",
+  "New information from family, carers or another service",
+  "The person asks for it to be reviewed",
+];
+
 // ---- Question 1: which specific outcome are you trying to prevent? ---------
 //
 // Keyed `${domainId}::${subtype}` against the approved SystmOne sub-domains, so

@@ -36,6 +36,7 @@ import {
   whatIsTheRiskFor, DOMAIN_RMP_CHIPS,
   WHAT_HELPS, WHAT_HELPS_LABEL, REDUCTION_TIMEFRAMES, TIMEFRAME_LABEL,
   NOT_ASSESSED, NOT_APPLICABLE, PATIENT_INVOLVEMENT, PATIENT_INVOLVEMENT_LABEL,
+  REVIEW_BY, REVIEW_BY_LABEL, REVIEW_WHEN, REVIEW_WHEN_LABEL, REVIEW_TRIGGERS, REVIEW_TRIGGER_LABEL,
 } from "@/lib/data/guides/rmp-chips";
 import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, SCREEN_TAIL, indicatorRoute,
@@ -73,10 +74,11 @@ interface DomainState {
   currentExamples: DatedExample[];
   historicalExamples: DatedExample[];
   involvement: string;               // "Was the person involved in this plan?"
+  reviewBy: string; reviewWhen: string; reviewTriggers: string[];   // printed in the plan header
 }
 const emptyDomain = (): DomainState => ({
   indicators: "", indicatorList: [], safety: "", current: "", historical: "",
-  noEvidence: false, risks: [], customSubs: [], customIndicators: [], ownRmp: [], currentExamples: [], historicalExamples: [], involvement: "",
+  noEvidence: false, risks: [], customSubs: [], customIndicators: [], ownRmp: [], currentExamples: [], historicalExamples: [], involvement: "", reviewBy: "", reviewWhen: "", reviewTriggers: [],
 });
 
 interface RiskRef { key: string; label: string; chipRisk: string; domainId: string }
@@ -733,6 +735,7 @@ export default function RiskAssessmentPage() {
       answers: capByRisk[dm.id],
       subs: st.risks,
       events: [...(st.currentExamples || []), ...(st.historicalExamples || [])],
+      review: { by: st.reviewBy, when: st.reviewWhen, triggers: st.reviewTriggers },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [domains, capByRisk]);
@@ -818,9 +821,15 @@ export default function RiskAssessmentPage() {
     const plans: string[] = [];
     for (const dm of planDomains) {
       const secs = deriveRmp(capByRisk[dm.id]);
-      const involved = getDomain(dm.id).involvement;
-      plans.push(buildOneRmp("", secs, planTitle(dm), undefined, involved));  // one plan per domain, named by the risks ticked
-      for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label, undefined, involved));
+      const st = getDomain(dm.id);
+      // Spun-off plans inherit the domain's header: the same person was involved
+      // and the same people review it, whichever sub-domain has its own plan.
+      const head = {
+        involvement: st.involvement, reviewBy: st.reviewBy,
+        reviewWhen: st.reviewWhen, reviewTriggers: st.reviewTriggers,
+      };
+      plans.push(buildOneRmp("", secs, planTitle(dm), undefined, head));  // one plan per domain, named by the risks ticked
+      for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label, undefined, head));
     }
     if (!plans.length) return "";
     const head = patientName ? `Patient: ${patientName}\n\n` : "";
@@ -983,22 +992,81 @@ export default function RiskAssessmentPage() {
               </p>
             </div>
 
-            {/* One dropdown, not a question. A plan the person disagreed with, or
-                could not take part in, is a normal outcome - a "patient agreed"
-                tick would make the honest answers unsayable. */}
-            <div className="rounded-lg border border-slate-200 bg-white p-3 flex items-center gap-3 flex-wrap">
-              <label htmlFor={`involve-${key}`} className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">
-                {PATIENT_INVOLVEMENT_LABEL}
-              </label>
-              <select
-                id={`involve-${key}`}
-                value={getDomain(dm.id).involvement}
-                onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, involvement: e.target.value }))}
-                className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-              >
-                <option value="">Not recorded</option>
-                {PATIENT_INVOLVEMENT.map((o) => <option key={o} value={o}>{o}</option>)}
-              </select>
+            {/* Facts about the plan, not questions in it - they print in the
+                plan's header, above the bar, outside the five Trust headings.
+                A plan the person disagreed with is a normal outcome, so this is
+                a dropdown rather than a "patient agreed" tick; and a plan that
+                is sound when written can be out of date within a shift, which
+                is what the review lines are for. */}
+            <div className="rounded-lg border border-slate-200 bg-white p-3 space-y-3">
+              <p className="text-[11px] font-mono uppercase tracking-wider text-slate-600">Plan header</p>
+
+              <div className="flex items-center gap-3 flex-wrap">
+                <label htmlFor={`involve-${key}`} className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">
+                  {PATIENT_INVOLVEMENT_LABEL}
+                </label>
+                <select
+                  id={`involve-${key}`}
+                  value={getDomain(dm.id).involvement}
+                  onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, involvement: e.target.value }))}
+                  className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                >
+                  <option value="">Not recorded</option>
+                  {PATIENT_INVOLVEMENT.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </div>
+
+              <div className="flex items-center gap-3 flex-wrap">
+                <label htmlFor={`revby-${key}`} className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">
+                  {REVIEW_BY_LABEL}
+                </label>
+                {/* A role, never a name - see REVIEW_BY. */}
+                <select
+                  id={`revby-${key}`}
+                  value={getDomain(dm.id).reviewBy}
+                  onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, reviewBy: e.target.value }))}
+                  className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                >
+                  <option value="">Not recorded</option>
+                  {REVIEW_BY.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </div>
+
+              <div className="flex items-center gap-3 flex-wrap">
+                <label htmlFor={`revwhen-${key}`} className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">
+                  {REVIEW_WHEN_LABEL}
+                </label>
+                <select
+                  id={`revwhen-${key}`}
+                  value={getDomain(dm.id).reviewWhen}
+                  onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, reviewWhen: e.target.value }))}
+                  className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                >
+                  <option value="">Not recorded</option>
+                  {REVIEW_WHEN.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-1.5">{REVIEW_TRIGGER_LABEL}</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {REVIEW_TRIGGERS.map((t) => {
+                    const on = getDomain(dm.id).reviewTriggers.includes(t);
+                    return (
+                      <button key={t} type="button" aria-pressed={on}
+                        onClick={() => updateDomain(dm.id, (d) => ({
+                          ...d,
+                          reviewTriggers: d.reviewTriggers.includes(t)
+                            ? d.reviewTriggers.filter((x) => x !== t)
+                            : [...d.reviewTriggers, t],
+                        }))}
+                        className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ring-1 ring-purple-300 ${on ? "bg-sky-700 border-sky-700 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-slate-400 hover:bg-slate-50"}`}>
+                        {t}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
             {questionsForDomain(dm.id).map((q) => (
               <SectionEditor

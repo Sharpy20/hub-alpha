@@ -25,20 +25,23 @@ import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb, Modal } from "@/components/ui";
 import {
-  FORMULATION_SECTIONS, RMP_SECTIONS,
+  RMP_SECTIONS,
   RISK_TEACHING, RISK_EXAMPLES,
   type RiskSection, type RiskChipGroup,
 } from "@/lib/data/guides/risk";
 import {
-  UNIFIED_QUESTIONS, questionsForDomain, type UnifiedQuestion,
+  RMP_QUESTIONS, questionsForDomain, type RmpQuestion,
 } from "@/lib/data/guides/risk-questions";
+import { whatIsTheRiskFor } from "@/lib/data/guides/rmp-chips";
 import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, SCREEN_TAIL, indicatorRoute,
+  buildFormulationSummary, formulationSummaryLines,
+  FORMULATION_SUMMARY_NOTE, FORMULATION_NOT_COMPLETED,
 } from "@/lib/data/welcome/risk-screen";
 import {
-  SectionEditor, buildOneRmp, formulationSectionForRisk,
-  rmpSectionForRisk, buildContent, naturalList, cap, ensureStop,
-  type AllState, type SecState, type DatedExample, EMPTY,
+  SectionEditor, buildOneRmp,
+  rmpSectionForRisk, naturalList, cap, ensureStop, applySec,
+  type AllState, type SecState, type SecUpdate, type DatedExample, EMPTY,
 } from "@/components/guides/risk-capture";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
@@ -51,7 +54,7 @@ import { printRiskProofreadPack } from "@/lib/utils/riskProofreadPack";
 import {
   ArrowLeft, Copy, Check, CheckCircle2, RotateCcw, ChevronDown,
   ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
-  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star, Printer, Clock, History as HistoryIcon,
+  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star, Printer, Clock, History as HistoryIcon, UserPen,
 } from "lucide-react";
 
 type YN = "" | "yes" | "no";
@@ -86,7 +89,6 @@ interface CapturedRow {
 // differ between server and client render.
 let captureSeq = 0;
 
-const F_SECTION = (id: string) => FORMULATION_SECTIONS.find((s) => s.id === id)!;
 const R_SECTION = (id: string) => RMP_SECTIONS.find((s) => s.id === id)!;
 
 // Narrow a section's chips to one labelled group. Used by the two halves of HOW
@@ -98,72 +100,79 @@ function pickGroup(groups: RiskChipGroup[], label?: string): RiskChipGroup[] {
   return hit.length ? hit : groups;
 }
 
-// Which document a question's answer ends up in. q_seen feeds both: the
-// formulation's presenting risk and the plan's opening line.
-function destOf(q: UnifiedQuestion): "formulation" | "plan" | "both" {
-  if (q.id === "q_seen") return "both";
-  return q.writes.doc === "r" ? "plan" : "formulation";
-}
+// ---- Chip resolution for the six plan questions ---------------------------
+//
+// Mike, 22 Aug: "the questions have the same chips regardless of domain, they are
+// not customised to that domain or that domain's clinical indicators - this
+// generates repetitive RMPs."
+//
+// Three tiers now, in this order:
+//   1. the ticked CLINICAL INDICATORS that belong on this question. These are the
+//      only Trust-sourced words on the page, so they come first and are marked as
+//      such. They are OFFERED, never inserted - an indicator says why the domain
+//      was relevant, not what is true of this person.
+//   2. the ticked SUB-DOMAINS' own banks, labelled with the sub-domain when more
+//      than one contributed, so two sub-domains never blur into one list.
+//   3. the universal library, folded behind "show all options".
+// Plus the honest-gap option where the question has one.
 
-// Build the display section for one question against a given risk's chip bank.
-function questionSectionFor(q: UnifiedQuestion, risk: string): RiskSection {
-  let src: RiskSection;
-  if (q.chip.doc === "generic") src = F_SECTION(q.chip.id);
-  else if (q.chip.doc === "f") src = formulationSectionForRisk(F_SECTION(q.chip.id), risk);
-  else src = rmpSectionForRisk(R_SECTION(q.chip.id), risk);
-  return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups: pickGroup(src.groups, q.chip.group), examples: q.examples, dest: destOf(q) };
-}
-
-// Merge the chip banks of several ticked sub-domains into ONE domain question set
-// (decision 2 - merged, but each risk's chips kept as separate labelled groups).
-// The generic base groups are included once when any contributor has no tailored
-// chips; tailored groups are labelled with the sub-domain when there's more than one.
-function mergeGroupsForRisks(kind: "f" | "r", sectionId: string, chipRisks: { label: string; risk: string }[], group?: string): RiskChipGroup[] {
-  const base = kind === "f" ? F_SECTION(sectionId) : R_SECTION(sectionId);
-  const specifics: { label: string; groups: RiskChipGroup[] }[] = [];
-  const seen = new Set<string>();
-  let anyBaseOnly = false;
-  for (const { label, risk } of chipRisks) {
-    if (!risk || seen.has(risk)) { if (!risk) anyBaseOnly = true; continue; }
-    seen.add(risk);
-    const resolved = kind === "f" ? formulationSectionForRisk(base, risk) : rmpSectionForRisk(base, risk);
-    if (resolved === base) anyBaseOnly = true;             // no tailored chips for this risk
-    else specifics.push({ label, groups: pickGroup(resolved.groups, group) });
+// Suggested chips drawn from the sub-domains actually ticked. Question 1 is served
+// by WHAT_IS_THE_RISK (keyed by sub-domain); the rest by that sub-domain's RMP bank.
+function suggestedGroups(q: RmpQuestion, domainId: string, subs: { label: string; risk: string }[]): RiskChipGroup[] {
+  if (q.suggest.section === "what") {
+    return whatIsTheRiskFor(domainId, subs.map((s) => s.label));
   }
+  const base = R_SECTION(q.suggest.section);
   const out: RiskChipGroup[] = [];
-  if (anyBaseOnly || !specifics.length) out.push(...pickGroup(base.groups, group));
-  const multi = specifics.length > 1;
-  for (const s of specifics) for (const g of s.groups) {
-    out.push(multi ? { label: g.label ? `${s.label} - ${g.label}` : s.label, words: g.words } : g);
+  const seenRisk = new Set<string>();
+  let anyUnmapped = false;
+  for (const { label, risk } of subs) {
+    if (!risk) { anyUnmapped = true; continue; }
+    if (seenRisk.has(risk)) continue;
+    seenRisk.add(risk);
+    const resolved = rmpSectionForRisk(base, risk);
+    if (resolved === base) { anyUnmapped = true; continue; }   // no tailored bank
+    for (const g of pickGroup(resolved.groups, q.suggest.group)) {
+      out.push({ ...g, label: subs.length > 1 ? (g.label ? `${label} - ${g.label}` : label) : g.label });
+    }
   }
+  // Only fall back to the section's own generic words when something ticked has
+  // no bank of its own - otherwise every domain gets the same opening list, which
+  // is the fault being fixed.
+  if (anyUnmapped || !out.length) out.push(...pickGroup(base.groups, q.suggest.group));
   return out;
 }
 
-// One domain-level question's display section, chips merged across its ticked
-// sub-domains. Generic questions keep their generic chips.
-function questionSectionForDomain(q: UnifiedQuestion, chipRisks: { label: string; risk: string }[]): RiskSection {
-  let groups: RiskChipGroup[];
-  if (q.chip.doc === "generic") groups = pickGroup(F_SECTION(q.chip.id).groups, q.chip.group);
-  else if (!chipRisks.length) groups = pickGroup((q.chip.doc === "f" ? F_SECTION(q.chip.id) : R_SECTION(q.chip.id)).groups, q.chip.group);
-  else groups = mergeGroupsForRisks(q.chip.doc, q.chip.id, chipRisks, q.chip.group);
-  return { id: q.id, heading: q.question, hint: q.hint, gap: q.gap, groups, examples: q.examples, dest: destOf(q) };
+// Assemble one question's display section.
+function buildQuestionSection(
+  q: RmpQuestion,
+  domainId: string,
+  subs: { label: string; risk: string }[],
+  indicatorWords: string[],
+): RiskSection {
+  const groups: RiskChipGroup[] = [];
+  if (indicatorWords.length) {
+    groups.push({ label: "From the clinical indicators you ticked", words: indicatorWords, source: "trust" });
+  }
+  groups.push(...suggestedGroups(q, domainId, subs));
+  if (q.universal.length) {
+    groups.push({ label: "General options", words: q.universal, tier: "all" });
+  }
+  if (q.incomplete) groups.push({ words: [q.incomplete], tier: "incomplete" });
+  return {
+    id: q.id, heading: `${q.n}. ${q.question}`, hint: q.hint, gap: q.gap,
+    groups, examples: q.examples,
+  };
 }
-// Split one risk's unified answers into formulation-section and RMP-section states.
-function deriveForm(cap: AllState | undefined): AllState {
-  const out: AllState = {};
-  for (const q of UNIFIED_QUESTIONS) if (q.writes.doc === "f") out[q.writes.id] = cap?.[q.id] || EMPTY;
-  return out;
-}
+
+// One risk's six answers, keyed by the RMP section they fill. Questions 3 and 4
+// both feed HOW TO PREVENT / REDUCE, so they are kept apart here and printed as
+// two labelled lines by buildOneRmp.
 function deriveRmp(cap: AllState | undefined): AllState {
   const out: AllState = {};
-  for (const q of UNIFIED_QUESTIONS) {
-    if (q.writes.doc !== "r") continue;
-    // Two questions feed HOW TO PREVENT / REDUCE, so they are kept apart here and
-    // printed as two labelled lines by buildOneRmp.
+  for (const q of RMP_QUESTIONS) {
     out[q.writes.part ? `${q.writes.id}__${q.writes.part}` : q.writes.id] = cap?.[q.id] || EMPTY;
   }
-  // WHAT IS THE RISK also carries the "what have you seen or heard" answer (q_seen).
-  out["what"] = cap?.["q_seen"] || EMPTY;
   return out;
 }
 // The combined formulation + RMP documents are built inside the component now
@@ -458,7 +467,11 @@ export default function RiskAssessmentPage() {
   }, []);
   const [q8, setQ8] = useState<YN>("");
   const [q8note, setQ8note] = useState("");
+  // Field 9. Generated from the ticked sub-domains, but the nurse can edit it -
+  // once they have, their version is what is copied and regenerating warns first.
   const [q9, setQ9] = useState("");
+  const [formulationEdited, setFormulationEdited] = useState(false);
+  const [regenAsk, setRegenAsk] = useState(false);
   const [generated, setGenerated] = useState(false);
   const [tab, setTab] = useState<"screen" | "formulation" | "rmp">("screen");
   const [copied, setCopied] = useState<Set<string>>(new Set());
@@ -476,7 +489,10 @@ export default function RiskAssessmentPage() {
   const updateDomain = (id: string, fn: (d: DomainState) => DomainState) =>
     setDomains((s) => ({ ...s, [id]: fn({ ...emptyDomain(), ...(s[id] || {}) }) }));
   const cGet = (key: string, qid: string): SecState => capByRisk[key]?.[qid] || EMPTY;
-  const cSet = (key: string, qid: string, v: SecState) => setCapByRisk((s) => ({ ...s, [key]: { ...s[key], [qid]: v } }));
+  // Takes an updater as well as a value - SectionEditor sends updaters for every
+  // toggle so two fast clicks cannot lose one. See SecUpdate.
+  const cSet = (key: string, qid: string, v: SecUpdate) =>
+    setCapByRisk((s) => ({ ...s, [key]: { ...s[key], [qid]: applySec(s[key]?.[qid], v) } }));
   const toggleCopied = (id: string, on: boolean) => setCopied((s) => { const n = new Set(s); if (on) n.add(id); else n.delete(id); return n; });
 
   const toggleSub = (domainId: string, label: string) => {
@@ -534,7 +550,7 @@ export default function RiskAssessmentPage() {
 
   // How many of the domain's questions carry an answer (domain plan only - spun-off
   // plans are counted on their own row).
-  const answeredCount = (key: string) => UNIFIED_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[key]?.[q.id]) ? 1 : 0), 0);
+  const answeredCount = (key: string) => RMP_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[key]?.[q.id]) ? 1 : 0), 0);
 
   type DomainStatus = "untouched" | "nil" | "started" | "answered";
   const domainStatus = (dm: typeof RISK_DOMAINS[number]): DomainStatus => {
@@ -639,23 +655,24 @@ export default function RiskAssessmentPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [domains]);
 
-  const overallSummary = useMemo(() => {
-    const pds = RISK_DOMAINS.filter((dm) => { const d = getDomain(dm.id); return isEngaged(d) && !d.noEvidence; });
-    if (!pds.length) return "";
-    const subs = pds.flatMap((dm) => getDomain(dm.id).risks);
-    const lines: string[] = subs.length ? [`Risks identified on screening: ${naturalList(subs)}.`] : [];
-    for (const dm of pds) {
-      const present = buildContent(capByRisk[dm.id]?.["q_seen"]);
-      const judge = buildContent(capByRisk[dm.id]?.["q_judgement"]);
-      const bits = [present, judge].filter((x) => x && x !== "Not yet established.");
-      if (bits.length) lines.push(`${cap(dm.short)}: ${ensureStop(bits.join(" "))}`);
-    }
-    const inds = [...new Set(pds.flatMap((dm) => getDomain(dm.id).indicatorList))];
-    if (inds.length) lines.push(`Clinical indicators noted: ${naturalList(inds)}.`);
-    return lines.join(" ");
+  // ---- The Risk Formulation summary (field 9) ------------------------------
+  // Generated from the ticked sub-domains and nothing else. See
+  // buildFormulationSummary() for why the old question-driven formulation went.
+  const formulationInput = useMemo(
+    () => RISK_DOMAINS.map((dm) => {
+      const st = getDomain(dm.id);
+      return { domainId: dm.id, subs: st.risks, noEvidence: st.noEvidence };
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [domains, capByRisk]);
-  const finalSummary = [overallSummary, q9.trim()].filter(Boolean).join(" ");
+    [domains],
+  );
+  const generatedFormulation = useMemo(
+    () => buildFormulationSummary(formulationInput, patientName),
+    [formulationInput, patientName],
+  );
+  const summaryRows = useMemo(() => formulationSummaryLines(formulationInput), [formulationInput]);
+  // What actually gets copied: the nurse's edited version if they touched it.
+  const finalSummary = formulationEdited ? q9 : generatedFormulation;
 
   const domainScreenText = (dm: typeof RISK_DOMAINS[number]): string => {
     const st = getDomain(dm.id);
@@ -725,53 +742,17 @@ export default function RiskAssessmentPage() {
     return named.length ? named.join(", ") : dm.title;
   };
 
-  // Merge extra chip words into a section state (used to fold indicators in).
-  const foldChips = (sec: SecState | undefined, extra: string[]): SecState => {
-    const base = sec || EMPTY;
-    if (!extra.length) return base;
-    const chips = [...base.chips];
-    for (const w of extra) if (!chips.includes(w)) chips.push(w);
-    return { ...base, na: false, chips };
-  };
-
-  // ONE formulation, one block per domain (each in == bars, then flowing prose).
-  // Background clinical indicators fold into the "history" (predisposing) section.
-  const buildFormulationText = (): string => {
-    const perDomain: string[] = [];
-    for (const dm of planDomains) {
-      const secs = deriveForm(capByRisk[dm.id]);
-      secs["predisposing"] = foldChips(secs["predisposing"], routedIndicators(dm, "formulation"));
-      // The formulation runs as prose with no section headings, so a bare "Not yet
-      // established." lands with nothing to say WHAT is not established - four of
-      // them in a row was the result. Gaps come out of the prose and are named
-      // once at the end instead, which still meets the trust rule about recording
-      // what could not be established rather than leaving a blank.
-      const bodies: string[] = [];
-      const gaps: string[] = [];
-      for (const sec of FORMULATION_SECTIONS) {
-        if (secs[sec.id]?.na) { gaps.push(sec.heading.toLowerCase()); continue; }
-        const body = buildContent(secs[sec.id]);
-        if (body) bodies.push(body);
-      }
-      if (!bodies.length && !gaps.length) continue;
-      const paras: string[] = [];
-      for (let i = 0; i < bodies.length; i += 3) paras.push(bodies.slice(i, i + 3).join(" "));
-      if (gaps.length) paras.push(`Not yet established: ${naturalList(gaps)}.`);
-      perDomain.push([TXT_BAR, dm.title, TXT_BAR, paras.join("\n\n")].join("\n"));
-    }
-    if (!perDomain.length) return "";
-    const head = patientName ? `Patient: ${patientName}\n\n` : "";
-    return head + perDomain.join("\n\n");
-  };
-
   // ONE management-plan document: the domain plan first, then any spun-off plans,
-  // in S1 domain order. Presentation indicators fold into the domain plan's
-  // "how does this present". Format reuses buildOneRmp (== bars, unchanged).
+  // in S1 domain order. Format reuses buildOneRmp (== bars, unchanged).
+  //
+  // ⚠ 22 Aug 2026: ticked clinical indicators are NO LONGER folded into the plan.
+  // They are offered as suggested chips on the matching question and only appear
+  // in the output if the nurse picked them. Nothing reaches a plan that was not
+  // selected, typed or approved by the person writing it.
   const buildRmpText = (): string => {
     const plans: string[] = [];
     for (const dm of planDomains) {
       const secs = deriveRmp(capByRisk[dm.id]);
-      secs["present"] = foldChips(secs["present"], routedIndicators(dm, "present"));
       plans.push(buildOneRmp("", secs, planTitle(dm)));       // one plan per domain, named by the risks ticked
       for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label));
     }
@@ -831,7 +812,8 @@ export default function RiskAssessmentPage() {
   // component) so editing a field doesn't remount and drop textarea focus.
   const renderRiskCapture = (r: RiskRef) => {
     const open = openRisks.has(r.key);
-    const done = UNIFIED_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[r.key]?.[q.id]) ? 1 : 0), 0);
+    const done = RMP_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[r.key]?.[q.id]) ? 1 : 0), 0);
+    const subs = [{ label: r.label, risk: r.chipRisk }];
     return (
       <div key={r.key} className="rounded-xl border border-slate-200 bg-white">
         {/* Header styled like a selected chip; sticks below the app header (top-16)
@@ -844,17 +826,23 @@ export default function RiskAssessmentPage() {
           }`}
         >
           <span className="font-bold text-sm flex-1">{r.label}</span>
-          <span className={`text-[10px] ${open ? "text-slate-200" : "text-slate-500"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
+          <span className={`text-[10px] ${open ? "text-slate-200" : "text-slate-500"}`}>{done}/{RMP_QUESTIONS.length} answered</span>
           {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
         </button>
         {open && (
           <div className="p-3 space-y-2">
             <p className="text-xs text-gray-500">
-              Answer these in your own words - it builds this risk&apos;s formulation and management plan for you. The
-              headings are added when you generate.
+              Six questions, in your own words - they build the risk management plan for {r.label}. The trust headings
+              are added when you generate.
             </p>
             {questionsForDomain(r.domainId).map((q) => (
-              <SectionEditor key={q.id} section={questionSectionFor(q, r.chipRisk)} state={cGet(r.key, q.id)} onChange={(n) => cSet(r.key, q.id, n)} bank={{ risk: r.chipRisk, questionId: q.id }} />
+              <SectionEditor
+                key={q.id}
+                section={buildQuestionSection(q, r.domainId, subs, indicatorSuggestions(r.domainId, q))}
+                state={cGet(r.key, q.id)}
+                onChange={(n) => cSet(r.key, q.id, n)}
+                bank={{ risk: r.chipRisk, questionId: q.id }}
+              />
             ))}
           </div>
         )}
@@ -862,17 +850,32 @@ export default function RiskAssessmentPage() {
     );
   };
 
-  // A small transparency note: which flagged clinical indicators fold where.
+  // The ticked clinical indicators offered as suggested chips on a question.
+  //
+  // Only question 2 ("what would staff notice") takes them, and only the ones
+  // that describe something observable - INDICATOR_BACKGROUND holds the rest,
+  // which are history and context. An indicator like "Male gender, under 35
+  // years" or "Major Psychiatric Diagnosis" tells staff nothing about what to
+  // watch for, so it is never offered as a warning sign.
+  //
+  // They are suggestions. Nothing here reaches the plan unless the nurse picks it.
+  const indicatorSuggestions = (domainId: string, q: RmpQuestion): string[] => {
+    if (q.id !== "q2_present") return [];
+    const st = getDomain(domainId);
+    return (st.indicatorList || []).filter((ind) => !st.ownRmp.includes(ind) && indicatorRoute(domainId, ind) === "present");
+  };
+
+  // A small transparency note about what the ticked indicators do.
   const renderFoldNote = (dm: typeof RISK_DOMAINS[number]) => {
     const pres = routedIndicators(dm, "present");
     const bg = routedIndicators(dm, "formulation");
     if (!pres.length && !bg.length) return null;
     return (
       <div className="rounded-lg border border-sky-200 bg-sky-50/60 p-2.5 text-xs text-sky-800 space-y-1">
-        <p className="flex items-center gap-1.5 font-semibold"><Info className="w-3.5 h-3.5 flex-shrink-0" /> Flagged clinical indicators are folded in automatically:</p>
-        {pres.length > 0 && <p><strong>Into the plan (early warning signs):</strong> {naturalList(pres)}.</p>}
-        {bg.length > 0 && <p><strong>Into the formulation (background):</strong> {naturalList(bg)}.</p>}
-        <p className="text-sky-700/80">Untick an indicator, or give it its own plan, to change where it lands.</p>
+        <p className="flex items-center gap-1.5 font-semibold"><Info className="w-3.5 h-3.5 flex-shrink-0" /> The clinical indicators you ticked are offered as suggestions, not added for you:</p>
+        {pres.length > 0 && <p><strong>Offered on question 2:</strong> {naturalList(pres)}.</p>}
+        {bg.length > 0 && <p><strong>Not offered</strong> (these are history or context, not something staff would notice): {naturalList(bg)}.</p>}
+        <p className="text-sky-700/80">They only reach the plan if you select them.</p>
       </div>
     );
   };
@@ -883,7 +886,7 @@ export default function RiskAssessmentPage() {
     const key = dm.id;
     const chipRisks = domainChipRisks(dm);
     const open = openRisks.has(key);
-    const done = UNIFIED_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[key]?.[q.id]) ? 1 : 0), 0);
+    const done = RMP_QUESTIONS.reduce((n, q) => n + (answered(capByRisk[key]?.[q.id]) ? 1 : 0), 0);
     return (
       <div key={key} className="rounded-xl border border-slate-200 bg-white">
         <button
@@ -892,30 +895,35 @@ export default function RiskAssessmentPage() {
           className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${open ? "bg-slate-700 text-white shadow-sm" : "bg-slate-100 text-slate-800 hover:bg-slate-200"}`}
         >
           <span className="font-bold text-sm flex-1">Build the plan for: {planTitle(dm)}</span>
-          <span className={`text-[10px] ${open ? "text-slate-200" : "text-slate-500"}`}>{done}/{UNIFIED_QUESTIONS.length} answered</span>
+          <span className={`text-[10px] ${open ? "text-slate-200" : "text-slate-500"}`}>{done}/{RMP_QUESTIONS.length} answered</span>
           {open ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
         </button>
         {open && (
           <div className="p-3 space-y-2">
-            {/* Why anyone is answering these at all. The trust guidance covers the
-                management plan only - the formulation half is best practice with
-                no trust template, which is worth being straight about. */}
+            {/* Six questions, one document. The formulation used to be built from
+                another seven here; it now comes straight from the sub-domains you
+                ticked, which is why this is short. */}
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-1.5 text-xs text-gray-700">
               <p className="font-bold text-gray-800">Why you are answering these</p>
               <p>
-                <span className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-600">Plan</span>{" "}
-                Six of them build the <strong>Risk Management Plan</strong> for {planTitle(dm)}. Every patient must have one
-                within 24 hours of admission, and it has a fixed trust template - these questions are its five headings.
+                These six build the <strong>Risk Management Plan</strong> for {planTitle(dm)}. Every patient must have one
+                within 24 hours of admission, and the trust guidance sets its five headings - one question per heading,
+                with &quot;how to prevent / reduce&quot; asked as two, because the trust lists managing it when it happens and
+                preventing it as two different things.
               </p>
-              <p>
-                <span className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700">Formulation</span>{" "}
-                The rest build the <strong>Risk Formulation</strong>, field 9 on SystmOne. There is no trust template for it,
-                so these follow the standard framework: what raises the risk, what sets it off, what keeps it going, what helps.
+              <p className="text-gray-500">
+                The <strong>Risk Formulation</strong> (field 9) is built for you from the sub-domains you ticked - there is
+                nothing to answer for it. Headings are added when you generate.
               </p>
-              <p className="text-gray-500">Each question is badged, so you can see where your answer lands. Headings are added when you generate.</p>
             </div>
             {questionsForDomain(dm.id).map((q) => (
-              <SectionEditor key={q.id} section={questionSectionForDomain(q, chipRisks)} state={cGet(key, q.id)} onChange={(n) => cSet(key, q.id, n)} bank={{ risk: chipRisks[0]?.risk || dm.id, questionId: q.id }} />
+              <SectionEditor
+                key={q.id}
+                section={buildQuestionSection(q, dm.id, chipRisks, indicatorSuggestions(dm.id, q))}
+                state={cGet(key, q.id)}
+                onChange={(n) => cSet(key, q.id, n)}
+                bank={{ risk: chipRisks[0]?.risk || dm.id, questionId: q.id }}
+              />
             ))}
           </div>
         )}
@@ -1382,6 +1390,23 @@ export default function RiskAssessmentPage() {
 
         {/* Removing a captured event - it may sit in more than one domain, so ask
             which ones to take it out of rather than guessing. */}
+        {/* Regenerating throws away whatever the nurse typed, so it asks first. */}
+        <Modal isOpen={regenAsk} onClose={() => setRegenAsk(false)} title="Regenerate the formulation summary?" size="sm">
+          <div className="space-y-3">
+            <p className="text-sm text-gray-700">
+              This replaces the summary with a fresh one built from the sub-domains currently ticked.
+              <strong> Anything you have typed or changed will be lost.</strong>
+            </p>
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setRegenAsk(false)} className="px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">Keep my version</button>
+              <button
+                onClick={() => { setQ9(""); setFormulationEdited(false); setRegenAsk(false); }}
+                className="px-4 py-2 rounded-lg text-sm font-semibold bg-rose-600 text-white hover:bg-rose-500 transition-colors"
+              >Replace it</button>
+            </div>
+          </div>
+        </Modal>
+
         <Modal isOpen={!!removing} onClose={() => setRemoving(null)} title="Remove this event" size="sm">
           {removing && (
             <div className="space-y-4">
@@ -1470,7 +1495,7 @@ export default function RiskAssessmentPage() {
               [
                 st.risks.length ? `${st.risks.length} ${st.risks.length === 1 ? "risk" : "risks"}` : "",
                 st.indicatorList.length ? `${st.indicatorList.length} indicators` : "",
-                `${ans}/${UNIFIED_QUESTIONS.length} answered`,
+                `${ans}/${RMP_QUESTIONS.length} answered`,
               ].filter(Boolean).join("  ·  ");
             return (
               <div key={dm.id} className={`rounded-2xl border-2 bg-white transition-all ${tone} ${open ? "shadow-lg" : "hover:border-slate-400"}`}>
@@ -1531,15 +1556,53 @@ export default function RiskAssessmentPage() {
             <YNToggle value={q8} onChange={setQ8} />
           </div>
           {q8 === "yes" && <input autoComplete="off" value={q8note} onChange={(e) => setQ8note(e.target.value)} className={inputCls} placeholder="Briefly, what are the concerns?" />}
+          {/* Field 9. Assembled from the ticked sub-domains and nothing else -
+              no indicators, no narratives, no dated events, no inferred causes.
+              Editable, and the nurse's version wins until they regenerate. */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">{SCREEN_TAIL.q9Label}</label>
-            <p className="text-xs text-gray-500 mb-1.5">Built from the risks you identified and the answers you gave. Add anything else below.</p>
-            {overallSummary ? (
-              <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-gray-700 whitespace-pre-wrap mb-2">{overallSummary}</div>
+            <p className="text-xs text-gray-500 mb-2">{FORMULATION_SUMMARY_NOTE}</p>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50 divide-y divide-slate-200 mb-2">
+              {summaryRows.map((row) => (
+                <div key={row.domainId} className="px-3 py-2 text-sm">
+                  <span className="font-semibold text-gray-800">{row.title}: </span>
+                  <span className={row.value === FORMULATION_NOT_COMPLETED ? "text-amber-700 font-medium" : "text-gray-700"}>{row.value}</span>
+                </div>
+              ))}
+            </div>
+
+            {formulationEdited ? (
+              <>
+                <textarea
+                  value={q9} onChange={(e) => setQ9(e.target.value)} rows={10}
+                  aria-label="Risk Formulation summary"
+                  className={`${inputCls} font-mono text-xs`}
+                />
+                <p className="text-[11px] text-purple-700 mt-1">You have edited this. It will not be overwritten unless you regenerate.</p>
+              </>
             ) : (
-              <p className="text-xs text-gray-600 italic mb-2">Work through the domains and answer their questions - this builds itself.</p>
+              <pre className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-gray-700 whitespace-pre-wrap font-mono overflow-x-auto">{generatedFormulation}</pre>
             )}
-            <textarea value={q9} onChange={(e) => setQ9(e.target.value)} rows={2} className={inputCls} placeholder="Add anything else to the formulation (optional)..." />
+
+            <div className="flex flex-wrap gap-2 mt-2">
+              {!formulationEdited && (
+                <button
+                  onClick={() => { setQ9(generatedFormulation); setFormulationEdited(true); }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  <UserPen className="w-3.5 h-3.5" /> Edit the summary
+                </button>
+              )}
+              <button
+                onClick={() => { if (formulationEdited) setRegenAsk(true); }}
+                disabled={!formulationEdited}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <RotateCcw className="w-3.5 h-3.5" /> Regenerate from selected sub-domains
+              </button>
+            </div>
+            <S1CopyBox text={finalSummary} />
           </div>
           <p className="flex items-start gap-2 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-3">
             <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
@@ -1644,7 +1707,7 @@ export default function RiskAssessmentPage() {
               <button
                 onClick={() => printClinicalDoc({ title: patient ? `Risk Assessment - ${patient.name}` : "Risk Assessment", sections: [
                   { heading: "Risk screen summary", text: fullScreenText },
-                  { heading: "Formulation", text: buildFormulationText() },
+                  { heading: "Risk formulation summary (field 9)", text: finalSummary },
                   { heading: "Management plans (RMP)", text: buildRmpText() },
                 ] })}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-700 text-white hover:bg-slate-500 transition-colors"
@@ -1675,10 +1738,11 @@ export default function RiskAssessmentPage() {
 
             {tab === "formulation" && (
               <div className="space-y-3">
-                {!planDomains.length && <p className="text-sm text-gray-600 text-center py-4">Identify at least one risk to build a formulation.</p>}
-                <p className="text-xs text-gray-500">One formulation, one block per domain (in == bars), then written up as prose. Copy it into the single SystmOne formulation field.</p>
-                <CopyField id="form-all" label="Formulation" text={buildFormulationText()} done={copied.has("form-all")} onToggle={toggleCopied} />
-                {finalSummary && <CopyField id="form-summary" label="Risk Formulation (field 9)" text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />}
+                <p className="text-xs text-gray-500">
+                  One bullet per domain, naming the sub-domains you ticked or the domain&apos;s own &quot;no evidence&quot; wording.
+                  It goes in the single SystmOne formulation field (field 9). {FORMULATION_SUMMARY_NOTE}
+                </p>
+                <CopyField id="form-summary" label={`${SCREEN_TAIL.q9Label} (field 9)`} text={finalSummary} done={copied.has("form-summary")} onToggle={toggleCopied} />
               </div>
             )}
 

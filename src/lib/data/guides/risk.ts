@@ -23,6 +23,15 @@ export interface RiskChipGroup {
   label?: string;
   words: string[];
   source?: ChipSource; // defaults to "wardhub"
+  // How prominently the group is offered (22 Aug 2026):
+  //   suggested  - shown straight away, because the sub-domains or the clinical
+  //                indicators the nurse ticked point at it. Never preselected.
+  //   all        - the universal library, folded behind a "show all options"
+  //                toggle so the screen stays short.
+  //   incomplete - a deliberate record that the patient-specific detail is not
+  //                established yet. Shown apart, and never as reassurance.
+  // Defaults to "suggested".
+  tier?: "suggested" | "all" | "incomplete";
 }
 
 export interface RiskSection {

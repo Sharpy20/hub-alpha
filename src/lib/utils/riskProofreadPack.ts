@@ -11,11 +11,18 @@
 //             needs a clinician's judgement, not just proofreading.
 
 import { printHtml, esc, IG_FOOTER } from "./printDoc";
-import { RISK_DOMAINS, CLINICAL_INDICATORS, SUBTYPE_RISK, SCREEN_TAIL } from "@/lib/data/welcome/risk-screen";
+import {
+  RISK_DOMAINS, CLINICAL_INDICATORS, SUBTYPE_RISK, SCREEN_TAIL,
+  FORMULATION_SUMMARY_TITLE, FORMULATION_SUMMARY_NOTE, FORMULATION_NOT_COMPLETED,
+} from "@/lib/data/welcome/risk-screen";
 import { questionsForDomain } from "@/lib/data/guides/risk-questions";
 import {
-  FORMULATION_SECTIONS, RMP_SECTIONS, MANDATORY_MDT_LINE,
-  RMP_RISK_CHIPS, FORMULATION_RISK_CHIPS, RISK_TYPES,
+  WHAT_IS_THE_RISK, INCOMPLETE_OPTIONS,
+  UNIVERSAL_IMMEDIATE, UNIVERSAL_PREVENTION, UNIVERSAL_REDUCTION_SIGNS, UNIVERSAL_ESCALATION,
+} from "@/lib/data/guides/rmp-chips";
+import {
+  RMP_SECTIONS, MANDATORY_MDT_LINE,
+  RMP_RISK_CHIPS, RISK_TYPES,
   RISK_TEACHING, RISK_EXAMPLES,
   type RiskChipGroup,
 } from "@/lib/data/guides/risk";
@@ -107,19 +114,21 @@ export function printRiskProofreadPack() {
 
   // ---- Part 3: wardHub's questions ---------------------------------------
   parts.push(`<h2>Part 3. The questions the tool asks ${WH}</h2>`);
-  parts.push(`<p class="lead">The SystmOne screen asks nothing beyond a/b/c per domain. Everything here was written for wardHub to build a formulation and a management plan from one pass. Each question feeds one named output section - that mapping is shown so you can see where an answer ends up.</p>`);
+  parts.push(`<p class="lead">The SystmOne screen asks nothing beyond a/b/c per domain. The six questions below were written for wardHub, and they build one thing: the Risk Management Plan the trust mandates within 24 hours of admission. Each one feeds a named heading of that plan.</p>`);
+  parts.push(`<div class="note">
+    <p style="margin:0 0 2mm"><strong>This used to be thirteen questions, and seven of them are gone.</strong> Six built the plan; the other seven built the SystmOne Risk Formulation field, for which the trust publishes no template at all - so wardHub had invented a formulation framework and was asking staff to fill it in. It was slow, the output read as repetitive, and the tool was effectively proposing causes, triggers, protective factors and an overall judgement of the risk.</p>
+    <p style="margin:0"><strong>The Risk Formulation field is now assembled, not asked.</strong> It lists one bullet per domain naming the sub-domains the nurse ticked, or that domain's own "no evidence" wording - see Part 6. It draws on nothing else: not the clinical indicators, not the narratives, not the dated events, not the plan. Every word in it is either the trust's own wording or a sub-domain the nurse selected. That is a transcription of their choices rather than an interpretation of the patient.</p>
+  </div>`);
 
   for (const dm of RISK_DOMAINS) {
     parts.push(`<h3>${dm.number}. ${esc(dm.title)}</h3>`);
     for (const q of questionsForDomain(dm.id)) {
-      const dest = q.writes.doc === "f"
-        ? FORMULATION_SECTIONS.find((s) => s.id === q.writes.id)?.heading
-        : RMP_SECTIONS.find((s) => s.id === q.writes.id)?.heading;
       parts.push(`<div class="q">
-        <p style="margin:0"><strong>${esc(q.question)}</strong></p>
+        <p style="margin:0"><strong>${q.n}. ${esc(q.question)}</strong></p>
         <p class="hint" style="margin:0">${esc(q.hint)}</p>
         ${q.gap ? `<p class="gap" style="margin:0">Gap prompt: ${esc(q.gap)}</p>` : ""}
-        <p class="hint" style="margin:0">Goes to: ${esc(dest || q.writes.id)} (${q.writes.doc === "f" ? "Formulation" : "Management Plan"})</p>
+        <p class="hint" style="margin:0">Goes to: ${esc(q.populates)} (Management Plan)</p>
+        ${q.incomplete ? `<p class="hint" style="margin:0">If it cannot be established: "${esc(q.incomplete)}"</p>` : ""}
       </div>`);
     }
     parts.push(signoff(`Domain ${dm.number} questions - do these fit this domain, and is anything missing?`));
@@ -147,24 +156,44 @@ export function printRiskProofreadPack() {
     <p style="margin:0"><strong>Three different meetings appear below and must not be merged.</strong> An <strong>MDT review</strong> is the trust's mandatory closing line on every plan. A <strong>risk strategy meeting</strong> is the trust's own risk process, and can be called either while managing an incident or as escalation. A <strong>safeguarding strategy meeting</strong> is the statutory discussion for children, and appears only in the domain 6 banks.</p>
   </div>`);
 
-  parts.push(`<h3>Generic banks (used when a risk has no tailored set)</h3>`);
-  for (const sec of [...FORMULATION_SECTIONS, ...RMP_SECTIONS]) {
-    if (!sec.groups.length) continue;
-    parts.push(`<h4>${esc(sec.heading)}</h4>${chipList(sec.groups)}`);
-  }
-  parts.push(signoff("Generic suggestion words - safe and appropriate?"));
+  parts.push(`<div class="note">
+    <p style="margin:0"><strong>Three tiers, and the order matters.</strong> Words that the ticked sub-domains and clinical indicators point at are offered first. The general library below that is folded away behind a "show all options" toggle. Nothing is ever pre-ticked, and a ticked clinical indicator is <em>offered</em> as a suggestion - it never writes itself into a plan, because an indicator records why the domain was considered relevant, not what is true of this person.</p>
+  </div>`);
 
-  for (const risk of RISK_TYPES) {
-    parts.push(`<h3>${esc(risk)}</h3>`);
-    const f = FORMULATION_RISK_CHIPS[risk];
-    const r = RMP_RISK_CHIPS[risk];
-    for (const sec of FORMULATION_SECTIONS) {
-      const g = f?.[sec.id as keyof typeof f];
-      if (g) parts.push(`<h4>Formulation - ${esc(sec.heading)}</h4>${chipList(g)}`);
+  parts.push(`<h3>Question 1 - which specific outcome are you trying to prevent?</h3>`);
+  parts.push(`<p class="lead">Keyed to the sub-domain the nurse ticked, so the outcome named is the one they actually selected. Domains 1 and 2 are Mike's own wording; <strong>domains 3 to 7 were drafted by Claude and have not been through him</strong>. None of these carry a likelihood, a severity or a risk level.</p>`);
+  for (const dm of RISK_DOMAINS) {
+    parts.push(`<h4>${dm.number}. ${esc(dm.title)}</h4>`);
+    for (const s of dm.subtypes) {
+      const bank = WHAT_IS_THE_RISK[`${dm.id}::${s}`];
+      parts.push(`<p style="margin:0 0 1mm"><strong>${esc(s)}</strong></p>`);
+      parts.push(bank ? chipList([{ words: bank }]) : `<p class="missing">no bank - falls back to the generic list</p>`);
     }
+  }
+  parts.push(signoff("Question 1 outcomes - is each one the right thing to be preventing, and is the wording safe?"));
+
+  parts.push(`<h3>The general library (questions 3 to 6)</h3>`);
+  parts.push(`<p class="lead">Shown on every domain behind the "show all options" toggle. Question 2 deliberately has no general library: a generic list of what a risk looks like was exactly the fault this rebuild fixed.</p>`);
+  parts.push(`<h4>3. What should staff do when the risk is present or increasing?</h4>${chipList([{ words: UNIVERSAL_IMMEDIATE }])}`);
+  parts.push(`<h4>4. What can staff and the patient do to reduce the likelihood?</h4>${chipList([{ words: UNIVERSAL_PREVENTION }])}`);
+  parts.push(`<h4>5. What observable changes would show the plan is working?</h4>${chipList([{ words: UNIVERSAL_REDUCTION_SIGNS }])}`);
+  parts.push(`<h4>6. What further action, and when should the plan be escalated?</h4>${chipList([{ words: UNIVERSAL_ESCALATION }])}`);
+  parts.push(signoff("The general library - safe and appropriate on any domain?"));
+
+  parts.push(`<h3>Recording a gap honestly</h3>`);
+  parts.push(`<p class="lead">A section with nothing in it prints "This section has not yet been completed." The options below are different: the nurse chose them deliberately to record that the patient-specific detail is not established yet. Neither is reassurance, and neither should be read as "there is nothing to find".</p>`);
+  parts.push(`<ul>${Object.entries(INCOMPLETE_OPTIONS).map(([, v]) => `<li>${esc(v)}</li>`).join("")}</ul>`);
+  parts.push(signoff("The not-established options - do these read as gaps rather than findings?"));
+
+  parts.push(`<h3>The tailored banks, per risk (questions 2 to 6)</h3>`);
+  parts.push(`<p class="lead">Ticking a sub-domain pulls in the bank named for it in Part 4. These are the words offered first, before the general library.</p>`);
+  for (const risk of RISK_TYPES) {
+    const r = RMP_RISK_CHIPS[risk];
+    if (!r) continue;
+    parts.push(`<h4>${esc(risk)}</h4>`);
     for (const sec of RMP_SECTIONS) {
-      const g = r?.[sec.id as keyof typeof r];
-      if (g) parts.push(`<h4>Plan - ${esc(sec.heading)}</h4>${chipList(g)}`);
+      const g = r[sec.id as keyof typeof r];
+      if (g) parts.push(`<p style="margin:0 0 1mm"><strong>${esc(sec.heading)}</strong></p>${chipList(g)}`);
     }
     parts.push(`<hr class="rule">`);
   }
@@ -172,7 +201,16 @@ export function printRiskProofreadPack() {
 
   // ---- Part 6: output templates ------------------------------------------
   parts.push(`<h2>Part 6. What comes out ${WH}</h2>`);
-  parts.push(`<h3>Formulation headings, in order</h3><ul>${FORMULATION_SECTIONS.map((s) => `<li><strong>${esc(s.heading)}</strong> - ${esc(s.hint)}</li>`).join("")}</ul>`);
+  parts.push(`<h3>The Risk Formulation field (field 9)</h3>`);
+  parts.push(`<p class="lead">Assembled, not asked. One bullet per domain, always all seven, in SystmOne order. A domain with sub-domains ticked lists them; a domain confirmed nil carries its own exact "No evidence ..." wording from the form; a domain neither worked nor confirmed reads "${esc(FORMULATION_NOT_COMPLETED)}" so a gap cannot pass for a negative finding.</p>`);
+  parts.push(`<pre>${esc(FORMULATION_SUMMARY_TITLE)}
+
+- Risk of self harm or suicide: Current thoughts of self-harm; Currently experiencing high levels of distress and/or hopelessness.
+- Risk to self, including self-neglect: Associated with Activities of Daily Living (ADL's).
+- Risk of harm or neglect to others: No evidence of risk of harm or neglect to others reported during assessment.
+- ... one line for each of the seven domains ...</pre>`);
+  parts.push(`<p>On screen it carries this note: "${esc(FORMULATION_SUMMARY_NOTE)}" It is editable, and regenerating it warns first that manual edits will be lost.</p>`);
+  parts.push(`<div class="note"><p style="margin:0">This is a <strong>summary of which risk types were identified</strong>, not a psychological formulation and not a predictive judgement - which is why the heading says SUMMARY. It is the one place the tool assembles text without the nurse selecting each part, and it can do that safely precisely because every word in it is either the trust's own wording or a sub-domain the nurse ticked.</p></div>`);
   parts.push(`<h3>Management plan headings, in order</h3><ul>${RMP_SECTIONS.map((s) => `<li><strong>${esc(s.heading)}</strong> - ${esc(s.hint)}</li>`).join("")}</ul>`);
   parts.push(`<h3>Mandatory closing line, added to every plan</h3><p>${esc(MANDATORY_MDT_LINE)}</p>`);
   parts.push(`<h3>Two things print differently from how they are asked</h3>
@@ -181,8 +219,9 @@ export function printRiskProofreadPack() {
 When it happens: ...
 To prevent or reduce: ...</pre>
     <p><strong>The plan is named after the risks that were ticked</strong>, not the SystmOne domain, because the guide's own examples name the risk itself ("self harm / risk to others / violence and aggression"). So a plan heads <em>VIOLENCE AND AGGRESSION, DAMAGE TO PROPERTY</em> rather than <em>Risk of harm or neglect to others</em>.</p>`);
-  parts.push(`<p class="lead">In the plan, an unanswered section prints as "Not yet established." under its heading, per the trust care planning guidance. The formulation runs as prose with no headings, so unanswered sections there are gathered into one closing line instead - "Not yet established: pattern over time, protective factors." - rather than repeating the bare phrase with nothing to say what is missing.</p>`);
-  parts.push(signoff("Output structure and the mandatory line - correct?"));
+  parts.push(`<h3>An empty section and an unestablished one are not the same</h3>`);
+  parts.push(`<p class="lead">A section nobody answered prints "This section has not yet been completed." A section where the nurse deliberately chose one of the not-established options prints their choice. Both are visible gaps for review; neither is filled with generic text to make the plan look finished.</p>`);
+  parts.push(signoff("Output structure, the formulation summary and the mandatory line - correct?"));
 
   // ---- Part 7: teaching ---------------------------------------------------
   parts.push(`<h2>Part 7. The teaching content ${WH}</h2>`);

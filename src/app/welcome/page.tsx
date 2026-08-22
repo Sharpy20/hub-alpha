@@ -43,7 +43,7 @@ import { FORMULATION_SECTIONS, RMP_SECTIONS } from "@/lib/data/guides/risk";
 import {
   SectionEditor, buildFormulation, buildOneRmp, formulationSectionForRisk,
   rmpSectionForRisk, buildContent, naturalList, cap, ensureStop,
-  type AllState, type SecState, EMPTY,
+  type AllState, type SecState, type SecUpdate, applySec, EMPTY,
 } from "@/components/guides/risk-capture";
 import {
   ChevronDown, ChevronRight, Copy, Check, RotateCcw, Sparkles, Info,
@@ -144,9 +144,9 @@ export default function WelcomePage() {
   const getDomain = (id: string): DomainState => domains[id] || emptyDomain();
   const setDomain = (id: string, next: DomainState) => setDomains((s) => ({ ...s, [id]: next }));
   const fGet = (key: string, sec: string): SecState => formByRisk[key]?.[sec] || EMPTY;
-  const fSet = (key: string, sec: string, v: SecState) => setFormByRisk((s) => ({ ...s, [key]: { ...s[key], [sec]: v } }));
+  const fSet = (key: string, sec: string, v: SecUpdate) => setFormByRisk((s) => ({ ...s, [key]: { ...s[key], [sec]: applySec(s[key]?.[sec], v) } }));
   const rGet = (key: string, sec: string): SecState => rmpByRisk[key]?.[sec] || EMPTY;
-  const rSet = (key: string, sec: string, v: SecState) => setRmpByRisk((s) => ({ ...s, [key]: { ...s[key], [sec]: v } }));
+  const rSet = (key: string, sec: string, v: SecUpdate) => setRmpByRisk((s) => ({ ...s, [key]: { ...s[key], [sec]: applySec(s[key]?.[sec], v) } }));
 
   const toggleCopied = (id: string, on: boolean) => setCopied((s) => { const n = new Set(s); if (on) n.add(id); else n.delete(id); return n; });
 

@@ -332,8 +332,71 @@ export const SCREEN_TAIL = {
 
 // Where a ticked clinical indicator flows: "formulation" (background) or "present"
 // (RMP early-warning signs, the default).
+//
+// ⚠ 22 Aug 2026: this no longer INSERTS anything. A ticked indicator is offered as
+// a suggested chip on the matching question and the nurse chooses whether to use
+// it. An indicator records why the domain was considered relevant; it is not by
+// itself a finding about this person, so it must not write itself into a plan.
 export function indicatorRoute(domainId: string, indicator: string): "formulation" | "present" {
   return (INDICATOR_BACKGROUND[domainId] || []).includes(indicator) ? "formulation" : "present";
+}
+
+// ---- The Risk Formulation summary (field 9) --------------------------------
+//
+// Rebuilt 22 Aug 2026. Field 9 on SystmOne is a single free-text box and the
+// Trust has published no template for it, so wardHub used to ask staff seven
+// extra questions and assemble a clinical formulation out of the answers. That
+// was slow, it read as repetitive, and it had the tool proposing causes,
+// triggers, protective factors and an overall judgement.
+//
+// This replaces it with a transcription of what the nurse ticked: one line per
+// domain, naming the sub-domains selected or the domain's own "no evidence"
+// wording. It draws on NOTHING else - not the clinical indicators, not the
+// narratives, not the dated events, not the plan. Every word in it is either the
+// Trust's own domain wording or a sub-domain the nurse chose.
+//
+// It is a summary of which risk types were identified. It is deliberately not a
+// psychological formulation and makes no predictive judgement, which is why the
+// heading says SUMMARY and the on-screen note tells staff to review it.
+
+export const FORMULATION_SUMMARY_TITLE = "RISK FORMULATION SUMMARY";
+export const FORMULATION_SUMMARY_NOTE =
+  "Generated from the risk sub-domains selected above. Review and amend the summary to ensure it accurately reflects your assessment.";
+// Used where a domain has been neither worked nor confirmed nil. It must not read
+// as reassurance - an unopened domain is a gap, not a negative finding.
+export const FORMULATION_NOT_COMPLETED = "Not yet completed.";
+
+export interface FormulationDomainInput {
+  domainId: string;
+  /** The sub-domains ticked, in the order they were ticked. Includes any the nurse named themselves. */
+  subs: string[];
+  /** True when the domain's "No evidence ..." option is selected. */
+  noEvidence: boolean;
+}
+
+/** One bullet per domain, in SystmOne order. Never omits a domain. */
+export function formulationSummaryLines(input: FormulationDomainInput[]): { domainId: string; title: string; value: string }[] {
+  const by = new Map(input.map((i) => [i.domainId, i]));
+  return RISK_DOMAINS.map((dm) => {
+    const got = by.get(dm.id);
+    const value = got?.noEvidence
+      ? `${dm.noEvidence}.`
+      : got && got.subs.length
+        ? `${got.subs.join("; ")}.`
+        : FORMULATION_NOT_COMPLETED;
+    return { domainId: dm.id, title: dm.title, value };
+  });
+}
+
+/** The plain-text block to paste into field 9. */
+export function buildFormulationSummary(input: FormulationDomainInput[], patientName?: string): string {
+  const lines = formulationSummaryLines(input).map((l) => `- ${l.title}: ${l.value}`);
+  return [
+    FORMULATION_SUMMARY_TITLE,
+    ...(patientName ? [`Patient: ${patientName}`] : []),
+    "",
+    ...lines,
+  ].join("\n");
 }
 
 // Observation levels (DHCFT Inpatient Therapeutic Observations & Engagement

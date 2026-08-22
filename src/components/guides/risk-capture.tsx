@@ -32,6 +32,18 @@ export interface SecState { chips: string[]; text: string; na: boolean; examples
 export type AllState = Record<string, SecState>;
 export const EMPTY: SecState = { chips: [], text: "", na: false };
 
+// What SectionEditor hands back. It passes an UPDATER for anything that toggles -
+// chips, examples, "not yet established" - because building the next value from
+// the `state` prop reads whatever the last render captured, so two clicks landing
+// in the same tick lose one. That fault has already been found twice on the risk
+// page (the capture panel and every domain handler); this is the third place.
+// Free text still passes a plain value: it comes from a controlled input, one
+// keystroke at a time.
+export type SecUpdate = SecState | ((prev: SecState) => SecState);
+/** Resolve an updater against the state the parent currently holds. */
+export const applySec = (prev: SecState | undefined, next: SecUpdate): SecState =>
+  typeof next === "function" ? next(prev || EMPTY) : next;
+
 // ---- text helpers ----
 export const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 export const ensureStop = (s: string) => (!s ? s : /[.!?]$/.test(s.trim()) ? s.trim() : s.trim() + ".");
@@ -91,12 +103,20 @@ export function buildFormulation(state: AllState, title = "RISK FORMULATION", pa
   return blocks.join("\n");
 }
 
+// An empty section and a section the nurse deliberately marked "not yet
+// established" are different things and must not print the same (Section 11 of
+// the 22 Aug brief). buildContent() emits "Not yet established." for the second;
+// this is what the first says.
+export const NOT_COMPLETED = "This section has not yet been completed.";
+
 export function buildOneRmp(risk: string, secs: AllState, displayName?: string, patientName?: string): string {
   const name = (displayName && displayName.trim()) || risk;
   const body = (id: string): string => {
     if (id === "what") {
-      const ctx = buildContent(secs["what"]);
-      return ctx ? `${ensureStop(cap(name))} ${ctx}` : ensureStop(cap(name));
+      // The plan is already headed with the risk name, so repeating it here read
+      // as "Fire Setting. Risk of deliberate fire setting." Question 1 now names
+      // the outcome directly; the risk name is only the fallback if it is blank.
+      return buildContent(secs["what"]) || ensureStop(cap(name));
     }
     if (id === "next") {
       const n = buildContent(secs["next"]);
@@ -111,9 +131,9 @@ export function buildOneRmp(risk: string, secs: AllState, displayName?: string, 
       const lines: string[] = [];
       if (manage) lines.push(`When it happens: ${manage}`);
       if (reduce) lines.push(`To prevent or reduce: ${reduce}`);
-      return lines.length ? lines.join("\n") : "Not yet established.";
+      return lines.length ? lines.join("\n") : NOT_COMPLETED;
     }
-    return buildContent(secs[id]) || "Not yet established.";
+    return buildContent(secs[id]) || NOT_COMPLETED;
   };
   const blocks: string[] = [TXT_BAR, name.toUpperCase(), ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
   RMP_SECTIONS.forEach((sec, i) => {
@@ -146,7 +166,7 @@ export function SectionEditor({
 }: {
   section: RiskSection;
   state: SecState;
-  onChange: (next: SecState) => void;
+  onChange: (next: SecUpdate) => void;
   accent?: "rose" | "violet";
   // Identifies this question's chip bank so words the user adds come back next
   // time they plan the same risk. Omit to hide "add your own".
@@ -155,6 +175,14 @@ export function SectionEditor({
   const [open, setOpen] = useState(false);
   const [userChips, setUserChips] = useState<string[]>([]);
   const [newChip, setNewChip] = useState("");
+  const [showAll, setShowAll] = useState(false);
+
+  // Three tiers: what this risk points at, the general library, and the honest
+  // "we have not worked this out yet" options. See RiskChipGroup.tier.
+  const suggested = section.groups.filter((g) => (g.tier ?? "suggested") === "suggested" && g.words.length);
+  const allGroups = section.groups.filter((g) => g.tier === "all" && g.words.length);
+  const gapGroups = section.groups.filter((g) => g.tier === "incomplete" && g.words.length);
+  const allCount = allGroups.reduce((n, g) => n + g.words.length, 0);
 
   // Read the user's own words for this bank once the section is opened.
   useEffect(() => {
@@ -167,10 +195,11 @@ export function SectionEditor({
     // made every picked word look like an alert (Mike, 20 Aug 2026).
     : { on: "bg-sky-700 border-sky-700", hover: "hover:border-slate-400 hover:bg-slate-50", ring: "focus:ring-sky-500 focus:border-sky-500", badge: "text-slate-600 bg-slate-100", spark: "text-slate-600", chipText: "text-slate-700", chipBg: "bg-slate-50 border-slate-200" };
 
-  const toggleChip = (w: string) => {
-    const has = state.chips.includes(w);
-    onChange({ ...state, na: false, chips: has ? state.chips.filter((c) => c !== w) : [...state.chips, w] });
-  };
+  const toggleChip = (w: string) =>
+    onChange((prev) => ({
+      ...prev, na: false,
+      chips: prev.chips.includes(w) ? prev.chips.filter((c) => c !== w) : [...prev.chips, w],
+    }));
 
   // Trust wording is plain; anything wardHub wrote carries a purple ring so the
   // two layers are never mistaken for each other.
@@ -186,7 +215,8 @@ export function SectionEditor({
     );
   };
   const examples = state.examples || [];
-  const setExamples = (next: DatedExample[]) => onChange({ ...state, na: false, examples: next });
+  const setExamples = (fn: (prev: DatedExample[]) => DatedExample[]) =>
+    onChange((prev) => ({ ...prev, na: false, examples: fn(prev.examples || []) }));
   const exampleCount = examples.filter((e) => e.text.trim()).length;
   const count = state.chips.length + (state.text.trim() ? 1 : 0) + exampleCount + (state.na ? 1 : 0);
   const chipsOnlyNoDetail = state.chips.length > 0 && !state.text.trim() && !state.na && exampleCount === 0;
@@ -214,7 +244,10 @@ export function SectionEditor({
             {section.dest === "plan" ? "Plan" : section.dest === "formulation" ? "Formulation" : "Both"}
           </span>
         )}
-        {count > 0 && <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${A.badge}`}>{state.na ? "n/a" : count}</span>}
+        {count > 0
+          ? <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${A.badge}`}>{state.na ? "n/a" : count}</span>
+          // Section 11: an empty section is not hidden behind filler. Say so.
+          : <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 flex-shrink-0">Not completed</span>}
         {open ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
       </button>
 
@@ -222,20 +255,54 @@ export function SectionEditor({
         <div className="px-3.5 pb-3.5 space-y-3">
           <div className="flex items-start justify-between gap-2">
             <p className="flex items-start gap-1.5 text-xs text-gray-500 flex-1"><Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-gray-400" />{section.hint}</p>
-            <button onClick={() => onChange({ chips: [], text: "", na: !state.na })} aria-pressed={state.na}
-              className={`flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg border transition-colors ${state.na ? "bg-gray-700 text-white border-gray-700" : "bg-white border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-800"}`}>
-              Not yet established
-            </button>
+            {/* The generic "not yet established" only appears where the question
+                has no named version of its own - otherwise the same idea sat on
+                screen twice, in two places, worded differently. */}
+            {gapGroups.length === 0 && (
+              <button onClick={() => onChange((prev) => ({ chips: [], text: "", na: !prev.na }))} aria-pressed={state.na}
+                className={`flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg border transition-colors ${state.na ? "bg-gray-700 text-white border-gray-700" : "bg-white border-gray-300 text-gray-600 hover:border-gray-500 hover:text-gray-800"}`}>
+                Not yet established
+              </button>
+            )}
           </div>
 
-          {section.groups.map((g, gi) => (
-            <div key={gi}>
+          {/* Suggested first, because the nurse's own sub-domain and indicator
+              ticks point at them. Nothing here is ever preselected. */}
+          {suggested.map((g, gi) => (
+            <div key={`s${gi}`}>
               {g.label && <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">{g.label}</p>}
               <div className="flex flex-wrap gap-1.5">
                 {g.words.map((w) => renderChip(w, g.source || "wardhub"))}
               </div>
             </div>
           ))}
+
+          {/* The universal library. Folded away by default - Mike, 22 Aug: the
+              plan-building "takes ages now". */}
+          {allGroups.length > 0 && (
+            <div>
+              <button
+                onClick={() => setShowAll((s) => !s)}
+                aria-expanded={showAll}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                {showAll ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                {showAll ? "Hide the general options" : `Show all ${allCount} general options`}
+              </button>
+              {showAll && (
+                <div className="mt-2 space-y-2">
+                  {allGroups.map((g, gi) => (
+                    <div key={`a${gi}`}>
+                      {g.label && <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">{g.label}</p>}
+                      <div className="flex flex-wrap gap-1.5">
+                        {g.words.map((w) => renderChip(w, g.source || "wardhub"))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* The user's own words for this bank, plus the box to add more. */}
           {bank && (
@@ -260,7 +327,7 @@ export function SectionEditor({
                     if (!w || userChips.some((x) => x.toLowerCase() === w.toLowerCase())) { setNewChip(""); return; }
                     addUserChip(bank.risk, bank.questionId, w);
                     setUserChips((c) => [...c, w]);
-                    onChange({ ...state, na: false, chips: [...state.chips, w] }); // added means you meant it
+                    onChange((prev) => ({ ...prev, na: false, chips: [...prev.chips, w] })); // added means you meant it
                     setNewChip("");
                   }}
                   className="inline-flex items-center gap-1"
@@ -288,15 +355,38 @@ export function SectionEditor({
 
           {section.gap && <p className={`flex items-start gap-1.5 text-xs ${A.spark}`}><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />Gap prompt: {section.gap}</p>}
 
-          <textarea value={state.text} onChange={(e) => onChange({ ...state, na: false, text: e.target.value })}
+          <textarea value={state.text} onChange={(e) => onChange((prev) => ({ ...prev, na: false, text: e.target.value }))}
             placeholder={section.placeholder || "Add patient-specific detail..."} rows={2}
             className={`w-full text-sm border border-gray-200 rounded-lg px-3 py-2 ${A.ring} resize-y`} />
+
+          {/* Recording a gap honestly. Kept apart from the suggestions and styled
+              as a warning, because "no early warning signs established" is a hole
+              in the plan and must never read as "there are none". */}
+          {gapGroups.length > 0 && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50/60 p-2.5 space-y-1.5">
+              <p className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-amber-700">
+                <AlertTriangle className="w-3 h-3 flex-shrink-0" /> If you cannot establish this yet
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {gapGroups.flatMap((g) => g.words).map((w) => {
+                  const on = state.chips.includes(w);
+                  return (
+                    <button key={w} onClick={() => toggleChip(w)} aria-pressed={on}
+                      className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ring-1 ring-purple-300 ${on ? "bg-amber-600 border-amber-600 text-white font-medium" : "bg-white border-amber-200 text-amber-800 hover:bg-amber-50"}`}>
+                      {w}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-[11px] text-amber-800">This records a gap for review. It does not say there is nothing to find.</p>
+            </div>
+          )}
 
           {section.examples && (
             <div className={`rounded-lg border ${A.chipBg} p-2.5 space-y-2`}>
               <p className="text-[10px] font-mono uppercase tracking-wider text-gray-500">Specific examples (date optional)</p>
               {examples.map((ex, i) => {
-                const upd = (patch: Partial<DatedExample>) => setExamples(examples.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
+                const upd = (patch: Partial<DatedExample>) => setExamples((prev) => prev.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
                 return (
                   <div key={i} className="space-y-1.5">
                     <div className="flex items-center gap-1.5">
@@ -312,13 +402,13 @@ export function SectionEditor({
                         <option value="">Year</option>
                         {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
                       </select>
-                      <button onClick={() => setExamples(examples.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
+                      <button onClick={() => setExamples((prev) => prev.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
                     </div>
                     <input type="text" value={ex.text} placeholder="what happened" onChange={(e) => upd({ text: e.target.value })} className={`w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${A.ring}`} />
                   </div>
                 );
               })}
-              <button onClick={() => setExamples([...examples, { day: "", month: "", year: "", text: "" }])} className={`inline-flex items-center gap-1 text-xs font-semibold ${A.chipText} hover:opacity-80 transition-opacity`}>
+              <button onClick={() => setExamples((prev) => [...prev, { day: "", month: "", year: "", text: "" }])} className={`inline-flex items-center gap-1 text-xs font-semibold ${A.chipText} hover:opacity-80 transition-opacity`}>
                 <Plus className="w-3.5 h-3.5" /> Add example
               </button>
             </div>

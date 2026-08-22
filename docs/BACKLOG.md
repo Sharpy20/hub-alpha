@@ -3120,7 +3120,38 @@ Deliberately not done, with reasons:
   with no sub-domain, historical with no current, very long custom chips, duplicate dates,
   saved data from before the update). Several are now covered by unit tests; a manual pass
   through the rest is worth a session.
-- **Review responsibility and timing** (his #3) - "who will review this, when, and what
-  triggers an earlier review". Not built. It is the one remaining item that probably wants
-  its own field rather than folding into a question, so it needs Mike's call on where it
-  goes: page-side reminder, plan header (next to involvement), or escalation wording.
+- ✅ **Review responsibility and timing (his #3) - DONE 22 Aug, commit `6dbaf88`.** Mike chose the plan header. See X14.
+
+### X14. Review responsibility and timing (Mike's call) - commit `6dbaf88`
+
+Three controls join involvement in the **plan header**, above the bar and outside the five
+Trust headings. A plan can be sound when written and out of date within a shift, and the
+Trust template has nowhere to say so.
+
+```
+========================================
+FIRE SETTING
+Person involved in this plan: Involved and agreed
+Review: The named nurse, At the next MDT
+Review sooner if: Any relevant incident; A change in observation level
+========================================
+```
+
+⛔ **WHO is a ROLE, never a name.** wardHub holds no staff names in a plan, and a role
+survives the person going on annual leave in a way a name does not.
+⛔ **WHEN is an INTERVAL, not a date picker.** A date typed here is stale the moment the
+plan is pasted, and the ward speaks in shifts and MDTs.
+⭐ **WHAT BRINGS IT FORWARD is the one that matters** - most plans go stale between
+scheduled reviews, and it is an event that does it rather than the calendar.
+
+- Seventh consistency check: a plan with answers and **no** review arrangement at all. Any
+  one of the three counts - triggers alone are a real arrangement, not half of one.
+- Spun-off sub-domain plans **inherit** the domain's header.
+- `buildOneRmp`'s trailing involvement argument became a `PlanHeader` object, so the next
+  thing that belongs above the bar does not need another positional parameter.
+- Proofreading pack updated: the header, the person's own preferences, the timeframes and
+  **all four ways a section can be empty** are in it for sign-off. **26 sign-off blocks,
+  ~17,200 words** (down from ~26,500 because the seven formulation questions and their chip
+  banks are gone - less content because there is less content).
+
+**143 tests. Copilot's list is now done bar X13's four parked items.**

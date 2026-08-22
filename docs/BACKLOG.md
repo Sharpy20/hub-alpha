@@ -3014,3 +3014,59 @@ The trust guidance quoted in `SEPARATE_PLANS_NOTE` ("write a SEPARATE risk manag
 for every current and historical risk") is met by the toggle rather than by forcing a split:
 the default is one plan per domain, titled by the sub-domains actually ticked, and anything
 that needs its own plan gets flagged and spun out. **Do not re-open this.**
+
+### X10. Read the source design in Teams (22 Aug, late) - commit `7c43eb7`
+
+Mike opened the M365 Copilot chat "Risk Management Plan Review" and asked for the whole
+thing to be read. **His original paste had been cut off mid domain 2, and domains 3-7 never
+arrived** - so those question-1 chips had been drafted by Claude and flagged unreviewed.
+The source has everything. All invented content is now REPLACED.
+
+**Now implemented from the source:**
+- **Per-domain banks for questions 2-5, all seven domains** (`DOMAIN_RMP_CHIPS` in
+  `rmp-chips.ts`). This is the design's actual mechanism for fixing "the same chips
+  regardless of domain", and it is better than the sub-domain-only layer that was there.
+- **Question 1 outcomes for domains 3-7**, replacing the drafts. Domain 3's are materially
+  different from what was guessed.
+- The rest of domain 2, which the paste cut off at "Contact relevant".
+
+⛔ **Two governance instructions in the source that were NOT in the paste:**
+1. **Sexual Offences stays high-level and non-graphic** - "In view of the sensitivity of
+   this sub-domain, use only high-level, non-graphic documentation options." Three options
+   only. **Guarded by a test.** Do not add detail.
+2. **Domain 6 is conservative and safeguarding-led** - "It must not attempt to resolve
+   safeguarding concerns through routine ward interventions." Its question-1 bank is
+   deliberately **NOT per sub-domain**: one high-level list (`WHAT_IS_THE_RISK_CHILD`) for
+   all nine, because splitting it would name what was done to a child. **Guarded by a test.**
+Both, plus domain 5's "the sub-domains are broad so the indicators should steer this", now
+show on the questions.
+
+**Chips resolve in three visible tiers, deduped:** what the ticked sub-domain adds on top,
+then the domain's reviewed bank, then the universal library.
+
+**Confirmed against the source, no change needed:** one RMP per domain (X9 matches the
+design), the six questions and their exact wording, the manage/prevent split, the universal
+libraries, and the mandatory MDT line. Also found Mike's own framing, which the build
+already follows: *"We cant use AI to interpret - has to be words from the nurse hence the
+chips idea - the guide was just helping the nurse organise what they know so it falls in to
+the correct format."*
+
+Eleven new tests (54 in the file, 116 across the suite), including one asserting no
+question-1 chip carries a severity word.
+
+### X11. ⛔⛔ URGENT FOR MIKE - patient data in M365 Copilot
+
+While reading that chat I had to read the patient example it was built around. **It reads
+like a real patient, not fictional test data**: a first and full name, ward, section, dated
+admissions, a named police station, prison and burns-unit episodes, an assault on named
+family members including a child's age, arrest and drug-supply detail, and quoted speech.
+
+Nothing from it has gone anywhere near the repo and none of it is recorded here. But it has
+been typed into M365 Copilot, and the Anthropic-subprocessor question aside, that is a
+processing route that has not been assessed for identifiable patient data.
+
+**Mike to decide:** whether this was a real patient, and if so whether the chat should be
+deleted and an IG incident raised. If it was constructed, it is still detailed enough that
+it would read as real to an auditor - worth rebuilding it against the fictional demo cast
+before it is used in any pack or demo. See also the earlier finding that the completed
+tribunal WAGOLL "reads like real notes" (BACKLOG Section U).

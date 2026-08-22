@@ -118,6 +118,13 @@ function pickGroup(groups: RiskChipGroup[], label?: string): RiskChipGroup[] {
 
 // Suggested chips drawn from the sub-domains actually ticked. Question 1 is served
 // by WHAT_IS_THE_RISK (keyed by sub-domain); the rest by that sub-domain's RMP bank.
+//
+// ⛔ THERE IS NO FALLBACK TO RMP_SECTIONS' OWN CHIPS, and that is deliberate.
+// Those were written for self-harm, so borrowing them offered "reduced incidents
+// of self-harm" as a sign the plan was working on a fire-setting risk (Mike,
+// 22 Aug). If nothing ticked has a bank of its own, this returns nothing and the
+// general library below carries the question - it is domain-neutral, which the
+// old generic bank never was.
 function suggestedGroups(q: RmpQuestion, domainId: string, subs: { label: string; risk: string }[]): RiskChipGroup[] {
   if (q.suggest.section === "what") {
     return whatIsTheRiskFor(domainId, subs.map((s) => s.label));
@@ -125,21 +132,15 @@ function suggestedGroups(q: RmpQuestion, domainId: string, subs: { label: string
   const base = R_SECTION(q.suggest.section);
   const out: RiskChipGroup[] = [];
   const seenRisk = new Set<string>();
-  let anyUnmapped = false;
   for (const { label, risk } of subs) {
-    if (!risk) { anyUnmapped = true; continue; }
-    if (seenRisk.has(risk)) continue;
+    if (!risk || seenRisk.has(risk)) continue;
     seenRisk.add(risk);
     const resolved = rmpSectionForRisk(base, risk);
-    if (resolved === base) { anyUnmapped = true; continue; }   // no tailored bank
+    if (resolved === base) continue;                           // no tailored bank
     for (const g of pickGroup(resolved.groups, q.suggest.group)) {
       out.push({ ...g, label: subs.length > 1 ? (g.label ? `${label} - ${g.label}` : label) : g.label });
     }
   }
-  // Only fall back to the section's own generic words when something ticked has
-  // no bank of its own - otherwise every domain gets the same opening list, which
-  // is the fault being fixed.
-  if (anyUnmapped || !out.length) out.push(...pickGroup(base.groups, q.suggest.group));
   return out;
 }
 
@@ -154,13 +155,18 @@ function buildQuestionSection(
   if (indicatorWords.length) {
     groups.push({ label: "From the clinical indicators you ticked", words: indicatorWords, source: "trust" });
   }
-  groups.push(...suggestedGroups(q, domainId, subs));
+  const tailored = suggestedGroups(q, domainId, subs);
+  groups.push(...tailored);
   if (q.universal.length) {
     groups.push({ label: "General options", words: q.universal, tier: "all" });
   }
   if (q.incomplete) groups.push({ words: [q.incomplete], tier: "incomplete" });
+  // Say why there are no tailored words rather than quietly showing none. This
+  // happens when no sub-domain is ticked yet, or when the nurse named their own.
+  const hint = tailored.length || indicatorWords.length ? q.hint
+    : `${q.hint} (Tick a sub-domain above and this question will suggest words for it.)`;
   return {
-    id: q.id, heading: `${q.n}. ${q.question}`, hint: q.hint, gap: q.gap,
+    id: q.id, heading: `${q.n}. ${q.question}`, hint, gap: q.gap,
     groups, examples: q.examples,
   };
 }
@@ -661,7 +667,7 @@ export default function RiskAssessmentPage() {
   const formulationInput = useMemo(
     () => RISK_DOMAINS.map((dm) => {
       const st = getDomain(dm.id);
-      return { domainId: dm.id, subs: st.risks, noEvidence: st.noEvidence };
+      return { domainId: dm.id, subs: st.risks, noEvidence: st.noEvidence, indicators: st.indicatorList };
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [domains],
@@ -1568,6 +1574,7 @@ export default function RiskAssessmentPage() {
                 <div key={row.domainId} className="px-3 py-2 text-sm">
                   <span className="font-semibold text-gray-800">{row.title}: </span>
                   <span className={row.value === FORMULATION_NOT_COMPLETED ? "text-amber-700 font-medium" : "text-gray-700"}>{row.value}</span>
+                  {row.indicators && <span className="block text-xs text-gray-600 mt-0.5">{row.indicators}</span>}
                 </div>
               ))}
             </div>

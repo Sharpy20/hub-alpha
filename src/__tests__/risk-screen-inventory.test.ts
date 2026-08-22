@@ -11,6 +11,8 @@
 
 import {
   RISK_DOMAINS, CLINICAL_INDICATORS, INDICATOR_BACKGROUND, SUBTYPE_RISK,
+  buildFormulationSummary, formulationSummaryLines,
+  FORMULATION_NOT_COMPLETED, FORMULATION_SUMMARY_TITLE, FORMULATION_INDICATOR_LABEL,
 } from "@/lib/data/welcome/risk-screen";
 import { RMP_RISK_CHIPS, FORMULATION_RISK_CHIPS } from "@/lib/data/guides/risk";
 
@@ -107,5 +109,97 @@ describe("indicator routing and chip mapping", () => {
       const hasForm = !!FORMULATION_RISK_CHIPS[risk];
       expect({ risk, hasRmp, hasForm }).toEqual({ risk, hasRmp: true, hasForm: true });
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// The Risk Formulation summary (field 9), rebuilt 22 Aug 2026.
+//
+// This is the one place the tool assembles text without the nurse selecting each
+// part, so it is the one place worth pinning down hard. The whole argument for it
+// being safe is that every word is either the trust's own wording or something
+// the nurse ticked - these tests are what keeps that true.
+// ---------------------------------------------------------------------------
+
+const blank = () => RISK_DOMAINS.map((d) => ({ domainId: d.id, subs: [] as string[], noEvidence: false, indicators: [] as string[] }));
+
+describe("Risk Formulation summary", () => {
+  it("always carries all seven domains, in SystmOne order", () => {
+    const rows = formulationSummaryLines([]);
+    expect(rows).toHaveLength(7);
+    expect(rows.map((r) => r.domainId)).toEqual(RISK_DOMAINS.map((d) => d.id));
+    expect(rows.map((r) => r.title)).toEqual(RISK_DOMAINS.map((d) => d.title));
+  });
+
+  it("does not let an unworked domain read as a negative finding", () => {
+    // "Not yet completed" is a gap. It must never be the domain's "no evidence"
+    // line, which is a statement that the assessment found nothing.
+    for (const row of formulationSummaryLines(blank())) {
+      expect(row.value).toBe(FORMULATION_NOT_COMPLETED);
+      expect(row.value).not.toMatch(/No evidence/);
+    }
+  });
+
+  it("uses the domain's own exact no-evidence wording, not a generated one", () => {
+    const input = blank().map((d) => ({ ...d, noEvidence: true }));
+    const rows = formulationSummaryLines(input);
+    RISK_DOMAINS.forEach((dm, i) => {
+      expect(rows[i].value).toBe(`${dm.noEvidence}.`);
+    });
+  });
+
+  it("lists the ticked sub-domains verbatim, semicolon separated", () => {
+    const input = blank().map((d) =>
+      d.domainId === "harm-to-others" ? { ...d, subs: ["Fire Setting", "Damage to Property"] } : d);
+    const row = formulationSummaryLines(input).find((r) => r.domainId === "harm-to-others")!;
+    expect(row.value).toBe("Fire Setting; Damage to Property.");
+  });
+
+  it("includes a sub-domain the nurse named themselves", () => {
+    const input = blank().map((d) =>
+      d.domainId === "environmental" ? { ...d, subs: ["Housing issues", "No safe route home"] } : d);
+    const row = formulationSummaryLines(input).find((r) => r.domainId === "environmental")!;
+    expect(row.value).toContain("No safe route home");
+  });
+
+  it("names the ticked clinical indicators", () => {
+    const input = blank().map((d) =>
+      d.domainId === "harm-to-others"
+        ? { ...d, subs: ["Violence and Aggression"], indicators: ["Male gender, under 35 years", "Incidents of violence"] }
+        : d);
+    const row = formulationSummaryLines(input).find((r) => r.domainId === "harm-to-others")!;
+    expect(row.indicators).toBe(`${FORMULATION_INDICATOR_LABEL}: Male gender, under 35 years; Incidents of violence.`);
+  });
+
+  it("carries no indicators on a domain confirmed nil", () => {
+    const input = blank().map((d) =>
+      d.domainId === "self-harm" ? { ...d, noEvidence: true, indicators: ["Trauma"] } : d);
+    const row = formulationSummaryLines(input).find((r) => r.domainId === "self-harm")!;
+    expect(row.indicators).toBe("");
+  });
+
+  it("puts nothing in the text that the nurse did not tick", () => {
+    // The safety argument for generating this at all. The only words allowed are
+    // the domain titles, the trust's no-evidence lines, the ticked sub-domains,
+    // the ticked indicators and the fixed labels.
+    const input = blank().map((d) =>
+      d.domainId === "self-harm"
+        ? { ...d, subs: ["Current thoughts of self-harm"], indicators: ["Trauma"] }
+        : { ...d, noEvidence: true });
+    const text = buildFormulationSummary(input);
+    const allowed = [
+      FORMULATION_SUMMARY_TITLE, FORMULATION_INDICATOR_LABEL,
+      ...RISK_DOMAINS.map((d) => d.title), ...RISK_DOMAINS.map((d) => d.noEvidence),
+      "Current thoughts of self-harm", "Trauma",
+    ];
+    let residue = text;
+    for (const a of allowed) residue = residue.split(a).join("");
+    // What is left should be punctuation and whitespace only - no prose crept in.
+    expect(residue.replace(/[-:;.\s]/g, "")).toBe("");
+  });
+
+  it("puts the patient name in only when one is linked", () => {
+    expect(buildFormulationSummary(blank())).not.toMatch(/Patient:/);
+    expect(buildFormulationSummary(blank(), "Anne Elliot")).toContain("Patient: Anne Elliot");
   });
 });

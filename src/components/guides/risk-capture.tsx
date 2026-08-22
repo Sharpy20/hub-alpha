@@ -175,14 +175,12 @@ export function SectionEditor({
   const [open, setOpen] = useState(false);
   const [userChips, setUserChips] = useState<string[]>([]);
   const [newChip, setNewChip] = useState("");
-  const [showAll, setShowAll] = useState(false);
 
   // Three tiers: what this risk points at, the general library, and the honest
   // "we have not worked this out yet" options. See RiskChipGroup.tier.
   const suggested = section.groups.filter((g) => (g.tier ?? "suggested") === "suggested" && g.words.length);
   const allGroups = section.groups.filter((g) => g.tier === "all" && g.words.length);
   const gapGroups = section.groups.filter((g) => g.tier === "incomplete" && g.words.length);
-  const allCount = allGroups.reduce((n, g) => n + g.words.length, 0);
 
   // Read the user's own words for this bank once the section is opened.
   useEffect(() => {
@@ -277,30 +275,21 @@ export function SectionEditor({
             </div>
           ))}
 
-          {/* The universal library. Folded away by default - Mike, 22 Aug: the
-              plan-building "takes ages now". */}
+          {/* The universal library. Shown, not hidden behind a toggle (Mike,
+              22 Aug) - just set apart from the tailored words above it by a rule
+              and its own heading, so you can see which is which at a glance. */}
           {allGroups.length > 0 && (
-            <div>
-              <button
-                onClick={() => setShowAll((s) => !s)}
-                aria-expanded={showAll}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
-              >
-                {showAll ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                {showAll ? "Hide the general options" : `Show all ${allCount} general options`}
-              </button>
-              {showAll && (
-                <div className="mt-2 space-y-2">
-                  {allGroups.map((g, gi) => (
-                    <div key={`a${gi}`}>
-                      {g.label && <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">{g.label}</p>}
-                      <div className="flex flex-wrap gap-1.5">
-                        {g.words.map((w) => renderChip(w, g.source || "wardhub"))}
-                      </div>
-                    </div>
-                  ))}
+            <div className={suggested.length ? "pt-3 border-t border-dashed border-gray-200 space-y-2" : "space-y-2"}>
+              {allGroups.map((g, gi) => (
+                <div key={`a${gi}`}>
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-gray-400 mb-1.5">
+                    {g.label || "General options"}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {g.words.map((w) => renderChip(w, g.source || "wardhub"))}
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
           )}
 

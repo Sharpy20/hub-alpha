@@ -366,16 +366,37 @@ export const FORMULATION_SUMMARY_NOTE =
 // as reassurance - an unopened domain is a gap, not a negative finding.
 export const FORMULATION_NOT_COMPLETED = "Not yet completed.";
 
+// The ticked clinical indicators are named too (Mike, 22 Aug). They are static
+// risk factors the trust asks you to identify - "Male gender, under 35 years",
+// "Involvement in Criminal Justice", "Trauma" - and they used to feed the old
+// formulation's "what raises the baseline risk" section. With that gone they had
+// nowhere left to land, so the tool was quietly discarding something the form
+// asks for.
+//
+// This stays pure transcription: every word is the trust's, every item was ticked
+// by the nurse, nothing is weighted, ordered by severity or interpreted.
+export const FORMULATION_INDICATOR_LABEL = "Clinical indicators recorded";
+
 export interface FormulationDomainInput {
   domainId: string;
   /** The sub-domains ticked, in the order they were ticked. Includes any the nurse named themselves. */
   subs: string[];
   /** True when the domain's "No evidence ..." option is selected. */
   noEvidence: boolean;
+  /** The clinical indicators ticked, in the order they were ticked. */
+  indicators: string[];
+}
+
+export interface FormulationRow {
+  domainId: string;
+  title: string;
+  value: string;
+  /** "Clinical indicators recorded: ..." or "" when none were ticked. */
+  indicators: string;
 }
 
 /** One bullet per domain, in SystmOne order. Never omits a domain. */
-export function formulationSummaryLines(input: FormulationDomainInput[]): { domainId: string; title: string; value: string }[] {
+export function formulationSummaryLines(input: FormulationDomainInput[]): FormulationRow[] {
   const by = new Map(input.map((i) => [i.domainId, i]));
   return RISK_DOMAINS.map((dm) => {
     const got = by.get(dm.id);
@@ -384,13 +405,20 @@ export function formulationSummaryLines(input: FormulationDomainInput[]): { doma
       : got && got.subs.length
         ? `${got.subs.join("; ")}.`
         : FORMULATION_NOT_COMPLETED;
-    return { domainId: dm.id, title: dm.title, value };
+    // A domain confirmed nil has no indicators by definition.
+    const inds = got && !got.noEvidence ? got.indicators : [];
+    return {
+      domainId: dm.id, title: dm.title, value,
+      indicators: inds.length ? `${FORMULATION_INDICATOR_LABEL}: ${inds.join("; ")}.` : "",
+    };
   });
 }
 
 /** The plain-text block to paste into field 9. */
 export function buildFormulationSummary(input: FormulationDomainInput[], patientName?: string): string {
-  const lines = formulationSummaryLines(input).map((l) => `- ${l.title}: ${l.value}`);
+  const lines = formulationSummaryLines(input).flatMap((l) =>
+    l.indicators ? [`- ${l.title}: ${l.value}`, `  ${l.indicators}`] : [`- ${l.title}: ${l.value}`],
+  );
   return [
     FORMULATION_SUMMARY_TITLE,
     ...(patientName ? [`Patient: ${patientName}`] : []),

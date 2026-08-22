@@ -14,6 +14,7 @@ import { printHtml, esc, IG_FOOTER } from "./printDoc";
 import {
   RISK_DOMAINS, CLINICAL_INDICATORS, SUBTYPE_RISK, SCREEN_TAIL,
   FORMULATION_SUMMARY_TITLE, FORMULATION_SUMMARY_NOTE, FORMULATION_NOT_COMPLETED,
+  FORMULATION_INDICATOR_LABEL,
 } from "@/lib/data/welcome/risk-screen";
 import { questionsForDomain } from "@/lib/data/guides/risk-questions";
 import {
@@ -157,7 +158,8 @@ export function printRiskProofreadPack() {
   </div>`);
 
   parts.push(`<div class="note">
-    <p style="margin:0"><strong>Three tiers, and the order matters.</strong> Words that the ticked sub-domains and clinical indicators point at are offered first. The general library below that is folded away behind a "show all options" toggle. Nothing is ever pre-ticked, and a ticked clinical indicator is <em>offered</em> as a suggestion - it never writes itself into a plan, because an indicator records why the domain was considered relevant, not what is true of this person.</p>
+    <p style="margin:0 0 2mm"><strong>Three tiers, and the order matters.</strong> Words that the ticked sub-domains and clinical indicators point at are offered first, then a rule, then the general library. Nothing is ever pre-ticked, and a ticked clinical indicator is <em>offered</em> as a suggestion - it never writes itself into a plan, because an indicator records why the domain was considered relevant, not what is true of this person.</p>
+    <p style="margin:0"><strong>There is no fallback to a generic bank, and that is deliberate.</strong> If nothing ticked has a bank of its own, no tailored words are shown and the general library carries the question alone. The tool used to borrow the section's own default chips instead, but those were written for self-harm - so a fire-setting risk was being offered "reduced incidents of self-harm" as a sign the plan was working. The general library is domain-neutral; the old defaults never were.</p>
   </div>`);
 
   parts.push(`<h3>Question 1 - which specific outcome are you trying to prevent?</h3>`);
@@ -206,9 +208,11 @@ export function printRiskProofreadPack() {
   parts.push(`<pre>${esc(FORMULATION_SUMMARY_TITLE)}
 
 - Risk of self harm or suicide: Current thoughts of self-harm; Currently experiencing high levels of distress and/or hopelessness.
+  ${esc(FORMULATION_INDICATOR_LABEL)}: Expressing suicidal ideas; Trauma; Significant life events.
 - Risk to self, including self-neglect: Associated with Activities of Daily Living (ADL's).
 - Risk of harm or neglect to others: No evidence of risk of harm or neglect to others reported during assessment.
 - ... one line for each of the seven domains ...</pre>`);
+  parts.push(`<p><strong>The ticked clinical indicators are named here too.</strong> They are static risk factors the trust asks you to identify - "Male gender, under 35 years", "Involvement in Criminal Justice", "Trauma" - and they used to feed the old formulation's "what raises the baseline risk" section. With that gone they had nowhere left to land, so listing them here stops the tool discarding something the form asks for. It stays pure transcription: the trust's words, the nurse's ticks, nothing weighted, ordered by severity or interpreted. A domain confirmed nil carries none by definition.</p>`);
   parts.push(`<p>On screen it carries this note: "${esc(FORMULATION_SUMMARY_NOTE)}" It is editable, and regenerating it warns first that manual edits will be lost.</p>`);
   parts.push(`<div class="note"><p style="margin:0">This is a <strong>summary of which risk types were identified</strong>, not a psychological formulation and not a predictive judgement - which is why the heading says SUMMARY. It is the one place the tool assembles text without the nurse selecting each part, and it can do that safely precisely because every word in it is either the trust's own wording or a sub-domain the nurse ticked.</p></div>`);
   parts.push(`<h3>Management plan headings, in order</h3><ul>${RMP_SECTIONS.map((s) => `<li><strong>${esc(s.heading)}</strong> - ${esc(s.hint)}</li>`).join("")}</ul>`);

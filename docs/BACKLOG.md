@@ -2978,3 +2978,30 @@ discharge). Plus his deliberately difficult test set.
 - Spot-check `INDICATOR_BACKGROUND["physical-health"]` routing (and the other six).
 - Whether the 23-risk "risk strategy meeting" set is right (W7).
 - **Still RED, and still blocked on Mike reading the proofreading pack.**
+
+### X8. Mike's second pass, same day (commit `6dc7762`)
+
+1. ⭐ **Ticked clinical indicators are now named in the formulation summary.** Mike pushed
+   back on "Male gender, under 35 years": it is a recognised higher-risk group and the trust
+   listed it deliberately. He is right. The distinction is **static vs dynamic** - it raises
+   the baseline and does not change, so it cannot answer "what would staff notice when the
+   risk is increasing", but it absolutely belonged in the old formulation's "what raises the
+   baseline risk" section. With that gone the tool was **discarding something the form asks
+   you to identify**. Each domain bullet now carries a second line:
+   `Clinical indicators recorded: X; Y; Z.` Still pure transcription - trust wording, the
+   nurse's ticks, nothing weighted, ordered or interpreted. Nil domains carry none.
+2. **General options are no longer behind a collapse toggle** - a dashed rule and their own
+   heading separate them from the tailored words.
+3. ⭐⭐ **FIXED, and Mike found it: the self-harm chip leak.** Tick "Arson" and "Accidental
+   fire setting" on domain 3 (both are INDICATORS, not sub-domains) and question 5 opened
+   with *"reduced incidents of self-harm"*. Cause: no sub-domain ticked means no tailored
+   bank, so the code fell back to `RMP_SECTIONS`' own default chips - **which were written
+   for self-harm**. That fallback is deleted. If nothing ticked has a bank, no tailored
+   words show and the general library carries the question alone (it is domain-neutral; the
+   old defaults never were), with the hint saying why.
+   **Audited: all 39 banks have all four RMP sections, so this was the only hole.**
+   ⛔ `RMP_SECTIONS[].groups` is still used by `/welcome` - leave it, but never reintroduce
+   it as a per-domain fallback in the risk tool.
+4. Nine new tests pin the formulation summary, including one that strips every allowed
+   string and asserts only punctuation remains - so no prose can creep into the one document
+   the tool assembles on its own. **116 tests pass.**

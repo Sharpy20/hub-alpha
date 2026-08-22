@@ -20,7 +20,7 @@
 // only "the person" is personalised on screen with the linked patient's name.
 // Nothing is saved - all state is in memory.
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb, Modal } from "@/components/ui";
@@ -381,8 +381,56 @@ function Collapse({ icon: Icon, title, children, tone = "gray" }: {
 
 const inputCls = "w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 focus:border-sky-500";
 
+// Height of the app header, which is sticky - anything scrolled to the top of the
+// window has to clear it.
+const STICKY_TOP = 72;
+
+// Opening or closing a panel changes the height of the page around where you are
+// looking. The browser keeps its scroll offset, so the thing you just clicked
+// walks off the screen - Mike, 22 Aug 2026: "the screen jumps and I lose my place".
+//
+// Two fixes, both here:
+//   keepInPlace(id) - measure an element BEFORE a state change; after the next
+//     paint the page is scrolled by however far it moved, so it stays put.
+//   scrollToTop(id) - park an element just under the sticky header. Used when a
+//     panel collapses and the content you were reading no longer exists.
+function useScrollKeeper() {
+  const pending = useRef<{ id: string; top: number } | null>(null);
+  const parkTo = useRef<string | null>(null);
+
+  useLayoutEffect(() => {
+    const hold = pending.current;
+    if (hold) {
+      pending.current = null;
+      const el = document.getElementById(hold.id);
+      if (el) {
+        const delta = el.getBoundingClientRect().top - hold.top;
+        if (delta) window.scrollBy(0, delta);
+      }
+    }
+    const park = parkTo.current;
+    if (park) {
+      parkTo.current = null;
+      const el = document.getElementById(park);
+      if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - STICKY_TOP;
+        window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      }
+    }
+  });
+
+  return {
+    keepInPlace: (id: string) => {
+      const el = document.getElementById(id);
+      if (el) pending.current = { id, top: el.getBoundingClientRect().top };
+    },
+    scrollToTop: (id: string) => { parkTo.current = id; },
+  };
+}
+
 export default function RiskAssessmentPage() {
   const v2Href = useV2Href();
+  const { keepInPlace, scrollToTop } = useScrollKeeper();
 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [domains, setDomains] = useState<Record<string, DomainState>>({});
@@ -789,7 +837,8 @@ export default function RiskAssessmentPage() {
         {/* Header styled like a selected chip; sticks below the app header (top-16)
             so you always see which risk you're on while scrolling its questions. */}
         <button
-          onClick={() => toggleOpenRisk(r.key)}
+          id={`plan-head-${r.key}`}
+          onClick={() => { scrollToTop(`plan-head-${r.key}`); toggleOpenRisk(r.key); }}
           className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${
             open ? "bg-slate-700 text-white shadow-sm" : "bg-slate-100 text-slate-800 hover:bg-slate-200"
           }`}
@@ -838,7 +887,8 @@ export default function RiskAssessmentPage() {
     return (
       <div key={key} className="rounded-xl border border-slate-200 bg-white">
         <button
-          onClick={() => toggleOpenRisk(key)}
+          id={`plan-head-${key}`}
+          onClick={() => { scrollToTop(`plan-head-${key}`); toggleOpenRisk(key); }}
           className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-left transition-colors rounded-t-xl sticky top-16 z-20 ${open ? "bg-slate-700 text-white shadow-sm" : "bg-slate-100 text-slate-800 hover:bg-slate-200"}`}
         >
           <span className="font-bold text-sm flex-1">Build the plan for: {planTitle(dm)}</span>
@@ -878,11 +928,13 @@ export default function RiskAssessmentPage() {
     const st = getDomain(dm.id);
     return (
       <div className="space-y-3">
-        <div className="flex flex-wrap gap-1.5">
+        {/* Ticking a sub-domain opens the plan questions further down, which moves
+            everything below this row - hold the row itself still. */}
+        <div id={`subs-${dm.id}`} className="flex flex-wrap gap-1.5">
           {dm.subtypes.map((label) => {
             const on = st.risks.includes(label);
             return (
-              <button key={label} onClick={() => toggleSub(dm.id, label)} aria-pressed={on}
+              <button key={label} onClick={() => { keepInPlace(`subs-${dm.id}`); toggleSub(dm.id, label); }} aria-pressed={on}
                 className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all text-left ${on ? "bg-sky-700 border-sky-700 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-slate-400 hover:bg-slate-50"}`}>
                 {label}
               </button>
@@ -930,12 +982,14 @@ export default function RiskAssessmentPage() {
                 with the narratives. Amber until it is answered. The chip list only
                 appears on Yes. */}
             {dm.indicatorsPrompt && (
-              <div className={`rounded-xl border-2 p-3 space-y-3 ${st.indicators === "" ? "border-amber-400 bg-amber-50/60" : "border-slate-300 bg-white"}`}>
+              <div id={`ind-card-${dm.id}`} className={`rounded-xl border-2 p-3 space-y-3 ${st.indicators === "" ? "border-amber-400 bg-amber-50/60" : "border-slate-300 bg-white"}`}>
                 <div className="flex items-center gap-3 flex-wrap">
                   <ListChecks className={`w-5 h-5 flex-shrink-0 ${st.indicators === "" ? "text-amber-600" : "text-slate-500"}`} />
                   <span className="text-base font-bold text-gray-800 flex-1 min-w-[220px]">{personalise(dm.indicatorsPrompt)}</span>
                   {st.indicators === "" && <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700 bg-amber-100 px-2 py-1 rounded-full">Needs an answer</span>}
-                  <YNToggle value={st.indicators} onChange={(v) => updateDomain(dm.id, (d) => ({ ...d, indicators: v }))} />
+                  {/* Yes opens a list of up to 27 indicators. Hold the card still so
+                      the list appears below where you are looking, not somewhere else. */}
+                  <YNToggle value={st.indicators} onChange={(v) => { keepInPlace(`ind-card-${dm.id}`); updateDomain(dm.id, (d) => ({ ...d, indicators: v })); }} />
                 </div>
                 {st.indicators === "" && (
                   <p className="text-xs text-amber-800">Answer this before you generate. It is on the form for every domain, and Yes opens the indicator list.</p>
@@ -1421,7 +1475,11 @@ export default function RiskAssessmentPage() {
             return (
               <div key={dm.id} className={`rounded-2xl border-2 bg-white transition-all ${tone} ${open ? "shadow-lg" : "hover:border-slate-400"}`}>
                 <button
-                  onClick={() => setOpenDomain(open ? null : dm.id)}
+                  id={`dom-head-${dm.id}`}
+                  // Opening one domain collapses another, which can be anywhere on
+                  // the page - park the header you just clicked instead of letting
+                  // the browser keep a now-meaningless scroll offset.
+                  onClick={() => { scrollToTop(`dom-head-${dm.id}`); setOpenDomain(open ? null : dm.id); }}
                   aria-expanded={open}
                   className={`w-full flex items-center gap-3 p-4 text-left rounded-2xl transition-colors ${open ? "bg-slate-700 text-white rounded-b-none" : "hover:bg-slate-50"}`}
                 >
@@ -1448,7 +1506,7 @@ export default function RiskAssessmentPage() {
                     </p>
                     {renderDomain(dm)}
                     <div className="flex justify-end pt-1">
-                      <button onClick={() => setOpenDomain(null)} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                      <button onClick={() => { scrollToTop(`dom-head-${dm.id}`); setOpenDomain(null); }} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
                         <CheckCircle2 className="w-4 h-4" /> Done with this domain
                       </button>
                     </div>

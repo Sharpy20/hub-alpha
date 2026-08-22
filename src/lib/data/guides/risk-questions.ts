@@ -29,11 +29,15 @@
 import {
   UNIVERSAL_IMMEDIATE, UNIVERSAL_PREVENTION, UNIVERSAL_REDUCTION_SIGNS,
   UNIVERSAL_ESCALATION, INCOMPLETE_OPTIONS,
+  type DomainRmpBank,
 } from "./rmp-chips";
 
 // The RMP section a question's answer lands in. "what" is the plan's opening
 // heading; the rest match RMP_SECTIONS ids.
 export type RmpTarget = "what" | "present" | "prevent" | "evaluate" | "next";
+
+/** The four per-domain banks in DOMAIN_RMP_CHIPS. */
+export type DomainBankKey = Exclude<keyof DomainRmpBank, "note">;
 
 export interface RmpQuestion {
   id: string;
@@ -47,7 +51,12 @@ export interface RmpQuestion {
   writes: { id: RmpTarget; part?: "manage" | "reduce" };
   // Which of the ticked sub-domain's tailored banks supplies the SUGGESTED chips.
   // "what" is served by WHAT_IS_THE_RISK, the rest by RMP_RISK_CHIPS.
-  suggest: { section: RmpTarget; group?: string };
+  // `bank` names the per-domain bank in DOMAIN_RMP_CHIPS; `section`/`group` still
+  // reach the older per-sub-domain banks for anything they add on top.
+  // `bank` names the per-domain bank in DOMAIN_RMP_CHIPS. Omitted on q1 (served by
+  // WHAT_IS_THE_RISK) and on q6 - the design gives NO per-domain escalation bank,
+  // because escalation is the universal list plus the mandatory MDT line.
+  suggest: { section: RmpTarget; group?: string; bank?: DomainBankKey };
   // The universal library shown under "all options". Empty for question 2 on
   // purpose - a generic list of what a risk looks like is the exact fault this
   // rebuild is fixing.
@@ -84,7 +93,7 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     gap: "What are the early warning signs for this person?",
     populates: "HOW DOES THIS PRESENT",
     writes: { id: "present" },
-    suggest: { section: "present" },
+    suggest: { section: "present", bank: "present" },
     universal: [],
     incomplete: INCOMPLETE_OPTIONS.q2_present,
     examples: true,
@@ -96,7 +105,7 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     gap: "What happens in the moment?",
     populates: "HOW TO PREVENT / REDUCE (when it happens)",
     writes: { id: "prevent", part: "manage" },
-    suggest: { section: "prevent", group: MANAGE_GROUP },
+    suggest: { section: "prevent", group: MANAGE_GROUP, bank: "manage" },
     universal: UNIVERSAL_IMMEDIATE,
   },
   {
@@ -106,7 +115,7 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     gap: "What reduces the risk for this person?",
     populates: "HOW TO PREVENT / REDUCE (to prevent or reduce)",
     writes: { id: "prevent", part: "reduce" },
-    suggest: { section: "prevent", group: REDUCE_GROUP },
+    suggest: { section: "prevent", group: REDUCE_GROUP, bank: "prevent" },
     universal: UNIVERSAL_PREVENTION,
     incomplete: INCOMPLETE_OPTIONS.q4_prevent,
   },
@@ -117,7 +126,7 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     gap: "What measurable change shows the risk is reducing?",
     populates: "EVALUATE SIGNS OF RISK REDUCTION",
     writes: { id: "evaluate" },
-    suggest: { section: "evaluate" },
+    suggest: { section: "evaluate", bank: "evaluate" },
     universal: UNIVERSAL_REDUCTION_SIGNS,
     incomplete: INCOMPLETE_OPTIONS.q5_evaluate,
   },

@@ -117,12 +117,11 @@ export const INCOMPLETE_OPTIONS: Record<string, string> = {
 };
 
 // ---- Question 1: which specific outcome are you trying to prevent? ---------
-// Keyed `${domainId}::${subtype}` against the approved SystmOne sub-domains, so
-// the outcome named is the one the nurse actually ticked.
 //
-// Domains 1 and 2 are Mike's own wording, supplied 22 Aug 2026. Domains 3-7 were
-// written here from the sub-domain names and the existing chip banks, and have
-// NOT been through him - they are flagged for sign-off in the proofreading pack.
+// Keyed `${domainId}::${subtype}` against the approved SystmOne sub-domains, so
+// the outcome named is the one the nurse actually ticked. Transcribed from the
+// design Mike settled on 22 Aug 2026 - the earlier drafts for domains 3-7 that
+// Claude invented have been REPLACED by this, which is the version he reviewed.
 //
 // These name an OUTCOME TO PREVENT. They never carry a likelihood, a severity or
 // a risk level: the tool offers vocabulary, it does not rate risk.
@@ -132,19 +131,17 @@ export const WHAT_IS_THE_RISK: Record<string, string[]> = {
     "Risk of intentional self-injury",
     "Risk of acting on current thoughts of self-harm",
     "Risk of accessing or concealing items for self-harm",
-    "Risk of further self-harm",
   ],
   "self-harm::Current thoughts of suicide or that life is not worth living": [
     "Risk of acting on suicidal thoughts",
     "Risk of attempting suicide",
-    "Risk associated with a considered or planned method",
+    "Risk associated with a planned or considered method",
     "Risk of accessing means to attempt suicide",
   ],
   "self-harm::Currently experiencing high levels of distress and/or hopelessness": [
     "Risk of self-harm during periods of acute distress",
     "Risk of suicidal behaviour during periods of hopelessness",
     "Risk increasing when the person feels trapped or unable to cope",
-    "Risk of deterioration associated with increasing distress",
   ],
 
   // --- Domain 2: risk to self, including self-neglect ---
@@ -156,7 +153,6 @@ export const WHAT_IS_THE_RISK: Record<string, string[]> = {
     "Risk of being unable to communicate needs",
     "Risk of becoming lost, missing or absent",
     "Risk associated with reduced engagement in care",
-    "Risk of reduced ability to complete essential daily activities",
   ],
   "self-neglect::Associated with Domestic ADL's and life skills": [
     "Risk of being unable to manage shopping or essential supplies",
@@ -165,199 +161,479 @@ export const WHAT_IS_THE_RISK: Record<string, string[]> = {
     "Risk associated with financial difficulties",
     "Risk of being unable to manage medication",
     "Risk associated with overestimating current abilities",
-    "Risk of being unable to manage domestic tasks safely",
   ],
 
   // --- Domain 3: harm or neglect to others ---
   "harm-to-others::Violence and Aggression": [
-    "Risk of physical assault on staff",
-    "Risk of physical assault on other patients",
-    "Risk of verbal threats and intimidation",
-    "Risk of harm to others during periods of agitation",
-    "Risk of injury to another person requiring intervention",
+    "Risk of verbal aggression",
+    "Risk of physical aggression",
+    "Risk of assault",
+    "Risk of threatening or intimidating behaviour",
+    "Risk associated with the use of weapons",
   ],
   "harm-to-others::Fire Setting": [
     "Risk of deliberate fire setting",
-    "Risk of accidental fire",
-    "Risk of harm to others from fire",
-    "Risk associated with access to lighters, matches or accelerants",
+    "Risk of accidental fire setting",
+    "Risk associated with unsafe access to ignition sources",
+    "Risk of harm to others through fire",
   ],
+  // ⚠ Deliberately high-level and non-graphic. The design's own instruction:
+  // "In view of the sensitivity of this sub-domain, use only high-level,
+  // non-graphic documentation options." Do not add detail here.
   "harm-to-others::Sexual Offenses": [
-    "Risk of sexually harmful behaviour towards another person",
-    "Risk of sexually inappropriate approaches to patients or staff",
-    "Risk associated with contact with people who may be vulnerable",
+    "Risk of sexually inappropriate behaviour",
+    "Risk of harmful sexual behaviour",
+    "Risk requiring specialist assessment and safeguarding management",
   ],
   "harm-to-others::Abuse, harassment and or exploitation": [
+    "Risk of harassment or stalking",
+    "Risk of coercive or controlling behaviour",
+    "Risk of domestic abuse",
+    "Risk of online harassment or harm",
     "Risk of exploiting another person",
-    "Risk of harassment or stalking of another person",
-    "Risk of coercive or controlling behaviour towards another person",
-    "Risk of taking money or possessions from another person",
   ],
   "harm-to-others::Damage to Property": [
-    "Risk of damage to ward property",
-    "Risk of damage that creates a hazard to others",
-    "Risk of damage to another person's belongings",
+    "Risk of damaging property",
+    "Risk of throwing or breaking objects",
+    "Risk of creating an unsafe environment through property damage",
   ],
   "harm-to-others::Associated with Mental Ill Health": [
-    "Risk of harm to others driven by paranoid or persecutory beliefs",
-    "Risk of harm to others in response to command hallucinations",
-    "Risk of harm to others through misidentification",
-    "Risk of harm to others linked to disinhibition",
+    "Risk of harm during periods of paranoia",
+    "Risk of harm associated with command hallucinations",
+    "Risk associated with misidentification of others",
+    "Risk associated with disinhibition",
+    "Risk of impulsive harm during mental state deterioration",
   ],
 
   // --- Domain 4: harm or neglect BY others (the patient is the person at risk) ---
-  "harm-by-others::Sexual abuse": [
-    "Risk of sexual abuse by another person",
-    "Risk of sexual exploitation",
-    "Risk associated with contact with a named person",
-  ],
-  "harm-by-others::Physical abuse": [
-    "Risk of physical assault by another person",
-    "Risk of injury caused by another person",
-    "Risk associated with contact with a named person",
-  ],
-  "harm-by-others::Organisational abuse (including care provided in own home)": [
-    "Risk of abuse or neglect within a care setting",
-    "Risk of care needs not being met by a provider",
-    "Risk associated with poor-quality care in their own home",
-  ],
-  "harm-by-others::Psychological abuse": [
-    "Risk of psychological or emotional abuse by another person",
-    "Risk of intimidation or humiliation by another person",
-    "Risk of isolation imposed by another person",
-  ],
-  "harm-by-others::Domestic abuse": [
-    "Risk of domestic abuse by a partner or family member",
-    "Risk of coercive control",
-    "Risk of escalation on leave or at discharge",
-  ],
-  "harm-by-others::Financial abuse": [
-    "Risk of money or possessions being taken by another person",
-    "Risk of being pressured into financial decisions",
-    "Risk of income or benefits being controlled by another person",
-  ],
-  "harm-by-others::Modern slavery": [
-    "Risk of forced labour or servitude",
-    "Risk of being controlled or trafficked by another person",
-    "Risk associated with debt bondage",
-  ],
-  "harm-by-others::Neglect / acts of omission": [
-    "Risk of essential care needs not being met by others",
-    "Risk of food, medication or personal care not being provided",
-    "Risk associated with a carer being unable to meet their needs",
-  ],
+  "harm-by-others::Sexual abuse": ["Risk of sexual abuse"],
+  "harm-by-others::Physical abuse": ["Risk of physical abuse"],
+  "harm-by-others::Organisational abuse (including care provided in own home)": ["Risk of organisational abuse"],
+  "harm-by-others::Psychological abuse": ["Risk of psychological abuse"],
+  "harm-by-others::Domestic abuse": ["Risk of domestic abuse"],
+  "harm-by-others::Financial abuse": ["Risk of financial abuse"],
+  "harm-by-others::Modern slavery": ["Risk of modern slavery"],
+  "harm-by-others::Neglect / acts of omission": ["Risk of neglect or acts of omission"],
 
   // --- Domain 5: physical health including frailty ---
+  // The design's note: "Because the sub-domains are broad, the selected clinical
+  // indicators should strongly influence which chips are prioritised."
   "physical-health::Short term health condition": [
-    "Risk of deterioration from an acute condition",
-    "Risk of an untreated infection",
-    "Risk of delayed recognition of physical illness",
+    "Risk of deterioration in an acute health condition",
+    "Risk of infection",
+    "Risk associated with vomiting or dehydration",
+    "Risk associated with delirium",
   ],
   "physical-health::Long term health condition": [
-    "Risk of deterioration of a long-term condition",
-    "Risk associated with poor concordance with treatment",
-    "Risk of complications from an untreated condition",
+    "Risk of deterioration in a long-term health condition",
+    "Risk associated with missed monitoring or treatment",
+    "Risk associated with medication administration or concordance",
   ],
   "physical-health::Physical Injury": [
-    "Risk of a further injury",
-    "Risk of a wound or injury deteriorating",
-    "Risk of an injury going unnoticed",
+    "Risk of deterioration or complications following physical injury",
+    "Risk associated with wounds or impaired tissue viability",
+    "Risk of pain or reduced mobility following injury",
   ],
   "physical-health::Sensory difficulties": [
-    "Risk of harm from unrecognised sensory impairment",
-    "Risk of not receiving information in a form they can understand",
-    "Risk of accidents linked to reduced sight or hearing",
+    "Risk arising from sensory impairment",
+    "Risk of unmet communication needs",
+    "Risk associated with sensory processing difficulties",
   ],
   "physical-health::Falls": [
     "Risk of falling",
-    "Risk of injury from a fall",
-    "Risk of a fall going unwitnessed",
-    "Risk of a further fall at night or on transfer",
-  ],
-
-  // --- Domain 6: foetus, infant or child under 18 (the CHILD is at risk) ---
-  "children::Looked after children (Child in care of local authority)": [
-    "Risk to a child currently in the care of the local authority",
-    "Risk associated with contact arrangements",
-    "Risk of contact taking place outside the agreed plan",
-  ],
-  "children::Child Protection": [
-    "Risk to a child subject to a child protection plan",
-    "Risk of the child protection plan not being followed",
-    "Risk associated with unsupervised contact",
-  ],
-  "children::Sexual abuse": [
-    "Risk of sexual abuse of a child",
-    "Risk of a child being exposed to sexually harmful behaviour",
-    "Risk associated with unsupervised contact with a child",
-  ],
-  "children::Physical abuse": [
-    "Risk of physical harm to a child",
-    "Risk of injury to a child during periods of distress or anger",
-    "Risk associated with unsupervised contact with a child",
-  ],
-  "children::Organisational abuse (including care provided in own home)": [
-    "Risk of a child being harmed or neglected within a care setting",
-    "Risk of a child's needs not being met by a provider",
-  ],
-  "children::Psychological abuse": [
-    "Risk of emotional harm to a child",
-    "Risk of a child being frightened or intimidated",
-    "Risk of a child being drawn into adult conflict",
-  ],
-  "children::Domestic abuse": [
-    "Risk of a child witnessing domestic abuse",
-    "Risk of a child being harmed during a domestic incident",
-    "Risk of a child taking on a protective role",
-  ],
-  "children::Financial abuse": [
-    "Risk of a child's money or entitlements being misused",
-    "Risk of a child going without essentials",
-  ],
-  "children::Neglect / acts of omission": [
-    "Risk of a child's basic needs not being met",
-    "Risk of a child being left unsupervised",
-    "Risk of a child's health or education needs being neglected",
+    "Risk of injury following a fall",
+    "Risk associated with reduced mobility or environmental hazards",
   ],
 
   // --- Domain 7: environmental / external factors ---
   "environmental::Domestic appliance issues": [
-    "Risk of fire from an unsafe appliance",
-    "Risk of injury from faulty equipment",
-    "Risk of harm from an unsafe or unmaintained home",
+    "Risk arising from unsafe or unusable domestic appliances",
+    "Risk of fire, injury or inability to meet basic needs",
+    "Risk arising from unsafe use of appliances",
   ],
   "environmental::Housing issues": [
-    "Risk of homelessness",
-    "Risk of losing their tenancy",
-    "Risk of returning to unsafe accommodation",
-    "Risk of discharge being delayed by housing",
+    "Risk associated with unsuitable accommodation",
+    "Risk of homelessness or eviction",
+    "Risk associated with an unsafe shared living environment",
+    "Risk arising from missing adaptations or equipment",
   ],
   "environmental::Lack of social stimulation/activities": [
-    "Risk of deterioration linked to isolation",
-    "Risk of disengagement from services",
-    "Risk of relapse linked to a lack of routine or purpose",
+    "Risk arising from social isolation",
+    "Risk associated with an absence of meaningful activity",
+    "Risk of deterioration linked to an unstructured environment",
   ],
 };
 
-// Shown when the nurse names their own sub-domain, which by definition has no
-// bank. Deliberately thin - their own words are the point.
-export const WHAT_IS_THE_RISK_FALLBACK: string[] = [
-  "Risk of harm to the person",
-  "Risk of harm to others",
-  "Risk of the situation deteriorating",
-  "Risk of an unmet need going unrecognised",
+// Domain 6 is the one domain whose question-1 bank is NOT per sub-domain.
+//
+// ⛔ The design is explicit: "This section should be conservative and
+// safeguarding-led. It must not attempt to resolve safeguarding concerns through
+// routine ward interventions", and selections "populate the relevant high-level
+// concern". So every sub-domain here offers the same high-level, non-graphic
+// list rather than naming what was done to a child. Do not split this per
+// sub-domain and do not make it more specific.
+export const WHAT_IS_THE_RISK_CHILD: string[] = [
+  "Risk involving a looked-after child",
+  "Child protection concern",
+  "Risk of abuse",
+  "Risk associated with domestic abuse",
+  "Risk associated with neglect or acts of omission",
+  "Risk of deliberate harm",
+  "Risk of accidental harm",
+  "Reported ideas of harm",
+  "Risk of exploitation",
 ];
 
-// Helper: the suggested outcomes for a set of ticked sub-domains, deduped and in
-// the order they were ticked.
+// ---- Questions 2 to 5, per domain ------------------------------------------
+//
+// One bank per DOMAIN (not per sub-domain), transcribed from the 22 Aug design.
+// These are what fix Mike's "the same chips regardless of domain" - each one is
+// written for its own domain and covers all of that domain's sub-domains.
+//
+// There is deliberately NO per-domain escalation bank: question 6 is served by
+// UNIVERSAL_ESCALATION plus the mandatory MDT line the trust guidance fixes.
+export interface DomainRmpBank {
+  /** Q2 - what staff would notice when the risk is increasing. */
+  present: string[];
+  /** Q3 - what staff do at the time. */
+  manage: string[];
+  /** Q4 - what reduces the likelihood. */
+  prevent: string[];
+  /** Q5 - observable change showing the plan is working. */
+  evaluate: string[];
+  /** A standing instruction the design attaches to the whole domain. */
+  note?: string;
+}
+
+export const DOMAIN_RMP_CHIPS: Record<string, DomainRmpBank> = {
+  "self-harm": {
+    present: [
+      "Expresses thoughts of self-harm", "Expresses suicidal thoughts",
+      "States that life is not worth living", "Expresses hopelessness",
+      "Expresses helplessness", "Reports feeling trapped or having no control",
+      "Identifies a method or plan", "Seeks access to potential means",
+      "Conceals or accumulates risk items", "Attempts to leave a safer environment",
+      "Withdraws from staff or peers", "Isolates in their bedroom",
+      "Reduced communication", "Appears tearful or distressed",
+      "Increased anxiety or agitation",
+      "Sudden change from distress to an unexpectedly calm presentation",
+      "Reports voices associated with self-harm or suicide", "Increased substance use",
+      "Reduced engagement with support",
+      "Deterioration following bad news or significant events",
+      "Risk increases around legal or criminal justice developments",
+    ],
+    manage: [
+      "Stay with the person while immediate safety is assessed",
+      "Offer supportive 1:1 engagement",
+      "Ask directly about current thoughts, intent, plans and access to means",
+      "Remove or secure identified risk items with the person's cooperation where possible",
+      "Complete a search in accordance with local policy and the individual plan",
+      "Review observation level", "Inform the nurse in charge",
+      "Offer prescribed PRN medication where clinically indicated",
+      "Seek urgent psychiatric review",
+      "Arrange physical health assessment following injury, overdose or suspected ingestion",
+      "Follow emergency procedures where immediate danger is present",
+    ],
+    prevent: [
+      "Develop or review a collaborative safety plan", "Identify individual triggers",
+      "Agree how the person will request help",
+      "Support future-focused discussion and achievable goals",
+      "Maintain regular therapeutic contact",
+      "Review access to medication or other identified means",
+      "Support safe medication storage and administration",
+      "Monitor response to legal, family, housing or financial developments",
+      "Address substance use", "Encourage meaningful activity and social connection",
+      "Involve family or carers with appropriate consent",
+    ],
+    evaluate: [
+      "Reports reduced thoughts of self-harm", "Reports reduced suicidal thoughts",
+      "Reports feeling safer", "No current intent or plan reported",
+      "No attempts to access identified means", "Seeks staff support before acting",
+      "Uses the agreed safety plan", "Increased engagement", "Reduced hopelessness",
+      "Identifies reasons for living", "Demonstrates future planning",
+      "No further self-harm during the agreed review period",
+    ],
+  },
+
+  "self-neglect": {
+    present: [
+      "Reduced food intake", "Reduced fluid intake", "Weight loss or nutritional concerns",
+      "Difficulty maintaining hygiene", "Wearing unsuitable or insufficient clothing",
+      "Difficulty managing medication", "Missed healthcare appointments",
+      "Difficulty communicating needs", "Declines or avoids support",
+      "Denies difficulties identified by others", "Unable to obtain food or essential items",
+      "Difficulty managing finances", "Accommodation becoming unsafe or unsuitable",
+      "Risk of eviction or loss of accommodation",
+      "Leaves the ward or placement unexpectedly", "Becomes lost or disorientated",
+      "Wandering", "Overestimates ability to manage independently",
+    ],
+    manage: [
+      "Offer practical assistance with the identified need", "Assess food and fluid intake",
+      "Assess immediate physical health concerns",
+      "Support personal care while promoting independence", "Support access to medication",
+      "Support communication of needs",
+      "Establish the person's whereabouts and immediate safety",
+      "Follow the missing-person procedure if required",
+      "Contact relevant housing, social care or support services",
+      "Review capacity for the specific decision where indicated",
+    ],
+    prevent: [
+      "Agree an ADL support plan", "Use prompts or graded support",
+      "Establish a predictable daily routine",
+      "Monitor food and fluid intake where indicated",
+      "Support access to shopping and essential supplies", "Review accommodation needs",
+      "Review financial support", "Use accessible communication",
+      "Support attendance at appointments", "Review medication support arrangements",
+      "Involve occupational therapy",
+      "Involve family, carers or support workers where appropriate",
+    ],
+    evaluate: [
+      "Improved food and fluid intake", "Improved hygiene", "Wears appropriate clothing",
+      "Communicates needs more consistently", "Accepts agreed support",
+      "Attends healthcare appointments", "Manages medication with agreed support",
+      "Improved living environment", "Essential supplies are available",
+      "Reduced missing or wandering episodes", "Improved engagement",
+      "Demonstrates safer awareness of current abilities",
+    ],
+  },
+
+  "harm-to-others": {
+    present: [
+      "Raised voice or shouting", "Verbal hostility", "Threatening statements",
+      "Expresses intent to harm someone", "Intimidating behaviour", "Pacing or restlessness",
+      "Clenched fists or tense posture", "Invades personal space",
+      "Throws or strikes objects", "Damages property", "Attempts to access a weapon",
+      "Increased anger or frustration", "Difficulty accepting boundaries",
+      "Focuses hostility on a particular person or group",
+      "Follows or repeatedly contacts another person", "Increasing paranoia about others",
+      "Believes others intend harm", "Reports violent command hallucinations",
+      "Misidentifies other people", "Increased disinhibition",
+      "Increased harmful or discriminatory language or behaviour",
+      "Increased risk during substance use or withdrawal",
+      "Preoccupation with fire or access to ignition sources",
+      "Unsafe use of appliances or smoking materials",
+    ],
+    manage: [
+      "Use calm verbal and non-verbal de-escalation", "Use one lead communicator",
+      "Allow appropriate time and personal space",
+      "Reduce noise, stimulation and numbers of staff present",
+      "Move other patients or vulnerable people away where necessary",
+      "Support the person to a quieter area",
+      "Acknowledge distress without agreeing with harmful beliefs",
+      "Set clear and respectful boundaries", "Offer agreed coping strategies",
+      "Offer prescribed PRN medication where clinically indicated",
+      "Summon additional assistance", "Inform the nurse in charge",
+      "Remove access to identified weapons or ignition sources in accordance with policy",
+      "Follow fire safety procedures", "Follow safeguarding procedures",
+      "Seek urgent medical or psychiatric review",
+      "Follow emergency or security procedures if immediate danger is present",
+    ],
+    prevent: [
+      "Record individual triggers and early warning signs",
+      "Agree preferred de-escalation strategies", "Maintain consistent boundaries",
+      "Avoid unnecessary confrontation", "Explain decisions clearly",
+      "Plan support around known high-risk situations",
+      "Monitor paranoia, hallucinations, misidentification or disinhibition",
+      "Support medication concordance", "Address substance use",
+      "Review contact with identified individuals where necessary",
+      "Review access to weapons or ignition sources",
+      "Develop an individual fire safety plan where indicated",
+      "Arrange relevant specialist or safeguarding assessment",
+      "Arrange a risk strategy meeting",
+    ],
+    evaluate: [
+      "Reduced agitation", "Communicates without threats",
+      "No aggressive incidents during the review period", "No property damage",
+      "No attempts to access weapons or ignition sources", "Accepts boundaries",
+      "Moves away from conflict", "Uses agreed de-escalation strategies",
+      "Requests staff support", "Reduced paranoid distress",
+      "Reduced harmful command experiences", "Improved recognition of the effect on others",
+      "Engages in review of incidents",
+    ],
+  },
+
+  "harm-by-others": {
+    present: [
+      "Reports being harmed, threatened or controlled",
+      "Appears fearful of a particular person",
+      "Another person controls contact or communication",
+      "Another person controls money, medication or personal belongings",
+      "Unexplained loss of money or possessions",
+      "Unexplained injuries or deterioration in wellbeing",
+      "Basic care needs are not being met", "Appears reluctant to return home",
+      "Receives repeated unwanted contact",
+      "Reports online threats, pressure or exploitation",
+      "Accommodation or care arrangements appear unsafe",
+      "Carer appears overwhelmed or unable to meet needs",
+      "The person is unable to speak privately",
+    ],
+    manage: [
+      "Ensure immediate safety", "Speak with the person privately where safe to do so",
+      "Listen and document the account accurately", "Inform the nurse in charge",
+      "Follow adult safeguarding procedures",
+      "Follow domestic abuse procedures where relevant",
+      "Seek immediate physical health review where needed",
+      "Preserve relevant evidence in accordance with policy",
+      "Contact emergency services where immediate danger is present",
+      "Consider advocacy or interpreting support",
+    ],
+    prevent: [
+      "Develop an individual safeguarding plan",
+      "Agree safe methods and times for communication",
+      "Review contact or visiting arrangements", "Review accommodation safety",
+      "Support access to advocacy", "Support financial safeguards",
+      "Involve appropriate safeguarding professionals", "Review carer support needs",
+      "Provide communication support", "Review online safety",
+      "Arrange discharge planning with relevant agencies",
+    ],
+    evaluate: [
+      "Reports feeling safer", "No further unwanted contact reported",
+      "Can communicate privately and freely",
+      "Agreed safeguarding actions have been completed",
+      "Safe accommodation has been identified",
+      "Safer financial arrangements are in place",
+      "Required care is being provided consistently", "Accepts relevant support",
+      "Improved emotional or physical wellbeing",
+    ],
+  },
+
+  "physical-health": {
+    note: "The sub-domains here are broad, so the clinical indicators you ticked should strongly influence which of these you use.",
+    present: [
+      "Change in consciousness or alertness", "New confusion or behaviour change",
+      "Fever or signs of infection", "Pain or increased pain", "Reduced mobility",
+      "Unsteadiness", "Recent fall or near miss", "Skin damage or pressure-area concerns",
+      "Difficulty swallowing", "Reduced food or fluid intake", "Vomiting",
+      "Rapid weight change", "Very low weight", "Incontinence", "Seizure activity",
+      "Difficulty seeing, hearing or processing the environment",
+      "Missed or delayed medication", "Refusal or difficulty taking medication",
+      "Required monitoring is overdue", "Difficulty accessing screening or healthcare",
+    ],
+    manage: [
+      "Complete physical observations",
+      "Use the appropriate physical health assessment or early-warning tool",
+      "Seek urgent medical review", "Provide first aid within competence",
+      "Follow the falls pathway", "Follow the seizure care plan",
+      "Follow swallowing guidance", "Monitor food and fluid intake",
+      "Monitor weight where indicated", "Review wounds and tissue viability",
+      "Check medication administration and timing",
+      "Contact the relevant specialist service",
+      "Transfer to emergency or acute care where clinically indicated",
+    ],
+    prevent: [
+      "Maintain scheduled physical health monitoring",
+      "Follow specialist medication-monitoring requirements",
+      "Ensure critical medicines are administered at the correct time",
+      "Use agreed medication support", "Review mobility and falls risks",
+      "Ensure appropriate equipment is available",
+      "Make reasonable environmental adaptations",
+      "Follow nutrition and hydration plans", "Follow tissue-viability guidance",
+      "Support access to screening", "Use accessible communication",
+      "Involve dietetics, physiotherapy, occupational therapy, speech and language therapy or other relevant professionals",
+    ],
+    evaluate: [
+      "Physical observations remain within the agreed range", "Reduced pain",
+      "Improved mobility", "No further falls", "Improved food or fluid intake",
+      "Weight stabilises within the agreed plan", "No further vomiting",
+      "Skin integrity improves", "Medication is received at the required times",
+      "Specialist monitoring is completed", "Improved alertness or orientation",
+      "Accesses required screening or treatment",
+    ],
+  },
+
+  "children": {
+    note: "Conservative and safeguarding-led. This must not attempt to resolve safeguarding concerns through routine ward interventions, and the person at risk is the child, not the patient.",
+    present: [
+      "A child may be exposed to unsafe behaviour or circumstances",
+      "Concerns regarding supervision or care",
+      "Concerns regarding contact arrangements", "Concerns about the home environment",
+      "Reported ideas of harming a foetus or child",
+      "Previous deliberate or accidental harm reported",
+      "Parental or carer mental-state deterioration affecting safe care",
+      "Domestic abuse or coercive control affecting a child",
+      "A child may be vulnerable to exploitation",
+      "Concerns arise during admission or discharge planning",
+    ],
+    manage: [
+      "Ensure immediate safety", "Inform the nurse in charge",
+      "Follow child safeguarding procedures", "Contact the safeguarding team",
+      "Seek urgent medical or psychiatric review where required",
+      "Review contact or visiting arrangements", "Liaise with children's services",
+      "Contact emergency services where immediate danger is present",
+      "Document the source and wording of the concern accurately",
+    ],
+    prevent: [
+      "Develop or update the safeguarding plan", "Agree safe contact arrangements",
+      "Include the concern in admission and discharge planning",
+      "Liaise with children's services and relevant professionals",
+      "Review parental or carer support needs",
+      "Monitor changes in mental state relevant to safe care",
+      "Support adherence to agreed safeguarding arrangements",
+      "Arrange a multi-agency or strategy discussion",
+    ],
+    evaluate: [
+      "Safeguarding actions completed", "Safe contact arrangements established",
+      "Relevant agencies confirm an agreed plan",
+      "Improved engagement with safeguarding professionals",
+      "No further reported incidents or concerns during the review period",
+      "The child's immediate safety has been established",
+    ],
+  },
+
+  "environmental": {
+    present: [
+      "Unsafe or faulty appliances",
+      "Unable to cook, heat the home or maintain basic needs",
+      "Dangerous or unsuitable living environment",
+      "Hoarding affecting safe use of the property", "Risk arising from another resident",
+      "Missing adaptations", "Required equipment is unavailable",
+      "Risk of eviction or homelessness", "Inadequate care package",
+      "Environment does not meet assessed needs",
+      "Communication barriers prevent access to support",
+      "Behaviour prevents or disrupts access to services", "Limited meaningful activity",
+      "Social isolation",
+    ],
+    manage: [
+      "Address immediate environmental danger", "Inform the nurse in charge",
+      "Contact housing or accommodation provider",
+      "Contact social care or the care coordinator",
+      "Arrange emergency accommodation where indicated",
+      "Request urgent repair or replacement of essential equipment",
+      "Review risk from cohabitees", "Use interpreting or communication support",
+      "Follow safeguarding procedures where relevant",
+      "Contact emergency services where immediate danger is present",
+    ],
+    prevent: [
+      "Develop a housing or environmental action plan", "Refer for housing support",
+      "Request an occupational therapy assessment", "Arrange appropriate adaptations",
+      "Review equipment needs", "Review the care package",
+      "Develop a meaningful activity plan", "Support access to community resources",
+      "Address communication barriers", "Coordinate discharge planning",
+      "Arrange multi-agency review",
+    ],
+    evaluate: [
+      "Environment is assessed as safer", "Essential appliances are working",
+      "Required adaptations or equipment are in place",
+      "Suitable accommodation is secured",
+      "Eviction or homelessness concerns are being addressed", "Care package is in place",
+      "Improved access to services", "Increased meaningful activity",
+      "Reduced social isolation", "Improved engagement with housing or support services",
+    ],
+  },
+};
+
+// The suggested outcomes for a set of ticked sub-domains, deduped and in the
+// order they were ticked. Domain 6 answers with its single high-level bank
+// whatever is ticked - see WHAT_IS_THE_RISK_CHILD.
 export function whatIsTheRiskFor(domainId: string, subtypes: string[]): RiskChipGroup[] {
-  const words: string[] = [];
-  let sawUnmapped = false;
-  for (const s of subtypes) {
-    const bank = WHAT_IS_THE_RISK[`${domainId}::${s}`];
-    if (!bank) { sawUnmapped = true; continue; }
-    for (const w of bank) if (!words.includes(w)) words.push(w);
+  if (domainId === "children") {
+    return subtypes.length ? [{ words: [...WHAT_IS_THE_RISK_CHILD] }] : [];
   }
-  if (sawUnmapped) for (const w of WHAT_IS_THE_RISK_FALLBACK) if (!words.includes(w)) words.push(w);
+  const words: string[] = [];
+  for (const s of subtypes) {
+    for (const w of WHAT_IS_THE_RISK[`${domainId}::${s}`] || []) {
+      if (!words.includes(w)) words.push(w);
+    }
+  }
   return words.length ? [{ words }] : [];
 }

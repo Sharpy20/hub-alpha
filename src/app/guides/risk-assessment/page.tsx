@@ -32,7 +32,7 @@ import {
 import {
   RMP_QUESTIONS, questionsForDomain, type RmpQuestion,
 } from "@/lib/data/guides/risk-questions";
-import { whatIsTheRiskFor } from "@/lib/data/guides/rmp-chips";
+import { whatIsTheRiskFor, DOMAIN_RMP_CHIPS } from "@/lib/data/guides/rmp-chips";
 import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, SCREEN_TAIL, indicatorRoute,
   buildFormulationSummary, formulationSummaryLines,
@@ -129,18 +129,32 @@ function suggestedGroups(q: RmpQuestion, domainId: string, subs: { label: string
   if (q.suggest.section === "what") {
     return whatIsTheRiskFor(domainId, subs.map((s) => s.label));
   }
-  const base = R_SECTION(q.suggest.section);
   const out: RiskChipGroup[] = [];
+  const seen = new Set<string>();
+
+  // The domain's own bank, written for this domain and covering all its
+  // sub-domains. This is the reviewed content and it carries the question.
+  const domainWords = q.suggest.bank ? DOMAIN_RMP_CHIPS[domainId]?.[q.suggest.bank] : undefined;
+  for (const w of domainWords || []) seen.add(w);
+
+  // Anything the ticked sub-domain's older wardHub bank adds on top - fire
+  // setting's "requests for lighters / matches", say, which the domain bank
+  // covers only as "preoccupation with fire". Deduped, so nothing shows twice.
+  const base = R_SECTION(q.suggest.section);
   const seenRisk = new Set<string>();
   for (const { label, risk } of subs) {
     if (!risk || seenRisk.has(risk)) continue;
     seenRisk.add(risk);
     const resolved = rmpSectionForRisk(base, risk);
     if (resolved === base) continue;                           // no tailored bank
+    const extra: string[] = [];
     for (const g of pickGroup(resolved.groups, q.suggest.group)) {
-      out.push({ ...g, label: subs.length > 1 ? (g.label ? `${label} - ${g.label}` : label) : g.label });
+      for (const w of g.words) if (!seen.has(w)) { seen.add(w); extra.push(w); }
     }
+    if (extra.length) out.push({ label: `For ${label.toLowerCase()}`, words: extra });
   }
+
+  if (domainWords?.length) out.push({ label: "For this domain", words: domainWords });
   return out;
 }
 
@@ -163,8 +177,13 @@ function buildQuestionSection(
   if (q.incomplete) groups.push({ words: [q.incomplete], tier: "incomplete" });
   // Say why there are no tailored words rather than quietly showing none. This
   // happens when no sub-domain is ticked yet, or when the nurse named their own.
-  const hint = tailored.length || indicatorWords.length ? q.hint
+  let hint = tailored.length || indicatorWords.length ? q.hint
     : `${q.hint} (Tick a sub-domain above and this question will suggest words for it.)`;
+  // Two domains carry a standing instruction from the design: domain 5 because
+  // its sub-domains are broad enough that the indicators have to steer, and
+  // domain 6 because it must stay conservative and safeguarding-led.
+  const note = q.suggest.bank ? DOMAIN_RMP_CHIPS[domainId]?.note : undefined;
+  if (note) hint = `${hint} ${note}`;
   return {
     id: q.id, heading: `${q.n}. ${q.question}`, hint, gap: q.gap,
     groups, examples: q.examples,

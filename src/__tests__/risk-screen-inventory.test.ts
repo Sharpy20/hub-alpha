@@ -15,6 +15,10 @@ import {
   FORMULATION_NOT_COMPLETED, FORMULATION_SUMMARY_TITLE, FORMULATION_INDICATOR_LABEL,
 } from "@/lib/data/welcome/risk-screen";
 import { RMP_RISK_CHIPS, FORMULATION_RISK_CHIPS } from "@/lib/data/guides/risk";
+import {
+  DOMAIN_RMP_CHIPS, WHAT_IS_THE_RISK, WHAT_IS_THE_RISK_CHILD, whatIsTheRiskFor,
+  UNIVERSAL_IMMEDIATE, UNIVERSAL_PREVENTION, UNIVERSAL_REDUCTION_SIGNS, UNIVERSAL_ESCALATION,
+} from "@/lib/data/guides/rmp-chips";
 
 const EXPECTED = {
   "self-harm": { number: 1, subtypes: 3, indicators: 19 },
@@ -201,5 +205,95 @@ describe("Risk Formulation summary", () => {
   it("puts the patient name in only when one is linked", () => {
     expect(buildFormulationSummary(blank())).not.toMatch(/Patient:/);
     expect(buildFormulationSummary(blank(), "Anne Elliot")).toContain("Patient: Anne Elliot");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// The RMP chip libraries, transcribed from the design Mike settled 22 Aug 2026.
+// ---------------------------------------------------------------------------
+
+describe("RMP chip libraries", () => {
+  it("gives every domain a bank for questions 2 to 5", () => {
+    for (const dm of RISK_DOMAINS) {
+      const bank = DOMAIN_RMP_CHIPS[dm.id];
+      expect({ id: dm.id, has: !!bank }).toEqual({ id: dm.id, has: true });
+      for (const key of ["present", "manage", "prevent", "evaluate"] as const) {
+        expect({ id: dm.id, key, n: bank[key].length > 0 }).toEqual({ id: dm.id, key, n: true });
+      }
+    }
+  });
+
+  it("has no duplicates inside any bank", () => {
+    for (const [id, bank] of Object.entries(DOMAIN_RMP_CHIPS)) {
+      for (const key of ["present", "manage", "prevent", "evaluate"] as const) {
+        const words = bank[key];
+        expect({ id, key, unique: new Set(words).size }).toEqual({ id, key, unique: words.length });
+      }
+    }
+  });
+
+  it("keys every question-1 bank to a real sub-domain, and covers all six per-sub-domain domains", () => {
+    const real = new Set(RISK_DOMAINS.flatMap((d) => d.subtypes.map((s) => `${d.id}::${s}`)));
+    for (const key of Object.keys(WHAT_IS_THE_RISK)) {
+      expect({ key, real: real.has(key) }).toEqual({ key, real: true });
+    }
+    // Domain 6 is deliberately served by one flat high-level bank instead.
+    for (const dm of RISK_DOMAINS) {
+      if (dm.id === "children") continue;
+      for (const s of dm.subtypes) {
+        const k = `${dm.id}::${s}`;
+        expect({ k, n: (WHAT_IS_THE_RISK[k] || []).length > 0 }).toEqual({ k, n: true });
+      }
+    }
+  });
+
+  it("names an outcome to prevent, never a risk level", () => {
+    // The MHRA line: the tool offers vocabulary, it never rates or stratifies.
+    const all = [...Object.values(WHAT_IS_THE_RISK).flat(), ...WHAT_IS_THE_RISK_CHILD];
+    for (const w of all) {
+      expect({ w, ok: /^(Risk|Child protection concern|Reported ideas)/.test(w) }).toEqual({ w, ok: true });
+      expect({ w, rated: /\b(low|moderate|high|severe|significant|minimal)\b/i.test(w) }).toEqual({ w, rated: false });
+    }
+  });
+
+  it("keeps domain 6 conservative - one high-level bank for every sub-domain", () => {
+    // The design: "conservative and safeguarding-led ... populate the relevant
+    // high-level concern". Splitting this per sub-domain would name what was
+    // done to a child, which is exactly what it must not do.
+    for (const s of RISK_DOMAINS.find((d) => d.id === "children")!.subtypes) {
+      expect(WHAT_IS_THE_RISK[`children::${s}`]).toBeUndefined();
+    }
+    expect(whatIsTheRiskFor("children", ["Child Protection"])[0].words).toEqual(WHAT_IS_THE_RISK_CHILD);
+    expect(whatIsTheRiskFor("children", ["Sexual abuse"])[0].words).toEqual(WHAT_IS_THE_RISK_CHILD);
+    expect(whatIsTheRiskFor("children", [])).toEqual([]);
+  });
+
+  it("keeps the sexual offences outcomes high-level and non-graphic", () => {
+    expect(WHAT_IS_THE_RISK["harm-to-others::Sexual Offenses"]).toEqual([
+      "Risk of sexually inappropriate behaviour",
+      "Risk of harmful sexual behaviour",
+      "Risk requiring specialist assessment and safeguarding management",
+    ]);
+  });
+
+  it("merges and dedupes the outcomes for several ticked sub-domains", () => {
+    const words = whatIsTheRiskFor("harm-to-others", ["Fire Setting", "Damage to Property"])[0].words;
+    expect(words).toContain("Risk of deliberate fire setting");
+    expect(words).toContain("Risk of damaging property");
+    expect(new Set(words).size).toBe(words.length);
+  });
+
+  it("carries the two standing instructions from the design", () => {
+    expect(DOMAIN_RMP_CHIPS["children"].note).toMatch(/safeguarding-led/);
+    expect(DOMAIN_RMP_CHIPS["physical-health"].note).toMatch(/clinical indicators/);
+  });
+
+  it("leaves the add-your-own affordance out of the chip data", () => {
+    const all = [
+      ...Object.values(DOMAIN_RMP_CHIPS).flatMap((b) => [...b.present, ...b.manage, ...b.prevent, ...b.evaluate]),
+      ...Object.values(WHAT_IS_THE_RISK).flat(), ...WHAT_IS_THE_RISK_CHILD,
+      ...UNIVERSAL_IMMEDIATE, ...UNIVERSAL_PREVENTION, ...UNIVERSAL_REDUCTION_SIGNS, ...UNIVERSAL_ESCALATION,
+    ];
+    for (const w of all) expect({ w, add: /^Add another/i.test(w) }).toEqual({ w, add: false });
   });
 });

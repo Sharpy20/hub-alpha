@@ -2869,3 +2869,112 @@ Verified end to end: all 27 domain 5 indicators, zero unmapped sub-domains in th
 table, the child banks, the new sections, and all three new explanations render.
 
 **This is where the session ends. RED is blocked on Mike reading the pack, nothing else.**
+
+---
+
+## SECTION X - The RMP breakthrough (22 Aug 2026)
+
+**⭐ This is the live section for the risk tool. It supersedes Section W's question design.**
+
+Mike opened the session with three complaints and a written spec. All three are fixed and
+most of the spec is built. Commits `b0be86d` and `2df4759`, pushed, all gates green.
+
+### X1. The three complaints - all fixed
+
+1. **The screen jumped and he lost his place** when clicking "display clinical indicators"
+   or "done with this section". Cause: toggling a panel changes the height of the page
+   around where you are looking, and the browser keeps its scroll offset. Fixed with a
+   `useScrollKeeper` hook - `keepInPlace(id)` holds an element still across a state change,
+   `scrollToTop(id)` parks a header under the sticky bar when the content collapses away.
+   Wired to the domain accordion, "done with this domain", the indicators Yes/No, the
+   sub-domain row and the plan-question headers.
+2. **The chips were the same regardless of domain**, so plans came out repetitive. Now three
+   tiers per question: the ticked clinical indicators first (trust wording), then the ticked
+   sub-domains' own banks, then a universal library folded behind "show all options". The
+   generic fallback only appears when something ticked genuinely has no bank of its own.
+3. **Twelve questions took ages.** Now six.
+
+### X2. ⭐⭐ The breakthrough: the formulation is assembled, not asked
+
+The run was doing two jobs. Six questions built the mandated Risk Management Plan; the rest
+built the SystmOne Risk Formulation field, **for which the trust publishes no template at
+all** - so wardHub had invented a formulation framework and was asking staff to fill it in.
+
+Field 9 is now generated from the ticked sub-domains: one bullet per domain, always all
+seven, naming the sub-domains selected or that domain's own exact "No evidence" wording.
+It draws on nothing else - no indicators, no narratives, no dated events, no inferred
+causes, triggers, protective factors or overall judgement.
+
+**Why this is the right call and not just a shortcut:** every word in it is either the
+trust's own wording or a sub-domain the nurse chose, so it is a transcription of their
+selections rather than an interpretation of the patient. It is faster AND it removes the
+part of the tool that came closest to clinical reasoning. `q_judgement` is gone entirely.
+
+It is editable; regenerating warns first that manual edits will be lost.
+
+### X3. Ticked indicators are now offered, never inserted
+
+They used to fold themselves into the plan's "how does this present". An indicator records
+why a domain was considered relevant, not what is true of this person, so it now appears as
+a suggested chip on question 2 and only reaches the plan if selected. Context-only
+indicators (`INDICATOR_BACKGROUND`, e.g. "Male gender, under 35 years") are not offered as
+warning signs at all.
+
+### X4. Other changes made
+
+- New `src/lib/data/guides/rmp-chips.ts` - the four universal banks, the named
+  "not established" options, and `WHAT_IS_THE_RISK` (question 1's outcomes, keyed per
+  sub-domain).
+- An empty section prints "This section has not yet been completed."; a deliberate
+  not-established choice prints its own wording. Two different things, never merged. The
+  named options sit apart on screen, styled as gaps, with "This records a gap for review.
+  It does not say there is nothing to find."
+- `WHAT IS THE RISK` no longer repeats the plan title ("Fire Setting. Risk of deliberate
+  fire setting." -> "Risk of deliberate fire setting.").
+- **The stale-state bug, found for the THIRD time.** `SectionEditor` built its next value
+  from the `state` prop, so chips clicked in the same tick overwrote each other - three
+  fast clicks landed one. Every mutator now passes an updater (`SecUpdate` / `applySec`),
+  and `/welcome` was migrated too. **If a fourth instance turns up, the rule is: any
+  handler that spreads current state into a setter is suspect.**
+- Domain 3's "what do staff do" hint said "when they become aggressive or unsafe" - wrong
+  for fire setting, damage to property and the sexual-offences sub-domains. Made neutral.
+- New `src/__tests__/risk-screen-inventory.test.ts` - 36 tests locking 7 domains,
+  36 sub-domains, 125 indicators, per-domain totals, no duplicates, every sub-domain mapped
+  to a bank that has chips, plus guards on the form's own "Crital meds" typo and the
+  open-ended "High BMI >". **All passed as written - the transcription was already right.**
+- Proofreading pack rewritten to match, including why the formulation changed.
+
+### X5. [BLOCKED] Questions for Mike before this goes further
+
+1. **The spec paste was cut off.** Section 14 (domain 2 chips) stops mid-sentence at
+   "Contact relevant", and domains 3-7 chips were never sent. Domain 1's question-1 chips
+   are in verbatim; **domains 3-7 were drafted here and have NOT been through Mike.** They
+   are flagged in red in the pack. Send the rest, or review what is there.
+2. ⭐ **One plan per domain contradicts the trust guidance already in the code.**
+   `SEPARATE_PLANS_NOTE` quotes it: "Write a SEPARATE risk management plan for every current
+   and historical risk - do not combine them into one big plan." The spec says one builder
+   per domain. Current behaviour is the compromise: one plan per domain by default, named
+   after the risks ticked, with the existing "Requires own RMP" toggle to spin any
+   sub-domain out. **Mike to confirm that is the right default.**
+3. **Domain titles and "no evidence" wording.** The spec's example text differs slightly
+   from what SystmOne actually says (e.g. "foetus, infants or children under 18" vs the
+   form's "foetus, infant or children (under 18 years old)"). Rule 7 applied - the code's
+   transcribed wording is used, not the spec's paraphrase.
+4. **Bullets are hyphens, not "•", in the copied text** - plain text is safer for SystmOne.
+   On screen they render as proper rows. Say if the bullet character matters.
+
+### X6. [ ] Copilot's suggestions - Mike said explore these AFTER the build
+
+Not started. In his own order: honest "summary not formulation" labelling (already done in
+X2), review responsibility and timing, provenance tags on events (observed / reported by
+patient / reported by others / not established), qualifiers kept on conditional actions,
+patient preferences as a chip category, "patient involved in this plan?" field, timeframes
+on the signs-of-reduction chips, contradiction checks before copying, distinguishing
+"not assessed" from "not yet established", and a setting filter (inpatient / community /
+discharge). Plus his deliberately difficult test set.
+
+### X7. [ ] Still open from Section W
+
+- Spot-check `INDICATOR_BACKGROUND["physical-health"]` routing (and the other six).
+- Whether the 23-risk "risk strategy meeting" set is right (W7).
+- **Still RED, and still blocked on Mike reading the proofreading pack.**

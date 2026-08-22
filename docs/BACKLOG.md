@@ -3005,3 +3005,12 @@ discharge). Plus his deliberately difficult test set.
 4. Nine new tests pin the formulation summary, including one that strips every allowed
    string and asserts only punctuation remains - so no prose can creep into the one document
    the tool assembles on its own. **116 tests pass.**
+
+### X9. [DECIDED] One plan per domain (Mike, 22 Aug)
+
+**One RMP per domain is right, and the "Requires own RMP" toggle stays.** This settles X5.2.
+
+The trust guidance quoted in `SEPARATE_PLANS_NOTE` ("write a SEPARATE risk management plan
+for every current and historical risk") is met by the toggle rather than by forcing a split:
+the default is one plan per domain, titled by the sub-domains actually ticked, and anything
+that needs its own plan gets flagged and spun out. **Do not re-open this.**

@@ -3155,3 +3155,33 @@ scheduled reviews, and it is an event that does it rather than the calendar.
   banks are gone - less content because there is less content).
 
 **143 tests. Copilot's list is now done bar X13's four parked items.**
+
+### X15. Five UI and content jobs (Mike, 22 Aug) - commit `6a2b252`
+
+1. ✅ **"Sexual Offenses" spelling - LEFT AS IS and locked with a test.** It is the American
+   spelling and it looks like our slip; it is what the SystmOne screen says, verified
+   against Mike's screenshots on 20 and 22 Aug. Rule 7, same reason "Crital meds" survives.
+   ⛔ **Three places key off that exact string** (`RISK_DOMAINS.subtypes`, `SUBTYPE_RISK`,
+   `WHAT_IS_THE_RISK`) - correcting it quietly would break the sub-domain's chip banks. The
+   comment in `risk-screen.ts` says how to change it if the live form is ever fixed.
+2. ✅ **BMI threshold - still not guessed, but no longer left looking finished.** New
+   `INDICATOR_NOTES` puts a footnote under the indicator list: the form leaves the threshold
+   blank, use the figure in the Trust's own guidance, say which you used, wardHub will not
+   guess one. Carries `[confirm]`. ⭐ **A test asserts the note contains no digits**, so
+   nobody can helpfully fill one in.
+3. ✅ **One `EventEditor` everywhere.** The in-domain version was a stacked block per event;
+   it is now the quick-capture pattern - list first so you can see what you have recorded,
+   then one compact add row. Replaces the page's own `DatedExamples` AND the copy inside
+   `SectionEditor`; **53 lines of near-duplicate deleted.**
+4. ✅ **Edit as well as remove, in both places.** A pencil loads the row back into the add
+   row. ⭐ On the **top capture list** it also removes the event from every domain it was
+   filed under first, so re-adding cannot leave a stale copy behind - and the note says so.
+5. ✅ **The six questions open expanded** - Mike does not want them truncated out of sight.
+   `/welcome` keeps them collapsed (`startOpen` prop); it has far more of them.
+6. ✅ **Question 1 now has a general library** (`UNIVERSAL_WHAT_IS_THE_RISK`, 11 options). It
+   only had the per-sub-domain outcomes, so a nurse who named their own sub-domain got
+   nothing. Like every other question-1 chip, not one carries a likelihood, a severity or a
+   risk level - the existing test covers them.
+
+**146 tests.** X13 is now down to the setting filter (deferred by Copilot itself) and a
+manual pass through his 16 difficult scenarios.

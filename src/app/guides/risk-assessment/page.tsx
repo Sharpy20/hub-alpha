@@ -39,12 +39,12 @@ import {
   REVIEW_BY, REVIEW_BY_LABEL, REVIEW_WHEN, REVIEW_WHEN_LABEL, REVIEW_TRIGGERS, REVIEW_TRIGGER_LABEL,
 } from "@/lib/data/guides/rmp-chips";
 import {
-  RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, SCREEN_TAIL, indicatorRoute,
+  RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, SCREEN_TAIL, indicatorRoute, INDICATOR_NOTES,
   buildFormulationSummary, formulationSummaryLines,
   FORMULATION_SUMMARY_NOTE, FORMULATION_NOT_COMPLETED,
 } from "@/lib/data/welcome/risk-screen";
 import {
-  SectionEditor, buildOneRmp,
+  SectionEditor, EventEditor, buildOneRmp,
   rmpSectionForRisk, naturalList, cap, ensureStop, applySec,
   type AllState, type SecState, type SecUpdate, type DatedExample, EMPTY, EVENT_SOURCES,
 } from "@/components/guides/risk-capture";
@@ -58,7 +58,7 @@ import { printClinicalDoc } from "@/lib/utils/printDoc";
 import { printRiskProofreadPack } from "@/lib/utils/riskProofreadPack";
 import { checkDomain, CHECK_PREAMBLE } from "@/lib/utils/riskChecks";
 import {
-  ArrowLeft, Copy, Check, CheckCircle2, RotateCcw, ChevronDown,
+  ArrowLeft, Copy, Check, CheckCircle2, RotateCcw, ChevronDown, Pencil,
   ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
   Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star, Printer, Clock, History as HistoryIcon, UserPen,
 } from "lucide-react";
@@ -89,7 +89,7 @@ interface RiskRef { key: string; label: string; chipRisk: string; domainId: stri
 interface CapturedRow {
   id: string;
   text: string;
-  day: string; month: string; year: string;
+  day: string; month: string; year: string; source?: string;
   places: { domainId: string; when: "current" | "historical" }[];
 }
 
@@ -279,59 +279,6 @@ function YNToggle({ value, onChange }: { value: YN; onChange: (v: YN) => void })
 // Dated specific-examples list under a narrative field (date optional).
 // `tone` keeps the two narrative boxes visually apart: rose for what is happening
 // now, slate for what happened before. `title` names what the examples are for.
-function DatedExamples({ examples, onChange, tone = "rose", title }: {
-  examples?: DatedExample[];
-  onChange: (next: DatedExample[]) => void;
-  tone?: "rose" | "slate";
-  title?: string;
-}) {
-  const list = examples || [];
-  const upd = (i: number, patch: Partial<DatedExample>) => onChange(list.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
-  const T = tone === "slate"
-    ? { box: "border-slate-200 bg-slate-50/60", head: "text-slate-500", ring: "focus:ring-slate-400 focus:border-slate-400", link: "text-slate-700 hover:text-slate-900" }
-    : { box: "border-sky-200 bg-sky-50/60", head: "text-sky-800", ring: "focus:ring-sky-500 focus:border-sky-500", link: "text-sky-800 hover:text-sky-900" };
-  const selCls = `text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${T.ring}`;
-  // Only rendered after the user adds an example (client-side), so new Date() here
-  // is safe from hydration mismatch.
-  const thisYear = new Date().getFullYear();
-  const years = Array.from({ length: 71 }, (_, i) => thisYear - i);
-  return (
-    <div className={`mt-2 rounded-lg border ${T.box} p-2.5 space-y-2`}>
-      <p className={`text-[10px] font-mono uppercase tracking-wider ${T.head}`}>
-        {title || "Give dated examples"} (date optional - just the year, the month and year, or the full date)
-      </p>
-      {list.map((ex, i) => (
-        <div key={i} className="space-y-1.5">
-          <div className="flex items-center gap-1.5">
-            <select value={ex.day} onChange={(e) => upd(i, { day: e.target.value })} aria-label="Day" className={selCls}>
-              <option value="">Day</option>
-              {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
-            </select>
-            <select value={ex.month} onChange={(e) => upd(i, { month: e.target.value })} aria-label="Month" className={selCls}>
-              <option value="">Month</option>
-              {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
-            </select>
-            <select value={ex.year} onChange={(e) => upd(i, { year: e.target.value })} aria-label="Year" className={selCls}>
-              <option value="">Year</option>
-              {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
-            </select>
-            <button onClick={() => onChange(list.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-500 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
-          </div>
-          <input type="text" value={ex.text} placeholder="what happened" aria-label="What happened" onChange={(e) => upd(i, { text: e.target.value })} className={`w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${T.ring}`} />
-          {/* Where it came from. What staff saw and what someone reported are
-              different weights of evidence, and the record should say which. */}
-          <select value={ex.source || ""} onChange={(e) => upd(i, { source: e.target.value })} aria-label="Where this came from" className={`${selCls} w-full`}>
-            <option value="">Where did this come from?</option>
-            {EVENT_SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
-        </div>
-      ))}
-      <button onClick={() => onChange([...list, { day: "", month: "", year: "", text: "" }])} className={`inline-flex items-center gap-1 text-xs font-semibold ${T.link} transition-colors`}>
-        <Plus className="w-3.5 h-3.5" /> Add example
-      </button>
-    </div>
-  );
-}
 
 function CopyField({ id, label, text, done, onToggle }: {
   id: string; label: string; text: string; done: boolean; onToggle: (id: string, copied: boolean) => void;
@@ -653,7 +600,7 @@ export default function RiskAssessmentPage() {
           if (!ex.id) continue; // typed straight into the domain, not a capture
           const row = byId.get(ex.id);
           if (row) row.places.push({ domainId: dm.id, when });
-          else byId.set(ex.id, { id: ex.id, text: ex.text, day: ex.day, month: ex.month, year: ex.year, places: [{ domainId: dm.id, when }] });
+          else byId.set(ex.id, { id: ex.id, text: ex.text, day: ex.day, month: ex.month, year: ex.year, source: ex.source, places: [{ domainId: dm.id, when }] });
         }
       }
     }
@@ -917,6 +864,7 @@ export default function RiskAssessmentPage() {
                 state={cGet(r.key, q.id)}
                 onChange={(n) => cSet(r.key, q.id, n)}
                 bank={{ risk: r.chipRisk, questionId: q.id }}
+                startOpen
               />
             ))}
           </div>
@@ -1075,6 +1023,7 @@ export default function RiskAssessmentPage() {
                 state={cGet(key, q.id)}
                 onChange={(n) => cSet(key, q.id, n)}
                 bank={{ risk: chipRisks[0]?.risk || dm.id, questionId: q.id }}
+                startOpen
               />
             ))}
           </div>
@@ -1182,6 +1131,15 @@ export default function RiskAssessmentPage() {
                         );
                       })}
                     </div>
+                    {/* Where the Trust's own entry is incomplete or misspelt we
+                        keep it verbatim, but we say so rather than letting it
+                        sit there looking finished. */}
+                    {(CLINICAL_INDICATORS[dm.id] || []).filter((ind) => INDICATOR_NOTES[ind]).map((ind) => (
+                      <p key={ind} className="flex items-start gap-1.5 text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-2 py-1.5">
+                        <Info className="w-3.5 h-3.5 mt-px flex-shrink-0" />
+                        <span><strong>{ind}</strong> - {INDICATOR_NOTES[ind]}</span>
+                      </p>
+                    ))}
                     <AddSubDomain placeholder="add another indicator..." onAdd={(name) => addCustomIndicator(dm.id, name)} />
                   </div>
                 )}
@@ -1201,7 +1159,7 @@ export default function RiskAssessmentPage() {
                 <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
                 <p className="flex items-start gap-1.5 text-xs text-slate-600 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what is going on now, and what has happened in the last few days or weeks.</p>
                 <textarea value={st.current} onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, current: e.target.value }))} rows={2} aria-label={personalise(dm.currentPrompt)} className={inputCls} />
-                <DatedExamples tone="rose" title="Recent examples" examples={st.currentExamples} onChange={(next) => updateDomain(dm.id, (d) => ({ ...d, currentExamples: next }))} />
+                <EventEditor accent="rose" title="Recent examples" items={st.currentExamples} onChange={(fn) => updateDomain(dm.id, (d) => ({ ...d, currentExamples: fn(d.currentExamples || []) }))} />
                 <S1CopyBox text={withExamples(st.current, st.currentExamples)} />
               </div>
             </div>
@@ -1221,7 +1179,7 @@ export default function RiskAssessmentPage() {
                 )}
                 <p className="flex items-start gap-1.5 text-xs text-slate-600 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what happened before this admission, and how long it has been going on.</p>
                 <textarea value={st.historical} onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, historical: e.target.value }))} rows={2} aria-label={personalise(dm.historicalPrompt)} className={inputCls} />
-                <DatedExamples tone="slate" title="Past events" examples={st.historicalExamples} onChange={(next) => updateDomain(dm.id, (d) => ({ ...d, historicalExamples: next }))} />
+                <EventEditor accent="slate" title="Past events" items={st.historicalExamples} onChange={(fn) => updateDomain(dm.id, (d) => ({ ...d, historicalExamples: fn(d.historicalExamples || []) }))} />
                 <S1CopyBox text={withExamples(st.historical, st.historicalExamples)} />
               </div>
             </div>
@@ -1534,6 +1492,23 @@ export default function RiskAssessmentPage() {
                         }))}
                       </span>
                     </span>
+                    {/* Editing pulls the event back into the capture box and
+                        takes it out of every domain it was filed under, so
+                        re-adding it cannot leave a stale copy behind. */}
+                    <button
+                      onClick={() => {
+                        setCapture({
+                          text: row.text, day: row.day, month: row.month, year: row.year,
+                          source: row.source || "",
+                          domains: [...new Set(row.places.map((p) => p.domainId))],
+                        });
+                        setCaptureWhen(row.places.some((p) => p.when === "historical") ? "historical" : "current");
+                        removeCapture(row.id, row.places.map((p) => p.domainId));
+                        setCaptureNote(`Editing "${row.text}" - it has been taken out of its domains, so add it again when you are done.`);
+                      }}
+                      aria-label={`Edit "${row.text}"`}
+                      className="text-gray-400 hover:text-sky-700 transition-colors flex-shrink-0 p-1"
+                    ><Pencil className="w-3.5 h-3.5" /></button>
                     <button
                       onClick={() => { setRemoving(row); setRemoveSel(row.places.map((p) => p.domainId)); }}
                       aria-label={`Remove "${row.text}"`}

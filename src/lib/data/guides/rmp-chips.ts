@@ -99,6 +99,26 @@ export const UNIVERSAL_ESCALATION: string[] = [
   "Update risk assessment and care plan",
 ];
 
+// Question 1's general library. The per-sub-domain outcomes in WHAT_IS_THE_RISK
+// are the sharp ones and come first; these cover the cases they miss - a nurse
+// who named their own sub-domain, or a risk that genuinely is the plain version.
+//
+// ⛔ Same rule as everywhere else here: these name an OUTCOME TO PREVENT. Not one
+// of them carries a likelihood, a severity or a risk level.
+export const UNIVERSAL_WHAT_IS_THE_RISK: string[] = [
+  "Risk of harm to the person",
+  "Risk of harm to others",
+  "Risk of harm to the person by someone else",
+  "Risk of a further incident of the same kind",
+  "Risk of the situation deteriorating",
+  "Risk of deterioration in physical health",
+  "Risk of an unmet need going unrecognised",
+  "Risk of the person being unable to keep themselves safe",
+  "Risk of the person leaving or being unable to return safely",
+  "Risk to a child or unborn baby",
+  "Risk of the plan not being followed",
+];
+
 // No universal bank for question 2 (how does this present): what staff would
 // notice is specific to the person and the risk, so a generic list would be the
 // exact fault Mike reported - the same chips under every domain. The suggested

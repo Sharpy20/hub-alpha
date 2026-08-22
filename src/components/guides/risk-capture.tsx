@@ -20,7 +20,7 @@ import {
   loadUserChips, addUserChip, removeUserChip, bankKey as bankKeyFor,
 } from "@/lib/data/guides/user-chips";
 import {
-  ChevronDown, ChevronRight, Info, Sparkles, AlertTriangle, Plus, X, UserPen,
+  ChevronDown, ChevronRight, Info, Sparkles, AlertTriangle, Plus, X, UserPen, Pencil, Check,
 } from "lucide-react";
 
 // ---- state ----
@@ -199,9 +199,126 @@ export function rmpSectionForRisk(sec: RiskSection, risk: string): RiskSection {
   return groups && groups.length ? { ...sec, groups, trustExamples: undefined } : sec;
 }
 
+// ---- dated events: one compact add row, then a plain list -------------------
+//
+// Mike, 22 Aug: the in-domain version was "chunkier, with big blocks for each",
+// one stacked form per event, and he wanted it like the quick-capture panel at
+// the top - add it once, then a tidy line per event you can edit or remove.
+//
+// The difference matters more than it looks: with a block per event you scroll
+// past four half-empty forms to reach the fifth, and you cannot see at a glance
+// what you have already recorded.
+export function EventEditor({
+  items, onChange, accent = "slate", title,
+}: {
+  items: DatedExample[];
+  onChange: (fn: (prev: DatedExample[]) => DatedExample[]) => void;
+  accent?: "rose" | "slate" | "violet";
+  title?: string;
+}) {
+  const blank = { day: "", month: "", year: "", text: "", source: "" };
+  const [draft, setDraft] = useState<DatedExample>({ ...blank });
+  // Which row is being edited, or null when adding a new one.
+  const [editing, setEditing] = useState<number | null>(null);
+  // Filled after mount so the year list cannot differ between server and client.
+  const [years, setYears] = useState<number[]>([]);
+  useEffect(() => {
+    const y = new Date().getFullYear();
+    setYears(Array.from({ length: 71 }, (_, i) => y - i));
+  }, []);
+
+  const A = accent === "rose"
+    ? { chip: "bg-rose-50 border-rose-200", ring: "focus:ring-rose-400 focus:border-rose-400", link: "text-rose-700 hover:text-rose-900" }
+    : accent === "violet"
+      ? { chip: "bg-violet-50 border-violet-200", ring: "focus:ring-violet-400 focus:border-violet-400", link: "text-violet-700 hover:text-violet-900" }
+      : { chip: "bg-slate-50 border-slate-200", ring: "focus:ring-sky-500 focus:border-sky-500", link: "text-slate-700 hover:text-slate-900" };
+  const sel = `text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${A.ring}`;
+
+  const commit = () => {
+    const text = draft.text.trim();
+    if (!text) return;
+    const entry = { ...draft, text };
+    onChange((prev) => (editing === null ? [...prev, entry] : prev.map((x, i) => (i === editing ? { ...x, ...entry } : x))));
+    setDraft({ ...blank });
+    setEditing(null);
+  };
+
+  return (
+    <div className={`rounded-lg border ${A.chip} p-2.5 space-y-2`}>
+      <p className="text-[10px] font-mono uppercase tracking-wider text-gray-500">
+        {title || "Events"} {items.filter((e) => e.text.trim()).length > 0 && `(${items.filter((e) => e.text.trim()).length})`}
+      </p>
+
+      {/* The list first, so what you have recorded is what you see. */}
+      {items.map((ex, i) => {
+        if (!ex.text.trim() && editing !== i) return null;
+        const d = formatPartialDate(ex);
+        return (
+          <div key={i} className="flex items-start gap-2 border-b border-gray-200/70 last:border-0 pb-1.5 last:pb-0">
+            <span className="flex-1 min-w-0">
+              <span className="block text-sm text-gray-800">
+                {d && <span className="font-semibold text-gray-500">{d} - </span>}{ex.text}
+              </span>
+              {ex.source && <span className="block text-xs text-gray-500 mt-0.5">{ex.source}</span>}
+            </span>
+            <button
+              onClick={() => { setDraft({ ...ex }); setEditing(i); }}
+              aria-label={`Edit "${ex.text}"`}
+              className="text-gray-400 hover:text-sky-700 transition-colors flex-shrink-0 p-1"
+            ><Pencil className="w-3.5 h-3.5" /></button>
+            <button
+              onClick={() => { onChange((prev) => prev.filter((_, idx) => idx !== i)); if (editing === i) { setDraft({ ...blank }); setEditing(null); } }}
+              aria-label={`Remove "${ex.text}"`}
+              className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0 p-1"
+            ><X className="w-4 h-4" /></button>
+          </div>
+        );
+      })}
+
+      <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+        <select value={draft.day} onChange={(e) => setDraft((d) => ({ ...d, day: e.target.value }))} aria-label="Day" className={sel}>
+          <option value="">Day</option>
+          {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
+        </select>
+        <select value={draft.month} onChange={(e) => setDraft((d) => ({ ...d, month: e.target.value }))} aria-label="Month" className={sel}>
+          <option value="">Month</option>
+          {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
+        </select>
+        <select value={draft.year} onChange={(e) => setDraft((d) => ({ ...d, year: e.target.value }))} aria-label="Year" className={sel}>
+          <option value="">Year</option>
+          {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
+        </select>
+        <select value={draft.source || ""} onChange={(e) => setDraft((d) => ({ ...d, source: e.target.value }))} aria-label="Where this came from" className={sel}>
+          <option value="">Where from?</option>
+          {EVENT_SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <input
+          type="text" value={draft.text}
+          onChange={(e) => setDraft((d) => ({ ...d, text: e.target.value }))}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commit(); } }}
+          placeholder="what happened" aria-label="What happened"
+          className={`flex-1 min-w-0 text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${A.ring}`}
+        />
+        <button onClick={commit} disabled={!draft.text.trim()}
+          className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-2 rounded-lg border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${A.link} border-gray-300 bg-white hover:bg-gray-50`}>
+          {editing === null ? <><Plus className="w-3.5 h-3.5" /> Add</> : <><Check className="w-3.5 h-3.5" /> Save</>}
+        </button>
+        {editing !== null && (
+          <button onClick={() => { setDraft({ ...blank }); setEditing(null); }}
+            className="text-xs font-semibold px-2.5 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ---- the editor (chips + free text + na + optional dated examples) ----
 export function SectionEditor({
-  section, state, onChange, accent = "rose", bank,
+  section, state, onChange, accent = "rose", bank, startOpen = false,
 }: {
   section: RiskSection;
   state: SecState;
@@ -210,8 +327,12 @@ export function SectionEditor({
   // Identifies this question's chip bank so words the user adds come back next
   // time they plan the same risk. Omit to hide "add your own".
   bank?: { risk: string; questionId: string };
+  /** Render expanded. The risk tool opens its six questions; /welcome does not. */
+  startOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  // Mike, 22 Aug: the six plan questions should not be truncated out of sight.
+  // The Welcome tool still opens them collapsed - it has far more of them.
+  const [open, setOpen] = useState(startOpen);
   const [userChips, setUserChips] = useState<string[]>([]);
   const [newChip, setNewChip] = useState("");
 
@@ -257,9 +378,7 @@ export function SectionEditor({
   const exampleCount = examples.filter((e) => e.text.trim()).length;
   const count = state.chips.length + (state.text.trim() ? 1 : 0) + exampleCount + (state.na ? 1 : 0);
   const chipsOnlyNoDetail = state.chips.length > 0 && !state.text.trim() && !state.na && exampleCount === 0;
-  // Only rendered once a section is opened (interaction), so new Date() is safe.
-  const thisYear = new Date().getFullYear();
-  const years = Array.from({ length: 71 }, (_, i) => thisYear - i);
+  // The year list moved into EventEditor, which fills it after mount.
 
   return (
     <div className="rounded-xl border border-gray-100 bg-white overflow-hidden">
@@ -411,41 +530,12 @@ export function SectionEditor({
           )}
 
           {section.examples && (
-            <div className={`rounded-lg border ${A.chipBg} p-2.5 space-y-2`}>
-              <p className="text-[10px] font-mono uppercase tracking-wider text-gray-500">Specific examples (date optional)</p>
-              {examples.map((ex, i) => {
-                const upd = (patch: Partial<DatedExample>) => setExamples((prev) => prev.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
-                return (
-                  <div key={i} className="space-y-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <select value={ex.day} onChange={(e) => upd({ day: e.target.value })} aria-label="Day" className={`text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${A.ring}`}>
-                        <option value="">Day</option>
-                        {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
-                      </select>
-                      <select value={ex.month} onChange={(e) => upd({ month: e.target.value })} aria-label="Month" className={`text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${A.ring}`}>
-                        <option value="">Month</option>
-                        {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
-                      </select>
-                      <select value={ex.year} onChange={(e) => upd({ year: e.target.value })} aria-label="Year" className={`text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${A.ring}`}>
-                        <option value="">Year</option>
-                        {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
-                      </select>
-                      <button onClick={() => setExamples((prev) => prev.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
-                    </div>
-                    <input type="text" value={ex.text} placeholder="what happened" onChange={(e) => upd({ text: e.target.value })} className={`w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${A.ring}`} />
-                    {/* Where it came from - see EVENT_SOURCES. */}
-                    <select value={ex.source || ""} onChange={(e) => upd({ source: e.target.value })} aria-label="Where this came from"
-                      className={`w-full text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${A.ring}`}>
-                      <option value="">Where did this come from?</option>
-                      {EVENT_SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                  </div>
-                );
-              })}
-              <button onClick={() => setExamples((prev) => [...prev, { day: "", month: "", year: "", text: "" }])} className={`inline-flex items-center gap-1 text-xs font-semibold ${A.chipText} hover:opacity-80 transition-opacity`}>
-                <Plus className="w-3.5 h-3.5" /> Add example
-              </button>
-            </div>
+            <EventEditor
+              accent={accent === "violet" ? "violet" : "slate"}
+              title="Specific examples (date optional)"
+              items={examples}
+              onChange={setExamples}
+            />
           )}
 
           {chipsOnlyNoDetail && <span className="text-xs text-amber-600 flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> Add patient-specific detail</span>}

@@ -28,7 +28,7 @@
 
 import {
   UNIVERSAL_IMMEDIATE, UNIVERSAL_PREVENTION, UNIVERSAL_REDUCTION_SIGNS,
-  UNIVERSAL_ESCALATION, INCOMPLETE_OPTIONS,
+  UNIVERSAL_ESCALATION, INCOMPLETE_OPTIONS, UNIVERSAL_WHAT_IS_THE_RISK,
   type DomainRmpBank,
 } from "./rmp-chips";
 
@@ -89,7 +89,7 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     writes: { id: "what" },
     suggest: { section: "what" },
     incomplete: INCOMPLETE_OPTIONS.q1_what,
-    universal: [],
+    universal: UNIVERSAL_WHAT_IS_THE_RISK,
   },
   {
     id: "q2_present", n: 2,

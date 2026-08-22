@@ -12,7 +12,7 @@
 import {
   RISK_DOMAINS, CLINICAL_INDICATORS, INDICATOR_BACKGROUND, SUBTYPE_RISK,
   buildFormulationSummary, formulationSummaryLines,
-  FORMULATION_NOT_COMPLETED, FORMULATION_SUMMARY_TITLE, FORMULATION_INDICATOR_LABEL,
+  FORMULATION_NOT_COMPLETED, FORMULATION_SUMMARY_TITLE, FORMULATION_INDICATOR_LABEL, INDICATOR_NOTES,
 } from "@/lib/data/welcome/risk-screen";
 import { RMP_RISK_CHIPS, FORMULATION_RISK_CHIPS } from "@/lib/data/guides/risk";
 import {
@@ -341,6 +341,35 @@ describe("conditional actions keep their qualifiers", () => {
     for (const w of actionWords()) {
       if (!/\bPRN\b/i.test(w)) continue;
       expect({ w, qualified: /(where clinically indicated|prescribed|offer)/i.test(w) }).toEqual({ w, qualified: true });
+    }
+  });
+});
+
+describe("the Trust's own incomplete entries are surfaced, not silently fixed", () => {
+  it("keeps the form's American spelling of Sexual Offenses", () => {
+    // Verified against Mike's SystmOne screenshots, 20 and 22 Aug 2026. Rule 7 -
+    // it looks like our slip and it is not. Three places key off this exact
+    // string, so "correcting" it silently breaks the sub-domain's chip banks.
+    const d3 = RISK_DOMAINS.find((d) => d.id === "harm-to-others")!;
+    expect(d3.subtypes).toContain("Sexual Offenses");
+    expect(d3.subtypes).not.toContain("Sexual Offences");
+    expect(SUBTYPE_RISK["harm-to-others::Sexual Offenses"]).toBeTruthy();
+    expect(WHAT_IS_THE_RISK["harm-to-others::Sexual Offenses"]).toBeTruthy();
+  });
+
+  it("tells the nurse the BMI threshold is missing rather than inventing one", () => {
+    const note = INDICATOR_NOTES["High BMI >"];
+    expect(note).toBeTruthy();
+    expect(note).toMatch(/will not guess/);
+    expect(note).toMatch(/\[confirm\]/);
+    // The whole point: no number appears anywhere near it.
+    expect(note).not.toMatch(/\d/);
+  });
+
+  it("only annotates indicators that actually exist on the form", () => {
+    const all = new Set(RISK_DOMAINS.flatMap((d) => CLINICAL_INDICATORS[d.id] || []));
+    for (const key of Object.keys(INDICATOR_NOTES)) {
+      expect({ key, real: all.has(key) }).toEqual({ key, real: true });
     }
   });
 });

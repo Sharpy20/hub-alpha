@@ -64,6 +64,13 @@ export const RISK_DOMAINS: RiskDomain[] = [
     subtypes: [
       "Violence and Aggression",
       "Fire Setting",
+      // "Offenses" is the American spelling and looks like a slip. It is not
+      // ours: it is what the SystmOne screen says, verified against Mike's
+      // screenshots on 20 Aug 2026 and again on 22 Aug. Rule 7 - trust forms
+      // keep their exact wording, the same reason "Crital meds" survives below.
+      // Guarded by a test. If the live screen is ever corrected to "Offences",
+      // change it HERE and in SUBTYPE_RISK and WHAT_IS_THE_RISK, which key off
+      // this exact string.
       "Sexual Offenses",
       "Abuse, harassment and or exploitation",
       "Damage to Property",
@@ -260,6 +267,19 @@ export const CLINICAL_INDICATORS: Record<string, string[]> = {
     "Lack of appropriate equipment /recourses/ care package", "Inappropriate environment",
     "Behaviour that prevents access to service",
   ],
+};
+
+// ---- Indicators that need a caveat on screen -------------------------------
+//
+// A handful of the Trust's own entries are incomplete or misspelt on SystmOne.
+// We keep them verbatim (rule 7) but we do NOT let them sit there looking
+// finished - a nurse ticking "High BMI >" has no idea what threshold they are
+// agreeing to, and inventing one would be worse than saying so.
+//
+// Keyed by the exact indicator string. Rendered as a footnote under the list.
+export const INDICATOR_NOTES: Record<string, string> = {
+  "High BMI >": "The form leaves the threshold blank. Use the figure in the Trust's own physical health guidance, and say which you used in the narrative. wardHub will not guess one. [confirm]",
+  "Crital meds (warfarin, Parkinson's)": "Spelt this way on the SystmOne form. Kept as it appears there, not corrected.",
 };
 
 // ---- Clinical-indicator routing (formulation vs RMP) -----------------------

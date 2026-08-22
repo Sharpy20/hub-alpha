@@ -27,7 +27,21 @@ import {
 // `id` is set only on examples added through the risk tool's quick capture, so
 // one event can be traced across every domain it was filed under and pulled back
 // out again. Examples typed straight into a domain have no id.
-export interface DatedExample { day: string; month: string; year: string; text: string; id?: string }
+export interface DatedExample { day: string; month: string; year: string; text: string; id?: string; source?: string }
+
+// Where an event came from. A risk screen mixes what staff saw with what the
+// person said, what a relative said and what is written in an old assessment,
+// and the four are not the same weight of evidence. Recording the source is what
+// stops "recorded allegation of assault" being read later as "assaulted a care
+// worker" - the tool must never quietly promote a report into a finding.
+export const EVENT_SOURCES: string[] = [
+  "Observed by staff",
+  "Reported by the person",
+  "Reported by family or carer",
+  "Reported by police or criminal justice service",
+  "Recorded in a previous assessment",
+  "Source not established",
+];
 export interface SecState { chips: string[]; text: string; na: boolean; examples?: DatedExample[] }
 export type AllState = Record<string, SecState>;
 export const EMPTY: SecState = { chips: [], text: "", na: false };
@@ -109,7 +123,13 @@ export function buildFormulation(state: AllState, title = "RISK FORMULATION", pa
 // this is what the first says.
 export const NOT_COMPLETED = "This section has not yet been completed.";
 
-export function buildOneRmp(risk: string, secs: AllState, displayName?: string, patientName?: string): string {
+export function buildOneRmp(
+  risk: string, secs: AllState, displayName?: string, patientName?: string,
+  // Printed in the plan's HEADER, above the bar - deliberately outside the five
+  // Trust headings, because it is a fact about the plan rather than a section of
+  // it. Adding a heading of our own to a mandated template is the thing not to do.
+  involvement?: string,
+): string {
   const name = (displayName && displayName.trim()) || risk;
   const body = (id: string): string => {
     if (id === "what") {
@@ -135,7 +155,12 @@ export function buildOneRmp(risk: string, secs: AllState, displayName?: string, 
     }
     return buildContent(secs[id]) || NOT_COMPLETED;
   };
-  const blocks: string[] = [TXT_BAR, name.toUpperCase(), ...(patientName ? [`Patient: ${patientName}`] : []), TXT_BAR];
+  const blocks: string[] = [
+    TXT_BAR, name.toUpperCase(),
+    ...(patientName ? [`Patient: ${patientName}`] : []),
+    ...(involvement ? [`Person involved in this plan: ${involvement}`] : []),
+    TXT_BAR,
+  ];
   RMP_SECTIONS.forEach((sec, i) => {
     blocks.push(sec.heading.toUpperCase());
     blocks.push(body(sec.id));
@@ -394,6 +419,12 @@ export function SectionEditor({
                       <button onClick={() => setExamples((prev) => prev.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-400 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
                     </div>
                     <input type="text" value={ex.text} placeholder="what happened" onChange={(e) => upd({ text: e.target.value })} className={`w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${A.ring}`} />
+                    {/* Where it came from - see EVENT_SOURCES. */}
+                    <select value={ex.source || ""} onChange={(e) => upd({ source: e.target.value })} aria-label="Where this came from"
+                      className={`w-full text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${A.ring}`}>
+                      <option value="">Where did this come from?</option>
+                      {EVENT_SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
+                    </select>
                   </div>
                 );
               })}

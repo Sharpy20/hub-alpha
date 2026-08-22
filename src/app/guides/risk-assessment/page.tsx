@@ -32,7 +32,11 @@ import {
 import {
   RMP_QUESTIONS, questionsForDomain, type RmpQuestion,
 } from "@/lib/data/guides/risk-questions";
-import { whatIsTheRiskFor, DOMAIN_RMP_CHIPS } from "@/lib/data/guides/rmp-chips";
+import {
+  whatIsTheRiskFor, DOMAIN_RMP_CHIPS,
+  WHAT_HELPS, WHAT_HELPS_LABEL, REDUCTION_TIMEFRAMES, TIMEFRAME_LABEL,
+  NOT_ASSESSED, NOT_APPLICABLE, PATIENT_INVOLVEMENT, PATIENT_INVOLVEMENT_LABEL,
+} from "@/lib/data/guides/rmp-chips";
 import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, SCREEN_TAIL, indicatorRoute,
   buildFormulationSummary, formulationSummaryLines,
@@ -41,7 +45,7 @@ import {
 import {
   SectionEditor, buildOneRmp,
   rmpSectionForRisk, naturalList, cap, ensureStop, applySec,
-  type AllState, type SecState, type SecUpdate, type DatedExample, EMPTY,
+  type AllState, type SecState, type SecUpdate, type DatedExample, EMPTY, EVENT_SOURCES,
 } from "@/components/guides/risk-capture";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
@@ -51,6 +55,7 @@ import { loadTracker, saveTracker, seedPatient } from "@/lib/data/care-review";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { printClinicalDoc } from "@/lib/utils/printDoc";
 import { printRiskProofreadPack } from "@/lib/utils/riskProofreadPack";
+import { checkDomain, CHECK_PREAMBLE } from "@/lib/utils/riskChecks";
 import {
   ArrowLeft, Copy, Check, CheckCircle2, RotateCcw, ChevronDown,
   ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
@@ -67,10 +72,11 @@ interface DomainState {
   ownRmp: string[];                     // sub-domains / indicators flagged "Requires own RMP"
   currentExamples: DatedExample[];
   historicalExamples: DatedExample[];
+  involvement: string;               // "Was the person involved in this plan?"
 }
 const emptyDomain = (): DomainState => ({
   indicators: "", indicatorList: [], safety: "", current: "", historical: "",
-  noEvidence: false, risks: [], customSubs: [], customIndicators: [], ownRmp: [], currentExamples: [], historicalExamples: [],
+  noEvidence: false, risks: [], customSubs: [], customIndicators: [], ownRmp: [], currentExamples: [], historicalExamples: [], involvement: "",
 });
 
 interface RiskRef { key: string; label: string; chipRisk: string; domainId: string }
@@ -171,10 +177,17 @@ function buildQuestionSection(
   }
   const tailored = suggestedGroups(q, domainId, subs);
   groups.push(...tailored);
+  // The person's own account of what works, on the two questions about what
+  // staff do. Not a seventh question - see WHAT_HELPS.
+  if (q.helps) groups.push({ label: WHAT_HELPS_LABEL, words: WHAT_HELPS });
+  if (q.timeframes) groups.push({ label: TIMEFRAME_LABEL, words: REDUCTION_TIMEFRAMES });
   if (q.universal.length) {
     groups.push({ label: "General options", words: q.universal, tier: "all" });
   }
-  if (q.incomplete) groups.push({ words: [q.incomplete], tier: "incomplete" });
+  // Three different reasons a section is empty, and they are not the same thing.
+  if (q.incomplete) {
+    groups.push({ words: [q.incomplete, NOT_ASSESSED, NOT_APPLICABLE], tier: "incomplete" });
+  }
   // Say why there are no tailored words rather than quietly showing none. This
   // happens when no sub-domain is ticked yet, or when the nurse named their own.
   let hint = tailored.length || indicatorWords.length ? q.hint
@@ -230,7 +243,13 @@ function withExamples(text: string, examples: DatedExample[] = []): string {
   const exs = examples.filter((e) => e.text.trim()).sort((a, b) => exampleKey(b) - exampleKey(a));
   if (!exs.length) return base;
   // Most recent first, each on its own line, straight into the dates (no label).
-  const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("\n");
+  const fmt = exs.map((e) => {
+    const d = formatPartialDate(e);
+    // Source last and in brackets, so the event reads as the event and the
+    // provenance qualifies it rather than becoming part of the account.
+    const src = e.source ? ` (${e.source.toLowerCase()})` : "";
+    return `${d ? d + " - " : ""}${e.text.trim()}${src}`;
+  }).join("\n");
   return `${base ? base + "\n" : ""}${fmt}`;
 }
 
@@ -297,6 +316,12 @@ function DatedExamples({ examples, onChange, tone = "rose", title }: {
             <button onClick={() => onChange(list.filter((_, idx) => idx !== i))} aria-label="Remove example" className="ml-auto text-gray-500 hover:text-red-600 transition-colors flex-shrink-0"><X className="w-4 h-4" /></button>
           </div>
           <input type="text" value={ex.text} placeholder="what happened" aria-label="What happened" onChange={(e) => upd(i, { text: e.target.value })} className={`w-full text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${T.ring}`} />
+          {/* Where it came from. What staff saw and what someone reported are
+              different weights of evidence, and the record should say which. */}
+          <select value={ex.source || ""} onChange={(e) => upd(i, { source: e.target.value })} aria-label="Where this came from" className={`${selCls} w-full`}>
+            <option value="">Where did this come from?</option>
+            {EVENT_SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
         </div>
       ))}
       <button onClick={() => onChange([...list, { day: "", month: "", year: "", text: "" }])} className={`inline-flex items-center gap-1 text-xs font-semibold ${T.link} transition-colors`}>
@@ -476,8 +501,8 @@ export default function RiskAssessmentPage() {
   // One spotted event can belong to more than one domain (rare, but a fire-setting
   // incident that is also domestic abuse is exactly the case), so the picker is
   // multi-select and the same entry is filed under each.
-  const [capture, setCapture] = useState<{ text: string; domains: string[]; day: string; month: string; year: string }>(
-    { text: "", domains: [], day: "", month: "", year: "" }
+  const [capture, setCapture] = useState<{ text: string; domains: string[]; day: string; month: string; year: string; source: string }>(
+    { text: "", domains: [], day: "", month: "", year: "", source: "" }
   );
   const [captureWhen, setCaptureWhen] = useState<"current" | "historical" | "">("");
   const [captureNote, setCaptureNote] = useState("");
@@ -594,7 +619,7 @@ export default function RiskAssessmentPage() {
     const yr = Number(capture.year);
     // Nothing older than last year belongs under "current concerns" by default.
     const when = captureWhen || (yr && yr < new Date().getFullYear() ? "historical" : "current");
-    const entry: DatedExample = { day: capture.day, month: capture.month, year: capture.year, text, id: `cap-${++captureSeq}` };
+    const entry: DatedExample = { day: capture.day, month: capture.month, year: capture.year, text, source: capture.source || undefined, id: `cap-${++captureSeq}` };
     // One setDomains pass so filing under several domains is a single update.
     setDomains((all) => {
       const next = { ...all };
@@ -609,7 +634,7 @@ export default function RiskAssessmentPage() {
       }
       return next;
     });
-    setCapture((c) => ({ ...c, text: "", day: "", month: "", year: "" }));
+    setCapture((c) => ({ ...c, text: "", day: "", month: "", year: "", source: "" }));
     setCaptureWhen("");
     setCaptureNote(`Added to ${naturalList(picked.map((d) => `${d.number}. ${d.short}`))} (${when === "current" ? "current concerns" : "historical"}).`);
   };
@@ -696,6 +721,21 @@ export default function RiskAssessmentPage() {
     [formulationInput, patientName],
   );
   const summaryRows = useMemo(() => formulationSummaryLines(formulationInput), [formulationInput]);
+
+  // Run over every domain that gets a plan. Recomputed as you go, but only shown
+  // in the output panel - warning about a half-finished answer while it is being
+  // typed would be noise.
+  const checks = useMemo(() => RISK_DOMAINS.flatMap((dm) => {
+    const st = getDomain(dm.id);
+    if (st.noEvidence) return [];
+    return checkDomain({
+      title: `${dm.number}. ${dm.short}`,
+      answers: capByRisk[dm.id],
+      subs: st.risks,
+      events: [...(st.currentExamples || []), ...(st.historicalExamples || [])],
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [domains, capByRisk]);
   // What actually gets copied: the nurse's edited version if they touched it.
   const finalSummary = formulationEdited ? q9 : generatedFormulation;
 
@@ -778,8 +818,9 @@ export default function RiskAssessmentPage() {
     const plans: string[] = [];
     for (const dm of planDomains) {
       const secs = deriveRmp(capByRisk[dm.id]);
-      plans.push(buildOneRmp("", secs, planTitle(dm)));       // one plan per domain, named by the risks ticked
-      for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label));
+      const involved = getDomain(dm.id).involvement;
+      plans.push(buildOneRmp("", secs, planTitle(dm), undefined, involved));  // one plan per domain, named by the risks ticked
+      for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label, undefined, involved));
     }
     if (!plans.length) return "";
     const head = patientName ? `Patient: ${patientName}\n\n` : "";
@@ -940,6 +981,24 @@ export default function RiskAssessmentPage() {
                 The <strong>Risk Formulation</strong> (field 9) is built for you from the sub-domains you ticked - there is
                 nothing to answer for it. Headings are added when you generate.
               </p>
+            </div>
+
+            {/* One dropdown, not a question. A plan the person disagreed with, or
+                could not take part in, is a normal outcome - a "patient agreed"
+                tick would make the honest answers unsayable. */}
+            <div className="rounded-lg border border-slate-200 bg-white p-3 flex items-center gap-3 flex-wrap">
+              <label htmlFor={`involve-${key}`} className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">
+                {PATIENT_INVOLVEMENT_LABEL}
+              </label>
+              <select
+                id={`involve-${key}`}
+                value={getDomain(dm.id).involvement}
+                onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, involvement: e.target.value }))}
+                className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+              >
+                <option value="">Not recorded</option>
+                {PATIENT_INVOLVEMENT.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
             </div>
             {questionsForDomain(dm.id).map((q) => (
               <SectionEditor
@@ -1357,6 +1416,12 @@ export default function RiskAssessmentPage() {
               <option value="">Year</option>
               {captureYears.map((y) => <option key={y} value={String(y)}>{y}</option>)}
             </select>
+            {/* Pasting from an AMHP report, section papers or old case notes is
+                exactly where provenance gets lost, so it is asked here too. */}
+            <select value={capture.source} onChange={(e) => setCapture((c) => ({ ...c, source: e.target.value }))} aria-label="Where this came from" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-sky-500">
+              <option value="">Where from?</option>
+              {EVENT_SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
             <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
               {([["current", "Current"], ["historical", "Historical"]] as const).map(([v, label]) => (
                 <button key={v} type="button" onClick={() => setCaptureWhen(captureWhen === v ? "" : v)} aria-pressed={captureWhen === v}
@@ -1742,6 +1807,25 @@ export default function RiskAssessmentPage() {
               </button>
             </div>
             <p className="text-xs text-gray-500">Tick each block as you paste it across, so you know what&apos;s done. Or use <strong>Print all</strong> to print the screen, formulation and plans together.</p>
+
+            {/* Things worth a second look before this goes in the record. The
+                tool never says which entry is right - see riskChecks.ts. */}
+            {checks.length > 0 && (
+              <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 space-y-2">
+                <p className="flex items-start gap-2 text-sm font-semibold text-amber-900">
+                  <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  {checks.length} thing{checks.length === 1 ? "" : "s"} to check before you copy this across
+                </p>
+                <ul className="space-y-1.5">
+                  {checks.map((c, i) => (
+                    <li key={i} className="text-xs text-amber-900">
+                      <span className="font-semibold">{c.where}:</span> {c.message}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-[11px] text-amber-800">{CHECK_PREAMBLE}</p>
+              </div>
+            )}
             <div className="inline-flex bg-slate-100 rounded-full p-1 flex-wrap">
               {([{ k: "screen", label: "Risk Screen" }, { k: "formulation", label: "Formulation" }, { k: "rmp", label: "Management Plan" }] as const).map((t) => (
                 <button key={t.k} onClick={() => setTab(t.k)} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${tab === t.k ? "bg-sky-700 text-white shadow" : "text-slate-600 hover:bg-white/60"}`}>{t.label}</button>

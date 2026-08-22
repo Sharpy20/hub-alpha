@@ -297,3 +297,50 @@ describe("RMP chip libraries", () => {
     for (const w of all) expect({ w, add: /^Add another/i.test(w) }).toEqual({ w, add: false });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Conditional actions must stay conditional.
+//
+// Some actions are only safe when qualified. "Complete a search" is an order;
+// "complete a search in line with policy and the individual plan" is a prompt to
+// follow the process. Same for observations - the tool may ask staff to REVIEW
+// an observation level, never to raise one, because that is a clinical decision
+// with its own policy and its own authoriser.
+// ---------------------------------------------------------------------------
+
+describe("conditional actions keep their qualifiers", () => {
+  const actionWords = () => {
+    const fromDomains = Object.values(DOMAIN_RMP_CHIPS)
+      .flatMap((b) => [...b.manage, ...b.prevent]);
+    const fromRisks = Object.values(RMP_RISK_CHIPS)
+      .flatMap((r) => [...(r.prevent || []), ...(r.next || [])])
+      .flatMap((g) => g.words);
+    return [...fromDomains, ...fromRisks, ...UNIVERSAL_IMMEDIATE, ...UNIVERSAL_PREVENTION, ...UNIVERSAL_ESCALATION];
+  };
+
+  it("never instructs staff to raise an observation level", () => {
+    for (const w of actionWords()) {
+      expect({ w, raises: /\bincrease\b[^.]*\bobservation/i.test(w) }).toEqual({ w, raises: false });
+    }
+  });
+
+  it("never instructs a search without pointing at the policy", () => {
+    for (const w of actionWords()) {
+      if (!/\bsearch\b/i.test(w)) continue;
+      expect({ w, qualified: /(policy|individual plan)/i.test(w) }).toEqual({ w, qualified: true });
+    }
+  });
+
+  it("never instructs staff to restrict or cancel leave", () => {
+    for (const w of actionWords()) {
+      expect({ w, restricts: /\b(restrict|cancel|suspend|stop)\b[^.]*\bleave\b/i.test(w) }).toEqual({ w, restricts: false });
+    }
+  });
+
+  it("keeps PRN conditional wherever it is offered", () => {
+    for (const w of actionWords()) {
+      if (!/\bPRN\b/i.test(w)) continue;
+      expect({ w, qualified: /(where clinically indicated|prescribed|offer)/i.test(w) }).toEqual({ w, qualified: true });
+    }
+  });
+});

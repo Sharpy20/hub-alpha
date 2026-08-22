@@ -64,6 +64,10 @@ export interface RmpQuestion {
   // A deliberate, visible record that the patient-specific detail is not known
   // yet. Not reassurance - see INCOMPLETE_OPTIONS.
   incomplete?: string;
+  /** Offer "what the person says helps" (questions 3 and 4 only). */
+  helps?: boolean;
+  /** Offer the "over what period" group (question 5 only). */
+  timeframes?: boolean;
   examples?: boolean;
 }
 
@@ -84,6 +88,7 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     populates: "WHAT IS THE RISK",
     writes: { id: "what" },
     suggest: { section: "what" },
+    incomplete: INCOMPLETE_OPTIONS.q1_what,
     universal: [],
   },
   {
@@ -107,6 +112,8 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     writes: { id: "prevent", part: "manage" },
     suggest: { section: "prevent", group: MANAGE_GROUP, bank: "manage" },
     universal: UNIVERSAL_IMMEDIATE,
+    helps: true,
+    incomplete: INCOMPLETE_OPTIONS.q3_manage,
   },
   {
     id: "q4_prevent", n: 4,
@@ -117,6 +124,7 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     writes: { id: "prevent", part: "reduce" },
     suggest: { section: "prevent", group: REDUCE_GROUP, bank: "prevent" },
     universal: UNIVERSAL_PREVENTION,
+    helps: true,
     incomplete: INCOMPLETE_OPTIONS.q4_prevent,
   },
   {
@@ -128,6 +136,7 @@ export const RMP_QUESTIONS: RmpQuestion[] = [
     writes: { id: "evaluate" },
     suggest: { section: "evaluate", bank: "evaluate" },
     universal: UNIVERSAL_REDUCTION_SIGNS,
+    timeframes: true,
     incomplete: INCOMPLETE_OPTIONS.q5_evaluate,
   },
   {

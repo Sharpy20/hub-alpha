@@ -104,17 +104,92 @@ export const UNIVERSAL_ESCALATION: string[] = [
 // exact fault Mike reported - the same chips under every domain. The suggested
 // bank plus the ticked clinical indicators carry that question instead.
 
+// ---- What the person says helps ---------------------------------------------
+//
+// Offered on questions 3 and 4. Every other bank in this file describes what
+// STAFF do; this is the only one that carries the person's own account of what
+// works, which is the half a plan most often misses. NICE's violence and
+// aggression guidance asks for personal triggers, early warning signs and
+// de-escalation preferences rather than one response for everyone.
+//
+// It is deliberately NOT a seventh question. Mike cut thirteen questions to six
+// on 22 Aug because the run took too long; adding one back to hold six chips
+// would undo that. It sits inside the two questions about what staff do.
+//
+// The unhelpful half matters as much as the helpful half - "finds being crowded
+// by staff unhelpful" is the line that changes what a shift actually does.
+export const WHAT_HELPS_LABEL = "What the person says helps, or does not help";
+export const WHAT_HELPS: string[] = [
+  "Prefers one staff member to speak at a time",
+  "Prefers time and space before discussion",
+  "Finds a quieter environment helpful",
+  "Finds walking or physical activity helpful",
+  "Finds music, television or another activity helpful",
+  "Prefers support from a familiar member of staff",
+  "Prefers concerns to be explained clearly and directly",
+  "Finds repeated questioning unhelpful",
+  "Finds being crowded by staff unhelpful",
+  "Has not yet identified what helps",
+];
+
+// ---- Timeframes for the signs-of-reduction question -------------------------
+//
+// "No further incidents" on its own is not a measure - it does not say over what
+// period, and an absence of incidents is not proof the underlying risk has gone.
+// Offered as their own group on question 5 so a period can be attached to
+// whichever absence chip was picked.
+export const TIMEFRAME_LABEL = "Over what period";
+export const REDUCTION_TIMEFRAMES: string[] = [
+  "during the current shift",
+  "since the plan was last reviewed",
+  "during the agreed review period",
+  "reduced frequency compared with the previous review period",
+  "reduced severity compared with previous incidents",
+];
+
 // ---- The deliberate "not established" options ------------------------------
-// Section 11: an empty section must not be filled with generic text, but staff
-// must be able to record that the patient-specific detail is not known yet.
-// These are NOT reassurance - "no early warning signs established" is a gap in
-// the plan, not a finding that there are none.
+//
+// An empty section must not be filled with generic text, but staff must be able
+// to record WHY it is empty - and the reasons are not interchangeable:
+//
+//   not yet established - staff have not identified the patient-specific detail
+//   not assessed        - it was not assessed, or the information was not available
+//   not applicable      - it does not apply in the current circumstances
+//
+// None of the three is reassurance. "No early warning signs established" is a
+// gap in the plan, not a finding that there are none. The domain's own
+// "No evidence ... reported during assessment" line is a fourth and different
+// thing again - that one IS a finding, and it lives on the risk screen.
 export const INCOMPLETE_OPTIONS: Record<string, string> = {
+  q1_what: "The specific outcome has not yet been established",
   q2_present: "No patient-specific early warning signs established",
+  q3_manage: "No patient-specific response has yet been agreed",
   q4_prevent: "No patient-specific preventative strategies established",
   q5_evaluate: "No patient-specific signs of reduction established",
   q6_next: "Escalation actions require MDT agreement",
 };
+
+/** Offered on every question alongside its own named option above. */
+export const NOT_ASSESSED = "Not assessed at this time";
+export const NOT_APPLICABLE = "Not applicable to this risk";
+
+// ---- Was the person involved in building this plan? -------------------------
+//
+// One dropdown beside the plan title, printed in the plan's header. It adds no
+// heading to the Trust template and it is not a seventh question.
+//
+// ⛔ Deliberately NOT a tick saying "patient agreed". A plan the person disagreed
+// with, or could not take part in, is a normal and recordable outcome; a binary
+// tick makes the honest answers unsayable and the audit trail worthless.
+export const PATIENT_INVOLVEMENT_LABEL = "Was the person involved in this plan?";
+export const PATIENT_INVOLVEMENT: string[] = [
+  "Involved and agreed",
+  "Involved but did not agree with all elements",
+  "Offered involvement but declined",
+  "Unable to participate at this time",
+  "Communication or capacity support required",
+  "Not yet discussed",
+];
 
 // ---- Question 1: which specific outcome are you trying to prevent? ---------
 //

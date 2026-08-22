@@ -3070,3 +3070,57 @@ deleted and an IG incident raised. If it was constructed, it is still detailed e
 it would read as real to an auditor - worth rebuilding it against the fictional demo cast
 before it is used in any pack or demo. See also the earlier finding that the completed
 tribunal WAGOLL "reads like real notes" (BACKLOG Section U).
+
+### X12. Copilot's review worked through (22 Aug, late) - commit `9459ee1`
+
+Mike: "rebuild as you suggest". **The two suggestions that would have added questions were
+folded into what is already there**, because he cut thirteen questions to six that morning
+precisely because it took too long.
+
+- **"What the person says helps, or does not help"** = a chip group inside questions 3 and
+  4, not a seventh question. The unhelpful half matters as much as the helpful half.
+- **"Was the person involved in this plan?"** = one dropdown beside the plan title, printed
+  in the plan's **header, above the bar** - deliberately outside the five Trust headings.
+  ⛔ Six options, NOT a "patient agreed" tick: a plan the person disagreed with, or could
+  not take part in, is a normal recordable outcome and a binary tick makes it unsayable.
+
+**The rest, none of which adds a question:**
+- **Three reasons a section is empty, kept apart** - "not yet established" / "not assessed
+  at this time" / "not applicable to this risk". The domain's own "No evidence ... reported
+  during assessment" is a **fourth and different thing** - that one IS a finding and lives
+  on the risk screen.
+- **Timeframes on question 5**, so "no further incidents" can say over what period.
+- **Provenance on every event** (`EVENT_SOURCES`) - observed by staff / reported by the
+  person / by family / by police / recorded in a previous assessment / not established.
+  Prints in brackets after the event so it qualifies the account rather than joining it.
+  ⭐ This is what stops "recorded allegation of assault" reading later as "assaulted a care
+  worker". Asked in the quick-capture panel too, which is where provenance gets lost.
+- **Consistency checks before copying** - new `src/lib/utils/riskChecks.ts`. Six checks.
+  ⛔ **Every one POINTS AT the pair and hands it back. A test asserts none of them says
+  which entry is right** - a tool that resolved the contradiction would be making a clinical
+  judgement, and that is a different product.
+
+⭐ **Conditional actions now stay conditional, and the tests found more than expected:**
+**17** chips said "increase observation level" (the tool may ask staff to REVIEW a level,
+never to raise one - that is a clinical decision with its own policy and authoriser),
+**7** said "complete a search" with no mention of policy, one "review and restrict leave",
+one "suspend contact and leave", two bare PRN. All qualified; four tests keep them that way.
+
+**25 new tests, 140 across the suite.**
+
+### X13. [ ] Still open from Copilot's list
+
+Deliberately not done, with reasons:
+- **Setting filter (inpatient / community / discharge)** - Copilot itself said defer to
+  phase two, and wardHub is a ward tool. Do not delay anything for it.
+- **"Sexual Offenses" spelling** - it is the Trust's own spelling on SystmOne, so Rule 7
+  applies and it stays. Worth confirming against the live screen once, then closing.
+- **"High BMI >"** - already guarded by a test; still needs the threshold from the Trust.
+- **His deliberately difficult test set** (16 scenarios: no evidence everywhere, indicators
+  with no sub-domain, historical with no current, very long custom chips, duplicate dates,
+  saved data from before the update). Several are now covered by unit tests; a manual pass
+  through the rest is worth a session.
+- **Review responsibility and timing** (his #3) - "who will review this, when, and what
+  triggers an earlier review". Not built. It is the one remaining item that probably wants
+  its own field rather than folding into a question, so it needs Mike's call on where it
+  goes: page-side reminder, plan header (next to involvement), or escalation wording.

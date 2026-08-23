@@ -18,13 +18,26 @@ export type UserChipStore = Record<string, string[]>;
 
 export const bankKey = (risk: string, questionId: string) => `${risk || "generic"}::${questionId}`;
 
+// Anything already on a device was written by an older build, and the question
+// ids changed on 22 Aug 2026 when thirteen questions became six. Orphaned keys
+// are harmless - they simply never match a live bank. A wrong SHAPE is not:
+// a stored string where an array belongs reached .map() in the editor and took
+// the page down. Found by Copilot's scenario 12.
+//
+// So this coerces rather than trusts: not an object, or an array, gives {};
+// a value that is not an array of strings is dropped down to what is usable.
 export function loadUserChips(): UserChipStore {
   if (typeof window === "undefined") return {};
   try {
     const raw = window.localStorage.getItem(KEY);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" ? (parsed as UserChipStore) : {};
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    const out: UserChipStore = {};
+    for (const [k, v] of Object.entries(parsed as Record<string, unknown>)) {
+      out[k] = Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+    }
+    return out;
   } catch {
     return {}; // corrupt or unavailable storage is not worth breaking the tool over
   }

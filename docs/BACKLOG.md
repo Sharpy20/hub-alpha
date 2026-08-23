@@ -12,6 +12,10 @@
 > before any work on hosting, persistence, guide data formats or the SSO application. It
 > supersedes R4's "same stack on trust accounts" assumption: the destination is the Trust's
 > ASP.NET / Azure standard, reached by Mike porting the app inside Cris's pipeline.
+>
+> **SECTION Y (22 Aug) is theory only and BLOCKED on its own first item.** Community
+> signposting directory. Do not start design or tagging until Y1 is answered: does Derbyshire
+> already commission a social prescribing directory we should read rather than rebuild?
 
 Related task docs (roll findings into here over time):
 - **⭐ `docs/evaluations/2026-07-30_project-evaluation.md`** - 13-hat review, 30 Jul, run against
@@ -3185,3 +3189,198 @@ scheduled reviews, and it is an event that does it rather than the calendar.
 
 **146 tests.** X13 is now down to the setting filter (deferred by Copilot itself) and a
 manual pass through his 16 difficult scenarios.
+
+---
+
+## SECTION Y - Community signposting directory (22 Aug 2026, Session 60) - THEORY, NOT BUILT
+
+**Status: design only. Nothing built, nothing scheduled. Do not start until Y1 is answered.**
+
+Mike ran a Copilot prompt at work that produced a 10-20 page discharge resource booklet for
+one patient in South Normanton: 40-80 real named local clubs, groups, volunteering roles and
+family activities, each with a verified phone number, address, cost and first step. The
+question is whether wardHub can do that for a wider audience, given two barriers he named
+himself:
+
+1. it cannot become clinical decision making
+2. it cannot mean embedding AI into wardHub
+
+The source prompt is worth keeping - it is the best statement of the taxonomy we have.
+
+### Y1. BLOCKING CHASE - does this already exist?
+
+**Answer this before any tagging or build work. Raise it at the start of every session that
+touches Section Y.**
+
+- What do Derbyshire social prescribing link workers actually use day to day? (Commissioned
+  products in this space: Elemental, Joy, Access Elemental, Connect Well.) Ask a link worker
+  or the social prescribing lead, not IT.
+- Joined Up Care Derbyshire directory - export, API or open data feed?
+- Community Directory Derbyshire - same question.
+- Amber Valley CVS volunteer listings - same question.
+
+**Two reasons this blocks everything.** Duplicating a system the Trust already pays for is
+the fastest way to lose the room. And if someone else already maintains the list, the right
+build is wardHub *reading* theirs and tagging on top, which means wardHub never owns
+currency at all. That turns a directory you maintain into a view over somebody else's.
+
+### Y2. The split that makes it work
+
+The Copilot output is two jobs stuck together:
+
+1. **Research and verify** a real organisation. Expensive, needs the web, needs checking.
+   Done ONCE per organisation, by a human.
+2. **Select and assemble** the ones matching a search, then print. Done once per patient.
+
+If job 1 is done properly, job 2 needs no intelligence at all - it is tick boxes over tagged
+data. The Rightmove model: nobody thinks Rightmove recommends you a house.
+
+### Y3. Staying out of clinical decision making - the input schema IS the boundary
+
+Not the output, and not a disclaimer (per the MHRA work in the competitor scan: marketing
+copy counts, disclaimers do not, and you cannot self-certify).
+
+The Copilot prompt fed in formulation - "recently required hospital and crisis support",
+"significant decline in motivation and concentration", "found peer groups unhelpful because
+conversations became competitive around self-harm". **If wardHub takes those as inputs it is
+a device.** So it never sees them. The staff member does that translation in their head and
+the app only ever receives facts about the SEARCH:
+
+- towns / area they can get to
+- travel: bus, lift, car, walking, online only
+- budget: free / a few pounds / can pay a membership
+- when: weekday daytime, evenings, weekends, school holidays
+- bringing children, age band
+- activity type: making, moving, outdoors, precision, gaming, learning, helping
+- avoid licensed venues: yes/no
+- talking: happy to chat / rather be doing something / wants to watch first
+- commitment: one-off, drop-in, weekly, seasonal
+- entry route: turn up, phone first, beginner course, register online, DBS needed
+
+Every one is a lifestyle preference a leisure centre booking form would ask. And every tag on
+the directory side is **a verifiable fact about the club**, checkable by ringing them - not a
+judgement about a person.
+
+Rules that follow:
+
+- **Drop the "Fit: strong match / worth considering" field** from the Copilot prompt. It is
+  the one field that is an inference about a person. Replace with "matches 6 of your 7
+  filters", which is arithmetic.
+- **No ranking by predicted benefit.** Sort by distance, cost or alphabetically. Ordering by
+  "how much this will help" is device territory.
+- Nothing persists. Session only, no name, no data subject, no DPIA delta.
+- Marketing copy: "search local activities by area, cost and day". NEVER "finds the right
+  support for your patient".
+- Free text is a risk (profiling drift, PII typed into a box, and it breaks Mike's
+  dropdowns-over-free-text rule). If there is one it is a keyword box for the ACTIVITY and
+  must say so.
+
+### Y4. Two tiers, visibly different
+
+Same three-state pattern as the risk tool chips (trust plain / wardHub ring / user-added) -
+use that as precedent, it is what got the risk tool moving.
+
+**Tier 1 - verified.** Human checked, phone rung, `lastChecked` date. House entry format.
+**Tier 2 - found online.** Machine gathered, unverified. The "advanced" mode.
+
+Tier 2 rules, all hard:
+
+- **Never render it in the house entry format.** The moment it has "What it is / Why it might
+  suit / Cost" it reads as endorsed. Show it raw: page title, full domain, snippet, date
+  found, link. It must look like search results.
+- **No facet tags on tier 2.** Nobody has made those judgements yet. An empty tag row is the
+  honest signal.
+- **Staff view, separate route.** Not a toggle widening the same list. Different page,
+  different chrome, no Trust branding on that view.
+- **It cannot reach the patient booklet.** Print builds from tier 1 only. If unverified
+  results can land in a printed pack carrying a Trust logo, the separation has failed however
+  well it is labelled. The failure mode is a staff member printing a screenshot - design
+  against the copy-paste, not against the lawyer.
+- **Promotion tier 2 to tier 1 is one-way and goes through a phone call.**
+
+### Y5. Maintenance: what the automated job is allowed to do
+
+Mike's ask: a monthly job, adoptable by the Trust, that does NOT require a human to confirm
+every result. Solved by splitting "verify" into two questions:
+
+1. **Does this club still exist and is this detail right?** No human needed. It needs a
+   SOURCE. Checking = "does the source still say this".
+2. **Is this appropriate to hand a patient, and how do we describe it?** Human - but ONCE, at
+   admission. Never again on a schedule.
+
+The monthly job only ever does question 1, and **only ever moves things in the safe
+direction**, so it can act unilaterally:
+
+| Finding | Automatic action | Human needed? |
+|---|---|---|
+| Source 404 / page gone | Auto-suspend, drops out of results | No - removing is always safe |
+| Source changed materially | Flag "details may have changed", harder confirm-before-travelling on print | No |
+| Source unchanged | `lastChecked` rolls forward automatically | No - if nothing changed, a human confirming changes nothing |
+| New candidate found | Lands in tier 2 | No - unverified is what it IS |
+
+**The headline job is re-checking, not discovering.** A directory dies from rot, not from
+being small. On a ~300 entry list a typical month outputs "4 suspended, 11 flagged" and that
+is already correct with nobody involved.
+
+**Review happens by use, not by rota.** A staff member searching for archery sees a tier 2
+result and rings the club *because they were going to ring them anyway*; filling in the
+fields IS the promotion. If nobody ever promotes anything the tool still works - smaller
+verified list, bigger unverified one. It degrades gracefully instead of silently going wrong.
+
+Candidates also need an **expiry** (unreviewed after 3 months, dropped) and a **dismissed**
+state, so the same closed club does not resurface every month.
+
+### Y6. Where it runs at go-live
+
+**Not on Mike's laptop.** Per Section V the Trust stack is ASP.NET Core / Azure App Service /
+Azure SQL, so this is a **timer-triggered Azure Function or WebJob in the Trust tenant**, on
+their pipeline, owned by whoever owns the app.
+
+Note what Y5 has reduced it to: **a link checker.** Fetch URL, compare against last time, set
+a status. No model, no API key, no supplier, no DPIA delta, and any Trust dev recognises it
+in five minutes. That is a far stronger governance position than "a Copilot agent proposes
+entries monthly".
+
+Discovery should hit a **fixed source list**, not blind search (blind monthly Googling
+returns dead 2019 Facebook events): the local directories from Y1, council what's-on pages,
+and national governing body club finders (Archery GB, Ramblers, parkrun, Men's Sheds
+Association, England Athletics, Wildlife Trust). Structured queries, real coverage - the same
+finders the Copilot prompt used as fallbacks.
+
+The only step that ever wanted a model is drafting prose for a NEW entry. That happens once,
+at promotion, with a person present - keep it as an authoring aid OUTSIDE the runtime (same
+shape as the Guide Builder agent) and it never becomes the Trust's problem.
+
+### Y7. Output
+
+The wow is the booklet, not the search. Reuse the existing print pipeline
+(`src/lib/utils/printDoc.ts`, the WAGOLL HTML forms). Tick filters, get a shortlist, print:
+personal directory, weekly planner, checkboxes, crisis box front AND back, "checked on
+(date), please check before travelling".
+
+Three modes: staff and patient filtering together on screen; print a personal pack; print a
+whole category as a ward noticeboard "what's on".
+
+### Y8. Honest limits - do not let these get sold away
+
+- **No cron keeps a community directory current.** It controls HOW it rots (quietly
+  disappearing rather than confidently wrong). Worth having, not the same as up to date.
+- **Somebody has to own the list.** If that is wardHub, the Trust has quietly acquired an
+  uncosted maintenance job. See Y1.
+- Scope to the catchment the wards actually discharge into (Derbyshire + adjacent Notts). Use
+  national club finders as a named per-category fallback rather than faking coverage.
+- Seeding from an existing dataset beats hand-typing several hundred entries. Again Y1.
+
+### Y9. Sequencing - respects the feature freeze
+
+Section V feature-freezes the Next.js build (content edits fine), so a new tool with new UI
+is the wrong thing to start.
+
+But **the tagging IS the product, and it is stack-neutral.** A facet schema plus a few
+hundred verified tagged entries survives the ASP.NET port intact, same as the guide content
+export job in V. Order of work:
+
+1. Answer Y1.
+2. Facet schema + entry template + candidates-file schema + promotion checklist (docs only).
+3. Tag the existing directory-builder entries.
+4. UI in Cris's sandbox, on the ported build.

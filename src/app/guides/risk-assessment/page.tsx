@@ -190,10 +190,15 @@ function buildQuestionSection(
   if (q.incomplete) {
     groups.push({ words: [q.incomplete, NOT_ASSESSED, NOT_APPLICABLE], tier: "incomplete" });
   }
-  // Say why there are no tailored words rather than quietly showing none. This
-  // happens when no sub-domain is ticked yet, or when the nurse named their own.
-  let hint = tailored.length || indicatorWords.length ? q.hint
-    : `${q.hint} (Tick a sub-domain above and this question will suggest words for it.)`;
+  // Say why there are no tailored words rather than quietly showing none - but
+  // say the right thing. A nurse who has named their own sub-domain HAS ticked
+  // one, and telling them to do it again is just wrong.
+  let hint = q.hint;
+  if (!tailored.length && !indicatorWords.length) {
+    hint += subs.length
+      ? " (There are no suggested words for a sub-domain you named yourself, so use the general options or your own.)"
+      : " (Tick a sub-domain above and this question will suggest words for it.)";
+  }
   // Two domains carry a standing instruction from the design: domain 5 because
   // its sub-domains are broad enough that the indicators have to steer, and
   // domain 6 because it must stay conservative and safeguarding-led.

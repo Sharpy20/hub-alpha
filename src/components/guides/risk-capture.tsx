@@ -93,7 +93,16 @@ export function buildContent(st: SecState | undefined): string {
     .sort((a, b) => exampleKey(b) - exampleKey(a));
   if (exs.length) {
     // Most recent first, each on its own line, straight into the dates (no label).
-    const fmt = exs.map((e) => { const d = formatPartialDate(e); return `${d ? d + " - " : ""}${e.text.trim()}`; }).join("\n");
+    // Source last and in brackets, so the event reads as the event and the
+    // provenance qualifies it rather than becoming part of the account. This was
+    // missing until Copilot's scenario 10 caught it: events added under question
+    // 2 reached the plan with their source stripped, which is the exact thing the
+    // source field exists to prevent.
+    const fmt = exs.map((e) => {
+      const d = formatPartialDate(e);
+      const src = e.source ? ` (${e.source.toLowerCase()})` : "";
+      return `${d ? d + " - " : ""}${e.text.trim()}${src}`;
+    }).join("\n");
     out = `${out ? out + "\n" : ""}${fmt}`;
   }
   return out;

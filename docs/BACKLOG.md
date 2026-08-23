@@ -3384,3 +3384,38 @@ export job in V. Order of work:
 2. Facet schema + entry template + candidates-file schema + promotion checklist (docs only).
 3. Tag the existing directory-builder entries.
 4. UI in Cris's sandbox, on the ported build.
+
+### X16. Copilot's difficult test set, run (23 Aug) - commit `ad24863`
+
+⚠ **His list is 15 scenarios, not the 16 previously recorded here.** New
+`src/__tests__/risk-scenarios.test.ts` - 30 tests, one describe() per scenario, named as he
+wrote them. The two purely visual ones were driven in the browser.
+
+**TWO REAL FAULTS, both in scenarios I expected to pass:**
+
+1. ⭐⭐ **Scenario 10 - the event source never reached the plan.** `buildContent` still used
+   the old format, so an event added under question 2 arrived in the management plan with
+   its provenance stripped: *"Recorded as deliberate"* with nothing to say it came from an
+   old assessment rather than from staff. **Exactly what the source field was added to
+   prevent, and it was half-wired** - the domain narrative carried it, the plan did not.
+   ⛔ Lesson: `withExamples` in the page and `buildContent` in risk-capture are two separate
+   formatters over the same data. Change one, check the other.
+2. ⭐ **Scenario 12 - `loadUserChips` trusted localStorage.** The question ids changed on
+   22 Aug when 13 questions became 6, so every device already holds old-shape keys. Orphaned
+   keys are harmless (they never match a live bank); a stored **string** where an array
+   belongs reached `.map()` in the editor and would have **taken the page down on open**.
+   Now coerces. Verified for real by planting old-shape data before loading the page.
+
+Plus a wording fix: a nurse who names their own sub-domain was told to "tick a sub-domain
+above", which they had just done.
+
+**What the rest confirmed rather than changed:** nil in all seven domains never says "not
+yet completed"; a custom sub-domain borrows no other sub-domain's words; indicators with no
+sub-domain still name the indicators; **duplicate events on one date are both kept** (two
+identical entries are far more likely to be two real incidents than a mistake, and removing
+one would be the tool editing the record); undated events sink to the bottom; the mandatory
+MDT line survives every combination; a 500-character custom chip wraps in place with no
+sideways page scroll; and seven domains at once generates seven plans with no errors and
+seven accurate "this plan would be empty" warnings.
+
+**176 tests. X13 is now down to the setting filter alone, which Copilot deferred himself.**

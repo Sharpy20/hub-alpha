@@ -2872,7 +2872,7 @@ reviewer needs in order to sign off rather than just proofread. Added:
 Verified end to end: all 27 domain 5 indicators, zero unmapped sub-domains in the Part 4
 table, the child banks, the new sections, and all three new explanations render.
 
-**This is where the session ends. RED is blocked on Mike reading the pack, nothing else.**
+~~This is where the session ends. RED is blocked on Mike reading the pack, nothing else.~~ **SUPERSEDED 25 Aug: the pack is gone and the guide is amber, signed off the normal way (Y9).**
 
 ---
 
@@ -2981,7 +2981,7 @@ discharge). Plus his deliberately difficult test set.
 
 - Spot-check `INDICATOR_BACKGROUND["physical-health"]` routing (and the other six).
 - Whether the 23-risk "risk strategy meeting" set is right (W7).
-- ~~Still RED, and still blocked on Mike reading the proofreading pack.~~ **SUPERSEDED 25 Aug: the pack is deleted and Mike parked the sign-off route. Still RED, now with no route to green - see Y5 and Y9.**
+- ~~Still RED, and still blocked on Mike reading the proofreading pack.~~ **SUPERSEDED 25 Aug: the pack is deleted and the guide is signed off like every other guide. Now AMBER - see Y5 and Y9.**
 
 ### X8. Mike's second pass, same day (commit `6dc7762`)
 
@@ -3429,6 +3429,9 @@ seven accurate "this plan would be empty" warnings.
 > to argue with. All seven built 25 Aug; item 8 was blank and he confirmed there was
 > nothing behind it.
 >
+> **Nothing from this list is outstanding.** Sign-off is the normal guide route (Y9) and
+> the tool is now amber rather than red.
+>
 > ⭐ **The standing lesson: Mike reverses things after using them, and he is usually
 > right.** The source field, the involvement dropdown and the review fields were all
 > built to his spec on 22 Aug and all three are now gone. Anything that adds a field or
@@ -3487,11 +3490,20 @@ prints the five Trust headings and nothing else, so this cannot creep back unnot
 
 ### Y8. [x] Nothing behind it - Mike confirmed there was no item 8
 
-### Y9. [ ] OPEN: how does the risk tool get signed off now?
+### Y9. [x] Sign-off: the same route as every other guide
 
-The one thing this session removed without replacing. Options as they stand:
-a shorter written pack (the six plan questions, the formulation wording and the
-sub-domain lists - roughly a tenth of the 17,800 words), a live walkthrough, or sign-off
-on the tool itself with the three-tier chip badging (trust plain / wardHub purple ring /
-user-added) as the audit trail. **Until one is picked the guide cannot go green.**
+Mike, 25 Aug, after being told the pack was the only path off RED: **"sign off will be
+treated like all the other guides - don't worry about the proof pack, not needed now."**
 
+So there is no bespoke sign-off artefact for the risk tool and there does not need to be.
+It goes through the normal traffic light in `src/lib/data/approval-status.ts` and, when
+Section L4 lands, the same CONFIRM pass against the source policy as the rest.
+
+**`risk-assessment` moved red -> amber**: the rebuild and this job list are finished, so
+"in development, do not trust yet" is no longer true. Amber is the honest state - built,
+awaiting his clinical sign-off - and it is what the other finished-but-unsigned guides
+carry (seclusion-support-plan, debrief, safety-plan, dama...). Green stays reserved for
+formal department sign-off.
+
+⛔ **Do not rebuild the proofreading pack.** If the tool needs explaining to an approver,
+it is explained the same way the other guides are.

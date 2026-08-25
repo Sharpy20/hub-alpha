@@ -21,7 +21,10 @@ export const GUIDE_APPROVAL: Record<string, ApprovalStatus> = {
   "prenoxad": "red",
   "admission-note": "red",
   // Rebuilt / new on 2 Jul - red until Mike signs each off.
-  "risk-assessment": "red",
+  // risk-assessment came off red on 25 Aug 2026: the rebuild and Mike's job list
+  // are finished, and it is signed off the same way as every other guide - no
+  // separate proofreading pack. Amber is what "built, awaiting sign-off" means.
+  "risk-assessment": "amber",
   "honos": "red",
   "dols": "red",
   "blanket-restrictions": "red",

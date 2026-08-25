@@ -8,7 +8,7 @@
 // Everything here is derived from what the nurse selected. Nothing is inferred
 // about the patient.
 
-import type { AllState, DatedExample } from "@/components/guides/risk-capture";
+import type { AllState } from "@/components/guides/risk-capture";
 import { RMP_QUESTIONS } from "@/lib/data/guides/risk-questions";
 import {
   NOT_ASSESSED, NOT_APPLICABLE, INCOMPLETE_OPTIONS, WHAT_HELPS, REDUCTION_TIMEFRAMES,
@@ -42,15 +42,11 @@ export interface DomainCheckInput {
   answers: AllState | undefined;
   /** Sub-domains ticked on this domain. */
   subs: string[];
-  /** Every dated event filed under this domain, current and historical. */
-  events: DatedExample[];
-  /** What is set in the plan header - who reviews it, when, and what brings that forward. */
-  review?: { by?: string; when?: string; triggers?: string[] };
 }
 
 export function checkDomain(input: DomainCheckInput): RiskCheck[] {
   const out: RiskCheck[] = [];
-  const { title, answers, subs, events } = input;
+  const { title, answers, subs } = input;
 
   let anyAnswered = false;
 
@@ -115,29 +111,10 @@ export function checkDomain(input: DomainCheckInput): RiskCheck[] {
     });
   }
 
-  // 6. Events with no source. Not a contradiction - a gap that changes how the
-  //    event reads later. An allegation and an observation are not the same.
-  const unsourced = events.filter((e) => e.text.trim() && !e.source);
-  if (unsourced.length) {
-    out.push({
-      where: title,
-      message: `${unsourced.length} ${unsourced.length === 1 ? "event has" : "events have"} no source recorded. Where an account came from changes how it should be read.`,
-    });
-  }
-
-  // 7. A plan that nobody is going to look at again. A plan can be sound when it
-  //    is written and out of date within a shift, and it is usually an event
-  //    rather than the calendar that makes it stale - so triggers count as a
-  //    review arrangement in their own right.
-  if (anyAnswered) {
-    const r = input.review || {};
-    if (!r.by && !r.when && !(r.triggers || []).length) {
-      out.push({
-        where: title,
-        message: "No review arrangement is recorded - nobody is named to review this plan, no interval is set, and nothing is listed that would bring a review forward.",
-      });
-    }
-  }
+  // Two more checks stood here until 25 Aug 2026 - one for events with no source
+  // and one for a plan with no review arrangement. Both read fields Mike removed
+  // from the tool after using it, so both went with them. A check can only ever
+  // be as good as something the nurse was actually asked.
 
   return out;
 }

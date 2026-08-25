@@ -2981,7 +2981,7 @@ discharge). Plus his deliberately difficult test set.
 
 - Spot-check `INDICATOR_BACKGROUND["physical-health"]` routing (and the other six).
 - Whether the 23-risk "risk strategy meeting" set is right (W7).
-- **Still RED, and still blocked on Mike reading the proofreading pack.**
+- ~~Still RED, and still blocked on Mike reading the proofreading pack.~~ **SUPERSEDED 25 Aug: the pack is deleted and Mike parked the sign-off route. Still RED, now with no route to green - see Y5 and Y9.**
 
 ### X8. Mike's second pass, same day (commit `6dc7762`)
 
@@ -3422,69 +3422,76 @@ seven accurate "this plan would be empty" warnings.
 
 ---
 
-## SECTION Y - Mike's job list after testing (25 Aug 2026) - NOT STARTED
+## SECTION Y - Mike's job list after testing (25 Aug 2026) - DONE
 
-> ⭐ **This is the live list for the risk tool. Read it before Section X.**
-> Written after he used the rebuilt tool properly. **Several items REVERSE work done on
-> 22 Aug** - that is him testing it and finding it wrong in use, not a change of mind to
-> argue with. Do not re-litigate; build what is here.
-> ⚠ **His item 8 was left blank** - ask him what it was before starting.
+> Written after he used the rebuilt tool properly. **Several items REVERSED work done
+> on 22 Aug** - that is him testing it and finding it wrong in use, not a change of mind
+> to argue with. All seven built 25 Aug; item 8 was blank and he confirmed there was
+> nothing behind it.
+>
+> ⭐ **The standing lesson: Mike reverses things after using them, and he is usually
+> right.** The source field, the involvement dropdown and the review fields were all
+> built to his spec on 22 Aug and all three are now gone. Anything that adds a field or
+> a click loses to speed. Weight new UI against "does this slow a nurse down at 3am"
+> BEFORE building it.
 
-### Y1. [ ] Drop the event source field completely
+### Y1. [x] The event source field is gone
 
-"It doesn't read well and adds a layer of effort for the user which slows people down too
-much." Remove `EVENT_SOURCES`, the source dropdown from `EventEditor` and the quick-capture
-panel, the `source` field on `DatedExample`, the bracketed suffix in `buildContent` and
-`withExamples`, and the "events with no source" consistency check.
+`EVENT_SOURCES`, the dropdown in both the quick-capture panel and `EventEditor`,
+`DatedExample.source`, the bracketed suffix in both formatters, and the "events with no
+source" check. "It doesn't read well and adds a layer of effort for the user which slows
+people down too much."
 
-⚠ **The concern it was added for does not disappear with it:** an allegation must not read
-later as a finding ("recorded allegation of assault" -> "assaulted a care worker"). Worth
-asking Mike whether that is handled by how staff word the narrative, or whether it needs a
-lighter answer than a dropdown per event. **Do not quietly reintroduce a field for it.**
+**Its concern, answered:** an allegation must not read later as a finding. Mike's call -
+**staff word it in the narrative themselves** ("police reported that..."), which is how
+they write it on SystmOne anyway. Scenario 10 in `risk-scenarios.test.ts` now proves the
+tool keeps two conflicting accounts verbatim without a source field to lean on.
+⛔ **Do not quietly reintroduce a field for it.**
 
-### Y2. [ ] Rebuild the Now / Before sections as one box, like the top capture panel
+### Y2/Y3/Y4. [x] One box per domain, three time choices, "Today (25 August 2026)"
 
-Each domain currently has two narrative boxes (current and historical) each with their own
-event editor. Replace with **one** box in the quick-capture style. The date decides which
-half it belongs to: **more than 3 months old = historic**, within 3 months = current.
+The Now card and the Before card - two narratives, two event lists - are one box in the
+quick-capture style. The three choices are offered up front in Mike's order: **Today
+(with today's date on the button) / A date / Historic**, and the date does the sorting:
+**older than three months = before**, everything else = now. Two green Copy-into-S1 boxes
+below it, because SystmOne still has two fields - the split is done for the nurse rather
+than asked of them.
 
-### Y3. [ ] Offer the three choices in this order: today / a date / historic
+`useToday()` fills the date after mount; nothing reads `new Date()` at render. Free-text
+domain narratives went with the two cards: one line per thing that happened is what the
+S1 field ends up holding anyway.
 
-Not "pick a date, then say whether it is current or historic". The three are offered up
-front and picking a date sorts it automatically.
+### Y5. [x] The proofreading pack is deleted
 
-### Y4. [ ] "Current" becomes "Today", showing today's date
+`riskProofreadPack.ts` and its button.
 
-e.g. `Today (25 August 2026)`. ⚠ Fill the date in a `useEffect`, never at render - a bare
-`new Date()` in render drifts between server and client (same rule as the capture year list
-and the SectionEditor years).
+⛔⛔ **CONSEQUENCE, RAISED AND ANSWERED: Mike parked the sign-off route.** The pack was
+the only path off RED - every note since 20 Aug said the guide was "blocked on Mike
+reading the pack". He chose *"delete it, park sign-off for now"*, so:
+**`/guides/risk-assessment` stays RED with no route to green, deliberately, and there is
+no document to read.** Picking that route back up is the open item below.
 
-### Y5. [ ] Drop the proofreading pack
+### Y6. [x] The formulation is in one box
 
-Remove `src/lib/utils/riskProofreadPack.ts` and its button.
+Per-domain summary rows, the generated `<pre>` and the green copy box were three
+renderings of the same text stacked on top of each other. Now one editable box: it
+arrives generated, typing in it makes it yours, Rebuild puts the generated wording back
+(still behind the confirm modal), and the copy control sits on the box.
 
-⛔⛔ **CONSEQUENCE, RAISE IT BEFORE DELETING:** the pack was the route off RED. Every memory
-and evaluation note since 20 Aug says the guide is "blocked on Mike reading the pack". If it
-goes, **the sign-off route needs replacing with something**, or the guide has no path to
-green. Ask him what replaces it - a shorter document, a live walkthrough, or sign-off on the
-tool itself.
+### Y7. [x] The plan header is gone
 
-### Y6. [ ] The risk formulation appears three times in a row - make it one box
+Involvement, who reviews it, when, and what brings the review forward. With it went the
+seventh check in `riskChecks.ts`, the `PlanHeader` argument on `buildOneRmp`, its header
+lines, and the `PATIENT_INVOLVEMENT` / `REVIEW_*` banks. A test now asserts the plan
+prints the five Trust headings and nothing else, so this cannot creep back unnoticed.
 
-Currently: the per-domain summary rows, then the generated `<pre>` (or the editable
-textarea), then the green Copy into S1 box - all one after another saying the same thing.
-Collapse to a single editable box with the copy control on it.
+### Y8. [x] Nothing behind it - Mike confirmed there was no item 8
 
-### Y7. [ ] Remove the whole Plan header section
+### Y9. [ ] OPEN: how does the risk tool get signed off now?
 
-Involvement, who reviews it, when, and what would bring the review forward - all of it.
+The one thing this session removed without replacing. Options as they stand:
+a shorter written pack (the six plan questions, the formulation wording and the
+sub-domain lists - roughly a tenth of the 17,800 words), a live walkthrough, or sign-off
+on the tool itself with the three-tier chip badging (trust plain / wardHub purple ring /
+user-added) as the audit trail. **Until one is picked the guide cannot go green.**
 
-⚠ **Knock-on:** the seventh consistency check in `riskChecks.ts` ("no review arrangement is
-recorded") depends on this and must go with it, along with `PlanHeader` on `buildOneRmp`,
-the header lines it prints, and the `PATIENT_INVOLVEMENT` / `REVIEW_*` banks. Both of these
-were built on 22 Aug at his request and he has now tested them - **he is reversing his own
-earlier decisions, deliberately.**
-
-### Y8. [ ] Blank - ask Mike
-
-He numbered an item 8 and did not write it.

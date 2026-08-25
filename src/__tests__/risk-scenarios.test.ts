@@ -16,7 +16,8 @@ import {
 import { whatIsTheRiskFor, UNIVERSAL_WHAT_IS_THE_RISK, INCOMPLETE_OPTIONS } from "@/lib/data/guides/rmp-chips";
 import { checkDomain } from "@/lib/utils/riskChecks";
 import {
-  buildOneRmp, buildContent, EMPTY, type AllState, type DatedExample,
+  buildOneRmp, buildContent, EMPTY, isHistoricDate, resolveWhen, HISTORIC_MONTHS,
+  type AllState, type DatedExample,
 } from "@/components/guides/risk-capture";
 import { loadUserChips } from "@/lib/data/guides/user-chips";
 
@@ -38,7 +39,7 @@ describe("1. No evidence in all domains", () => {
 
   it("raises no consistency warnings at all", () => {
     for (const dm of RISK_DOMAINS) {
-      expect(checkDomain({ title: dm.short, answers: {}, subs: [], events: [] })).toEqual([]);
+      expect(checkDomain({ title: dm.short, answers: {}, subs: [] })).toEqual([]);
     }
   });
 });
@@ -158,26 +159,27 @@ describe("9. Current risk with no known history", () => {
       q2_present: sec({ chips: ["Unsteadiness"], text: "Reaches for furniture crossing the bay." }),
       q3_manage: sec({ chips: ["Inform the nurse in charge"] }),
     };
-    expect(checkDomain({
-      title: "5. Physical health", answers, subs: ["Falls"], events: [],
-      review: { by: "The named nurse" },
-    })).toEqual([]);
+    expect(checkDomain({ title: "5. Physical health", answers, subs: ["Falls"] })).toEqual([]);
   });
 });
 
 describe("10. Conflicting current and historical information", () => {
   it("records both without deciding between them", () => {
-    // Two accounts of the same event from different sources. The tool keeps both
-    // and attributes each; it must never merge or adjudicate them.
+    // Two accounts of the same event. The tool keeps both, word for word, in the
+    // order they were entered; it must never merge or adjudicate them.
+    //
+    // A source dropdown answered this on 22 Aug and was removed on 25 Aug - it
+    // slowed the nurse down for something they can say in the sentence itself,
+    // which is what these two entries do.
     const events: DatedExample[] = [
-      { day: "4", month: "7", year: "2026", text: "Says the fire was an accident", source: "Reported by the person" },
-      { day: "4", month: "7", year: "2026", text: "Recorded as deliberate", source: "Recorded in a previous assessment" },
+      { day: "4", month: "7", year: "2026", text: "Reports the fire was an accident" },
+      { day: "4", month: "7", year: "2026", text: "Previous assessment records it as deliberate" },
     ];
     const body = buildContent(sec({ examples: events }));
-    expect(body).toContain("Says the fire was an accident (reported by the person)");
-    expect(body).toContain("Recorded as deliberate (recorded in a previous assessment)");
-    const found = checkDomain({ title: "3. Harm to others", answers: {}, subs: [], events });
-    // Nothing is flagged, because neither entry is wrong - they are two sources.
+    expect(body).toContain("Reports the fire was an accident");
+    expect(body).toContain("Previous assessment records it as deliberate");
+    const found = checkDomain({ title: "3. Harm to others", answers: {}, subs: [] });
+    // Nothing is flagged, because neither entry is wrong - they are two accounts.
     expect(found).toEqual([]);
   });
 });
@@ -195,7 +197,7 @@ describe("11. No patient-specific early warning signs established", () => {
   it("raises nothing when it stands alone", () => {
     expect(checkDomain({
       title: "3. Harm to others", answers: { q2_present: sec({ chips: [INCOMPLETE_OPTIONS.q2_present] }) },
-      subs: ["Fire Setting"], events: [], review: { by: "The MDT" },
+      subs: ["Fire Setting"],
     })).toEqual([]);
   });
 });
@@ -287,7 +289,7 @@ describe("15. Unsafe or contradictory intervention selections", () => {
     const found = checkDomain({
       title: "3. Harm to others",
       answers: { q4_prevent: sec({ chips: [INCOMPLETE_OPTIONS.q4_prevent, "Maintain consistent boundaries"] }) },
-      subs: ["Fire Setting"], events: [], review: { by: "The MDT" },
+      subs: ["Fire Setting"],
     });
     expect(found).toHaveLength(1);
   });
@@ -295,7 +297,7 @@ describe("15. Unsafe or contradictory intervention selections", () => {
   it("flags an absence claim with no period", () => {
     const found = checkDomain({
       title: "3. Harm to others", answers: { q5_evaluate: sec({ chips: ["No property damage"] }) },
-      subs: ["Fire Setting"], events: [], review: { by: "The MDT" },
+      subs: ["Fire Setting"],
     });
     expect(found[0].message).toMatch(/does not say over what period/);
   });
@@ -303,5 +305,64 @@ describe("15. Unsafe or contradictory intervention selections", () => {
   it("never suppresses the mandatory MDT line, whatever else is selected", () => {
     const secs = plan({ next: sec({ chips: [INCOMPLETE_OPTIONS.q6_next] }) });
     expect(buildOneRmp("", secs, "Fire Setting")).toContain("must be reviewed by the MDT");
+  });
+});
+
+// ---------------------------------------------------------------------------
+
+describe("16. When did it happen - today, a date, or historic", () => {
+  // Mike, 25 Aug 2026: three choices up front, and the date does the sorting.
+  // The nurse is never asked "is this current or historical" as a second
+  // question, because the answer is already in the date they gave.
+  const today = new Date(2026, 7, 25);   // 25 August 2026
+
+  it("counts anything older than three months as history", () => {
+    expect(HISTORIC_MONTHS).toBe(3);
+    expect(isHistoricDate({ day: "1", month: "1", year: "2020" }, today)).toBe(true);
+    expect(isHistoricDate({ day: "1", month: "8", year: "2026" }, today)).toBe(false);
+  });
+
+  it("puts the boundary itself on the current side", () => {
+    // Exactly three months ago is not yet history - only older than that is.
+    expect(isHistoricDate({ day: "25", month: "5", year: "2026" }, today)).toBe(false);
+    expect(isHistoricDate({ day: "24", month: "5", year: "2026" }, today)).toBe(true);
+  });
+
+  it("treats an undated event as current, never as history", () => {
+    // A missing year is not evidence something happened long ago.
+    expect(isHistoricDate({ day: "", month: "", year: "" }, today)).toBe(false);
+  });
+
+  it("stamps Today with today's date", () => {
+    const e = resolveWhen("today", { day: "", month: "", year: "" }, today);
+    expect(e).toMatchObject({ day: "25", month: "8", year: "2026", historic: false });
+  });
+
+  it("takes Historic without asking for a date", () => {
+    const e = resolveWhen("historic", { day: "", month: "", year: "" }, today);
+    expect(e).toMatchObject({ day: "", month: "", year: "", historic: true });
+  });
+
+  it("sorts a picked date on its own", () => {
+    expect(resolveWhen("date", { day: "3", month: "2", year: "2019" }, today).historic).toBe(true);
+    expect(resolveWhen("date", { day: "3", month: "8", year: "2026" }, today).historic).toBe(false);
+  });
+
+  it("prints an event as the event, with nothing appended to it", () => {
+    // The source suffix ("(reported by the person)") went on 25 Aug. Where an
+    // account came from is now said in the words of the entry itself.
+    const events: DatedExample[] = [{ day: "4", month: "7", year: "2026", text: "Police reported a fire in the garden" }];
+    expect(buildContent(sec({ examples: events }))).toBe("4 July 2026 - Police reported a fire in the garden");
+  });
+});
+
+describe("17. The plan prints the five trust headings and nothing else", () => {
+  it("carries no involvement or review lines in its header", () => {
+    // Built 22 Aug, removed 25 Aug. If these come back, they come back as one
+    // control rather than four - and this test should be the thing that fails.
+    const text = buildOneRmp("", plan({ what: sec({ chips: ["Risk of deliberate fire setting"] }) }), "Fire Setting");
+    expect(text).not.toMatch(/Person involved in this plan/);
+    expect(text).not.toMatch(/^Review:/m);
+    expect(text).not.toMatch(/Review sooner if/);
   });
 });

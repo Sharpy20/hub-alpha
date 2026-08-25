@@ -193,73 +193,13 @@ export const INCOMPLETE_OPTIONS: Record<string, string> = {
 export const NOT_ASSESSED = "Not assessed at this time";
 export const NOT_APPLICABLE = "Not applicable to this risk";
 
-// ---- Was the person involved in building this plan? -------------------------
+// A plan header lived here between 22 and 25 August 2026: involvement, who
+// reviews the plan, when, and what would bring the review forward. Mike asked
+// for all four, built to his spec, then took them out after using the tool -
+// four more controls on every domain, and the ward nurse writing this has a
+// shift to run. The five Trust headings are the plan.
 //
-// One dropdown beside the plan title, printed in the plan's header. It adds no
-// heading to the Trust template and it is not a seventh question.
-//
-// ⛔ Deliberately NOT a tick saying "patient agreed". A plan the person disagreed
-// with, or could not take part in, is a normal and recordable outcome; a binary
-// tick makes the honest answers unsayable and the audit trail worthless.
-export const PATIENT_INVOLVEMENT_LABEL = "Was the person involved in this plan?";
-export const PATIENT_INVOLVEMENT: string[] = [
-  "Involved and agreed",
-  "Involved but did not agree with all elements",
-  "Offered involvement but declined",
-  "Unable to participate at this time",
-  "Communication or capacity support required",
-  "Not yet discussed",
-];
-
-// ---- Keeping the plan current ----------------------------------------------
-//
-// A plan can be sound when it is written and out of date within a shift. The
-// Trust template has no review heading, so these print in the plan HEADER
-// alongside involvement - metadata about the plan, never a heading of our own
-// inside a mandated template.
-//
-// ⛔ WHO reviews it is a ROLE, not a name. wardHub holds no staff names in a
-// plan and never will (see the no-special-category-data rule); a role also
-// survives the person going on annual leave, which a name does not.
-export const REVIEW_BY_LABEL = "Who will review this plan?";
-export const REVIEW_BY: string[] = [
-  "The named nurse",
-  "The nurse in charge",
-  "The MDT",
-  "The responsible clinician",
-  "The ward manager",
-  "The safeguarding lead",
-  "Not yet agreed",
-];
-
-// Intervals rather than a date picker: a date typed here would be stale the
-// moment the plan is pasted, and the ward speaks in shifts and MDTs anyway.
-export const REVIEW_WHEN_LABEL = "When will it be reviewed?";
-export const REVIEW_WHEN: string[] = [
-  "Every shift",
-  "Daily",
-  "Twice weekly",
-  "Weekly",
-  "At the next MDT",
-  "Before any leave",
-  "Before discharge",
-  "Date to be agreed at the MDT",
-];
-
-// The important one. Most plans go stale between scheduled reviews, and it is
-// an event that makes them stale rather than the calendar.
-export const REVIEW_TRIGGER_LABEL = "What would mean reviewing it sooner?";
-export const REVIEW_TRIGGERS: string[] = [
-  "Any relevant incident",
-  "A significant change in mental state",
-  "A change in observation level",
-  "Leave or discharge planning",
-  "A legal or safeguarding development",
-  "Physical health deterioration",
-  "A change in medication",
-  "New information from family, carers or another service",
-  "The person asks for it to be reviewed",
-];
+// If any of it comes back, it comes back as ONE control, not four.
 
 // ---- Question 1: which specific outcome are you trying to prevent? ---------
 //

@@ -20,7 +20,7 @@
 // only "the person" is personalised on screen with the linked patient's name.
 // Nothing is saved - all state is in memory.
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout";
 import { Breadcrumb, Modal } from "@/components/ui";
@@ -35,18 +35,16 @@ import {
 import {
   whatIsTheRiskFor, DOMAIN_RMP_CHIPS,
   WHAT_HELPS, WHAT_HELPS_LABEL, REDUCTION_TIMEFRAMES, TIMEFRAME_LABEL,
-  NOT_ASSESSED, NOT_APPLICABLE, PATIENT_INVOLVEMENT, PATIENT_INVOLVEMENT_LABEL,
-  REVIEW_BY, REVIEW_BY_LABEL, REVIEW_WHEN, REVIEW_WHEN_LABEL, REVIEW_TRIGGERS, REVIEW_TRIGGER_LABEL,
+  NOT_ASSESSED, NOT_APPLICABLE,
 } from "@/lib/data/guides/rmp-chips";
 import {
   RISK_DOMAINS, SUBTYPE_RISK, CLINICAL_INDICATORS, SCREEN_TAIL, indicatorRoute, INDICATOR_NOTES,
-  buildFormulationSummary, formulationSummaryLines,
-  FORMULATION_SUMMARY_NOTE, FORMULATION_NOT_COMPLETED,
+  buildFormulationSummary, FORMULATION_SUMMARY_NOTE,
 } from "@/lib/data/welcome/risk-screen";
 import {
-  SectionEditor, EventEditor, buildOneRmp,
-  rmpSectionForRisk, naturalList, cap, ensureStop, applySec,
-  type AllState, type SecState, type SecUpdate, type DatedExample, EMPTY, EVENT_SOURCES,
+  SectionEditor, EventEditor, WhenPicker, buildOneRmp,
+  rmpSectionForRisk, naturalList, cap, ensureStop, applySec, resolveWhen, useToday,
+  type AllState, type SecState, type SecUpdate, type DatedExample, type WhenChoice, EMPTY,
 } from "@/components/guides/risk-capture";
 import { useV2Href } from "@/lib/hooks/useV2";
 import { FocusLinks } from "@/components/guides/FocusLinks";
@@ -55,31 +53,34 @@ import { Patient } from "@/lib/types";
 import { loadTracker, saveTracker, seedPatient } from "@/lib/data/care-review";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { printClinicalDoc } from "@/lib/utils/printDoc";
-import { printRiskProofreadPack } from "@/lib/utils/riskProofreadPack";
 import { checkDomain, CHECK_PREAMBLE } from "@/lib/utils/riskChecks";
 import {
   ArrowLeft, Copy, Check, CheckCircle2, RotateCcw, ChevronDown, Pencil,
   ChevronRight, Info, Lightbulb, AlertTriangle, GraduationCap, ListChecks,
-  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star, Printer, Clock, History as HistoryIcon, UserPen,
+  Sparkles, ShieldAlert, ClipboardCheck, Plus, X, Star, Printer, Clock,
 } from "lucide-react";
 
 type YN = "" | "yes" | "no";
 
 interface DomainState {
-  indicators: YN; indicatorList: string[]; safety: YN; current: string; historical: string;
+  indicators: YN; indicatorList: string[]; safety: YN;
   noEvidence: boolean; risks: string[]; // selected sub-domain labels
   customSubs: string[];                 // nurse-named extra sub-domains for this domain
   customIndicators: string[];           // nurse-named extra clinical indicators
   ownRmp: string[];                     // sub-domains / indicators flagged "Requires own RMP"
-  currentExamples: DatedExample[];
-  historicalExamples: DatedExample[];
-  involvement: string;               // "Was the person involved in this plan?"
-  reviewBy: string; reviewWhen: string; reviewTriggers: string[];   // printed in the plan header
+  // ONE list, not the old current / historical pair with a narrative box each
+  // (Mike, 25 Aug 2026). Each event carries `historic`, set from the three time
+  // choices when it is added, and that is what decides which S1 field it is
+  // copied into.
+  events: DatedExample[];
 }
 const emptyDomain = (): DomainState => ({
-  indicators: "", indicatorList: [], safety: "", current: "", historical: "",
-  noEvidence: false, risks: [], customSubs: [], customIndicators: [], ownRmp: [], currentExamples: [], historicalExamples: [], involvement: "", reviewBy: "", reviewWhen: "", reviewTriggers: [],
+  indicators: "", indicatorList: [], safety: "",
+  noEvidence: false, risks: [], customSubs: [], customIndicators: [], ownRmp: [], events: [],
 });
+/** The two halves of the S1 screen, derived from the one list. */
+const nowEvents = (d: DomainState) => (d.events || []).filter((e) => !e.historic);
+const beforeEvents = (d: DomainState) => (d.events || []).filter((e) => e.historic);
 
 interface RiskRef { key: string; label: string; chipRisk: string; domainId: string }
 
@@ -89,8 +90,8 @@ interface RiskRef { key: string; label: string; chipRisk: string; domainId: stri
 interface CapturedRow {
   id: string;
   text: string;
-  day: string; month: string; year: string; source?: string;
-  places: { domainId: string; when: "current" | "historical" }[];
+  day: string; month: string; year: string; historic?: boolean;
+  places: string[];   // domain ids it was filed under
 }
 
 // Ids for captured events. A plain counter - no dates or randomness, so it cannot
@@ -252,10 +253,7 @@ function withExamples(text: string, examples: DatedExample[] = []): string {
   // Most recent first, each on its own line, straight into the dates (no label).
   const fmt = exs.map((e) => {
     const d = formatPartialDate(e);
-    // Source last and in brackets, so the event reads as the event and the
-    // provenance qualifies it rather than becoming part of the account.
-    const src = e.source ? ` (${e.source.toLowerCase()})` : "";
-    return `${d ? d + " - " : ""}${e.text.trim()}${src}`;
+    return `${d ? d + " - " : ""}${e.text.trim()}`;
   }).join("\n");
   return `${base ? base + "\n" : ""}${fmt}`;
 }
@@ -376,6 +374,41 @@ function S1CopyBox({ text }: { text: string }) {
   );
 }
 
+// Field 9, in ONE place. Until 25 Aug 2026 the same summary appeared three times
+// in a row - a per-domain table, the generated block, then a green copy box - and
+// reading down the page you met it three times before you could do anything with
+// it. Now it is one box: it arrives generated, typing in it makes it yours, and
+// Rebuild puts the generated wording back.
+function FormulationBox({ value, edited, onChange, onRebuild }: {
+  value: string; edited: boolean; onChange: (v: string) => void; onRebuild: () => void;
+}) {
+  const [flash, setFlash] = useState(false);
+  const doCopy = async () => { await copyText(value); setFlash(true); setTimeout(() => setFlash(false), 1600); };
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+      <div className="flex flex-wrap items-center gap-2 px-3 py-2 border-b border-slate-100 bg-slate-50">
+        <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 flex-1">
+          {edited ? "Your version" : "Built from the sub-domains you ticked"}
+        </span>
+        {edited && (
+          <button onClick={onRebuild} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 transition-colors">
+            <RotateCcw className="w-3.5 h-3.5" /> Rebuild it
+          </button>
+        )}
+        <button onClick={doCopy} disabled={!value.trim()} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-green-600 text-white hover:bg-green-500 disabled:opacity-40 transition-colors">
+          {flash ? <><Check className="w-3.5 h-3.5" /> Copied</> : <><Copy className="w-3.5 h-3.5" /> Copy into S1</>}
+        </button>
+      </div>
+      <textarea
+        value={value} onChange={(e) => onChange(e.target.value)} rows={10}
+        aria-label="Risk Formulation summary"
+        className="w-full text-sm leading-relaxed text-slate-700 px-3 py-2.5 border-0 focus:ring-0 focus:outline-none resize-y"
+      />
+      {edited && <p className="px-3 pb-2 text-[11px] text-purple-700">You have edited this, so it is your wording that gets copied.</p>}
+    </div>
+  );
+}
+
 function Collapse({ icon: Icon, title, children, tone = "gray" }: {
   icon: typeof Info; title: string; children: React.ReactNode; tone?: "gray" | "rose";
 }) {
@@ -455,20 +488,17 @@ export default function RiskAssessmentPage() {
   // One spotted event can belong to more than one domain (rare, but a fire-setting
   // incident that is also domestic abuse is exactly the case), so the picker is
   // multi-select and the same entry is filed under each.
-  const [capture, setCapture] = useState<{ text: string; domains: string[]; day: string; month: string; year: string; source: string }>(
-    { text: "", domains: [], day: "", month: "", year: "", source: "" }
+  const [capture, setCapture] = useState<{ text: string; domains: string[]; day: string; month: string; year: string }>(
+    { text: "", domains: [], day: "", month: "", year: "" }
   );
-  const [captureWhen, setCaptureWhen] = useState<"current" | "historical" | "">("");
+  const [captureWhen, setCaptureWhen] = useState<WhenChoice>("");
   const [captureNote, setCaptureNote] = useState("");
   const [removing, setRemoving] = useState<CapturedRow | null>(null);
   const [removeSel, setRemoveSel] = useState<string[]>([]);
   const [introOpen, setIntroOpen] = useState(true);
-  // Filled after mount so the year list never differs between server and client.
-  const [captureYears, setCaptureYears] = useState<number[]>([]);
-  useEffect(() => {
-    const thisYear = new Date().getFullYear();
-    setCaptureYears(Array.from({ length: 71 }, (_, i) => thisYear - i));
-  }, []);
+  // Filled after mount - a bare new Date() at render drifts between the server
+  // and the browser, and it is what the Today button prints.
+  const today = useToday();
   const [q8, setQ8] = useState<YN>("");
   const [q8note, setQ8note] = useState("");
   // Field 9. Generated from the ticked sub-domains, but the nurse can edit it -
@@ -545,12 +575,12 @@ export default function RiskAssessmentPage() {
   const reset = () => {
     setDomains({}); setCapByRisk({}); setQ8(""); setQ8note(""); setQ9("");
     setGenerated(false); setCopied(new Set()); setOpenRisks(new Set()); setTab("screen"); setRiskMarked(false);
-    setOpenDomain(null); setGuardOpen(false); setCaptureNote("");
+    setOpenDomain(null); setGuardOpen(false); setCaptureNote(""); setCaptureWhen(""); setFormulationEdited(false);
   };
 
   const isEngaged = (d: DomainState) =>
-    d.risks.length > 0 || d.noEvidence || d.current.trim() !== "" || d.historical.trim() !== "" || d.indicators !== "" || d.safety !== "" ||
-    (d.currentExamples || []).some((e) => e.text.trim()) || (d.historicalExamples || []).some((e) => e.text.trim());
+    d.risks.length > 0 || d.noEvidence || d.indicators !== "" || d.safety !== "" ||
+    (d.events || []).some((e) => e.text.trim());
 
   // How many of the domain's questions carry an answer (domain plan only - spun-off
   // plans are counted on their own row).
@@ -569,11 +599,10 @@ export default function RiskAssessmentPage() {
   const addCapture = () => {
     const text = capture.text.trim();
     const picked = RISK_DOMAINS.filter((d) => capture.domains.includes(d.id));
-    if (!text || !picked.length) return;
-    const yr = Number(capture.year);
-    // Nothing older than last year belongs under "current concerns" by default.
-    const when = captureWhen || (yr && yr < new Date().getFullYear() ? "historical" : "current");
-    const entry: DatedExample = { day: capture.day, month: capture.month, year: capture.year, text, source: capture.source || undefined, id: `cap-${++captureSeq}` };
+    if (!text || !picked.length || !captureWhen || !today) return;
+    // The three time choices are the only thing that decides which half of the
+    // S1 screen this lands in - see resolveWhen.
+    const entry: DatedExample = { ...resolveWhen(captureWhen, capture, today), text, id: `cap-${++captureSeq}` };
     // One setDomains pass so filing under several domains is a single update.
     setDomains((all) => {
       const next = { ...all };
@@ -582,15 +611,14 @@ export default function RiskAssessmentPage() {
         next[dm.id] = {
           ...st,
           noEvidence: false, // something was found, so the domain is no longer nil
-          currentExamples: when === "current" ? [...(st.currentExamples || []), entry] : st.currentExamples,
-          historicalExamples: when === "historical" ? [...(st.historicalExamples || []), entry] : st.historicalExamples,
+          events: [...(st.events || []), entry],
         };
       }
       return next;
     });
-    setCapture((c) => ({ ...c, text: "", day: "", month: "", year: "", source: "" }));
+    setCapture((c) => ({ ...c, text: "", day: "", month: "", year: "" }));
     setCaptureWhen("");
-    setCaptureNote(`Added to ${naturalList(picked.map((d) => `${d.number}. ${d.short}`))} (${when === "current" ? "current concerns" : "historical"}).`);
+    setCaptureNote(`Added to ${naturalList(picked.map((d) => `${d.number}. ${d.short}`))} (${entry.historic ? "before" : "now"}).`);
   };
 
   // Every captured event still present in the domains, oldest first.
@@ -599,14 +627,11 @@ export default function RiskAssessmentPage() {
     for (const dm of RISK_DOMAINS) {
       const st = domains[dm.id];
       if (!st) continue;
-      for (const when of ["current", "historical"] as const) {
-        const list = (when === "current" ? st.currentExamples : st.historicalExamples) || [];
-        for (const ex of list) {
-          if (!ex.id) continue; // typed straight into the domain, not a capture
-          const row = byId.get(ex.id);
-          if (row) row.places.push({ domainId: dm.id, when });
-          else byId.set(ex.id, { id: ex.id, text: ex.text, day: ex.day, month: ex.month, year: ex.year, source: ex.source, places: [{ domainId: dm.id, when }] });
-        }
+      for (const ex of st.events || []) {
+        if (!ex.id) continue; // typed straight into the domain, not a capture
+        const row = byId.get(ex.id);
+        if (row) row.places.push(dm.id);
+        else byId.set(ex.id, { id: ex.id, text: ex.text, day: ex.day, month: ex.month, year: ex.year, historic: ex.historic, places: [dm.id] });
       }
     }
     return [...byId.values()].sort((a, b) => Number(a.id.slice(4)) - Number(b.id.slice(4)));
@@ -620,11 +645,7 @@ export default function RiskAssessmentPage() {
       for (const domainId of domainIds) {
         const st = next[domainId];
         if (!st) continue;
-        next[domainId] = {
-          ...st,
-          currentExamples: (st.currentExamples || []).filter((e) => e.id !== id),
-          historicalExamples: (st.historicalExamples || []).filter((e) => e.id !== id),
-        };
+        next[domainId] = { ...st, events: (st.events || []).filter((e) => e.id !== id) };
       }
       return next;
     });
@@ -674,7 +695,6 @@ export default function RiskAssessmentPage() {
     () => buildFormulationSummary(formulationInput, patientName),
     [formulationInput, patientName],
   );
-  const summaryRows = useMemo(() => formulationSummaryLines(formulationInput), [formulationInput]);
 
   // Run over every domain that gets a plan. Recomputed as you go, but only shown
   // in the output panel - warning about a half-finished answer while it is being
@@ -686,8 +706,6 @@ export default function RiskAssessmentPage() {
       title: `${dm.number}. ${dm.short}`,
       answers: capByRisk[dm.id],
       subs: st.risks,
-      events: [...(st.currentExamples || []), ...(st.historicalExamples || [])],
-      review: { by: st.reviewBy, when: st.reviewWhen, triggers: st.reviewTriggers },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [domains, capByRisk]);
@@ -703,9 +721,9 @@ export default function RiskAssessmentPage() {
     if (dm.safetyPrompt && st.safety) parts.push(`Concerns about safety: ${st.safety === "yes" ? "Yes" : "No"}`);
     if (st.indicators) parts.push(`Clinical indicators: ${st.indicators === "yes" ? "Yes" : "No"}`);
     if (st.indicatorList.length) parts.push(`Indicators present: ${st.indicatorList.join("; ")}`);
-    const curText = withExamples(st.current, st.currentExamples);
+    const curText = withExamples("", nowEvents(st));
     if (curText) parts.push(`Current concerns: ${ensureStop(cap(curText))}`);
-    const histText = withExamples(st.historical, st.historicalExamples);
+    const histText = withExamples("", beforeEvents(st));
     if (histText) parts.push(`Historical: ${ensureStop(cap(histText))}`);
     return parts.join("\n");
   };
@@ -773,15 +791,8 @@ export default function RiskAssessmentPage() {
     const plans: string[] = [];
     for (const dm of planDomains) {
       const secs = deriveRmp(capByRisk[dm.id]);
-      const st = getDomain(dm.id);
-      // Spun-off plans inherit the domain's header: the same person was involved
-      // and the same people review it, whichever sub-domain has its own plan.
-      const head = {
-        involvement: st.involvement, reviewBy: st.reviewBy,
-        reviewWhen: st.reviewWhen, reviewTriggers: st.reviewTriggers,
-      };
-      plans.push(buildOneRmp("", secs, planTitle(dm), undefined, head));  // one plan per domain, named by the risks ticked
-      for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label, undefined, head));
+      plans.push(buildOneRmp("", secs, planTitle(dm)));  // one plan per domain, named by the risks ticked
+      for (const u of spinUnitsFor(dm)) plans.push(buildOneRmp(u.chipRisk, deriveRmp(capByRisk[u.key]), u.label));
     }
     if (!plans.length) return "";
     const head = patientName ? `Patient: ${patientName}\n\n` : "";
@@ -945,82 +956,6 @@ export default function RiskAssessmentPage() {
               </p>
             </div>
 
-            {/* Facts about the plan, not questions in it - they print in the
-                plan's header, above the bar, outside the five Trust headings.
-                A plan the person disagreed with is a normal outcome, so this is
-                a dropdown rather than a "patient agreed" tick; and a plan that
-                is sound when written can be out of date within a shift, which
-                is what the review lines are for. */}
-            <div className="rounded-lg border border-slate-200 bg-white p-3 space-y-3">
-              <p className="text-[11px] font-mono uppercase tracking-wider text-slate-600">Plan header</p>
-
-              <div className="flex items-center gap-3 flex-wrap">
-                <label htmlFor={`involve-${key}`} className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">
-                  {PATIENT_INVOLVEMENT_LABEL}
-                </label>
-                <select
-                  id={`involve-${key}`}
-                  value={getDomain(dm.id).involvement}
-                  onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, involvement: e.target.value }))}
-                  className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                >
-                  <option value="">Not recorded</option>
-                  {PATIENT_INVOLVEMENT.map((o) => <option key={o} value={o}>{o}</option>)}
-                </select>
-              </div>
-
-              <div className="flex items-center gap-3 flex-wrap">
-                <label htmlFor={`revby-${key}`} className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">
-                  {REVIEW_BY_LABEL}
-                </label>
-                {/* A role, never a name - see REVIEW_BY. */}
-                <select
-                  id={`revby-${key}`}
-                  value={getDomain(dm.id).reviewBy}
-                  onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, reviewBy: e.target.value }))}
-                  className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                >
-                  <option value="">Not recorded</option>
-                  {REVIEW_BY.map((o) => <option key={o} value={o}>{o}</option>)}
-                </select>
-              </div>
-
-              <div className="flex items-center gap-3 flex-wrap">
-                <label htmlFor={`revwhen-${key}`} className="text-sm font-semibold text-gray-700 flex-1 min-w-[200px]">
-                  {REVIEW_WHEN_LABEL}
-                </label>
-                <select
-                  id={`revwhen-${key}`}
-                  value={getDomain(dm.id).reviewWhen}
-                  onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, reviewWhen: e.target.value }))}
-                  className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                >
-                  <option value="">Not recorded</option>
-                  {REVIEW_WHEN.map((o) => <option key={o} value={o}>{o}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <p className="text-sm font-semibold text-gray-700 mb-1.5">{REVIEW_TRIGGER_LABEL}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {REVIEW_TRIGGERS.map((t) => {
-                    const on = getDomain(dm.id).reviewTriggers.includes(t);
-                    return (
-                      <button key={t} type="button" aria-pressed={on}
-                        onClick={() => updateDomain(dm.id, (d) => ({
-                          ...d,
-                          reviewTriggers: d.reviewTriggers.includes(t)
-                            ? d.reviewTriggers.filter((x) => x !== t)
-                            : [...d.reviewTriggers, t],
-                        }))}
-                        className={`px-2.5 py-1.5 rounded-lg text-sm border transition-all ring-1 ring-purple-300 ${on ? "bg-sky-700 border-sky-700 text-white font-medium" : "bg-white border-gray-200 text-gray-600 hover:border-slate-400 hover:bg-slate-50"}`}>
-                        {t}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
             {questionsForDomain(dm.id).map((q) => (
               <SectionEditor
                 key={q.id}
@@ -1151,41 +1086,54 @@ export default function RiskAssessmentPage() {
               </div>
             )}
 
-            {/* The two narratives. They are different questions and used to look
-                identical, so each gets its own colour, heading and wording: rose
-                for what is happening now, slate for what happened before. */}
+            {/* ONE box, in the style of the capture panel at the top (Mike,
+                25 Aug 2026). It replaced a Now card and a Before card, each with
+                its own narrative and its own event list - four places to type
+                where the nurse only ever thinks in one: what happened, and when.
+                The when answer sorts it; the two S1 fields are built below. */}
             <div className="rounded-xl border-2 border-slate-200 bg-white overflow-hidden">
               <div className="flex items-center gap-2 bg-sky-700 px-3 py-2">
                 <Clock className="w-4 h-4 text-white flex-shrink-0" />
-                <span className="text-sm font-bold text-white">Now - current concerns</span>
-                <span className="ml-auto text-[11px] text-slate-200">What is happening at the moment</span>
+                <span className="text-sm font-bold text-white">What has happened</span>
+                <span className="ml-auto text-[11px] text-slate-200">Say when - it files itself</span>
               </div>
-              <div className="p-3">
-                <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.currentPrompt)}</label>
-                <p className="flex items-start gap-1.5 text-xs text-slate-600 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what is going on now, and what has happened in the last few days or weeks.</p>
-                <textarea value={st.current} onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, current: e.target.value }))} rows={2} aria-label={personalise(dm.currentPrompt)} className={inputCls} />
-                <EventEditor accent="rose" title="Recent examples" items={st.currentExamples} onChange={(fn) => updateDomain(dm.id, (d) => ({ ...d, currentExamples: fn(d.currentExamples || []) }))} />
-                <S1CopyBox text={withExamples(st.current, st.currentExamples)} />
-              </div>
-            </div>
+              <div className="p-3 space-y-3">
+                <div className="text-xs text-gray-500 space-y-1">
+                  <p><strong className="text-gray-700">Now:</strong> {personalise(dm.currentPrompt)}</p>
+                  <p><strong className="text-gray-700">Before:</strong> {personalise(dm.historicalPrompt)}</p>
+                  {dm.historicalSubPrompts && (
+                    <ul className="ml-3 space-y-0.5">
+                      {dm.historicalSubPrompts.map((sp) => <li key={sp}>- {personalise(sp)}</li>)}
+                    </ul>
+                  )}
+                </div>
+                <p className="flex items-start gap-1.5 text-xs text-slate-600">
+                  <Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                  Anything more than three months old goes under &quot;before&quot;. One line per thing that happened.
+                </p>
+                <EventEditor
+                  when accent="rose" title="What happened, and when"
+                  placeholder="what happened..."
+                  items={st.events}
+                  onChange={(fn) => updateDomain(dm.id, (d) => ({ ...d, noEvidence: false, events: fn(d.events || []) }))}
+                />
 
-            <div className="rounded-xl border-2 border-slate-300 bg-white overflow-hidden">
-              <div className="flex items-center gap-2 bg-slate-500 px-3 py-2">
-                <HistoryIcon className="w-4 h-4 text-white flex-shrink-0" />
-                <span className="text-sm font-bold text-white">Before - historical risk</span>
-                <span className="ml-auto text-[11px] text-slate-200">What has happened in the past</span>
-              </div>
-              <div className="p-3">
-                <label className="block text-xs font-semibold text-gray-500 mb-1">{personalise(dm.historicalPrompt)}</label>
-                {dm.historicalSubPrompts && (
-                  <ul className="mb-1.5 ml-1 space-y-0.5">
-                    {dm.historicalSubPrompts.map((sp) => <li key={sp} className="text-xs text-gray-600">- {personalise(sp)}</li>)}
-                  </ul>
-                )}
-                <p className="flex items-start gap-1.5 text-xs text-slate-600 mb-1"><Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" /> Gap prompt: what happened before this admission, and how long it has been going on.</p>
-                <textarea value={st.historical} onChange={(e) => updateDomain(dm.id, (d) => ({ ...d, historical: e.target.value }))} rows={2} aria-label={personalise(dm.historicalPrompt)} className={inputCls} />
-                <EventEditor accent="slate" title="Past events" items={st.historicalExamples} onChange={(fn) => updateDomain(dm.id, (d) => ({ ...d, historicalExamples: fn(d.historicalExamples || []) }))} />
-                <S1CopyBox text={withExamples(st.historical, st.historicalExamples)} />
+                {/* Two green boxes because SystmOne has two fields - the split is
+                    done for the nurse rather than asked of them. */}
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-wider text-sky-800 mb-1">Now - current concerns</p>
+                    {nowEvents(st).length
+                      ? <S1CopyBox text={withExamples("", nowEvents(st))} />
+                      : <p className="text-xs text-gray-400 border border-dashed border-gray-200 rounded-lg px-3 py-2">Nothing in the last three months.</p>}
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-mono uppercase tracking-wider text-slate-600 mb-1">Before - historical risk</p>
+                    {beforeEvents(st).length
+                      ? <S1CopyBox text={withExamples("", beforeEvents(st))} />
+                      : <p className="text-xs text-gray-400 border border-dashed border-gray-200 rounded-lg px-3 py-2">Nothing recorded from before.</p>}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1214,7 +1162,7 @@ export default function RiskAssessmentPage() {
         )}
 
         {/* The ONE domain question set. */}
-        {!st.noEvidence && (st.risks.length > 0 || st.indicatorList.length > 0 || st.current.trim() !== "" || st.historical.trim() !== "") && (
+        {!st.noEvidence && (st.risks.length > 0 || st.indicatorList.length > 0 || st.events.length > 0) && (
           <div className="space-y-2">
             <p className="text-[11px] font-mono uppercase tracking-wider text-slate-600">Answer the questions for this domain</p>
             {renderFoldNote(dm)}
@@ -1368,13 +1316,6 @@ export default function RiskAssessmentPage() {
               aid - the words are yours and you stay responsible for the final entry. Nothing is saved.
             </p>
           </div>
-          <button
-            onClick={printRiskProofreadPack}
-            title="Every domain, question, chip and template in one printable document, split into trust wording and wardHub wording"
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-purple-50 border border-purple-300 text-purple-700 hover:bg-purple-100 transition-colors"
-          >
-            <Printer className="w-4 h-4" /> Proofreading pack
-          </button>
           <button onClick={reset} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
             <RotateCcw className="w-4 h-4" /> Reset
           </button>
@@ -1435,35 +1376,13 @@ export default function RiskAssessmentPage() {
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <select value={capture.day} onChange={(e) => setCapture((c) => ({ ...c, day: e.target.value }))} aria-label="Day" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-sky-500">
-              <option value="">Day</option>
-              {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
-            </select>
-            <select value={capture.month} onChange={(e) => setCapture((c) => ({ ...c, month: e.target.value }))} aria-label="Month" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-sky-500">
-              <option value="">Month</option>
-              {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
-            </select>
-            <select value={capture.year} onChange={(e) => setCapture((c) => ({ ...c, year: e.target.value }))} aria-label="Year" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-sky-500">
-              <option value="">Year</option>
-              {captureYears.map((y) => <option key={y} value={String(y)}>{y}</option>)}
-            </select>
-            {/* Pasting from an AMHP report, section papers or old case notes is
-                exactly where provenance gets lost, so it is asked here too. */}
-            <select value={capture.source} onChange={(e) => setCapture((c) => ({ ...c, source: e.target.value }))} aria-label="Where this came from" className="text-sm border border-gray-200 rounded-lg px-2 py-2 bg-white focus:ring-2 focus:ring-sky-500">
-              <option value="">Where from?</option>
-              {EVENT_SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
-            </select>
-            <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
-              {([["current", "Current"], ["historical", "Historical"]] as const).map(([v, label]) => (
-                <button key={v} type="button" onClick={() => setCaptureWhen(captureWhen === v ? "" : v)} aria-pressed={captureWhen === v}
-                  className={`px-3 py-2 text-sm font-semibold transition-colors ${captureWhen === v ? "bg-sky-700 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}>
-                  {label}
-                </button>
-              ))}
-            </div>
+            <WhenPicker
+              choice={captureWhen} onChoice={setCaptureWhen}
+              date={capture} onDate={(fn) => setCapture((c) => ({ ...c, ...fn(c) }))}
+            />
             <button
               onClick={addCapture}
-              disabled={!capture.text.trim() || !capture.domains.length}
+              disabled={!capture.text.trim() || !capture.domains.length || !captureWhen}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold bg-sky-700 text-white hover:bg-sky-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <Plus className="w-4 h-4" /> Add{capture.domains.length > 1 ? ` to ${capture.domains.length} domains` : " to domain"}
@@ -1491,10 +1410,11 @@ export default function RiskAssessmentPage() {
                         {dated && <span className="font-semibold text-gray-500">{dated} - </span>}{row.text}
                       </span>
                       <span className="block text-xs text-gray-500 mt-0.5">
-                        {naturalList(row.places.map((p) => {
-                          const dm = RISK_DOMAINS.find((d) => d.id === p.domainId);
-                          return `${dm?.number}. ${dm?.short} (${p.when === "current" ? "now" : "before"})`;
+                        {naturalList(row.places.map((id) => {
+                          const dm = RISK_DOMAINS.find((d) => d.id === id);
+                          return `${dm?.number}. ${dm?.short}`;
                         }))}
+                        {" - "}{row.historic ? "before" : "now"}
                       </span>
                     </span>
                     {/* Editing pulls the event back into the capture box and
@@ -1504,18 +1424,17 @@ export default function RiskAssessmentPage() {
                       onClick={() => {
                         setCapture({
                           text: row.text, day: row.day, month: row.month, year: row.year,
-                          source: row.source || "",
-                          domains: [...new Set(row.places.map((p) => p.domainId))],
+                          domains: [...new Set(row.places)],
                         });
-                        setCaptureWhen(row.places.some((p) => p.when === "historical") ? "historical" : "current");
-                        removeCapture(row.id, row.places.map((p) => p.domainId));
+                        setCaptureWhen(row.year ? "date" : row.historic ? "historic" : "today");
+                        removeCapture(row.id, row.places);
                         setCaptureNote(`Editing "${row.text}" - it has been taken out of its domains, so add it again when you are done.`);
                       }}
                       aria-label={`Edit "${row.text}"`}
                       className="text-gray-400 hover:text-sky-700 transition-colors flex-shrink-0 p-1"
                     ><Pencil className="w-3.5 h-3.5" /></button>
                     <button
-                      onClick={() => { setRemoving(row); setRemoveSel(row.places.map((p) => p.domainId)); }}
+                      onClick={() => { setRemoving(row); setRemoveSel([...row.places]); }}
                       aria-label={`Remove "${row.text}"`}
                       className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0 p-1"
                     ><X className="w-4 h-4" /></button>
@@ -1558,20 +1477,20 @@ export default function RiskAssessmentPage() {
                   : "Take this event out of:"}
               </p>
               <div className="space-y-2">
-                {removing.places.map((p) => {
-                  const dm = RISK_DOMAINS.find((d) => d.id === p.domainId);
-                  const on = removeSel.includes(p.domainId);
+                {removing.places.map((id) => {
+                  const dm = RISK_DOMAINS.find((d) => d.id === id);
+                  const on = removeSel.includes(id);
                   return (
-                    <label key={p.domainId} className="flex items-center gap-3 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-slate-400 transition-colors">
+                    <label key={id} className="flex items-center gap-3 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-slate-400 transition-colors">
                       <input
                         type="checkbox"
                         checked={on}
-                        onChange={() => setRemoveSel(on ? removeSel.filter((x) => x !== p.domainId) : [...removeSel, p.domainId])}
+                        onChange={() => setRemoveSel(on ? removeSel.filter((x) => x !== id) : [...removeSel, id])}
                         className="rounded border-gray-300 text-slate-500 w-4 h-4 flex-shrink-0"
                       />
                       <span className="text-sm font-semibold text-gray-800">
                         {dm?.number}. {dm?.title}
-                        <span className="block text-xs font-normal text-gray-500">{p.when === "current" ? "Current concerns" : "Historical"}</span>
+                        <span className="block text-xs font-normal text-gray-500">{removing.historic ? "Historical" : "Current concerns"}</span>
                       </span>
                     </label>
                   );
@@ -1699,49 +1618,13 @@ export default function RiskAssessmentPage() {
               Editable, and the nurse's version wins until they regenerate. */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">{SCREEN_TAIL.q9Label}</label>
-            <p className="text-xs text-gray-500 mb-2">{FORMULATION_SUMMARY_NOTE}</p>
-
-            <div className="rounded-xl border border-slate-200 bg-slate-50 divide-y divide-slate-200 mb-2">
-              {summaryRows.map((row) => (
-                <div key={row.domainId} className="px-3 py-2 text-sm">
-                  <span className="font-semibold text-gray-800">{row.title}: </span>
-                  <span className={row.value === FORMULATION_NOT_COMPLETED ? "text-amber-700 font-medium" : "text-gray-700"}>{row.value}</span>
-                  {row.indicators && <span className="block text-xs text-gray-600 mt-0.5">{row.indicators}</span>}
-                </div>
-              ))}
-            </div>
-
-            {formulationEdited ? (
-              <>
-                <textarea
-                  value={q9} onChange={(e) => setQ9(e.target.value)} rows={10}
-                  aria-label="Risk Formulation summary"
-                  className={`${inputCls} font-mono text-xs`}
-                />
-                <p className="text-[11px] text-purple-700 mt-1">You have edited this. It will not be overwritten unless you regenerate.</p>
-              </>
-            ) : (
-              <pre className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-gray-700 whitespace-pre-wrap font-mono overflow-x-auto">{generatedFormulation}</pre>
-            )}
-
-            <div className="flex flex-wrap gap-2 mt-2">
-              {!formulationEdited && (
-                <button
-                  onClick={() => { setQ9(generatedFormulation); setFormulationEdited(true); }}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors"
-                >
-                  <UserPen className="w-3.5 h-3.5" /> Edit the summary
-                </button>
-              )}
-              <button
-                onClick={() => { if (formulationEdited) setRegenAsk(true); }}
-                disabled={!formulationEdited}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                <RotateCcw className="w-3.5 h-3.5" /> Regenerate from selected sub-domains
-              </button>
-            </div>
-            <S1CopyBox text={finalSummary} />
+            <p className="text-xs text-gray-500 mb-2">{FORMULATION_SUMMARY_NOTE} Edit it here if it does not read right - your version is what gets copied.</p>
+            <FormulationBox
+              value={finalSummary}
+              edited={formulationEdited}
+              onChange={(v) => { setQ9(v); setFormulationEdited(true); }}
+              onRebuild={() => setRegenAsk(true)}
+            />
           </div>
           <p className="flex items-start gap-2 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-3">
             <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />

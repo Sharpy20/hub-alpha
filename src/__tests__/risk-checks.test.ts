@@ -12,10 +12,8 @@ import {
 import { EMPTY, type AllState } from "@/components/guides/risk-capture";
 
 const sec = (patch: Partial<typeof EMPTY> = {}) => ({ ...EMPTY, ...patch });
-// A review arrangement by default, so the other tests are testing one thing.
-const REVIEWED = { by: "The named nurse", when: "At the next MDT", triggers: ["Any relevant incident"] };
-const base = (answers: AllState = {}, subs = ["Fire Setting"], events: never[] = []) =>
-  checkDomain({ title: "3. Harm to others", answers, subs, events, review: REVIEWED });
+const base = (answers: AllState = {}, subs = ["Fire Setting"]) =>
+  checkDomain({ title: "3. Harm to others", answers, subs });
 
 describe("risk plan consistency checks", () => {
   it("is quiet when there is nothing odd", () => {
@@ -81,20 +79,7 @@ describe("risk plan consistency checks", () => {
   });
 
   it("says nothing about an empty plan when no sub-domain is ticked", () => {
-    expect(checkDomain({ title: "x", answers: {}, subs: [], events: [] })).toEqual([]);
-  });
-
-  it("flags events with no source recorded", () => {
-    const found = checkDomain({
-      title: "3. Harm to others", answers: { q1_what: sec({ chips: ["Risk of assault"] }) }, subs: ["Fire Setting"], review: REVIEWED,
-      events: [
-        { day: "", month: "", year: "", text: "Set fire to a bin", source: "Observed by staff" },
-        { day: "", month: "", year: "", text: "Reported by a neighbour" },
-        { day: "", month: "", year: "", text: "" },
-      ],
-    });
-    expect(found).toHaveLength(1);
-    expect(found[0].message).toMatch(/^1 event has no source/);
+    expect(checkDomain({ title: "x", answers: {}, subs: [] })).toEqual([]);
   });
 
   it("never tells the nurse which entry is correct", () => {
@@ -111,26 +96,6 @@ describe("risk plan consistency checks", () => {
   });
 });
 
-describe("keeping the plan current", () => {
-  const answered: AllState = { q1_what: sec({ chips: ["Risk of deliberate fire setting"] }) };
-  const run = (review?: { by?: string; when?: string; triggers?: string[] }) =>
-    checkDomain({ title: "3. Harm to others", answers: answered, subs: ["Fire Setting"], events: [], review });
-
-  it("flags a plan with no review arrangement at all", () => {
-    const found = run(undefined);
-    expect(found).toHaveLength(1);
-    expect(found[0].message).toMatch(/No review arrangement is recorded/);
-  });
-
-  it("accepts any one of the three - who, when, or what brings it forward", () => {
-    // An event usually makes a plan stale rather than the calendar, so triggers
-    // on their own are a real arrangement, not half of one.
-    expect(run({ by: "The MDT" })).toEqual([]);
-    expect(run({ when: "Weekly" })).toEqual([]);
-    expect(run({ triggers: ["Any relevant incident"] })).toEqual([]);
-  });
-
-  it("says nothing about review on a plan nobody has started", () => {
-    expect(checkDomain({ title: "x", answers: {}, subs: [], events: [] })).toEqual([]);
-  });
-});
+// "keeping the plan current" used to sit here - four tests over the plan header
+// (who reviews it, when, what brings it forward). Mike took the header out on
+// 25 Aug 2026 after using the tool, so the check went with it and so do these.

@@ -27,21 +27,46 @@ import {
 // `id` is set only on examples added through the risk tool's quick capture, so
 // one event can be traced across every domain it was filed under and pulled back
 // out again. Examples typed straight into a domain have no id.
-export interface DatedExample { day: string; month: string; year: string; text: string; id?: string; source?: string }
+export interface DatedExample {
+  day: string; month: string; year: string; text: string; id?: string;
+  /** Set on events captured against a domain: true = "before", false = "now". */
+  historic?: boolean;
+}
 
-// Where an event came from. A risk screen mixes what staff saw with what the
-// person said, what a relative said and what is written in an old assessment,
-// and the four are not the same weight of evidence. Recording the source is what
-// stops "recorded allegation of assault" being read later as "assaulted a care
-// worker" - the tool must never quietly promote a report into a finding.
-export const EVENT_SOURCES: string[] = [
-  "Observed by staff",
-  "Reported by the person",
-  "Reported by family or carer",
-  "Reported by police or criminal justice service",
-  "Recorded in a previous assessment",
-  "Source not established",
-];
+// ---- when did it happen -----------------------------------------------------
+//
+// Mike, 25 Aug 2026: ask the three real answers up front - today, a date, or
+// simply "historic" - rather than asking for a date and then asking again which
+// half of the screen it belongs to. Picking a date sorts it on its own.
+//
+// A source dropdown used to sit alongside this. It went on the same day: "it
+// doesn't read well and adds a layer of effort for the user which slows people
+// down too much." Where an account came from is now said in the words of the
+// event itself ("police reported that..."), which is how it is written on
+// SystmOne anyway. Do not put the field back without asking.
+export type WhenChoice = "" | "today" | "date" | "historic";
+
+/** Older than this and it is history, not a current concern. */
+export const HISTORIC_MONTHS = 3;
+
+/** Is a dated event old enough to belong under "before"? Undated events are not. */
+export function isHistoricDate(d: { day: string; month: string; year: string }, today: Date): boolean {
+  const y = Number(d.year);
+  if (!y) return false;
+  const cut = new Date(today.getFullYear(), today.getMonth() - HISTORIC_MONTHS, today.getDate());
+  return new Date(y, (Number(d.month) || 1) - 1, Number(d.day) || 1) < cut;
+}
+
+/**
+ * Today's date, filled after mount. Never read at render time - the server and
+ * the browser can be on different days, and the mismatch shows up as a hydration
+ * error rather than as anything obvious.
+ */
+export function useToday(): Date | null {
+  const [today, setToday] = useState<Date | null>(null);
+  useEffect(() => { setToday(new Date()); }, []);
+  return today;
+}
 export interface SecState { chips: string[]; text: string; na: boolean; examples?: DatedExample[] }
 export type AllState = Record<string, SecState>;
 export const EMPTY: SecState = { chips: [], text: "", na: false };
@@ -78,6 +103,10 @@ function formatPartialDate(d: { day: string; month: string; year: string }): str
   if (d.year) parts.push(d.year);
   return parts.join(" ");
 }
+/** "25 August 2026" - what the Today button shows. Client-side only, see useToday. */
+export function formatLongDate(d: Date): string {
+  return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
 // Sort key for a dated example - higher is more recent; missing parts count as 0.
 const exampleKey = (e: { day: string; month: string; year: string }) =>
   (Number(e.year) || 0) * 10000 + (Number(e.month) || 0) * 100 + (Number(e.day) || 0);
@@ -93,15 +122,9 @@ export function buildContent(st: SecState | undefined): string {
     .sort((a, b) => exampleKey(b) - exampleKey(a));
   if (exs.length) {
     // Most recent first, each on its own line, straight into the dates (no label).
-    // Source last and in brackets, so the event reads as the event and the
-    // provenance qualifies it rather than becoming part of the account. This was
-    // missing until Copilot's scenario 10 caught it: events added under question
-    // 2 reached the plan with their source stripped, which is the exact thing the
-    // source field exists to prevent.
     const fmt = exs.map((e) => {
       const d = formatPartialDate(e);
-      const src = e.source ? ` (${e.source.toLowerCase()})` : "";
-      return `${d ? d + " - " : ""}${e.text.trim()}${src}`;
+      return `${d ? d + " - " : ""}${e.text.trim()}`;
     }).join("\n");
     out = `${out ? out + "\n" : ""}${fmt}`;
   }
@@ -132,20 +155,13 @@ export function buildFormulation(state: AllState, title = "RISK FORMULATION", pa
 // this is what the first says.
 export const NOT_COMPLETED = "This section has not yet been completed.";
 
-// Facts ABOUT the plan, printed in its header above the bar. Deliberately not
-// sections of the plan: the Trust template has five headings and adding one of
-// our own to a mandated document is the thing not to do.
-export interface PlanHeader {
-  involvement?: string;
-  /** A role, never a name - see REVIEW_BY. */
-  reviewBy?: string;
-  reviewWhen?: string;
-  reviewTriggers?: string[];
-}
-
+// A plan header - who was involved, who reviews it, when, and what brings the
+// review forward - was built on 22 Aug and taken back out on 25 Aug after Mike
+// used it. Four more controls per domain lost to the thing everything else here
+// loses to: a nurse writing this at 3am. The five Trust headings are all the
+// plan prints.
 export function buildOneRmp(
   risk: string, secs: AllState, displayName?: string, patientName?: string,
-  header?: PlanHeader,
 ): string {
   const name = (displayName && displayName.trim()) || risk;
   const body = (id: string): string => {
@@ -172,16 +188,9 @@ export function buildOneRmp(
     }
     return buildContent(secs[id]) || NOT_COMPLETED;
   };
-  // Who and when go on one line - two half-empty lines read worse than one, and
-  // either half is useful on its own.
-  const reviewLine = [header?.reviewBy, header?.reviewWhen].filter(Boolean).join(", ");
-  const triggers = (header?.reviewTriggers || []).filter(Boolean);
   const blocks: string[] = [
     TXT_BAR, name.toUpperCase(),
     ...(patientName ? [`Patient: ${patientName}`] : []),
-    ...(header?.involvement ? [`Person involved in this plan: ${header.involvement}`] : []),
-    ...(reviewLine ? [`Review: ${reviewLine}`] : []),
-    ...(triggers.length ? [`Review sooner if: ${triggers.join("; ")}`] : []),
     TXT_BAR,
   ];
   RMP_SECTIONS.forEach((sec, i) => {
@@ -208,6 +217,87 @@ export function rmpSectionForRisk(sec: RiskSection, risk: string): RiskSection {
   return groups && groups.length ? { ...sec, groups, trustExamples: undefined } : sec;
 }
 
+// ---- when did it happen: today, a date, or simply "historic" ---------------
+//
+// Offered in that order, up front. Picking a date is what sorts the event -
+// anything older than HISTORIC_MONTHS is history, everything else is a current
+// concern - so the nurse is never asked the same thing twice.
+export function WhenPicker({
+  choice, onChoice, date, onDate, ring = "focus:ring-sky-500 focus:border-sky-500",
+}: {
+  choice: WhenChoice;
+  onChoice: (c: WhenChoice) => void;
+  date: { day: string; month: string; year: string };
+  onDate: (fn: (d: { day: string; month: string; year: string }) => { day: string; month: string; year: string }) => void;
+  ring?: string;
+}) {
+  const today = useToday();
+  // Both lists are filled after mount, so neither can differ between the server
+  // render and the browser.
+  const years = today ? Array.from({ length: 71 }, (_, i) => today.getFullYear() - i) : [];
+  const sel = `text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-white ${ring}`;
+
+  const opts: { v: WhenChoice; label: string }[] = [
+    { v: "today", label: today ? `Today (${formatLongDate(today)})` : "Today" },
+    { v: "date", label: "A date" },
+    { v: "historic", label: "Historic" },
+  ];
+
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
+        {opts.map((o) => (
+          <button
+            key={o.v} type="button" aria-pressed={choice === o.v}
+            onClick={() => onChoice(choice === o.v ? "" : o.v)}
+            className={`px-3 py-1.5 text-sm font-semibold transition-colors ${choice === o.v ? "bg-sky-700 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      {choice === "date" && (
+        <>
+          <select value={date.day} onChange={(e) => onDate((d) => ({ ...d, day: e.target.value }))} aria-label="Day" className={sel}>
+            <option value="">Day</option>
+            {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
+          </select>
+          <select value={date.month} onChange={(e) => onDate((d) => ({ ...d, month: e.target.value }))} aria-label="Month" className={sel}>
+            <option value="">Month</option>
+            {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
+          </select>
+          <select value={date.year} onChange={(e) => onDate((d) => ({ ...d, year: e.target.value }))} aria-label="Year" className={sel}>
+            <option value="">Year</option>
+            {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
+          </select>
+        </>
+      )}
+      {choice === "historic" && (
+        <span className="text-xs text-gray-500">Before this admission - no date needed.</span>
+      )}
+    </div>
+  );
+}
+
+/** Where an event lands, once the nurse has told us when it was. */
+export function resolveWhen(
+  choice: WhenChoice, date: { day: string; month: string; year: string }, today: Date,
+): DatedExample {
+  if (choice === "today") {
+    return {
+      day: String(today.getDate()), month: String(today.getMonth() + 1), year: String(today.getFullYear()),
+      text: "", historic: false,
+    };
+  }
+  if (choice === "historic") return { day: "", month: "", year: "", text: "", historic: true };
+  return { ...date, text: "", historic: isHistoricDate(date, today) };
+}
+
+/** The tag on a recorded event - which half of the S1 screen it will be copied into. */
+export function whenLabel(e: DatedExample): string {
+  return e.historic ? "Before" : "Now";
+}
+
 // ---- dated events: one compact add row, then a plain list -------------------
 //
 // Mike, 22 Aug: the in-domain version was "chunkier, with big blocks for each",
@@ -217,18 +307,27 @@ export function rmpSectionForRisk(sec: RiskSection, risk: string): RiskSection {
 // The difference matters more than it looks: with a block per event you scroll
 // past four half-empty forms to reach the fifth, and you cannot see at a glance
 // what you have already recorded.
+//
+// `when` turns it into the domain version (25 Aug): ONE box replacing the old
+// Now / Before pair, with the three time choices deciding which half each event
+// belongs to.
 export function EventEditor({
-  items, onChange, accent = "slate", title,
+  items, onChange, accent = "slate", title, when = false, placeholder = "what happened",
 }: {
   items: DatedExample[];
   onChange: (fn: (prev: DatedExample[]) => DatedExample[]) => void;
   accent?: "rose" | "slate" | "violet";
   title?: string;
+  /** Ask today / a date / historic, and tag each row with where it lands. */
+  when?: boolean;
+  placeholder?: string;
 }) {
-  const blank = { day: "", month: "", year: "", text: "", source: "" };
+  const blank = { day: "", month: "", year: "", text: "" };
   const [draft, setDraft] = useState<DatedExample>({ ...blank });
+  const [choice, setChoice] = useState<WhenChoice>("");
   // Which row is being edited, or null when adding a new one.
   const [editing, setEditing] = useState<number | null>(null);
+  const today = useToday();
   // Filled after mount so the year list cannot differ between server and client.
   const [years, setYears] = useState<number[]>([]);
   useEffect(() => {
@@ -246,10 +345,22 @@ export function EventEditor({
   const commit = () => {
     const text = draft.text.trim();
     if (!text) return;
-    const entry = { ...draft, text };
+    // In `when` mode the three choices set the date and which half it lands in;
+    // everywhere else the draft's own date is the whole answer.
+    const entry = when && today ? { ...draft, ...resolveWhen(choice, draft, today), text } : { ...draft, text };
     onChange((prev) => (editing === null ? [...prev, entry] : prev.map((x, i) => (i === editing ? { ...x, ...entry } : x))));
     setDraft({ ...blank });
+    setChoice("");
     setEditing(null);
+  };
+  const canAdd = draft.text.trim() !== "" && (!when || choice !== "");
+
+  // Editing a row puts its own answer back in the picker, so saving it again
+  // cannot silently re-file it somewhere else.
+  const startEdit = (ex: DatedExample, i: number) => {
+    setDraft({ ...ex });
+    setChoice(ex.year ? "date" : ex.historic ? "historic" : "today");
+    setEditing(i);
   };
 
   return (
@@ -268,15 +379,19 @@ export function EventEditor({
               <span className="block text-sm text-gray-800">
                 {d && <span className="font-semibold text-gray-500">{d} - </span>}{ex.text}
               </span>
-              {ex.source && <span className="block text-xs text-gray-500 mt-0.5">{ex.source}</span>}
+              {when && (
+                <span className={`inline-block mt-0.5 text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full ${ex.historic ? "bg-slate-200 text-slate-600" : "bg-sky-100 text-sky-800"}`}>
+                  {whenLabel(ex)}
+                </span>
+              )}
             </span>
             <button
-              onClick={() => { setDraft({ ...ex }); setEditing(i); }}
+              onClick={() => startEdit(ex, i)}
               aria-label={`Edit "${ex.text}"`}
               className="text-gray-400 hover:text-sky-700 transition-colors flex-shrink-0 p-1"
             ><Pencil className="w-3.5 h-3.5" /></button>
             <button
-              onClick={() => { onChange((prev) => prev.filter((_, idx) => idx !== i)); if (editing === i) { setDraft({ ...blank }); setEditing(null); } }}
+              onClick={() => { onChange((prev) => prev.filter((_, idx) => idx !== i)); if (editing === i) { setDraft({ ...blank }); setChoice(""); setEditing(null); } }}
               aria-label={`Remove "${ex.text}"`}
               className="text-gray-400 hover:text-red-600 transition-colors flex-shrink-0 p-1"
             ><X className="w-4 h-4" /></button>
@@ -284,43 +399,50 @@ export function EventEditor({
         );
       })}
 
-      <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-        <select value={draft.day} onChange={(e) => setDraft((d) => ({ ...d, day: e.target.value }))} aria-label="Day" className={sel}>
-          <option value="">Day</option>
-          {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
-        </select>
-        <select value={draft.month} onChange={(e) => setDraft((d) => ({ ...d, month: e.target.value }))} aria-label="Month" className={sel}>
-          <option value="">Month</option>
-          {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
-        </select>
-        <select value={draft.year} onChange={(e) => setDraft((d) => ({ ...d, year: e.target.value }))} aria-label="Year" className={sel}>
-          <option value="">Year</option>
-          {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
-        </select>
-        <select value={draft.source || ""} onChange={(e) => setDraft((d) => ({ ...d, source: e.target.value }))} aria-label="Where this came from" className={sel}>
-          <option value="">Where from?</option>
-          {EVENT_SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-      </div>
+      {when ? (
+        <WhenPicker
+          choice={choice} onChoice={setChoice}
+          date={draft} onDate={(fn) => setDraft((d) => ({ ...d, ...fn(d) }))}
+          ring={A.ring}
+        />
+      ) : (
+        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+          <select value={draft.day} onChange={(e) => setDraft((d) => ({ ...d, day: e.target.value }))} aria-label="Day" className={sel}>
+            <option value="">Day</option>
+            {Array.from({ length: 31 }, (_, d) => <option key={d + 1} value={String(d + 1)}>{d + 1}</option>)}
+          </select>
+          <select value={draft.month} onChange={(e) => setDraft((d) => ({ ...d, month: e.target.value }))} aria-label="Month" className={sel}>
+            <option value="">Month</option>
+            {MONTHS.map((m, mi) => <option key={m} value={String(mi + 1)}>{m}</option>)}
+          </select>
+          <select value={draft.year} onChange={(e) => setDraft((d) => ({ ...d, year: e.target.value }))} aria-label="Year" className={sel}>
+            <option value="">Year</option>
+            {years.map((y) => <option key={y} value={String(y)}>{y}</option>)}
+          </select>
+        </div>
+      )}
       <div className="flex items-center gap-1.5">
         <input
           type="text" value={draft.text}
           onChange={(e) => setDraft((d) => ({ ...d, text: e.target.value }))}
           onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commit(); } }}
-          placeholder="what happened" aria-label="What happened"
+          placeholder={placeholder} aria-label="What happened"
           className={`flex-1 min-w-0 text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 ${A.ring}`}
         />
-        <button onClick={commit} disabled={!draft.text.trim()}
+        <button onClick={commit} disabled={!canAdd}
           className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-2 rounded-lg border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${A.link} border-gray-300 bg-white hover:bg-gray-50`}>
           {editing === null ? <><Plus className="w-3.5 h-3.5" /> Add</> : <><Check className="w-3.5 h-3.5" /> Save</>}
         </button>
         {editing !== null && (
-          <button onClick={() => { setDraft({ ...blank }); setEditing(null); }}
+          <button onClick={() => { setDraft({ ...blank }); setChoice(""); setEditing(null); }}
             className="text-xs font-semibold px-2.5 py-2 rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 transition-colors">
             Cancel
           </button>
         )}
       </div>
+      {when && draft.text.trim() !== "" && choice === "" && (
+        <p className="text-xs text-amber-700">Say when it was - that is what files it under now or before.</p>
+      )}
     </div>
   );
 }

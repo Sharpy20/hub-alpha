@@ -616,7 +616,11 @@ export default function RiskAssessmentPage() {
       }
       return next;
     });
-    setCapture((c) => ({ ...c, text: "", day: "", month: "", year: "" }));
+    // Everything clears, the domain chips included (Mike, 25 Aug 2026). Leaving
+    // them lit read as "still selected for the next one", so the next event went
+    // in wherever the last one did, or a click meant to pick a domain silently
+    // un-picked it. One event, one clean slate.
+    setCapture({ text: "", domains: [], day: "", month: "", year: "" });
     setCaptureWhen("");
     setCaptureNote(`Added to ${naturalList(picked.map((d) => `${d.number}. ${d.short}`))} (${entry.historic ? "before" : "now"}).`);
   };

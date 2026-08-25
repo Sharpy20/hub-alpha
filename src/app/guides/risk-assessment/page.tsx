@@ -42,7 +42,7 @@ import {
   buildFormulationSummary, FORMULATION_SUMMARY_NOTE,
 } from "@/lib/data/welcome/risk-screen";
 import {
-  SectionEditor, EventEditor, WhenPicker, buildOneRmp,
+  SectionEditor, EventEditor, WhenPicker, buildOneRmp, buildBlankRmp,
   rmpSectionForRisk, naturalList, cap, ensureStop, applySec, resolveWhen, useToday,
   type AllState, type SecState, type SecUpdate, type DatedExample, type WhenChoice, EMPTY,
 } from "@/components/guides/risk-capture";
@@ -510,6 +510,9 @@ export default function RiskAssessmentPage() {
   const [tab, setTab] = useState<"screen" | "formulation" | "rmp">("screen");
   const [copied, setCopied] = useState<Set<string>>(new Set());
   const [riskMarked, setRiskMarked] = useState(false);
+  // The blank template at the end of the plans - closed by default, so it never
+  // competes with the plans the nurse just built.
+  const [blankOpen, setBlankOpen] = useState(false);
 
   const patientName = patient?.name;
 
@@ -1796,6 +1799,30 @@ export default function RiskAssessmentPage() {
                 {!planDomains.length && <p className="text-sm text-gray-600 text-center py-4">Identify at least one risk to build a management plan.</p>}
                 <p className="text-xs text-gray-500">One plan per domain, in domain order. Anything you flagged &quot;requires own RMP&quot; follows its domain as a separate plan.</p>
                 <CopyField id="rmp-all" label="Management plans" text={buildRmpText()} done={copied.has("rmp-all")} onToggle={toggleCopied} />
+
+                {/* A blank one as well (Mike, 25 Aug 2026) - for a plan written by
+                    hand, or a risk this tool did not cover. Sits at the end, under
+                    the real plans, so it is an extra rather than an alternative. */}
+                <div className="rounded-xl border border-dashed border-slate-300 bg-white">
+                  <button
+                    onClick={() => setBlankOpen((o) => !o)}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-slate-50 transition-colors rounded-xl"
+                  >
+                    <ClipboardCheck className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                    <span className="text-sm font-semibold text-gray-700 flex-1">Blank plan template</span>
+                    <span className="text-xs text-gray-500 hidden sm:inline">write one yourself</span>
+                    {blankOpen ? <ChevronDown className="w-4 h-4 text-gray-400" /> : <ChevronRight className="w-4 h-4 text-gray-400" />}
+                  </button>
+                  {blankOpen && (
+                    <div className="px-3 pb-3 space-y-2">
+                      <p className="text-xs text-gray-500">
+                        The five trust headings with nothing filled in - for a plan you are writing by hand, or a
+                        risk this tool does not cover. Copy it as many times as you need.
+                      </p>
+                      <CopyField id="rmp-blank" label="Blank risk management plan" text={buildBlankRmp()} done={copied.has("rmp-blank")} onToggle={toggleCopied} />
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>

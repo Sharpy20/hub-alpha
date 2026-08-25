@@ -201,6 +201,34 @@ export function buildOneRmp(
   return blocks.join("\n");
 }
 
+/**
+ * An EMPTY plan - the five Trust headings in order, the two halves of the
+ * prevent / reduce heading, and the mandatory MDT line, with nothing filled in.
+ *
+ * Mike, 25 Aug 2026: offered at the end alongside the finished plans, for
+ * someone writing one by hand or covering a risk this tool did not. It is a
+ * blank form, not a draft - the only words in it are the Trust's own.
+ */
+export function buildBlankRmp(): string {
+  const blocks: string[] = [TXT_BAR, "[NAME THE RISK]", TXT_BAR];
+  RMP_SECTIONS.forEach((sec, i) => {
+    blocks.push(sec.heading.toUpperCase());
+    if (sec.id === "prevent") {
+      // The Trust asks two things under this one heading, so a blank template
+      // that gave it one line would lose half of it.
+      blocks.push("When it happens:");
+      blocks.push("To prevent or reduce:");
+    } else if (sec.id === "next") {
+      // Always applies, whoever writes the plan.
+      blocks.push(MANDATORY_MDT_LINE);
+    } else {
+      blocks.push("");
+    }
+    if (i < RMP_SECTIONS.length - 1) blocks.push(TXT_DIV);
+  });
+  return blocks.join("\n");
+}
+
 // ---- per-risk chip resolution (single risk) ----
 // Swap a formulation section's generic chips for this risk's chips where we have
 // them. "presenting" reuses the risk's RMP "present" chips (the observable signs

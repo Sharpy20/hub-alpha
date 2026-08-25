@@ -14,9 +14,10 @@ import {
   FORMULATION_NOT_COMPLETED, SUBTYPE_RISK,
 } from "@/lib/data/welcome/risk-screen";
 import { whatIsTheRiskFor, UNIVERSAL_WHAT_IS_THE_RISK, INCOMPLETE_OPTIONS } from "@/lib/data/guides/rmp-chips";
+import { RMP_SECTIONS, MANDATORY_MDT_LINE } from "@/lib/data/guides/risk";
 import { checkDomain } from "@/lib/utils/riskChecks";
 import {
-  buildOneRmp, buildContent, EMPTY, isHistoricDate, resolveWhen, HISTORIC_MONTHS,
+  buildOneRmp, buildBlankRmp, buildContent, EMPTY, isHistoricDate, resolveWhen, HISTORIC_MONTHS,
   type AllState, type DatedExample,
 } from "@/components/guides/risk-capture";
 import { loadUserChips } from "@/lib/data/guides/user-chips";
@@ -364,5 +365,36 @@ describe("17. The plan prints the five trust headings and nothing else", () => {
     expect(text).not.toMatch(/Person involved in this plan/);
     expect(text).not.toMatch(/^Review:/m);
     expect(text).not.toMatch(/Review sooner if/);
+  });
+});
+
+describe("18. The blank plan template", () => {
+  // Offered at the end alongside the finished plans, for someone writing one by
+  // hand. A blank form, not a draft - so the only words in it are the Trust's.
+  const blank = buildBlankRmp();
+
+  it("carries all five trust headings, in order", () => {
+    let at = -1;
+    for (const sec of RMP_SECTIONS) {
+      const i = blank.indexOf(sec.heading.toUpperCase());
+      expect(i).toBeGreaterThan(at);
+      at = i;
+    }
+  });
+
+  it("keeps both halves of prevent / reduce, which share one heading", () => {
+    expect(blank).toContain("When it happens:");
+    expect(blank).toContain("To prevent or reduce:");
+  });
+
+  it("still carries the mandatory MDT line", () => {
+    expect(blank).toContain(MANDATORY_MDT_LINE);
+  });
+
+  it("suggests nothing about a patient", () => {
+    // Anything here would be the tool putting words in a hand-written plan.
+    expect(blank).not.toContain("has not yet been completed");
+    expect(blank).not.toMatch(/Not yet established/);
+    expect(blank).toContain("[NAME THE RISK]");
   });
 });

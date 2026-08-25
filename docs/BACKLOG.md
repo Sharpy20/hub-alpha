@@ -3507,3 +3507,22 @@ formal department sign-off.
 
 ⛔ **Do not rebuild the proofreading pack.** If the tool needs explaining to an approver,
 it is explained the same way the other guides are.
+
+### Y10. [x] A blank plan template, at the end with the finished plans
+
+Mike, 25 Aug. `buildBlankRmp()` in `risk-capture.tsx` - the five Trust headings in order,
+both halves of prevent / reduce, and the mandatory MDT line, with nothing filled in.
+
+It sits under the real plans on the Management Plan tab, closed by default, so it is an
+extra rather than an alternative to what the nurse just built. For a plan written by hand,
+or a risk the tool does not cover.
+
+⛔ **It suggests nothing about a patient** - a blank form, not a draft. The only words in
+it are the Trust's own, and a test asserts that (no "not yet completed", no
+"not yet established", just `[NAME THE RISK]`).
+
+### Y11. [x] The capture panel clears fully after an add
+
+The domain chips stayed lit, so either the next event went in wherever the last one did,
+or a click meant to pick a domain silently un-picked it. Text, chips and the time choice
+all reset now.

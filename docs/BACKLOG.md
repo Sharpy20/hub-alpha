@@ -3419,3 +3419,72 @@ sideways page scroll; and seven domains at once generates seven plans with no er
 seven accurate "this plan would be empty" warnings.
 
 **176 tests. X13 is now down to the setting filter alone, which Copilot deferred himself.**
+
+---
+
+## SECTION Y - Mike's job list after testing (25 Aug 2026) - NOT STARTED
+
+> ⭐ **This is the live list for the risk tool. Read it before Section X.**
+> Written after he used the rebuilt tool properly. **Several items REVERSE work done on
+> 22 Aug** - that is him testing it and finding it wrong in use, not a change of mind to
+> argue with. Do not re-litigate; build what is here.
+> ⚠ **His item 8 was left blank** - ask him what it was before starting.
+
+### Y1. [ ] Drop the event source field completely
+
+"It doesn't read well and adds a layer of effort for the user which slows people down too
+much." Remove `EVENT_SOURCES`, the source dropdown from `EventEditor` and the quick-capture
+panel, the `source` field on `DatedExample`, the bracketed suffix in `buildContent` and
+`withExamples`, and the "events with no source" consistency check.
+
+⚠ **The concern it was added for does not disappear with it:** an allegation must not read
+later as a finding ("recorded allegation of assault" -> "assaulted a care worker"). Worth
+asking Mike whether that is handled by how staff word the narrative, or whether it needs a
+lighter answer than a dropdown per event. **Do not quietly reintroduce a field for it.**
+
+### Y2. [ ] Rebuild the Now / Before sections as one box, like the top capture panel
+
+Each domain currently has two narrative boxes (current and historical) each with their own
+event editor. Replace with **one** box in the quick-capture style. The date decides which
+half it belongs to: **more than 3 months old = historic**, within 3 months = current.
+
+### Y3. [ ] Offer the three choices in this order: today / a date / historic
+
+Not "pick a date, then say whether it is current or historic". The three are offered up
+front and picking a date sorts it automatically.
+
+### Y4. [ ] "Current" becomes "Today", showing today's date
+
+e.g. `Today (25 August 2026)`. ⚠ Fill the date in a `useEffect`, never at render - a bare
+`new Date()` in render drifts between server and client (same rule as the capture year list
+and the SectionEditor years).
+
+### Y5. [ ] Drop the proofreading pack
+
+Remove `src/lib/utils/riskProofreadPack.ts` and its button.
+
+⛔⛔ **CONSEQUENCE, RAISE IT BEFORE DELETING:** the pack was the route off RED. Every memory
+and evaluation note since 20 Aug says the guide is "blocked on Mike reading the pack". If it
+goes, **the sign-off route needs replacing with something**, or the guide has no path to
+green. Ask him what replaces it - a shorter document, a live walkthrough, or sign-off on the
+tool itself.
+
+### Y6. [ ] The risk formulation appears three times in a row - make it one box
+
+Currently: the per-domain summary rows, then the generated `<pre>` (or the editable
+textarea), then the green Copy into S1 box - all one after another saying the same thing.
+Collapse to a single editable box with the copy control on it.
+
+### Y7. [ ] Remove the whole Plan header section
+
+Involvement, who reviews it, when, and what would bring the review forward - all of it.
+
+⚠ **Knock-on:** the seventh consistency check in `riskChecks.ts` ("no review arrangement is
+recorded") depends on this and must go with it, along with `PlanHeader` on `buildOneRmp`,
+the header lines it prints, and the `PATIENT_INVOLVEMENT` / `REVIEW_*` banks. Both of these
+were built on 22 Aug at his request and he has now tested them - **he is reversing his own
+earlier decisions, deliberately.**
+
+### Y8. [ ] Blank - ask Mike
+
+He numbered an item 8 and did not write it.

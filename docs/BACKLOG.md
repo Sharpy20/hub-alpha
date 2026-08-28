@@ -2496,86 +2496,113 @@ printable HTML pages under `public/forms/`, linked from their guides.
 
 ---
 
-## V. THE SANDBOX PLAN (6 Aug 2026, Session 56) - hosting, trial and handover direction
+## V. Hosting, trial and handover - WHERE IT ACTUALLY STANDS (rewritten 28 Aug 2026)
 
-**Where it came from:** the post-presentation reply-all (roadmap, SENT 6 Aug) led to a direct
-thread with Cris, who put his team's standard stack in writing and agreed the phased approach.
-Full context in memory `session-56-replyall-and-claude-request`.
+**Read this before planning anything that assumes Trust infrastructure.** The sandbox plan
+that lived here (drafted 14 Aug, sequenced 17 Aug) has been declined. What follows is what is
+true, not a replacement plan - there isn't one yet, and inventing a sequence before the
+sponsor answers would only have to be unwritten again.
 
-### The Trust standard stack (Cris, 6 Aug, in writing)
+### How it got here
 
-ASP.NET Core MVC · Azure App Service · Azure SQL Database · UK Azure regions · NHSmail
-authentication + app-level access controls · custom domain purchased through Azure (Web Team
-managed, auto-renewing TLS) · Git · CI/CD with dev/test vs production separation · logging,
-monitoring, backup and retention as standard practice · internal governance approval before
-ANY app goes live · **DPIA required for EVERY application - fictional-data demos included.**
-The DPIA for a no-personal-data app will be short, but stop claiming the hosted phase needs
-no sign-off; the process runs regardless.
+- **6 Aug** - Cris gave the Web Development Team's standard stack in writing and agreed the
+  phased approach ("Yes, that approach makes sense"). Full context in memory
+  `session-56-replyall-and-claude-request`.
+- **17 Aug** - Mike proposed the sandbox: his team stand up their standard setup, dev/test
+  only, Git access for Mike, wardHub ported to ASP.NET Core MVC, DPIA and guide sign-offs
+  completed in the sandbox, handover discussed later.
+- **28 Aug** - Cris declined, clearly and with reasons. His 14 Aug "yes" was to a shape; the
+  17 Aug email was the first that asked for actual resource.
 
-Cris also stated plainly: his team cannot adopt or maintain the existing Next.js codebase.
-For them to ever own it, it has to be on their stack. That is what makes the plan below the
-plan.
+### What Cris said (28 Aug, in writing)
 
-### The plan - FINAL SEQUENCE (settled 17 Aug 2026)
+- The stack list was **context, not a requirement**. He explicitly does not recommend porting
+  Next.js to ASP.NET Core, and said so to stop Mike spending weeks on a false premise.
+- **No sandbox or UAT environment from his team.** Azure components are chargeable (App
+  Service, SQL Database, domain/DNS at minimum) and no funding or ownership is attached. If
+  wardHub wants Azure hosting, the environment must be established separately, "including the
+  associated funding, ownership, and governance arrangements".
+- **No handover, on any stack.** His team maintains only what they built from the outset under
+  their own standards, architecture, source control, testing and governance. Adopting an
+  externally developed application - even one on the same stack - would mean reviewing and
+  validating the entire codebase and reworking significant parts of it.
+- **No further Web Dev involvement** in the current application.
+- **The one open route:** if the Trust formally asks the Web Development Team to develop its
+  own version of wardHub, based on the functionality and requirements of the current
+  application, they would support it - as a NEW application built by them from scratch,
+  through the usual request, approval, requirements-gathering, development and governance
+  processes.
 
-1. [ ] **Send Cris the sandbox proposal** (redrafted and polished 17 Aug, ready). Send it
-      BEFORE the group catch-up email, so Cris isn't introduced to his own starring role via
-      the group. The ask: his team stands up a **"sandbox"** (their standard setup - App
-      Service, Azure SQL, UK regions - dev/test only, nothing live) with Git access for
-      Mike. Env settings via their secrets process, never email. Cris may monitor PRs as
-      much or little as he likes; development and maintenance stay with Mike, no commitment
-      from his team beyond the setup.
-2. [ ] **Mike ports wardHub from Next.js to ASP.NET Core MVC** (Claude-assisted, evenings),
-      inside THEIR pipeline from day one - so the eventual handover is a hardening pass and
-      a change of maintainer, not a third build. The sandbox's job is to prove the
-      infrastructure works.
-3. [ ] **In the sandbox:** DPIA and governance paperwork completed WITH Cris against the
-      real target system (written once, never redone); **guides REBUILT through the agent
-      pipeline, THEN signed off** - sign-offs attach to the rebuilt generation only, since
-      signing the old generation first would be invalidated by the rebuild; the NHSmail SSO
-      application goes in once the Azure domain exists (the redirect URI needs it).
-4. [ ] **Promote sandbox -> live environment, still on fictional data.** The PII decision
-      does NOT gate this move - the live environment stands up and soaks with fictional
-      data.
-5. [ ] **The PII decision gates WARD ACCESS, not the build.** Decision lands (full name /
-      initials + NHS number / SystmOne sync) -> the two wards get access -> the trial
-      starts, on the ported app in the live environment. Nothing to rebuild between a
-      successful trial and rolling out. The September line, verbatim: *"The trial runs on
-      the same build, on the same infrastructure, that would carry on afterwards."*
-6. [ ] **After a successful trial the two wards keep access** (Mike maintains, with agreed
-      limits - say so before Cris has to raise his operational-reliance point). No decision
-      on if or how his team takes over unless the trial proves a success.
+### What this kills
 
-### Build implications - read before ANY session touches hosting, persistence or guide data
+- [x] ⛔ **The ASP.NET port. Do not start it.** Its only justification was making a later
+      handover a hardening pass instead of a third build, and the handover is ruled out
+      regardless of stack. Weeks of evenings saved.
+- [x] ⛔ **The sandbox, and everything that was sequenced inside it.** The "DPIA and guide
+      sign-offs happen while in the sandbox" ordering has nothing left to sit in.
+- [x] ⛔ **Feature-freeze on the Next.js build. Void.** The Next.js build is the product
+      again and there is no second codebase to diverge from. Build freely.
+- **"Persistence targets Azure SQL, never Supabase"** was only true to match a stack that no
+  longer needs matching. Open question again, and the Supabase-region chase is live rather
+  than moot.
 
-- [ ] ⭐ **Highest-leverage prep job: export guide content to a stack-neutral data format**
-      that both apps consume. Sign-offs then attach to content versions and SURVIVE the port
-      (otherwise porting invalidates all 68 signatures and nobody re-reads them twice), and
-      the automated Guide Builder's target becomes "produce valid guide-data" - testable the
-      moment the M365 agents are accessible again, independent of the port.
-- ⛔ **Feature-freeze the Next.js build once the port starts.** Content changes are fine.
-      Two diverging codebases is the failure mode.
-- **Persistence targets Azure SQL, never Supabase.** Nothing is built on Supabase (dormant,
-      no DB in use), so switching the target costs nothing today. On this path the
-      Supabase-region chase is moot.
-- **Do not transfer wardhub.live.** The Trust buys its own domain through Azure per their
-      standard, which keeps the domain - and the IP question (Section R4) - untangled.
-- Terminology: **"sandbox"** = the fictional-data-on-Trust-infra stage. Never "fake PII" in
-      writing; fictional demo data is not personal data.
-- The Claude Code seats / AI-tooling-in-their-repo conversation belongs at the moment port
-      work starts inside their pipeline, not before.
-- [ ] ⭐ **Prep that waits for nobody: schema -> validator -> agent instruction block** (output
-      format + guardrails), all buildable and testable against the CURRENT Next.js site
-      before the port exists or Cris replies - both generations consume the same guide-data.
-      The agent pipeline is the least-proven link in the whole pitch (session 51 test:
-      retrieval excellent, output format unusable and resistant to correction) and is
-      blocked on agent access - prove it early, not after the port.
-- **The existing 68 guides are the MARK SCHEME** for agent rebuilds: compare every rebuild
-      against the known-good version (the session-51 blind test, designed and still unrun).
-- **Pitch honesty:** uniform LOOK comes free from rendering guide-data - the rebuild buys
-      PROVENANCE (source doc -> tenant agent -> valid data -> render -> sign-off, no "Mike
-      at home" link). Agents cover Tier A (single-SOP restructure); Tier B synthesis stays a
-      human+AI editorial job outputting the same format.
+### What is still true
+
+- The **two-ward pilot agreed on 30 Jul stands.** Web Dev stepping back removed an assumed
+  implementation route, not the pilot.
+- ⭐⭐ **A trial cannot run on fictional data** (Mike, 28 Aug). Nurses cannot run a real diary
+  against invented patients; that is a longer demo, not a trial. So the trial needs
+  patient-identifiable data, which needs a Trust-owned environment with a DPIA behind it.
+  **That is now the single hard blocker on the trial.**
+- DPIA and internal governance approval before go-live are **Trust-wide requirements, not Web
+  Dev ones.** Unaffected by any of the above.
+- The guides have to be **rebuilt through the agent pipeline either way** - it buys provenance
+  and it is the "the tech team owns no clinical content" pitch. Needs no hosting and no Cris.
+
+### The open question - a sponsor decision, not a technical one
+
+Two halves of one decision, for Tumi via Tess:
+
+1. **Who owns and funds an environment that can hold patient data for a two-ward trial?**
+2. **Which PII option is approved** - full name / initials + NHS number / SystmOne sync?
+
+They travel together: nobody can scope or cost an environment without knowing what it stores,
+so Alex's answer is **upstream** of the hosting question, not downstream of it.
+
+**Ballpark for the room only, NOT verified and not to be put in writing** until someone with
+the subscription confirms it: order of £100-200 a month for a dev/test plus production setup
+at trial scale, so low thousands a year, and likely less under an NHS agreement. The Azure
+bill is the small part. The real asks are **subscription ownership, IG and DPIA time, clinical
+safety work, and clinical time for guide sign-off.**
+
+### What proceeds regardless - the work that waits for nobody
+
+- [ ] ⭐ **Stack-neutral guide data export: schema -> validator -> agent instruction block**
+      (output format plus guardrails). Buildable and testable against the CURRENT site today.
+      Worth MORE after 28 Aug, not less: if the Trust ever commissions its own build, portable
+      guide content with sign-offs attached to content versions is what stops the clinical
+      work being thrown away.
+- [ ] Design and testing continue on fictional data, on the current build.
+- [ ] Draft the DPIA - required on every route that ends in a trial.
+- [ ] ⏰ **Chase M365 agent access.** As of 6 Aug nobody could reach the wH agents. The guide
+      rebuild sits on the critical path to sign-off and is blocked on this.
+- [ ] ⏰ **Ask for guide sign-off names.** Maria offered to put names against the list on
+      31 Jul and was never tasked. Costs nothing, needs no hosting, shortens the critical path.
+- **The existing 68 guides remain the MARK SCHEME** for agent rebuilds (the session-51 blind
+  test, designed and still unrun).
+- **Pitch honesty unchanged:** uniform LOOK comes free from rendering guide-data - the rebuild
+  buys PROVENANCE (source doc -> tenant agent -> valid data -> render -> sign-off, no "Mike at
+  home" link). Agents cover Tier A (single-SOP restructure); Tier B synthesis stays a human+AI
+  editorial job outputting the same format.
+
+### ⚠ Watch the IP line on the formal-development route
+
+"Develop our own version based on the functionality and requirements of the current
+application" means the Trust rebuilding the product from Mike's specification. The standing
+rule (Section R4, and memory `exec-sponsor-full-greenlight`) is **the ownership position in
+writing BEFORE anything transfers - and a detailed requirements spec is a transfer.** Not a
+reason to be cagey; it may well be the right outcome for the Trust. It is a reason to get the
+ownership question answered before the blueprint is handed over.
 
 ---
 

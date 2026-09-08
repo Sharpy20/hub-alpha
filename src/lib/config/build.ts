@@ -18,4 +18,4 @@
 // Nothing else was removed - all the split logic (useV2.ts, proxy.ts,
 // the `!isV2 &&` gates and copy rewrites across the app) is intact and simply
 // dormant while this is true. See [[session-23-url-swap]] for the split design.
-export const COLLAPSED_FOR_DEMO = true;
+export const COLLAPSED_FOR_DEMO = false;

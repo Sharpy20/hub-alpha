@@ -72,7 +72,11 @@ deletion blocked; admin direct pushes still bypass - tightening that is Mike's c
    UI shows **"Hidden in demo mode"**. The real values are NOT in code comments - they live
    only in `E:\Hub\temp\internal-contacts.md`, keyed by entry id. Never paste one into the
    repo.
-3. **The patient record is non-clinical, guarded by a test.** It holds name, ward, status,
+3. **Direction of travel (Mike, 8 Sept): no staff records and no patient records on the
+   site at all** - the diary and staff list move to SystmOne. Not yet implemented; the
+   staff list, assignees, named nurse and login-as-a-staff-member are all still in the
+   code. Until then:
+   **The patient record is non-clinical, guarded by a test.** It holds name, ward, status,
    admission date/time, named nurse, consultant, ward professional and discharge fields.
    MHA status, alerts, diagnoses, room and bed were removed 28 Jul 2026;
    `src/__tests__/no-special-category-data.test.ts` fails if they return. Mike's reasoning
@@ -93,12 +97,17 @@ deletion blocked; admin direct pushes still bypass - tightening that is Mike's c
 ## WHAT WARDHUB IS NOW (one build)
 
 The Light/Medium/Max version system is long gone (`hasFeature()` always returns true).
-What replaced it, the root vs `/v2` split (root = limited PII-free build, `/v2` = full
-build), is itself currently **collapsed for demo**: `COLLAPSED_FOR_DEMO = true` in
-`src/lib/config/build.ts` serves every feature at the root. Set it false to restore the
-split - the machinery (`src/proxy.ts` routing + `useIsV2()`) is intact but dormant.
-⚠ Naming debt: `useIsV2() === true` means "limited build", and that is the ROOT when the
-split is live.
+What replaced it is the root vs `/v2` split, and it was **inverted on 8 September 2026**
+(Mike's call): **root = the FULL product, `/v2` = the stripped PII-free build.** The root
+is the URL people reach for, so it carries the whole thing, and `/v2` is what gets handed
+to anyone who should not see patient data. `COLLAPSED_FOR_DEMO = false` in
+`src/lib/config/build.ts`; setting it true collapses everything back to the root.
+Routing is `src/proxy.ts`, the hook is `useIsV2()`, and `src/__tests__/proxy.test.ts`
+guards both directions - it caught the inversion the first time round.
+⚠ Naming debt: `useIsV2() === true` means "limited build", which is now `/v2`, so it
+finally reads the way it sounds. But the arrangement has flipped four times since June
+(21 Jun, 2 Jul, 8 Sept morning, 8 Sept afternoon), so **check the date on any comment or
+note that contradicts what you see in the code**.
 
 **Main surfaces:** unified guide viewer at `/guides/[id]` (static-route builder/checker
 guides override it) · Team Diary `/tasks` · My Jobs kanban `/my-tasks` · Patients

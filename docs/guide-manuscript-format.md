@@ -57,10 +57,18 @@ service_area: Trust-wide
 issue_no: 4                       # increments on ANY change to the body
 issue_date: 2026-09-12
 review_date: 2029-09-12
-ratified_by: Mental Health Act Committee
+ratification:
+  lead_group: Mental Health Act Committee
+  contributing_groups: [Quality and Safeguarding Committee]
 ratification_date: 2026-09-12
 ratified_issue: 4                 # which issue_no was ratified
 review_group: Mental Health Act Committee
+
+conflicts:
+  - ref: CR-17                    # id in CONFLICT-REGISTER.md
+    between: [s132-pol, mha-cop]
+    guide_follows: s132-pol       # a source id, or: unresolved
+    note: Policy is more specific than the Code on timing. Both quoted in the body.
 
 sources:
   - id: s132-pol
@@ -91,9 +99,9 @@ is the failure mode that would actually hurt.
 
 ## Where a guide gets ratified
 
-**You do not need to invent an owner. The guide inherits its route from its sources.**
-
-The Trust ratifies policies through fourteen groups. The ones that matter for this library:
+**A guide built from one policy inherits that policy's route.** The register at
+`E:\Hub\policy-audit-full\POLICY-REGISTER.csv` records a `RatificationGroup` for every
+policy, across fourteen groups. The ones that matter for this library:
 
 | Ratification group | Policies |
 |---|---|
@@ -103,16 +111,62 @@ The Trust ratifies policies through fourteen groups. The ones that matter for th
 | Physical Health Care Committee | 17 |
 | Adult Acute Care Group Performance Meeting | 11 |
 
-A guide built from the Section 132 policy goes to the group that ratified the Section 132
-policy. A NEWS2 guide follows its physical health sources. That is derivable from
-`sources[]`, so the routing is a lookup rather than a negotiation.
+So a Section 132 guide goes to the Mental Health Act Committee, because that is who ratified
+the Section 132 policy. Nobody has to agree an owner for it.
 
-This replaces the ten proposed shelves in `guide-signoff-shelves.md`. Instead of asking the
-Trust to agree ten new owners, each guide arrives at the group that already owns that subject.
-Far smaller ask, and it is the same governance everyone already follows.
+### But most guides are not built from one policy
 
-Where a guide draws on sources ratified by different groups, it goes to the one covering its
-primary clinical subject, and the others are listed in `sources[]` for anyone checking.
+This is the part that does not resolve neatly, and it should not be papered over.
+
+The whole point of a wardHub guide is that it pulls together what several documents say so a
+nurse does not have to read five policies at 3am. The July audit found what that means in
+practice: 60 conflicts across the corpus, a rapid tranquillisation interval that appears in
+only one document, a NEWS2 escalation ladder that cannot be followed as written because two
+documents disagree on frequency, and two ratified policies contradicting each other on
+olanzapine monitoring.
+
+So there are three cases, and they are not equally hard.
+
+| Case | What the guide is | Route |
+|---|---|---|
+| One source | A restatement | That source's group |
+| Several sources, all agreeing | Still a restatement, just gathered up | Lead group, others listed |
+| Several sources, disagreeing | **A new clinical statement** | Needs deciding, see below |
+
+**The third case is the one to be careful about.** If policy A says fifteen minutes and policy
+B says thirty, a guide that says "fifteen" has made a clinical decision that neither committee
+made. Whoever ratifies that guide is ratifying the choice, not just the wording. That is a
+much bigger ask than signing off a restatement, and it is worth knowing before walking into a
+committee expecting the light route.
+
+### The rule that keeps this safe
+
+**A guide may not state a resolution that no source states.**
+
+Where sources disagree, the guide does one of two things, and never a third:
+
+1. **Follows one source and says so**, with both quoted in the body, so the reader can see
+   there is another position and which one this guide takes. Record it in `conflicts[]` with
+   `guide_follows` set.
+2. **Says the position is unresolved**, names the conflict, and tells the reader who to ask.
+   `guide_follows: unresolved`.
+
+What it must never do is pick silently. A guide that quietly resolves a contradiction between
+two ratified policies is doing exactly the thing we have said all along the tools do not do,
+which is interpret. It is also the failure the agent already demonstrated: the fabricated
+quote it produced in July made two documents agree, and dissolving a conflict is the most
+dangerous error available to a tool whose job is surfacing them.
+
+### Conflicts are a finding, not a wardHub problem
+
+Those 60 conflicts exist whether or not wardHub does. Building guides is simply the activity
+that makes them visible, one clinical subject at a time.
+
+That is arguably the most valuable thing the project produces, but it needs somewhere to go.
+`CONFLICT-REGISTER.md` already holds them with ids, severity and status, so a guide can cite
+`CR-17` rather than inventing its own account. What is missing is a Trust-side owner for the
+register. Worth asking for, because without it every guide that surfaces a contradiction stops
+dead at ratification with nobody able to settle it.
 
 ## The body
 
@@ -226,6 +280,12 @@ ratification manually and we know what the group asks for.
 3. **Do we backfill 68 guides, or apply this to new and edited ones only?** Backfilling
    sources for guides written months ago is a large job and may not be worth it before the
    pilot. Look at the worked example before deciding.
-4. **Does a guide need its own ratification if it only restates a ratified policy?** Worth
-   asking the Trust rather than assuming. If a guide is treated as a derived document rather
-   than a new one, the route may be lighter than full ratification.
+4. **Does a single-source guide need its own ratification, or is it a derived document?**
+   Worth asking the Trust rather than assuming, and the answer sets the whole timeline. If
+   restatements take a light route and only the synthesising guides need full ratification,
+   most of the library can move quickly and the slow queue is small. That is the same split
+   as the Tier A / Tier B idea, with a test you can actually apply: count the sources, then
+   check whether they agree.
+5. **Who owns the conflict register?** A guide that surfaces a contradiction between two
+   ratified policies cannot be signed off by either committee alone. Without an owner, those
+   guides stall.

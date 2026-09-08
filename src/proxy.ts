@@ -6,13 +6,12 @@ import { COLLAPSED_FOR_DEMO } from "@/lib/config/build";
 // runs on the Node.js runtime). Function renamed middleware -> proxy, file
 // renamed middleware.ts -> proxy.ts. The config.matcher export is unchanged.
 //
-// THE SWAP (21 Jun 2026): the stripped / PII-free demo is now the DEFAULT site
-// at the root domain, and the FULL build (Team Diary, Patients, Reports, etc.)
-// lives under the /v2 prefix.
+// THE SPLIT (inverted 8 Sept 2026): the FULL build is the DEFAULT site at the
+// root domain, and the stripped / PII-free build lives under the /v2 prefix.
 //
-// These are the full-build / PII routes. In the LIMITED experience (root) they
-// are blocked and redirect home. Under the FULL build (/v2) they are fully
-// accessible. Keep this list in sync with the features hidden via `useIsV2()`.
+// These are the full-build / PII routes. At the root they are fully accessible.
+// Under /v2 they are blocked and redirect to /v2. Keep this list in sync with
+// the features hidden via `useIsV2()`.
 const FULL_ONLY_PREFIXES = [
   "/diary",
   "/tasks",
@@ -25,7 +24,7 @@ const FULL_ONLY_PREFIXES = [
   "/staff",
 ];
 // Note: /patient-guides is PII-free (MH educational leaflets for patients),
-// so it stays accessible in the limited experience.
+// so it stays accessible under /v2.
 
 function isFullOnly(subpath: string): boolean {
   return FULL_ONLY_PREFIXES.some(
@@ -98,7 +97,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // FULL build under /v2 - rewrite to the real route, full access (no blocking).
+  // LIMITED experience under /v2 - rewrite to the real route, minus the PII routes.
   if (pathname === "/v2" || pathname.startsWith("/v2/")) {
     const subpath = pathname === "/v2" ? "/" : pathname.slice("/v2".length);
 
@@ -112,6 +111,14 @@ export function proxy(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
+    // Block the full-build / PII routes and send the user back to the /v2 home
+    // rather than the root, so they stay inside the stripped build.
+    if (isFullOnly(subpath)) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/v2";
+      return NextResponse.redirect(url);
+    }
+
     // Rewrite to the existing route so a single codebase serves both.
     // usePathname() still returns /v2/... so client code can detect mode.
     const url = request.nextUrl.clone();
@@ -119,13 +126,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  // LIMITED experience at the root - block the full-build / PII routes.
-  if (isFullOnly(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
-  }
-
+  // FULL build at the root - nothing blocked.
   return NextResponse.next();
 }
 

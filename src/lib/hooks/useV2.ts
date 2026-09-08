@@ -4,20 +4,22 @@ import { usePathname } from "next/navigation";
 import { COLLAPSED_FOR_DEMO } from "@/lib/config/build";
 
 // ---------------------------------------------------------------------------
-// THE SWAP (21 Jun 2026, Session 23)
-// The two experiences traded URLs. The STRIPPED / PII-FREE demo is now the
-// DEFAULT site served at the root domain (e.g. wardhub.live). The FULL build
-// (Team Diary, Patients, Reports, My Jobs, Staff) now lives under the /v2 prefix.
+// THE SPLIT (inverted 8 Sept 2026, Mike's call)
+// The FULL product (Team Diary, Patients, Reports, My Jobs, Staff) is the
+// DEFAULT site at the root domain. The STRIPPED / PII-FREE build lives under
+// the /v2 prefix, so it can be handed to people who should not see patient
+// data without taking the full build away from anyone.
 //
-// `useIsV2()` has always meant "am I in the stripped / limited experience?" and
-// every component still uses it that way - hide a feature or rewrite copy when
-// it is true. To keep all of that logic untouched, we ONLY flip WHERE it is true:
-//   - root and every non-/v2 path  -> isV2 = true   (stripped / limited demo)
-//   - /v2 and /v2/* paths          -> isV2 = false  (full build)
-// The boolean therefore reads a little oddly (it is true when NOT under /v2),
-// but its MEANING - "is this the limited public experience" - is unchanged, so
-// no component logic had to move. Think of "v2" as the name of the stripped
-// variant, which now happens to be the default.
+// `useIsV2()` means "am I in the stripped / limited experience?" and every
+// component uses it that way - hide a feature or rewrite copy when it is true:
+//   - /v2 and /v2/* paths          -> isV2 = true   (stripped / limited)
+//   - root and every non-/v2 path  -> isV2 = false  (full build)
+// "v2" is the name of the stripped variant, and it now lives at the URL of the
+// same name, which is the least confusing arrangement we have had.
+//
+// Before 8 Sept this was the other way round, and between 2 Jul and 8 Sept the
+// demo collapse put the full build at the root with /v2 redirecting home. If
+// something looks wrong, check which era a comment was written in.
 //
 // The link helper (useV2Href / v2Href) keeps the user inside their current
 // experience: under /v2 it prefixes internal links with /v2; at root it leaves
@@ -32,21 +34,20 @@ function underV2Prefix(pathname: string | null): boolean {
   return pathname === V2_PREFIX || pathname.startsWith(V2_PREFIX + "/");
 }
 
-// True for the stripped / PII-free experience (now the default site at root).
+// True for the stripped / PII-free experience (served under /v2).
 export function useIsV2(): boolean {
   const pathname = usePathname();
   // Demo collapse: the whole product is the full build - never the limited variant.
   if (COLLAPSED_FOR_DEMO) return false;
-  // Default to the limited experience when the path is unknown (safer: hides PII).
-  return !underV2Prefix(pathname);
+  return underV2Prefix(pathname);
 }
 
-// Prefix internal links with /v2 when the user is inside the full (/v2) build so
-// navigation stays in that build. `inFull` = "are we under the /v2 prefix".
-export function v2Href(href: string, inFull: boolean): string {
+// Prefix internal links with /v2 when the user is inside the stripped (/v2)
+// build so navigation stays in it. `underPrefix` = "are we under the /v2 prefix".
+export function v2Href(href: string, underPrefix: boolean): string {
   // Demo collapse: everything lives at the root, so never add the /v2 prefix.
   if (COLLAPSED_FOR_DEMO) return href;
-  if (!inFull) return href;
+  if (!underPrefix) return href;
   if (!href) return href;
   // Leave external URLs, anchors and absolute-non-app paths alone.
   if (
@@ -67,6 +68,6 @@ export function v2Href(href: string, inFull: boolean): string {
 
 export function useV2Href() {
   const pathname = usePathname();
-  const inFull = underV2Prefix(pathname);
-  return (href: string) => v2Href(href, inFull);
+  const underPrefix = underV2Prefix(pathname);
+  return (href: string) => v2Href(href, underPrefix);
 }

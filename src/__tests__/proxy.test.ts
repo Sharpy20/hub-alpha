@@ -100,7 +100,7 @@ describe("parked routes", () => {
   });
 });
 
-describe("collapsed for the demo (COLLAPSED_FOR_DEMO = true, the live setting)", () => {
+describe("collapsed for the demo (COLLAPSED_FOR_DEMO = true, dormant since 8 Sept)", () => {
   const proxy = loadProxy(true);
 
   it("serves the full build at the root - no PII route is blocked", () => {
@@ -121,27 +121,48 @@ describe("collapsed for the demo (COLLAPSED_FOR_DEMO = true, the live setting)",
   });
 });
 
-describe("split restored (COLLAPSED_FOR_DEMO = false, currently dormant)", () => {
+// Inverted 8 Sept 2026: the FULL product is now the root and the stripped,
+// PII-free build lives under /v2. Before that it was the other way round, so
+// these assertions read backwards against anything written earlier.
+describe("the split (COLLAPSED_FOR_DEMO = false, the live setting since 8 Sept)", () => {
   const proxy = loadProxy(false);
 
-  it("blocks the full-build routes at the root", () => {
-    for (const path of ["/tasks", "/patients", "/overview", "/reports", "/staff"]) {
-      const res = proxy(request(path));
-      expect(isRedirect(res)).toBe(true);
-      expect(target(res)).toBe("/");
-    }
-  });
+  // Keep in sync with FULL_ONLY_PREFIXES in src/proxy.ts.
+  const PII_ROUTES = [
+    "/diary",
+    "/tasks",
+    "/my-diary",
+    "/my-tasks",
+    "/patients",
+    "/overview",
+    "/reports",
+    "/data-sources",
+    "/staff",
+  ];
 
-  it("leaves the shared routes reachable at the root", () => {
-    for (const path of ["/guides", "/links", "/about", "/patient-guides"]) {
+  it("serves the full build at the root - no PII route is blocked", () => {
+    for (const path of PII_ROUTES) {
       expect(target(proxy(request(path)))).not.toBe("/");
     }
   });
 
-  it("serves the full build under /v2 by rewriting, not redirecting", () => {
-    const res = proxy(request("/v2/patients"));
-    expect(isRewrite(res)).toBe(true);
-    expect(target(res)).toBe("/patients");
+  // The one that matters: /v2 is what gets handed to people who must not see
+  // patient data, so every PII route has to bounce, and bounce to /v2 rather
+  // than the root - landing them on the root would drop them into the full build.
+  it("blocks every PII route under /v2 and keeps the user inside /v2", () => {
+    for (const path of PII_ROUTES) {
+      const res = proxy(request("/v2" + path));
+      expect(isRedirect(res)).toBe(true);
+      expect(target(res)).toBe("/v2");
+    }
+  });
+
+  it("leaves the shared routes reachable under /v2", () => {
+    for (const path of ["/guides", "/links", "/about", "/patient-guides"]) {
+      const res = proxy(request("/v2" + path));
+      expect(isRewrite(res)).toBe(true);
+      expect(target(res)).toBe(path);
+    }
   });
 
   it("keeps the /v2 prefix on legacy redirects, so the prefix is not silently dropped", () => {

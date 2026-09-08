@@ -88,7 +88,9 @@ last_source_check: 2026-09-08
 | Field | Why it exists |
 |---|---|
 | `issue_no` | The thing ratification attaches to. Increments on any change to the body, no exceptions. |
-| `ratified_by` / `ratification_date` / `ratified_issue` | The record. A group, never a person. |
+| `ratification.lead_group` / `ratification_date` / `ratified_issue` | The record. Groups, never people. |
+| `ratification.contributing_groups` | Every other group whose policy this guide draws on. They may want sight of it. |
+| `conflicts[]` | Where sources disagree: which conflict, which source the guide follows, or that it is unresolved. |
 | `review_group` | Who owns it from here. Usually the same group. |
 | `sources[]` with `issue_no` and `review_date` | Makes freshness checking possible. Without the source issue number there is nothing to compare against when a policy is reissued. |
 | `last_source_check` | When a human or the Guide Auditor last confirmed the sources still say what we claim. |

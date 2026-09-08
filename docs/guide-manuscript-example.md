@@ -2,6 +2,7 @@
 
 **This is the real IMHA guide content**, taken from `E:\Hub\guide-manuscripts\imha-advocacy.md`
 and reshaped into the format in `guide-manuscript-format.md`. Nothing has been invented.
+The frontmatter uses the Trust's own policy front sheet fields.
 
 > **The citations are the point of this example.** The existing manuscript has none, because
 > nothing has ever required them. Every place a source quote is needed and missing is marked
@@ -20,20 +21,27 @@ category: Legal & Advocacy
 guide_type: step-by-step
 summary: Independent Mental Health Advocate for all patients, informal and detained.
 
-content_version: 1
-status: draft
-review_due: 2027-09-08
+service_area: Trust-wide
+issue_no: 1
+issue_date: NOT YET ISSUED
+review_date: NOT YET ISSUED
+ratified_by: NOT YET RATIFIED
+ratification_date: NOT YET RATIFIED
+ratified_issue: 0
+review_group: Mental Health Act Committee
 
 sources:
   - id: s132-pol
     title: Section 132 Rights Policy
-    version: NEEDS SOURCE
-    dated: NEEDS SOURCE
+    issue_no: NEEDS SOURCE
+    issue_date: NEEDS SOURCE
+    review_date: NEEDS SOURCE
+    ratified_by: Mental Health Act Committee
     held: Trust Policy Library
   - id: mha-cop
     title: MHA Code of Practice
-    version: "2015"
-    dated: 2015-04
+    issue_no: "2015"
+    issue_date: 2015-04
     held: national
 
 last_source_check: never
@@ -116,6 +124,10 @@ appear as `{{contact:...}}` instead.
 and it is worth seeing on the guide you know best before deciding whether to backfill 68 of
 them or apply this to new and edited guides only.
 
-**`status: draft` and `last_source_check: never` are correct here**, not pessimistic. The
-content exists and has never been checked against a source document. Saying so is the format
-working as intended.
+**`ratified_issue: 0` and `last_source_check: never` are correct here**, not pessimistic. The
+content exists and has never been checked against a source document or put in front of a
+ratifying group. Because 0 does not equal `issue_no: 1`, the guide is unpublishable until it
+has been, which is the rule doing its job on day one.
+
+**The ratification route was not chosen, it was read off.** Both sources sit with the Mental
+Health Act Committee, so that is where this guide goes. No one had to agree an owner for it.

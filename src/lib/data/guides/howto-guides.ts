@@ -1,4 +1,5 @@
 import type { PatientTaskCategory, TaskPriority } from "@/lib/types";
+import type { BranchBlock, StepCondition } from "./branching";
 
 // How-to guide data - extracted from how-to/[id]/page.tsx
 //
@@ -51,6 +52,11 @@ export interface GuideStep {
   // where hiding content would hurt - short DO / DO NOT safety guidance, and
   // sequential teaching steps where the worked example is the whole point.
   progressive?: boolean;
+  // A question the reader answers on this step. Later steps can hang off the
+  // answer with showIf. See branching.ts.
+  branch?: BranchBlock;
+  // Only show this step when every condition holds.
+  showIf?: StepCondition[];
 }
 
 export interface GuideData {

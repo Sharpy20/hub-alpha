@@ -7,6 +7,7 @@
 
 import type { CriteriaWalk } from "./criteria-walk";
 import { S117_QUALIFY_WALK } from "./criteria-walk";
+import type { BranchBlock, StepCondition } from "./branching";
 
 export interface WorkflowForm {
   label: string;
@@ -68,6 +69,11 @@ export interface WorkflowStep {
   // Optional guided walk attached to one of those sections (matched on the
   // header text). For sections that are really a decision, not a paragraph.
   walk?: CriteriaWalk;
+  // A question the reader answers on this step, and conditions on later steps.
+  // See branching.ts. The fixed consent/section/area/s117 step types stay as
+  // they are for now; this is the general form.
+  branch?: BranchBlock;
+  showIf?: StepCondition[];
 }
 
 export interface WorkflowData {

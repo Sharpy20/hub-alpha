@@ -11,7 +11,7 @@ import { PatientPickerModal } from "@/components/modals/PatientPickerModal";
 import { AddTaskModal, CommitTasksModal, type AddTaskPrefill } from "@/components/modals";
 import { Patient, DiaryTask } from "@/lib/types";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTour } from "@/app/tour-provider";
 import {
   CheckCircle, FileText, Eye, BookOpen, Send, Clipboard, ClipboardList,
@@ -27,6 +27,11 @@ import { ProgressiveContent } from "@/components/guides/ProgressiveContent";
 import { HandBackModal } from "@/components/modals/HandBackModal";
 import { HandbackBadge } from "@/components/tasks/HandbackBadge";
 import { CriteriaWalker } from "@/components/guides/CriteriaWalker";
+import { BranchPicker } from "@/components/guides/BranchPicker";
+import {
+  visibleSteps, branchAnswered, applyBranchTokens, describeConditions,
+  type BranchAnswers, type BranchableStep,
+} from "@/lib/data/guides/branching";
 import {
   GUIDES, DEFAULT_GUIDE, GUIDE_CONFIG, GUIDE_WAGOLLS,
   type GuideData,
@@ -355,12 +360,18 @@ export default function UnifiedGuidePage() {
   // How-to specific state
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
 
+  // Branching. Answers live here; the steps the reader sees are the ones whose
+  // conditions hold. A guide with no branches gets its full list back untouched.
+  const [branchAnswers, setBranchAnswers] = useState<BranchAnswers>({});
+  const allSteps: BranchableStep[] = isReferral ? workflow.steps : guide.steps;
+  const shownSteps = useMemo(() => visibleSteps(allSteps, branchAnswers), [allSteps, branchAnswers]);
+
   // Current step data
-  const totalSteps = isReferral ? workflow.steps.length : guide.steps.length;
+  const totalSteps = shownSteps.length;
   const title = isReferral ? workflow.title : guide.title;
   const description = isReferral ? workflow.description : guide.description;
-  const rStep: WorkflowStep | undefined = isReferral ? workflow.steps[currentStep] : undefined;
-  const hStep = !isReferral ? guide.steps[currentStep] : undefined;
+  const rStep = isReferral ? (shownSteps[currentStep] as WorkflowStep | undefined) : undefined;
+  const hStep = !isReferral ? (shownSteps[currentStep] as GuideData["steps"][number] | undefined) : undefined;
   const StepIcon = isReferral && rStep ? (STEP_ICONS[rStep.type] || CheckCircle) : BookOpen;
 
   // Handle patient selection (shared)
@@ -414,6 +425,7 @@ export default function UnifiedGuidePage() {
       return `${patientText}Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. ${statusText} and would benefit from independent advocacy support.${consentText}${staffText}`;
     }
     let text = rStep.clipboardText || "";
+    text = applyBranchTokens(text, workflow.steps, branchAnswers);
     text = text.replace(/\[DATE\]/g, todayDate);
     // Answers the user gave earlier in the wizard. Each step owns the wording it
     // wants in the note (consentYesNote etc) so the viewer never invents clinical
@@ -455,6 +467,7 @@ export default function UnifiedGuidePage() {
   };
 
   const canProceed = () => {
+    if (!branchAnswered(shownSteps[currentStep] ?? { id: "" }, branchAnswers)) return false;
     if (!isReferral || !rStep) return true;
     if (rStep.type === "criteria") return criteriaConfirmed;
     if (rStep.type === "consent") return patientConsent !== null && (!rStep.informedQuestion || patientInformed !== null);
@@ -582,7 +595,14 @@ export default function UnifiedGuidePage() {
             {!isReferral && guide.steps.map((s, i) => inPrint(s.id) && (
               <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
                 <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
+                {s.showIf && s.showIf.length > 0 && <p className="text-xs italic text-gray-600 mb-1">Only if: {describeConditions(s, guide.steps)}</p>}
                 <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content.replace(/\[#\d+\]/g, ""))}</div>
+                {s.branch && (
+                  <div className="text-sm mt-1">
+                    <p className="font-semibold">{s.branch.question}</p>
+                    <ul className="list-disc ml-5">{s.branch.choices.map((c) => <li key={c.id}>{c.label}</li>)}</ul>
+                  </div>
+                )}
                 {s.tip && <p className="text-sm italic text-gray-600 mt-1">Tip: {s.tip}</p>}
               </section>
             ))}
@@ -593,7 +613,14 @@ export default function UnifiedGuidePage() {
               return (
                 <section key={s.id} className="mb-4" style={{ breakInside: "avoid" }}>
                   <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
+                  {s.showIf && s.showIf.length > 0 && <p className="text-xs italic text-gray-600 mb-1">Only if: {describeConditions(s, workflow.steps)}</p>}
                   <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content)}</div>
+                  {s.branch && (
+                    <div className="text-sm mt-1">
+                      <p className="font-semibold">{s.branch.question}</p>
+                      <ul className="list-disc ml-5">{s.branch.choices.map((c) => <li key={c.id}>{c.label}</li>)}</ul>
+                    </div>
+                  )}
                   {links.length > 0 && (
                     <ul className="text-sm list-disc ml-5 mt-1">
                       {links.map((f) => <li key={f.label}>{f.label}: {f.url}</li>)}
@@ -771,9 +798,9 @@ export default function UnifiedGuidePage() {
         {isReferral ? (
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center gap-1 mb-2">
-              {workflow.steps.map((s, index) => (
+              {shownSteps.map((s, index) => (
                 <div key={s.id} className={`flex-1 h-3 rounded-full transition-all duration-300 ${
-                  index < currentStep ? "bg-green-500" : index === currentStep ? `bg-gradient-to-r ${STEP_GRADIENTS[s.type]}` : "bg-gray-200"
+                  index < currentStep ? "bg-green-500" : index === currentStep ? `bg-gradient-to-r ${STEP_GRADIENTS[(s as WorkflowStep).type]}` : "bg-gray-200"
                 }`} />
               ))}
             </div>
@@ -817,7 +844,7 @@ export default function UnifiedGuidePage() {
         <div className="bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-4">
           <div className={isReferral ? "grid grid-cols-2 md:grid-cols-3 gap-2" : "flex flex-wrap gap-2"}>
             {isReferral ? (
-              workflow.steps.map((s, index) => {
+              (shownSteps as WorkflowStep[]).map((s, index) => {
                 const Icon = STEP_ICONS[s.type] || CheckCircle;
                 return (
                   <button key={s.id} onClick={() => { if (index <= currentStep) setCurrentStep(index); }} disabled={index > currentStep}
@@ -831,7 +858,7 @@ export default function UnifiedGuidePage() {
                 );
               })
             ) : (
-              guide.steps.map((s, index) => (
+              (shownSteps as GuideData["steps"]).map((s, index) => (
                 <button key={s.id} onClick={() => setCurrentStep(index)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     index === currentStep ? `bg-gradient-to-r ${config.gradient} text-white shadow-md`
@@ -888,6 +915,15 @@ export default function UnifiedGuidePage() {
                   ))
                 )}
               </div>
+              {rStep.branch && (
+                <div className="mb-6">
+                  <BranchPicker
+                    branch={rStep.branch}
+                    answer={branchAnswers[rStep.branch.id]}
+                    onAnswer={(choice) => setBranchAnswers((prev) => ({ ...prev, [rStep.branch!.id]: choice }))}
+                  />
+                </div>
+              )}
 
               {/* Criteria */}
               {rStep.type === "criteria" && (
@@ -1208,6 +1244,13 @@ export default function UnifiedGuidePage() {
               {hStep.widget === "pay-faq" && (
                 <PayFaqAccordion topic={guideId === "pay-roster-faq" ? "all" : guideId === "payslip" ? "payslip" : guideId === "roster" ? "roster" : "leave"} />
               )}
+              {hStep.branch && (
+                <BranchPicker
+                  branch={hStep.branch}
+                  answer={branchAnswers[hStep.branch.id]}
+                  onAnswer={(choice) => setBranchAnswers((prev) => ({ ...prev, [hStep.branch!.id]: choice }))}
+                />
+              )}
               {hStep.tip && (
                 <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">
                   <div className="flex gap-3">
@@ -1373,10 +1416,10 @@ export default function UnifiedGuidePage() {
                       <Check className="w-3.5 h-3.5" /> Copied
                     </span>
                   )}
-                  {(linkedPatient ? `Patient: ${linkedPatient.name}. ` : "") + (guide.caseNote ? guide.caseNote.replace(/\[DATE\]/g, todayDate).replace(/\[NURSE\]/g, caseNoteBy || "[NURSE]") : `${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`)}
+                  {(linkedPatient ? `Patient: ${linkedPatient.name}. ` : "") + (guide.caseNote ? applyBranchTokens(guide.caseNote, guide.steps, branchAnswers).replace(/\[DATE\]/g, todayDate).replace(/\[NURSE\]/g, caseNoteBy || "[NURSE]") : `${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`)}
                 </div>
                 <Button onClick={() => {
-                  const text = `${linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}` + (guide.caseNote ? guide.caseNote.replace(/\[DATE\]/g, todayDate).replace(/\[NURSE\]/g, caseNoteBy || "[NURSE]") : `${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`);
+                  const text = `${linkedPatient ? `Patient: ${linkedPatient.name}. ` : ""}` + (guide.caseNote ? applyBranchTokens(guide.caseNote, guide.steps, branchAnswers).replace(/\[DATE\]/g, todayDate).replace(/\[NURSE\]/g, caseNoteBy || "[NURSE]") : `${title} reviewed on ${todayDate}.${caseNoteBy ? ` Completed by ${caseNoteBy}.` : ""}`);
                   handleCopy(text);
                 }} className={`w-full mt-3 py-3 ${copied ? "bg-green-600 hover:bg-green-700" : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600"}`}>
                   {copied ? <><Check className="w-5 h-5 mr-2" /> Copied!</> : <><Copy className="w-5 h-5 mr-2" /> Copy to Clipboard</>}

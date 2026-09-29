@@ -161,6 +161,14 @@ NOT a role. Ward Professional comes from staff/lead/manager only.
   open on the Trust network.
 - **Guides index data** lives in `catalog.ts` (`ALL_GUIDES`); `howto-guides.ts` uses
   unquoted object keys - keep the style.
+- **Guide editor (29 Sept 2026):** `/admin/guides` (`?edit=<id>`), logic in
+  `lib/data/guides/editor-model.ts`, screens in `components/admin/guide-editor/`. It edits
+  the same `GuideData` / `WorkflowData` objects the viewer reads. Guides it saves go through
+  `lib/data/guides/guide-store.ts` (localStorage today, the ONE file to swap for the real
+  back end) and override a built-in guide with the same id. **Branching** is a `branch` on a
+  step plus `showIf` on later steps (`branching.ts`); the viewer filters with `visibleSteps`.
+  If you add a field to `GuideStep` / `WorkflowStep`, add it to `EDITOR_COVERAGE` and give it
+  an editor control, or the coverage test fails on purpose. See BACKLOG Section Z.
 - Task actions are "Claim" / "Take Over" / "Hand back" (Drop was retired 29 Jul - hand
   back is the only way to release a job, and it generates a case note).
 

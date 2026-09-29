@@ -11,6 +11,10 @@
 // what keeps step positions stable: answering a branch can only add or remove
 // steps after it, never before, so "step 3 of 7" never shuffles under the
 // reader's feet.
+//
+// A step normally asks one question. `alsoAsk` puts further questions on the
+// same screen, for the times two facts belong together (consent, and whether the
+// person was told). They are asked in order and all have to be answered.
 
 export interface BranchChoice {
   id: string;
@@ -19,6 +23,11 @@ export interface BranchChoice {
   hint?: string;
   // What this answer says in the case note. Falls back to the label.
   note?: string;
+  // A callout shown under the question once this choice is picked. First line is
+  // the headline; any further lines are the detail.
+  explain?: string;
+  // "caution" is amber, for a pathway with extra obligations. Default is grey.
+  explainTone?: "caution" | "neutral";
 }
 
 export interface BranchBlock {
@@ -40,10 +49,16 @@ export interface BranchableStep {
   id: string;
   title?: string;
   branch?: BranchBlock;
+  alsoAsk?: BranchBlock[];
   showIf?: StepCondition[];
 }
 
 export type BranchAnswers = Record<string, string>;
+
+// Every question on a step, in the order they are asked.
+export function branchesOf(step: BranchableStep): BranchBlock[] {
+  return [...(step.branch ? [step.branch] : []), ...(step.alsoAsk ?? [])];
+}
 
 // Walks the steps in order and keeps only those whose conditions hold. An
 // answer only counts if the step that asked the question is itself showing, so
@@ -58,22 +73,27 @@ export function visibleSteps<T extends BranchableStep>(steps: T[], answers: Bran
     });
     if (!showing) continue;
     out.push(step);
-    if (step.branch && answers[step.branch.id] !== undefined) {
-      live[step.branch.id] = answers[step.branch.id];
+    for (const b of branchesOf(step)) {
+      if (answers[b.id] !== undefined) live[b.id] = answers[b.id];
     }
   }
   return out;
 }
 
 export function branchAnswered(step: BranchableStep, answers: BranchAnswers): boolean {
-  if (!step.branch) return true;
-  if (step.branch.required === false) return true;
-  const given = answers[step.branch.id];
-  return given !== undefined && step.branch.choices.some((c) => c.id === given);
+  return branchesOf(step).every((b) => {
+    if (b.required === false) return true;
+    const given = answers[b.id];
+    return given !== undefined && b.choices.some((c) => c.id === given);
+  });
 }
 
 export function findBranch(steps: BranchableStep[], branchId: string): BranchBlock | undefined {
-  return steps.find((s) => s.branch?.id === branchId)?.branch;
+  for (const s of steps) {
+    const hit = branchesOf(s).find((b) => b.id === branchId);
+    if (hit) return hit;
+  }
+  return undefined;
 }
 
 // Reads a condition back as words, for the print sheet and the editor:
@@ -112,7 +132,7 @@ export function validateBranching(steps: BranchableStep[]): string[] {
     (step.showIf ?? []).forEach((cond) => {
       const at = seenBranch.get(cond.branch);
       if (at === undefined) {
-        const exists = steps.some((s) => s.branch?.id === cond.branch);
+        const exists = steps.some((s) => branchesOf(s).some((b) => b.id === cond.branch));
         errors.push(
           exists
             ? `"${name}" depends on the question "${cond.branch}", which comes after it. A step can only depend on an earlier question.`
@@ -132,9 +152,9 @@ export function validateBranching(steps: BranchableStep[]): string[] {
       });
     });
 
-    if (step.branch) {
-      const b = step.branch;
-      if (seenBranch.has(b.id)) errors.push(`Two questions share the id "${b.id}".`);
+    const own = new Set<string>();
+    branchesOf(step).forEach((b) => {
+      if (seenBranch.has(b.id) || own.has(b.id)) errors.push(`Two questions share the id "${b.id}".`);
       if (!b.question.trim()) errors.push(`The question on "${name}" is empty.`);
       if (b.choices.length < 2) errors.push(`"${name}" needs at least two choices.`);
       const ids = new Set<string>();
@@ -143,8 +163,9 @@ export function validateBranching(steps: BranchableStep[]): string[] {
         if (ids.has(c.id)) errors.push(`"${name}" has two choices with the id "${c.id}".`);
         ids.add(c.id);
       });
-      seenBranch.set(b.id, index);
-    }
+      own.add(b.id);
+    });
+    own.forEach((id) => seenBranch.set(id, index));
   });
 
   return errors;
@@ -159,8 +180,9 @@ export function unusedBranches(steps: BranchableStep[], extraText = ""): string[
   const usedInText = (id: string) =>
     extraText.includes(`[BRANCH:${id}]`) || steps.some((s) => JSON.stringify(s).includes(`[BRANCH:${id}]`));
   return steps
-    .filter((s) => s.branch && !used.has(s.branch.id) && !usedInText(s.branch.id))
-    .map((s) => s.branch!.id);
+    .flatMap((s) => branchesOf(s))
+    .filter((b) => !used.has(b.id) && !usedInText(b.id))
+    .map((b) => b.id);
 }
 
 export interface Route {
@@ -187,25 +209,23 @@ export function enumerateRoutes<T extends BranchableStep>(steps: T[]): { routes:
       return;
     }
     const shown = visibleSteps(steps, answers);
-    const open = shown.find((s) => s.branch && answers[s.branch.id] === undefined);
-    if (!open || !open.branch) {
+    const asked = shown.flatMap((s) => branchesOf(s));
+    const open = asked.find((b) => answers[b.id] === undefined);
+    if (!open) {
       routes.push({
         answers,
-        label: shown
-          .filter((s) => s.branch && answers[s.branch.id])
-          .map((s) => {
-            const b = s.branch!;
-            return `${b.question} ${b.choices.find((c) => c.id === answers[b.id])?.label ?? answers[b.id]}`;
-          })
+        label: asked
+          .filter((b) => answers[b.id])
+          .map((b) => `${b.question} ${b.choices.find((c) => c.id === answers[b.id])?.label ?? answers[b.id]}`)
           .join(", "),
         steps: shown.map((s) => s.id),
       });
       return;
     }
-    for (const choice of open.branch.choices) walk({ ...answers, [open.branch.id]: choice.id });
+    for (const choice of open.choices) walk({ ...answers, [open.id]: choice.id });
     // Skipping an optional question is a route too. "" counts as answered but
     // matches no condition, exactly as the viewer treats an unanswered one.
-    if (open.branch.required === false) walk({ ...answers, [open.branch.id]: "" });
+    if (open.required === false) walk({ ...answers, [open.id]: "" });
   };
 
   walk({});

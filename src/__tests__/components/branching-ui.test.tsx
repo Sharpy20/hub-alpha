@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { StepEditor } from "@/components/admin/guide-editor/StepEditor";
 import { BranchPicker } from "@/components/guides/BranchPicker";
 import { ConditionPanel, QuestionPanel } from "@/components/admin/guide-editor/BranchEditors";
 import type { BranchBlock } from "@/lib/data/guides/branching";
@@ -120,5 +121,103 @@ describe("ConditionPanel", () => {
   it("lists only earlier questions in the picker", () => {
     render(<ConditionPanel step={after} steps={[asks, after]} onChange={() => {}} onRemove={() => {}} />);
     expect(screen.getByRole("option", { name: /Which area\? \(on Ask\)/ })).toBeInTheDocument();
+  });
+});
+
+describe("BranchPicker messages", () => {
+  const withMessage: BranchBlock = {
+    id: "q1",
+    question: "S117?",
+    choices: [
+      { id: "a", label: "Entitled", explain: "S117 pathway.\nA meeting is needed.", explainTone: "caution" },
+      { id: "b", label: "Not entitled", explain: "Standard pathway." },
+      { id: "c", label: "Unsure" },
+    ],
+  };
+
+  it("shows nothing until a choice with a message is picked", () => {
+    render(<BranchPicker branch={withMessage} answer={undefined} onAnswer={() => {}} />);
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("shows the headline and the detail of the picked choice", () => {
+    render(<BranchPicker branch={withMessage} answer="a" onAnswer={() => {}} />);
+    const box = screen.getByRole("status");
+    expect(box).toHaveTextContent("S117 pathway.");
+    expect(box).toHaveTextContent("A meeting is needed.");
+  });
+
+  it("is amber for caution and grey otherwise", () => {
+    const { rerender } = render(<BranchPicker branch={withMessage} answer="a" onAnswer={() => {}} />);
+    expect(screen.getByRole("status")).toHaveClass("bg-amber-50");
+    rerender(<BranchPicker branch={withMessage} answer="b" onAnswer={() => {}} />);
+    expect(screen.getByRole("status")).toHaveClass("bg-gray-50");
+  });
+
+  it("shows no message for a choice without one", () => {
+    render(<BranchPicker branch={withMessage} answer="c" onAnswer={() => {}} />);
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("hides the question line but keeps the group labelled", () => {
+    render(<BranchPicker branch={withMessage} answer={undefined} onAnswer={() => {}} hideQuestion />);
+    expect(screen.queryByText("S117?", { selector: "p" })).not.toBeInTheDocument();
+    expect(screen.getByRole("radiogroup", { name: "S117?" })).toBeInTheDocument();
+  });
+});
+
+describe("QuestionPanel messages", () => {
+  it("takes a message for a choice", () => {
+    const onChange = jest.fn();
+    render(<QuestionPanel branch={area} onChange={onChange} onRemove={() => {}} dependants={0} onInsertToken={() => {}} />);
+    fireEvent.change(screen.getAllByLabelText(/Message shown once this is picked/)[0], { target: { value: "Heads up." } });
+    const next = onChange.mock.calls[0][0] as BranchBlock;
+    expect(next.choices[0].explain).toBe("Heads up.");
+  });
+
+  it("uses the title it is given", () => {
+    render(<QuestionPanel title="Another question on this step" branch={area} onChange={() => {}} onRemove={() => {}} dependants={0} onInsertToken={() => {}} />);
+    expect(screen.getByRole("heading", { name: "Another question on this step" })).toBeInTheDocument();
+  });
+});
+
+describe("StepEditor extra questions", () => {
+  const step = { id: "s1", title: "Consent", content: "x", branch: area } as EditorStep;
+  const renderStep = (s: EditorStep, onChange = jest.fn()) => {
+    render(
+      <ol>
+        <StepEditor
+          step={s}
+          index={0}
+          steps={[s]}
+          kind="guide"
+          open
+          onToggle={() => {}}
+          onChange={onChange}
+          onMove={() => {}}
+          onDuplicate={() => {}}
+          onDelete={() => {}}
+          onInsertToken={() => {}}
+        />
+      </ol>
+    );
+    return onChange;
+  };
+
+  it("offers to ask another question once there is a first one", () => {
+    const onChange = renderStep(step);
+    fireEvent.click(screen.getByRole("button", { name: "Ask another question on this step" }));
+    const next = onChange.mock.calls[0][0] as EditorStep;
+    expect(next.alsoAsk).toHaveLength(1);
+  });
+
+  it("does not offer it on a step with no question", () => {
+    renderStep({ id: "s1", title: "Plain", content: "x" } as EditorStep);
+    expect(screen.queryByRole("button", { name: "Ask another question on this step" })).not.toBeInTheDocument();
+  });
+
+  it("shows each further question in its own panel", () => {
+    renderStep({ ...step, alsoAsk: [{ id: "q2", question: "Told?", choices: [{ id: "yes", label: "Yes" }, { id: "no", label: "No" }] }] } as EditorStep);
+    expect(screen.getAllByRole("heading", { name: /question/i })).toHaveLength(2);
   });
 });

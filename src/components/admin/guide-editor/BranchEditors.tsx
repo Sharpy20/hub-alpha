@@ -2,11 +2,12 @@
 
 import { addChoice, applyQuestionPreset, QUESTION_PRESETS, questionsBefore, removeChoice, setConditionBranch, toggleConditionChoice, removeCondition, addCondition, updateChoice, type EditorStep } from "@/lib/data/guides/editor-model";
 import type { BranchBlock } from "@/lib/data/guides/branching";
-import { BlockPanel, CheckField, TextField, smallButton } from "./fields";
+import { BlockPanel, CheckField, SelectField, TextField, smallButton } from "./fields";
 
 export function QuestionPanel({
-  branch, onChange, onRemove, dependants, onInsertToken,
+  branch, onChange, onRemove, dependants, onInsertToken, title = "Question",
 }: {
+  title?: string;
   branch: BranchBlock;
   onChange: (b: BranchBlock) => void;
   onRemove: () => void;
@@ -15,7 +16,7 @@ export function QuestionPanel({
 }) {
   const token = `[BRANCH:${branch.id}]`;
   return (
-    <BlockPanel title="Question" onRemove={onRemove}>
+    <BlockPanel title={title} onRemove={onRemove}>
       {dependants > 0 && (
         <p className="text-sm text-blue-900 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
           {dependants} later {dependants === 1 ? "step changes" : "steps change"} with this answer. If you remove the question, {dependants === 1 ? "it needs" : "they need"} fixing, and the checks below will say which.
@@ -71,6 +72,22 @@ export function QuestionPanel({
                 onChange={(note) => onChange(updateChoice(branch, choice.id, { note: note || undefined }))}
                 hint="Falls back to the choice text."
               />
+            </div>
+            <div className="grid gap-2 sm:grid-cols-[1fr_10rem]">
+              <TextField
+                label="Message shown once this is picked (optional)"
+                value={choice.explain ?? ""}
+                onChange={(explain) => onChange(updateChoice(branch, choice.id, { explain: explain || undefined }))}
+                hint="The first sentence is the headline. Use a new line for the detail."
+              />
+              {choice.explain && (
+                <SelectField
+                  label="Style"
+                  value={choice.explainTone ?? "neutral"}
+                  onChange={(tone) => onChange(updateChoice(branch, choice.id, { explainTone: tone === "caution" ? "caution" : undefined }))}
+                  options={[{ value: "neutral", label: "Grey" }, { value: "caution", label: "Amber" }]}
+                />
+              )}
             </div>
           </div>
         ))}

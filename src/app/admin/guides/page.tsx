@@ -20,6 +20,7 @@ import {
   blankGuide, copyOfBuiltIn, duplicateStep, moveStep, newStep, referralTemplate, uniqueGuideId,
   DEFAULT_LOOK, type EditorStep,
 } from "@/lib/data/guides/editor-model";
+import { hasLegacyQuestions, migrateWorkflow } from "@/lib/data/guides/legacy-steps";
 import { GuideList } from "@/components/admin/guide-editor/GuideList";
 import { StepEditor } from "@/components/admin/guide-editor/StepEditor";
 import { DetailsPanel, ExtrasPanel, RouteCheck } from "@/components/admin/guide-editor/GuidePanels";
@@ -223,6 +224,22 @@ function Editor() {
             )}
           </div>
         </div>
+
+        {working.kind === "workflow" && hasLegacyQuestions(working.data.steps) && (
+          <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 flex flex-wrap items-center gap-3">
+            <p className="flex-1 min-w-[16rem] text-sm text-amber-900">
+              This referral still uses the older fixed question steps (consent, legal status, S117, area). Question blocks do the same job and can be edited like any other step. Converting keeps every answer, every case note word and every form and contact filter exactly as they are.
+            </p>
+            <Button
+              onClick={() => {
+                change({ ...working, data: migrateWorkflow(working.data) });
+                setNotice("Converted to Question blocks.");
+              }}
+            >
+              Convert to Question blocks
+            </Button>
+          </div>
+        )}
 
         {notice && <p role="status" className="text-sm font-semibold text-nhs-dark-blue bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">{notice}</p>}
 

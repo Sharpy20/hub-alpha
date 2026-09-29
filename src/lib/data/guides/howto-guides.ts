@@ -55,6 +55,8 @@ export interface GuideStep {
   // A question the reader answers on this step. Later steps can hang off the
   // answer with showIf. See branching.ts.
   branch?: BranchBlock;
+  // Further questions on the same screen, asked after `branch`.
+  alsoAsk?: BranchBlock[];
   // Only show this step when every condition holds.
   showIf?: StepCondition[];
 }

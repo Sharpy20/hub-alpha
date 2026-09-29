@@ -1,6 +1,6 @@
 import {
   visibleSteps, branchAnswered, applyBranchTokens, validateBranching,
-  describeConditions, unusedBranches, enumerateRoutes, type BranchableStep,
+  describeConditions, unusedBranches, enumerateRoutes, branchesOf, type BranchableStep,
 } from "@/lib/data/guides/branching";
 
 const area = {
@@ -191,5 +191,68 @@ describe("enumerateRoutes", () => {
     const { routes, truncated } = enumerateRoutes(many);
     expect(routes.length).toBe(64);
     expect(truncated).toBe(true);
+  });
+});
+
+describe("several questions on one step", () => {
+  const yn = [{ id: "yes", label: "Yes" }, { id: "no", label: "No" }];
+  const two: BranchableStep[] = [
+    {
+      id: "consent",
+      title: "Consent",
+      branch: { id: "consent", question: "Consent?", choices: yn },
+      alsoAsk: [{ id: "informed", question: "Told?", choices: yn }],
+    },
+    { id: "told-only", title: "Told", showIf: [{ branch: "informed", is: ["yes"] }] },
+    { id: "end", title: "End" },
+  ];
+
+  it("lists the questions in the order they are asked", () => {
+    expect(branchesOf(two[0]).map((b) => b.id)).toEqual(["consent", "informed"]);
+    expect(branchesOf(two[2])).toEqual([]);
+  });
+
+  it("wants every one of them answered before moving on", () => {
+    expect(branchAnswered(two[0], {})).toBe(false);
+    expect(branchAnswered(two[0], { consent: "yes" })).toBe(false);
+    expect(branchAnswered(two[0], { consent: "yes", informed: "no" })).toBe(true);
+  });
+
+  it("lets a later step depend on the second question", () => {
+    expect(ids(visibleSteps(two, { consent: "yes", informed: "yes" }))).toEqual(["consent", "told-only", "end"]);
+    expect(ids(visibleSteps(two, { consent: "yes", informed: "no" }))).toEqual(["consent", "end"]);
+  });
+
+  it("passes the checks", () => {
+    expect(validateBranching(two)).toEqual([]);
+  });
+
+  it("flags two questions on a step sharing an id", () => {
+    const bad: BranchableStep[] = [{ id: "s", title: "S", branch: two[0].branch, alsoAsk: [{ ...two[0].alsoAsk![0], id: "consent" }] }];
+    expect(validateBranching(bad).join(" ")).toMatch(/share the id/);
+  });
+
+  it("does not let a step depend on a question on its own screen", () => {
+    const bad: BranchableStep[] = [{ ...two[0], showIf: [{ branch: "informed", is: ["yes"] }] }];
+    expect(validateBranching(bad).join(" ")).toMatch(/depends on/);
+  });
+
+  it("multiplies the routes by every question", () => {
+    expect(enumerateRoutes(two).routes).toHaveLength(4);
+  });
+
+  it("writes either answer into the case note", () => {
+    const withNotes: BranchableStep[] = [{
+      id: "c",
+      branch: { id: "consent", question: "C?", choices: [{ id: "yes", label: "Yes", note: "Consent was obtained." }, { id: "no", label: "No" }] },
+      alsoAsk: [{ id: "informed", question: "T?", choices: [{ id: "yes", label: "Yes", note: "was" }, { id: "no", label: "No", note: "was not" }] }],
+    }];
+    expect(applyBranchTokens("[BRANCH:consent] Patient [BRANCH:informed] informed.", withNotes, { consent: "yes", informed: "no" }))
+      .toBe("Consent was obtained. Patient was not informed.");
+  });
+
+  it("counts a question that only feeds the case note as used", () => {
+    expect(unusedBranches(two, "")).toEqual(["consent"]);
+    expect(unusedBranches(two, "[BRANCH:consent]")).toEqual([]);
   });
 });

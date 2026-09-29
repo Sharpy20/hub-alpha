@@ -169,6 +169,9 @@ NOT a role. Ward Professional comes from staff/lead/manager only.
   step plus `showIf` on later steps (`branching.ts`); the viewer filters with `visibleSteps`.
   If you add a field to `GuideStep` / `WorkflowStep`, add it to `EDITOR_COVERAGE` and give it
   an editor control, or the coverage test fails on purpose. See BACKLOG Section Z.
+  **Consent / legal status / S117 / area are Question blocks now** (ids `consent`, `informed`,
+  `section`, `s117`, `area`); the fixed step types only survive for old editor copies. The referral
+  case note is built by `lib/data/guides/case-note.ts` and a golden-file test guards its wording.
 - Task actions are "Claim" / "Take Over" / "Hand back" (Drop was retired 29 Jul - hand
   back is the only way to release a job, and it generates a case note).
 

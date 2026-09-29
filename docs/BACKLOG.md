@@ -3596,10 +3596,8 @@ referrals, viewer changed to render branching.
 **Known limits - say these out loud, do not let anyone find them:**
 - **Storage is per browser.** Nothing is shared until the store is connected. Download / Import
   moves guides between machines.
-- **The fixed step types (consent, section, s117, area) still do the branching in IMHA and the
-  safeguarding guides.** They work as before, but the route check shows "one route" for them. The
-  Question block is the general form; migrating those seven referrals to it is not done and needs
-  the viewer's IMHA case note logic (`generateCaseNote`, hard-coded for imha-advocacy) untangled.
+- **Fixed question steps: MIGRATED 29 Sept, see "Migration" below.** Old editor copies saved before
+  the migration still carry them and still work; the editor offers a one-click convert.
 - **Widgets (payslip, shift checker) cannot be added in the editor**, only kept on a copy.
 - **No governance metadata yet.** The manuscript format (issue_no, ratified_by, sources,
   provenance) is still a draft awaiting Mike's review, so the editor does not model it. Add it
@@ -3610,6 +3608,50 @@ referrals, viewer changed to render branching.
 **Next, in order:**
 1. [ ] Mike to try it on a real guide (a guide he knows well) and say what slows him down.
 2. [ ] Decide the shared store (Azure SQL per Cris's standard) - swap `guide-store.ts` only.
-3. [ ] Migrate the seven typed-step referrals onto Question blocks, then retire the fixed types.
+3. [x] Migrate the typed-step referrals onto Question blocks (done, six not seven - see below).
+   [ ] Then delete the legacy code paths: the four fixed-type screens and their state in the viewer,
+   `buildReferralCaseNote`'s IMHA branch, and the consent/informed wording panel in the editor.
+   Safe once nobody has an old editor copy. Nothing in the app can tell you that; ask.
 4. [ ] Governance fields + manuscript export, after the format is reviewed.
 5. [ ] Live preview beside the editor (today "View guide" opens the real viewer in a new tab).
+
+### Migration of the fixed question steps (29 Sept 2026)
+
+**It was six referrals, not seven:** imha-advocacy, safeguarding, safeguarding-children,
+homeless-discharge, social-care, ctr-dsp. `s117-meeting` uses a criteria walk, which is a different
+mechanism and was left alone.
+
+**What changed.** The consent, legal status, S117 and area steps now carry a Question block. They keep
+their `type` (so the step keeps its colour and icon) but the type no longer carries behaviour: a step
+with a `branch` ignores its fixed type. New pieces:
+- `alsoAsk` on a step: further questions on the same screen (consent, then "have you told them").
+- `explain` / `explainTone` on a choice: the amber or grey message that appears once it is picked
+  (the S117 pathway callout).
+- `[NURSE]` in a referral's case note places the sign-off yourself instead of the automatic
+  "Completed by". IMHA needs it because its note ends "Referral completed by".
+- `lib/data/guides/case-note.ts`: the case note builder, pulled out of the viewer so it can be tested.
+- `lib/data/guides/legacy-steps.ts`: `migrateWorkflow`, used to migrate the built-in data AND by the
+  editor's "Convert to Question blocks" banner for older saved copies.
+- Ids match what the fixed steps used (`area` = `city`/`county`, `consent` = `yes`/`no`, `informed`,
+  `section`, `s117`), so the forms and contacts that filter by `area` needed no change.
+
+**How it was proved, not just eyeballed:**
+- Before touching anything I recorded 676 case notes from the OLD code across every answer combination
+  (`__tests__/fixtures/referral-casenotes.golden.json`) and a copy of the six referrals as they were
+  (`referrals-before-branch-migration.json`). The extraction of the case note builder was checked
+  against a verbatim copy of the old function first.
+- `__tests__/referral-branch-migration.test.ts` (51 tests): the built-in data equals what migrating
+  the old copy produces; same steps in the same order; the reader is held on a step until exactly the
+  same answers are given; and every recorded case note comes out word for word the same.
+- Checked in the browser: IMHA end to end (gating, ten legal statuses, area filtering of forms and
+  contacts, exact case note), safeguarding (two questions on one screen, both required, note),
+  social-care (S117 messages).
+
+**Deliberate differences, none of which the app can reach or the reader will mind:**
+- A note for a question the reader never answered shows `[BRANCH:id]` rather than the old bracketed
+  word. Unreachable: every one of these questions is required.
+- IMHA's note used to skip "Referral completed by" when nobody was signed in. It now always places
+  the token. Somebody is always signed in.
+- Small visible change: the choices are now the standard radio cards, not the bespoke coloured
+  buttons, and the ten legal statuses are one list rather than a two-column grid. The step keeps its
+  colour and icon.

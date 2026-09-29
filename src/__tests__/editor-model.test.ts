@@ -1,12 +1,15 @@
 import { GUIDES } from "@/lib/data/guides/howto-guides";
 import { WORKFLOWS } from "@/lib/data/guides/referral-workflows";
-import { visibleSteps, enumerateRoutes } from "@/lib/data/guides/branching";
+import { visibleSteps, enumerateRoutes, branchesOf } from "@/lib/data/guides/branching";
+import { migrateWorkflow } from "@/lib/data/guides/legacy-steps";
+import legacyReferrals from "./fixtures/referrals-before-branch-migration.json";
+import type { WorkflowData } from "@/lib/data/guides/referral-workflows";
 import { isStoredGuide, safeUrl, type StoredGuide } from "@/lib/data/guides/guide-store";
 import {
   EDITOR_COVERAGE, DEFAULT_LOOK, blankGuide, referralTemplate, copyOfBuiltIn, newStep,
   addBlock, removeBlock, hasBlock, addBranch, addChoice, updateChoice, removeChoice,
   addCondition, setConditionBranch, toggleConditionChoice, removeCondition, questionsBefore,
-  dependantsOf, applyQuestionPreset, moveStep, duplicateStep, nextId, uniqueGuideId, checkGuide, errorsOf,
+  dependantsOf, applyQuestionPreset, addAlsoAsk, updateAlsoAsk, removeAlsoAsk, moveStep, duplicateStep, nextId, uniqueGuideId, checkGuide, errorsOf,
   type EditorStep,
 } from "@/lib/data/guides/editor-model";
 
@@ -76,9 +79,34 @@ describe("opening a built-in guide in the editor", () => {
     expect(bad).toEqual([]);
   });
 
-  it("every built-in guide has exactly one route, as it did before branching", () => {
+  it("read-through guides have one route, as they did before branching", () => {
     Object.values(GUIDES).forEach((g) => expect(enumerateRoutes(g.steps).routes).toHaveLength(1));
-    Object.values(WORKFLOWS).forEach((w) => expect(enumerateRoutes(w.steps).routes).toHaveLength(1));
+  });
+
+  // Every combination of answers the reader can give. IMHA is area (2) x consent
+  // (2) x legal status (10); the safeguarding pair is area x consent x informed.
+  const ROUTES: Record<string, number> = {
+    "imha-advocacy": 40,
+    safeguarding: 8,
+    "safeguarding-children": 8,
+    "homeless-discharge": 4,
+    "social-care": 3,
+    "ctr-dsp": 2,
+  };
+  it("referrals have one route unless they ask questions, and then exactly the routes they should", () => {
+    Object.values(WORKFLOWS).forEach((w) => {
+      expect(enumerateRoutes(w.steps).routes).toHaveLength(ROUTES[w.id] ?? 1);
+    });
+  });
+});
+
+describe("questions in the built-in referrals are all doing something", () => {
+  it("raises no 'nothing changes' warning on any of them", () => {
+    const look = { icon: "x", gradient: "g", category: "c" };
+    const stray = Object.values(WORKFLOWS)
+      .map((w) => ({ id: w.id, warnings: checkGuide(copyOfBuiltIn("workflow", w, look)).filter((f) => /Nothing changes/.test(f.text)) }))
+      .filter((x) => x.warnings.length);
+    expect(stray).toEqual([]);
   });
 });
 
@@ -295,5 +323,65 @@ describe("links in built-in guides survive being copied into the editor", () => 
   it("finds links to check", () => expect(urls.length).toBeGreaterThan(100));
   it("leaves every one of them unchanged", () => {
     expect(urls.filter((u) => safeUrl(u) !== u)).toEqual([]);
+  });
+});
+
+describe("a further question on the same step", () => {
+  const start = () => {
+    const steps = blankGuide("g", "G").data.steps as EditorStep[];
+    return { steps, step: addBranch(steps[0], steps) };
+  };
+
+  it("gets an id that no other question has", () => {
+    const { steps, step } = start();
+    const more = addAlsoAsk(step, [step, ...steps.slice(1)]);
+    expect(branchesOf(more).map((b) => b.id)).toEqual(["q1", "q2"]);
+  });
+
+  it("can be edited and removed", () => {
+    const { steps, step } = start();
+    let s = addAlsoAsk(step, steps);
+    s = updateAlsoAsk(s, 0, { ...s.alsoAsk![0], question: "Told?" });
+    expect(s.alsoAsk![0].question).toBe("Told?");
+    s = removeAlsoAsk(s, 0);
+    expect("alsoAsk" in s).toBe(false);
+  });
+
+  it("goes when the first question goes", () => {
+    const { steps, step } = start();
+    const s = removeBlock(addAlsoAsk(step, steps), "branch");
+    expect(branchesOf(s)).toEqual([]);
+    expect("alsoAsk" in s).toBe(false);
+  });
+
+  it("offers later steps every question on an earlier step", () => {
+    const { steps, step } = start();
+    const s = addAlsoAsk(step, steps);
+    expect(questionsBefore([s, { id: "s2", title: "Next", content: "" } as EditorStep], 1)).toHaveLength(2);
+  });
+
+  it("is left behind when a step is duplicated", () => {
+    const { steps, step } = start();
+    expect(duplicateStep(addAlsoAsk(step, steps), steps).alsoAsk).toBeUndefined();
+  });
+});
+
+describe("converting an older referral saved in the editor", () => {
+  const old = (legacyReferrals as unknown as Record<string, WorkflowData>)["safeguarding"];
+
+  it("swaps the fixed question steps for Question blocks and keeps everything else", () => {
+    const converted = migrateWorkflow(old);
+    expect(converted.steps.map((s) => s.id)).toEqual(old.steps.map((s) => s.id));
+    const consent = converted.steps.find((s) => s.id === "consent")!;
+    expect(consent.type).toBe("consent");
+    expect(branchesOf(consent).map((b) => b.id)).toEqual(["consent", "informed"]);
+    expect("consentYesLabel" in consent).toBe(false);
+    expect(converted.steps.find((s) => s.id === "forms")).toEqual(old.steps.find((s) => s.id === "forms"));
+  });
+
+  it("gives a guide the checks accept", () => {
+    const look = { icon: "x", gradient: "g", category: "c" };
+    const stored = copyOfBuiltIn("workflow", migrateWorkflow(old), look);
+    expect(errorsOf(checkGuide(stored))).toEqual([]);
   });
 });

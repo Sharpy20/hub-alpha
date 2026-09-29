@@ -39,8 +39,15 @@ const METHOD_COLUMNS: Column[] = [
   { key: "area", label: "Shown for", kind: "select", options: AREA_OPTIONS, optional: true },
 ];
 
+const FIXED_QUESTION_TYPES: WorkflowStep["type"][] = ["consent", "section", "s117", "area"];
+
 export function WorkflowFields({ step, onChange }: { step: WorkflowStep; onChange: (s: WorkflowStep) => void }) {
   const type = STEP_TYPES.find((t) => t.value === step.type);
+  // The fixed question types are retired in favour of the Question block. They
+  // stay in the list only for a step that already has one, so it does not lose its
+  // colour or its old behaviour before it is converted.
+  const offered = STEP_TYPES.filter((t) => !FIXED_QUESTION_TYPES.includes(t.value) || t.value === step.type);
+  const legacy = FIXED_QUESTION_TYPES.includes(step.type) && !step.branch;
   const patch = (p: Partial<WorkflowStep>) => onChange({ ...step, ...p });
   const forms = step.forms ?? { blank: [], wagoll: [], otherGuides: [] };
   const setForms = (key: "blank" | "wagoll" | "otherGuides", list: WorkflowForm[]) => patch({ forms: { ...forms, [key]: list } });
@@ -53,8 +60,8 @@ export function WorkflowFields({ step, onChange }: { step: WorkflowStep; onChang
         label="What kind of step is this?"
         value={step.type}
         onChange={(v) => patch({ type: v as WorkflowStep["type"] })}
-        options={STEP_TYPES.map((t) => ({ value: t.value, label: t.label }))}
-        hint={type?.help}
+        options={offered.map((t) => ({ value: t.value, label: t.label }))}
+        hint={legacy ? "This uses the older fixed question. Convert the referral to Question blocks from the banner at the top." : type?.help}
       />
 
       {(step.type === "criteria" || step.type === "reminder") && (
@@ -65,7 +72,7 @@ export function WorkflowFields({ step, onChange }: { step: WorkflowStep; onChang
         />
       )}
 
-      {step.type === "consent" && (
+      {step.type === "consent" && legacy && (
         <BlockPanel title="Consent wording">
           <div className="grid gap-3 sm:grid-cols-2">
             <TextField label="Yes button" value={step.consentYesLabel ?? ""} onChange={(v) => patch({ consentYesLabel: v || undefined })} />

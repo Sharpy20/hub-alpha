@@ -29,8 +29,9 @@ import { HandbackBadge } from "@/components/tasks/HandbackBadge";
 import { CriteriaWalker } from "@/components/guides/CriteriaWalker";
 import { BranchPicker } from "@/components/guides/BranchPicker";
 import { useStoredGuides } from "@/lib/hooks/useStoredGuides";
+import { buildReferralCaseNote } from "@/lib/data/guides/case-note";
 import {
-  visibleSteps, branchAnswered, applyBranchTokens, describeConditions,
+  visibleSteps, branchAnswered, branchesOf, applyBranchTokens, describeConditions,
   type BranchAnswers, type BranchableStep,
 } from "@/lib/data/guides/branching";
 import {
@@ -370,6 +371,12 @@ export default function UnifiedGuidePage() {
   const allSteps: BranchableStep[] = isReferral ? workflow.steps : guide.steps;
   const shownSteps = visibleSteps(allSteps, branchAnswers);
 
+  // The council area picked, whether by a question with the id "area" (the
+  // general form) or by an older fixed area step. Forms and submission methods
+  // are filtered by it either way.
+  const areaAnswer = branchAnswers.area === "city" || branchAnswers.area === "county" ? branchAnswers.area : null;
+  const areaNow = selectedArea ?? areaAnswer;
+
   // Current step data
   const totalSteps = shownSteps.length;
   const title = isReferral ? workflow.title : guide.title;
@@ -410,70 +417,23 @@ export default function UnifiedGuidePage() {
 
   const generateCaseNote = () => {
     if (!rStep) return "";
-    if (guideId === "imha-advocacy") {
-      const areaName = selectedArea === "city" ? "Derby City IMHA (Disability Direct)" : "Derbyshire County IMHA (Cloverleaf)";
-      const areaEmail = selectedArea === "city" ? "info@disabilitydirect.com" : "referrals@cloverleaf-advocacy.co.uk";
-      const patientText = linkedPatient ? `Patient: ${linkedPatient.name}. ` : "";
-      const staffText = caseNoteBy ? ` Referral completed by ${caseNoteBy}.` : "";
-      let statusText: string;
-      if (patientSection === "informal") {
-        statusText = "Patient is informal (voluntary)";
-      } else {
-        const sectionLabel = SECTION_OPTIONS.find(o => o.value === patientSection)?.label || patientSection?.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()) || "[SECTION]";
-        statusText = `Patient is detained under ${sectionLabel}`;
-      }
-      const consentStep = workflow.steps.find(s => s.type === "consent");
-      const consentText = patientConsent && consentStep
-        ? ` ${patientConsent === "yes" ? consentStep.consentYesNote : consentStep.consentNoNote}`
-        : "";
-      return `${patientText}Referral for IMHA sent to ${areaName} via email to ${areaEmail} on ${todayDate}. ${statusText} and would benefit from independent advocacy support.${consentText}${staffText}`;
-    }
-    let text = rStep.clipboardText || "";
-    text = applyBranchTokens(text, workflow.steps, branchAnswers);
-    text = text.replace(/\[DATE\]/g, todayDate);
-    // Answers the user gave earlier in the wizard. Each step owns the wording it
-    // wants in the note (consentYesNote etc) so the viewer never invents clinical
-    // phrasing. An unanswered question leaves its placeholder visible rather than
-    // guessing - a blank is obvious, a wrong assertion is not.
-    const consentStep = workflow.steps.find(s => s.type === "consent");
-    if (patientConsent && consentStep) {
-      const note = patientConsent === "yes" ? consentStep.consentYesNote : consentStep.consentNoNote;
-      if (note) text = text.replace(/\[CONSENT\]/g, note);
-    }
-    if (patientInformed && consentStep) {
-      const note = patientInformed === "yes" ? consentStep.informedYesNote : consentStep.informedNoNote;
-      if (note) text = text.replace(/\[INFORMED\]/g, note);
-    }
-    if (s117Status) {
-      const opt = S117_OPTIONS.find(o => o.value === s117Status);
-      if (opt) {
-        text = text.replace(
-          /\[S117\]/g,
-          opt.entitled
-            // Lowercase the first letter only - toLowerCase() on the whole label
-            // turned "Previously on Section 3" into "section 3".
-            ? `Patient has S117 aftercare entitlement (${opt.label.charAt(0).toLowerCase() + opt.label.slice(1)}) - a S117 aftercare meeting is required before discharge.`
-            : "Patient has no qualifying section, so no S117 aftercare entitlement; standard Care Act route."
-        );
-      }
-    }
-    if (selectedArea) {
-      text = text.replace(/\[DERBY CITY\/DERBYSHIRE COUNTY\]/g, selectedArea === "city" ? "Derby City" : "Derbyshire County");
-      text = text.replace(/\[DERBY\/COUNTY\]/g, selectedArea === "city" ? "Derby City" : "Derbyshire County");
-    }
-    if (patientSection) {
-      const sectionLabel = SECTION_OPTIONS.find(o => o.value === patientSection)?.label || patientSection.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-      text = text.replace(/\[SECTION\]/g, sectionLabel);
-    }
-    if (linkedPatient) text = `Patient: ${linkedPatient.name}. ${text}`;
-    if (caseNoteBy) text = `${text} Completed by ${caseNoteBy}.`;
-    return text;
+    return buildReferralCaseNote({
+      guideId,
+      steps: workflow.steps,
+      step: rStep,
+      fixed: { area: areaNow, consent: patientConsent, informed: patientInformed, section: patientSection, s117: s117Status },
+      branch: branchAnswers,
+      today: todayDate,
+      patientName: linkedPatient?.name,
+      by: caseNoteBy,
+    });
   };
 
   const canProceed = () => {
     if (!branchAnswered(shownSteps[currentStep] ?? { id: "" }, branchAnswers)) return false;
     if (!isReferral || !rStep) return true;
     if (rStep.type === "criteria") return criteriaConfirmed;
+    if (rStep.branch) return true;
     if (rStep.type === "consent") return patientConsent !== null && (!rStep.informedQuestion || patientInformed !== null);
     if (rStep.type === "section") return patientSection !== "";
     if (rStep.type === "s117") return s117Status !== "";
@@ -605,12 +565,12 @@ export default function UnifiedGuidePage() {
                 <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
                 {s.showIf && s.showIf.length > 0 && <p className="text-xs italic text-gray-600 mb-1">Only if: {describeConditions(s, guide.steps)}</p>}
                 <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content.replace(/\[#\d+\]/g, ""))}</div>
-                {s.branch && (
-                  <div className="text-sm mt-1">
-                    <p className="font-semibold">{s.branch.question}</p>
-                    <ul className="list-disc ml-5">{s.branch.choices.map((c) => <li key={c.id}>{c.label}</li>)}</ul>
+                {branchesOf(s).map((b) => (
+                  <div key={b.id} className="text-sm mt-1">
+                    <p className="font-semibold">{b.question}</p>
+                    <ul className="list-disc ml-5">{b.choices.map((c) => <li key={c.id}>{c.label}</li>)}</ul>
                   </div>
-                )}
+                ))}
                 {s.tip && <p className="text-sm italic text-gray-600 mt-1">Tip: {s.tip}</p>}
               </section>
             ))}
@@ -623,12 +583,12 @@ export default function UnifiedGuidePage() {
                   <h2 className="text-base font-bold border-b border-gray-300 pb-1 mb-1">{i + 1}. {s.title}</h2>
                   {s.showIf && s.showIf.length > 0 && <p className="text-xs italic text-gray-600 mb-1">Only if: {describeConditions(s, workflow.steps)}</p>}
                   <div className="text-sm whitespace-pre-wrap leading-snug">{renderWithLinks(s.content)}</div>
-                  {s.branch && (
-                    <div className="text-sm mt-1">
-                      <p className="font-semibold">{s.branch.question}</p>
-                      <ul className="list-disc ml-5">{s.branch.choices.map((c) => <li key={c.id}>{c.label}</li>)}</ul>
+                  {branchesOf(s).map((b) => (
+                    <div key={b.id} className="text-sm mt-1">
+                      <p className="font-semibold">{b.question}</p>
+                      <ul className="list-disc ml-5">{b.choices.map((c) => <li key={c.id}>{c.label}</li>)}</ul>
                     </div>
-                  )}
+                  ))}
                   {links.length > 0 && (
                     <ul className="text-sm list-disc ml-5 mt-1">
                       {links.map((f) => <li key={f.label}>{f.label}: {f.url}</li>)}
@@ -923,15 +883,16 @@ export default function UnifiedGuidePage() {
                   ))
                 )}
               </div>
-              {rStep.branch && (
-                <div className="mb-6">
+              {branchesOf(rStep).map((b) => (
+                <div key={b.id} className="mb-6">
                   <BranchPicker
-                    branch={rStep.branch}
-                    answer={branchAnswers[rStep.branch.id]}
-                    onAnswer={(choice) => setBranchAnswers((prev) => ({ ...prev, [rStep.branch!.id]: choice }))}
+                    branch={b}
+                    answer={branchAnswers[b.id]}
+                    hideQuestion={b.question.trim().toLowerCase() === rStep.title.trim().toLowerCase()}
+                    onAnswer={(choice) => setBranchAnswers((prev) => ({ ...prev, [b.id]: choice }))}
                   />
                 </div>
-              )}
+              ))}
 
               {/* Criteria */}
               {rStep.type === "criteria" && (
@@ -942,7 +903,7 @@ export default function UnifiedGuidePage() {
               )}
 
               {/* Consent */}
-              {rStep.type === "consent" && (
+              {rStep.type === "consent" && !rStep.branch && (
                 <div className="space-y-3">
                   <button onClick={() => setPatientConsent("yes")} className={`w-full p-5 rounded-xl text-left flex items-center gap-4 transition-all border-2 ${patientConsent === "yes" ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white border-green-500" : "bg-green-50 text-gray-800 border-green-200 hover:border-green-400"}`}>
                     <span className="text-3xl">{"\u2705"}</span>
@@ -975,7 +936,7 @@ export default function UnifiedGuidePage() {
               {/* S117 status. Its own three options rather than the 10-way MHA list -
                   entitlement turns on whether a qualifying section was EVER held, and
                   "previously on S3" cannot be said with the generic picker. */}
-              {rStep.type === "s117" && (
+              {rStep.type === "s117" && !rStep.branch && (
                 <div className="space-y-3">
                   {S117_OPTIONS.map((option) => (
                     <button key={option.value} onClick={() => setS117Status(option.value)} className={`w-full p-5 rounded-xl text-left flex items-center gap-4 transition-all border-2 ${s117Status === option.value ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-indigo-500" : "bg-indigo-50 text-gray-800 border-indigo-200 hover:border-indigo-400"}`}>
@@ -1001,7 +962,7 @@ export default function UnifiedGuidePage() {
               )}
 
               {/* Section selection */}
-              {rStep.type === "section" && (
+              {rStep.type === "section" && !rStep.branch && (
                 <div className="grid grid-cols-2 gap-3">
                   {SECTION_OPTIONS.map((option) => (
                     <button key={option.value} onClick={() => setPatientSection(option.value)} className={`p-5 rounded-xl text-center transition-all border-2 ${patientSection === option.value ? "bg-gradient-to-r from-indigo-500 to-purple-600 text-white border-indigo-500" : "bg-indigo-50 text-gray-800 border-indigo-200 hover:border-indigo-400"}`}>
@@ -1012,7 +973,7 @@ export default function UnifiedGuidePage() {
               )}
 
               {/* Area selection */}
-              {rStep.type === "area" && (
+              {rStep.type === "area" && !rStep.branch && (
                 <div className="space-y-3">
                   {AREA_OPTIONS.map((option) => (
                     <button key={option.value} onClick={() => setSelectedArea(option.value as "city" | "county")} className={`w-full p-5 rounded-xl text-left flex items-center gap-4 transition-all border-2 ${selectedArea === option.value ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white border-violet-500" : "bg-violet-50 text-gray-800 border-violet-200 hover:border-violet-400"}`}>
@@ -1030,7 +991,7 @@ export default function UnifiedGuidePage() {
                     <div>
                       <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2"><Download className="w-5 h-5 text-blue-600" /> Blank Forms</h3>
                       <div className="space-y-2">
-                        {rStep.forms.blank.filter((form) => !form.area || form.area === selectedArea).map((form) => (
+                        {rStep.forms.blank.filter((form) => !form.area || form.area === areaNow).map((form) => (
                           <div key={form.label}>
                             {!form.url || form.url === "#" ? (
                               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="No trust URL has been captured for this form yet. Get it from FOCUS in the meantime.">
@@ -1080,7 +1041,7 @@ export default function UnifiedGuidePage() {
                     <div>
                       <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2"><BookOpen className="w-5 h-5 text-teal-600" /> Other Guides</h3>
                       <div className="space-y-2">
-                        {rStep.forms.otherGuides.filter((form) => !form.area || form.area === selectedArea).map((form) => (
+                        {rStep.forms.otherGuides.filter((form) => !form.area || form.area === areaNow).map((form) => (
                           <div key={form.label}>
                             {!form.url || form.url === "#" ? (
                               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="No trust URL has been captured for this guide yet.">
@@ -1107,7 +1068,7 @@ export default function UnifiedGuidePage() {
               {/* Submission */}
               {rStep.type === "submission" && rStep.methods && (
                 <div className="space-y-3">
-                  {rStep.methods.filter((method) => !method.area || method.area === selectedArea).map((method) => (
+                  {rStep.methods.filter((method) => !method.area || method.area === areaNow).map((method) => (
                     <div key={method.label} className={`p-5 rounded-xl border-2 ${method.type === "email" ? "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200" : method.type === "phone" ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200" : "bg-gradient-to-r from-purple-50 to-violet-50 border-purple-200"}`}>
                       <div className="flex items-center gap-3">
                         {method.type === "email" ? <Mail className="w-6 h-6 text-blue-600" /> : method.type === "phone" ? <Phone className="w-6 h-6 text-green-600" /> : <ExternalLink className="w-6 h-6 text-purple-600" />}
@@ -1252,13 +1213,15 @@ export default function UnifiedGuidePage() {
               {hStep.widget === "pay-faq" && (
                 <PayFaqAccordion topic={guideId === "pay-roster-faq" ? "all" : guideId === "payslip" ? "payslip" : guideId === "roster" ? "roster" : "leave"} />
               )}
-              {hStep.branch && (
+              {branchesOf(hStep).map((b) => (
                 <BranchPicker
-                  branch={hStep.branch}
-                  answer={branchAnswers[hStep.branch.id]}
-                  onAnswer={(choice) => setBranchAnswers((prev) => ({ ...prev, [hStep.branch!.id]: choice }))}
+                  key={b.id}
+                  branch={b}
+                  answer={branchAnswers[b.id]}
+                  hideQuestion={b.question.trim().toLowerCase() === hStep.title.trim().toLowerCase()}
+                  onAnswer={(choice) => setBranchAnswers((prev) => ({ ...prev, [b.id]: choice }))}
                 />
-              )}
+              ))}
               {hStep.tip && (
                 <div className="mt-6 p-4 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl border border-amber-200">
                   <div className="flex gap-3">

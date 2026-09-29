@@ -9,7 +9,7 @@
 import type { GuideData, GuideStep } from "./howto-guides";
 import { DEFAULT_WORKFLOW, type WorkflowData, type WorkflowStep } from "./referral-workflows";
 import {
-  validateBranching, unusedBranches,
+  validateBranching, unusedBranches, branchesOf,
   type BranchBlock, type BranchChoice, type BranchableStep, type StepCondition,
 } from "./branching";
 import type { GuideLook, StoredGuide } from "./guide-store";
@@ -117,6 +117,7 @@ export function duplicateStep<T extends EditorStep>(step: T, steps: EditorStep[]
   copy.id = nextId("s", steps.map((s) => s.id));
   copy.title = `${step.title} (copy)`;
   delete copy.branch;
+  delete copy.alsoAsk;
   return copy;
 }
 
@@ -136,7 +137,7 @@ export function hasBlock(step: EditorStep, block: BlockName): boolean {
 }
 
 export function addBranch(step: EditorStep, steps: EditorStep[]): EditorStep {
-  const taken = steps.flatMap((s) => (s.branch ? [s.branch.id] : []));
+  const taken = steps.flatMap((s) => branchesOf(s).map((b) => b.id));
   const branch: BranchBlock = {
     id: nextId("q", taken),
     question: "",
@@ -195,7 +196,7 @@ export function dependantsOf(steps: EditorStep[], branchId: string): EditorStep[
 export function questionsBefore(steps: EditorStep[], index: number): { stepTitle: string; branch: BranchBlock }[] {
   return steps
     .slice(0, index)
-    .flatMap((s) => (s.branch ? [{ stepTitle: s.title, branch: s.branch }] : []));
+    .flatMap((s) => branchesOf(s).map((branch) => ({ stepTitle: s.title, branch })));
 }
 
 export function addCondition(step: EditorStep, steps: EditorStep[]): EditorStep {
@@ -233,6 +234,37 @@ export function removeCondition(step: EditorStep, at: number): EditorStep {
 export function removeBlock(step: EditorStep, block: BlockName): EditorStep {
   const next = { ...step } as Record<string, unknown>;
   delete next[block];
+  // The extra questions hang off the first one, so they go with it.
+  if (block === "branch") delete next.alsoAsk;
+  return next as unknown as EditorStep;
+}
+
+// A further question on the same screen as the first.
+export function addAlsoAsk(step: EditorStep, steps: EditorStep[]): EditorStep {
+  const taken = steps.flatMap((s) => branchesOf(s).map((b) => b.id));
+  const branch: BranchBlock = {
+    id: nextId("q", taken),
+    question: "",
+    choices: [
+      { id: "c1", label: "" },
+      { id: "c2", label: "" },
+    ],
+  };
+  return { ...step, alsoAsk: [...(step.alsoAsk ?? []), branch] };
+}
+
+export function updateAlsoAsk(step: EditorStep, at: number, branch: BranchBlock): EditorStep {
+  return { ...step, alsoAsk: (step.alsoAsk ?? []).map((b, i) => (i === at ? branch : b)) };
+}
+
+export function removeAlsoAsk(step: EditorStep, at: number): EditorStep {
+  const rest = (step.alsoAsk ?? []).filter((_, i) => i !== at);
+  return rest.length === 0 ? stripAlsoAsk(step) : { ...step, alsoAsk: rest };
+}
+
+function stripAlsoAsk(step: EditorStep): EditorStep {
+  const next = { ...step } as Record<string, unknown>;
+  delete next.alsoAsk;
   return next as unknown as EditorStep;
 }
 
@@ -256,6 +288,14 @@ export interface Finding {
 
 const BRANCH_TOKEN = /\[BRANCH:([\w-]+)\]/g;
 
+function filtersByArea(steps: EditorStep[]): boolean {
+  return steps.some((s) => {
+    const w = s as WorkflowStep;
+    const entries = [...(w.forms?.blank ?? []), ...(w.forms?.wagoll ?? []), ...(w.forms?.otherGuides ?? []), ...(w.methods ?? [])];
+    return entries.some((e) => !!e.area);
+  });
+}
+
 export function checkGuide(g: StoredGuide): Finding[] {
   const out: Finding[] = [];
   const err = (text: string) => out.push({ level: "error", text });
@@ -278,12 +318,16 @@ export function checkGuide(g: StoredGuide): Finding[] {
   validateBranching(steps as BranchableStep[]).forEach(err);
 
   const caseText = g.kind === "guide" ? (g.data.caseNote ?? "") : "";
-  unusedBranches(steps as BranchableStep[], caseText).forEach((id) => {
-    const owner = steps.find((s) => s.branch?.id === id);
-    warn(`Nothing changes with the answer to "${owner?.branch?.question || id}". Fine if it is only there for the case note.`);
+  // A question with the id "area" also steers which forms and contacts show,
+  // through the `area` on each of them, so it is never "unused".
+  unusedBranches(steps as BranchableStep[], caseText)
+    .filter((id) => !(id === "area" && filtersByArea(steps)))
+    .forEach((id) => {
+    const owner = steps.flatMap((s) => branchesOf(s)).find((b) => b.id === id);
+    warn(`Nothing changes with the answer to "${owner?.question || id}". Fine if it is only there for the case note.`);
   });
 
-  const known = new Set(steps.flatMap((s) => (s.branch ? [s.branch.id] : [])));
+  const known = new Set(steps.flatMap((s) => branchesOf(s).map((b) => b.id)));
   const texts = [
     caseText,
     ...steps.map((s) => (s as WorkflowStep).clipboardText ?? ""),
@@ -310,7 +354,7 @@ export const EDITOR_COVERAGE = {
     keptAsIs: [] as string[],
   },
   guideStep: {
-    editable: ["id", "title", "content", "tip", "tldr", "progressive", "commitTasks", "branch", "showIf"],
+    editable: ["id", "title", "content", "tip", "tldr", "progressive", "commitTasks", "branch", "alsoAsk", "showIf"],
     keptAsIs: ["widget"],
   },
   workflow: {
@@ -319,7 +363,7 @@ export const EDITOR_COVERAGE = {
   },
   workflowStep: {
     editable: [
-      "id", "type", "title", "content", "progressive", "branch", "showIf",
+      "id", "type", "title", "content", "progressive", "branch", "alsoAsk", "showIf",
       "checkboxLabel", "clipboardText", "forms", "methods",
       "consentYesLabel", "consentYesDesc", "consentYesNote", "consentNoLabel", "consentNoDesc", "consentNoNote",
       "informedQuestion", "informedYesLabel", "informedYesNote", "informedNoLabel", "informedNoNote",

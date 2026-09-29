@@ -4,7 +4,7 @@ import { ChevronDown, ChevronUp, Copy, Trash2 } from "lucide-react";
 import type { GuideStep, CommitTask } from "@/lib/data/guides/howto-guides";
 import type { WorkflowStep } from "@/lib/data/guides/referral-workflows";
 import {
-  addBlock, dependantsOf, hasBlock, questionsBefore, removeBlock,
+  addAlsoAsk, addBlock, dependantsOf, hasBlock, questionsBefore, removeAlsoAsk, removeBlock, updateAlsoAsk,
   type BlockName, type EditorStep,
 } from "@/lib/data/guides/editor-model";
 import { describeConditions } from "@/lib/data/guides/branching";
@@ -128,6 +128,24 @@ export function StepEditor({
                 dependants={dependantsOf(steps, step.branch.id).length}
                 onInsertToken={onInsertToken}
               />
+            )}
+
+            {(step.alsoAsk ?? []).map((b, at) => (
+              <QuestionPanel
+                key={b.id}
+                title="Another question on this step"
+                branch={b}
+                onChange={(next) => onChange(updateAlsoAsk(step, at, next))}
+                onRemove={() => onChange(removeAlsoAsk(step, at))}
+                dependants={dependantsOf(steps, b.id).length}
+                onInsertToken={onInsertToken}
+              />
+            ))}
+
+            {step.branch && (
+              <button type="button" className={smallButton} onClick={() => onChange(addAlsoAsk(step, steps))}>
+                Ask another question on this step
+              </button>
             )}
 
             {hasBlock(step, "showIf") && (

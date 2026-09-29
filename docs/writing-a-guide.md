@@ -44,6 +44,13 @@ Say you want City and County readers to see different steps, then meet again.
 4. Leave the steps after that alone. A step with no condition shows for everyone, so the two routes
    meet again by themselves.
 
+Two questions can share one screen (for example consent, then whether the person was told). Switch on
+**Question**, then press **Ask another question on this step**. The reader has to answer both.
+
+To show a message once a choice is picked, fill in **Message shown once this is picked** on that
+choice. The first sentence is the headline and a new line starts the detail. Choose amber for a
+pathway with extra obligations.
+
 A step can only depend on a question that comes **before** it. If you move a question below the steps
 that depend on it, the checks say so.
 

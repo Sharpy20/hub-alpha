@@ -194,6 +194,14 @@ export function RouteCheck({ guide }: { guide: StoredGuide }) {
   const findings = checkGuide(guide);
   const { routes, truncated } = enumerateRoutes(steps);
   const titleOf = (id: string) => steps.find((s) => s.id === id)?.title.trim() || "Untitled step";
+  // Different answers often lead to the same steps (consent yes or no, then the
+  // same forms). Showing each on its own would bury the routes that differ.
+  const groups: { steps: string[]; labels: string[] }[] = [];
+  routes.forEach((r) => {
+    const hit = groups.find((g) => g.steps.join("|") === r.steps.join("|"));
+    if (hit) hit.labels.push(r.label);
+    else groups.push({ steps: r.steps, labels: [r.label] });
+  });
   const errors = findings.filter((f) => f.level === "error");
   const warnings = findings.filter((f) => f.level === "warning");
 
@@ -220,17 +228,29 @@ export function RouteCheck({ guide }: { guide: StoredGuide }) {
 
       <div>
         <h3 className="text-sm font-bold text-gray-900 mb-2">
-          {routes.length === 1 && !routes[0].label ? "Everyone sees the same steps" : `${routes.length}${truncated ? "+" : ""} routes through this guide`}
+          {routes.length === 1 && !routes[0].label
+            ? "Everyone sees the same steps"
+            : groups.length === 1
+              ? `Every combination of answers shows the same steps (${routes.length}${truncated ? "+" : ""} combinations)`
+              : `${groups.length} different routes through this guide (${routes.length}${truncated ? "+" : ""} combinations of answers)`}
         </h3>
         <ul className="space-y-2">
-          {routes.map((r, i) => (
+          {groups.map((g, i) => (
             <li key={i} className="text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-              {r.label && <p className="font-semibold text-gray-900">{r.label}</p>}
-              <p className="text-gray-600">{r.steps.map(titleOf).join("  →  ")}</p>
+              {g.labels.length === 1 && g.labels[0] && <p className="font-semibold text-gray-900">{g.labels[0]}</p>}
+              {g.labels.length > 1 && (
+                <details>
+                  <summary className="font-semibold text-gray-900 cursor-pointer">{g.labels.length} combinations of answers</summary>
+                  <ul className="mt-1 mb-2 list-disc ml-5 text-gray-600">
+                    {g.labels.map((l, k) => <li key={k}>{l}</li>)}
+                  </ul>
+                </details>
+              )}
+              <p className="text-gray-600">{g.steps.map(titleOf).join("  \u2192  ")}</p>
             </li>
           ))}
         </ul>
-        {truncated && <p className="text-xs text-gray-600 mt-2">Showing the first 64. A guide with this many routes is worth splitting in two.</p>}
+        {truncated && <p className="text-xs text-gray-600 mt-2">Showing the first 64 combinations. A guide with this many is worth splitting in two.</p>}
       </div>
     </section>
   );

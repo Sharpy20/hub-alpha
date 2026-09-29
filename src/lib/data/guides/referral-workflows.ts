@@ -73,6 +73,8 @@ export interface WorkflowStep {
   // See branching.ts. The fixed consent/section/area/s117 step types stay as
   // they are for now; this is the general form.
   branch?: BranchBlock;
+  // Further questions on the same screen, asked after `branch`.
+  alsoAsk?: BranchBlock[];
   showIf?: StepCondition[];
 }
 
@@ -154,24 +156,106 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "consent",
         title: "Patient Consent",
         content: "Have you asked the patient if they consent to an IMHA referral? (This is asked on the referral form - select as a reminder before proceeding)",
-        consentYesLabel: "Patient Consents",
-        consentYesDesc: "I have asked and the patient consents to IMHA referral",
-        consentNoLabel: "Patient Does Not Consent",
-        consentNoDesc: "Patient has declined or cannot give consent (referral can still proceed)",
-        consentYesNote: "Patient was asked and consented to the referral.",
-        consentNoNote: "Patient declined or was unable to consent; referral made as IMHA access is a statutory entitlement.",
+        branch: {
+          id: "consent",
+          question: "Patient Consent",
+          choices: [
+            {
+              id: "yes",
+              label: "Patient Consents",
+              hint: "I have asked and the patient consents to IMHA referral",
+              note: "Patient was asked and consented to the referral.",
+            },
+            {
+              id: "no",
+              label: "Patient Does Not Consent",
+              hint: "Patient has declined or cannot give consent (referral can still proceed)",
+              note: "Patient declined or was unable to consent; referral made as IMHA access is a statutory entitlement.",
+            },
+          ],
+        },
       },
       {
         id: "section",
         type: "section",
         title: "Legal Status",
         content: "What is the patient's current legal status under the Mental Health Act?",
+        branch: {
+          id: "section",
+          question: "Legal Status",
+          choices: [
+            { id: "informal", label: "Informal (Voluntary)", note: "Patient is informal (voluntary)" },
+            {
+              id: "section_2",
+              label: "Section 2 (Assessment)",
+              note: "Patient is detained under Section 2 (Assessment)",
+            },
+            {
+              id: "section_3",
+              label: "Section 3 (Treatment)",
+              note: "Patient is detained under Section 3 (Treatment)",
+            },
+            {
+              id: "section_4",
+              label: "Section 4 (Emergency)",
+              note: "Patient is detained under Section 4 (Emergency)",
+            },
+            {
+              id: "section_5_2",
+              label: "Section 5(2) (Doctor's Holding Power)",
+              note: "Patient is detained under Section 5(2) (Doctor's Holding Power)",
+            },
+            {
+              id: "section_5_4",
+              label: "Section 5(4) (Nurse's Holding Power)",
+              note: "Patient is detained under Section 5(4) (Nurse's Holding Power)",
+            },
+            {
+              id: "cto",
+              label: "CTO / Section 17A (Community Treatment Order)",
+              note: "Patient is detained under CTO / Section 17A (Community Treatment Order)",
+            },
+            {
+              id: "section_37",
+              label: "Section 37 (Hospital Order)",
+              note: "Patient is detained under Section 37 (Hospital Order)",
+            },
+            {
+              id: "section_37_41",
+              label: "Section 37/41 (Restricted Order)",
+              note: "Patient is detained under Section 37/41 (Restricted Order)",
+            },
+            {
+              id: "section_47_49",
+              label: "Section 47/49 (Transfer Direction)",
+              note: "Patient is detained under Section 47/49 (Transfer Direction)",
+            },
+          ],
+        },
       },
       {
         id: "area",
         type: "area",
         title: "Select Area",
         content: "Which area is the patient from? This determines which advocacy service to use.",
+        branch: {
+          id: "area",
+          question: "Select Area",
+          choices: [
+            {
+              id: "city",
+              label: "Derby City",
+              hint: "Derby City Council",
+              note: "Derby City IMHA (Disability Direct) via email to info@disabilitydirect.com",
+            },
+            {
+              id: "county",
+              label: "Derbyshire County",
+              hint: "Derbyshire County Council",
+              note: "Derbyshire County IMHA (Cloverleaf) via email to referrals@cloverleaf-advocacy.co.uk",
+            },
+          ],
+        },
       },
       {
         id: "forms",
@@ -210,8 +294,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "casenote",
         title: "Case Note Entry",
         content: "Copy this text to add to the patient's case notes:",
-        clipboardText: "", // Will be generated dynamically
-        isDynamic: true,
+        clipboardText: "Referral for IMHA sent to [BRANCH:area] on [DATE]. [BRANCH:section] and would benefit from independent advocacy support. [BRANCH:consent] Referral completed by [NURSE].",
       },
       {
         id: "reminder",
@@ -331,24 +414,49 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "consent",
         type: "consent",
         title: "Consent",
-        consentYesLabel: "Consent Obtained",
-        consentYesDesc: "I have discussed the referral with the adult and they consent",
-        consentNoLabel: "Referring Without Consent",
-        consentNoDesc: "Consent not given or not sought - proceeding due to risk (record your reasons)",
-        consentYesNote: "Consent was obtained from the adult.",
-        consentNoNote: "Consent was not obtained; referral made on risk grounds (reasons recorded on the referral).",
-        informedQuestion: "Separately - have you told the patient the referral is being made?",
-        informedYesLabel: "Patient informed",
-        informedNoLabel: "Not informed",
-        informedYesNote: "was",
-        informedNoNote: "was not",
         content: "Best practice is to get consent before referring. However:\n\n- Don't let consent stop you if you're genuinely worried\n- You can override consent if there's immediate risk of harm or risk to your own safety\n- If you can't get consent, explain why in the referral\n- Always try to inform the person you're making a referral, even if consent wasn't obtained\n- Consider whether the person has capacity to consent\n\nHaving consent is ideal but not essential. A referral without consent is better than no referral at all.",
+        branch: {
+          id: "consent",
+          question: "Consent",
+          choices: [
+            {
+              id: "yes",
+              label: "Consent Obtained",
+              hint: "I have discussed the referral with the adult and they consent",
+              note: "Consent was obtained from the adult.",
+            },
+            {
+              id: "no",
+              label: "Referring Without Consent",
+              hint: "Consent not given or not sought - proceeding due to risk (record your reasons)",
+              note: "Consent was not obtained; referral made on risk grounds (reasons recorded on the referral).",
+            },
+          ],
+        },
+        alsoAsk: [
+          {
+            id: "informed",
+            question: "Separately - have you told the patient the referral is being made?",
+            choices: [
+              { id: "yes", label: "Patient informed", note: "was" },
+              { id: "no", label: "Not informed", note: "was not" },
+            ],
+          },
+        ],
       },
       {
         id: "area",
         type: "area",
         title: "Select Area",
         content: "Which local authority area is the patient from? This determines where to send the safeguarding referral.",
+        branch: {
+          id: "area",
+          question: "Select Area",
+          choices: [
+            { id: "city", label: "Derby City", hint: "Derby City Council" },
+            { id: "county", label: "Derbyshire County", hint: "Derbyshire County Council" },
+          ],
+        },
       },
       {
         id: "writing-it",
@@ -416,7 +524,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "casenote",
         title: "Case Note Entry",
         content: "Copy this text to add to the patient's case notes:",
-        clipboardText: "Adult Safeguarding concern raised to [DERBY CITY/DERBYSHIRE COUNTY] on [DATE]. Concern relates to suspected [TYPE OF ABUSE]. Referral sent via [METHOD]. Reference number: [IF GIVEN]. [CONSENT] Patient [INFORMED] informed of referral.",
+        clipboardText: "Adult Safeguarding concern raised to [BRANCH:area] on [DATE]. Concern relates to suspected [TYPE OF ABUSE]. Referral sent via [METHOD]. Reference number: [IF GIVEN]. [BRANCH:consent] Patient [BRANCH:informed] informed of referral.",
       },
       {
         id: "reminder",
@@ -516,24 +624,49 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         id: "consent",
         type: "consent",
         title: "Discuss with Family",
-        consentYesLabel: "Family Discussed / Consents",
-        consentYesDesc: "I have discussed the concern with the family and they are aware of / consent to the referral",
-        consentNoLabel: "Referring Without Family Consent",
-        consentNoDesc: "Not discussed with family - doing so would raise the risk or is not appropriate (record your reasons). The child's safety comes first.",
-        consentYesNote: "Concern was discussed with the family and they consent to the referral.",
-        consentNoNote: "Family consent was not sought or not given; referring without it as seeking it would increase risk (reasons recorded on the referral).",
-        informedQuestion: "Separately - have you told the parent/carer the referral is being made?",
-        informedYesLabel: "Parent informed",
-        informedNoLabel: "Not informed",
-        informedYesNote: "was",
-        informedNoNote: "was not",
         content: "Best practice is to discuss concerns with the family and gain consent before referring.\n\nHowever, do NOT seek consent if:\n- Doing so would put the child at greater risk\n- Doing so would put you or others at risk\n- It would compromise a police investigation\n- The alleged perpetrator is a family member and may destroy evidence\n\nIf you refer without consent, record your reasons clearly in the referral.",
+        branch: {
+          id: "consent",
+          question: "Discuss with Family",
+          choices: [
+            {
+              id: "yes",
+              label: "Family Discussed / Consents",
+              hint: "I have discussed the concern with the family and they are aware of / consent to the referral",
+              note: "Concern was discussed with the family and they consent to the referral.",
+            },
+            {
+              id: "no",
+              label: "Referring Without Family Consent",
+              hint: "Not discussed with family - doing so would raise the risk or is not appropriate (record your reasons). The child's safety comes first.",
+              note: "Family consent was not sought or not given; referring without it as seeking it would increase risk (reasons recorded on the referral).",
+            },
+          ],
+        },
+        alsoAsk: [
+          {
+            id: "informed",
+            question: "Separately - have you told the parent/carer the referral is being made?",
+            choices: [
+              { id: "yes", label: "Parent informed", note: "was" },
+              { id: "no", label: "Not informed", note: "was not" },
+            ],
+          },
+        ],
       },
       {
         id: "area",
         type: "area",
         title: "Select Area",
         content: "Which area is the child from? This determines which team to contact.\n\nDerby City: Initial Response Team (Mon-Fri 9am-5pm)\nDerbyshire County: Starting Point (Mon-Fri 9am-5pm)",
+        branch: {
+          id: "area",
+          question: "Select Area",
+          choices: [
+            { id: "city", label: "Derby City", hint: "Derby City Council" },
+            { id: "county", label: "Derbyshire County", hint: "Derbyshire County Council" },
+          ],
+        },
       },
       {
         id: "forms",
@@ -573,7 +706,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "casenote",
         title: "Case Note Entry",
         content: "Document the safeguarding referral in the patient's notes (the parent is your patient):",
-        clipboardText: "Child safeguarding concern referred to [DERBY CITY/DERBYSHIRE COUNTY] on [DATE]. Concern relates to [CHILD NAME/DOB]. Nature of concern: [DETAILS]. Referral made via [PHONE/EMAIL]. Reference: [IF GIVEN]. [CONSENT] Parent [INFORMED] informed.",
+        clipboardText: "Child safeguarding concern referred to [BRANCH:area] on [DATE]. Concern relates to [CHILD NAME/DOB]. Nature of concern: [DETAILS]. Referral made via [PHONE/EMAIL]. Reference: [IF GIVEN]. [BRANCH:consent] Parent [BRANCH:informed] informed.",
       },
       {
         id: "reminder",
@@ -609,25 +742,45 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "consent",
         title: "Patient Consent",
         content: "Unlike a safeguarding referral, the Duty to Refer is built around the patient's agreement. The Homelessness Reduction Act 2017 asks for their consent to the referral, and to their details going to the housing authority.\n\n[confirm] What to do when you cannot get consent is still being checked with the Trust. A refusal by someone with capacity is not the same as being unable to consent - where a patient LACKS CAPACITY, a best-interests referral may still be appropriate. Do not treat a 'no' here as the final answer: check with your discharge coordinator or the housing team.\n\nEither way, give them the housing contact details, offer to help them self-refer, and record that the offer was made.",
-        consentYesLabel: "Patient Consents",
-        consentYesDesc: "The patient agrees to the referral and to their details being shared with housing",
-        consentNoLabel: "No Consent Recorded",
-        consentNoDesc: "Declined, or unable to consent - read the [confirm] note above before you decide what to do next",
-        // These carry the "was a referral actually made" clause, because whether a
+        // The notes on the choices carry the "was a referral actually made" clause, because whether a
         // referral goes in depends on the answer. The template must not open with
         // "referral submitted" or the two halves can contradict each other.
         // The no-consent wording deliberately states only what is known - it does
         // NOT say "no referral was made", because whether a best-interests referral
         // applies where the patient lacks capacity is still to be confirmed with the
         // Trust (see BACKLOG Section N, the [confirm] item).
-        consentYesNote: "Referral submitted with the patient's consent to their details being shared with housing.",
-        consentNoNote: "Consent to the referral was not obtained at this point. Housing contact details were given and the offer of support recorded.",
+        branch: {
+          id: "consent",
+          question: "Patient Consent",
+          choices: [
+            {
+              id: "yes",
+              label: "Patient Consents",
+              hint: "The patient agrees to the referral and to their details being shared with housing",
+              note: "Referral submitted with the patient's consent to their details being shared with housing.",
+            },
+            {
+              id: "no",
+              label: "No Consent Recorded",
+              hint: "Declined, or unable to consent - read the [confirm] note above before you decide what to do next",
+              note: "Consent to the referral was not obtained at this point. Housing contact details were given and the offer of support recorded.",
+            },
+          ],
+        },
       },
       {
         id: "area",
         type: "area",
         title: "Select Area",
         content: "Which local authority area does the patient need housing support from?",
+        branch: {
+          id: "area",
+          question: "Select Area",
+          choices: [
+            { id: "city", label: "Derby City", hint: "Derby City Council" },
+            { id: "county", label: "Derbyshire County", hint: "Derbyshire County Council" },
+          ],
+        },
       },
       {
         id: "s1-questions",
@@ -687,7 +840,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "casenote",
         title: "Case Note Entry",
         content: "Document the housing referral:",
-        clipboardText: "Duty to Refer (housing), [DERBY/COUNTY], [DATE]. [CONSENT] Expected discharge: [DATE]. Current accommodation status: [DETAILS]. Reference: [IF GIVEN].",
+        clipboardText: "Duty to Refer (housing), [BRANCH:area], [DATE]. [BRANCH:consent] Expected discharge: [DATE]. Current accommodation status: [DETAILS]. Reference: [IF GIVEN].",
       },
       {
         id: "reminder",
@@ -723,6 +876,36 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "s117",
         title: "S117 Status",
         content: "Is the patient under Section 3, or have they been on a Section 3 in this or a previous admission?\n\nThis determines the referral pathway:\n• S117 patients – require both a Care Act/S117 referral AND a S117 aftercare meeting before discharge\n• Non-S117 patients – follow the standard Care Act referral process\n\n⚠️ IMPORTANT: don't confuse the two meetings. Every patient should have a discharge planning meeting before they leave, whatever their section. The S117 aftercare meeting is a separate requirement that ONLY applies to patients with S117 entitlement – triggered by a Section 3 in this OR any previous admission. S117 status survives readmission, so a patient readmitted informally or under Section 2 who still holds S117 status DOES need one. A patient with no qualifying section in any admission does not. For S117 patients the two are often held as a single combined meeting.",
+        branch: {
+          id: "s117",
+          question: "S117 Status",
+          choices: [
+            {
+              id: "current",
+              label: "Detained under Section 3 during this admission",
+              hint: "At any point this admission - it counts even if they are informal now",
+              note: "Patient has S117 aftercare entitlement (detained under Section 3 during this admission) - a S117 aftercare meeting is required before discharge.",
+              explain: "S117 pathway - a S117 aftercare meeting is required before discharge (7 days notice), as well as this referral.\nThis is separate from the discharge planning meeting every patient should have. The two are often held together.",
+              explainTone: "caution",
+            },
+            {
+              id: "previous",
+              label: "Detained under Section 3 in a previous admission",
+              hint: "Any earlier admission, however long ago - entitlement survives readmission",
+              note: "Patient has S117 aftercare entitlement (detained under Section 3 in a previous admission) - a S117 aftercare meeting is required before discharge.",
+              explain: "S117 pathway - a S117 aftercare meeting is required before discharge (7 days notice), as well as this referral.\nThis is separate from the discharge planning meeting every patient should have. The two are often held together.",
+              explainTone: "caution",
+            },
+            {
+              id: "none",
+              label: "No qualifying section, ever",
+              hint: "Never held S3 or an equivalent - standard Care Act route",
+              note: "Patient has no qualifying section, so no S117 aftercare entitlement; standard Care Act route.",
+              explain: "Standard Care Act pathway - no S117 aftercare meeting needed.\nThe patient should still have a discharge planning meeting before they leave.",
+              explainTone: "neutral",
+            },
+          ],
+        },
       },
       {
         id: "what-it-asks",
@@ -786,7 +969,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "casenote",
         title: "Case Note Entry",
         content: "Document the referral. The referral will be triaged by duty and the outcome shared with the ward/referrer via telephone and email.",
-        clipboardText: "Care Act / S117 referral submitted on [DATE] to Derby City Mental Health Social Care (MHSOCIALCARE@DERBY.GOV.UK). [S117] Supporting documents sent: care plan, risk assessment [and OT assessment if applicable]. Nursing assessment: [INCLUDED/NOT REQUIRED]. Referral type: [CARE ACT ASSESSMENT / S117 MEETING REQUEST / ENABLEMENT]. Awaiting triage outcome from duty team. Contact: 01332 640777.",
+        clipboardText: "Care Act / S117 referral submitted on [DATE] to Derby City Mental Health Social Care (MHSOCIALCARE@DERBY.GOV.UK). [BRANCH:s117] Supporting documents sent: care plan, risk assessment [and OT assessment if applicable]. Nursing assessment: [INCLUDED/NOT REQUIRED]. Referral type: [CARE ACT ASSESSMENT / S117 MEETING REQUEST / ENABLEMENT]. Awaiting triage outcome from duty team. Contact: 01332 640777.",
       },
       {
         id: "reminder",
@@ -1571,12 +1754,24 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "consent",
         title: "Patient/Carer Consent",
         content: "Complete the DSP consent form with the patient or their carer/representative. An Easy Read version is available.",
-        consentYesLabel: "Consent Obtained",
-        consentYesDesc: "The DSP consent form has been completed and signed",
-        consentNoLabel: "Consent Pending",
-        consentNoDesc: "Form not completed yet - the referral can go ahead and consent follows",
-        consentYesNote: "obtained",
-        consentNoNote: "pending",
+        branch: {
+          id: "consent",
+          question: "Patient/Carer Consent",
+          choices: [
+            {
+              id: "yes",
+              label: "Consent Obtained",
+              hint: "The DSP consent form has been completed and signed",
+              note: "obtained",
+            },
+            {
+              id: "no",
+              label: "Consent Pending",
+              hint: "Form not completed yet - the referral can go ahead and consent follows",
+              note: "pending",
+            },
+          ],
+        },
       },
       {
         id: "forms",
@@ -1615,7 +1810,7 @@ export const WORKFLOWS: Record<string, WorkflowData> = {
         type: "casenote",
         title: "Case Note Entry",
         content: "Document the CTR/DSP referral:",
-        clipboardText: "CTR/DSP referral submitted to JUCD Keyworking Team on [DATE]. Patient has [AUTISM/LEARNING DISABILITY]. DSP consent [CONSENT]. Referral form completed and sent via [METHOD]. Awaiting keyworker allocation.",
+        clipboardText: "CTR/DSP referral submitted to JUCD Keyworking Team on [DATE]. Patient has [AUTISM/LEARNING DISABILITY]. DSP consent [BRANCH:consent]. Referral form completed and sent via [METHOD]. Awaiting keyworker allocation.",
       },
       {
         id: "reminder",

@@ -1,6 +1,6 @@
 import {
   visibleSteps, branchAnswered, applyBranchTokens, validateBranching,
-  describeConditions, unusedBranches, type BranchableStep,
+  describeConditions, unusedBranches, enumerateRoutes, type BranchableStep,
 } from "@/lib/data/guides/branching";
 
 const area = {
@@ -144,5 +144,52 @@ describe("describeConditions and unusedBranches", () => {
     expect(unusedBranches(lonely)).toEqual(["area"]);
     expect(unusedBranches(lonely, "Sent to [BRANCH:area]")).toEqual([]);
     expect(unusedBranches(steps)).toEqual([]);
+  });
+});
+
+describe("enumerateRoutes", () => {
+  it("gives one route for a guide with no questions", () => {
+    const { routes } = enumerateRoutes([{ id: "a" }, { id: "b" }]);
+    expect(routes).toHaveLength(1);
+    expect(routes[0].steps).toEqual(["a", "b"]);
+    expect(routes[0].label).toBe("");
+  });
+
+  it("gives one route per answer to a single question", () => {
+    const { routes } = enumerateRoutes(steps);
+    expect(routes.map((r) => r.steps)).toEqual([
+      ["intro", "ask", "city-step", "everyone"],
+      ["intro", "ask", "county-step", "everyone"],
+    ]);
+    expect(routes[0].label).toBe("Which area? Derby City");
+  });
+
+  it("only multiplies questions the route actually reaches", () => {
+    const nested: BranchableStep[] = [
+      { id: "q1", branch: { id: "adult", question: "Adult?", choices: yesNo } },
+      { id: "q2", showIf: [{ branch: "adult", is: ["y"] }], branch: { id: "carer", question: "Carer?", choices: yesNo } },
+    ];
+    // adult=n has no carer question, so three routes, not four.
+    expect(enumerateRoutes(nested).routes).toHaveLength(3);
+  });
+
+  it("treats skipping an optional question as its own route", () => {
+    const optional: BranchableStep[] = [
+      { id: "q", branch: { id: "q", question: "Q?", choices: yesNo, required: false } },
+      { id: "after", showIf: [{ branch: "q", is: ["y"] }] },
+    ];
+    const { routes } = enumerateRoutes(optional);
+    expect(routes).toHaveLength(3);
+    expect(routes.some((r) => r.steps.join() === "q")).toBe(true);
+  });
+
+  it("stops rather than freezing on a runaway number of routes", () => {
+    const many: BranchableStep[] = Array.from({ length: 8 }, (_, i) => ({
+      id: `q${i}`,
+      branch: { id: `b${i}`, question: `Q${i}?`, choices: yesNo },
+    }));
+    const { routes, truncated } = enumerateRoutes(many);
+    expect(routes.length).toBe(64);
+    expect(truncated).toBe(true);
   });
 });

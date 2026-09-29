@@ -11,7 +11,7 @@ import { PatientPickerModal } from "@/components/modals/PatientPickerModal";
 import { AddTaskModal, CommitTasksModal, type AddTaskPrefill } from "@/components/modals";
 import { Patient, DiaryTask } from "@/lib/types";
 import Link from "next/link";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import {
   CheckCircle, FileText, Eye, BookOpen, Send, Clipboard, ClipboardList,
@@ -28,6 +28,7 @@ import { HandBackModal } from "@/components/modals/HandBackModal";
 import { HandbackBadge } from "@/components/tasks/HandbackBadge";
 import { CriteriaWalker } from "@/components/guides/CriteriaWalker";
 import { BranchPicker } from "@/components/guides/BranchPicker";
+import { useStoredGuides } from "@/lib/hooks/useStoredGuides";
 import {
   visibleSteps, branchAnswered, applyBranchTokens, describeConditions,
   type BranchAnswers, type BranchableStep,
@@ -207,12 +208,15 @@ export default function UnifiedGuidePage() {
   }, [legacyTarget, router, link]);
 
   // Determine guide type
-  const isReferral = !!WORKFLOWS[guideId];
-  const workflow: WorkflowData = isReferral ? (WORKFLOWS[guideId] || DEFAULT_WORKFLOW) : DEFAULT_WORKFLOW;
-  const guide: GuideData = !isReferral ? (GUIDES[guideId] || DEFAULT_GUIDE) : DEFAULT_GUIDE;
+  // A guide saved in the editor wins over the built-in one with the same id.
+  const { guides: storedGuides, ready: storeReady } = useStoredGuides();
+  const stored = storedGuides.find((g) => g.id === guideId);
+  const isReferral = stored ? stored.kind === "workflow" : !!WORKFLOWS[guideId];
+  const workflow: WorkflowData = stored?.kind === "workflow" ? stored.data : isReferral ? (WORKFLOWS[guideId] || DEFAULT_WORKFLOW) : DEFAULT_WORKFLOW;
+  const guide: GuideData = stored?.kind === "guide" ? stored.data : !isReferral ? (GUIDES[guideId] || DEFAULT_GUIDE) : DEFAULT_GUIDE;
   const config = isReferral
     ? { icon: workflow.icon, gradient: workflow.gradient, category: "Referral" }
-    : (GUIDE_CONFIG[guideId] || { icon: "\uD83D\uDCD6", gradient: "from-blue-500 to-blue-700", category: "Guide" });
+    : (stored?.look || GUIDE_CONFIG[guideId] || { icon: "\uD83D\uDCD6", gradient: "from-blue-500 to-blue-700", category: "Guide" });
 
   // Some how-to guides are the write-up for a recurring ward diary task (e.g.
   // fridge temps). If one of today's ward tasks for the active ward is linked to
@@ -364,7 +368,7 @@ export default function UnifiedGuidePage() {
   // conditions hold. A guide with no branches gets its full list back untouched.
   const [branchAnswers, setBranchAnswers] = useState<BranchAnswers>({});
   const allSteps: BranchableStep[] = isReferral ? workflow.steps : guide.steps;
-  const shownSteps = useMemo(() => visibleSteps(allSteps, branchAnswers), [allSteps, branchAnswers]);
+  const shownSteps = visibleSteps(allSteps, branchAnswers);
 
   // Current step data
   const totalSteps = shownSteps.length;
@@ -533,6 +537,10 @@ export default function UnifiedGuidePage() {
   useEffect(() => {
     if (isTourMode && isLastStep && !tourCompleteShown) setTourCompleteShown(true);
   }, [isTourMode, isLastStep, tourCompleteShown]);
+
+  // An id that is not built in may be a guide saved in the editor. Wait for the
+  // browser store to be read rather than flashing the placeholder guide.
+  if (!storeReady && !stored && !GUIDES[guideId] && !WORKFLOWS[guideId] && !legacyTarget) return null;
 
   return (
     <MainLayout>

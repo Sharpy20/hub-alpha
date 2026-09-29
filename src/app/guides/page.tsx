@@ -6,7 +6,8 @@ import { Badge, StatusBadge } from "@/components/ui";
 import Link from "next/link";
 import { ArrowRight, Filter, FileText, Pencil, Search } from "lucide-react";
 import { guideApproval } from "@/lib/data/approval-status";
-import { ALL_GUIDES, TYPE_STYLE, guideType } from "@/lib/data/guides/catalog";
+import { ALL_GUIDES, TYPE_STYLE, guideType, type GuideItem } from "@/lib/data/guides/catalog";
+import { useStoredGuides } from "@/lib/hooks/useStoredGuides";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { useV2Href } from "@/lib/hooks/useV2";
 
@@ -18,6 +19,24 @@ export default function GuidesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [customOrder, setCustomOrder] = useState<{ id: string; category: string }[] | null>(null);
+  const { guides: storedGuides } = useStoredGuides();
+
+  // Guides written in the editor that are not built in. An edited copy of a
+  // built-in guide keeps its place in the list, so only new ids are added here.
+  const draftItems: GuideItem[] = storedGuides
+    .filter((g) => !ALL_GUIDES.some((a) => a.id === g.id))
+    .map((g) => ({
+      id: g.id,
+      title: g.data.title,
+      description: g.data.description,
+      icon: g.look.icon,
+      gradient: g.look.gradient,
+      category: g.look.category,
+      viewerPath: `/guides/${g.id}`,
+    }));
+  const draftIds = new Set(draftItems.map((d) => d.id));
+  const typeOf = (id: string) =>
+    draftIds.has(id) && storedGuides.find((s) => s.id === id)?.kind === "workflow" ? "Step-by-step" : guideType(id);
 
   // Load custom order from localStorage (set via editor)
   useEffect(() => {
@@ -33,15 +52,18 @@ export default function GuidesPage() {
   // self-heals browsers that saved a guide order before later restructures, which
   // could otherwise scatter or bury guides.
   const orderedGuides = (() => {
-    if (!customOrder) return ALL_GUIDES;
-    const byId = new Map(ALL_GUIDES.map((g) => [g.id, g] as const));
-    const savedKnown = customOrder.filter((co) => byId.has(co.id));
-    // If the saved order covers fewer than 70% of current guides it is stale - drop it.
-    if (savedKnown.length < ALL_GUIDES.length * 0.7) return ALL_GUIDES;
-    const seen = new Set(savedKnown.map((co) => co.id));
-    return savedKnown
-      .map((co) => byId.get(co.id)!)
-      .concat(ALL_GUIDES.filter((g) => !seen.has(g.id)));
+    const base = (() => {
+      if (!customOrder) return ALL_GUIDES;
+      const byId = new Map(ALL_GUIDES.map((g) => [g.id, g] as const));
+      const savedKnown = customOrder.filter((co) => byId.has(co.id));
+      // If the saved order covers fewer than 70% of current guides it is stale - drop it.
+      if (savedKnown.length < ALL_GUIDES.length * 0.7) return ALL_GUIDES;
+      const seen = new Set(savedKnown.map((co) => co.id));
+      return savedKnown
+        .map((co) => byId.get(co.id)!)
+        .concat(ALL_GUIDES.filter((g) => !seen.has(g.id)));
+    })();
+    return [...base, ...draftItems];
   })();
 
   const allCategories = [...new Set(orderedGuides.map((g) => g.category))];
@@ -53,7 +75,7 @@ export default function GuidesPage() {
   // Filter by guide type (Builder / Checklist / Step-by-step / Tips / How-to)
   const typeFiltered = selectedType === "all"
     ? categoryFiltered
-    : categoryFiltered.filter((g) => guideType(g.id) === selectedType);
+    : categoryFiltered.filter((g) => typeOf(g.id) === selectedType);
 
   const filteredGuides = searchQuery.trim()
     ? typeFiltered.filter((g) => {
@@ -64,7 +86,7 @@ export default function GuidesPage() {
 
   // Types present, in a sensible order, for the type filter row
   const TYPE_ORDER = ["How-to", "Step-by-step", "Builder", "Checklist", "Tips"];
-  const presentTypes = TYPE_ORDER.filter((t) => orderedGuides.some((g) => guideType(g.id) === t));
+  const presentTypes = TYPE_ORDER.filter((t) => orderedGuides.some((g) => typeOf(g.id) === t));
   const TYPE_HELP: Record<string, string> = {
     "How-to": "Read-through reference",
     "Step-by-step": "Follow the steps in order",
@@ -214,12 +236,16 @@ export default function GuidesPage() {
                     <Badge className="bg-gray-100 text-gray-600 border-0 text-xs">
                       {guide.category}
                     </Badge>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${TYPE_STYLE[guideType(guide.id)]}`}>
-                      {guideType(guide.id)}
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${TYPE_STYLE[typeOf(guide.id)]}`}>
+                      {typeOf(guide.id)}
                     </span>
                   </div>
                 </div>
-                <StatusBadge status={guideApproval(guide.id)} />
+                {draftIds.has(guide.id) ? (
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 whitespace-nowrap">Draft on this browser</span>
+                ) : (
+                  <StatusBadge status={guideApproval(guide.id)} />
+                )}
                 <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-500 flex-shrink-0 transition-colors" />
               </div>
             </Link>

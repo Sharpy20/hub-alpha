@@ -162,3 +162,52 @@ export function unusedBranches(steps: BranchableStep[], extraText = ""): string[
     .filter((s) => s.branch && !used.has(s.branch.id) && !usedInText(s.branch.id))
     .map((s) => s.branch!.id);
 }
+
+export interface Route {
+  // The answers that produce this route, as { questionId: choiceId }.
+  answers: BranchAnswers;
+  // Readable: "Which area? Derby City, Adult? Yes". Empty for a guide with no questions.
+  label: string;
+  steps: string[];
+}
+
+const MAX_ROUTES = 64;
+
+// Every distinct route a reader can take, for the editor's route check. Only
+// questions on steps that are actually showing multiply the routes, so a
+// question inside a branch does not double-count the routes that never reach it.
+// Stops at MAX_ROUTES and reports `truncated` rather than freezing the editor.
+export function enumerateRoutes<T extends BranchableStep>(steps: T[]): { routes: Route[]; truncated: boolean } {
+  const routes: Route[] = [];
+  let truncated = false;
+
+  const walk = (answers: BranchAnswers) => {
+    if (routes.length >= MAX_ROUTES) {
+      truncated = true;
+      return;
+    }
+    const shown = visibleSteps(steps, answers);
+    const open = shown.find((s) => s.branch && answers[s.branch.id] === undefined);
+    if (!open || !open.branch) {
+      routes.push({
+        answers,
+        label: shown
+          .filter((s) => s.branch && answers[s.branch.id])
+          .map((s) => {
+            const b = s.branch!;
+            return `${b.question} ${b.choices.find((c) => c.id === answers[b.id])?.label ?? answers[b.id]}`;
+          })
+          .join(", "),
+        steps: shown.map((s) => s.id),
+      });
+      return;
+    }
+    for (const choice of open.branch.choices) walk({ ...answers, [open.branch.id]: choice.id });
+    // Skipping an optional question is a route too. "" counts as answered but
+    // matches no condition, exactly as the viewer treats an unanswered one.
+    if (open.branch.required === false) walk({ ...answers, [open.branch.id]: "" });
+  };
+
+  walk({});
+  return { routes, truncated };
+}

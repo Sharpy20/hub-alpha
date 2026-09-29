@@ -26,7 +26,7 @@ const AREA_OPTIONS = [
 
 const FORM_COLUMNS: Column[] = [
   { key: "label", label: "Name" },
-  { key: "url", label: "Link", placeholder: "Leave as # until you have it" },
+  { key: "url", label: "Link", placeholder: "https://... or # until you have it" },
   { key: "note", label: "Note (optional)", optional: true },
   { key: "icon", label: "Icon (optional)", optional: true },
   { key: "area", label: "Shown for", kind: "select", options: AREA_OPTIONS, optional: true },

@@ -45,7 +45,7 @@ export function DetailsPanel({ guide, onChange }: { guide: StoredGuide; onChange
 
   return (
     <section className="bg-white rounded-2xl border-2 border-gray-200 p-5 space-y-4">
-      <h2 className="text-lg font-bold text-nhs-dark-blue">About this guide</h2>
+      <h2 className="text-lg font-bold text-blue-900">About this guide</h2>
       <TextField label="Title" value={guide.data.title} onChange={(title) => setData({ title })} />
       <TextField label="One line for the guides list" value={guide.data.description} onChange={(description) => setData({ description })} />
       <div className="grid gap-4 sm:grid-cols-3">
@@ -53,7 +53,7 @@ export function DetailsPanel({ guide, onChange }: { guide: StoredGuide; onChange
         <SelectField label="Icon" value={guide.look.icon} onChange={(icon) => setLook({ icon })} options={icons.map((i) => ({ value: i, label: i }))} />
         <SelectField label="Colour" value={guide.look.gradient} onChange={(gradient) => setLook({ gradient })} options={gradients} />
       </div>
-      <p className="text-sm text-nhs-dark-grey">
+      <p className="text-sm text-gray-600">
         Web address: <code className="bg-gray-100 px-1.5 py-0.5 rounded">/guides/{guide.id}</code> (fixed once the guide exists, so links keep working)
       </p>
     </section>
@@ -87,10 +87,10 @@ export function ExtrasPanel({ guide, onChange }: { guide: StoredGuide; onChange:
 
   return (
     <section className="bg-white rounded-2xl border-2 border-gray-200 p-5 space-y-4">
-      <h2 className="text-lg font-bold text-nhs-dark-blue">Around the whole guide</h2>
+      <h2 className="text-lg font-bold text-blue-900">Around the whole guide</h2>
 
       <fieldset>
-        <legend className="text-sm font-semibold text-nhs-black mb-2">Case note at the end</legend>
+        <legend className="text-sm font-semibold text-gray-900 mb-2">Case note at the end</legend>
         <div className="flex flex-wrap gap-2">
           {([
             ["default", "Standard sentence"],
@@ -102,7 +102,7 @@ export function ExtrasPanel({ guide, onChange }: { guide: StoredGuide; onChange:
               type="button"
               aria-pressed={mode === m}
               onClick={() => setMode(m)}
-              className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 ${mode === m ? "bg-nhs-blue text-white border-nhs-blue" : "bg-white text-nhs-blue border-nhs-blue/40 hover:border-nhs-blue"}`}
+              className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 ${mode === m ? "bg-nhs-blue text-white border-nhs-blue" : "bg-white text-blue-700 border-nhs-blue/40 hover:border-nhs-blue"}`}
             >
               {label}
             </button>
@@ -122,7 +122,7 @@ export function ExtrasPanel({ guide, onChange }: { guide: StoredGuide; onChange:
       </fieldset>
 
       <div>
-        <p className="text-sm font-semibold text-nhs-black mb-2">Add to this guide</p>
+        <p className="text-sm font-semibold text-gray-900 mb-2">Add to this guide</p>
         <div className="flex flex-wrap gap-2">
           <ToggleChip label="Related guides" on={!!data.related} onClick={() => (data.related ? drop("related") : patch({ related: [] }))} />
           <ToggleChip label="Printable forms" on={!!data.downloads} onClick={() => (data.downloads ? drop("downloads") : patch({ downloads: [] }))} />
@@ -150,7 +150,7 @@ export function ExtrasPanel({ guide, onChange }: { guide: StoredGuide; onChange:
         <BlockPanel title="Printable forms" onRemove={() => drop("downloads")}>
           <ListEditor
             items={data.downloads}
-            columns={[{ key: "label", label: "Name" }, { key: "url", label: "Link" }]}
+            columns={[{ key: "label", label: "Name" }, { key: "url", label: "Link", placeholder: "https://..." }]}
             onChange={(downloads) => patch({ downloads })}
             makeNew={() => ({ label: "", url: "" })}
             addLabel="Add a form"
@@ -162,7 +162,7 @@ export function ExtrasPanel({ guide, onChange }: { guide: StoredGuide; onChange:
         <BlockPanel title="FOCUS links" onRemove={() => drop("focus")}>
           <ListEditor
             items={data.focus}
-            columns={[{ key: "label", label: "Name" }, { key: "url", label: "Link" }]}
+            columns={[{ key: "label", label: "Name" }, { key: "url", label: "Link", placeholder: "https://..." }]}
             onChange={(focus) => patch({ focus })}
             makeNew={() => ({ label: "", url: "" })}
             addLabel="Add a FOCUS link"
@@ -177,7 +177,7 @@ export function ExtrasPanel({ guide, onChange }: { guide: StoredGuide; onChange:
             columns={[
               { key: "n", label: "Number", kind: "number" },
               { key: "label", label: "Reference" },
-              { key: "url", label: "Link (optional)", optional: true },
+              { key: "url", label: "Link (optional)", optional: true, placeholder: "https://..." },
             ]}
             onChange={(sources) => patch({ sources })}
             makeNew={() => ({ n: data.sources!.length + 1, label: "" })}
@@ -199,7 +199,7 @@ export function RouteCheck({ guide }: { guide: StoredGuide }) {
 
   return (
     <section className="bg-white rounded-2xl border-2 border-gray-200 p-5 space-y-4" aria-label="Checks">
-      <h2 className="text-lg font-bold text-nhs-dark-blue">Checks</h2>
+      <h2 className="text-lg font-bold text-blue-900">Checks</h2>
 
       {errors.length === 0 ? (
         <p className="text-sm text-nhs-green font-semibold">No errors.</p>
@@ -219,18 +219,18 @@ export function RouteCheck({ guide }: { guide: StoredGuide }) {
       )}
 
       <div>
-        <h3 className="text-sm font-bold text-nhs-black mb-2">
+        <h3 className="text-sm font-bold text-gray-900 mb-2">
           {routes.length === 1 && !routes[0].label ? "Everyone sees the same steps" : `${routes.length}${truncated ? "+" : ""} routes through this guide`}
         </h3>
         <ul className="space-y-2">
           {routes.map((r, i) => (
             <li key={i} className="text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-              {r.label && <p className="font-semibold text-nhs-black">{r.label}</p>}
-              <p className="text-nhs-dark-grey">{r.steps.map(titleOf).join("  →  ")}</p>
+              {r.label && <p className="font-semibold text-gray-900">{r.label}</p>}
+              <p className="text-gray-600">{r.steps.map(titleOf).join("  →  ")}</p>
             </li>
           ))}
         </ul>
-        {truncated && <p className="text-xs text-nhs-dark-grey mt-2">Showing the first 64. A guide with this many routes is worth splitting in two.</p>}
+        {truncated && <p className="text-xs text-gray-600 mt-2">Showing the first 64. A guide with this many routes is worth splitting in two.</p>}
       </div>
     </section>
   );

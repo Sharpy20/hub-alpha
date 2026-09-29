@@ -3,15 +3,15 @@
 import { useId, type ReactNode } from "react";
 
 const inputClass =
-  "w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-nhs-black focus:outline-none focus:ring-2 focus:ring-nhs-blue focus:border-nhs-blue";
+  "w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-nhs-blue focus:border-nhs-blue";
 
 export function Field({ label, hint, children }: { label: string; hint?: string; children: (id: string) => ReactNode }) {
   const id = useId();
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-semibold text-nhs-black mb-1">{label}</label>
+      <label htmlFor={id} className="block text-sm font-semibold text-gray-900 mb-1">{label}</label>
       {children(id)}
-      {hint && <p className="text-xs text-nhs-dark-grey mt-1">{hint}</p>}
+      {hint && <p className="text-xs text-gray-600 mt-1">{hint}</p>}
     </div>
   );
 }
@@ -59,9 +59,9 @@ export function CheckField({ label, checked, onChange, hint }: { label: string; 
   return (
     <div className="flex items-start gap-2">
       <input id={id} type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="mt-1 w-4 h-4 accent-nhs-blue" />
-      <label htmlFor={id} className="text-sm text-nhs-black">
+      <label htmlFor={id} className="text-sm text-gray-900">
         {label}
-        {hint && <span className="block text-xs text-nhs-dark-grey">{hint}</span>}
+        {hint && <span className="block text-xs text-gray-600">{hint}</span>}
       </label>
     </div>
   );
@@ -72,7 +72,7 @@ export function BlockPanel({ title, onRemove, children }: { title: string; onRem
   return (
     <section className="rounded-xl border border-gray-300 bg-gray-50 p-4 space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <h4 className="text-sm font-bold text-nhs-dark-blue">{title}</h4>
+        <h4 className="text-sm font-bold text-blue-900">{title}</h4>
         {onRemove && (
           <button type="button" onClick={onRemove} className="text-sm font-semibold text-nhs-red hover:underline">
             Remove
@@ -93,7 +93,7 @@ export function ToggleChip({ label, on, onClick, title }: { label: string; on: b
       aria-pressed={on}
       title={title}
       className={`px-3 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors ${
-        on ? "bg-nhs-blue text-white border-nhs-blue" : "bg-white text-nhs-blue border-nhs-blue/40 hover:border-nhs-blue"
+        on ? "bg-nhs-blue text-white border-nhs-blue" : "bg-white text-blue-700 border-nhs-blue/40 hover:border-nhs-blue"
       }`}
     >
       {on ? "✓ " : "+ "}{label}
@@ -102,4 +102,4 @@ export function ToggleChip({ label, on, onClick, title }: { label: string; on: b
 }
 
 export const smallButton =
-  "px-3 py-1.5 rounded-lg text-sm font-semibold border border-gray-300 bg-white text-nhs-black hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed";
+  "px-3 py-1.5 rounded-lg text-sm font-semibold border border-gray-300 bg-white text-gray-900 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed";

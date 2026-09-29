@@ -1,6 +1,6 @@
 import {
   parseStore, isStoredGuide, saveStoredGuide, getStoredGuide, deleteStoredGuide,
-  readStoredGuides, slugFromTitle, STORE_KEY, type StoredGuide,
+  readStoredGuides, slugFromTitle, safeUrl, STORE_KEY, type StoredGuide,
 } from "@/lib/data/guides/guide-store";
 
 const guide = (id: string, title = "A guide"): StoredGuide => ({
@@ -74,5 +74,29 @@ describe("slugFromTitle", () => {
   });
   it("copes with an empty title", () => {
     expect(slugFromTitle("!!!")).toBe("");
+  });
+});
+
+describe("safeUrl", () => {
+  it("keeps ordinary links", () => {
+    ["https://example.org/a", "http://example.org", "mailto:a@b.org", "tel:0800000000", "/guides/news2", "#", ""].forEach((u) =>
+      expect(safeUrl(u)).toBe(u)
+    );
+  });
+  it("neutralises anything that can run code or leave the site oddly", () => {
+    ["javascript:alert(1)", " JavaScript:alert(1)", "data:text/html,x", "vbscript:x", "//evil.example", "file:///c:/x"].forEach((u) =>
+      expect(safeUrl(u)).toBe("#")
+    );
+  });
+});
+
+describe("cleaning links on the way in", () => {
+  it("rewrites unsafe links anywhere in a stored guide", () => {
+    const g = guide("g1") as StoredGuide & { data: { downloads?: { label: string; url: string }[]; focus?: { label: string; url: string }[] } };
+    g.data.downloads = [{ label: "Form", url: "javascript:alert(1)" }, { label: "Ok", url: "https://example.org/f.pdf" }];
+    g.data.focus = [{ label: "F", url: "data:text/html,x" }];
+    const [back] = parseStore(JSON.stringify([g])) as unknown as (typeof g)[];
+    expect(back.data.downloads?.map((d) => d.url)).toEqual(["#", "https://example.org/f.pdf"]);
+    expect(back.data.focus?.[0].url).toBe("#");
   });
 });

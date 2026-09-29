@@ -89,8 +89,8 @@ export function StepEditor({
         >
           <span className="w-8 h-8 rounded-full bg-nhs-blue text-white font-bold flex items-center justify-center flex-shrink-0">{index + 1}</span>
           <span className="min-w-0">
-            <span className="block font-bold text-nhs-black truncate">{step.title.trim() || "Untitled step"}</span>
-            {summary.length > 0 && <span className="block text-xs text-nhs-dark-grey truncate">{summary.join(" · ")}</span>}
+            <span className="block font-bold text-gray-900 truncate">{step.title.trim() || "Untitled step"}</span>
+            {summary.length > 0 && <span className="block text-xs text-gray-600 truncate">{summary.join(" · ")}</span>}
           </span>
         </button>
         <button type="button" className={smallButton} onClick={() => onMove(-1)} disabled={index === 0} aria-label={`Move step ${index + 1} up`}><ChevronUp className="w-4 h-4" /></button>
@@ -142,7 +142,7 @@ export function StepEditor({
 
             {step.progressive && (
               <BlockPanel title="Collapsible sections" onRemove={() => toggle("progressive")}>
-                <p className="text-sm text-nhs-dark-grey">
+                <p className="text-sm text-gray-600">
                   Short lines ending in a colon become headings. Everything under a heading folds away until the reader opens it.
                 </p>
               </BlockPanel>
@@ -167,7 +167,7 @@ export function StepEditor({
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-nhs-black mb-2">Add to this step</p>
+            <p className="text-sm font-semibold text-gray-900 mb-2">Add to this step</p>
             <div className="flex flex-wrap gap-2">
               {blocks.map((b) => (
                 <ToggleChip
@@ -182,7 +182,7 @@ export function StepEditor({
                 />
               ))}
             </div>
-            {noEarlierQuestion && <p className="text-xs text-nhs-dark-grey mt-2">Only show if becomes available once an earlier step has a question.</p>}
+            {noEarlierQuestion && <p className="text-xs text-gray-600 mt-2">Only show if becomes available once an earlier step has a question.</p>}
           </div>
         </div>
       )}

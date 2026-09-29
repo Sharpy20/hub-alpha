@@ -52,11 +52,33 @@ export function isStoredGuide(v: unknown): v is StoredGuide {
   return data.steps.every((s) => isObject(s) && isString(s.id) && isString(s.title) && isString(s.content));
 }
 
+// Links in an authored guide end up in href attributes. Anything that is not an
+// ordinary web, mail, phone or on-site link is neutralised to "#", which the
+// viewer already shows as "Link to confirm". Matters for imported files.
+export function safeUrl(url: string): string {
+  const trimmed = url.trim();
+  if (trimmed === "" || trimmed === "#") return trimmed;
+  if (/^(https?:|mailto:|tel:)/i.test(trimmed)) return trimmed;
+  if (trimmed.startsWith("/") && !trimmed.startsWith("//")) return trimmed;
+  return "#";
+}
+
+function cleanUrls(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(cleanUrls);
+  if (!isObject(value)) return value;
+  const out: Record<string, unknown> = {};
+  for (const [key, v] of Object.entries(value)) {
+    out[key] = key === "url" && isString(v) ? safeUrl(v) : cleanUrls(v);
+  }
+  return out;
+}
+
 export function parseStore(raw: string | null): StoredGuide[] {
   if (!raw) return [];
   try {
     const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter(isStoredGuide) : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(isStoredGuide).map((g) => cleanUrls(g) as StoredGuide);
   } catch {
     return [];
   }

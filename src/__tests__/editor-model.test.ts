@@ -1,7 +1,7 @@
 import { GUIDES } from "@/lib/data/guides/howto-guides";
 import { WORKFLOWS } from "@/lib/data/guides/referral-workflows";
 import { visibleSteps, enumerateRoutes } from "@/lib/data/guides/branching";
-import { isStoredGuide, type StoredGuide } from "@/lib/data/guides/guide-store";
+import { isStoredGuide, safeUrl, type StoredGuide } from "@/lib/data/guides/guide-store";
 import {
   EDITOR_COVERAGE, DEFAULT_LOOK, blankGuide, referralTemplate, copyOfBuiltIn, newStep,
   addBlock, removeBlock, hasBlock, addBranch, addChoice, updateChoice, removeChoice,
@@ -275,5 +275,25 @@ describe("question presets", () => {
   it("ignores an unknown preset", () => {
     const b = blank();
     expect(applyQuestionPreset(b, "nope")).toBe(b);
+  });
+});
+
+describe("links in built-in guides survive being copied into the editor", () => {
+  const urls: string[] = [];
+  const walk = (v: unknown) => {
+    if (Array.isArray(v)) v.forEach(walk);
+    else if (v && typeof v === "object") {
+      for (const [k, x] of Object.entries(v)) {
+        if (k === "url" && typeof x === "string") urls.push(x);
+        else walk(x);
+      }
+    }
+  };
+  walk(Object.values(GUIDES));
+  walk(Object.values(WORKFLOWS));
+
+  it("finds links to check", () => expect(urls.length).toBeGreaterThan(100));
+  it("leaves every one of them unchanged", () => {
+    expect(urls.filter((u) => safeUrl(u) !== u)).toEqual([]);
   });
 });

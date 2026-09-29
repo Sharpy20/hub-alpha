@@ -12,7 +12,7 @@ export interface Column {
   placeholder?: string;
 }
 
-const cell = "w-full px-2 py-1.5 border border-gray-300 rounded-md bg-white text-sm text-nhs-black focus:outline-none focus:ring-2 focus:ring-nhs-blue";
+const cell = "w-full px-2 py-1.5 border border-gray-300 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-nhs-blue";
 
 // A small table-style editor for a list of flat records: form links, submission
 // methods, diary jobs, sources. One shape, so the screens that need a list all
@@ -45,14 +45,14 @@ export function ListEditor<T extends object>({
 
   return (
     <div className="space-y-2">
-      {items.length === 0 && empty && <p className="text-sm text-nhs-dark-grey">{empty}</p>}
+      {items.length === 0 && empty && <p className="text-sm text-gray-600">{empty}</p>}
       {items.map((item, index) => {
         const rec = item as Record<string, unknown>;
         return (
           <div key={index} className="rounded-lg border border-gray-300 bg-white p-3">
             <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {columns.map((col) => (
-                <label key={col.key} className="block text-xs font-semibold text-nhs-dark-grey">
+                <label key={col.key} className="block text-xs font-semibold text-gray-600">
                   {col.label}
                   {col.kind === "select" ? (
                     <select
@@ -63,7 +63,7 @@ export function ListEditor<T extends object>({
                       {col.options?.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                     </select>
                   ) : col.kind === "check" ? (
-                    <span className="mt-1 flex items-center gap-2 text-sm font-normal text-nhs-black">
+                    <span className="mt-1 flex items-center gap-2 text-sm font-normal text-gray-900">
                       <input
                         type="checkbox"
                         className="w-4 h-4 accent-nhs-blue"

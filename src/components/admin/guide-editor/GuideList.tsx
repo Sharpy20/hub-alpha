@@ -45,10 +45,10 @@ export function GuideList({
   return (
     <div className="space-y-6">
       <section className="bg-white rounded-2xl border-2 border-gray-200 p-5 space-y-4">
-        <h2 className="text-lg font-bold text-nhs-dark-blue">Start a new guide</h2>
+        <h2 className="text-lg font-bold text-blue-900">Start a new guide</h2>
         <TextField label="Title" value={title} onChange={setTitle} placeholder="Managing a missed depot injection" />
         <fieldset>
-          <legend className="text-sm font-semibold text-nhs-black mb-2">What sort of guide?</legend>
+          <legend className="text-sm font-semibold text-gray-900 mb-2">What sort of guide?</legend>
           <div className="grid gap-3 sm:grid-cols-2">
             {([
               ["guide", "Read-through guide", "Steps of text, with tips, questions and branching where you want them."],
@@ -61,8 +61,8 @@ export function GuideList({
                 onClick={() => setKind(value)}
                 className={`text-left p-4 rounded-xl border-2 ${kind === value ? "border-nhs-blue bg-blue-50" : "border-gray-300 bg-white hover:border-nhs-blue"}`}
               >
-                <span className="block font-bold text-nhs-black">{label}</span>
-                <span className="block text-sm text-nhs-dark-grey">{help}</span>
+                <span className="block font-bold text-gray-900">{label}</span>
+                <span className="block text-sm text-gray-600">{help}</span>
               </button>
             ))}
           </div>
@@ -72,7 +72,7 @@ export function GuideList({
 
       <section className="bg-white rounded-2xl border-2 border-gray-200 p-5 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-bold text-nhs-dark-blue">Your guides on this browser</h2>
+          <h2 className="text-lg font-bold text-blue-900">Your guides on this browser</h2>
           <div className="flex gap-2">
             <button type="button" className={`${smallButton} inline-flex items-center gap-1.5`} onClick={onExportAll} disabled={stored.length === 0}>
               <Download className="w-4 h-4" /> Download all
@@ -94,20 +94,20 @@ export function GuideList({
             />
           </div>
         </div>
-        <p className="text-sm text-nhs-dark-grey">
+        <p className="text-sm text-gray-600">
           Saved in this browser only, until the shared store is connected. Download a copy if you want to keep one or move it to another computer.
         </p>
-        {importNote && <p role="status" className="text-sm font-semibold text-nhs-dark-blue">{importNote}</p>}
+        {importNote && <p role="status" className="text-sm font-semibold text-blue-900">{importNote}</p>}
         {stored.length === 0 ? (
-          <p className="text-sm text-nhs-dark-grey">Nothing yet.</p>
+          <p className="text-sm text-gray-600">Nothing yet.</p>
         ) : (
           <ul className="divide-y divide-gray-200">
             {stored.map((g) => (
               <li key={g.id} className="py-3 flex flex-wrap items-center gap-3">
                 <span className="text-2xl" aria-hidden="true">{g.look.icon}</span>
                 <div className="flex-1 min-w-[12rem]">
-                  <p className="font-bold text-nhs-black">{g.data.title}</p>
-                  <p className="text-xs text-nhs-dark-grey">
+                  <p className="font-bold text-gray-900">{g.data.title}</p>
+                  <p className="text-xs text-gray-600">
                     {g.kind === "workflow" ? "Referral" : "Guide"} · {g.data.steps.length} steps
                     {g.basedOn ? " · edited copy of a built-in guide" : ""}
                   </p>
@@ -124,8 +124,8 @@ export function GuideList({
       </section>
 
       <section className="bg-white rounded-2xl border-2 border-gray-200 p-5 space-y-3">
-        <h2 className="text-lg font-bold text-nhs-dark-blue">Built-in guides</h2>
-        <p className="text-sm text-nhs-dark-grey">
+        <h2 className="text-lg font-bold text-blue-900">Built-in guides</h2>
+        <p className="text-sm text-gray-600">
           Editing one saves a copy that replaces it in this browser. The built-in version is never changed.
         </p>
         <TextField label="Find a guide" value={filter} onChange={setFilter} />
@@ -140,15 +140,15 @@ export function GuideList({
               <li key={g.id} className="py-2.5 flex flex-wrap items-center gap-3">
                 <span className="text-xl" aria-hidden="true">{g.icon}</span>
                 <div className="flex-1 min-w-[12rem]">
-                  <p className="font-semibold text-nhs-black">{g.title}</p>
-                  <p className="text-xs text-nhs-dark-grey">{g.category}{hasCopy ? " · you have an edited copy" : ""}</p>
+                  <p className="font-semibold text-gray-900">{g.title}</p>
+                  <p className="text-xs text-gray-600">{g.category}{hasCopy ? " · you have an edited copy" : ""}</p>
                 </div>
                 {editable ? (
                   <button type="button" className={smallButton} onClick={() => onOpenBuiltIn(id)}>
                     {hasCopy ? "Open my copy" : "Edit a copy"}
                   </button>
                 ) : (
-                  <span className="text-xs text-nhs-dark-grey">Interactive tool, not editable here</span>
+                  <span className="text-xs text-gray-600">Interactive tool, not editable here</span>
                 )}
               </li>
             );

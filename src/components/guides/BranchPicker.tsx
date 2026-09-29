@@ -13,8 +13,8 @@ export function BranchPicker({ branch, answer, onAnswer }: BranchPickerProps) {
   const required = branch.required !== false;
   return (
     <div className="mt-6" role="radiogroup" aria-label={branch.question}>
-      <p className="text-lg font-bold text-nhs-black mb-1">{branch.question}</p>
-      <p className="text-sm text-nhs-dark-grey mb-3">
+      <p className="text-lg font-bold text-gray-900 mb-1">{branch.question}</p>
+      <p className="text-sm text-gray-600 mb-3">
         {required ? "Pick one to see the next steps." : "Optional. Pick one if it applies."}
       </p>
       <div className="space-y-2">
@@ -30,7 +30,7 @@ export function BranchPicker({ branch, answer, onAnswer }: BranchPickerProps) {
               className={`w-full flex items-center gap-3 p-4 rounded-xl text-left border-2 transition-colors ${
                 selected
                   ? "bg-nhs-blue text-white border-nhs-blue"
-                  : "bg-white text-nhs-black border-gray-300 hover:border-nhs-blue"
+                  : "bg-white text-gray-900 border-gray-300 hover:border-nhs-blue"
               }`}
             >
               <span
@@ -39,12 +39,12 @@ export function BranchPicker({ branch, answer, onAnswer }: BranchPickerProps) {
                 }`}
                 aria-hidden="true"
               >
-                {selected && <Check className="w-4 h-4 text-nhs-blue" />}
+                {selected && <Check className="w-4 h-4 text-blue-700" />}
               </span>
               <span className="min-w-0">
                 <span className="block font-semibold">{choice.label}</span>
                 {choice.hint && (
-                  <span className={`block text-sm ${selected ? "text-white/90" : "text-nhs-dark-grey"}`}>{choice.hint}</span>
+                  <span className={`block text-sm ${selected ? "opacity-90" : "text-gray-600"}`}>{choice.hint}</span>
                 )}
               </span>
             </button>

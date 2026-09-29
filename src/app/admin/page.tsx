@@ -143,7 +143,7 @@ export default function AdminPage() {
           </Link>
 
           {/* Guides card (merged referral guides + how-to guides) */}
-          <Link href={link("/admin/workflows")} className="block no-underline">
+          <Link href={link("/admin/guides")} className="block no-underline">
             <div className="bg-white rounded-xl border-2 border-gray-100 p-6 hover:border-rose-300 hover:shadow-lg transition-all cursor-pointer group">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-700 rounded-xl flex items-center justify-center">
@@ -157,7 +157,7 @@ export default function AdminPage() {
                 </div>
               </div>
               <p className="text-gray-600 mb-4 text-sm">
-                Edit referral workflows, how-to guides, steps, forms, and case note templates.
+                Write and edit guides and referrals: steps, questions and branching, forms and case notes.
               </p>
               <div className="flex items-center gap-2 text-rose-600 font-semibold group-hover:gap-3 transition-all text-sm">
                 Manage

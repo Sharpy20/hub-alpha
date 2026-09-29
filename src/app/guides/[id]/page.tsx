@@ -757,7 +757,7 @@ export default function UnifiedGuidePage() {
                 )}
               </div>
               {canEdit && (
-                <Link href={link("/admin/workflows")} className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline">
+                <Link href={link(`/admin/guides?edit=${guideId}`)} className="flex items-center gap-2 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm font-semibold transition-colors no-underline">
                   <Pencil className="w-4 h-4" /> Edit
                 </Link>
               )}

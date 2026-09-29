@@ -115,7 +115,7 @@ export default function GuidesPage() {
             <div className="flex items-center gap-2">
               {canEdit && (
                 <Link
-                  href={link("/admin/workflows")}
+                  href={link("/admin/guides")}
                   className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg font-semibold transition-colors no-underline"
                 >
                   <Pencil className="w-4 h-4" />

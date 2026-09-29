@@ -6,7 +6,7 @@ import {
   EDITOR_COVERAGE, DEFAULT_LOOK, blankGuide, referralTemplate, copyOfBuiltIn, newStep,
   addBlock, removeBlock, hasBlock, addBranch, addChoice, updateChoice, removeChoice,
   addCondition, setConditionBranch, toggleConditionChoice, removeCondition, questionsBefore,
-  dependantsOf, moveStep, duplicateStep, nextId, uniqueGuideId, checkGuide, errorsOf,
+  dependantsOf, applyQuestionPreset, moveStep, duplicateStep, nextId, uniqueGuideId, checkGuide, errorsOf,
   type EditorStep,
 } from "@/lib/data/guides/editor-model";
 
@@ -253,5 +253,27 @@ describe("checkGuide", () => {
 describe("look", () => {
   it("has a default look for a new guide", () => {
     expect(blankGuide("g", "G").look).toEqual(DEFAULT_LOOK);
+  });
+});
+
+describe("question presets", () => {
+  const blank = () => {
+    const steps = blankGuide("g", "G").data.steps as EditorStep[];
+    return addBranch(steps[0], steps).branch!;
+  };
+
+  it("fills yes or no and keeps the choice ids", () => {
+    const b = applyQuestionPreset(blank(), "yesno");
+    expect(b.choices.map((c) => [c.id, c.label])).toEqual([["c1", "Yes"], ["c2", "No"]]);
+  });
+
+  it("fills the two council areas with case note wording", () => {
+    const b = applyQuestionPreset(blank(), "area");
+    expect(b.choices.map((c) => c.note)).toEqual(["Derby City", "Derbyshire County"]);
+  });
+
+  it("ignores an unknown preset", () => {
+    const b = blank();
+    expect(applyQuestionPreset(b, "nope")).toBe(b);
   });
 });

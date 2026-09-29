@@ -13,6 +13,10 @@
 > supersedes R4's "same stack on trust accounts" assumption: the destination is the Trust's
 > ASP.NET / Azure standard, reached by Mike porting the app inside Cris's pipeline.
 >
+> **SECTION Z (29 Sept) is the guide editor rebuild and branching** - what is built, what is not,
+> and the order to do the rest in. Read it before touching `/admin/guides`, the viewer's step
+> logic or `guide-store.ts`.
+>
 > **SECTION Y (22 Aug) is theory only and BLOCKED on its own first item.** Community
 > signposting directory. Do not start design or tagging until Y1 is answered: does Derbyshire
 > already commission a social prescribing directory we should read rather than rebuild?
@@ -3553,3 +3557,59 @@ it are the Trust's own, and a test asserts that (no "not yet completed", no
 The domain chips stayed lit, so either the next event went in wherever the last one did,
 or a click meant to pick a domain silently un-picked it. Text, chips and the time choice
 all reset now.
+
+---
+
+## SECTION Z - Guide editor rebuild and branching (29 Sept 2026)
+
+**What Mike asked for:** an editor that can build guides "as they are now", with more branching, not
+less. Blocks are switched on per step (TL;DR, branch and so on), never forced on every panel. Mike
+said yes to all three design calls: conditions on a flat step list, one editor for guides and
+referrals, viewer changed to render branching.
+
+**Shipped 29 Sept (four commits on main, CI green on the first three):**
+- `src/lib/data/guides/branching.ts` - the branch model and its pure helpers. A step can carry a
+  `branch` (question + choices); any LATER step can carry `showIf` conditions. One flat list, paths
+  rejoin by default, conditions only look backwards so step positions never shuffle. Also
+  `validateBranching`, `enumerateRoutes` (every route a reader can take), `applyBranchTokens`
+  (`[BRANCH:q1]` writes the answer into the case note; an unanswered one stays visible).
+- Viewer (`/guides/[id]`) renders branches for both guides and referrals. A guide with no branch
+  gets its full step list back untouched. Print shows every step, with an "Only if" line.
+- `src/lib/data/guides/guide-store.ts` - where authored guides live. **One file is the seam for the
+  real back end** (Azure SQL later). Today it is localStorage, one browser only. A saved guide
+  overrides the built-in one with the same id. Corrupt or old entries are skipped, never fatal.
+- `src/lib/data/guides/editor-model.ts` + `src/components/admin/guide-editor/*` - the editor at
+  `/admin/guides` (`/admin/workflows` redirects to it; `?edit=<id>` opens a guide). Old
+  `FlowchartEditor.tsx` deleted. Old guide editor never loaded real content (it used sample steps).
+- The editor: steps as cards; "Add to this step" toggles (Question, Only show if, In a hurry, Tip,
+  Collapsible sections, Diary jobs); "Add to this guide" toggles (Related guides, Printable forms,
+  FOCUS links, References) plus a case note choice; referral steps get type-specific fields;
+  Question presets (Yes/No, City/County); a Checks panel with errors, warnings and every route.
+
+**The proof for "as they are now" (`src/__tests__/editor-model.test.ts`):**
+- A test walks all 42 how-to guides and 19 referrals and fails if any uses a field the editor
+  cannot edit or carry through a save (`EDITOR_COVERAGE`). Passes. Fields with no control
+  (`widget`, `walk`, `isDynamic`) are carried through untouched.
+- Every built-in guide opens in the editor with no errors and exactly one route.
+- 254 tests in total, tsc and eslint clean, production build passes.
+
+**Known limits - say these out loud, do not let anyone find them:**
+- **Storage is per browser.** Nothing is shared until the store is connected. Download / Import
+  moves guides between machines.
+- **The fixed step types (consent, section, s117, area) still do the branching in IMHA and the
+  safeguarding guides.** They work as before, but the route check shows "one route" for them. The
+  Question block is the general form; migrating those seven referrals to it is not done and needs
+  the viewer's IMHA case note logic (`generateCaseNote`, hard-coded for imha-advocacy) untangled.
+- **Widgets (payslip, shift checker) cannot be added in the editor**, only kept on a copy.
+- **No governance metadata yet.** The manuscript format (issue_no, ratified_by, sources,
+  provenance) is still a draft awaiting Mike's review, so the editor does not model it. Add it
+  once he has signed the format off.
+- The editor uses the same role gate as before (contributor, manager, ward admin, senior admin).
+- Edited copies of built-in guides only exist in the editing browser. The built-in is untouched.
+
+**Next, in order:**
+1. [ ] Mike to try it on a real guide (a guide he knows well) and say what slows him down.
+2. [ ] Decide the shared store (Azure SQL per Cris's standard) - swap `guide-store.ts` only.
+3. [ ] Migrate the seven typed-step referrals onto Question blocks, then retire the fixed types.
+4. [ ] Governance fields + manuscript export, after the format is reviewed.
+5. [ ] Live preview beside the editor (today "View guide" opens the real viewer in a new tab).

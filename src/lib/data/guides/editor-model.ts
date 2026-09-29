@@ -148,6 +148,31 @@ export function addBranch(step: EditorStep, steps: EditorStep[]): EditorStep {
   return { ...step, branch };
 }
 
+// Ready-made choice sets for the questions people ask most. Wording is public
+// fact only; nothing here writes clinical language for the author.
+export const QUESTION_PRESETS: { key: string; label: string; choices: { label: string; note?: string }[] }[] = [
+  { key: "yesno", label: "Yes or no", choices: [{ label: "Yes" }, { label: "No" }] },
+  {
+    key: "area",
+    label: "Derby City or Derbyshire County",
+    choices: [
+      { label: "Derby City", note: "Derby City" },
+      { label: "Derbyshire County", note: "Derbyshire County" },
+    ],
+  },
+];
+
+// Fills the choices from a preset, keeping the ids c1, c2 ... so a condition
+// written before the preset was chosen still points at something real.
+export function applyQuestionPreset(branch: BranchBlock, key: string): BranchBlock {
+  const preset = QUESTION_PRESETS.find((p) => p.key === key);
+  if (!preset) return branch;
+  return {
+    ...branch,
+    choices: preset.choices.map((c, i) => ({ id: `c${i + 1}`, label: c.label, ...(c.note ? { note: c.note } : {}) })),
+  };
+}
+
 export function addChoice(branch: BranchBlock): BranchBlock {
   return { ...branch, choices: [...branch.choices, { id: nextId("c", branch.choices.map((c) => c.id)), label: "" }] };
 }

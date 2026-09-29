@@ -1,6 +1,6 @@
 "use client";
 
-import { addChoice, questionsBefore, removeChoice, setConditionBranch, toggleConditionChoice, removeCondition, addCondition, updateChoice, type EditorStep } from "@/lib/data/guides/editor-model";
+import { addChoice, applyQuestionPreset, QUESTION_PRESETS, questionsBefore, removeChoice, setConditionBranch, toggleConditionChoice, removeCondition, addCondition, updateChoice, type EditorStep } from "@/lib/data/guides/editor-model";
 import type { BranchBlock } from "@/lib/data/guides/branching";
 import { BlockPanel, CheckField, TextField, smallButton } from "./fields";
 
@@ -17,8 +17,8 @@ export function QuestionPanel({
   return (
     <BlockPanel title="Question" onRemove={onRemove}>
       {dependants > 0 && (
-        <p className="text-sm text-amber-900 bg-amber-50 border border-amber-300 rounded-lg px-3 py-2">
-          {dependants} later {dependants === 1 ? "step waits" : "steps wait"} on this answer. Removing the question leaves {dependants === 1 ? "it" : "them"} with nothing to wait for, and the route check will flag it.
+        <p className="text-sm text-nhs-dark-blue bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+          {dependants} later {dependants === 1 ? "step changes" : "steps change"} with this answer. If you remove the question, {dependants === 1 ? "it needs" : "they need"} fixing, and the checks below will say which.
         </p>
       )}
       <TextField
@@ -27,6 +27,16 @@ export function QuestionPanel({
         onChange={(question) => onChange({ ...branch, question })}
         placeholder="Which area is the patient from?"
       />
+      {!branch.question.trim() && branch.choices.every((c) => !c.label.trim()) && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-nhs-dark-grey">Start from:</span>
+          {QUESTION_PRESETS.map((p) => (
+            <button key={p.key} type="button" className={smallButton} onClick={() => onChange(applyQuestionPreset(branch, p.key))}>
+              {p.label}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="space-y-2">
         <p className="text-sm font-semibold text-nhs-black">Choices</p>
         {branch.choices.map((choice, i) => (

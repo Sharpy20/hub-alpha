@@ -10,6 +10,8 @@ import type { StoredGuide } from "@/lib/data/guides/guide-store";
 import { parseStore } from "@/lib/data/guides/guide-store";
 import { Button } from "@/components/ui";
 import { TextField, smallButton } from "./fields";
+import { useIsV3 } from "@/lib/hooks/useV2";
+import { isV3ToolOut } from "@/lib/config/editions";
 
 export function GuideList({
   stored, onCreate, onOpenStored, onOpenBuiltIn, onDeleteStored, onImport, onExportAll, link,
@@ -29,8 +31,13 @@ export function GuideList({
   const [importNote, setImportNote] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // 3.0 does not list the eight tools it leaves out.
+  const isV3 = useIsV3();
   const q = filter.trim().toLowerCase();
-  const builtIn = ALL_GUIDES.filter((g) => g.viewerPath.startsWith("/guides/") && (!q || g.title.toLowerCase().includes(q) || g.category.toLowerCase().includes(q)));
+  const builtIn = ALL_GUIDES.filter((g) =>
+    g.viewerPath.startsWith("/guides/") &&
+    !(isV3 && isV3ToolOut(g.id)) &&
+    (!q || g.title.toLowerCase().includes(q) || g.category.toLowerCase().includes(q)));
 
   const readFile = async (file: File) => {
     const parsed = parseStore(await file.text());
@@ -126,7 +133,7 @@ export function GuideList({
       <section className="bg-white rounded-2xl border-2 border-gray-200 p-5 space-y-3">
         <h2 className="text-lg font-bold text-blue-900">Built-in guides</h2>
         <p className="text-sm text-gray-600">
-          Editing one saves a copy that replaces it in this browser. The built-in version is never changed.
+          Editing one saves a draft copy in this browser. Readers keep seeing the published version until your copy is published.
         </p>
         <TextField label="Find a guide" value={filter} onChange={setFilter} />
         <ul className="divide-y divide-gray-200 max-h-[28rem] overflow-y-auto">

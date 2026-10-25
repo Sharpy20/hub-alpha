@@ -276,11 +276,14 @@ describe("edition links", () => {
   // still in force. Pin it to the live setting.
   let v2Href!: typeof import("@/lib/hooks/useV2").v2Href;
   let isV3Route!: typeof import("@/lib/config/editions").isV3Route;
+  let isV3ToolLink!: typeof import("@/lib/config/editions").isV3ToolLink;
   jest.isolateModules(() => {
     jest.doMock("@/lib/config/build", () => ({ COLLAPSED_FOR_DEMO: false }));
     /* eslint-disable @typescript-eslint/no-require-imports */
     v2Href = (require("@/lib/hooks/useV2") as typeof import("@/lib/hooks/useV2")).v2Href;
-    isV3Route = (require("@/lib/config/editions") as typeof import("@/lib/config/editions")).isV3Route;
+    const editions = require("@/lib/config/editions") as typeof import("@/lib/config/editions");
+    isV3Route = editions.isV3Route;
+    isV3ToolLink = editions.isV3ToolLink;
     /* eslint-enable @typescript-eslint/no-require-imports */
   });
 
@@ -299,6 +302,21 @@ describe("edition links", () => {
 
   it("does not double up when a link already carries the other edition", () => {
     expect(v2Href("/v2/guides", "/3.0")).toBe("/v2/guides");
+  });
+
+  // A file is not a page of any edition. Prefixed with /3.0 it would fall
+  // outside the allowlist and bounce to the 3.0 home.
+  it("leaves files alone, so a form or leaflet still opens inside 3.0", () => {
+    expect(v2Href("/forms/stepdown-referral-wagoll.html", "/3.0")).toBe("/forms/stepdown-referral-wagoll.html");
+    expect(v2Href("/patient-guides.html#anxiety", "/3.0")).toBe("/patient-guides.html#anxiety");
+    expect(v2Href("/guides/social-care", "/3.0")).toBe("/3.0/guides/social-care");
+  });
+
+  it("recognises a link to one of the tools 3.0 leaves out", () => {
+    expect(isV3ToolLink("/guides/care-plan")).toBe(true);
+    expect(isV3ToolLink("/guides/risk-assessment?x=1")).toBe(true);
+    expect(isV3ToolLink("/guides/imha-advocacy")).toBe(false);
+    expect(isV3ToolLink("https://example.org/guides/care-plan")).toBe(false);
   });
 
   it("treats the guides tree as 3.0 except for the eight tools", () => {

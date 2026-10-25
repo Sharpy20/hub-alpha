@@ -45,6 +45,7 @@ import { PayslipDecoder } from "@/components/guides/PayslipDecoder";
 import { usePayBand } from "@/lib/hooks/usePayBand";
 import { HOURS_PER_YEAR, EFFECTIVE_FROM, gbp } from "@/lib/data/guides/pay-scales";
 import { useIsV2, useIsV3, useV2Href } from "@/lib/hooks/useV2";
+import { isV3ToolLink, isV3ToolOut } from "@/lib/config/editions";
 import { toLocalDateStr } from "@/lib/utils/date";
 
 // Step icons for referral workflows
@@ -1057,7 +1058,7 @@ export default function UnifiedGuidePage() {
                     <div>
                       <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2"><BookOpen className="w-5 h-5 text-teal-600" /> Other Guides</h3>
                       <div className="space-y-2">
-                        {rStep.forms.otherGuides.filter((form) => !form.area || form.area === areaNow).map((form) => (
+                        {rStep.forms.otherGuides.filter((form) => (!form.area || form.area === areaNow) && !(isV3 && isV3ToolLink(form.url))).map((form) => (
                           <div key={form.label}>
                             {!form.url || form.url === "#" ? (
                               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-dashed border-gray-300" title="No trust URL has been captured for this guide yet.">
@@ -1066,7 +1067,7 @@ export default function UnifiedGuidePage() {
                                 <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full whitespace-nowrap">Link to confirm</span>
                               </div>
                             ) : (
-                              <a href={form.url} className="flex items-center gap-4 p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl hover:from-teal-100 hover:to-cyan-100 transition-colors no-underline border border-teal-200">
+                              <a href={link(form.url)} className="flex items-center gap-4 p-4 bg-gradient-to-r from-teal-50 to-cyan-50 rounded-xl hover:from-teal-100 hover:to-cyan-100 transition-colors no-underline border border-teal-200">
                                 <span className="text-2xl">{"\uD83D\uDCDA"}</span>
                                 <span className="font-semibold text-gray-800 flex-1">{form.label}</span>
                                 <ExternalLink className="w-5 h-5 text-teal-600" />
@@ -1288,11 +1289,11 @@ export default function UnifiedGuidePage() {
         )}
 
         {/* Related in-app guides */}
-        {!isReferral && guide?.related && guide.related.length > 0 && (
+        {!isReferral && guide?.related && guide.related.some((r) => !(isV3 && isV3ToolOut(r.guideId))) && (
           <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
             <h3 className="font-bold text-blue-900 text-sm mb-3">Related guides</h3>
             <div className="flex flex-wrap gap-2">
-              {guide.related.map((r, i) => (
+              {guide.related.filter((r) => !(isV3 && isV3ToolOut(r.guideId))).map((r, i) => (
                 <Link key={i} href={link(`/guides/${r.guideId}`)} className="inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-blue-200 rounded-lg text-sm font-medium text-blue-700 hover:bg-blue-100 no-underline">
                   <BookOpen className="w-4 h-4" /> {r.label}
                 </Link>
@@ -1504,7 +1505,7 @@ export default function UnifiedGuidePage() {
             <h3 className="font-bold text-gray-800 mb-3 flex items-center gap-2"><BookOpen className="w-5 h-5" /> Related Resources</h3>
             <div className="flex flex-wrap gap-2">
               {Object.entries(GUIDE_CONFIG)
-                .filter(([id]) => id !== guideId && GUIDE_CONFIG[id]?.category === config.category)
+                .filter(([id]) => id !== guideId && GUIDE_CONFIG[id]?.category === config.category && !(isV3 && isV3ToolOut(id)))
                 .slice(0, 3)
                 .map(([id, cfg]) => (
                   <button key={id} onClick={() => { setCurrentStep(0); setCompletedSteps([]); router.push(link(`/guides/${id}`)); }}

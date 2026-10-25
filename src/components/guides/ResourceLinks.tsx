@@ -3,7 +3,8 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { ExternalLink, Lock, Shield, X, FileText, AlertCircle } from "lucide-react";
-import { useV2Href } from "@/lib/hooks/useV2";
+import { useIsV3, useV2Href } from "@/lib/hooks/useV2";
+import { isV3ToolLink } from "@/lib/config/editions";
 import { useModalA11y } from "@/lib/hooks/useModalA11y";
 import type { GuideLink } from "@/lib/data/guides/admission";
 
@@ -12,8 +13,11 @@ import type { GuideLink } from "@/lib/data/guides/admission";
 //  - FOCUS links               -> show the Trust-login warning, then open
 //  - public links              -> open in a new tab
 //  - links with no url          -> disabled "Link to confirm" chip
-export function ResourceLinks({ links }: { links: GuideLink[] }) {
+export function ResourceLinks({ links: allLinks }: { links: GuideLink[] }) {
   const v2Href = useV2Href();
+  // 3.0 does not offer links to the tools it leaves out (care plan, risk...).
+  const isV3 = useIsV3();
+  const links = isV3 ? allLinks?.filter((l) => !(l.url && isV3ToolLink(l.url))) : allLinks;
   const [focusUrl, setFocusUrl] = useState<string | null>(null);
   // Keyboard support for the FOCUS warning modal (WCAG 2.1.2)
   const dialogRef = useRef<HTMLDivElement>(null);

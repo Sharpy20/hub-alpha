@@ -81,6 +81,9 @@ export function v2Href(href: string, prefix: string | null): string {
   if (href === "/") return prefix;
   if (editionPrefix(href)) return href;
   if (!href.startsWith("/")) return href;
+  // A file (/forms/x.html, /patient-guides.html) is not a page of any edition.
+  // Prefixed, 3.0 would treat it as an unknown route and send it home.
+  if (/\.[a-z0-9]+$/i.test(href.split(/[?#]/)[0])) return href;
   return `${prefix}${href}`;
 }
 

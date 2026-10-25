@@ -43,6 +43,12 @@ export function isV3ToolOut(guideId: string): boolean {
   return V3_TOOLS_OUT.includes(guideId);
 }
 
+/** Is this in-site link (e.g. "/guides/care-plan") a tool that 3.0 leaves out? */
+export function isV3ToolLink(href: string): boolean {
+  if (!href.startsWith("/guides/")) return false;
+  return isV3ToolOut(href.slice("/guides/".length).split(/[/?#]/)[0]);
+}
+
 /** Is this route (with the /3.0 prefix already removed) part of 3.0? */
 export function isV3Route(subpath: string): boolean {
   if (subpath.startsWith("/guides/")) {

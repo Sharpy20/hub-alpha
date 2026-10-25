@@ -1,4 +1,5 @@
 import { WORKFLOWS } from "./referral-workflows";
+import { withPublished } from "./published";
 
 export interface GuideItem {
   id: string;
@@ -37,7 +38,7 @@ export function guideLabel(id: string): string {
 
 // All guides grouped by category - this order drives the page (when no custom
 // editor order is saved). Categories render in first-seen order.
-export const ALL_GUIDES: GuideItem[] = [
+const BUILT_IN_GUIDES: GuideItem[] = [
   // Legal & Advocacy
   { id: "mha-statuses", title: "MHA Statuses Explained", description: "All Mental Health Act sections and patient rights", icon: "⚖️", gradient: "from-indigo-600 to-purple-800", category: "Legal & Advocacy", viewerPath: "/guides/mha-statuses" },
   { id: "mha-checker", title: "Section Papers - Receipt & Scrutiny", description: "Interactive checker - which MHA forms you need and how to scrutinise them", icon: "⚖️", gradient: "from-indigo-600 to-purple-700", category: "Legal & Advocacy", viewerPath: "/guides/mha-checker" },
@@ -124,3 +125,7 @@ export const ALL_GUIDES: GuideItem[] = [
   { id: "leave-absence", title: "Leave, Absence & Rest Rules", description: "Annual leave, public holidays and sickness, carers and bereavement leave, phased returns - and the rest rules between shifts", icon: "🛌", gradient: "from-indigo-600 to-blue-800", category: "Learning & Development", viewerPath: "/guides/leave-absence" },
   { id: "pay-roster-faq", title: "Pay & Roster FAQ and Jargon Buster", description: "The questions staff ask most about pay, rostering and leave - plus every payslip and roster word translated, in one place", icon: "❓", gradient: "from-slate-600 to-slate-800", category: "Learning & Development", viewerPath: "/guides/pay-roster-faq" },
 ];
+
+// The index everyone reads: the built-in list with published guides applied
+// (see published.ts).
+export const ALL_GUIDES: GuideItem[] = withPublished(BUILT_IN_GUIDES);

@@ -41,7 +41,9 @@ function compileData() {
   execFileSync(
     process.execPath,
     [tsc, ...dataFiles, "--outDir", tmpDir, "--rootDir", "src", "--module", "commonjs",
-     "--target", "es2020", "--skipLibCheck", "--esModuleInterop", "--moduleResolution", "node"],
+     "--target", "es2020", "--skipLibCheck", "--esModuleInterop", "--moduleResolution", "node",
+     // published.ts imports published.json (the 3.0 publishing route).
+     "--resolveJsonModule"],
     { cwd: repoRoot, stdio: "inherit" },
   );
 }

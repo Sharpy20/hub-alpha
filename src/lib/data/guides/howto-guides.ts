@@ -1,5 +1,6 @@
 import type { PatientTaskCategory, TaskPriority } from "@/lib/types";
 import type { BranchBlock, StepCondition } from "./branching";
+import { PUBLISHED } from "./published";
 
 // How-to guide data - extracted from how-to/[id]/page.tsx
 //
@@ -2376,4 +2377,13 @@ const GUIDE_CASE_NOTES: Record<string, string> = {
 
 for (const [id, note] of Object.entries(GUIDE_CASE_NOTES)) {
   if (GUIDES[id]) GUIDES[id].caseNote = note;
+}
+
+// Published guides (see published.ts) replace the built-in with the same id,
+// or add a new one. Applied last, so a published guide is exactly the file
+// that was sent, case note included.
+for (const g of PUBLISHED) {
+  if (g.kind !== "guide") continue;
+  GUIDES[g.id] = g.data;
+  GUIDE_CONFIG[g.id] = g.look;
 }

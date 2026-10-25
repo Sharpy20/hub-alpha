@@ -8,6 +8,7 @@
 import type { CriteriaWalk } from "./criteria-walk";
 import { S117_QUALIFY_WALK } from "./criteria-walk";
 import type { BranchBlock, StepCondition } from "./branching";
+import { PUBLISHED } from "./published";
 
 export interface WorkflowForm {
   label: string;
@@ -1970,3 +1971,8 @@ export const DEFAULT_WORKFLOW: WorkflowData = {
   ],
 };
 
+// Published referrals (see published.ts) replace the built-in with the same id,
+// or add a new one.
+for (const g of PUBLISHED) {
+  if (g.kind === "workflow") WORKFLOWS[g.id] = g.data;
+}

@@ -9,7 +9,7 @@ import { useTour } from "@/app/tour-provider";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, X, Sparkles, Shield, Phone, ChevronRight } from "lucide-react";
 import { bookmarks } from "@/lib/data/bookmarks";
-import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
+import { useIsV2, useIsV3, useV2Href } from "@/lib/hooks/useV2";
 
 // Code-split: the diary widget pulls in task/patient demo data. Loading it
 // dynamically keeps that code out of the shared home-page bundle, so it never
@@ -45,6 +45,15 @@ const QUICK_ACTIONS = [
     gradient: "from-red-500 to-red-700",
   },
 ];
+
+// 3.0 adds the patient leaflets, which have no other way in from the home page.
+const LEAFLETS_ACTION = {
+  icon: "📖",
+  label: "Patient Leaflets",
+  description: "Printable mental health guides for patients and families",
+  href: "/patient-guides",
+  gradient: "from-emerald-500 to-emerald-700",
+};
 
 const SG_QUICK_LINKS = [
   { icon: "🛡️", label: "Safeguarding Adults", description: "S.42 referral - step by step", href: "/guides/safeguarding" },
@@ -218,8 +227,10 @@ export default function HomePage() {
   const { user } = useApp();
   const { startTour, hasBeenStarted } = useTour();
   const isV2 = useIsV2();
+  const isV3 = useIsV3();
   const link = useV2Href();
   const [bannerDismissed, setBannerDismissed] = useState(true);
+  const quickActions = isV3 ? [...QUICK_ACTIONS, LEAFLETS_ACTION] : QUICK_ACTIONS;
 
   useEffect(() => {
     const dismissed = localStorage.getItem("wardhub_onboarding_dismissed");
@@ -227,7 +238,8 @@ export default function HomePage() {
   }, []);
 
   const isAdminRole = user?.role === "senior_admin" || user?.role === "ward_admin";
-  const showOnboarding = user && !bannerDismissed && !hasBeenStarted && !isAdminRole;
+  // 3.0 has no tour, and nobody is signed in to it.
+  const showOnboarding = !isV3 && user && !bannerDismissed && !hasBeenStarted && !isAdminRole;
 
   const dismissBanner = () => {
     setBannerDismissed(true);
@@ -281,14 +293,16 @@ export default function HomePage() {
             Derbyshire Healthcare NHS Foundation Trust
           </p>
           <h1 className="text-2xl md:text-3xl font-bold mb-1">
-            {user ? `Welcome, ${user.name}` : "wardHub"}
+            {user && !isV3 ? `Welcome, ${user.name}` : "wardHub"}
           </h1>
           <p className="text-white/80 text-base max-w-xl mx-auto">
-            {isV2
+            {isV3
+              ? "Step-by-step guides, links and patient leaflets for the ward."
+              : isV2
               ? "Interactive guides, links and quick access to the resources you need."
               : "Interactive guides, team diary and quick access to the resources you need."}
           </p>
-          {user && (
+          {user && !isV3 && (
             <div className="flex items-center justify-center gap-6 mt-2 text-sm text-white/70">
               <span className="flex items-center gap-1.5">
                 <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
@@ -298,14 +312,28 @@ export default function HomePage() {
               {user.isContributor && <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">Contributor</span>}
             </div>
           )}
-          {!user && (
+          {(!user || isV3) && (
             <div className="flex justify-center mt-3">
               <ChevronDown className="w-6 h-6 text-white/60 animate-bounce" />
             </div>
           )}
         </section>
 
-        {/* Live demo notice */}
+        {/* 3.0 says what it is in place of the demo notice */}
+        {isV3 ? (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 flex items-start gap-3">
+            <span className="text-lg flex-shrink-0">&#x1F4D8;</span>
+            <div>
+              <p className="text-sm font-medium text-blue-900">This is wardHub 3.0, the guides edition.</p>
+              <p className="text-xs text-blue-800 mt-0.5">
+                No diary, no patient or staff data, and nobody signs in. Every guide is a draft until it is
+                signed off, so check it against Trust policy before you rely on it.{" "}
+                <Link href={link("/about")} className="font-semibold underline">What is in 3.0</Link>
+              </p>
+            </div>
+          </div>
+        ) : (
+        /* Live demo notice */
         <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-3">
           <span className="text-lg flex-shrink-0">🔧</span>
           <div>
@@ -318,6 +346,7 @@ export default function HomePage() {
             )}
           </div>
         </div>
+        )}
 
         {/* Bookmark Carousel */}
         <section>
@@ -333,7 +362,7 @@ export default function HomePage() {
             I need to...
           </h2>
           <div className="space-y-4">
-            {QUICK_ACTIONS.map((action) => (
+            {quickActions.map((action) => (
               <Link key={action.href} href={link(action.href)} className="block no-underline">
                 <div className={`rounded-xl p-4 sm:p-6 flex items-center gap-3 sm:gap-5 bg-gradient-to-r ${action.gradient} text-white hover:shadow-xl hover:scale-[1.02] transition-all`}>
                   <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center flex-shrink-0">

@@ -44,7 +44,7 @@ import { ShiftChecker } from "@/components/guides/ShiftChecker";
 import { PayslipDecoder } from "@/components/guides/PayslipDecoder";
 import { usePayBand } from "@/lib/hooks/usePayBand";
 import { HOURS_PER_YEAR, EFFECTIVE_FROM, gbp } from "@/lib/data/guides/pay-scales";
-import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
+import { useIsV2, useIsV3, useV2Href } from "@/lib/hooks/useV2";
 import { toLocalDateStr } from "@/lib/utils/date";
 
 // Step icons for referral workflows
@@ -192,11 +192,13 @@ export default function UnifiedGuidePage() {
   const { isTourActive, setIsInLiveWalkthrough, setCurrentSection, setCurrentSlide } = useTour();
   const isTourMode = searchParams.get("tour") === "true";
   const isV2 = useIsV2();
+  const isV3 = useIsV3();
   const link = useV2Href();
 
   // In the limited (PII-free) build, case notes must not show a staff name -
   // show the role instead (Staff / Editor). The full build keeps the name.
-  const caseNoteBy = isV2 ? (user?.isContributor ? "Editor" : "Staff") : user?.name;
+  // 3.0 has nobody signed in, so the note leaves [NURSE] for the nurse to fill.
+  const caseNoteBy = isV3 ? undefined : isV2 ? (user?.isContributor ? "Editor" : "Staff") : user?.name;
 
   const guideId = params.id as string;
 
@@ -210,8 +212,11 @@ export default function UnifiedGuidePage() {
 
   // Determine guide type
   // A guide saved in the editor wins over the built-in one with the same id.
+  // Not in 3.0: readers there only see published guides, and the author sees
+  // their own copy only when the editor opens it as a preview (?draft=1).
   const { guides: storedGuides, ready: storeReady } = useStoredGuides();
-  const stored = storedGuides.find((g) => g.id === guideId);
+  const isDraftPreview = isV3 && searchParams.get("draft") === "1";
+  const stored = isV3 && !isDraftPreview ? undefined : storedGuides.find((g) => g.id === guideId);
   const isReferral = stored ? stored.kind === "workflow" : !!WORKFLOWS[guideId];
   const workflow: WorkflowData = stored?.kind === "workflow" ? stored.data : isReferral ? (WORKFLOWS[guideId] || DEFAULT_WORKFLOW) : DEFAULT_WORKFLOW;
   const guide: GuideData = stored?.kind === "guide" ? stored.data : !isReferral ? (GUIDES[guideId] || DEFAULT_GUIDE) : DEFAULT_GUIDE;
@@ -504,6 +509,15 @@ export default function UnifiedGuidePage() {
 
   return (
     <MainLayout>
+      {isDraftPreview && (
+        <div role="status" className="mb-4 rounded-xl border-2 border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          {stored ? (
+            <><strong>Draft preview.</strong> This is the copy saved in this browser. Nobody else can see it. Readers see the published guide until this one is published.</>
+          ) : (
+            <><strong>No draft saved for this guide in this browser.</strong> You are looking at the published guide.</>
+          )}
+        </div>
+      )}
       {/* Tour mode floating guide */}
       {isTourMode && isTourActive && (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">

@@ -7,6 +7,7 @@ import { enumerateRoutes } from "@/lib/data/guides/branching";
 import type { StoredGuide } from "@/lib/data/guides/guide-store";
 import { BlockPanel, SelectField, TextAreaField, TextField, ToggleChip } from "./fields";
 import { ListEditor } from "./ListEditor";
+import { useIsV3 } from "@/lib/hooks/useV2";
 
 const ICONS = ["📖", "🗣️", "🏥", "🛡️", "👶", "🏠", "👥", "🥗", "🩹", "🦷", "🏃", "🧩", "💬", "📋", "⚖️", "💊", "🩺", "💉", "🧠", "❤️", "🔬", "🚪", "📝", "📊"];
 
@@ -63,6 +64,8 @@ export function DetailsPanel({ guide, onChange }: { guide: StoredGuide; onChange
 type CaseNoteMode = "default" | "custom" | "none";
 
 export function ExtrasPanel({ guide, onChange }: { guide: StoredGuide; onChange: (g: StoredGuide) => void }) {
+  // Nobody signs in to 3.0, so [NURSE] is left for the nurse to fill in there.
+  const isV3 = useIsV3();
   if (guide.kind !== "guide") return null;
   const data = guide.data;
   const set = (next: GuideData) => onChange({ ...guide, data: next });
@@ -115,7 +118,9 @@ export function ExtrasPanel({ guide, onChange }: { guide: StoredGuide; onChange:
               rows={4}
               value={data.caseNote ?? ""}
               onChange={(caseNote) => patch({ caseNote })}
-              hint="[DATE] and [NURSE] fill in automatically. [BRANCH:q1] writes in the answer to a question."
+              hint={isV3
+                ? "[DATE] fills in automatically. [NURSE] stays in the note for the nurse to fill in. [BRANCH:q1] writes in the answer to a question."
+                : "[DATE] and [NURSE] fill in automatically. [BRANCH:q1] writes in the answer to a question."}
             />
           </div>
         )}

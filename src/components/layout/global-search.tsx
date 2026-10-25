@@ -3,7 +3,8 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, FileText, Link2, ExternalLink, Lock, CornerDownLeft } from "lucide-react";
-import { useV2Href } from "@/lib/hooks/useV2";
+import { useIsV3, useV2Href } from "@/lib/hooks/useV2";
+import { isV3ToolOut } from "@/lib/config/editions";
 import { useModalA11y } from "@/lib/hooks/useModalA11y";
 
 type Result =
@@ -34,6 +35,7 @@ function score(query: string, title: string, extra: string): number {
 export function GlobalSearch() {
   const router = useRouter();
   const link = useV2Href();
+  const isV3 = useIsV3();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -85,6 +87,7 @@ export function GlobalSearch() {
     if (q.length < 2 || !index) return [];
 
     const guides = index.guides
+      .filter((g) => !isV3 || !isV3ToolOut(g.id))
       .map((g) => ({ g, s: score(q, g.title, `${g.description} ${g.category}`) }))
       .filter((r) => r.s >= 0)
       .sort((a, b) => b.s - a.s)
@@ -105,7 +108,7 @@ export function GlobalSearch() {
       }));
 
     return [...guides, ...links];
-  }, [query, index]);
+  }, [query, index, isV3]);
 
   useEffect(() => { setActive(0); }, [query]);
 

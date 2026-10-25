@@ -9,7 +9,8 @@ import { guideApproval } from "@/lib/data/approval-status";
 import { ALL_GUIDES, TYPE_STYLE, guideType, type GuideItem } from "@/lib/data/guides/catalog";
 import { useStoredGuides } from "@/lib/hooks/useStoredGuides";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
-import { useV2Href } from "@/lib/hooks/useV2";
+import { useIsV3, useV2Href } from "@/lib/hooks/useV2";
+import { isV3ToolOut } from "@/lib/config/editions";
 
 
 export default function GuidesPage() {
@@ -19,12 +20,18 @@ export default function GuidesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [customOrder, setCustomOrder] = useState<{ id: string; category: string }[] | null>(null);
-  const { guides: storedGuides } = useStoredGuides();
+  const { guides: browserGuides } = useStoredGuides();
+  const isV3 = useIsV3();
+  // 3.0 readers only ever see published guides. A copy saved in the editor
+  // stays in the editor (and its preview) until somebody publishes it, so an
+  // edit on a shared ward PC never changes what the next person reads.
+  const storedGuides = isV3 ? [] : browserGuides;
+  const catalogue = isV3 ? ALL_GUIDES.filter((g) => !isV3ToolOut(g.id)) : ALL_GUIDES;
 
   // Guides written in the editor that are not built in. An edited copy of a
   // built-in guide keeps its place in the list, so only new ids are added here.
   const draftItems: GuideItem[] = storedGuides
-    .filter((g) => !ALL_GUIDES.some((a) => a.id === g.id))
+    .filter((g) => !catalogue.some((a) => a.id === g.id))
     .map((g) => ({
       id: g.id,
       title: g.data.title,
@@ -53,15 +60,15 @@ export default function GuidesPage() {
   // could otherwise scatter or bury guides.
   const orderedGuides = (() => {
     const base = (() => {
-      if (!customOrder) return ALL_GUIDES;
-      const byId = new Map(ALL_GUIDES.map((g) => [g.id, g] as const));
+      if (!customOrder) return catalogue;
+      const byId = new Map(catalogue.map((g) => [g.id, g] as const));
       const savedKnown = customOrder.filter((co) => byId.has(co.id));
       // If the saved order covers fewer than 70% of current guides it is stale - drop it.
-      if (savedKnown.length < ALL_GUIDES.length * 0.7) return ALL_GUIDES;
+      if (savedKnown.length < catalogue.length * 0.7) return catalogue;
       const seen = new Set(savedKnown.map((co) => co.id));
       return savedKnown
         .map((co) => byId.get(co.id)!)
-        .concat(ALL_GUIDES.filter((g) => !seen.has(g.id)));
+        .concat(catalogue.filter((g) => !seen.has(g.id)));
     })();
     return [...base, ...draftItems];
   })();
@@ -263,7 +270,7 @@ export default function GuidesPage() {
 
         {/* Count */}
         <div className="diary-muted text-center text-sm">
-          {filteredGuides.length} of {ALL_GUIDES.length} guides
+          {filteredGuides.length} of {orderedGuides.length} guides
         </div>
       </div>
     </MainLayout>

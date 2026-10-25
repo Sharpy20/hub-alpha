@@ -11,6 +11,7 @@ import { bookmarks, getCategories } from "@/lib/data/bookmarks";
 import { useWardSettings, PersonalBookmark } from "@/app/ward-settings-provider";
 import { sanitizeExternalUrl } from "@/lib/utils/url";
 import { useApp } from "@/app/providers";
+import { useIsV3 } from "@/lib/hooks/useV2";
 import { Lock, ExternalLink, Link2, Filter, Star, Check, X, Shield, Plus, Pencil, Trash2, Send, User, Search } from "lucide-react";
 
 function isEmoji(str: string): boolean {
@@ -59,6 +60,9 @@ function BookmarksContent() {
   const focusDialogRef = useRef<HTMLDivElement>(null);
   useModalA11y(focusDialogRef, () => setFocusModalUrl(null), !!focusModalUrl);
   const { user } = useApp();
+  // Nobody signs in to 3.0, so a suggestion there carries no name.
+  const isV3 = useIsV3();
+  const suggestedBy = isV3 ? "Anonymous" : user?.name || "Unknown";
   const {
     userFavoriteBookmarks, toggleFavoriteBookmark,
     defaultBookmarkCategory, setDefaultBookmarkCategory,
@@ -494,9 +498,9 @@ function BookmarksContent() {
       {recommendModal && (
         <RecommendModal
           bookmark={recommendModal}
-          userName={user?.name || "Unknown"}
+          userName={suggestedBy}
           onSubmit={(category) => {
-            recommendBookmark(recommendModal, category, user?.name || "Unknown");
+            recommendBookmark(recommendModal, category, suggestedBy);
             setRecommendModal(null);
           }}
           onClose={() => setRecommendModal(null)}

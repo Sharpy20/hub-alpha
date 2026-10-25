@@ -8,7 +8,7 @@ import { MainLayout } from "@/components/layout";
 import { Button, ConfirmDialog } from "@/components/ui";
 import { useApp } from "@/app/providers";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
-import { useV2Href } from "@/lib/hooks/useV2";
+import { useIsV3, useV2Href } from "@/lib/hooks/useV2";
 import { useStoredGuides } from "@/lib/hooks/useStoredGuides";
 import { ALL_GUIDES } from "@/lib/data/guides/catalog";
 import { GUIDES, GUIDE_CONFIG } from "@/lib/data/guides/howto-guides";
@@ -44,12 +44,36 @@ function lookOfBuiltIn(id: string) {
   return cfg ? { icon: cfg.icon, gradient: cfg.gradient, category: cfg.category } : DEFAULT_LOOK;
 }
 
+// 3.0 publishes through a person rather than a database, so the editor says
+// plainly where a draft lives and how it reaches readers.
+function PublishingNote({ compact = false }: { compact?: boolean }) {
+  if (compact) {
+    return (
+      <p className="text-sm text-nhs-dark-grey bg-nhs-pale-grey/60 border border-gray-200 rounded-lg px-3 py-2">
+        Readers cannot see this draft. Preview it, then download it and send the file to the publisher to put it live.
+      </p>
+    );
+  }
+  return (
+    <section aria-label="How publishing works" className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900 space-y-2">
+      <h2 className="font-bold text-base">How a guide gets published in 3.0</h2>
+      <ol className="list-decimal list-inside space-y-1">
+        <li>Write or edit the guide here. It saves in this browser only, and readers never see it.</li>
+        <li>Use <strong>Preview draft</strong> to read it the way a reader will.</li>
+        <li>When it is ready, <strong>Download to publish</strong> and send the file to the publisher.</li>
+        <li>The publisher adds it to the site. It goes live on the next update, under its traffic light.</li>
+      </ol>
+    </section>
+  );
+}
+
 function Editor() {
   const { user } = useApp();
   const { canEdit } = useCanEdit();
   const router = useRouter();
   const search = useSearchParams();
   const link = useV2Href();
+  const isV3 = useIsV3();
   const { guides: stored, ready } = useStoredGuides();
 
   const [working, setWorking] = useState<StoredGuide | null>(null);
@@ -78,7 +102,8 @@ function Editor() {
     if (user && !canEdit) router.push("/");
   }, [user, canEdit, router]);
 
-  if (!user || !canEdit) {
+  // 3.0 has no sign-in, so nobody needs a user to open the editor there.
+  if ((!user && !isV3) || !canEdit) {
     return (
       <MainLayout>
         <div className="text-center py-20">
@@ -151,12 +176,13 @@ function Editor() {
       <MainLayout>
         <div className="space-y-6 max-w-4xl">
           <div>
-            <Link href={link("/admin")} className="inline-flex items-center gap-1.5 text-sm font-semibold text-nhs-blue hover:underline">
-              <ArrowLeft className="w-4 h-4" /> Admin
+            <Link href={link(isV3 ? "/guides" : "/admin")} className="inline-flex items-center gap-1.5 text-sm font-semibold text-nhs-blue hover:underline">
+              <ArrowLeft className="w-4 h-4" /> {isV3 ? "Guides" : "Admin"}
             </Link>
             <h1 className="text-3xl font-bold text-nhs-dark-blue mt-2">Guide editor</h1>
             <p className="text-nhs-dark-grey mt-1">Write a guide, add questions and branching where it needs them, and see the routes a reader can take.</p>
           </div>
+          {isV3 && <PublishingNote />}
           <GuideList
             stored={stored}
             onCreate={create}
@@ -197,7 +223,7 @@ function Editor() {
           <div>
             <button
               type="button"
-              onClick={() => { setWorking(null); setNotice(""); router.replace("/admin/guides"); }}
+              onClick={() => { setWorking(null); setNotice(""); router.replace(link("/admin/guides")); }}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-nhs-blue hover:underline"
             >
               <ArrowLeft className="w-4 h-4" /> All guides
@@ -211,11 +237,11 @@ function Editor() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link href={link(`/guides/${working.id}`)} target="_blank" className={`${smallButton} inline-flex items-center gap-1.5 no-underline`}>
-              <ExternalLink className="w-4 h-4" /> View guide
+            <Link href={link(`/guides/${working.id}${isV3 ? "?draft=1" : ""}`)} target="_blank" className={`${smallButton} inline-flex items-center gap-1.5 no-underline`}>
+              <ExternalLink className="w-4 h-4" /> {isV3 ? "Preview draft" : "View guide"}
             </Link>
             <button type="button" className={`${smallButton} inline-flex items-center gap-1.5`} onClick={() => download(`${working.id}.json`, [working])}>
-              <Download className="w-4 h-4" /> Download
+              <Download className="w-4 h-4" /> {isV3 ? "Download to publish" : "Download"}
             </button>
             {isStored && (
               <button type="button" className={`${smallButton} text-nhs-red`} onClick={() => setToRemove(working)}>
@@ -240,6 +266,8 @@ function Editor() {
             </Button>
           </div>
         )}
+
+        {isV3 && <PublishingNote compact />}
 
         {notice && <p role="status" className="text-sm font-semibold text-nhs-dark-blue bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">{notice}</p>}
 

@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
-import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
+import { useIsV2, useIsV3, useV2Href } from "@/lib/hooks/useV2";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
   const isV2 = useIsV2();
+  const isV3 = useIsV3();
   const link = useV2Href();
 
   return (
@@ -17,7 +18,9 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-3">wardHub</h3>
             <p className="text-sm text-white/70">
-              {isV2
+              {isV3
+                ? "Step-by-step guides for an inpatient ward: referrals, the Mental Health Act, safeguarding and the rest of the job."
+                : isV2
                 ? "A reference tool built around the needs of an inpatient ward. Interactive guides, links and resources at your fingertips."
                 : "A reference and task management tool built around the needs of an inpatient ward. Interactive guides and a simple electronic jobs diary."}
             </p>
@@ -37,6 +40,13 @@ export function Footer() {
                   Interactive Guides
                 </Link>
               </li>
+              {isV3 && (
+                <li>
+                  <Link href={link("/patient-guides")} className="hover:text-white transition-colors">
+                    Patient leaflets
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link href={link("/gdpr")} className="hover:text-white transition-colors">
                   GDPR &amp; Privacy
@@ -44,7 +54,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href={link("/about")} className="hover:text-white transition-colors">
-                  About &amp; Governance
+                  {isV3 ? "About 3.0" : <>About &amp; Governance</>}
                 </Link>
               </li>
             </ul>
@@ -53,12 +63,25 @@ export function Footer() {
           {/* Support */}
           <div>
             <h3 className="font-bold text-lg mb-3">Support</h3>
-            <p className="text-sm text-white/70 mb-2">
-              This is a demo with fictional data.
-            </p>
-            <p className="text-sm text-white/70 mb-4">
-              For the live version, contact your ward administrator.
-            </p>
+            {isV3 ? (
+              <>
+                <p className="text-sm text-white/70 mb-2">
+                  3.0 holds no patient or staff data and nobody signs in.
+                </p>
+                <p className="text-sm text-white/70 mb-4">
+                  Every guide is a draft until it is signed off.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-white/70 mb-2">
+                  This is a demo with fictional data.
+                </p>
+                <p className="text-sm text-white/70 mb-4">
+                  For the live version, contact your ward administrator.
+                </p>
+              </>
+            )}
             <Link
               href={link("/feedback")}
               className="inline-flex items-center gap-2 text-sm text-nhs-light-blue hover:text-white transition-colors"
@@ -73,7 +96,7 @@ export function Footer() {
           <p className="text-xs text-white/70 font-medium tracking-wider uppercase">
             Derbyshire Healthcare NHS Foundation Trust
           </p>
-          <p>&copy; {currentYear} wardHub &ndash; Alpha Demo. Not for clinical use.</p>
+          <p>&copy; {currentYear} wardHub &ndash; {isV3 ? "3.0, guides edition" : "Alpha Demo"}. Not for clinical use.</p>
           <div className="flex items-center justify-center gap-4 text-xs text-white/70">
             <Link href={link("/gdpr")} className="hover:text-white transition-colors">Privacy</Link>
             {!isV2 && (

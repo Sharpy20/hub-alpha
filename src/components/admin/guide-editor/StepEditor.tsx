@@ -12,6 +12,7 @@ import { BlockPanel, TextAreaField, TextField, ToggleChip, smallButton } from ".
 import { ConditionPanel, QuestionPanel } from "./BranchEditors";
 import { ListEditor, type Column } from "./ListEditor";
 import { STEP_TYPES, WorkflowFields } from "./WorkflowFields";
+import { useIsV3 } from "@/lib/hooks/useV2";
 
 interface BlockInfo {
   name: BlockName;
@@ -61,7 +62,10 @@ export function StepEditor({
   onDelete: () => void;
   onInsertToken: (token: string) => void;
 }) {
-  const blocks = kind === "guide" ? GUIDE_BLOCKS : WORKFLOW_BLOCKS;
+  // 3.0 has no diary, so it offers no Diary jobs block. A guide that already
+  // has one keeps it, untouched, for the full build.
+  const isV3 = useIsV3();
+  const blocks = (kind === "guide" ? GUIDE_BLOCKS : WORKFLOW_BLOCKS).filter((b) => !(isV3 && b.name === "commitTasks"));
   const noEarlierQuestion = questionsBefore(steps, index).length === 0;
   const guideStep = step as GuideStep;
   const typeLabel = kind === "workflow" ? STEP_TYPES.find((t) => t.value === (step as WorkflowStep).type)?.label : undefined;
@@ -166,7 +170,7 @@ export function StepEditor({
               </BlockPanel>
             )}
 
-            {guideStep.commitTasks && kind === "guide" && (
+            {guideStep.commitTasks && kind === "guide" && !isV3 && (
               <BlockPanel title="Diary jobs" onRemove={() => toggle("commitTasks")}>
                 <ListEditor<CommitTask>
                   items={guideStep.commitTasks}

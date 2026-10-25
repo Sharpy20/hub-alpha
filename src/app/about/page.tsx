@@ -14,7 +14,8 @@ import {
   Film,
 } from "lucide-react";
 import Link from "next/link";
-import { useV2Href } from "@/lib/hooks/useV2";
+import { useIsV3, useV2Href } from "@/lib/hooks/useV2";
+import { AboutV3 } from "@/components/about/AboutV3";
 // PERFORMANCE: import the catalog module directly (not the ui barrel) - it is
 // the lightest file that knows every guide id. See the note in components/ui/index.ts.
 import { ALL_GUIDES } from "@/lib/data/guides/catalog";
@@ -35,6 +36,10 @@ const TOTAL_GUIDES = ALL_GUIDES.length;
 
 export default function AboutPage() {
   const link = useV2Href();
+  const isV3 = useIsV3();
+
+  // 3.0 has its own About page, which also answers the privacy question.
+  if (isV3) return <AboutV3 />;
 
   return (
     <MainLayout>

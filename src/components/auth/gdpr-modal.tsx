@@ -3,6 +3,7 @@
 import { Modal, ModalActions } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Shield, AlertTriangle } from "lucide-react";
+import { useIsV3 } from "@/lib/hooks/useV2";
 
 interface GdprModalProps {
   isOpen: boolean;
@@ -10,6 +11,34 @@ interface GdprModalProps {
 }
 
 export function GdprModal({ isOpen, onAccept }: GdprModalProps) {
+  const isV3 = useIsV3();
+
+  // 3.0 holds no patient or staff data, so its notice says what it does hold.
+  if (isV3) {
+    return (
+      <Modal isOpen={isOpen} onClose={() => {}} title="Before you start" size="md" showClose={false}>
+        <div className="space-y-4 text-nhs-dark-grey">
+          <p className="font-semibold text-nhs-black flex items-center gap-2">
+            <Shield className="w-5 h-5 text-nhs-blue" />
+            wardHub 3.0 is the guides edition
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-sm ml-2">
+            <li>It holds no patient or staff data, and nobody signs in.</li>
+            <li><strong>Do not type patient information</strong> into the editor or anywhere else on this site.</li>
+            <li>Anything you change, such as a draft guide or a saved link, stays in this browser.</li>
+            <li>The site sets one cookie, to remember that you entered the password.</li>
+            <li>Every guide is a draft until it is signed off. Check it against Trust policy before you rely on it.</li>
+          </ul>
+        </div>
+        <ModalActions>
+          <Button onClick={onAccept} size="lg">
+            I Understand
+          </Button>
+        </ModalActions>
+      </Modal>
+    );
+  }
+
   return (
     <Modal
       isOpen={isOpen}

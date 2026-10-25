@@ -7,13 +7,15 @@ import { Menu, X, User, LogOut, CalendarDays, ChevronDown, Building2, Users, Lin
 import { useState, useRef, useEffect } from "react";
 import { useTour } from "@/app/tour-provider";
 import { getStaffByWard } from "@/lib/data/staff";
-import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
+import { useIsV2, useIsV3, useV2Href } from "@/lib/hooks/useV2";
 import { GlobalSearch } from "./global-search";
+import { HeaderV3 } from "./header-v3";
 
 export function Header() {
   const router = useRouter();
   const { user, setUser, activeWard, setActiveWard, allWards, styleTheme, setStyleTheme, colorMode, setColorMode } = useApp();
   const isV2 = useIsV2();
+  const isV3 = useIsV3();
   const link = useV2Href();
   const availableRoles = (isV2
     ? (["staff", "senior_admin"] as const)
@@ -130,6 +132,9 @@ export function Header() {
   // other-ward cue never switches off.
   const isViewingOtherWard = !!user && activeWard.toLowerCase() !== user.ward.toLowerCase();
   const canAccessAdmin = !!user;
+
+  // 3.0 has its own header: no sign-in, no demo selector, nothing leading out.
+  if (isV3) return <HeaderV3 />;
 
   return (
     <>

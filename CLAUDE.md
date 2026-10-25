@@ -114,9 +114,7 @@ the Trust: guides, links, patient leaflets and three checklists, no diary, no pa
 staff, no logins. Unlike `/v2` it is an **allowlist**: `src/lib/config/editions.ts` lists the
 routes it serves and the eight tools it leaves out, and `src/proxy.ts` sends everything else
 back to `/3.0`. `useIsV3()` marks it, and `useIsV2()` is ALSO true under `/3.0`, so every
-"limited" gate applies there. In 3.0 readers only see published guides; a guide changes for
-readers only through `published.json` (see the guide editor gotcha below). Full story:
-BACKLOG Section AA.
+"limited" gate applies there. Full story: BACKLOG Section AA.
 
 **Main surfaces:** unified guide viewer at `/guides/[id]` (static-route builder/checker
 guides override it) · Team Diary `/tasks` · My Jobs kanban `/my-tasks` · Patients
@@ -174,7 +172,10 @@ NOT a role. Ward Professional comes from staff/lead/manager only.
   `lib/data/guides/editor-model.ts`, screens in `components/admin/guide-editor/`. It edits
   the same `GuideData` / `WorkflowData` objects the viewer reads. Guides it saves go through
   `lib/data/guides/guide-store.ts` (localStorage today, the ONE file to swap for the real
-  back end) and override a built-in guide with the same id. **Branching** is a `branch` on a
+  back end). **Since 25 Oct 2026 a saved copy NEVER reaches readers, in any edition:** it shows
+  only in the editor and at `/guides/<id>?draft=1` (the "Preview draft" button). A guide changes
+  for readers only by being published into `published.json` (gotcha below), which is what
+  stops an edit on a shared ward PC changing what the next nurse reads. **Branching** is a `branch` on a
   step plus `showIf` on later steps (`branching.ts`); the viewer filters with `visibleSteps`.
   If you add a field to `GuideStep` / `WorkflowStep`, add it to `EDITOR_COVERAGE` and give it
   an editor control, or the coverage test fails on purpose. See BACKLOG Section Z.

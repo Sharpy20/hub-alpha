@@ -211,12 +211,13 @@ export default function UnifiedGuidePage() {
   }, [legacyTarget, router, link]);
 
   // Determine guide type
-  // A guide saved in the editor wins over the built-in one with the same id.
-  // Not in 3.0: readers there only see published guides, and the author sees
-  // their own copy only when the editor opens it as a preview (?draft=1).
+  // Readers only ever see published guides (25 Oct 2026, every edition). A
+  // copy saved in the editor shows only when the editor opens it as a preview
+  // (?draft=1), so an edit on a shared ward PC never changes what the next
+  // person reads. It reaches readers by being published (published.ts).
   const { guides: storedGuides, ready: storeReady } = useStoredGuides();
-  const isDraftPreview = isV3 && searchParams.get("draft") === "1";
-  const stored = isV3 && !isDraftPreview ? undefined : storedGuides.find((g) => g.id === guideId);
+  const isDraftPreview = searchParams.get("draft") === "1";
+  const stored = isDraftPreview ? storedGuides.find((g) => g.id === guideId) : undefined;
   const isReferral = stored ? stored.kind === "workflow" : !!WORKFLOWS[guideId];
   const workflow: WorkflowData = stored?.kind === "workflow" ? stored.data : isReferral ? (WORKFLOWS[guideId] || DEFAULT_WORKFLOW) : DEFAULT_WORKFLOW;
   const guide: GuideData = stored?.kind === "guide" ? stored.data : !isReferral ? (GUIDES[guideId] || DEFAULT_GUIDE) : DEFAULT_GUIDE;
@@ -503,9 +504,10 @@ export default function UnifiedGuidePage() {
     if (isTourMode && isLastStep && !tourCompleteShown) setTourCompleteShown(true);
   }, [isTourMode, isLastStep, tourCompleteShown]);
 
-  // An id that is not built in may be a guide saved in the editor. Wait for the
-  // browser store to be read rather than flashing the placeholder guide.
-  if (!storeReady && !stored && !GUIDES[guideId] && !WORKFLOWS[guideId] && !legacyTarget) return null;
+  // In a draft preview, an id that is not built in may be a guide saved in the
+  // editor. Wait for the browser store to be read rather than flashing the
+  // placeholder guide.
+  if (isDraftPreview && !storeReady && !stored && !GUIDES[guideId] && !WORKFLOWS[guideId] && !legacyTarget) return null;
 
   return (
     <MainLayout>

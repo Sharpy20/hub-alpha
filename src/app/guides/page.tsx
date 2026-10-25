@@ -6,8 +6,7 @@ import { Badge, StatusBadge } from "@/components/ui";
 import Link from "next/link";
 import { ArrowRight, Filter, FileText, Pencil, Search } from "lucide-react";
 import { guideApproval } from "@/lib/data/approval-status";
-import { ALL_GUIDES, TYPE_STYLE, guideType, type GuideItem } from "@/lib/data/guides/catalog";
-import { useStoredGuides } from "@/lib/hooks/useStoredGuides";
+import { ALL_GUIDES, TYPE_STYLE, guideType } from "@/lib/data/guides/catalog";
 import { useCanEdit } from "@/lib/hooks/useCanEdit";
 import { useIsV3, useV2Href } from "@/lib/hooks/useV2";
 import { isV3ToolOut } from "@/lib/config/editions";
@@ -20,30 +19,13 @@ export default function GuidesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedType, setSelectedType] = useState<string>("all");
   const [customOrder, setCustomOrder] = useState<{ id: string; category: string }[] | null>(null);
-  const { guides: browserGuides } = useStoredGuides();
   const isV3 = useIsV3();
-  // 3.0 readers only ever see published guides. A copy saved in the editor
-  // stays in the editor (and its preview) until somebody publishes it, so an
-  // edit on a shared ward PC never changes what the next person reads.
-  const storedGuides = isV3 ? [] : browserGuides;
+  // Readers only ever see published guides (25 Oct 2026, every edition). A
+  // copy saved in the editor stays in the editor and its preview until it is
+  // published, so an edit on a shared ward PC never changes what the next
+  // person reads.
   const catalogue = isV3 ? ALL_GUIDES.filter((g) => !isV3ToolOut(g.id)) : ALL_GUIDES;
-
-  // Guides written in the editor that are not built in. An edited copy of a
-  // built-in guide keeps its place in the list, so only new ids are added here.
-  const draftItems: GuideItem[] = storedGuides
-    .filter((g) => !catalogue.some((a) => a.id === g.id))
-    .map((g) => ({
-      id: g.id,
-      title: g.data.title,
-      description: g.data.description,
-      icon: g.look.icon,
-      gradient: g.look.gradient,
-      category: g.look.category,
-      viewerPath: `/guides/${g.id}`,
-    }));
-  const draftIds = new Set(draftItems.map((d) => d.id));
-  const typeOf = (id: string) =>
-    draftIds.has(id) && storedGuides.find((s) => s.id === id)?.kind === "workflow" ? "Step-by-step" : guideType(id);
+  const typeOf = guideType;
 
   // Load custom order from localStorage (set via editor)
   useEffect(() => {
@@ -70,7 +52,7 @@ export default function GuidesPage() {
         .map((co) => byId.get(co.id)!)
         .concat(catalogue.filter((g) => !seen.has(g.id)));
     })();
-    return [...base, ...draftItems];
+    return base;
   })();
 
   const allCategories = [...new Set(orderedGuides.map((g) => g.category))];
@@ -248,11 +230,8 @@ export default function GuidesPage() {
                     </span>
                   </div>
                 </div>
-                {draftIds.has(guide.id) ? (
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 whitespace-nowrap">Draft on this browser</span>
-                ) : (
-                  <StatusBadge status={guideApproval(guide.id)} />
-                )}
+                <StatusBadge status={guideApproval(guide.id)} />
+
                 <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-purple-500 flex-shrink-0 transition-colors" />
               </div>
             </Link>

@@ -95,7 +95,7 @@ export function GuideList({
           </div>
         </div>
         <p className="text-sm text-gray-600">
-          Saved in this browser only, until the shared store is connected. Download a copy if you want to keep one or move it to another computer.
+          Saved in this browser only, and readers cannot see them. To put one live, download it and send the file to the publisher. Downloading also keeps a copy or moves it to another computer.
         </p>
         {importNote && <p role="status" className="text-sm font-semibold text-blue-900">{importNote}</p>}
         {stored.length === 0 ? (
@@ -112,7 +112,7 @@ export function GuideList({
                     {g.basedOn ? " · edited copy of a built-in guide" : ""}
                   </p>
                 </div>
-                <Link href={link(`/guides/${g.id}`)} className={`${smallButton} no-underline`}>View</Link>
+                <Link href={link(`/guides/${g.id}?draft=1`)} className={`${smallButton} no-underline`}>Preview</Link>
                 <button type="button" className={smallButton} onClick={() => onOpenStored(g)}>Edit</button>
                 <button type="button" className={`${smallButton} text-nhs-red`} onClick={() => onDeleteStored(g)}>
                   {g.basedOn ? "Put the built-in back" : "Delete"}

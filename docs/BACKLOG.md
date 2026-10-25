@@ -3729,8 +3729,6 @@ To take one down: `npm run publish-guide -- --remove <id>`. The built-in version
   tools in the code. `/3.0` is the demonstration. If the Trust says yes, the follow-up is a
   standalone 3.0 repository with everything outside 3.0 deleted, so they review a fraction of it.
   ⛔ The ownership position goes in writing before any code is handed over (Section V).
-- The shared-PC problem (a local edit overriding a guide for the next reader) is fixed **in 3.0
-  only**. Root and `/v2` still do it. Decide whether root should follow.
 - The tab title is swapped in the browser, because Next streams the site-wide title (which names
   the diary) after load. The raw HTML still carries the site-wide title.
 - 3.0 is behind the same password as the rest of the site. Whether a Trust-hosted 3.0 needs one
@@ -3745,5 +3743,9 @@ To take one down: `npm run publish-guide -- --remove <id>`. The built-in version
 2. [ ] **Rebuild each guide in the editor (Mike, 25 Oct).** For every guide in 3.0, try to
        recreate it in the editor and record one of: builds as it is / could with an editor
        change (say which) / impossible. "Impossible" may mean the guide drops out of 3.0.
-3. [ ] Decide whether root and `/v2` adopt "readers never see local edits".
+3. [x] **Root and `/v2` now work like 3.0 (Mike, 25 Oct).** Readers in every edition see
+       published guides only. A copy saved in the editor shows only at `/guides/<id>?draft=1`,
+       and the editor offers Preview draft and Download to publish everywhere. This supersedes
+       Section Z's "a saved guide overrides the built-in one". Anyone who had an edited copy in
+       their browser still has it in the editor; it just no longer replaces the guide for them.
 4. [ ] If the Trust says yes: the standalone 3.0 repository, after the ownership position.

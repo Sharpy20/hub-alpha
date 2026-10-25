@@ -174,3 +174,136 @@ describe("the split (COLLAPSED_FOR_DEMO = false, the live setting since 8 Sept)"
     expect(target(proxy(request("/v2")))).toBe("/");
   });
 });
+
+// 3.0, the guides-only edition (25 Oct 2026). An allowlist rather than a
+// blocklist, so these tests check both what is in and that a route nobody has
+// listed stays out. It runs the same whichever way the demo collapse is set.
+describe("3.0, the guides-only edition", () => {
+  for (const collapsed of [false, true]) {
+    describe(`with COLLAPSED_FOR_DEMO = ${collapsed}`, () => {
+      const proxy = loadProxy(collapsed);
+
+      // The dot in "3.0" would otherwise let every 3.0 page skip the password.
+      it("is behind the password gate despite the dot in its name", () => {
+        for (const path of ["/3.0", "/3.0/guides", "/3.0/guides/imha-advocacy"]) {
+          expect(target(proxy(request(path, { authed: false })))).toBe("/password");
+        }
+      });
+
+      it("serves the guides, links, leaflets, editor and its own pages", () => {
+        for (const path of [
+          "/guides",
+          "/guides/imha-advocacy",
+          "/guides/news2",
+          "/guides/admission-checklist",
+          "/guides/leave-discharge-transfer",
+          "/guides/mha-checker",
+          "/links",
+          "/patient-guides",
+          "/patient-guides/anxiety",
+          "/admin/guides",
+          "/about",
+          "/feedback",
+        ]) {
+          const res = proxy(request("/3.0" + path));
+          expect(isRewrite(res)).toBe(true);
+          expect(target(res)).toBe(path);
+        }
+      });
+
+      // The full privacy page talks about the diary and patients. 3.0 answers
+      // the same question on its own About page.
+      it("answers the privacy page from the 3.0 About page", () => {
+        const res = proxy(request("/3.0/gdpr"));
+        expect(isRedirect(res)).toBe(true);
+        expect(target(res)).toBe("/3.0/about");
+        expect(res.headers.get("location")).toContain("#privacy");
+      });
+
+      it("maps bare /3.0 to the root page", () => {
+        const res = proxy(request("/3.0"));
+        expect(isRewrite(res)).toBe(true);
+        expect(target(res)).toBe("/");
+      });
+
+      it("sends every diary, patient and staff route back to the 3.0 home", () => {
+        for (const path of [
+          "/diary", "/tasks", "/my-diary", "/my-tasks", "/patients", "/overview",
+          "/reports", "/data-sources", "/staff", "/login",
+        ]) {
+          const res = proxy(request("/3.0" + path));
+          expect(isRedirect(res)).toBe(true);
+          expect(target(res)).toBe("/3.0");
+        }
+      });
+
+      it("keeps out everything that is not on the list, including the extras", () => {
+        for (const path of [
+          "/quiz", "/service-map", "/dev-panel", "/admin", "/admin/links",
+          "/admin/ward-settings", "/faq", "/intro-guide", "/welcome", "/something-new",
+        ]) {
+          expect(target(proxy(request("/3.0" + path)))).toBe("/3.0");
+        }
+      });
+
+      it("sends the eight tools that are not in 3.0 to the guides list", () => {
+        for (const id of [
+          "risk-assessment", "care-plan", "safety-plan", "mental-state-exam",
+          "debrief", "observation-engagement", "restraint-monitoring", "seclusion-support-plan",
+        ]) {
+          const res = proxy(request(`/3.0/guides/${id}`));
+          expect(isRedirect(res)).toBe(true);
+          expect(target(res)).toBe("/3.0/guides");
+        }
+      });
+
+      it("keeps the /3.0 prefix on legacy redirects", () => {
+        expect(target(proxy(request("/3.0/bookmarks")))).toBe("/3.0/links");
+        expect(target(proxy(request("/3.0/referrals/imha-advocacy")))).toBe("/3.0/guides/imha-advocacy");
+      });
+
+      it("sends /v3 and /3 to /3.0", () => {
+        expect(target(proxy(request("/v3")))).toBe("/3.0");
+        expect(target(proxy(request("/3")))).toBe("/3.0");
+      });
+    });
+  }
+});
+
+// The link helper keeps a reader inside whichever edition they are in.
+describe("edition links", () => {
+  // jest.doMock outlives isolateModules, so the flag the tests above faked is
+  // still in force. Pin it to the live setting.
+  let v2Href!: typeof import("@/lib/hooks/useV2").v2Href;
+  let isV3Route!: typeof import("@/lib/config/editions").isV3Route;
+  jest.isolateModules(() => {
+    jest.doMock("@/lib/config/build", () => ({ COLLAPSED_FOR_DEMO: false }));
+    /* eslint-disable @typescript-eslint/no-require-imports */
+    v2Href = (require("@/lib/hooks/useV2") as typeof import("@/lib/hooks/useV2")).v2Href;
+    isV3Route = (require("@/lib/config/editions") as typeof import("@/lib/config/editions")).isV3Route;
+    /* eslint-enable @typescript-eslint/no-require-imports */
+  });
+
+  it("prefixes internal links with /3.0 inside 3.0, and leaves the rest alone", () => {
+    expect(v2Href("/guides/news2", "/3.0")).toBe("/3.0/guides/news2");
+    expect(v2Href("/", "/3.0")).toBe("/3.0");
+    expect(v2Href("/3.0/links", "/3.0")).toBe("/3.0/links");
+    expect(v2Href("https://www.nhs.uk", "/3.0")).toBe("https://www.nhs.uk");
+    expect(v2Href("#top", "/3.0")).toBe("#top");
+  });
+
+  it("still prefixes /v2, and adds nothing at the root", () => {
+    expect(v2Href("/guides", "/v2")).toBe("/v2/guides");
+    expect(v2Href("/guides", null)).toBe("/guides");
+  });
+
+  it("does not double up when a link already carries the other edition", () => {
+    expect(v2Href("/v2/guides", "/3.0")).toBe("/v2/guides");
+  });
+
+  it("treats the guides tree as 3.0 except for the eight tools", () => {
+    expect(isV3Route("/guides/imha-advocacy")).toBe(true);
+    expect(isV3Route("/guides/risk-assessment")).toBe(false);
+    expect(isV3Route("/guides-and-more")).toBe(false);
+  });
+});

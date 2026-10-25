@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { COLLAPSED_FOR_DEMO } from "@/lib/config/build";
+import { V3_PREFIX } from "@/lib/config/editions";
 
 // ---------------------------------------------------------------------------
 // THE SPLIT (inverted 8 Sept 2026, Mike's call)
@@ -28,26 +29,43 @@ import { COLLAPSED_FOR_DEMO } from "@/lib/config/build";
 
 const V2_PREFIX = "/v2";
 
-// Are we currently under the /v2 URL prefix (the full build)?
-function underV2Prefix(pathname: string | null): boolean {
-  if (!pathname) return false;
-  return pathname === V2_PREFIX || pathname.startsWith(V2_PREFIX + "/");
+// 3.0 (25 Oct 2026) is a third experience: guides only. It is stricter than
+// /v2, so useIsV2() is true under /3.0 as well and every existing "limited"
+// gate applies there for free. useIsV3() is for the extra things 3.0 drops.
+// See src/lib/config/editions.ts.
+
+// Which edition prefix is this path under, if any?
+function editionPrefix(pathname: string | null): string | null {
+  if (!pathname) return null;
+  for (const p of [V3_PREFIX, V2_PREFIX]) {
+    if (pathname === p || pathname.startsWith(p + "/")) return p;
+  }
+  return null;
 }
 
-// True for the stripped / PII-free experience (served under /v2).
+// True for the stripped / PII-free experience (served under /v2 and /3.0).
 export function useIsV2(): boolean {
   const pathname = usePathname();
+  const prefix = editionPrefix(pathname);
+  // 3.0 is always limited. The demo collapse only ever applied to /v2.
+  if (prefix === V3_PREFIX) return true;
   // Demo collapse: the whole product is the full build - never the limited variant.
   if (COLLAPSED_FOR_DEMO) return false;
-  return underV2Prefix(pathname);
+  return prefix === V2_PREFIX;
 }
 
-// Prefix internal links with /v2 when the user is inside the stripped (/v2)
-// build so navigation stays in it. `underPrefix` = "are we under the /v2 prefix".
-export function v2Href(href: string, underPrefix: boolean): string {
-  // Demo collapse: everything lives at the root, so never add the /v2 prefix.
-  if (COLLAPSED_FOR_DEMO) return href;
-  if (!underPrefix) return href;
+// True only inside the guides-only edition at /3.0.
+export function useIsV3(): boolean {
+  return editionPrefix(usePathname()) === V3_PREFIX;
+}
+
+// Prefix internal links with the edition the user is in (/v2 or /3.0) so
+// navigation stays inside it. `prefix` is that edition's prefix, or null at
+// the root.
+export function v2Href(href: string, prefix: string | null): string {
+  if (!prefix) return href;
+  // Demo collapse: /v2 lives at the root, so never add the /v2 prefix.
+  if (COLLAPSED_FOR_DEMO && prefix === V2_PREFIX) return href;
   if (!href) return href;
   // Leave external URLs, anchors and absolute-non-app paths alone.
   if (
@@ -60,14 +78,13 @@ export function v2Href(href: string, underPrefix: boolean): string {
   ) {
     return href;
   }
-  if (href === "/") return V2_PREFIX;
-  if (href === V2_PREFIX || href.startsWith(V2_PREFIX + "/")) return href;
+  if (href === "/") return prefix;
+  if (editionPrefix(href)) return href;
   if (!href.startsWith("/")) return href;
-  return `${V2_PREFIX}${href}`;
+  return `${prefix}${href}`;
 }
 
 export function useV2Href() {
-  const pathname = usePathname();
-  const underPrefix = underV2Prefix(pathname);
-  return (href: string) => v2Href(href, underPrefix);
+  const prefix = editionPrefix(usePathname());
+  return (href: string) => v2Href(href, prefix);
 }

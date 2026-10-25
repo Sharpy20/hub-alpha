@@ -3740,9 +3740,20 @@ To take one down: `npm run publish-guide -- --remove <id>`. The built-in version
 ### Next, in order
 
 1. [ ] Mike walks `/3.0` and says what is wrong or missing.
-2. [ ] **Rebuild each guide in the editor (Mike, 25 Oct).** For every guide in 3.0, try to
+2. [x] **Rebuild each guide in the editor (Mike, 25 Oct).** For every guide in 3.0, try to
        recreate it in the editor and record one of: builds as it is / could with an editor
        change (say which) / impossible. "Impossible" may mean the guide drops out of 3.0.
+       **Done 25 Oct: [docs/v3-editor-rebuild-audit.md](v3-editor-rebuild-audit.md).** 49 build
+       as they are, 12 could with an editor change, 2 look impossible (the Section Papers
+       checker and the patient leaflets). Nothing changed: no guide, light or editor code.
+       - [ ] Mike: keep `mha-checker` and the leaflets as fixed content, or drop them from 3.0.
+       - [ ] Mike: one wording per guide for the card and the guide (42 differ; publishing a
+             copy swaps the card text for the guide's own), or add card fields to the editor.
+       - [ ] Mike: Social Care's two County entries can never show (no area question).
+       - [ ] Editor changes, small first: step look for question steps (6 guides), City/County
+             preset that filters (4, proved broken from blank in the browser), widget picker
+             (2), WAGOLL on read-through guides (1). Then the checklist block (2) and the
+             criteria walk editor (1). Not started.
 3. [x] **Root and `/v2` now work like 3.0 (Mike, 25 Oct).** Readers in every edition see
        published guides only. A copy saved in the editor shows only at `/guides/<id>?draft=1`,
        and the editor offers Preview draft and Download to publish everywhere. This supersedes

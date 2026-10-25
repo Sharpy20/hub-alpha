@@ -8,6 +8,7 @@ import { useWardSettings } from "@/app/ward-settings-provider";
 import { sanitizeExternalUrl } from "@/lib/utils/url";
 import type { Bookmark } from "@/lib/types";
 import Link from "next/link";
+import { useV2Href } from "@/lib/hooks/useV2";
 
 const MY_FAVOURITES = "My Favourites";
 const MY_PERSONAL = "My Personal";
@@ -89,6 +90,8 @@ function WheelConnector({ index, total }: { index: number; total: number }) {
 }
 
 export function BookmarkCarousel() {
+  // Keeps these links inside /v2 or /3.0 when the reader is in one.
+  const link = useV2Href();
   const { defaultBookmarkCategory, userFavoriteBookmarks, personalBookmarks } = useWardSettings();
   const hasFavourites = userFavoriteBookmarks.length > 0;
   const hasPersonal = personalBookmarks.length > 0;
@@ -257,14 +260,14 @@ export function BookmarkCarousel() {
         {/* View all + add your own */}
         <div className="flex flex-wrap items-center gap-2">
           <Link
-            href="/links"
+            href={link("/links")}
             className="inline-flex items-center justify-center gap-2 px-5 py-2 bg-nhs-blue text-white font-semibold rounded-xl hover:bg-nhs-dark-blue transition-colors no-underline text-sm"
           >
             View all links
             <span className="text-white/70">&rarr;</span>
           </Link>
           <Link
-            href="/links?add=1"
+            href={link("/links?add=1")}
             className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-violet-100 text-violet-700 font-semibold rounded-xl hover:bg-violet-200 transition-colors no-underline text-sm"
           >
             <Plus className="w-4 h-4" /> Add your own

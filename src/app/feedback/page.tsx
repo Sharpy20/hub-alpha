@@ -628,8 +628,8 @@ function FeedbackContent() {
 
           <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
             <p className="text-gray-700">
-              This is v1 (guides only). The interactive feedback board is coming in v2. For now,
-              the quickest way to share an idea, report a problem or suggest a new guide is a quick email.
+              This version has no feedback board, because nobody signs in to it. The quickest way
+              to share an idea, report a problem or suggest a new guide is a quick email.
             </p>
             <a
               href={FEEDBACK_MAILTO}

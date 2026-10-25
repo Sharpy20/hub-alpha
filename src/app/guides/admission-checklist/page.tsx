@@ -16,7 +16,7 @@ import {
 } from "@/lib/data/care-review";
 import { toLocalDateStr } from "@/lib/utils/date";
 import { printChecklist } from "@/lib/utils/printDoc";
-import { useV2Href } from "@/lib/hooks/useV2";
+import { useIsV2, useV2Href } from "@/lib/hooks/useV2";
 import { ArrowLeft, Check, Printer, RotateCcw, ClipboardList, Info } from "lucide-react";
 
 // Every checklist item is a care-review admission item (same id), so ticks map
@@ -25,6 +25,8 @@ const ADMISSION_IDS = new Set(ADMISSION_ITEMS.map((i) => i.id));
 
 export default function AdmissionChecklistPage() {
   const v2Href = useV2Href();
+  // /v2 and 3.0 hold no patients: no patient link, and no ?patient= auto-link.
+  const limited = useIsV2();
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [patient, setPatient] = useState<Patient | null>(null);
   // Set when we arrived from a patient's Care Review, so we can offer a way BACK
@@ -33,6 +35,7 @@ export default function AdmissionChecklistPage() {
 
   // Auto-link a patient passed via ?patient=<id> (e.g. from the Care Review pop-up).
   useEffect(() => {
+    if (limited) return;
     const id = new URLSearchParams(window.location.search).get("patient");
     if (id) {
       const p = DEMO_PATIENTS.find((x) => x.id === id);
@@ -41,7 +44,7 @@ export default function AdmissionChecklistPage() {
         setFromPatientId(p.id);
       }
     }
-  }, []);
+  }, [limited]);
 
   // Cross-reference with the patient's Care Review admission tracker: when a
   // patient is linked, pull their already-done admission tasks into the ticks,
@@ -201,7 +204,7 @@ export default function AdmissionChecklistPage() {
           <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-xl p-3 text-sm text-blue-800 print:hidden">
             <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
             <p>
-              Link a patient above to save progress against them. Otherwise ticks are just for you and reset when you
+              {limited ? "Ticks" : "Link a patient above to save progress against them. Otherwise ticks"} are just for you and reset when you
               leave the page - a memory aid, not a patient record. Record completed tasks in SystmOne. Links marked{" "}
               <span className="font-semibold text-amber-800">FOCUS</span> only open on a Trust computer.
             </p>
@@ -311,6 +314,8 @@ export default function AdmissionChecklistPage() {
             <p className="text-xs text-gray-500 mt-0.5">
               {patient
                 ? "Every tick is saved as you make it. You can leave and come back to the rest."
+                : limited
+                ? "Ticks reset when you leave the page. Record completed tasks in SystmOne."
                 : "Link a patient above if you want these ticks to save against their record."}
             </p>
           </div>

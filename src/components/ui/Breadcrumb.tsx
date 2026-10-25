@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useV2Href } from "@/lib/hooks/useV2";
 import { ChevronRight, Home } from "lucide-react";
 
 interface BreadcrumbItem {
@@ -11,11 +14,14 @@ interface BreadcrumbProps {
 }
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
+  // Home stays inside /v2 or /3.0 when the reader is in one. Callers prefix
+  // their own item links.
+  const link = useV2Href();
   // diary-muted / text-foreground keep the trail readable in dark mode,
   // where the page background flips dark but grey utilities do not.
   return (
     <nav aria-label="Breadcrumb" className="diary-muted flex items-center gap-1.5 text-sm mb-4 overflow-x-auto">
-      <Link href="/" aria-label="Home" className="diary-muted flex items-center gap-1 hover:text-gray-700 transition-colors flex-shrink-0">
+      <Link href={link("/")} aria-label="Home" className="diary-muted flex items-center gap-1 hover:text-gray-700 transition-colors flex-shrink-0">
         <Home className="w-3.5 h-3.5" />
       </Link>
       {items.map((item, index) => (

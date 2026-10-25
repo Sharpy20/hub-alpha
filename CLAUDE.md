@@ -109,6 +109,15 @@ finally reads the way it sounds. But the arrangement has flipped four times sinc
 (21 Jun, 2 Jul, 8 Sept morning, 8 Sept afternoon), so **check the date on any comment or
 note that contradicts what you see in the code**.
 
+**3.0, the guides edition (25 Oct 2026), lives at `/3.0`** - the cut-down version offered to
+the Trust: guides, links, patient leaflets and three checklists, no diary, no patients, no
+staff, no logins. Unlike `/v2` it is an **allowlist**: `src/lib/config/editions.ts` lists the
+routes it serves and the eight tools it leaves out, and `src/proxy.ts` sends everything else
+back to `/3.0`. `useIsV3()` marks it, and `useIsV2()` is ALSO true under `/3.0`, so every
+"limited" gate applies there. In 3.0 readers only see published guides; a guide changes for
+readers only through `published.json` (see the guide editor gotcha below). Full story:
+BACKLOG Section AA.
+
 **Main surfaces:** unified guide viewer at `/guides/[id]` (static-route builder/checker
 guides override it) · Team Diary `/tasks` · My Jobs kanban `/my-tasks` · Patients
 `/patients` · `/overview` (barriers, waiting, care-review audit) · `/links` ·
@@ -172,6 +181,16 @@ NOT a role. Ward Professional comes from staff/lead/manager only.
   **Consent / legal status / S117 / area are Question blocks now** (ids `consent`, `informed`,
   `section`, `s117`, `area`); the fixed step types only survive for old editor copies. The referral
   case note is built by `lib/data/guides/case-note.ts` and a golden-file test guards its wording.
+- **Publishing a guide (25 Oct 2026):** a guide downloaded from the editor goes live with
+  `npm run publish-guide -- <file>`, which merges it into `lib/data/guides/published.json`;
+  `--remove <id>` takes it down. `published.ts` applies it over `GUIDES`, `WORKFLOWS` and
+  `ALL_GUIDES` everywhere, and `published-guides.test.ts` fails CI on a bad file. Never hand
+  edit `published.json` into shape - fix the guide in the editor and publish it again.
+- **3.0 routing:** a new page is NOT in 3.0 until it is added to `editions.ts`. The proxy's
+  "any path with a dot skips the password" rule has an explicit exception for `/3.0`, because
+  the dot in "3.0" would otherwise let every 3.0 page skip the gate. Keep it.
+- Internal links must go through `useV2Href()` (it prefixes `/v2` or `/3.0`). A bare
+  `href="/..."` drops the reader out of their edition.
 - Task actions are "Claim" / "Take Over" / "Hand back" (Drop was retired 29 Jul - hand
   back is the only way to release a job, and it generates a case note).
 

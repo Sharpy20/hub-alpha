@@ -8,10 +8,14 @@
 > is still valid, but R sits above it: it carries the medical device question, the Tier A/B guide
 > split, the trust-account handover and Mike's 2 Aug job list. Read R first.
 >
-> **⭐ SECTION V (6 Aug) is the hosting/trial/handover direction - the sandbox plan.** Read it
-> before any work on hosting, persistence, guide data formats or the SSO application. It
-> supersedes R4's "same stack on trust accounts" assumption: the destination is the Trust's
-> ASP.NET / Azure standard, reached by Mike porting the app inside Cris's pipeline.
+> **⭐ SECTION V (rewritten 28 Aug) is where hosting, trial and handover actually stand.** Read it
+> before any work on hosting, persistence or the SSO application. Cris declined the sandbox, the
+> ASP.NET port and any handover on 28 Aug; the old sandbox plan that this line used to describe
+> is dead.
+>
+> **⭐ SECTION AA (25 Oct) is wardHub 3.0, the guides edition at /3.0** - the cut-down version
+> offered to the Trust. What is in, what is out, how publishing works, and what is next. Read it
+> before touching routing, the editor or guide data.
 >
 > **SECTION Z (29 Sept) is the guide editor rebuild and branching** - what is built, what is not,
 > and the order to do the rest in. Read it before touching `/admin/guides`, the viewer's step
@@ -3655,3 +3659,91 @@ with a `branch` ignores its fixed type. New pieces:
 - Small visible change: the choices are now the standard radio cards, not the bespoke coloured
   buttons, and the ten legal statuses are one list rather than a two-column grid. The step keeps its
   colour and icon.
+
+---
+
+## SECTION AA - wardHub 3.0, the guides edition (25 Oct 2026)
+
+**Why it exists.** The big bosses like wardHub; Trust IT are blocking, with "treat it like a
+product we are buying and review everything". Mike is gifting, not selling. His level-headed
+route: give them a cut-down version that is easy to say yes to. If they still say no, he goes
+back to option 1 (give it free to another trust) or option 2 (set up a company and sell it).
+**3.0 is that cut-down version**, live at `wardhub.live/3.0` (`/v3` and `/3` redirect there).
+
+### Agreed with Mike, 25 Oct (his answers, not defaults)
+
+- **Content:** every current guide goes in, under its existing traffic light. **No AI label on
+  guides** (Mike's call). Nothing in 3.0 claims they were hand-written either. If asked, the
+  true answer is that Claude drafted them from Trust policy. The Copilot agents never built any.
+- **Kept beside the guides:** links directory, patient leaflets, and three checklists
+  (admission, leave/discharge/transfer, MHA section papers).
+- **Out:** diary, My Jobs, appointments; patients, overview, reports, discharge; staff, login,
+  roles, wards; the eight interactive tools (risk formulation/RMP, MSE, care plan, safety plan,
+  debrief, observation and engagement, restraint/rapid tranq monitoring, seclusion support plan);
+  quiz; service map; dev panel; everything about the Copilot agents.
+- **Sign-off:** traffic lights as now (`approval-status.ts`, Mike's editorial call). No sign-off
+  panel in the editor.
+- **Publishing:** export, then publish. No database, no logins.
+
+### Built 25 Oct
+
+- [x] `src/lib/config/editions.ts` - the 3.0 **allowlist** (only listed routes are served, so a
+      new page stays out of 3.0 until someone adds it) and the eight tools that are out.
+- [x] `src/proxy.ts` serves `/3.0/*` from the allowlist; anything else goes to `/3.0`, an
+      excluded tool goes to `/3.0/guides`, `/3.0/gdpr` goes to `/3.0/about#privacy`.
+- [x] ⛔ **Gate fix:** the "any path with a dot skips the password" rule would have let every
+      3.0 page skip the gate. `/3.0` is ruled out of it explicitly, and a test guards it.
+- [x] `useIsV3()`. `useIsV2()` is now true under `/3.0` too, so every existing "limited" gate
+      applies there. The link helper keeps a reader inside `/3.0`.
+- [x] `HeaderV3` (no profile, role, ward or demo selector; colour mode only), footer and home
+      copy, a 3.0 GDPR notice, and `components/about/AboutV3.tsx` (what is in, what is out and
+      why, traffic lights with live counts, publishing, privacy).
+- [x] **3.0 readers only ever see published guides.** A copy saved in the editor shows only in
+      `?draft=1` preview, with a banner. Root and `/v2` behave as before.
+- [x] Editor open without a login in 3.0 (edit on, delete/approve off). It explains publishing,
+      offers "Preview draft" and "Download to publish", and hides the Diary jobs block.
+- [x] **Publishing route:** `src/lib/data/guides/published.json` + `published.ts`. A published
+      guide replaces the built-in with the same id (or adds a new one) in `GUIDES`, `WORKFLOWS`
+      and `ALL_GUIDES`, everywhere. `npm run publish-guide -- <file>` merges a download in;
+      `--remove <id>` takes one down. `published-guides.test.ts` is the gate: invalid guide,
+      broken branching or a how-to/referral id clash fails CI.
+- [x] Case notes in 3.0 leave `[NURSE]` for the nurse, because nobody is signed in.
+- [x] Fixed in passing (these leaked out of `/v2` too): the Quick Links wheel's two links, the
+      breadcrumb Home link, the admission checklist's `?patient=` auto-link and its "Link a
+      patient above" copy, and the stale "v1 / v2" feedback copy.
+- [x] 389 tests, tsc and eslint clean, production build passes. Walked in the browser: gate,
+      home, guides list (63 cards), IMHA, the three checklists, editor, draft preview vs reader
+      vs root, redirects, About/privacy, links, leaflets; root and `/v2` unchanged.
+
+### How to publish a guide (for Mike)
+
+1. The author opens the editor in 3.0, writes or edits, previews, then **Download to publish**.
+2. `npm run publish-guide -- path/to/the-file.json`
+3. `npm test`, commit, push. Live in about two minutes.
+
+To take one down: `npm run publish-guide -- --remove <id>`. The built-in version comes back.
+
+### Known limits - say these out loud
+
+- **It is the same codebase.** IT reviewing "the product" would still see the diary, patients and
+  tools in the code. `/3.0` is the demonstration. If the Trust says yes, the follow-up is a
+  standalone 3.0 repository with everything outside 3.0 deleted, so they review a fraction of it.
+  ⛔ The ownership position goes in writing before any code is handed over (Section V).
+- The shared-PC problem (a local edit overriding a guide for the next reader) is fixed **in 3.0
+  only**. Root and `/v2` still do it. Decide whether root should follow.
+- The tab title is swapped in the browser, because Next streams the site-wide title (which names
+  the diary) after load. The raw HTML still carries the site-wide title.
+- 3.0 is behind the same password as the rest of the site. Whether a Trust-hosted 3.0 needs one
+  is their call.
+- `scripts/export-guide-manuscripts.mjs` has been **broken since 2 Aug** (bare tsc cannot resolve
+  the `@/lib/types` alias). Not caused by 3.0. It now passes `--resolveJsonModule` for
+  `published.json`; the alias still needs a temporary tsconfig with `paths`.
+
+### Next, in order
+
+1. [ ] Mike walks `/3.0` and says what is wrong or missing.
+2. [ ] **Rebuild each guide in the editor (Mike, 25 Oct).** For every guide in 3.0, try to
+       recreate it in the editor and record one of: builds as it is / could with an editor
+       change (say which) / impossible. "Impossible" may mean the guide drops out of 3.0.
+3. [ ] Decide whether root and `/v2` adopt "readers never see local edits".
+4. [ ] If the Trust says yes: the standalone 3.0 repository, after the ownership position.

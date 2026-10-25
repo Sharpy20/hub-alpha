@@ -197,11 +197,11 @@ gives them the card's look. Harmless, but it is a visible change.
   Referral" form and the "Derbyshire County ASC" phone number are tagged County, and the
   guide has no area question, so they never show. Walked in the browser to the forms and
   contact steps to confirm. Either they go, or the guide gets an area question. Mike's call.
-- **Two referrals link out of 3.0.** Step Down (3 links) and CMHT / EI (2 links) list other
+- ✅ **Fixed 25 Oct (7947ad8): the links now stay in 3.0.** **Two referrals link out of 3.0.** Step Down (3 links) and CMHT / EI (2 links) list other
   wardHub guides under "Other guides" as typed `/guides/...` addresses. The viewer draws them
   as plain links, so in 3.0 they open the full site instead of the 3.0 page. A guide picker
   for these (like Related guides on read-through guides) would fix it and stop typos.
-- **The 3.0 editor lists the eight tools that are out of 3.0**, as "Interactive tool, not
+- ✅ **Fixed 25 Oct (7947ad8): no longer listed.** **The 3.0 editor lists the eight tools that are out of 3.0**, as "Interactive tool, not
   editable here". They do not open, but they should not be listed in 3.0.
 - **The leaflets card says 23 leaflets; there are 29** (`patient-guides.ts`).
 
